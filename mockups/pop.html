@@ -66,10 +66,10 @@ const papBg=`<div class="pap" style="inset:0"></div><div class="hr" style="inset
 const FR=`<div class="fr"></div><div class="grain"></div>`;
 // torre con personaggi dietro i merli (stessa geometria del prototipo): left,top della torre in px, fattore k
 function towerBlock(ids,left,top,k,n){const TW=391/1.5*k,HT=2506/1.5*k;let out='';
- const spec=n===8?(()=>{const T8=[[70,116],[50,124],[30,132]],a=[];for(let i=0;i<8;i++){const t=[0,2,1,0,2,1,0,2][i];a.push([72+i*(228/7),T8[t][0],T8[t][1]])}return a})():[[80,70,140],[133,34,150],[186,70,140],[239,34,150],[292,70,140]].map(a=>a);
+ const spec=n===8?[0,7,1,6,2,5,3,4].map(i=>{const d=Math.abs(i-3.5);return [i,186+(i-3.5)*25,86+d*5,150-d*6,(i-3.5)*5]}).sort((a,b)=>a[0]-b[0]).map(a=>[a[1],a[2],a[3],a[4]]):[[80,70,140,0],[133,34,150,0],[186,70,140,0],[239,34,150,0],[292,70,140,0]];
  const base=left+8/1.5*k; // x del bordo sinistro della torre (padding incluso) -> centro corona = left+TW/2
  const cx=left+TW/2;
- spec.slice(0,ids.length).forEach((a,i)=>{const x=cx+(a[0]-186)*k,feet=top+(a[1]-0)*k-(8/1.5)*k+ (0),h=a[2]*k;out+=`<img class="cut stk" src="${A(ids[i])}" style="position:absolute;height:${h}px;left:${x}px;top:${feet-h}px;transform:translateX(-50%);z-index:5">`});
+ spec.slice(0,ids.length).forEach((a,i)=>{const x=cx+(a[0]-186)*k,feet=top+(a[1]-0)*k-(8/1.5)*k+ (0),h=a[2]*k;out+=`<img class="cut stk" src="${A(ids[i])}" style="position:absolute;height:${h}px;left:${x}px;top:${feet-h}px;transform:translateX(-50%) rotate(${a[3]||0}deg);transform-origin:50% 100%;z-index:5">`});
  out+=`<img class="cut" src="${A('tower')}" style="position:absolute;left:${left}px;top:${top-8/1.5*k}px;width:${TW}px;height:${HT}px;z-index:6;max-width:none">`;return out}
 const I8=['p05-i01','p05-i02','p05-i03','p05-i04','p05-i05','p05-i06','p05-i07','p05-i09'];
 const S={};

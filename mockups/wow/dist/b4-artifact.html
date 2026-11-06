@@ -155,9 +155,9 @@ add('Ingresso<small>solo andata</small>',`left:${TX+78}px;top:1895px;z-index:7;t
 // ---- personaggi: stanno dietro la corona (si vedono volti e busti), leggermente distanziati
 const CH=[];
 if(N===5){[[80,70,140],[133,34,150],[186,70,140],[239,34,150],[292,70,140]].forEach(([x,f,h],i)=>CH.push({n:i+1,x,feet:TY+f,h,z:5}))}
-else{const T8=[[70,116],[50,124],[30,132]];for(let i=0;i<8;i++){const tier=[0,2,1,0,2,1,0,2][i],[f,h]=T8[tier];CH.push({n:i+1,x:Math.round(72+i*(228/7)),feet:TY+f,h,z:5})}}
+else{const order=[0,7,1,6,2,5,3,4];order.forEach(i=>{const d=Math.abs(i-3.5);CH.push({n:i+1,x:Math.round(186+(i-3.5)*25),feet:TY+86+d*5,h:Math.round(150-d*6),z:5,rot:(i-3.5)*5})});CH.sort((a,b)=>a.n-b.n)}
 const ch={};
-CH.forEach(c=>{const img=document.createElement('img');img.className='cut stk pick';img.src=CUT(IDS[c.n-1]);img.style.cssText=`height:${c.h}px;z-index:${c.z}`;img.dataset.n=c.n;W.appendChild(img);ch[c.n]=img;
+CH.forEach(c=>{c.rot=c.rot||0;const img=document.createElement('img');img.className='cut stk pick';img.src=CUT(IDS[c.n-1]);img.style.cssText=`height:${c.h}px;z-index:${c.z}`;img.dataset.n=c.n;W.appendChild(img);ch[c.n]=img;
  add(c.n,`left:${c.x-13}px;top:${TY+86}px;z-index:9;pointer-events:none;${N===8?'transform:scale(.82)':''}`,'bd')});
 // ---- logica di voto
 const BASE=SETS[N].base;let sel=2;const PLAYED=SETS[N].played;
@@ -285,11 +285,11 @@ function render(T){
  const sus=t<0?sm(1.7,T_FALL,T):0;
  {const cx_=CH[sel-1].x;cone.style.left=(cx_-95)+'px';cone.style.opacity=(t<.3?1:0)*(.55+.45*Math.sin(T*3));}
  CH.forEach(c=>{const im=ch[c.n];im.classList.toggle('sel',c.n===sel&&t<.4);if(c.n!==FN||t<0&&false){}
-  if(c.n!==FN)im.style.transform=`rotate(${(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
+  if(c.n!==FN)im.style.transform=`rotate(${c.rot+(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
  const c=cardState(t),wob=t<0?Math.sin(T*28)*sus*3:0,h=fc.h,dp=dip(t);
  const hg=Math.max(0,YI-c.y);c.y+=dp*Math.max(0,Math.min(1,1-hg/22));
  const w=f.naturalWidth/f.naturalHeight*h;
- if(t<TS*.3){f.style.zIndex=fc.z;f.style.left=(fc.x-w/2)+'px';f.style.top=(startY()-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob}deg)`}
+ if(t<TS*.3){f.style.zIndex=fc.z;f.style.left=(fc.x-w/2)+'px';f.style.top=(startY()-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob+(fc.rot||0)}deg)`}
  else{f.style.zIndex=30;f.style.left=(c.x-w/2)+'px';f.style.top=(c.y-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${c.r}deg) scale(${(c.sx||1)*c.k},${(c.sy||1)*c.k})`}
  const cm=cam(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
  const dutch=-3*sm(.5,1.3,t)*(1-sm(TI-.3,TI+.4,t));const shk=(T>1.85&&T<2.1)?Math.sin(T*80)*3:0;
