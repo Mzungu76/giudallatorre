@@ -171,21 +171,23 @@ const mats=[mkMat('#e8362b',MW+14,40,'a',MX-7,2110),mkMat('#ffc72c',MW,40,'b',MX
 add('Assicurazione?<small>mai sentita</small>','left:236px;top:1966px;z-index:10;font-size:13px;transform:rotate(5deg)','gag');
 // ---- folla: solo mani alzate (come in copertina), con oggetti buffi che cambiano a ogni caduta
 const hs=document.createElementNS(NS,'svg');hs.setAttribute('viewBox','-520 2040 1400 560');hs.style.cssText='left:-520px;top:2040px;width:1400px;height:560px;z-index:12;pointer-events:none';W.appendChild(hs);
-// mani della copertina del regolamento (ritaglio con tools/cutout_hands.py): 3 file a profondità diversa
-const HW=362,HH=225,HTIPS=[[11,75],[119,103],[189,109],[249,74],[336,3]];
+// mani del regolamento (immagine fornita dall'utente, ritaglio con tools/cutout_hands.py): 3 file a profondità diversa
+const HW=1198,HH=616,CROP=250,HTIPS=[[375,240],[609,321],[774,338],[955,258],[1078,89],[1128,81]];
 const HIMG=window.IMGS?window.IMGS.hands:'../../public/scene/hands_cut.webp';
 const tiles=[];
-function mkTile(x0,top,sc,flip,bright,layer){
- const g=document.createElementNS(NS,'g');g.setAttribute('filter',bright<1?'url(#dark'+layer+')':'');
- const im=document.createElementNS(NS,'image');im.setAttribute('href',HIMG);im.setAttribute('x',flip?-HW:0);im.setAttribute('y',0);im.setAttribute('width',HW);im.setAttribute('height',HH);
- const holder=document.createElementNS(NS,'g');holder.setAttribute('transform',`translate(${x0} ${top}) scale(${flip?-sc:sc} ${sc})`);holder.appendChild(im);g.appendChild(holder);
- const og=document.createElementNS(NS,'g');g.appendChild(og);hs.appendChild(g);
- const tips=HTIPS.map(([tx,ty])=>({x:x0+(flip?(HW-tx):tx)*sc,y:top+ty*sc,sc}));
- const t={g,og,tips,cx:x0+HW*sc/2,base:top+HH*sc,ph:Math.random()*6,layer};tiles.push(t);return t}
 const defs=document.createElementNS(NS,'defs');defs.innerHTML='<filter id="dark0"><feComponentTransfer><feFuncR type="linear" slope=".78"/><feFuncG type="linear" slope=".78"/><feFuncB type="linear" slope=".8"/></feComponentTransfer></filter>';hs.appendChild(defs);
-[[-230,0],[-31,1],[168,0],[367,1]].forEach(([x,fl])=>mkTile(x,2178,.55,!!fl,.78,0));
-mkTile(-20,2128,.85,true,1,1);mkTile(250,2128,.85,false,1,1);
-mkTile(-150,2205,1.35,true,1,2);mkTile(338,2205,1.35,false,1,2);
+function mkTile(x0,top,sc,flip,full,dark,layer){
+ const g=document.createElementNS(NS,'g');if(dark)g.setAttribute('filter','url(#dark0)');
+ const vw=full?HW:HW-CROP,vx=full?0:CROP;
+ const inner=document.createElementNS(NS,'svg');inner.setAttribute('width',vw);inner.setAttribute('height',HH);inner.setAttribute('viewBox',`${vx} 0 ${vw} ${HH}`);inner.setAttribute('overflow','hidden');
+ const im=document.createElementNS(NS,'image');im.setAttribute('href',HIMG);im.setAttribute('width',HW);im.setAttribute('height',HH);inner.appendChild(im);
+ const holder=document.createElementNS(NS,'g');holder.setAttribute('transform',flip?`translate(${x0+vw*sc} ${top}) scale(${-sc} ${sc})`:`translate(${x0} ${top}) scale(${sc} ${sc})`);holder.appendChild(inner);g.appendChild(holder);
+ const og=document.createElementNS(NS,'g');g.appendChild(og);hs.appendChild(g);
+ const tips=HTIPS.filter(([tx])=>tx>=vx).map(([tx,ty])=>({x:flip?x0+(vw-(tx-vx))*sc:x0+(tx-vx)*sc,y:top+ty*sc,sc}));
+ const t={g,og,tips,cx:x0+vw*sc/2,base:top+HH*sc,ph:Math.random()*6,layer};tiles.push(t);return t}
+[[-300,1],[-35,0],[230,1],[495,0]].forEach(([x,fl])=>mkTile(x,2178,.28,!!fl,false,true,0));
+[[-150,0],[229,1],[608,0]].forEach(([x,fl])=>mkTile(x,2160,.4,!!fl,false,false,1));
+mkTile(-60,2146,.6,false,true,false,2);
 // pool di oggetti buffi (disegnati con base in (0,0), alti ~44)
 const K='#13224a';
 const OBJ={
@@ -211,7 +213,7 @@ function placeObjects(seed){const r=mulberry(seed*7919+13);tiles.forEach(t=>t.og
  const keys=Object.keys(OBJ).sort(()=>r()-.5).slice(0,6);used=keys;
  const cand=[];tiles.filter(t=>t.layer>0).forEach(t=>t.tips.forEach(p=>{if(p.x>-30&&p.x<420&&!(p.x>50&&p.x<330&&p.y<2200))cand.push({t,p})}));
  cand.sort(()=>r()-.5);
- keys.forEach((k,j)=>{const c=cand[j];if(!c)return;const o=document.createElementNS(NS,'g');o.setAttribute('transform',`translate(${c.p.x} ${c.p.y+4}) scale(${.55+c.p.sc*.5})`);o.innerHTML=OBJ[k];c.t.og.appendChild(o)});
+ keys.forEach((k,j)=>{const c=cand[j];if(!c)return;const o=document.createElementNS(NS,'g');o.setAttribute('transform',`translate(${c.p.x} ${c.p.y+4}) scale(${.45+c.p.sc*1.4})`);o.innerHTML=OBJ[k];c.t.og.appendChild(o)});
  const el=$('items');if(el)el.textContent='Il pubblico ha portato: '+keys.map(k=>NAMES[k]).join(', ')+'.'}
 // ---- polvere e stelle
 const puffs=[[30,2040],[96,2050],[300,2048],[230,2040],[160,2030]].map(([x,y])=>add('',`left:${x}px;top:${y}px;z-index:31`,'puff'));
