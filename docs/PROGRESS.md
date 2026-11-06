@@ -14,3 +14,10 @@
 
 ## Prossimi passi
 Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
+
+## Fase 3 — Motore di gioco (completata, in attesa di eventuali modifiche)
+- [x] `packages/game-engine`: FSM (PROCLAIM, PLAY, SUSPECT, VOTE, RESULTS, GAME_OVER), punteggi, spareggio, variante "Megafono sa", rotazione, mazzi con rimescolamento
+- [x] Viste per giocatore (nessun dato privato altrui), errori tipizzati, stato JSON + PRNG deterministico
+- [x] 62 test Vitest: preparazione 3–8 giocatori, validazioni, esempio del regolamento, spareggi, Lui!, privacy, ripristino da JSON, azioni simultanee, mazzo minimo, partite simulate 3–8 giocatori (entrambe le varianti) con invarianti di conservazione carte, contenuti reali (125 carte, 50×5 + 15 frasi)
+- [x] CI GitHub Actions (typecheck + test)
+- Prossima: Fase 4 (backend Cloudflare Workers + Durable Objects + protocollo WebSocket)

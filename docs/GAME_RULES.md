@@ -55,3 +55,15 @@ Stato autorevole lato server; il client non decide punteggi, carte, esito voto, 
 
 ## Decisioni aggiuntive
 Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = opzione di stanza (il Megafono gioca dalla mano e ripesca).
+
+## Scelte implementative del motore (Fase 3)
+- Il motore parte con la partita già avviata (la lobby è del backend). Stato **serializzabile in JSON** e PRNG deterministico (`seed`): una partita è riproducibile e ripristinabile dopo un'interruzione.
+- **Frase**: all'inizio del turno si pesca una carta "Su sulla Torre" visibile solo al Megafono. Può scegliere una frase della carta (carta singola: obbligatoria) oppure inventarla a voce (`free`). Mazzo frasi che si rimescola quando finisce.
+- **Torre**: modalità base = N−1 carte giocate dalla Folla + 1 pescata dal mazzo (nessun proprietario); variante "Il Megafono sa" = N carte dalle mani. Le carte vengono mescolate e numerate 1..N solo quando tutti hanno giocato.
+- **Voto**: tutti votano una volta, Megafono incluso, anche la propria carta e quella del mazzo.
+- **Pareggio**: se il massimo di voti è condiviso, cade **sempre** il personaggio votato dal Megafono (anche se ha solo il suo voto).
+- **Punti**: +2 a ogni votante del caduto; +2 a chi ha giocato la carta caduta (nessuno se era del mazzo); Lui! CADE sul caduto +4; Lui! NON CADE su un personaggio che resta su +1; i punti si sommano.
+- **Fine turno**: la Torre va nello scarto; pesca 1 carta chi ha giocato (la Folla; nella variante anche il Megafono); mazzo Personaggio rimescolato dallo scarto se finisce; il Megafono passa al giocatore successivo in ordine di ingresso.
+- **Fine partita**: tutti hanno fatto il Megafono 2 volte (3–5 giocatori) o 1 volta (6–8). Vince il punteggio più alto, parità = vittoria condivisa.
+- **Mazzo**: 125 carte Personaggio (decisione utente; la carta p13-i01 è identica a un'altra immagine ma resta una carta distinta).
+- **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
