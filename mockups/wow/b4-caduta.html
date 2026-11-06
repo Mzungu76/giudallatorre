@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Caduta dalla Torre</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1}
+*{box-sizing:border-box;margin:0}
+body{background:#2a2a30;min-height:100vh;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:center;padding:20px;font-family:Nunito,sans-serif;color:#fff}
+.phone{width:390px;height:844px;border-radius:44px;border:9px solid #0b0b10;position:relative;overflow:hidden;background:#5db4e6;box-shadow:0 30px 80px #000a;color:var(--navy);flex:none}
+.sky{position:absolute;inset:0;background:repeating-conic-gradient(from -4deg at 50% 36%,#79d3ee 0 6deg,#4fbce6 6deg 12deg)}
+.skyh{position:absolute;inset:0;background:radial-gradient(circle,#fff 0 26%,transparent 28%) 0 0/10px 10px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.55}
+.sky2{position:absolute;inset:0;background:linear-gradient(180deg,#ffd36b,#ffe9a8);opacity:0}
+.far,.world{position:absolute;left:0;top:0;will-change:transform;transform-origin:0 0}
+.world{width:372px;height:2600px}
+.world>*{position:absolute}
+.cut{display:block;height:auto}
+.stk{filter:drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(5px 6px 0 #13224a)}
+.stk.sel{filter:drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(0 0 7px #ffc72c) drop-shadow(0 0 14px #ffc72c) drop-shadow(5px 6px 0 #13224a)}
+.grain{position:absolute;inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.4;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.vig{position:absolute;inset:0;pointer-events:none;z-index:59;background:radial-gradient(circle,#e8362b 0 26%,transparent 28%) 0 0/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 100% 0,#000 0,transparent 38%);mask-image:radial-gradient(ellipse at 100% 0,#000 0,transparent 38%);opacity:.55}
+.gag{font:400 16px/1 Anton;text-transform:uppercase;color:var(--red);background:var(--paper);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:6px 9px;text-align:center;letter-spacing:.04em;white-space:nowrap}
+.gag small{display:block;font:400 11px/1 'Caveat Brush';color:var(--navy);margin-top:3px;letter-spacing:.02em;text-transform:none}
+.bd{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a0,#e0a52c 70%);border:3px solid #6e4310;color:#4a2a06;font:400 15px/20px Anton;text-align:center;box-shadow:0 2px 0 #0006}
+.tk{width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:2px 2px 0 var(--navy);display:grid;place-items:center;font:400 14px/1 Anton;color:#fff;transform:scale(0)}
+.lui{padding:4px 7px;background:var(--red);color:#fff;border:3px solid var(--navy);font:400 12px/1 Anton;letter-spacing:.06em;box-shadow:3px 3px 0 var(--navy);transform:scale(0);white-space:nowrap}
+.puff{width:70px;height:70px;border-radius:50%;background:radial-gradient(circle,#fff 0,#fffd 40%,#fff0 70%);opacity:0}
+.hud{position:absolute;inset:0;pointer-events:none}
+.top{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;font:800 12px Nunito;z-index:20}
+.top span{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:4px 9px;box-shadow:2px 2px 0 var(--navy);display:flex;gap:5px;align-items:center}
+.top i{width:11px;height:11px;border-radius:50%;border:2px solid var(--navy)}
+.strip{position:absolute;left:-10px;right:-10px;top:42px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 17px/1 Anton;letter-spacing:.16em;padding:9px 0 8px;text-align:center;box-shadow:0 5px 0 #0005;z-index:19}
+.hl{position:absolute;left:18px;right:16px;top:92px;font:400 44px/.9 Anton;text-transform:uppercase;color:#fff;z-index:18;-webkit-text-stroke:0;text-shadow:4px 4px 0 var(--red),7px 7px 0 var(--navy)}
+.hl small{display:block;font:400 21px/1 'Caveat Brush';color:#fff;text-transform:none;margin-bottom:5px;transform:rotate(-1.5deg);text-shadow:2px 2px 0 var(--navy)}
+.stamp{position:absolute;left:50%;top:116px;width:230px;margin-left:-115px;text-align:center;color:var(--red);border:5px solid var(--red);padding:8px 6px 6px;font:400 40px/.95 Anton;transform:rotate(-6deg) scale(0);z-index:21;text-transform:uppercase;background:#f4e3bdf2;box-shadow:5px 5px 0 var(--navy)}
+.stamp small{display:block;font:400 17px/1 Anton;letter-spacing:.14em;margin-top:5px}
+.ticket{position:absolute;left:14px;right:14px;bottom:16px;height:84px;z-index:30;display:flex;filter:drop-shadow(4px 5px 0 var(--navy));pointer-events:auto;cursor:pointer}
+.ticket .m{flex:1;background:var(--mus);border-radius:12px 0 0 12px;padding:10px 14px;-webkit-mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px)}
+.ticket .m b{display:block;font:400 28px/1 Anton;text-transform:uppercase}
+.ticket .m small{font:800 12px Nunito;opacity:.85;display:block;margin-top:5px}
+.ticket .s{width:84px;background:var(--red);color:#fff;border-radius:0 12px 12px 0;border-left:4px dashed var(--navy);display:grid;place-items:center;font:400 24px/1 Anton;text-align:center;-webkit-mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px)}
+.lines{position:absolute;inset:0;z-index:10;opacity:0;background:repeating-linear-gradient(90deg,transparent 0 22px,#ffffff55 22px 24px,transparent 24px 41px,#ffffff33 41px 43px);-webkit-mask-image:radial-gradient(ellipse at 50% 45%,transparent 20%,#000 80%);mask-image:radial-gradient(ellipse at 50% 45%,transparent 20%,#000 80%)}
+.aaah{position:absolute;z-index:22;font:400 40px/1 'Caveat Brush';color:#fff;text-shadow:3px 3px 0 var(--red),5px 5px 0 var(--navy);opacity:0;white-space:nowrap}
+.boing{position:absolute;z-index:23;left:50%;width:210px;height:150px;margin-left:-105px;display:grid;place-items:center;opacity:0;font:400 44px/1 Anton;color:var(--navy);text-transform:uppercase}
+.boing::before{content:"";position:absolute;inset:0;background:var(--mus);clip-path:polygon(50% 0,60% 18%,82% 6%,78% 30%,100% 36%,82% 52%,96% 74%,72% 72%,66% 96%,50% 80%,34% 96%,28% 72%,4% 74%,18% 52%,0 36%,22% 30%,18% 6%,40% 18%);filter:drop-shadow(5px 5px 0 var(--navy))}
+.boing span{position:relative;transform:rotate(-8deg)}
+.panel{position:absolute;left:12px;right:12px;bottom:14px;z-index:40;background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px 14px;transform:translateY(120%);pointer-events:auto}
+.panel h3{font:400 26px/1 Anton;text-transform:uppercase;color:var(--red);margin-bottom:8px;letter-spacing:.02em}
+.row{display:flex;align-items:center;gap:9px;padding:5px 0;border-top:2px dashed #13224a40;font:800 14px Nunito;opacity:0;transform:translateX(-14px)}
+.row i{width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);flex:none}
+.row em{margin-left:auto;font:400 22px/1 Anton;font-style:normal;color:var(--red)}
+.row small{font:800 11px Nunito;opacity:.7;margin-left:4px}
+.next{margin-top:8px;display:block;width:100%;background:var(--mus);padding:11px;font:400 22px/1 Anton;text-transform:uppercase;color:var(--navy);box-shadow:4px 4px 0 var(--navy);border:3px solid var(--navy)}
+.stars b{position:absolute;font-size:20px;color:var(--mus);text-shadow:2px 2px 0 var(--navy);animation:orb 1.2s linear infinite}
+.stars b:nth-child(2){animation-delay:-.4s}.stars b:nth-child(3){animation-delay:-.8s}
+@keyframes orb{0%{transform:translate(0,12px) scale(.8)}25%{transform:translate(30px,0)}50%{transform:translate(60px,12px) scale(1.15)}75%{transform:translate(30px,24px)}100%{transform:translate(0,12px) scale(.8)}}
+.skip{position:absolute;right:14px;top:84px;z-index:70;background:#fff;border:2px solid var(--navy);box-shadow:2px 2px 0 var(--navy);font:800 12px Nunito;padding:4px 10px;border-radius:99px;display:none;cursor:pointer;color:var(--navy);pointer-events:auto}
+.ctl{width:300px;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.4}
+.ctl h1{font:400 28px/1 Anton;color:var(--mus);letter-spacing:.03em}
+.ctl button{font:800 14px Nunito;border:0;border-radius:10px;padding:10px;background:var(--mus);color:var(--navy);cursor:pointer}
+.ctl input[type=range]{width:100%}.ctl label{display:flex;gap:8px;align-items:center}
+</style></head><body>
+<div class="phone"><div id="vp" style="position:absolute;inset:0;overflow:hidden">
+ <div class="sky"></div><div class="skyh"></div><div class="sky2" id="sky2"></div>
+ <div class="far" id="far"></div>
+ <div class="world" id="world"></div>
+ <div class="lines" id="lines"></div>
+ <div class="hud">
+  <div class="top"><span><i style="background:#2f7be0"></i>Luca</span><span>📣 Marta</span><span>Turno 3/10</span></div>
+  <div class="strip" id="strip">★ AVVISO ALLA CITTADINANZA ★</div>
+  <div class="hl" id="hl"><small>Oggi sale sulla torre…</small>chi manda vocali da nove minuti.</div>
+  <div class="stamp" id="stamp">Più votato: n. 2<small>3 voti su 5 · cade lui!</small></div>
+  <div class="ticket" id="ticket"><div class="m"><b>Conferma il n. 2</b><small>2 su 5 hanno già votato. Voto segreto.</small></div><div class="s">GIÙ!</div></div>
+  <div class="aaah" id="aaah">AAAAAH!</div>
+  <div class="boing" id="boing"><span>BOING!</span></div>
+  <div class="skip" id="skip">Salta ›</div>
+  <div class="panel" id="panel"><h3>Giù dalla torre!</h3><div id="rows"></div><button class="next">Prossimo turno</button></div>
+ </div>
+ <div class="vig"></div><div class="grain"></div>
+</div></div>
+<div class="ctl">
+ <h1>Giù dalla Torre<br>la caduta · v4</h1>
+ <div>Stile pop irriverente: torre del regolamento, personaggi scontornati, folla anonima.</div>
+ <button id="play">▶ Vota e guarda la caduta</button><button id="reset">↺ Torna alla votazione</button>
+ <label>Scrub <input id="scrub" type="range" min="-1" max="9.5" step="0.01" value="-1"></label>
+ <label><input type="checkbox" id="snd" checked> Suoni (sintetizzati)</label>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+const W=$('world'),F=$('far');
+const CUT=id=>`../../public/cutouts/${id}.webp`;
+const PL={M:['Marta','#e5384b'],L:['Luca','#2f7be0'],G:['Giulia','#f4c20d'],O:['Omar','#3aa655'],E:['Elena','#8a5a3b']};
+const add=(html,css,cls='')=>{const d=document.createElement('div');d.className=cls;d.style.cssText=css;d.innerHTML=html;W.appendChild(d);return d};
+const cloudSVG=(w)=>{const c='<circle cx="50" cy="52" r="28"/><circle cx="88" cy="38" r="34"/><circle cx="130" cy="48" r="30"/><circle cx="162" cy="58" r="22"/><rect x="24" y="52" width="160" height="28" rx="14"/>';return `<svg width="${w}" viewBox="0 0 210 100" overflow="visible"><g fill="#13224a" transform="translate(7 8)">${c}</g><g fill="#13224a" stroke="#13224a" stroke-width="7">${c}</g><g fill="#fff">${c}</g><path d="M30 76q80 12 150 0" stroke="#bfe9f5" stroke-width="9" fill="none" stroke-linecap="round"/></svg>`};
+[[10,40,150],[230,150,120],[40,300,170],[210,470,130],[0,640,150],[230,820,170],[60,1010,130],[220,1200,150]].forEach(([x,y,w])=>{const c=document.createElement('div');c.style.cssText=`position:absolute;left:${x}px;top:${y}px`;c.innerHTML=cloudSVG(w);F.appendChild(c)});
+// ---- paesaggio pop: colline piatte con contorno inchiostro, prato con mezzatinta
+const land=document.createElementNS(NS,'svg');land.setAttribute('viewBox','0 0 1400 700');land.style.cssText='position:absolute;left:-520px;top:1880px;width:1400px;height:700px;z-index:1';
+land.innerHTML=`<defs><pattern id="ht" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="4.5" cy="4.5" r="2.4" fill="#13224a"/></pattern><linearGradient id="fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></linearGradient><mask id="mk"><rect width="1400" height="700" fill="url(#fade)"/></mask></defs>
+<path d="M0 170Q220 60 470 150T930 130T1400 160V700H0Z" fill="#8fdcb0" stroke="#13224a" stroke-width="5"/>
+<path d="M0 230Q260 150 560 215T1100 200T1400 225V700H0Z" fill="#2fb48f" stroke="#13224a" stroke-width="5"/>
+<path d="M0 262Q300 236 700 258T1400 250V700H0Z" fill="#14a3a1" stroke="#13224a" stroke-width="5"/>
+<rect y="262" width="1400" height="438" fill="url(#ht)" mask="url(#mk)" opacity=".55"/>
+${Array.from({length:22},(_,i)=>`<path d="M${i*64+(i%3)*11} 292q10 -26 20 0q10 -22 20 0" fill="#ffc72c" stroke="#13224a" stroke-width="3" opacity="${i%3?1:.0}"/>`).join('')}
+${Array.from({length:60},(_,i)=>`<path d="M${(i*23)%1400} ${320+(i*41)%340}l4 -13l4 13z" fill="#13224a" opacity=".6"/>`).join('')}`;
+W.appendChild(land);
+// ---- torre (regolamento, versione pop con contorno e mezzatinta). I personaggi stanno dietro la sagoma
+const TX=61,TY=420,TW=250,TH=1660,PAD=8/1.5,TWW=391/1.5,THH=2506/1.5;
+const tsh=document.createElement('img');tsh.src='../../public/scene/tower_pop.webp';tsh.style.cssText=`left:${TX-PAD+13}px;top:${TY-PAD+10}px;width:${TWW}px;height:${THH}px;z-index:3;filter:brightness(0) opacity(.28)`;W.appendChild(tsh);
+const tf=document.createElement('img');tf.src='../../public/scene/tower_pop.webp';tf.style.cssText=`left:${TX-PAD}px;top:${TY-PAD}px;width:${TWW}px;height:${THH}px;z-index:6`;W.appendChild(tf);
+// gag sulla torre
+add('Torre del<br>Giudizio Spicciolo<small>vietato lanciare oggetti. Persone sì.</small>',`left:${TX+30}px;top:1010px;z-index:7;transform:rotate(-3deg)`,'gag');
+add(`<svg width="64" height="56" viewBox="0 0 64 56"><path d="M8 36q4-22 26-20q16 2 18 16q-8 10-26 10z" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><circle cx="46" cy="20" r="9" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><path d="M54 21l9 3l-9 3z" fill="#ffc72c" stroke="#13224a" stroke-width="2"/><circle cx="48" cy="18" r="2" fill="#13224a"/><path d="M14 34q14-8 28 2" stroke="#13224a" stroke-width="3" fill="none"/><path d="M26 44v8M34 44v8" stroke="#13224a" stroke-width="3"/></svg>`,`left:${TX+176}px;top:1180px;z-index:7`);
+add('«tra 200 m,<br>svolta a destra»',`left:${TX+80}px;top:1150px;z-index:7;transform:rotate(-4deg);font-size:12px`,'gag');
+add('Ingresso<small>solo andata</small>',`left:${TX+78}px;top:1895px;z-index:7;transform:rotate(2deg);font-size:15px`,'gag');
+// ---- personaggi sulla torre (x ordinati: 1..5)  front = riga davanti
+const CH=[{n:1,x:106,front:1},{n:2,x:146,front:0},{n:3,x:186,front:1},{n:4,x:226,front:0},{n:5,x:266,front:1}];
+const ch={};const HGT=160;
+CH.forEach(c=>{const img=document.createElement('img');img.className='cut stk';img.src=CUT('p05-i0'+c.n);const h=c.front?140:150;img.style.cssText=`height:${h}px;z-index:5`;W.appendChild(img);c.h=h;c.feet=TY+(c.front?70:34);ch[c.n]=img;
+ const b=add(c.n,`left:${c.x-13}px;top:${TY+86}px;z-index:7`,'bd')});
+const VOTES={1:['M'],2:['L','G','E'],3:['O']};
+const tokens=[];
+Object.entries(VOTES).forEach(([n,a])=>a.forEach((k,i)=>{const c=CH[n-1];const t=add(n,`left:${c.x-16+i*15}px;top:${c.feet-c.h-24-(i%2)*8}px;background:${PL[k][1]};z-index:8`,'tk');tokens.push([t,+n,i])}));
+const lui=add('CADE LUI!','left:150px;top:300px;z-index:9','lui');
+// ---- materassi pop: strisce, contorno inchiostro, ombra dura
+const mat=(c,w,h,id)=>`<svg width="${w+14}" height="${h+12}" viewBox="0 0 ${w+14} ${h+12}"><defs><pattern id="st${id}" width="46" height="10" patternUnits="userSpaceOnUse"><rect width="23" height="10" fill="${c}"/><rect x="23" width="23" height="10" fill="#fff7e0"/></pattern></defs>
+<rect x="9" y="9" width="${w}" height="${h}" rx="15" fill="#13224a"/>
+<rect x="3" y="3" width="${w}" height="${h}" rx="15" fill="url(#st${id})" stroke="#13224a" stroke-width="4"/>
+<path d="M16 11Q${w/2} 5 ${w-10} 11" stroke="#fff" stroke-width="4" stroke-linecap="round" fill="none" opacity=".7"/>
+<path d="M14 ${h*.66}H${w-8}" stroke="#13224a" stroke-width="2.5" stroke-dasharray="7 6" opacity=".55"/>
+${[.18,.38,.62,.82].map(f=>`<circle cx="${3+w*f}" cy="${3+h*.5}" r="3.4" fill="#13224a"/>`).join('')}</svg>`;
+const MX=70,MW=232;
+const mats=[add(mat('#e8362b',MW+14,34,'a'),`left:${MX-7}px;top:2112px;z-index:9;transform-origin:50% 100%`),
+ add(mat('#ffc72c',MW,34,'b'),`left:${MX}px;top:2074px;z-index:9;transform-origin:50% 100%`),
+ add(mat('#14a3a1',MW-14,34,'c'),`left:${MX+7}px;top:2036px;z-index:9;transform-origin:50% 100%`)];
+add('Assicurazione?<small>mai sentita</small>','left:236px;top:1968px;z-index:10;font-size:13px;transform:rotate(5deg)','gag');
+// ---- folla anonima (come in copertina: sagome e mani alzate), due strati: dietro e davanti ai materassi
+const crowdSvg=(z,top,h)=>{const e=document.createElementNS(NS,'svg');e.setAttribute('viewBox',`-520 ${top} 1400 ${h}`);e.style.cssText=`left:-520px;top:${top}px;width:1400px;height:${h}px;z-index:${z};pointer-events:none`;W.appendChild(e);return e};
+const cb=crowdSvg(8,1980,330),cf=crowdSvg(12,2160,420);
+const SIGNS=['10','GIÙ!','BIS!','ANCORA','9,5','BOCCIATO','10 E LODE','MEH','SPINGI!'];
+const NV=['#13224a','#0c1636','#1d3166'],ACC=['#e8362b','#ffc72c','#14a3a1'];
+let sd=5;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647;
+const crowd=[];
+function person(svg,x,base,s,fill,rim){
+ const g=document.createElementNS(NS,'g');let h='';
+ const arms=rn()<.62?(rn()<.4?2:1):0;
+ for(let a=0;a<arms;a++){const d=a?1:-1,ax=x+d*17*s,ex=x+d*(26+rn()*14)*s,ey=base-(112+rn()*26)*s;
+  h+=`<path d="M${ax} ${base-44*s}L${ex} ${ey}" stroke="${fill}" stroke-width="${11*s}" stroke-linecap="round"/><path d="M${ax} ${base-44*s}L${ex} ${ey}" stroke="${rim}" stroke-width="${1.6}" stroke-linecap="round" fill="none" opacity="0"/>`;
+  h+=`<rect x="${ex-6*s}" y="${ey+8*s}" width="${12*s}" height="${5*s}" fill="${ACC[Math.floor(rn()*3)]}"/>`;
+  h+=`<ellipse cx="${ex}" cy="${ey-4*s}" rx="${8*s}" ry="${10*s}" fill="${fill}" stroke="${rim}" stroke-width="2"/>`;
+  [-5,0,5].forEach(f=>h+=`<path d="M${ex+f*s} ${ey-10*s}v${-8*s}" stroke="${fill}" stroke-width="${3.4*s}" stroke-linecap="round"/>`);
+  if(rn()<.22){const t=SIGNS[Math.floor(rn()*SIGNS.length)];h+=`<path d="M${ex} ${ey-16*s}v${-34*s}" stroke="#13224a" stroke-width="${3*s}"/><rect x="${ex-24*s}" y="${ey-72*s}" width="${48*s}" height="${26*s}" fill="#fff7e0" stroke="#13224a" stroke-width="${3*s}"/><text x="${ex}" y="${ey-52*s}" text-anchor="middle" font-family="Anton" font-size="${14*s}" fill="#e8362b">${t}</text>`}}
+ h+=`<path d="M${x-23*s} ${base}Q${x-26*s} ${base-46*s} ${x-12*s} ${base-52*s}H${x+12*s}Q${x+26*s} ${base-46*s} ${x+23*s} ${base}Z" fill="${fill}" stroke="${rim}" stroke-width="2"/>`;
+ h+=`<circle cx="${x}" cy="${base-68*s}" r="${14.5*s}" fill="${fill}" stroke="${rim}" stroke-width="2"/>`;
+ if(rn()<.3)h+=`<path d="M${x-15*s} ${base-72*s}a${15*s} ${15*s} 0 0 1 ${30*s} 0z" fill="${ACC[Math.floor(rn()*3)]}" stroke="#13224a" stroke-width="2.5"/>`;
+ g.innerHTML=h;svg.appendChild(g);crowd.push({g,ph:rn()*6})}
+// dietro (più piccola, più chiara) e davanti (grande, scura)
+for(let r=0;r<3;r++){const base=2132+r*26,s=.72+r*.12,n=26-r*3;for(let i=0;i<n;i++){const x=-500+i*(1380/n)+rn()*18;if(x>-12&&x<330&&r<2)continue;person(cb,x,base,s,NV[(i+r)%3],'#f4e3bd')}}
+for(let r=0;r<2;r++){const base=2300+r*70,s=1.15+r*.35,n=9-r*2;for(let i=0;i<n;i++){const x=-500+i*(1380/n)+rn()*26;person(cf,x,base,s,NV[(i+r+1)%3],'#f4e3bd')}}
+// ---- polvere e stelline
+const puffs=[ [30,2040],[96,2050],[300,2048],[230,2040],[160,2030] ].map(([x,y])=>add('',`left:${x}px;top:${y}px;z-index:31`,'puff'));
+const stars=add('<b>★</b><b>★</b><b>★</b>','width:70px;height:30px;z-index:32;opacity:0','stars');
+// ---- punti
+const SC=[['M','+4','segnalino “Lui!”'],['L','+2','voto giusto'],['G','+2','voto giusto'],['E','+2','voto giusto'],['O','+2','carta giocata']];
+$('rows').innerHTML=SC.map(([k,p,w])=>`<div class="row"><i style="background:${PL[k][1]}"></i>${PL[k][0]}<small>${w}</small><em>${p}</em></div>`).join('');
+// ---- fisica / regia
+const S0=1.3,CY0=TY+30-470/S0;
+const f=ch[2],fc=CH[1];
+const G=1000,Y0=470,MT=2032,YI=MT-42,TF=Math.sqrt(2*(YI-Y0)/G),TS=0.65,TI=TS+TF;
+const T_FALL=2.7,BNC=[[.55,170],[.34,70],[.2,24]];
+const sm=(a,b,x)=>{x=Math.min(1,Math.max(0,(x-a)/(b-a)));return x*x*(3-2*x)};
+const lerp=(a,b,u)=>a+(b-a)*u;
+const startY=fc.feet-fc.h/2;
+function cardState(t){
+ if(t<0)return{x:fc.x,y:startY,r:0,k:1};
+ if(t<TS){const u=sm(0,TS,t);return{x:lerp(fc.x,196,u),y:lerp(startY,Y0,u),r:-26*u,k:lerp(1,1.12,u)}}
+ if(t<TI){const s=t-TS,p=s/TF;return{x:196+12*Math.sin(s*5),y:Y0+.5*G*s*s,r:-26-760*Math.pow(p,1.3),k:1.12-.12*p}}
+ const d=t-TI;let y=YI,sx=1,sy=1;
+ if(d<.14){const k=Math.sin(Math.PI*d/.14);sx=1+.25*k;sy=1-.28*k}
+ let acc=0;for(const[du,h]of BNC){if(d>=acc&&d<acc+du){const u=(d-acc)/du;y=YI-h*4*u*(1-u);break}acc+=du}
+ return{x:196-4*sm(0,1.5,d),y,r:-786+10*Math.sin(d*9)*Math.exp(-d*2.5),k:1,sx,sy}}
+function zoom(t){if(t<=.3)return S0;const a=lerp(S0,.72,sm(.3,1.6,t));if(t<TI-.7)return a;return lerp(.72,1.05,sm(TI-.7,TI+.35,t))}
+function cam(t){const s=zoom(t),c=cardState(Math.max(t,0));let cy=CY0;
+ if(t>0){const target=Math.max(CY0,Math.min(2600-826/s,c.y-340/s));cy=lerp(CY0,target,t>=TI?1:sm(.3,1.1,t))}
+ return{s,cx:186-186/s,cy}}
+function render(T){
+ const t=T-T_FALL;
+ $('ticket').style.transform=`translateY(${sm(0,.4,T)*140}px)`;$('ticket').style.opacity=T>=.45?0:1;
+ tokens.forEach(([e,n,i])=>{e.style.transform=`scale(${sm(.3+i*.18+(n-1)*.1,.6+i*.18+(n-1)*.1,T)})`;if(t>.3)e.style.opacity=1-sm(.3,.6,t)});
+ lui.style.left=(CH[1].x-30)+'px';lui.style.top=(CH[1].feet-CH[1].h-22)+'px';lui.style.transform=`rotate(8deg) scale(${sm(1.2,1.5,T)*(1-sm(.1,.5,t))})`;
+ $('stamp').style.transform=`rotate(-6deg) scale(${sm(1.6,1.85,T)*(t>.3?1-sm(.3,.6,t):1)})`;
+ $('hl').style.opacity=1-sm(1.5,1.8,T);
+ const sus=t<0?sm(1.7,T_FALL,T):0;
+ CH.forEach(c=>{if(c.n!==2)ch[c.n].style.transform=`rotate(${(c.n%2?-1:1)*sus*2.5}deg)`;ch[c.n].style.transformOrigin='50% 100%'});
+ // personaggio che cade
+ const c=cardState(t),wob=t<0?Math.sin(T*28)*sus*3:0,h=fc.h;
+ f.classList.toggle('sel',T>1.2&&t<0.4);
+ if(t<TS*0.3){f.style.zIndex=5;f.style.left=(fc.x-f.naturalWidth/f.naturalHeight*h/2)+'px';f.style.top=(startY-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob}deg)`}
+ else{f.style.zIndex=30;const w=f.naturalWidth/f.naturalHeight*h;f.style.left=(c.x-w/2)+'px';f.style.top=(c.y-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${c.r}deg) scale(${(c.sx||1)*c.k},${(c.sy||1)*c.k})`}
+ // camera
+ const cm=cam(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
+ W.style.transform=`translate(${sh}px,${sh}px) scale(${cm.s}) translate(${-cm.cx}px,${-cm.cy}px)`;
+ F.style.transform=`translateY(${-(cm.cy-CY0)*cm.s*.35}px)`;
+ $('sky2').style.opacity=Math.min(1,Math.max(0,(cm.cy-CY0)/1500))*.75;
+ // materassi
+ const im=t>TI?Math.exp(-(t-TI)*6)*Math.cos((t-TI)*22):0;
+ mats.forEach((m,i)=>m.style.transform=`scaleY(${1-.22*im*(i==2?1:.35)})`);
+ // pubblico che esulta
+ crowd.forEach((a,i)=>{const j=t>TI+.1?Math.abs(Math.sin((t-TI)*9+a.ph))*12*Math.min(1,(t-TI)/.4)*(t>TI+2.6?0:1):0;a.g.setAttribute('transform',`translate(0 ${-j})`)});
+ // polvere
+ puffs.forEach((p,i)=>{const d=t-TI-i*.02;const o=d>0&&d<1?(1-d)*.9:0;p.style.opacity=o;p.style.transform=`scale(${.5+Math.max(0,d)*2.2}) translateY(${-Math.max(0,d)*30}px)`});
+ stars.style.opacity=t>TI+1.1?1:0;stars.style.left=(c.x-30)+'px';stars.style.top=(c.y-90)+'px';
+ // effetti
+ const v=t>TS&&t<TI?(t-TS)/TF:0;$('lines').style.opacity=Math.min(1,v*2)*(t<TI?1:0);$('lines').style.backgroundPositionY=(t*1800%86)+'px';
+ const sy=(c.y-cm.cy)*cm.s;
+ const ca=$('aaah');ca.style.opacity=(t>.55&&t<TI-.05)?1:0;ca.style.left='34px';ca.style.top=(sy-110)+'px';ca.style.transform=`rotate(${-8+Math.sin(t*20)*3}deg) scale(${1+v*.5})`;
+ const bo=$('boing'),d=t-TI;bo.style.opacity=(d>0&&d<1)?1:0;bo.style.top=(sy-110)+'px';bo.style.transform=`scale(${d>0?(1.2-.2*sm(0,.2,d))*(1-sm(.6,1,d)):0}) rotate(-4deg)`;
+ $('strip').textContent=t>.4?'★ BOLLETTINO DELLA CADUTA ★':'★ AVVISO ALLA CITTADINANZA ★';
+ const pt=t-(TI+1.0);$('panel').style.transform=`translateY(${(1-sm(0,.5,pt))*120}%)`;
+ document.querySelectorAll('.row').forEach((r,i)=>{const s=sm(.3+i*.18,.55+i*.18,pt);r.style.opacity=s;r.style.transform=`translateX(${(1-s)*-14}px)`});
+ $('skip').style.display=(T>0&&t<TI+1)?'block':'none';window.__T=T;
+}
+window.__render=render;
+// ---- audio
+let AC,master;const ac=()=>{if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.5;master.connect(AC.destination)}return AC};
+const on=()=>$('snd').checked;
+function noise(d){const b=AC.createBuffer(1,AC.sampleRate*d,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<a.length;i++)a[i]=Math.random()*2-1;const s=AC.createBufferSource();s.buffer=b;return s}
+const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFilter(),g=AC.createGain();fl.type='bandpass';fl.frequency.setValueAtTime(300,AC.currentTime);fl.frequency.exponentialRampToValueAtTime(2400,AC.currentTime+TF);fl.Q.value=1.4;g.gain.setValueAtTime(.01,AC.currentTime);g.gain.linearRampToValueAtTime(.5,AC.currentTime+TF);g.gain.linearRampToValueAtTime(0,AC.currentTime+TF+.15);n.connect(fl).connect(g).connect(master);n.start()},
+ thud(){if(!on())return;ac();const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(140,AC.currentTime);o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+.25);g.gain.setValueAtTime(.9,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.3);o.connect(g).connect(master);o.start();o.stop(AC.currentTime+.32)},
+ boing(a=1,f0=220){if(!on())return;ac();const o=AC.createOscillator(),g=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();o.type='triangle';o.frequency.setValueAtTime(f0,AC.currentTime);o.frequency.exponentialRampToValueAtTime(f0*2.6,AC.currentTime+.12);o.frequency.exponentialRampToValueAtTime(f0*.9,AC.currentTime+.5);l.frequency.value=22;lg.gain.value=30*a;l.connect(lg).connect(o.frequency);g.gain.setValueAtTime(.5*a,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.5);o.connect(g).connect(master);o.start();l.start();o.stop(AC.currentTime+.55);l.stop(AC.currentTime+.55)},
+ cheer(){if(!on())return;ac();const n=noise(1.4),fl=AC.createBiquadFilter(),g=AC.createGain();fl.type='bandpass';fl.frequency.value=1200;fl.Q.value=.6;g.gain.setValueAtTime(.001,AC.currentTime);g.gain.linearRampToValueAtTime(.35,AC.currentTime+.3);g.gain.linearRampToValueAtTime(0,AC.currentTime+1.4);n.connect(fl).connect(g).connect(master);n.start()}};
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let raf=0,t0=0,fired={};
+const EVENTS=[[T_FALL+TS,()=>snd.wind()],[T_FALL+TI,()=>{snd.thud();snd.boing(1,200)}],[T_FALL+TI+.55,()=>snd.boing(.6,260)],[T_FALL+TI+.89,()=>snd.boing(.35,320)],[T_FALL+TI+1.0,()=>snd.cheer()]];
+function play(){cancelAnimationFrame(raf);fired={};if(reduce){render(T_FALL+TI+2.4);return}t0=performance.now();ac();const loop=now=>{const T=(now-t0)/1000;render(T);$('scrub').value=Math.min(9.5,T);EVENTS.forEach(([et,fn],i)=>{if(!fired[i]&&T>=et){fired[i]=1;fn()}});if(T<T_FALL+TI+2.4)raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)}
+$('play').onclick=play;$('reset').onclick=()=>{cancelAnimationFrame(raf);render(-1);$('scrub').value=-1};$('ticket').onclick=play;
+$('skip').onclick=()=>{cancelAnimationFrame(raf);render(T_FALL+TI+2.4);$('scrub').value=9.5};
+$('scrub').oninput=e=>{cancelAnimationFrame(raf);render(+e.target.value)};
+const imgs=[...document.images];Promise.all(imgs.map(i=>i.complete?1:new Promise(r=>i.onload=r))).then(()=>{
+ CH.forEach(c=>{const im=ch[c.n],w=im.naturalWidth/im.naturalHeight*c.h;im.style.left=(c.x-w/2)+'px';im.style.top=(c.feet-c.h)+'px'});
+ render(-1);window.__ready=1});
+</script></body></html>
