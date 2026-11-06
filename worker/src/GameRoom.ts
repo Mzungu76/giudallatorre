@@ -1,13 +1,14 @@
 import { DurableObject } from "cloudflare:workers";
 import { clientMessageSchema, createRoomBody, joinRoomBody, MAX_MESSAGE_BYTES } from "@gdt/game-protocol";
 import type { ServerMessage, SessionResponse } from "@gdt/game-protocol";
+import type { GameEvent } from "@gdt/game-engine";
 import { RoomCore, RoomError } from "./RoomCore.ts";
 import type { Outbox, RoomData } from "./RoomCore.ts";
 import { DECK, PHRASE_DECK } from "./content.ts";
 import { TokenBucket, cryptoBytes } from "./security.ts";
 
 export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; ASSETS: Fetcher }
-interface Attachment { pid: string | null; at: number }
+interface Attachment { pid: string | null; at: number; spec?: boolean }
 const UNAUTH_MS = 10_000;
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store", "x-content-type-options": "nosniff" } });
 
@@ -31,12 +32,17 @@ export class GameRoom extends DurableObject<Env> {
 
   private save() { if (this.core) this.ctx.storage.sql.exec("INSERT OR REPLACE INTO kv (k, v) VALUES ('room', ?)", JSON.stringify(this.core.data)); }
   private deps() { return { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK }; }
+  private spectators() { return this.ctx.getWebSockets().filter((w) => (w.deserializeAttachment() as Attachment | null)?.spec === true); }
+  private sendSpectators(events: GameEvent[]) {
+    const specs = this.spectators(); if (!specs.length || !this.core) return;
+    for (const m of this.core.spectatorMessages(events)) { const s = JSON.stringify(m); for (const ws of specs) { try { ws.send(s); } catch { /* */ } } }
+  }
   private socketsOf(pid: string) { return this.ctx.getWebSockets().filter((w) => (w.deserializeAttachment() as Attachment | null)?.pid === pid); }
 
   private async schedule() {
     const now = Date.now();
     let at = this.core?.nextAlarm() ?? null;
-    const pending = this.ctx.getWebSockets().some((w) => !(w.deserializeAttachment() as Attachment | null)?.pid);
+    const pending = this.ctx.getWebSockets().some((w) => { const a = w.deserializeAttachment() as Attachment | null; return !a?.pid && !a?.spec; });
     if (pending) at = Math.min(at ?? Infinity, now + UNAUTH_MS + 500);
     if (at === null) await this.ctx.storage.deleteAlarm(); else await this.ctx.storage.setAlarm(Math.max(at, now + 50));
   }
@@ -48,6 +54,7 @@ export class GameRoom extends DurableObject<Env> {
       for (const ws of this.ctx.getWebSockets()) { try { ws.send(JSON.stringify({ t: "closed", reason: "room-closed" })); ws.close(1000, "room-closed"); } catch { /* */ } }
       await this.ctx.storage.deleteAlarm(); await this.ctx.storage.deleteAll(); this.core = null; return;
     }
+    if (out.persist || out.events) this.sendSpectators(out.events ?? []);
     if (out.persist) this.save();
     await this.schedule();
   }
@@ -89,6 +96,12 @@ export class GameRoom extends DurableObject<Env> {
     if (!this.core) { ws.close(4004, "room-closed"); return; }
     let raw: unknown; try { raw = JSON.parse(message); } catch { ws.close(4400, "invalid json"); return; }
     const parsed = clientMessageSchema.safeParse(raw);
+    if (!att.pid && parsed.success && parsed.data.t === "watch") { // schermo condiviso: sola visione
+      if (!this.core.data.options.display) { ws.send(JSON.stringify({ t: "error", code: "DISPLAY_OFF", message: "schermo condiviso non abilitato" })); ws.close(4003, "display off"); return; }
+      ws.serializeAttachment({ pid: null, at: now, spec: true } satisfies Attachment);
+      for (const m of this.core.spectatorMessages()) ws.send(JSON.stringify(m)); return;
+    }
+    if (att.spec) { ws.close(4401, "read only"); return; } // gli schermi condivisi non inviano comandi
     if (!att.pid) { // primo messaggio: autenticazione
       if (!parsed.success || parsed.data.t !== "hello") { ws.close(4401, "hello required"); return; }
       const pid = this.core.authenticate(parsed.data.token);
@@ -119,7 +132,7 @@ export class GameRoom extends DurableObject<Env> {
 
   override async alarm() {
     const now = Date.now();
-    for (const ws of this.ctx.getWebSockets()) { const a = ws.deserializeAttachment() as Attachment | null; if (!a?.pid && now - a!.at > UNAUTH_MS) { try { ws.close(4401, "hello timeout"); } catch { /* */ } } }
+    for (const ws of this.ctx.getWebSockets()) { const a = ws.deserializeAttachment() as Attachment | null; if (!a?.pid && !a?.spec && now - a!.at > UNAUTH_MS) { try { ws.close(4401, "hello timeout"); } catch { /* */ } } }
     if (!this.core) return;
     await this.apply(this.core.tick(now));
   }

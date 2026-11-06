@@ -28,3 +28,12 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Sicurezza: validazione strict, rate limit, controllo Origin, privacy delle viste (`docs/SECURITY.md`)
 - [x] 98 test unit + prova end-to-end su workerd reale (partita completa da 3 giocatori via WebSocket, riconnessione, token errato, JSON non valido, Origin) + ripristino dopo riavvio
 - [ ] Deploy su Cloudflare: richiede account e segreti dell'utente (`docs/DEPLOYMENT.md`)
+
+## Fase 5 — Frontend (completata in locale)
+- [x] React + Vite + TypeScript (`apps/web`): Home, Crea, Entra (codice/QR/link), Lobby (QR, condivisione, host, espulsione, opzioni, timer), Megafono (frasi originali), scelta carta dalla mano (con ingrandimento), Torre con personaggi scontornati (5–8), Lui!, voto con ingrandimento, risultati animati (caduta, materassi, mani con oggetti diversi a ogni turno), punti, classifica finale (vittoria condivisa)
+- [x] Scena animata portata dal prototipo approvato (`apps/web/src/scene/towerScene.ts`), suoni sintetizzati (silenziabili), `prefers-reduced-motion` rispettato, tasto "Salta"
+- [x] Modalità tavolo e remota (stessa app; la modalità è un'opzione di stanza), **schermo condiviso** `/schermo/CODICE` di sola visione (il server non invia mai dati privati: testato)
+- [x] Riconnessione automatica con backoff, banner di connessione, sessione nel browser (token), ritorno alla partita
+- [x] PWA: manifest, icone (192/512/maskable), service worker per i soli contenuti statici (il gioco richiede Internet)
+- [x] Prove su browser reali: `npm run e2e:ui` (3 telefoni + schermo condiviso, partita intera da 6 turni) e `scripts/e2e-ui8.mjs` (8 telefoni fino alla caduta, nono giocatore respinto)
+- [ ] Da rifare a mano: scontorno delle 9 carte segnalate (`public/cutouts/review-needed.json`); per ora la carta intera

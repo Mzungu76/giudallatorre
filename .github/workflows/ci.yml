@@ -13,6 +13,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run e2e   # Worker reale in locale: HTTP + WebSocket + Durable Object SQLite
+      - name: Browser per la prova dell'interfaccia
+        run: npm install --no-save playwright@1.49.1 && npx playwright install --with-deps chromium
+      - run: npm run e2e:ui   # 3 browser giocano una partita intera + schermo condiviso
 
   deploy:
     # Pubblica solo da main, dopo i test, e solo se i segreti Cloudflare sono stati configurati (vedi docs/DEPLOYMENT.md).
@@ -31,9 +34,9 @@ jobs:
         id: sec
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "ok=false" >> "$GITHUB_OUTPUT"; echo "Segreti Cloudflare assenti: deploy saltato."; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
-      - name: Build frontend (se presente)
+      - name: Build frontend
         if: steps.sec.outputs.ok == 'true'
-        run: if [ -f apps/web/package.json ]; then npm run build -w apps/web; fi
+        run: npm run build
       - name: Deploy
         if: steps.sec.outputs.ok == 'true'
         run: npx wrangler deploy

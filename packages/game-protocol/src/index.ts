@@ -37,8 +37,9 @@ const act = z.union([
 ]);
 export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("hello"), token: tokenSchema }).strict(),
+  z.object({ t: z.literal("watch") }).strict(),
   z.object({ t: z.literal("ping") }).strict(),
-  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
+  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("start") }).strict(),
   z.object({ t: z.literal("leave") }).strict(),
@@ -49,7 +50,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
-export interface RoomOptionsDto { megafonoSa: boolean; mode: "table" | "remote"; turnTimerSec: number }
+export interface RoomOptionsDto { megafonoSa: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
 export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean }
 export type ServerMessage =
   | { t: "room"; seq: number; code: string; stage: RoomStage; you: string; hostId: string; options: RoomOptionsDto; players: RoomPlayerDto[] }

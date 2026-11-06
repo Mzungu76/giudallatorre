@@ -12,7 +12,7 @@ describe("stanza: creazione, accesso e lobby", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta", mode: "remote", megafonoSa: true });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0 });
+    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {
@@ -202,3 +202,30 @@ describe("persistenza", () => {
     expect(clone.data.stage).toBe("FINISHED");
   });
 });
+
+describe("schermo condiviso (sola visione)", () => {
+  it("non vede mani, proprietari delle carte né voti prima dei risultati; non vede il tipo di Lui!", () => {
+    const r = makeRoom(4, 12); send(r, 0, { t: "start" });
+    const g0 = r.core.data.game as GameState;
+    playOneTurnTo(r, "VOTE");
+    const msgs = r.core.spectatorMessages();
+    const view = msgs.find((m) => m.t === "view") as { view: { myHand: string[]; tower: { ownerId: string | null }[]; luiKind: string | null; votes: unknown } };
+    expect(view.view.myHand).toEqual([]); expect(view.view.tower.every((t) => t.ownerId === null)).toBe(true);
+    expect(view.view.luiKind).toBeNull(); expect(view.view.votes).toBeNull();
+    const json = JSON.stringify(msgs);
+    for (const hand of Object.values((r.core.data.game as GameState).hands)) for (const c of hand) expect(json).not.toContain(`"${c}"`);
+    expect(g0.turnNumber).toBe(1);
+  });
+  it("si può disattivare (opzione display)", () => {
+    const r = makeRoom(3, 13); send(r, 0, { t: "setOptions", display: false });
+    expect(r.core.spectatorMessages()).toEqual([]);
+  });
+});
+function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
+  let g = r.core.data.game as GameState;
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
+  g = r.core.data.game as GameState;
+  for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } });
+  expect(upTo).toBe("VOTE");
+}

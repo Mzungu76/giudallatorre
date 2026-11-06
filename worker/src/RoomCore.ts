@@ -15,6 +15,8 @@ export interface Outbox {
   send: { to: string; msg: ServerMessage }[];
   close: { playerId: string; code: number; reason: string }[];
   persist: boolean; destroy: boolean;
+  /** Eventi di gioco dell'ultima azione, per gli schermi condivisi (sola visione). */
+  events?: GameEvent[];
 }
 export interface Deps { rng: RandomBytes; deck: CardId[]; phraseDeck: PhraseCard[] }
 
@@ -35,7 +37,7 @@ export class RoomCore {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0 },
+      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0, display: true },
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now }],
     };
     return { core: new RoomCore(data, deps), playerId, token };
@@ -92,12 +94,13 @@ export class RoomCore {
     const err = (code: string, message: string, reqId?: string) => { out.send.push({ to: playerId, msg: { t: "error", code, message, ...(reqId ? { reqId } : {}) } }); return out; };
     const me = d.players.find((p) => p.id === playerId)!;
     switch (msg.t) {
-      case "hello": case "ping": return out;
+      case "hello": case "ping": case "watch": return out;
       case "setOptions": {
         if (!me.isHost) return err("NOT_HOST", "solo l'host cambia le opzioni");
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "le opzioni si cambiano prima dell'avvio");
         if (msg.megafonoSa !== undefined) d.options.megafonoSa = msg.megafonoSa;
         if (msg.mode !== undefined) d.options.mode = msg.mode;
+        if (msg.display !== undefined) d.options.display = msg.display;
         if (msg.turnTimerSec !== undefined) d.options.turnTimerSec = msg.turnTimerSec;
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
@@ -197,12 +200,19 @@ export class RoomCore {
     if (this.data.game) res.push({ to: playerId, msg: { t: "view", seq: this.data.seq, view: viewFor(this.data.game, playerId), events: [], deadline: this.data.deadline } });
     return res;
   }
+  /** Messaggi per uno schermo condiviso: stanza e vista senza alcun dato privato (nessuna mano, voti e proprietari nascosti). */
+  spectatorMessages(events: GameEvent[] = []): ServerMessage[] {
+    const d = this.data; if (!d.options.display) return [];
+    const room = this.roomMsg(""); const res: ServerMessage[] = [room];
+    if (d.game) res.push({ t: "view", seq: d.seq, view: viewFor(d.game, ""), events, deadline: d.deadline });
+    return res;
+  }
   private broadcastRoom(out: Outbox): Outbox {
     for (const p of this.data.players) if (this.connected.has(p.id)) out.send.push({ to: p.id, msg: this.roomMsg(p.id) });
     return out;
   }
   private broadcastGame(out: Outbox, events: GameEvent[]): Outbox {
-    const d = this.data;
+    const d = this.data; out.events = events;
     for (const p of d.players) if (this.connected.has(p.id)) {
       out.send.push({ to: p.id, msg: this.roomMsg(p.id) });
       out.send.push({ to: p.id, msg: { t: "view", seq: d.seq, view: viewFor(d.game!, p.id), events, deadline: d.deadline } });
