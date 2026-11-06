@@ -7,7 +7,7 @@ import type { RoomMsg } from "../hooks/useRoom.ts";
 export default function Final({ room, view, readOnly }: { room: RoomMsg; view: PlayerView; readOnly?: boolean }) {
   const people = usePeople(room);
   const rank = [...view.players].sort((a, b) => b.score - a.score);
-  const win = new Set(view.winners ?? []);
+  const win = new Set(view.winners ?? []), pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
   const top = rank.slice(0, 3);
   return (
     <div className="final" data-testid="final">
@@ -16,11 +16,11 @@ export default function Final({ room, view, readOnly }: { room: RoomMsg; view: P
       <div className="pod">
         {top.map((p, i) => (
           <div key={p.id} className={`pod-${i}`} style={{ height: [150, 118, 90][i] }}>
-            {win.has(p.id) && <span style={{ fontSize: 30 }}>👑</span>}<Disc color={people.get(p.id).color} size="xl" />{p.name}<span style={{ fontSize: [30, 24, 22][i] }}>{p.score}</span>
+            {win.has(p.id) && <span style={{ fontSize: 30 }}>👑</span>}<Disc color={people.get(p.id).color} size="xl" />{p.name}<span style={{ fontSize: [30, 24, 22][i] }}>{pts(p.score)}</span>
           </div>
         ))}
       </div>
-      <div className="rank">{rank.slice(3).map((p, i) => <div key={p.id} className="pl"><b className="num">{i + 4}</b><Disc color={people.get(p.id).color} />{p.name}<span className="tg">{p.score}</span></div>)}</div>
+      <div className="rank">{rank.slice(3).map((p, i) => <div key={p.id} className="pl"><b className="num">{i + 4}</b><Disc color={people.get(p.id).color} />{p.name}<span className="tg">{pts(p.score)}</span></div>)}</div>
       {!readOnly && <div className="bottom two"><Btn kind="pap" style={{ fontSize: 18 }} onClick={() => { forgetSession(room.code); navigate("/"); }} testId="leave-final">Esci</Btn><Btn onClick={() => { forgetSession(room.code); navigate("/crea"); }} style={{ fontSize: 19 }}>Nuova partita</Btn></div>}
     </div>
   );

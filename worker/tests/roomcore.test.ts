@@ -229,3 +229,45 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } });
   expect(upTo).toBe("VOTE");
 }
+
+describe("giocatori virtuali nella stanza", () => {
+  it("l'host aggiunge e toglie bot in lobby (max 8, nomi unici, solo host)", () => {
+    const r = makeRoom(1, 20);
+    expect(errCode(send(r, 0, { t: "addBot", level: "hard" }))).toBeUndefined();
+    send(r, 0, { t: "addBot", level: "easy" }); send(r, 0, { t: "addBot", level: "medium" });
+    const bots = r.core.data.players.filter((p) => p.isBot); expect(bots).toHaveLength(3);
+    expect(new Set(r.core.data.players.map((p) => p.nickname)).size).toBe(4);
+    for (let i = 0; i < 6; i++) send(r, 0, { t: "addBot", level: "medium" });
+    expect(r.core.data.players).toHaveLength(8);
+    expect(errCode(send(r, 0, { t: "addBot", level: "medium" }))).toBe("ROOM_FULL");
+    send(r, 0, { t: "removeBot", playerId: bots[0]!.id }); expect(r.core.data.players).toHaveLength(7);
+    expect(errCode(send(r, 0, { t: "removeBot", playerId: r.ids[0]! }))).toBe("INVALID_TARGET");
+  });
+  it("un giocatore non-host non può aggiungere bot; i bot non hanno token e non si autenticano", () => {
+    const r = makeRoom(2, 21); expect(errCode(send(r, 1, { t: "addBot", level: "easy" }))).toBe("NOT_HOST");
+    send(r, 0, { t: "addBot", level: "easy" });
+    expect(r.core.authenticate("")).toBeNull();
+    expect(JSON.stringify(r.core.data.players)).not.toContain('"tokenHash":"a');
+  });
+  it("partita in solitario: 1 umano + 3 bot (creati insieme alla stanza) arriva alla fine; i bot agiscono dal timer", () => {
+    const c = RoomCore.create("SOLOX", deps(5), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
+    const core = c.core; core.onConnect(c.playerId, 0);
+    expect(core.data.players).toHaveLength(4); expect(core.roomMsg(c.playerId).players.filter((p) => p.isBot && p.connected)).toHaveLength(3);
+    core.handle(c.playerId, { t: "start" }, 0);
+    let now = 0, guard = 0;
+    while (core.data.stage === "PLAYING" && guard++ < 4000) {
+      const g = core.data.game as GameState;
+      const a = suggestAction(g, c.playerId, Math.random);
+      if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; core.handle(c.playerId, { t: "act", action } as never, now); }
+      else if (g.phase === "RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
+      now += 1500; core.tick(now);
+    }
+    expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(4000);
+  });
+  it("con bot l'umano non Megafono può far proseguire quando il Megafono è un bot", () => {
+    const c = RoomCore.create("SOLOY", deps(6), 0, { nickname: "A", mode: "table", megafonoSa: false, bots: { count: 2, level: "easy" } });
+    const hostless = c.core; hostless.onConnect(c.playerId, 0); hostless.handle(c.playerId, { t: "start" }, 0);
+    expect(hostless.data.players.filter((p) => p.isBot)).toHaveLength(2);
+  });
+});
+import { suggestAction } from "@gdt/game-engine";

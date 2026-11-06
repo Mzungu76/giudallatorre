@@ -5,6 +5,8 @@ import { randomInt, shuffle } from "./rng.ts";
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 /** Malus del segnalino Lui! quando la scommessa fallisce. */
 export const LUI_FAIL_MALUS = 1;
+/** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
+export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
@@ -80,7 +82,10 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
         s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]! };
         events.push({ type: "phraseChosen", mode: "card", text: s.phrase.text });
       } else {
-        s.phrase = { mode: "free" }; events.push({ type: "phraseChosen", mode: "free" });
+        const raw = action.text, text = typeof raw === "string" ? raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim() : "";
+        if (raw !== undefined && typeof raw !== "string") throw new EngineError("INVALID_CHOICE", "testo non valido");
+        if (text.length > MAX_PHRASE_CHARS) throw new EngineError("INVALID_CHOICE", `frase troppo lunga (massimo ${MAX_PHRASE_CHARS} caratteri)`);
+        s.phrase = text ? { mode: "free", text } : { mode: "free" }; events.push({ type: "phraseChosen", mode: "free", ...(text ? { text } : {}) });
       }
       s.phraseDiscard.push(card); s.proclaim = null;
       if (!s.megafonoSa) s.deckCard = draw(s);

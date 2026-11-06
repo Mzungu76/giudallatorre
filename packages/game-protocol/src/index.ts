@@ -18,9 +18,11 @@ export const nicknameSchema = z
 export const tokenSchema = z.string().regex(/^[A-Za-z0-9_-]{22}$/);
 export const playerIdSchema = z.string().regex(/^[0-9a-f]{16}$/);
 export const modeSchema = z.enum(["table", "remote"]);
+export const botLevelSchema = z.enum(["easy", "medium", "hard"]);
+export const MAX_PHRASE_CHARS = 80;
 
 // ---------- API HTTP ----------
-export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false) }).strict();
+export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), bots: z.object({ count: z.number().int().min(0).max(7), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
 export const joinRoomBody = z.object({ nickname: nicknameSchema }).strict();
 export type CreateRoomBody = z.infer<typeof createRoomBody>;
 export interface SessionResponse { code: string; playerId: string; token: string }
@@ -29,7 +31,7 @@ export interface RoomInfoResponse { exists: boolean; stage?: "LOBBY" | "PLAYING"
 // ---------- messaggi client -> server ----------
 const act = z.union([
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("card"), index: z.number().int().min(0).max(9) }).strict(),
-  z.object({ type: z.literal("choosePhrase"), mode: z.literal("free") }).strict(),
+  z.object({ type: z.literal("choosePhrase"), mode: z.literal("free"), text: z.string().max(200).optional() }).strict(),
   z.object({ type: z.literal("playCard"), cardId: z.string().regex(/^p\d{2}-i\d{2}$|^c\d{1,4}$/).max(16) }).strict(),
   z.object({ type: z.literal("placeLui"), kind: z.enum(["CADE", "NON_CADE"]), position: z.number().int().min(1).max(8) }).strict(),
   z.object({ type: z.literal("vote"), position: z.number().int().min(1).max(8) }).strict(),
@@ -41,6 +43,8 @@ export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("ping") }).strict(),
   z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
+  z.object({ t: z.literal("addBot"), level: botLevelSchema.default("medium") }).strict(),
+  z.object({ t: z.literal("removeBot"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("start") }).strict(),
   z.object({ t: z.literal("leave") }).strict(),
   z.object({ t: z.literal("act"), reqId: z.string().max(32).optional(), action: act }).strict(),
@@ -51,7 +55,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
 export interface RoomOptionsDto { megafonoSa: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
-export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean }
+export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; isBot?: boolean; level?: "easy" | "medium" | "hard" }
 export type ServerMessage =
   | { t: "room"; seq: number; code: string; stage: RoomStage; you: string; hostId: string; options: RoomOptionsDto; players: RoomPlayerDto[] }
   | { t: "view"; seq: number; view: PlayerView; events: GameEvent[]; deadline: number | null }

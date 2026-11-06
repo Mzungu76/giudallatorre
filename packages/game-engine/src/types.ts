@@ -22,7 +22,7 @@ export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId
 
 export type PhraseChoice =
   | { mode: "card"; cardId: string; index: number; text: string }
-  | { mode: "free" };
+  | { mode: "free"; text?: string };
 
 export interface LuiToken { kind: LuiKind; position: number }
 
@@ -79,7 +79,7 @@ export interface GameState {
 
 export type Action =
   | { type: "choosePhrase"; playerId: PlayerId; mode: "card"; index: number }
-  | { type: "choosePhrase"; playerId: PlayerId; mode: "free" }
+  | { type: "choosePhrase"; playerId: PlayerId; mode: "free"; text?: string }
   | { type: "playCard"; playerId: PlayerId; cardId: CardId }
   | { type: "placeLui"; playerId: PlayerId; kind: LuiKind; position: number }
   | { type: "vote"; playerId: PlayerId; position: number }

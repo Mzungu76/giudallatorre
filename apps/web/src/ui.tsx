@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode, CSSProperties } from "react";
 
 export const PLAYER_COLORS = ["#e5384b", "#2f7be0", "#f4c20d", "#3aa655", "#8a5a3b", "#8e44c8", "#ee7bb0", "#222222"];
@@ -13,19 +13,43 @@ export function useFit(maxScale = 1.5, boxW = 372, boxH = 826) {
   return k;
 }
 
-/** Palco 372×826: tutto il disegno dei mockup è in queste coordinate e viene scalato. */
-export function Stage({ children, bg = "paper", frame = true, testId }: { children: ReactNode; bg?: "paper" | "sky" | "none"; frame?: boolean; testId?: string }) {
-  const k = useFit();
+/** Modalità veloce (test e accessibilità): nessuna animazione lunga. Attiva con ?fast=1 oppure con "riduci animazioni" del sistema. */
+export const FAST: boolean = (() => { try { return /[?&]fast=1/.test(location.search) || sessionStorage.getItem("gdt.fast") === "1" || matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } })();
+try { if (/[?&]fast=1/.test(location.search)) sessionStorage.setItem("gdt.fast", "1"); } catch { /* */ }
+
+/** Dimensione logica del palco: larghezza fissa 372, altezza che si adatta al telefono (640–940). */
+export interface StageDims { k: number; H: number; dy: number }
+export const StageCtx = createContext<StageDims>({ k: 1, H: 826, dy: 0 });
+export const useStage = () => useContext(StageCtx);
+const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+function calcDims(maxScale: number): StageDims {
+  const vh = window.visualViewport?.height ?? window.innerHeight;
+  let k = Math.max(0.3, Math.min(maxScale, window.innerWidth / 372)), H = vh / k;
+  if (H < 640) { H = 640; k = vh / 640; }
+  H = Math.min(H, 940);
+  return { k, H, dy: clamp((H - 826) * 0.6, -80, 70) };
+}
+export function useAdaptive(maxScale = 1.5): StageDims {
+  const [d, setD] = useState(() => calcDims(maxScale));
+  useEffect(() => { const f = () => setD(calcDims(maxScale)); window.addEventListener("resize", f); window.visualViewport?.addEventListener("resize", f); return () => { window.removeEventListener("resize", f); window.visualViewport?.removeEventListener("resize", f); }; }, [maxScale]);
+  return d;
+}
+
+/** Palco 372×H: tutto il disegno è in queste coordinate e viene scalato. L'altezza H si adatta allo schermo. */
+export function Stage({ children, bg = "paper", frame = true, testId, fixed }: { children: ReactNode; bg?: "paper" | "sky" | "none"; frame?: boolean; testId?: string; fixed?: boolean }) {
+  const ad = useAdaptive(), fk = useFit(), d: StageDims = fixed ? { k: fk, H: 826, dy: 0 } : ad;
   return (
-    <div className="stage-outer" style={{ width: 372 * k, height: 826 * k }} data-testid={testId}>
-      <div className="stage" style={{ transform: `scale(${k})` }}>
-        {bg === "paper" && (<><div className="pap" /><div className="hr" /><div className="ht" /></>)}
-        {bg === "sky" && (<><div className="sky" /><div className="skyg" /><div className="skyh" /></>)}
-        {children}
-        {frame && <div className="fr" />}
-        <div className="grain" />
+    <StageCtx.Provider value={d}>
+      <div className="stage-outer" style={{ width: 372 * d.k, height: d.H * d.k }} data-testid={testId}>
+        <div className="stage" style={{ transform: `scale(${d.k})`, height: d.H }}>
+          {bg === "paper" && (<><div className="pap" /><div className="hr" /><div className="ht" /></>)}
+          {bg === "sky" && (<><div className="sky" /><div className="skyg" /><div className="skyh" /></>)}
+          {children}
+          {frame && <div className="fr" />}
+          <div className="grain" />
+        </div>
       </div>
-    </div>
+    </StageCtx.Provider>
   );
 }
 

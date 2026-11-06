@@ -22,6 +22,8 @@ export interface PlayerView {
   lastResult: TurnResult | null;
   winners: PlayerId[] | null;
   goldenGoal: boolean;
+  /** Giro corrente (1..rounds, oltre = spareggio), giri regolari e se il turno appena risolto chiude un giro. */
+  round: number; rounds: number; roundEnd: boolean;
   drawPileCount: number; discardCount: number;
 }
 
@@ -44,6 +46,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed ? s.lastResult : null,
     winners: s.winners, goldenGoal: s.goldenGoal,
+    round: Math.ceil(s.turnNumber / s.playerIds.length), rounds: s.rounds, roundEnd: s.phase === "RESULTS" && s.turnNumber % s.playerIds.length === 0,
     drawPileCount: s.drawPile.length, discardCount: s.discardPile.length,
   };
 }
