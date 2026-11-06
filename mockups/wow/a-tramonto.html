@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wow A — Tramonto sulla Torre</title>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d1238;--dusk:#2a1b4d;--plum:#7a3f8f;--coral:#ff7e5f;--gold:#ffc27a;--cream:#fff1cf;--teal:#14607e;--stone:#e2c79b;--stone-s:#a4805a;}
+*{box-sizing:border-box;margin:0}
+body{background:#120a24;min-height:100vh;display:grid;place-items:center;font-family:Nunito,system-ui,sans-serif;padding:20px}
+.phone{width:390px;height:844px;border-radius:44px;border:9px solid #07030f;position:relative;overflow:hidden;background:linear-gradient(180deg,#2a1b4d 0%,#6a3585 24%,#ff7e5f 56%,#ffc27a 76%,#ffe9b4 100%);box-shadow:0 30px 80px #0009}
+.layer{position:absolute;inset:0}
+.sun{position:absolute;left:50%;top:370px;width:460px;height:460px;margin-left:-230px;border-radius:50%;background:radial-gradient(circle,#fff6c9 0 18%,#ffd88a 30%,#ff9a5a55 52%,transparent 70%)}
+.ray{position:absolute;left:50%;top:0;width:0;height:0;mix-blend-mode:screen}
+.birds path{stroke:#2a1b4d;stroke-width:3;fill:none;stroke-linecap:round}
+/* tower */
+.tower{position:absolute;left:50%;top:186px;width:310px;margin-left:-155px;filter:drop-shadow(-18px 10px 0 #2a1b4d55)}
+.floor{position:relative;margin:0 auto;border:4px solid var(--stone-s);border-radius:6px;
+ background:
+ linear-gradient(90deg,#ffe1a8aa 0,transparent 30%,transparent 62%,#4a2a6a66 100%),
+ repeating-linear-gradient(0deg,transparent 0 21px,#a4805a88 21px 23px),
+ repeating-linear-gradient(90deg,transparent 0 41px,#a4805a55 41px 43px),var(--stone);}
+.floor.f1{width:256px;height:138px}.floor.f2{width:282px;height:138px;margin-top:-2px}.floor.f3{width:310px;height:142px;margin-top:-2px}
+.floor::before{content:"";position:absolute;left:-10px;right:-10px;top:-12px;height:14px;background:var(--stone);border:4px solid var(--stone-s);border-radius:5px;box-shadow:0 5px 0 #4a2a6a66}
+.roof{position:relative;margin:0 auto;width:272px;height:30px}
+.roof i{position:absolute;bottom:0;width:36px;height:30px;background:var(--stone);border:4px solid var(--stone-s);border-bottom:0}
+.flag{position:absolute;left:50%;top:-58px;width:4px;height:58px;background:var(--ink)}
+.flag::after{content:"";position:absolute;left:4px;top:2px;width:44px;height:28px;background:var(--coral);clip-path:polygon(0 0,100% 20%,70% 50%,100% 80%,0 100%)}
+.niche{position:absolute;top:6px;width:78px;height:114px;border-radius:39px 39px 4px 4px;background:radial-gradient(#ffcf6e,#ff8f4a);border:4px solid var(--stone-s);box-shadow:inset 0 0 0 4px #ffe6b0, inset 0 8px 14px #fff6;}
+.card{position:absolute;inset:6px 6px 14px;border-radius:7px;background:center/cover;border:3px solid #fff4d6;box-shadow:0 4px 0 #0004}
+.num{position:absolute;left:50%;bottom:-12px;width:26px;height:26px;margin-left:-13px;border-radius:50%;background:linear-gradient(#ffd45e,#d8901a);border:3px solid #7a4a0c;color:#4a2a06;font:400 13px/20px 'Bowlby One';text-align:center;box-shadow:0 3px 0 #0005}
+.niche.sel{transform:translateY(-8px) scale(1.12);z-index:5;box-shadow:0 0 0 5px #fff,0 0 38px 14px #ffe08a,inset 0 0 0 4px #ffe6b0}
+.sel .card{border-color:#fff}
+.tok{position:absolute;right:-14px;top:-14px;width:38px;height:38px;border-radius:50%;background:#2f7be0;border:4px solid #fff;color:#fff;font:400 16px/30px 'Bowlby One';text-align:center;box-shadow:0 4px 0 #0006;z-index:6}
+.win{position:absolute;top:38px;width:30px;height:56px;border-radius:15px 15px 2px 2px;background:#2a1b4d;border:3px solid var(--stone-s)}
+.door{position:absolute;left:50%;bottom:-4px;width:70px;height:92px;margin-left:-35px;border-radius:35px 35px 0 0;background:#6b3a1c;border:5px solid #3d1f0c}
+.bunting{position:absolute;left:-30px;top:-44px;width:370px;height:60px;pointer-events:none}
+/* banner */
+.top{position:absolute;left:0;right:0;top:0;padding:40px 16px 0}
+.chips{display:flex;gap:6px;justify-content:space-between;margin-bottom:12px}
+.chip{background:#2a1b4dcc;color:#ffe9b8;border-radius:99px;padding:6px 11px;font-weight:800;font-size:12px;display:flex;gap:6px;align-items:center}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid #fff}
+.banner{position:relative;background:var(--cream);margin:0 8px;padding:10px 16px 20px;color:var(--ink);text-align:center;box-shadow:0 8px 0 #0003;
+ clip-path:polygon(0 0,100% 0,100% 88%,95% 100%,90% 88%,85% 100%,80% 88%,75% 100%,70% 88%,65% 100%,60% 88%,55% 100%,50% 88%,45% 100%,40% 88%,35% 100%,30% 88%,25% 100%,20% 88%,15% 100%,10% 88%,5% 100%,0 88%)}
+.banner small{display:block;font-weight:800;font-size:12px;color:var(--teal);margin-bottom:2px}
+.banner b{font:400 18px/1.1 'Bowlby One';letter-spacing:-.01em}
+/* crowd & ground */
+.ground{position:absolute;left:0;right:0;bottom:0;height:230px}
+.crowd{position:absolute;left:0;bottom:132px;width:100%;height:86px}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--cream);border-radius:28px 28px 0 0;padding:12px 18px 18px;box-shadow:0 -10px 0 #ff7e5f;}
+.who{display:flex;gap:7px;justify-content:center;margin-bottom:9px}
+.who i{width:26px;height:26px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 0 #0003;display:grid;place-items:center;font:normal 800 12px Nunito;color:#fff;font-style:normal}
+.who i.w{opacity:.35}
+.cta{display:block;width:100%;border:0;border-radius:18px;padding:15px;background:linear-gradient(#ff9a3d,#f26a14);color:#fff;font:400 21px 'Bowlby One';box-shadow:0 6px 0 #a8420a;text-shadow:0 2px 0 #a8420a}
+.cta small{display:block;font:800 12px Nunito;opacity:.9;text-shadow:none;margin-top:1px}
+</style></head><body>
+<div class="phone" id="p">
+ <div class="layer"><div class="sun"></div></div>
+ <svg class="layer" viewBox="0 0 372 826" width="372" height="826" style="position:absolute;inset:0" id="sky"></svg>
+ <div class="tower">
+  <div class="flag"></div>
+  <div class="roof"><i style="left:0"></i><i style="left:59px"></i><i style="left:118px"></i><i style="left:177px"></i><i style="left:236px"></i></div>
+  <div class="floor f1"><div class="win" style="left:14px;top:40px;opacity:.0"></div>
+    <div class="niche" style="left:34px"><div class="card" style="background-image:url(../../public/cards/p05-i01.webp)"></div><div class="num">1</div></div>
+    <div class="niche sel" style="right:34px"><div class="card" style="background-image:url(../../public/cards/p05-i02.webp)"></div><div class="num">2</div><div class="tok">L</div></div></div>
+  <div class="floor f2"><div class="win" style="left:20px"></div><div class="win" style="right:20px"></div>
+    <div class="niche" style="left:97px"><div class="card" style="background-image:url(../../public/cards/p05-i03.webp)"></div><div class="num">3</div></div></div>
+  <div class="floor f3">
+    <div class="niche" style="left:58px"><div class="card" style="background-image:url(../../public/cards/p05-i04.webp)"></div><div class="num">4</div></div>
+    <div class="niche" style="right:58px"><div class="card" style="background-image:url(../../public/cards/p05-i05.webp)"></div><div class="num">5</div></div>
+    <div class="door" style="opacity:0"></div></div>
+  <svg class="bunting" viewBox="0 0 370 60"><path d="M0 8Q185 40 370 8" fill="none" stroke="#2a1b4d" stroke-width="3"/><g id="flags"></g></svg>
+ </div>
+ <div class="ground"><svg viewBox="0 0 372 200" width="372" height="200" preserveAspectRatio="none" style="position:absolute;inset:0"><path d="M0 70Q90 20 190 52T372 40V200H0z" fill="#3b1f5a"/><path d="M0 110Q120 70 240 100T372 90V200H0z" fill="#241247"/></svg></div>
+ <svg class="crowd" id="crowd" viewBox="0 70 372 80" preserveAspectRatio="none"></svg>
+ <div class="top">
+  <div class="chips"><span class="chip"><i class="dot" style="background:#2f7be0"></i>Luca</span><span class="chip">📣 Marta</span><span class="chip">Turno 3/10</span></div>
+  <div class="banner"><small>Marta urla dal Megafono</small><b>Oggi sale sulla torre chi manda vocali da nove minuti.</b></div>
+ </div>
+ <div class="sheet">
+  <div class="who"><i style="background:#e5384b">✓</i><i style="background:#2f7be0">✓</i><i class="w" style="background:#f4c20d"></i><i class="w" style="background:#3aa655"></i><i class="w" style="background:#8a5a3b"></i></div>
+  <button class="cta">Giù il numero 2!<small>Il tuo voto resta segreto fino alla caduta</small></button>
+ </div>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a,p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+// sky: clouds, hills, birds, rays
+const sky=document.getElementById('sky');
+const cloud=(x,y,s,c1,c2)=>{const g=el('g',{transform:`translate(${x} ${y}) scale(${s})`},sky);
+ [[0,20,34],[34,6,40],[78,18,32],[48,28,36],[16,30,26]].forEach(([cx,cy,r])=>el('circle',{cx,cy,r,fill:c1},g));
+ el('rect',{x:-18,y:34,width:130,height:22,rx:11,fill:c2},g)};
+cloud(-20,92,1.3,'#ff9fb5','#e0668f');cloud(250,150,1,'#ffb78e','#ee7a6e');cloud(210,60,.8,'#b27ad0','#8b4fb0');cloud(30,300,1.1,'#ffc79a','#ff8f7a');cloud(260,330,1.2,'#ffd6a8','#ff9a7a');
+const hills=el('path',{d:'M0 560Q70 500 150 540T300 520T372 540V700H0z',fill:'#6a3585',opacity:.9},sky);
+const hills2=el('path',{d:'M0 600Q100 560 200 590T372 575V700H0z',fill:'#4b2468'},sky);
+const b=el('g',{class:'birds'},sky);[[60,200,1],[92,224,.8],[300,250,.9],[324,236,.7]].forEach(([x,y,s])=>el('path',{d:`M${x} ${y}q${8*s} ${-9*s} ${16*s} 0q${8*s} ${-9*s} ${16*s} 0`,stroke:'#2a1b4d','stroke-width':3,fill:'none','stroke-linecap':'round'},b));
+// god rays on selected card
+const ph=document.getElementById('p');
+// bunting flags
+const fl=document.getElementById('flags');const cs=['#ff7e5f','#ffd45e','#14607e','#f2f2f2','#e5384b','#3aa655'];
+for(let i=0;i<12;i++){const t=(i+.5)/12,x=t*370,y=8+4*(1-(2*t-1)**2)*9;el('path',{d:`M${x-8} ${y-1}L${x+8} ${y-1}L${x} ${y+16}z`,fill:cs[i%6],stroke:'#2a1b4d','stroke-width':1.5},fl)}
+// crowd
+const cr=document.getElementById('crowd');let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+for(let i=0;i<34;i++){const x=-6+i*11.6+rnd()*6,h=34+rnd()*34,y=150-h,r=7+rnd()*2;
+ const g=el('g',{},cr);
+ el('rect',{x:x-r*1.1,y:y+r*1.7,width:r*2.2,height:h,rx:r,fill:'#1d1238'},g);
+ el('circle',{cx:x,cy:y+r,r,fill:'#1d1238'},g);
+ el('path',{d:`M${x-r} ${y+r}a${r} ${r} 0 0 1 ${r*.8} ${-r*.9}`,stroke:'#ff9a5a','stroke-width':1.6,fill:'none'},g);
+ const k=rnd();
+ if(k<.45){const s=k<.2?-1:1;el('path',{d:`M${x+s*r} ${y+r*2.4}l${s*5} ${-18}`,stroke:'#1d1238','stroke-width':4,'stroke-linecap':'round'},g);
+  if(k<.12)el('rect',{x:x+s*r+s*3-4,y:y-6,width:8,height:13,rx:2,fill:'#fff1cf'},g);   // telefono acceso
+  else if(k<.3){el('path',{d:`M${x+s*r+s*2} ${y-6}l${s*14} ${-5}l0 10z`,fill:'#e5384b'},g)} } }
+</script></body></html>
