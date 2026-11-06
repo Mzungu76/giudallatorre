@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wow B2 — Votazione e caduta</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--brick:#e8a15c}
+*{box-sizing:border-box;margin:0}
+body{background:#2a2a30;min-height:100vh;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:center;padding:20px;font-family:Nunito,sans-serif;color:#fff}
+.phone{width:390px;height:844px;border-radius:44px;border:9px solid #0b0b10;position:relative;overflow:hidden;background:var(--paper);box-shadow:0 30px 80px #000a;color:var(--navy);flex:none}
+.vp{position:absolute;inset:0;overflow:hidden}
+.sky2{position:absolute;inset:0;background:linear-gradient(180deg,#bfe6df,#ffe0a3 80%);opacity:0}
+.halft{position:absolute;inset:0;background:radial-gradient(circle,#e8362b 0 28%,transparent 30%) 0 0/9px 9px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.5}
+.halft2{position:absolute;inset:0;background:radial-gradient(circle,#14a3a1 0 28%,transparent 30%) 4px 4px/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 0 0,#000 0,transparent 55%);mask-image:radial-gradient(ellipse at 0 0,#000 0,transparent 55%);opacity:.55}
+.world{position:absolute;left:0;top:0;width:372px;height:2500px;will-change:transform}
+.far{position:absolute;left:0;top:0;width:372px;height:2500px;will-change:transform}
+.cl{position:absolute;width:120px;height:44px;background:#fff;border:3px solid var(--navy);border-radius:30px;box-shadow:4px 4px 0 var(--navy)}
+.cl::before,.cl::after{content:"";position:absolute;background:#fff;border:3px solid var(--navy);border-bottom:0;border-radius:40px 40px 0 0}
+.cl::before{left:14px;top:-22px;width:46px;height:26px;border-bottom:0}.cl::after{left:52px;top:-30px;width:50px;height:34px}
+.wall{position:absolute;left:46px;width:280px;top:656px;height:1464px;border:4px solid var(--navy);border-top:0;
+ background:linear-gradient(90deg,transparent 68%,#13224a30 68%),
+ repeating-linear-gradient(0deg,transparent 0 31px,#13224a55 31px 33px),
+ repeating-linear-gradient(90deg,transparent 0 59px,#13224a40 59px 61px),var(--brick);box-shadow:8px 0 0 #13224a}
+.win{position:absolute;width:44px;height:70px;border-radius:22px 22px 0 0;background:var(--navy);border:4px solid #fff1cf;box-shadow:3px 3px 0 #13224a66}
+.plank{position:absolute;left:62px;width:248px;top:1010px;padding:10px 8px;background:var(--paper);border:4px solid var(--navy);box-shadow:5px 5px 0 var(--navy);text-align:center;font:400 22px/1 Anton;letter-spacing:.05em;transform:rotate(-2deg);color:var(--red)}
+.plank small{display:block;font:400 14px/1 'Caveat Brush';color:var(--navy);margin-top:5px;letter-spacing:.02em}
+.stk{position:absolute;width:96px;height:144px;border-radius:11px;background:center/cover;border:6px solid #fff;box-shadow:5px 6px 0 var(--navy);transform-origin:50% 100%}
+.stk .n{position:absolute;left:-12px;bottom:-12px;width:30px;height:30px;border-radius:50%;background:var(--red);border:3px solid var(--navy);color:#fff;font:400 17px/24px Anton;text-align:center}
+.tk{position:absolute;width:30px;height:30px;border-radius:50%;border:3px solid #fff;box-shadow:2px 2px 0 var(--navy);display:grid;place-items:center;font:400 14px/1 Anton;color:#fff;transform:scale(0)}
+.lui{position:absolute;right:-16px;top:-14px;padding:5px 7px;background:var(--red);color:#fff;border:3px solid var(--navy);font:400 12px/1 Anton;letter-spacing:.06em;transform:rotate(8deg) scale(0);box-shadow:3px 3px 0 var(--navy)}
+.mat{position:absolute;height:44px;border:4px solid var(--navy);border-radius:14px;box-shadow:5px 5px 0 var(--navy);transform-origin:50% 100%}
+.mat::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,var(--navy) 0 2.5px,transparent 3.5px) 0 0/46px 22px;opacity:.55}
+.hud{position:absolute;inset:0;pointer-events:none}
+.top{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;font:800 12px Nunito;z-index:20}
+.top span{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:4px 9px;box-shadow:2px 2px 0 var(--navy);display:flex;gap:5px;align-items:center}
+.top i{width:11px;height:11px;border-radius:50%;border:2px solid var(--navy)}
+.strip{position:absolute;left:-10px;right:-10px;top:42px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 17px/1 Anton;letter-spacing:.16em;padding:9px 0 8px;text-align:center;box-shadow:0 5px 0 #0005;z-index:19}
+.hl{position:absolute;left:20px;right:16px;top:92px;font:400 46px/.9 Anton;text-transform:uppercase;color:var(--red);z-index:18}
+.hl small{display:block;font:400 21px/1 'Caveat Brush';color:var(--navy);text-transform:none;margin-bottom:5px;transform:rotate(-1.5deg)}
+.stamp{position:absolute;left:50%;top:116px;width:230px;margin-left:-115px;text-align:center;color:var(--red);border:5px solid var(--red);padding:8px 6px 6px;font:400 40px/.95 Anton;transform:rotate(-6deg) scale(0);mix-blend-mode:multiply;z-index:21;text-transform:uppercase;background:#f4e3bdd0}
+.stamp small{display:block;font:400 17px/1 Anton;letter-spacing:.14em;margin-top:5px}
+.ticket{position:absolute;left:14px;right:14px;bottom:16px;height:84px;z-index:30;display:flex;filter:drop-shadow(4px 5px 0 var(--navy));pointer-events:auto;cursor:pointer}
+.ticket .m{flex:1;background:var(--mus);border-radius:12px 0 0 12px;padding:10px 14px;-webkit-mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px)}
+.ticket .m b{display:block;font:400 28px/1 Anton;text-transform:uppercase}
+.ticket .m small{font:800 12px Nunito;opacity:.85;display:block;margin-top:5px}
+.ticket .s{width:84px;background:var(--red);color:#fff;border-radius:0 12px 12px 0;border-left:4px dashed var(--navy);display:grid;place-items:center;font:400 24px/1 Anton;text-align:center;-webkit-mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px)}
+.lines{position:absolute;inset:0;z-index:10;opacity:0;background:repeating-linear-gradient(90deg,transparent 0 22px,#13224a30 22px 25px,transparent 25px 41px,#13224a22 41px 43px);-webkit-mask-image:radial-gradient(ellipse at 50% 45%,transparent 18%,#000 75%);mask-image:radial-gradient(ellipse at 50% 45%,transparent 18%,#000 75%)}
+.aaah{position:absolute;z-index:22;font:400 40px/1 'Caveat Brush';color:var(--red);text-shadow:3px 3px 0 var(--navy);opacity:0;white-space:nowrap}
+.boing{position:absolute;z-index:23;left:50%;top:200px;width:210px;height:150px;margin-left:-105px;display:grid;place-items:center;opacity:0;font:400 44px/1 Anton;color:var(--navy);text-transform:uppercase}
+.boing::before{content:"";position:absolute;inset:0;background:var(--mus);border:0;clip-path:polygon(50% 0,60% 18%,82% 6%,78% 30%,100% 36%,82% 52%,96% 74%,72% 72%,66% 96%,50% 80%,34% 96%,28% 72%,4% 74%,18% 52%,0 36%,22% 30%,18% 6%,40% 18%);filter:drop-shadow(5px 5px 0 var(--navy))}
+.boing span{position:relative;transform:rotate(-8deg)}
+.panel{position:absolute;left:12px;right:12px;bottom:14px;z-index:40;background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px 14px;transform:translateY(120%);pointer-events:auto}
+.panel h3{font:400 26px/1 Anton;text-transform:uppercase;color:var(--red);margin-bottom:8px;letter-spacing:.02em}
+.row{display:flex;align-items:center;gap:9px;padding:5px 0;border-top:2px dashed #13224a40;font:800 14px Nunito;opacity:0;transform:translateX(-14px)}
+.row i{width:16px;height:16px;border-radius:50%;border:3px solid var(--navy);flex:none}
+.row em{margin-left:auto;font:400 22px/1 Anton;font-style:normal;color:var(--red)}
+.row small{font:800 11px Nunito;opacity:.7;margin-left:4px}
+.next{margin-top:8px;display:block;width:100%;border:0;background:var(--mus);padding:11px;font:400 22px/1 Anton;text-transform:uppercase;color:var(--navy);box-shadow:4px 4px 0 var(--navy);border:3px solid var(--navy)}
+.stars{position:absolute;width:70px;height:30px;opacity:0}
+.stars b{position:absolute;font-size:20px;color:var(--mus);text-shadow:2px 2px 0 var(--navy);animation:orb 1.2s linear infinite}
+.stars b:nth-child(2){animation-delay:-.4s}.stars b:nth-child(3){animation-delay:-.8s}
+@keyframes orb{0%{transform:translate(0,12px) scale(.8)}25%{transform:translate(30px,0)}50%{transform:translate(60px,12px) scale(1.15)}75%{transform:translate(30px,24px)}100%{transform:translate(0,12px) scale(.8)}}
+.grain{position:absolute;inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.5;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.skip{position:absolute;right:14px;top:84px;z-index:70;background:#fff;border:2px solid var(--navy);box-shadow:2px 2px 0 var(--navy);font:800 12px Nunito;padding:4px 10px;border-radius:99px;display:none;cursor:pointer;color:var(--navy)}
+/* regia */
+.ctl{width:300px;display:flex;flex-direction:column;gap:12px;font-size:14px;line-height:1.4}
+.ctl h1{font:400 28px/1 Anton;color:var(--mus);letter-spacing:.03em}
+.ctl button{font:800 14px Nunito;border:0;border-radius:10px;padding:10px;background:var(--mus);color:var(--navy);cursor:pointer}
+.ctl input[type=range]{width:100%}.ctl label{display:flex;gap:8px;align-items:center}
+.ctl ol{padding-left:18px;opacity:.85}
+</style></head><body>
+<div class="phone"><div class="vp" id="vp">
+ <div class="sky2" id="sky2"></div><div class="halft"></div><div class="halft2"></div>
+ <div class="far" id="far"></div>
+ <div class="world" id="world"></div>
+ <div class="lines" id="lines"></div>
+ <div class="hud">
+  <div class="top"><span><i style="background:#2f7be0"></i>Luca</span><span>📣 Marta</span><span>Turno 3/10</span></div>
+  <div class="strip" id="strip">★ AVVISO ALLA CITTADINANZA ★</div>
+  <div class="hl" id="hl"><small>Oggi sale sulla torre…</small>chi manda vocali da nove minuti.</div>
+  <div class="stamp" id="stamp">Più votato: n. 2<small>3 voti su 5 · cade lui!</small></div>
+  <div class="ticket" id="ticket"><div class="m"><b>Conferma il n. 2</b><small>2 su 5 hanno già votato. Voto segreto.</small></div><div class="s">GIÙ!</div></div>
+  <div class="aaah" id="aaah">AAAAAH!</div>
+  <div class="boing" id="boing"><span>BOING!</span></div>
+  <div class="skip" id="skip">Salta ›</div>
+  <div class="panel" id="panel"><h3>Giù dalla torre!</h3><div id="rows"></div><button class="next">Prossimo turno</button></div>
+ </div>
+ <div class="grain"></div>
+</div></div>
+<div class="ctl">
+ <h1>Giù dalla Torre<br>la caduta</h1>
+ <div>Prototipo della sequenza: tocca <b>GIÙ!</b> sul biglietto (o premi il bottone).</div>
+ <button id="play">▶ Vota e guarda la caduta</button>
+ <button id="reset">↺ Torna alla votazione</button>
+ <label>Scrub <input id="scrub" type="range" min="-1" max="9.5" step="0.01" value="-1"></label>
+ <label><input type="checkbox" id="snd" checked> Suoni (sintetizzati)</label>
+ <ol><li>Voto: carte in piedi sull'ultimo piano</li><li>Rivelazione: segnalini voto + “Lui!”</li><li>Suspense, spinta, caduta con camera che segue</li><li>Impatto, rimbalzi sui materassi, punti</li></ol>
+</div>
+<script>
+const NS='http://www.w3.org/2000/svg',$=id=>document.getElementById(id);
+const W=$('world'),F=$('far');
+const IMG=n=>`../../public/cards/p05-i0${n}.webp`;
+const PL={M:['Marta','#e5384b'],L:['Luca','#2f7be0'],G:['Giulia','#f4c20d'],O:['Omar','#3aa655'],E:['Elena','#8a5a3b']};
+// ---------- scena ----------
+// clouds (far layer, parallax)
+[[20,860,.9],[230,1130,1],[60,1450,1.1],[250,1760,.9],[10,2050,1],[220,390,.8]].forEach(([x,y,s])=>{const c=document.createElement('div');c.className='cl';c.style.cssText=`left:${x}px;top:${y}px;transform:scale(${s})`;F.appendChild(c)});
+// piattaforma
+const plat=document.createElementNS(NS,'svg');plat.setAttribute('viewBox','0 0 372 460');plat.style.cssText='position:absolute;left:0;top:300px;width:372px;height:460px';
+plat.innerHTML=`
+ <g>
+ <path d="M36 70h300v440H36z" fill="#13224a" transform="translate(6 6)" opacity="0"/>
+ <!-- merli sul fondo -->
+ ${[0,1,2,3,4,5].map(i=>`<rect x="${40+i*50}" y="32" width="34" height="46" fill="#d9bd88" stroke="#13224a" stroke-width="4"/>`).join('')}
+ <!-- piano superiore (prospettiva) -->
+ <path d="M32 76 L340 76 L384 300 L-12 300 Z" fill="#e9d3a3" stroke="#13224a" stroke-width="4"/>
+ ${[1,2,3,4,5].map(i=>`<path d="M${32+i*51.3} 76 L${-12+i*66} 300" stroke="#13224a55" stroke-width="2.5"/>`).join('')}
+ ${[120,170,230].map(y=>`<path d="M${32-(y-76)*.149} ${y} H${340+(y-76)*.149}" stroke="#13224a55" stroke-width="2.5"/>`).join('')}
+ <!-- fronte di pietra -->
+ <rect x="-12" y="300" width="396" height="60" fill="#c9a66c" stroke="#13224a" stroke-width="4"/>
+ ${[0,1,2,3,4,5,6].map(i=>`<path d="M${-12+i*66} 300v60" stroke="#13224a66" stroke-width="3"/>`).join('')}
+ <path d="M-12 330H384" stroke="#13224a66" stroke-width="3"/>
+ <rect x="-12" y="300" width="396" height="9" fill="#13224a" opacity=".25"/>
+ </g>`;
+// muro torre
+const wall=document.createElement('div');wall.className='wall';W.appendChild(wall);W.appendChild(plat);
+[[70,760],[200,760],[70,1230],[200,1230],[70,1600],[200,1600]].forEach(([x,y])=>{const w=document.createElement('div');w.className='win';w.style.cssText=`left:${x}px;top:${y}px`;W.appendChild(w)});
+const pl=document.createElement('div');pl.className='plank';pl.innerHTML='TORRE DEL GIUDIZIO SPICCIOLO<small>vietato lanciare oggetti. Persone sì.</small>';W.appendChild(pl);
+// piccione col GPS
+const pg=document.createElement('div');pg.style.cssText='position:absolute;left:208px;top:1195px;font-size:34px;transform:scaleX(-1)';pg.textContent='🕊️';W.appendChild(pg);
+const gp=document.createElement('div');gp.style.cssText='position:absolute;left:182px;top:1180px;background:#fff;border:3px solid #13224a;box-shadow:3px 3px 0 #13224a;padding:3px 6px;font:400 13px/1 Anton;color:#13224a;transform:rotate(-4deg)';gp.textContent='“tra 200 m, svolta a destra”';W.appendChild(gp);
+// materassi
+[[50,2072,272,'#e8362b'],[62,2030,248,'#14a3a1'],[78,1990,216,'#ffc72c']].forEach(([x,y,w,c],i)=>{const m=document.createElement('div');m.className='mat';m.id='mat'+i;m.style.cssText=`left:${x}px;top:${y}px;width:${w}px;background:repeating-linear-gradient(90deg,${c} 0 22px,#fff 22px 44px)`;W.appendChild(m)});
+// prato + folla con cartelli voto
+const grass=document.createElement('div');grass.style.cssText='position:absolute;left:0;right:0;top:2116px;height:384px;background:#14a3a1;border-top:4px solid #13224a';W.appendChild(grass);
+const crowd=document.createElementNS(NS,'svg');crowd.setAttribute('viewBox','0 0 372 330');crowd.style.cssText='position:absolute;left:0;top:2090px;width:372px;height:330px';
+let sd=11;const rn=()=>(sd=(sd*16807)%2147483647)/2147483647;let cs='';
+const cols=['#13224a','#e8362b','#ffc72c','#f4e3bd','#13224a'];
+for(let i=0;i<22;i++){const x=10+(i%11)*34+rn()*8,row=i<11?0:1,y=row?150:50+rn()*14,c=cols[Math.floor(rn()*5)];
+ cs+=`<g><rect x="${x-14}" y="${y+28}" width="28" height="${86-row*20}" rx="14" fill="${c}" stroke="#13224a" stroke-width="3"/><circle cx="${x}" cy="${y+14}" r="14" fill="#f2c9a0" stroke="#13224a" stroke-width="3"/>
+ ${rn()<.5?`<rect x="${x+4}" y="${y-30}" width="30" height="28" fill="#fff" stroke="#13224a" stroke-width="3"/><text x="${x+19}" y="${y-8}" text-anchor="middle" font-family="Anton" font-size="20" fill="#e8362b">${[10,9,8,10,7][Math.floor(rn()*5)]}</text><path d="M${x+10} ${y-2}L${x+4} ${y+30}" stroke="#13224a" stroke-width="3"/>`:''}</g>`}
+crowd.innerHTML=cs;W.appendChild(crowd);
+// carte
+const POS={1:[92,478],2:[186,478],3:[280,478],4:[140,592],5:[232,592]};
+const card={};
+for(let n=1;n<=5;n++){const d=document.createElement('div');d.className='stk';d.style.cssText=`left:${POS[n][0]-48}px;top:${POS[n][1]-144}px;background-image:url(${IMG(n)});z-index:${n>3?7:6}`;d.innerHTML=`<div class="n">${n}</div>`;W.appendChild(d);card[n]=d}
+// segnalini
+const VOTES={1:['M'],2:['L','G','E'],3:['O']};
+Object.entries(VOTES).forEach(([n,a])=>a.forEach((k,i)=>{const t=document.createElement('div');t.className='tk';t.style.cssText=`left:${6+i*20}px;top:${-16-(i%2)*6}px;background:${PL[k][1]}`;t.textContent=n;t.dataset.i=i;card[n].appendChild(t)}));
+const lui=document.createElement('div');lui.className='lui';lui.textContent='CADE LUI!';card[2].appendChild(lui);
+const stars=document.createElement('div');stars.className='stars';stars.innerHTML='<b>★</b><b>★</b><b>★</b>';W.appendChild(stars);
+// punti
+const SC=[['M','+4','segnalino “Lui!”'],['L','+2','voto giusto'],['G','+2','voto giusto'],['E','+2','voto giusto'],['O','+2','carta giocata']];
+$('rows').innerHTML=SC.map(([k,p,w])=>`<div class="row"><i style="background:${PL[k][1]}"></i>${PL[k][0]}<small>${w}</small><em>${p}</em></div>`).join('');
+// ---------- matematica ----------
+const G=1000,Y0=568,YI=1942,TF=Math.sqrt(2*(YI-Y0)/G),TS=0.65,TI=TS+TF,MAXC=1660;
+const T_FALL=2.7; // T alla quale parte la caduta
+const sm=(a,b,x)=>{x=Math.min(1,Math.max(0,(x-a)/(b-a)));return x*x*(3-2*x)};
+const BNC=[[.55,170],[.34,70],[.2,24]];
+function cardState(t){ // centro carta nel mondo
+ if(t<0){const a=Math.max(0,(t+1)*0);return{x:186,y:406,r:0,sx:1,sy:1}}
+ if(t<TS){const u=sm(0,TS,t);return{x:186+14*u,y:406+(Y0-406)*u,r:-28*u,sx:1+.12*u,sy:1+.12*u}}
+ if(t<TI){const s=t-TS,p=s/TF;return{x:200+14*Math.sin(s*5),y:Y0+.5*G*s*s,r:-28-770*Math.pow(p,1.3),sx:1.12-.12*p,sy:1.12-.12*p}}
+ let d=t-TI,y=YI,sx=1,sy=1;
+ if(d<.14){const k=Math.sin(Math.PI*d/.14);sx=1+.28*k;sy=1-.3*k}
+ let acc=0;for(const[du,h]of BNC){if(d>=acc&&d<acc+du){const u=(d-acc)/du;y=YI-h*4*u*(1-u);break}acc+=du}
+ return{x:200-4*sm(0,1.5,d),y,r:-798+10*Math.sin(d*9)*Math.exp(-d*2.5),sx,sy}}
+function camY(t){if(t<=0)return 0;if(t>=TI)return MAXC;const c=cardState(t).y;return sm(.35,1.3,t)*Math.min(MAXC,Math.max(0,c-280))}
+function render(T){
+ const t=T-T_FALL, voted=T>=0;
+ // ticket
+ $('ticket').style.transform=`translateY(${sm(0,.4,T)*140}px)`;$('ticket').style.opacity=T>=0.45?0:1;
+ // segnalini e Lui
+ for(const n in VOTES){card[n].querySelectorAll('.tk').forEach((e,i)=>{const s=sm(.3+i*.18+(n-1)*.1,.6+i*.18+(n-1)*.1,T);e.style.transform=`scale(${s*1.0})`})}
+ lui.style.transform=`rotate(8deg) scale(${sm(1.2,1.5,T)})`;
+ $('stamp').style.transform=`rotate(-6deg) scale(${sm(1.6,1.85,T)*(t>0.3?1-sm(.3,.6,t):1)})`;
+ $('hl').style.opacity=1-sm(1.5,1.8,T);
+ // suspense
+ const sus=sm(1.7,T_FALL,T)*(t<0?1:0);
+ [1,3,4,5].forEach(n=>{card[n].style.transform=`rotate(${(n%2?-1:1)*sus*3}deg)`});
+ // carta caduta
+ const c=cardState(t),el=card[2];
+ const wob=t<0?Math.sin(T*28)*sus*5:0;
+ el.style.zIndex=20;
+ el.style.left=(c.x-48)+'px';el.style.top=(c.y-72)+'px';el.style.transformOrigin='50% 50%';
+ el.style.transform=`rotate(${c.r+wob}deg) scale(${c.sx},${c.sy})`;
+ // camera
+ const cy=camY(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
+ W.style.transform=`translate(${sh}px,${-cy+sh}px)`;F.style.transform=`translateY(${-cy*.55}px)`;
+ $('sky2').style.opacity=Math.min(1,cy/MAXC);
+ // materassi
+ const im=t>TI?Math.exp(-(t-TI)*6)*Math.cos((t-TI)*22):0;
+ [0,1,2].forEach(i=>$('mat'+i).style.transform=`scaleY(${1-.2*im*(i==2?1:.4)})`);
+ // effetti
+ const v=t>TS&&t<TI?(t-TS)/TF:0;$('lines').style.opacity=Math.min(1,v*2.2)*(t<TI?1:0);
+ $('lines').style.backgroundPositionY=(t*1800%86)+'px';
+ const ca=$('aaah');ca.style.opacity=(t>.55&&t<TI-.05)?1:0;ca.style.left='40px';ca.style.top=(c.y-cy-130)+'px';ca.style.transform=`rotate(${-8+Math.sin(t*20)*3}deg) scale(${1+v*.5})`;
+ const bo=$('boing'),d=t-TI;bo.style.opacity=(d>0&&d<1)?1:0;bo.style.top=(c.y-cy-90)+'px';bo.style.transform=`scale(${d>0?(1.2-.2*sm(0,.2,d))*(1-sm(.6,1,d)):0}) rotate(${-4}deg)`;
+ stars.style.opacity=t>TI+1.1?1:0;stars.style.left=(c.x-30)+'px';stars.style.top=(c.y-110)+'px';
+ $('strip').textContent=t>0.4?'★ BOLLETTINO DELLA CADUTA ★':'★ AVVISO ALLA CITTADINANZA ★';
+ // pannello punti
+ const pt=t-(TI+1.0);$('panel').style.transform=`translateY(${(1-sm(0,.5,pt))*120}%)`;
+ document.querySelectorAll('.row').forEach((r,i)=>{const s=sm(.3+i*.18,.55+i*.18,pt);r.style.opacity=s;r.style.transform=`translateX(${(1-s)*-14}px)`});
+ $('skip').style.display=(T>0&&t<TI+1)?'block':'none';
+ window.__T=T;
+}
+window.__render=render;
+// ---------- audio ----------
+let AC,master;
+function ac(){if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=.5;master.connect(AC.destination)}return AC}
+const on=()=>$('snd').checked;
+function noise(dur){const b=AC.createBuffer(1,AC.sampleRate*dur,AC.sampleRate),d=b.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;const s=AC.createBufferSource();s.buffer=b;return s}
+const snd={
+ wind(){if(!on())return;ac();const n=noise(TF+.2),f=AC.createBiquadFilter(),g=AC.createGain();f.type='bandpass';f.frequency.setValueAtTime(300,AC.currentTime);f.frequency.exponentialRampToValueAtTime(2400,AC.currentTime+TF);f.Q.value=1.4;g.gain.setValueAtTime(.01,AC.currentTime);g.gain.linearRampToValueAtTime(.5,AC.currentTime+TF);g.gain.linearRampToValueAtTime(0,AC.currentTime+TF+.15);n.connect(f).connect(g).connect(master);n.start()},
+ thud(){if(!on())return;ac();const o=AC.createOscillator(),g=AC.createGain();o.frequency.setValueAtTime(140,AC.currentTime);o.frequency.exponentialRampToValueAtTime(40,AC.currentTime+.25);g.gain.setValueAtTime(.9,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.3);o.connect(g).connect(master);o.start();o.stop(AC.currentTime+.32)},
+ boing(a=1,f0=220){if(!on())return;ac();const o=AC.createOscillator(),g=AC.createGain(),l=AC.createOscillator(),lg=AC.createGain();o.type='triangle';o.frequency.setValueAtTime(f0,AC.currentTime);o.frequency.exponentialRampToValueAtTime(f0*2.6,AC.currentTime+.12);o.frequency.exponentialRampToValueAtTime(f0*.9,AC.currentTime+.5);l.frequency.value=22;lg.gain.value=30*a;l.connect(lg).connect(o.frequency);g.gain.setValueAtTime(.5*a,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.5);o.connect(g).connect(master);o.start();l.start();o.stop(AC.currentTime+.55);l.stop(AC.currentTime+.55)},
+ cheer(){if(!on())return;ac();const n=noise(1.4),f=AC.createBiquadFilter(),g=AC.createGain();f.type='bandpass';f.frequency.value=1200;f.Q.value=.6;g.gain.setValueAtTime(.001,AC.currentTime);g.gain.linearRampToValueAtTime(.35,AC.currentTime+.3);g.gain.linearRampToValueAtTime(0,AC.currentTime+1.4);n.connect(f).connect(g).connect(master);n.start()}
+};
+// ---------- regia ----------
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let raf=0,t0=0,fired={};
+const EVENTS=[[T_FALL+TS,()=>snd.wind()],[T_FALL+TI,()=>{snd.thud();snd.boing(1,200)}],[T_FALL+TI+.55,()=>snd.boing(.6,260)],[T_FALL+TI+.89,()=>snd.boing(.35,320)],[T_FALL+TI+1.0,()=>snd.cheer()]];
+function play(){cancelAnimationFrame(raf);fired={};if(reduce){render(T_FALL+TI+2);return}
+ t0=performance.now();ac();const loop=now=>{const T=(now-t0)/1000;render(T);$('scrub').value=Math.min(9.5,T);EVENTS.forEach(([et,fn],i)=>{if(!fired[i]&&T>=et){fired[i]=1;fn()}});if(T<T_FALL+TI+2.4)raf=requestAnimationFrame(loop)};raf=requestAnimationFrame(loop)}
+function reset(){cancelAnimationFrame(raf);render(-1);$('scrub').value=-1}
+$('play').onclick=play;$('reset').onclick=reset;$('ticket').onclick=play;
+$('skip').onclick=()=>{cancelAnimationFrame(raf);render(T_FALL+TI+2.4);$('scrub').value=9.5};
+$('scrub').oninput=e=>{cancelAnimationFrame(raf);render(+e.target.value)};
+render(-1);
+</script></body></html>
