@@ -2,27 +2,29 @@
 
 Stato: **analisi su rev. 5.2l (provvisoria)**. Il regolamento definitivo NON è presente né nel repository né nella sessione (`/mnt/attach` vuota): va fornito prima di chiudere questo documento.
 
-## BLOCCANTI (modificano il gioco)
+## RISOLTE (decisioni dell'utente, 2026-11-06)
+| # | Decisione |
+|---|---|
+| B1 | Il regolamento definitivo è **`Giù dalla Torre! rev. 5.2l.pdf`** già nel repo (identico all'allegato) |
+| B2 | Le carte Personaggio sono **125** (tutte le illustrazioni estratte; il regolamento che dice 100 è da considerarsi superato) |
+| B3 | Carte a frase singola aggiunte in `Carte_singola frase.pdf` (vedi D1) |
+| B4 | In caso di pareggio cade **sempre** il personaggio votato dal Megafono, anche se è il solo con il suo voto; gli altri voti non contano |
+| B5 | Il Megafono **può** votare la carta pescata dal mazzo |
+| B6 | Si **può** votare la propria carta |
+| B8 | Variante "Il Megafono sa": **sì**, opzione di stanza |
 
-| # | Tema | Fonti in conflitto | Domanda |
-|---|------|--------------------|---------|
-| B1 | **Regolamento definitivo mancante** | Il prompt lo dà "allegato", ma non è arrivato | Puoi ricaricarlo (nel repo o in chat)? |
-| B2 | **Numero carte Personaggio** | Regolamento: 100. PDF illustrazioni: 14 pagine, **125 immagini** (124 uniche esatte; 1 duplicato identico p12/p13; 1 quasi-duplicato p1/p8) | Quante e quali sono le carte vere? Quelle in eccesso sono bozze/varianti? Quale versione tenere per il quasi-duplicato? |
-| B3 | **Carte "Su sulla Torre"** | Regolamento: 70 carte = 50 da 4 frasi + 20 da 1 frase. DOCX: titolo "50 carte x 5 frasi" = 250 frasi, nessuna carta da 1 frase | Il definitivo usa 5 frasi o 4? Dove sono le 20 carte da 1 frase ("Ammetto che sono stato più volte in vacanza con uno dei personaggi...") e le 4 frasi del regolamento (formula "Oggi salgono sulla torre i parteciponi...")? Le frasi del DOCX hanno incipit "Oggi sale sulla torre chi…", diverso dal regolamento |
-| B4 | **Pareggio nei voti** | "In caso di pareggio cade il personaggio votato dal Megafono, anche se ha ricevuto meno voti" | Se il Megafono ha votato un personaggio NON coinvolto nel pareggio, quale cade? (Il Megafono vota tramite segnalino voto, distinto dal "Lui!".) Proposta: cade il personaggio *tra i pareggiati* votato dal Megafono; se non c'è, estrazione casuale. Da confermare |
-| B5 | **Carta del Megafono (fase 1)** | Pescata casualmente dal mazzo e messa sulla Torre; quindi sulla Torre ci sono N-1 carte della Folla + 1 del mazzo = N carte | Il Megafono **può votare** il personaggio pescato dal mazzo? E chi "ha giocato" quella carta (nessuno) non fa punti — confermare |
-| B6 | **Giocatore che vota la propria carta** | Non specificato | È consentito votare la carta che si è giocata? Proposta: sì, è permesso |
-| B7 | **Fine partita: "tutti hanno fatto il Megafono 1 volta (6-8) o 2 volte (3-5)"** | Ordine "alla destra in ordine di turno" | Verso/ordine di rotazione in online: proposta ordine di ingresso. Giocatori espulsi/disconnessi definitivamente a metà partita? |
-| B8 | **Variante "Il Megafono sa"** | Opzionale | Implementarla come opzione di stanza? (Proposta: sì, flag alla creazione) |
-| B9 | **Segnalini "Lui!"** | Ne servono 2 ("CADE" e "NON CADE"); il Megafono ne usa uno solo | Il Megafono *sceglie* quale dei due usare vedendo il retro (ovvio dal testo) — confermare che l'altro resta inutilizzato |
-| B10 | **Punti "NON CADE LUI!"** | +1 se il segnalino sta su un personaggio che non cade | Confermato testo; ma con N carte la probabilità è alta: bilanciamento voluto? (solo informativo) |
+## ANCORA APERTE
+| # | Tema | Domanda |
+|---|------|---------|
+| D1 | **Frasi** | Il regolamento prevede 70 carte Su sulla Torre (50 con 4 frasi + 20 singole). In repo: `Carte_frasi.docx` = 50 carte × **5** frasi (250); `Carte_singola frase.pdf` = **15** frasi singole (18 slot, 3 vuoti). Proposta: usare 50×5 e 15 singole così come sono (65 carte); mancano 5 singole: aggiungerle in futuro senza modifiche al codice |
+| D2 | Carta "Su sulla Torre" a 5 frasi | Il Megafono ne sceglie una sola (come da regola per le carte multiple) — confermato implicitamente |
+| D3 | Incipit | Le frasi del DOCX iniziano con "Oggi sale sulla torre…" (singolare, anche con "le persone che"): importate letteralmente, senza correzioni |
+| D4 | Rotazione Megafono | Proposta: ordine di ingresso; giocatori disconnessi a lungo vengono saltati |
+| D5 | Segnalino "Lui!" | Il Megafono sceglie quale dei due (CADE / NON CADE) usare; l'altro resta inutilizzato |
 
-## MINORI (propongo la soluzione indicata)
-
-- Mano di 5 carte, ripescata a fine turno: il Megafono non pesca (ha già la mano intera). OK dal testo.
-- Mazzo personaggi esaurito → si rimescola lo scarto (testo chiaro). Se mazzo+scarto insufficienti (impossibile con ≥100 carte, 8 giocatori).
-- Refusi nel PDF rev. 5.2l ("casualemente", "perdonaggi", "copertro", "Lato scopertro", "Gran Megafono" nel testo vittoria): da non riprodurre.
-- Contraddizione grafica: tavolo di setup "Segnalino Voto" numerato 1–8 e Plancia con caselle 1–45: la Torre online è dinamica (N ≤ 8 carte).
-- Voto "in ordine di turno a partire dal successivo al Megafono": online le rivelazioni sono simultanee con animazione in ordine (nessun effetto sul punteggio).
-- Frasi/carte con **Carte_frasi.docx**: 250 frasi uniche, nessun duplicato; tabella riepilogativa a fine documento (50 temi) importata solo come `tema`.
-- Il PDF delle carte non contiene nomi: l'unico identificativo certo è pagina+posizione (`pNN-iNN`). Il rapporto frase↔carta Personaggio non esiste (le frasi non sono legate a singoli personaggi).
+## MINORI
+- Il Megafono non pesca a fine turno (non ha giocato carte; in variante "Megafono sa" pesca 1 carta come gli altri).
+- Mazzo esaurito → si rimescola lo scarto.
+- Refusi nel PDF (non riprodotti): "casualemente", "perdonaggi", "copertro", "scopertro".
+- Il PDF delle carte non ha nomi: id = pagina+posizione (`pNN-iNN`). Quasi-duplicato `p01`/`p08` (diff 3.65): tenute entrambe; duplicato esatto p13-i01 escluso (125 immagini estratte, 124 file).
+- Torre online dinamica: N carte (N = giocatori), non 45 caselle.

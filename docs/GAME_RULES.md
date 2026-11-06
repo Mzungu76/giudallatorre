@@ -1,10 +1,10 @@
-# GAME_RULES — trasposizione tecnica (PROVVISORIA, basata su rev. 5.2l)
+# GAME_RULES — trasposizione tecnica (regolamento definitivo: rev. 5.2l)
 
-> Il regolamento definitivo non è disponibile: questo documento verrà riallineato appena fornito. Prevale sempre il PDF definitivo. Vedi `RULES_AMBIGUITIES.md` (B1–B10).
+> Fonte: `Giù dalla Torre! rev. 5.2l.pdf` (confermato definitivo dall'utente) + decisioni in `RULES_AMBIGUITIES.md`.
 
 ## Parametri
 - Giocatori: **3–8**. Età 10+, ~20 min.
-- Componenti: mazzo Personaggio (100 per regolamento, vedi B2), mazzo "Su sulla Torre" (70: 50×4 frasi + 20×1 frase, vedi B3), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
+- Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo "Su sulla Torre" (70: 50×4 frasi + 20×1 frase, vedi B3), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
 
 ## Setup
 1. Mescola mazzo Personaggio e mazzo Su sulla Torre.
@@ -19,7 +19,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 |---|---|
 | Condizione iniziale | Inizio turno; Megafono designato |
 | Azione Megafono | Annuncia una frase che inizia con "Oggi sale/salgono sulla torre…": inventata, oppure da carta "Su sulla Torre". Carta a 4 frasi: ne sceglie 1; carta a 1 frase: **deve** dire quella. (Online: la frase è mostrata a tutti; il Megafono non digita, "proclama" a voce/megafono o sceglie dalla carta) |
-| Carta del Megafono | Pesca casualmente dal mazzo 1 carta Personaggio e la piazza coperta sulla Torre (non gioca dalla mano) — *variante "Il Megafono sa": gioca una carta dalla propria mano* |
+| Carta del Megafono | (il Megafono può votarla) Pesca casualmente dal mazzo 1 carta Personaggio e la piazza coperta sulla Torre (non gioca dalla mano) — *variante "Il Megafono sa": gioca una carta dalla propria mano* |
 | Azione Folla | Ogni giocatore della Folla sceglie in segreto 1 carta dalla mano e la gioca coperta |
 | Risposta sistema | Quando tutte le carte sono giocate: mescola, rivela scoperte e numerate 1..N (N = n. giocatori) |
 | Transizione | Tutte le carte scoperte → Fase 2 |
@@ -31,7 +31,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 
 ### Fase 3 — Giù dalla Torre
 1. Rivelazione voti (a partire dal giocatore successivo al Megafono).
-2. Cade il personaggio con più voti. **Pareggio: cade quello votato dal Megafono** (anche con meno voti — vedi B4).
+2. Cade il personaggio con più voti. **Pareggio: cade SEMPRE il personaggio votato dal Megafono**, anche se ha solo il voto del Megafono (gli altri voti sono ignorati).
 3. Punti:
    - **+2** a chi ha votato il personaggio caduto;
    - **+2** a chi ha giocato la carta caduta;
@@ -52,3 +52,6 @@ Parlare è sempre consentito e non vincolante (bluff ammesso). **Vietato** rivel
 
 ## Implicazioni per il motore
 Stato autorevole lato server; il client non decide punteggi, carte, esito voto, eliminazioni, vincitore. Le carte giocate e i voti restano segreti fino alla rivelazione.
+
+## Decisioni aggiuntive
+Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = opzione di stanza (il Megafono gioca dalla mano e ripesca).
