@@ -3,14 +3,24 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p packages/game-engine/tsconfig.json --noEmit"
+    "typecheck": "tsc -p packages/game-engine/tsconfig.json --noEmit && tsc -p packages/game-protocol/tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit",
+    "dev": "wrangler dev",
+    "e2e": "bash scripts/run-e2e.sh",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "5.20261006.1",
+    "@types/node": "22.10.2",
+    "@types/ws": "^8.5.13",
     "typescript": "5.6.3",
     "vitest": "2.1.8",
-    "@types/node": "22.10.2"
+    "wrangler": "^4.150.0",
+    "ws": "^8.18.0",
+    "zod": "^3.24.1"
   }
 }

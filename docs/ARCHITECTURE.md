@@ -11,3 +11,10 @@
 - Alternativa scartata: Pages+Functions (meno adatto ai DO), D1/KV (non necessari).
 - Contenuti: `content/su-sulla-torre.json` + `public/cards/manifest.json` (id `pNN-iNN`).
 - Playwright è gratuito (open source) e già disponibile in questo ambiente.
+
+## Implementazione Fase 4
+- `packages/game-engine`: regole (pure, senza rete). `packages/game-protocol`: schemi zod e tipi dei messaggi (vedi `docs/PROTOCOL.md`).
+- `worker/src/RoomCore.ts`: logica di stanza **indipendente dal runtime** (lobby, sessioni, host, espulsione, timer, pulizia, viste) → testabile con Vitest.
+- `worker/src/GameRoom.ts`: Durable Object che collega RoomCore a SQLite (tabella `kv`, una riga `room` in JSON), WebSocket Hibernation (`acceptWebSocket`, `serializeAttachment`, auto-risposta al ping) e allarmi (timer di fase, passaggio host, pulizia, `hello` scaduto).
+- `worker/src/index.ts`: routing HTTP/WS, validazione, limiti per IP, controllo `Origin`.
+- Persistenza: lo stato completo è JSON; dopo un riavvio la stanza si ricostruisce da SQLite (verificato con `scripts/persist-check.mjs`).

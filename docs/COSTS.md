@@ -22,3 +22,10 @@ Con WebSocket Hibernation, 1 partita da 8 giocatori × ~60 azioni ≈ 500 messag
 
 ## Strategie
 Hibernation API; nessun timer a polling (usare alarm solo per timeout); snapshot di stato compatti; cancellazione stanze terminate/inattive; gestione errore di quota con messaggio "servizio al limite giornaliero, riprova dopo 00:00 UTC"; contatori d'uso interni (nessun servizio di monitoraggio esterno).
+
+## Stima di consumo del backend (Fase 4, misurata sul progetto)
+- **Scritture SQLite**: 1 riga scritta per azione/cambio di stanza. Partita da 8 giocatori ≈ 160 azioni → ~160 righe scritte (limite gratuito 100.000/giorno → centinaia di partite).
+- **Richieste Durable Object**: messaggi WebSocket in ingresso contano 1/20; ~160 azioni ≈ 8 richieste + connessioni + HTTP ≈ 30 per partita (limite 100.000/giorno).
+- **Durata**: con WebSocket Hibernation il tempo di attesa tra azioni non fattura durata; i ping `{"t":"ping"}` sono risposti dal runtime senza svegliare la stanza.
+- **Worker**: solo `/api/*` e `/ws/*` passano dal Worker; gli asset statici no (`run_worker_first` ristretto).
+- **Pulizia**: stanze vuote/inattive cancellate (`deleteAll`) → nessun accumulo di dati.

@@ -21,3 +21,10 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] 62 test Vitest: preparazione 3–8 giocatori, validazioni, esempio del regolamento, spareggi, Lui!, privacy, ripristino da JSON, azioni simultanee, mazzo minimo, partite simulate 3–8 giocatori (entrambe le varianti) con invarianti di conservazione carte, contenuti reali (125 carte, 50×5 + 15 frasi)
 - [x] CI GitHub Actions (typecheck + test)
 - Prossima: Fase 4 (backend Cloudflare Workers + Durable Objects + protocollo WebSocket)
+
+## Fase 4 — Backend (completata in locale; deploy in attesa dei dati Cloudflare dell'utente)
+- [x] Protocollo tipizzato con zod (`packages/game-protocol`), API HTTP e WebSocket
+- [x] Durable Object per stanza con SQLite, WebSocket Hibernation, token di sessione (solo hash), riconnessione con snapshot, host con tolleranza di 60 s, espulsione, timer opzionali, pulizia stanze
+- [x] Sicurezza: validazione strict, rate limit, controllo Origin, privacy delle viste (`docs/SECURITY.md`)
+- [x] 98 test unit + prova end-to-end su workerd reale (partita completa da 3 giocatori via WebSocket, riconnessione, token errato, JSON non valido, Origin) + ripristino dopo riavvio
+- [ ] Deploy su Cloudflare: richiede account e segreti dell'utente (`docs/DEPLOYMENT.md`)
