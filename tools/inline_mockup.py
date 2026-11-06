@@ -18,6 +18,7 @@ elif which == "mod":
     ids = ["p05-i01","p05-i02","p05-i03","p05-i04","p05-i05","p05-i06","p05-i07","p05-i09"]
     imgs = {i: uri(f"public/cutouts/{i}.webp") for i in ids}
     imgs["tower"] = uri("public/scene/tower_pop.webp"); imgs["hands"] = uri("public/scene/hands_cut.webp")
+    imgs["cutfb"] = uri("mockups/pop-assets/cutout-fallback.webp")
     src = re.sub(r"window\.IMGS=window\.IMGS\|\|\(\(\)=>\{.*?\}\)\(\);\n", "", src, flags=re.S)
     out = root/"mockups/dist/modifiche-artifact.html"
 elif which == "pop":
