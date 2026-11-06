@@ -7,12 +7,22 @@ def uri(p): return "data:image/webp;base64," + base64.b64encode((root/p).read_by
 which = sys.argv[1]
 if which == "b4":
     src = (root/"mockups/wow/b4-caduta.html").read_text()
-    imgs = {f"p05-i0{n}": uri(f"public/cutouts/p05-i0{n}.webp") for n in range(1, 6)}
+    imgs = {i: uri(f"public/cutouts/{i}.webp") for i in ["p05-i01","p05-i02","p05-i03","p05-i04","p05-i05","p05-i06","p05-i07","p05-i09"]}
     imgs["tower"] = uri("public/scene/tower_pop.webp"); imgs["hands"] = uri("public/scene/hands_cut.webp")
     src = src.replace("const CUT=id=>`../../public/cutouts/${id}.webp`;", "const CUT=id=>window.IMGS[id];")
     src = src.replace("'../../public/scene/tower_pop.webp'", "window.IMGS.tower")
     src = src.replace("window.IMGS?window.IMGS.hands:'../../public/scene/hands_cut.webp'", "window.IMGS.hands")
     out = root/"mockups/wow/dist/b4-artifact.html"
+elif which == "pop":
+    src = (root/"mockups/pop.html").read_text()
+    ids = ["p05-i01","p05-i02","p05-i03","p05-i04","p05-i05","p05-i06","p05-i07","p05-i09"]
+    imgs = {i: uri(f"public/cutouts/{i}.webp") for i in ids}
+    imgs.update({f"c-p03-i0{n}": uri(f"public/cards/p03-i0{n}.webp") for n in range(1, 6)})
+    imgs["tower"] = uri("public/scene/tower_pop.webp"); imgs["hands"] = uri("public/scene/hands_cut.webp")
+    for n in ["torre","torre8","lui","zoom","risultati","caduta","impatto","punti","punti8"]:
+        imgs["proto-"+n] = uri(f"mockups/pop-assets/proto-{n}.webp")
+    src = re.sub(r"/\*PATHS\*/.*?/\*ENDPATHS\*/", "const PATHS={};", src, flags=re.S)
+    out = root/"mockups/dist/gallery-artifact.html"
 else:
     src = (root/"mockups/index.html").read_text()
     ids = [f"p{p:02d}-i{i:02d}" for p, i in [(3,1),(3,2),(3,3),(3,4),(3,5),(5,1),(5,2),(5,3),(5,4),(5,5)]]

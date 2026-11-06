@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup Giù dalla Torre</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--pink:#ff7aa8;--sky1:#79d3ee;--sky2:#4fbce6}
+*{box-sizing:border-box;margin:0}
+body{background:#23232a;color:#fff;font-family:Nunito,system-ui,sans-serif;min-height:100vh;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.g{padding:18px 0 6px}header.g h1{font:400 34px/1 Anton;color:var(--mus);letter-spacing:.02em}header.g p{opacity:.75;font-size:14px;max-width:760px;margin-top:6px}
+nav.g{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;position:sticky;top:0;background:#23232a;z-index:90}
+nav.g button{font:800 13px Nunito;border:0;border-radius:99px;padding:7px 12px;background:#3a3a46;color:#fff;cursor:pointer}nav.g button.on{background:var(--mus);color:var(--navy)}
+main.g{padding:10px 0 60px}.sec{margin-bottom:40px}.sec h2{font:400 26px/1 Anton;margin:8px 0 4px;letter-spacing:.02em}.sec p.note{font-size:14px;opacity:.8;max-width:720px;line-height:1.45;margin-bottom:14px}
+.row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}.cap{font-size:12px;opacity:.65;text-align:center;margin-top:6px}
+.phw{width:390px;flex:none}.ph{width:390px;height:844px;border-radius:44px;border:9px solid #07070b;position:relative;overflow:hidden;background:var(--paper);box-shadow:0 24px 60px #000a;color:var(--navy)}
+.dw{flex:none}.dk{width:1280px;height:720px;border-radius:16px;border:9px solid #07070b;position:relative;overflow:hidden;background:var(--paper);color:var(--navy);transform-origin:0 0;box-shadow:0 24px 60px #000a}
+.s{position:absolute;inset:0;overflow:hidden}.s>*{position:absolute}
+.sky{background:repeating-conic-gradient(from -4deg at 50% 34%,var(--sky1) 0 6deg,var(--sky2) 6deg 12deg)}
+.skyg{background:linear-gradient(0deg,rgba(255,199,44,.5),transparent 42%)}
+.dots{background:radial-gradient(circle,#fff 0 26%,transparent 28%) 0 0/10px 10px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.5}
+.pap{background:var(--paper)}
+.hr{background:radial-gradient(circle,#e8362b 0 26%,transparent 28%) 0 0/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);opacity:.6}
+.ht{background:radial-gradient(circle,#14a3a1 0 26%,transparent 28%) 4px 4px/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 0 0,#000,transparent 55%);mask-image:radial-gradient(ellipse at 0 0,#000,transparent 55%);opacity:.5}
+.fr{inset:0;pointer-events:none;border-radius:35px;box-shadow:inset 0 0 0 5px #13224a,inset 0 0 0 9px #f4e3bd,inset 0 0 0 13px #13224a;z-index:50}
+.grain{inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.4;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.chips{left:16px;right:16px;top:22px;display:flex;justify-content:space-between;z-index:20;font:800 12px Nunito}
+.chip{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:4px 9px;box-shadow:2px 2px 0 var(--navy);display:flex;gap:5px;align-items:center;color:var(--navy)}
+.dc{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid var(--navy);flex:none}.dc.l{width:30px;height:30px;border-width:3px}.dc.xl{width:46px;height:46px;border-width:4px}
+.strip{left:-10px;right:-10px;top:56px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 17px/1 Anton;letter-spacing:.16em;padding:9px 0 8px;text-align:center;box-shadow:0 5px 0 #0005;z-index:19}
+.h{font:400 44px/.9 Anton;text-transform:uppercase;color:#fff;text-shadow:4px 4px 0 var(--red),7px 7px 0 var(--navy);z-index:18;left:20px;right:16px}
+.h.r{color:var(--red);text-shadow:3px 3px 0 var(--navy)}
+.h small{display:block;font:400 21px/1 'Caveat Brush';text-transform:none;margin-bottom:5px;transform:rotate(-1.5deg);text-shadow:2px 2px 0 var(--navy);color:#fff}.h.r small{color:var(--navy);text-shadow:none}
+.bt{display:flex;align-items:center;justify-content:center;gap:8px;font:400 25px/1 Anton;text-transform:uppercase;letter-spacing:.02em;padding:15px 12px;border:3px solid var(--navy);box-shadow:5px 5px 0 var(--navy);color:var(--navy);background:var(--mus);text-align:center}
+.bt.red{background:var(--red);color:#fff}.bt.pap{background:#fff7e0}.bt.dis{background:#c9c3b0;color:#8c8672;box-shadow:5px 5px 0 #7b7766}
+.bt small{display:block;font:800 11px Nunito;text-transform:none;letter-spacing:0;margin-top:2px}
+.in{background:#fff;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:11px 12px;font:800 20px Nunito;display:flex;align-items:center;min-height:52px}.in .ph2{opacity:.35}
+.lb{font:400 22px/1 'Caveat Brush';color:var(--navy);margin-bottom:5px;display:block;transform:rotate(-1deg)}
+.pp{background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px}
+.tape{position:absolute;left:50%;top:-12px;width:60px;height:20px;margin-left:-30px;background:#ffc72ccc;transform:rotate(3deg)}
+.cut{display:block}.stk{filter:drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(5px 6px 0 #13224a)}
+.card{width:104px;height:156px;border-radius:11px;background:center/cover;border:6px solid #fff;box-shadow:5px 6px 0 var(--navy)}
+.card.sel{box-shadow:0 0 0 4px var(--mus),0 0 26px 10px #ffc72caa,6px 8px 0 var(--navy)}
+.sp{color:#fff;font-size:20px}
+.seg{display:flex;gap:10px}.seg .bt{flex:1;font-size:19px;padding:12px 6px}
+.sw{width:56px;height:32px;border:3px solid var(--navy);background:#c9c3b0;position:relative;flex:none;border-radius:99px}.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--navy)}.sw.on{background:var(--mus)}.sw.on::after{left:auto;right:3px}
+.cb{display:flex;gap:8px;justify-content:center}.cb b{width:50px;height:64px;background:#fff;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);display:grid;place-items:center;font:400 38px/1 Anton}.cb b.e{border-style:dashed;box-shadow:none;opacity:.6}
+.pl{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:6px 10px;font:800 16px Nunito}.pl .tg{margin-left:auto;background:var(--mus);border:2px solid var(--navy);font:400 12px/1 Anton;padding:3px 7px;letter-spacing:.06em}.pl .x{margin-left:8px;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;border:2px solid var(--navy);font-weight:800;font-size:13px}.pl.em{border-style:dashed;box-shadow:none;background:#fff7e0aa;opacity:.8;min-height:44px}
+.bn{background:var(--red);color:#fff;border:3px solid var(--navy);box-shadow:5px 5px 0 var(--navy);padding:10px 14px;font:700 15px/1.25 Nunito}.bn small{display:block;font:400 12px/1 Anton;letter-spacing:.08em;text-transform:uppercase;opacity:.9;margin-bottom:3px}
+.opt{background:#fff7e0;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:8px 11px;font:800 13.5px/1.25 Nunito;position:relative}.opt.on{background:var(--mus);box-shadow:0 0 0 3px #fff,0 0 20px 6px #ffc72caa,4px 4px 0 var(--navy)}
+.pod{display:flex;align-items:flex-end;gap:8px}.pod div{flex:1;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:3px;color:#fff;font:400 18px/1 Anton}
+.qr{background:#fff;border:3px solid var(--navy);padding:6px}.qr svg{display:block;width:100%;height:100%}
+.hands{left:-40px;width:480px;z-index:5}
+</style></head><body>
+<header class="g"><h1>Giù dalla Torre — Mockup stile pop</h1><p>Tutte le schermate nello stile approvato. Le schermate di gioco (Torre, Sospetto, Votazione, Risultati, Caduta) sono fotogrammi del <b>prototipo animato</b> “Caduta dalla Torre”. Le carte sono le illustrazioni originali; sulla torre i personaggi sono scontornati.</p></header>
+<nav class="g" id="nav"></nav><main class="g" id="main"></main>
+<script>
+/*PATHS*/const PATHS=(()=>{const o={};['p05-i01','p05-i02','p05-i03','p05-i04','p05-i05','p05-i06','p05-i07','p05-i09'].forEach(i=>o[i]='../public/cutouts/'+i+'.webp');['p03-i01','p03-i02','p03-i03','p03-i04','p03-i05'].forEach(i=>o['c-'+i]='../public/cards/'+i+'.webp');o.tower='../public/scene/tower_pop.webp';o.hands='../public/scene/hands_cut.webp';['torre','torre8','lui','zoom','risultati','caduta','impatto','punti','punti8'].forEach(i=>o['proto-'+i]='pop-assets/proto-'+i+'.webp');return o})();/*ENDPATHS*/
+const A=id=>(window.IMGS||PATHS)[id];
+const PLN=[['Marta','#e5384b'],['Luca','#2f7be0'],['Giulia','#f4c20d'],['Omar','#3aa655'],['Elena','#8a5a3b'],['Paolo','#8e44c8'],['Sara','#ee7bb0'],['Tommi','#222']];
+const dc=(c,k='')=>`<i class="dc ${k}" style="background:${c}"></i>`;
+const spk=(x,y,c='#fff')=>`<div class="sp" style="left:${x}px;top:${y}px"><svg width="26" height="26" viewBox="-13 -13 26 26"><path d="M0 -12Q2 -2 12 0Q2 2 0 12Q-2 2 -12 0Q-2 -2 0 -12Z" fill="${c}" stroke="#13224a" stroke-width="1.6"/></svg></div>`;
+const QR=`<div class="qr"><svg viewBox="0 0 21 21" shape-rendering="crispEdges"><rect width="21" height="21" fill="#fff"/><g fill="#13224a"><path d="M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0z"/><path fill="#fff" d="M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1z"/><path d="M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM8 1h2v2H8zM11 3h2v2h-2zM8 6h3v2H8zM9 9h2v2H9zM12 8h2v3h-2zM15 9h3v2h-3zM8 12h2v3H8zM11 13h3v2h-3zM15 12h2v2h-2zM18 14h2v3h-2zM15 16h2v4h-2zM9 17h3v2H9zM12 19h2v2h-2zM18 19h3v2h-3z"/></g></svg></div>`;
+const chips=(who=1,mega=1)=>`<div class="chips"><span class="chip">${dc(PLN[who][1])} ${PLN[who][0]}</span><span class="chip">📣 Marta</span><span class="chip">Turno 3/10</span></div>`;
+const cut=(id,css,extra='')=>`<img class="cut stk ${extra}" src="${A(id)}" style="position:absolute;${css}">`;
+const skyBg=`<div class="sky" style="inset:0"></div><div class="skyg" style="inset:0"></div><div class="dots" style="inset:0"></div>`;
+const papBg=`<div class="pap" style="inset:0"></div><div class="hr" style="inset:0"></div><div class="ht" style="inset:0"></div>`;
+const FR=`<div class="fr"></div><div class="grain"></div>`;
+// torre con personaggi dietro i merli (stessa geometria del prototipo): left,top della torre in px, fattore k
+function towerBlock(ids,left,top,k,n){const TW=391/1.5*k,HT=2506/1.5*k;let out='';
+ const spec=n===8?(()=>{const T8=[[70,116],[50,124],[30,132]],a=[];for(let i=0;i<8;i++){const t=[0,2,1,0,2,1,0,2][i];a.push([72+i*(228/7),T8[t][0],T8[t][1]])}return a})():[[80,70,140],[133,34,150],[186,70,140],[239,34,150],[292,70,140]].map(a=>a);
+ const base=left+8/1.5*k; // x del bordo sinistro della torre (padding incluso) -> centro corona = left+TW/2
+ const cx=left+TW/2;
+ spec.slice(0,ids.length).forEach((a,i)=>{const x=cx+(a[0]-186)*k,feet=top+(a[1]-0)*k-(8/1.5)*k+ (0),h=a[2]*k;out+=`<img class="cut stk" src="${A(ids[i])}" style="position:absolute;height:${h}px;left:${x}px;top:${feet-h}px;transform:translateX(-50%);z-index:5">`});
+ out+=`<img class="cut" src="${A('tower')}" style="position:absolute;left:${left}px;top:${top-8/1.5*k}px;width:${TW}px;height:${HT}px;z-index:6;max-width:none">`;return out}
+const I8=['p05-i01','p05-i02','p05-i03','p05-i04','p05-i05','p05-i06','p05-i07','p05-i09'];
+const S={};
+S.home={t:'1 · Home',n:'Logo a fumetto, la torre del regolamento con i personaggi in cima, tre azioni chiare. Nessun login.',
+phones:[`<div class="s">${skyBg}${spk(40,300)}${spk(310,250,'#ffc72c')}${spk(300,520)}
+<div style="left:0;right:0;top:44px;text-align:center;z-index:30"><div style="font:400 50px/.9 Anton;color:#fff;text-shadow:3px 3px 0 var(--red),5px 5px 0 var(--navy);transform:rotate(-4deg);display:inline-block;margin-right:90px">GIÙ</div><div style="font:400 40px/.9 Anton;color:var(--mus);text-shadow:3px 3px 0 var(--navy);transform:rotate(3deg);display:inline-block;margin-top:-10px;margin-left:-70px">DALLA</div><div style="font:400 96px/.82 Anton;color:#fff;text-shadow:4px 4px 0 var(--red),8px 8px 0 var(--navy);-webkit-text-stroke:3px var(--navy);paint-order:stroke fill;letter-spacing:-1px">TORRE!</div></div>
+${towerBlock(['p05-i01','p05-i02','p05-i03'].concat([]),56,330,1,3).replace(/(<img class="cut stk")/g,'$1')}
+<div style="left:20px;right:20px;bottom:24px;display:flex;flex-direction:column;gap:12px;z-index:40"><div class="bt">Crea partita</div><div class="bt red">Entra con un codice</div><div class="bt pap" style="font-size:19px;padding:11px">Come si gioca</div></div>${FR}</div>`]};
+S.crea={t:'2 · Creazione partita',n:'Nickname, modalità (stesso tavolo o a distanza) e variante “Il Megafono sa”. Nessun altro parametro: i turni li decide il regolamento.',
+phones:[`<div class="s">${papBg}<div class="chips"><span class="chip">‹ Indietro</span></div>
+<div class="h r" style="top:70px"><small>Prima di salire…</small>Crea la partita</div>
+<div style="left:20px;right:20px;top:200px"><span class="lb">Il tuo nickname</span><div class="in">Marta<span style="margin-left:auto;opacity:.4;font-size:14px">5/12</span></div></div>
+<div style="left:20px;right:20px;top:300px"><span class="lb">Come si gioca?</span><div class="seg"><div class="bt" style="outline:4px solid #fff;box-shadow:0 0 0 7px var(--mus),5px 5px 0 7px var(--navy)">Stesso tavolo</div><div class="bt pap">A distanza</div></div><div style="font:800 12px/1.3 Nunito;margin-top:12px;opacity:.8">Tutti insieme, ognuno col proprio telefono. Un tablet o un PC può fare da schermo condiviso.</div></div>
+<div class="pp" style="left:20px;right:20px;top:476px;display:flex;gap:12px;align-items:center"><div class="sw"></div><div><div style="font:400 20px/1 Anton;text-transform:uppercase">Il Megafono sa</div><div style="font:800 12px/1.3 Nunito;opacity:.8;margin-top:3px">Il Megafono gioca una carta dalla sua mano invece di pescarla. Più strategia, meno caos.</div></div></div>
+${cut('p05-i02','height:230px;right:-18px;bottom:-30px;transform:rotate(5deg);z-index:6')}
+<div class="bt" style="left:20px;width:220px;bottom:24px;z-index:30;font-size:21px">Crea e invita<br>gli amici</div>${FR}</div>`]};
+S.accesso={t:'3 · Accesso con codice',n:'Codice a 5 caratteri (senza lettere ambigue), nickname, oppure QR o link. Il codice da solo non basta a impersonare qualcuno.',
+phones:[`<div class="s">${papBg}<div class="chips"><span class="chip">‹ Indietro</span></div>
+<div class="h r" style="top:70px"><small>Hai il codice?</small>Entra in partita</div>
+<div style="left:20px;right:20px;top:200px"><span class="lb">Codice partita</span><div class="cb"><b>T</b><b>O</b><b>R</b><b class="e"></b><b class="e"></b></div></div>
+<div style="left:20px;right:20px;top:330px;display:flex;gap:10px;align-items:center"><div style="flex:1;height:3px;background:var(--navy);opacity:.4"></div><span style="font:400 20px 'Caveat Brush'">oppure</span><div style="flex:1;height:3px;background:var(--navy);opacity:.4"></div></div>
+<div class="bt pap" style="left:20px;right:20px;top:374px;font-size:20px;padding:12px">📷 Inquadra il QR</div>
+<div style="left:20px;right:20px;top:470px"><span class="lb">Il tuo nickname</span><div class="in"><span class="ph2">Es. Giulia</span></div><div class="bn" style="margin-top:12px;font-size:13px;transform:rotate(-1deg)"><small>Nickname già usato</small>“Marta” c’è già in questa stanza. Scegline un altro.</div></div>
+${cut('p05-i03','height:230px;left:-30px;bottom:-34px;transform:rotate(-4deg);z-index:6')}
+<div class="bt dis" style="left:150px;right:20px;bottom:24px;z-index:30">Entra</div>${FR}</div>`]};
+const lobbyRows=(n)=>PLN.slice(0,n).map((p,i)=>`<div class="pl">${dc(p[1],'l')}${p[0]}${i==0?'<span class="tg">HOST</span>':'<span class="x">×</span>'}</div>`).join('')+Array.from({length:8-n},(_,i)=>`<div class="pl em">${i==0?'In attesa di altri giocatori…':''}</div>`).join('');
+S.lobby={t:'4 · Lobby',n:'Codice grande, QR e link. Giocatori con il proprio colore (disco e segnalino). L’host può espellere prima dell’avvio; “Avvia” da 3 giocatori. La partita prosegue anche se l’host esce.',
+phones:[`<div class="s">${skyBg}${spk(310,120)}${spk(34,300,'#ffc72c')}<div class="chips"><span class="chip">Lobby</span><span class="chip">5/8 giocatori</span></div>
+<div class="pp" style="left:16px;right:16px;top:64px;display:flex;gap:12px;align-items:center;z-index:20"><div style="width:108px;height:108px">${QR}</div><div><div style="font:400 14px 'Caveat Brush'">Codice</div><div style="font:400 58px/.9 Anton;letter-spacing:.03em;color:var(--red);text-shadow:3px 3px 0 var(--navy)">TORRE</div><div style="font:800 12px Nunito;margin-top:4px;text-decoration:underline">Copia il link</div></div></div>
+<div style="left:16px;right:16px;top:208px;display:flex;flex-direction:column;gap:7px;z-index:20">${lobbyRows(5)}</div>
+<div style="left:16px;right:16px;bottom:24px;z-index:30"><div style="font:800 12px Nunito;text-align:center;margin-bottom:8px;color:var(--navy);background:#fff7e0;border:2px solid var(--navy);padding:4px">Tavolo · Variante Megafono sa: no · minimo 3 giocatori</div><div class="bt">Avvia partita</div></div>${FR}</div>`]};
+const PH_=['chi manda vocali da nove minuti','chi risponde solo “k”','le persone che scrivono in CAPS LOCK','chi tagga tutti nella foto peggiore','chi posta “niente social” sui social'];
+S.megafono={t:'5 · Schermata del Megafono',n:'Fase 1. Il Megafono vede la carta “Su sulla Torre”: con più frasi ne sceglie una; se è a frase singola è obbligato. Poi “Proclama!”. Le frasi sono quelle originali del documento.',
+phones:[`<div class="s">${skyBg}${chips(0)}<div class="strip">★ SEI IL MEGAFONO ★</div>
+<div style="left:206px;top:92px;width:160px;height:190px;background:url(${A('hands')}) 0 0/659px 339px no-repeat;transform:rotate(8deg);filter:drop-shadow(4px 5px 0 #13224a);z-index:21"></div>
+<div class="h" style="top:104px;width:190px;font-size:36px"><small>Scegli la frase</small>Cosa urli<br>alla folla?</div>
+<div style="left:16px;right:16px;top:256px;display:flex;flex-direction:column;gap:8px;z-index:20">${PH_.map((t,i)=>`<div class="opt ${i==1?'on':''}">Oggi sale sulla torre ${t}.</div>`).join('')}<div style="font:400 20px 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 var(--navy);text-align:center;margin-top:2px">…oppure inventane una tua e dilla a voce!</div></div>
+<div class="bt red" style="left:16px;right:16px;bottom:24px;z-index:30">📣 Proclama!</div>${FR}</div>`,
+`<div class="s">${skyBg}${chips(0)}<div class="strip">★ SEI IL MEGAFONO ★</div>
+<div class="h" style="top:104px"><small>Carta a frase singola</small>Questa è<br>obbligatoria</div>
+<div class="pp" style="left:16px;right:16px;top:260px;z-index:20"><div class="bn" style="font-size:19px;padding:16px"><small>Devi dire</small>Ammetto di aver cantato in pubblico al karaoke di paese insieme a uno dei personaggi sopra la Torre</div><div style="font:800 12px/1.3 Nunito;margin-top:10px;opacity:.8">Con questa carta la frase non si sceglie: il Megafono la proclama così com’è.</div></div>
+<div style="left:206px;top:520px;width:160px;height:190px;background:url(${A('hands')}) 0 0/659px 339px no-repeat;transform:rotate(-8deg) scaleX(-1);filter:drop-shadow(4px 5px 0 #13224a);z-index:21"></div>
+<div class="bt red" style="left:16px;right:16px;bottom:24px;z-index:30">📣 Proclama!</div>${FR}</div>`]};
+const HC=['p03-i01','p03-i02','p03-i03','p03-i04','p03-i05'];
+S.carte={t:'6 · Selezione carte Personaggio',n:'La Folla vede la frase e la propria mano di 5 carte (private). Tocca per ingrandire, “Gioca” conferma. Gli altri vedono solo chi ha già giocato. Qui servono le carte intere.',
+phones:[`<div class="s">${skyBg}${chips(1)}<div class="strip">★ SCEGLI LA CARTA ★</div>
+<div class="bn" style="left:16px;right:16px;top:112px;z-index:20"><small>Marta dice</small>Oggi sale sulla torre chi manda vocali da nove minuti.</div>
+${HC.map((c,i)=>{const rot=[-12,-6,0,6,12][i],x=[6,70,132,194,258][i],y=[470,440,i==2?392:430,440,470][i];return `<div class="card ${i==2?'sel':''}" style="position:absolute;left:${x}px;top:${y}px;background-image:url(${A('c-'+c)});transform:rotate(${rot}deg);z-index:${10+i}"></div>`}).join('')}
+<div style="left:0;right:0;top:350px;text-align:center;font:400 22px 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 var(--navy);z-index:20">tocca una carta per vederla bene</div>
+<div style="left:16px;right:16px;bottom:96px;display:flex;gap:6px;justify-content:center;z-index:30">${PLN.slice(0,5).map((p,i)=>`<span class="chip">${dc(p[1])}${i==2||i==3?'✓':'…'}</span>`).join('')}</div>
+<div class="bt" style="left:16px;right:16px;bottom:24px;z-index:30">Gioca questa carta</div>${FR}</div>`]};
+const frame=(id)=>`<div class="s"><img src="${A(id)}" style="position:absolute;left:0;top:0;width:372px;height:826px"></div>`;
+S.torre={t:'7 · Visualizzazione della Torre',n:'Le carte giocate vengono rivelate: i personaggi fanno capolino dai merli, numerati da sinistra a destra. A 8 giocatori la fila si infittisce ma i volti restano leggibili.',phones:[frame('proto-torre'),frame('proto-torre8')]};
+S.sospetto={t:'8 · Scelta del Sospetto (“Lui!”)',n:'Solo il Megafono: sceglie il segnalino (CADE / NON CADE) e lo posa su un personaggio. Gli altri vedono un segnalino coperto.',phones:[frame('proto-lui')]};
+S.voto={t:'9 · Votazione segreta',n:'Un tocco su un personaggio lo ingrandisce a schermo intero, con frecce per vederli tutti. “Voto il n. X” lo sceglie; il voto resta segreto fino alla rivelazione.',phones:[frame('proto-zoom')]};
+S.risultati={t:'10 · Rivelazione dei risultati',n:'I segnalini voto rimbalzano sui personaggi e il timbro annuncia il più votato. Pareggio: cade il personaggio votato dal Megafono.',phones:[frame('proto-risultati')]};
+S.caduta={t:'11 · Caduta dalla Torre',n:'La camera segue la caduta, la scena si inclina, il personaggio rimbalza e piega i materassi. Mani del regolamento con oggetti buffi diversi a ogni caduta; poi i punti.',phones:[frame('proto-caduta'),frame('proto-impatto'),frame('proto-punti'),frame('proto-punti8')]};
+S.finale={t:'12 · Classifica finale',n:'Podio, tabella punti e titolo “Gran Megafono”. Parità = vittoria condivisa.',
+phones:[`<div class="s">${skyBg}${spk(30,330)}${spk(320,300,'#ffc72c')}
+${Array.from({length:34},(_,i)=>`<i style="position:absolute;left:${(i*53)%360}px;top:${60+(i*97)%420}px;width:${8+i%3*3}px;height:${5+i%4*2}px;background:${['#e8362b','#ffc72c','#14a3a1','#fff7e0','#ff7aa8'][i%5]};border:1px solid #13224a;transform:rotate(${i*37}deg)"></i>`).join('')}
+<div class="chips"><span class="chip">Fine partita</span></div>
+<div class="h" style="top:62px;text-align:center;left:0;right:0;font-size:54px"><small>Ha vinto…</small>Gran<br>Megafono!</div>
+<div class="pod" style="left:20px;right:20px;top:300px;height:190px;z-index:20"><div style="height:120px;background:var(--teal)">${dc(PLN[1][1],'xl')}Luca<span style="font-size:24px">27</span></div><div style="height:160px;background:var(--red);margin-top:-30px"><span style="font-size:34px;margin-top:-2px">👑</span>${dc(PLN[0][1],'xl')}Marta<span style="font-size:28px">31</span></div><div style="height:92px;background:#8a6b2e">${dc(PLN[3][1],'xl')}Omar<span style="font-size:22px">22</span></div></div>
+<div style="left:20px;right:20px;top:520px;display:flex;flex-direction:column;gap:6px;z-index:20">${[[2,19],[4,14],[5,11],[6,9],[7,6]].map(([i,p],k)=>`<div class="pl" style="padding:4px 10px;font-size:14px"><span style="font:400 18px Anton">${k+4}</span>${dc(PLN[i][1])}${PLN[i][0]}<span class="tg" style="margin-left:auto;font-size:14px">${p}</span></div>`).join('')}</div>
+<div class="bt" style="left:16px;right:16px;bottom:24px;z-index:30;font-size:21px">Rigioca con gli stessi amici</div>${FR}</div>`]};
+S.schermo={t:'13 · Schermo condiviso (tablet / PC / TV)',n:'Solo informazioni pubbliche: frase, Torre con i personaggi, punteggi, chi ha già votato, codice e QR. Mai mani né voti prima della rivelazione. Si apre da /schermo/CODICE senza giocare.',
+desks:[`<div class="s">${skyBg}${towerBlock(I8,380,390,2,8)}
+<div class="pp" style="left:28px;top:28px;width:300px;display:flex;gap:12px;align-items:center;z-index:30"><div style="width:96px;height:96px">${QR}</div><div><div style="font:400 15px 'Caveat Brush'">Codice</div><div style="font:400 50px/.9 Anton;color:var(--red);text-shadow:3px 3px 0 var(--navy)">TORRE</div></div></div>
+<div class="bn" style="left:360px;right:360px;top:34px;font-size:24px;padding:14px 20px;z-index:30;text-align:center"><small style="font-size:15px">Marta, il Megafono, dice</small>Oggi sale sulla torre chi manda vocali da nove minuti.</div>
+<div class="chip" style="left:28px;top:182px;font-size:16px;padding:6px 14px;z-index:30">Turno 3 di 10 · Fase: Voto</div>
+<div style="right:26px;top:26px;width:290px;display:flex;flex-direction:column;gap:8px;z-index:30">${PLN.map((p,i)=>`<div class="pl" style="font-size:17px">${dc(p[1],'l')}${p[0]}${i==0?' 📣':''}<span class="tg" style="font-size:15px">${[31,27,19,22,14,11,9,6][i]} pt ${i<5?'✓':'…'}</span></div>`).join('')}<div style="font:400 24px 'Caveat Brush';text-align:center;color:#fff;text-shadow:2px 2px 0 var(--navy)">5 su 8 hanno votato</div></div></div>`]};
+const order=['home','crea','accesso','lobby','megafono','carte','torre','sospetto','voto','risultati','caduta','finale','schermo'];
+const nav=document.getElementById('nav'),main=document.getElementById('main');
+function render(id){main.innerHTML='';(id==='all'?order:[id]).forEach(k=>{const s=S[k],e=document.createElement('section');e.className='sec';
+ e.innerHTML=`<h2>${s.t}</h2><p class="note">${s.n}</p><div class="row">${(s.phones||[]).map(h=>`<div class="phw"><div class="ph">${h}</div></div>`).join('')}${(s.desks||[]).map(h=>`<div class="dw"><div class="dk">${h}</div></div>`).join('')}</div>`;main.appendChild(e)});
+ [...nav.children].forEach(b=>b.classList.toggle('on',b.dataset.id===id));fit()}
+function fit(){const k=Math.min(1,(innerWidth-32)/390);document.querySelectorAll('.phw').forEach(p=>{p.style.width=390*k+'px';p.firstChild.style.zoom=k});
+ const kd=Math.min(.62,(innerWidth-32)/1298);document.querySelectorAll('.dw').forEach(d=>{d.style.width=1298*kd+'px';d.style.height=738*kd+'px';d.firstChild.style.transform=`scale(${kd})`})}
+addEventListener('resize',fit);
+[['all','Tutte']].concat(order.map(k=>[k,S[k].t])).forEach(([k,t])=>{const b=document.createElement('button');b.textContent=t;b.dataset.id=k;b.onclick=()=>render(k);nav.appendChild(b)});
+render('all');
+</script></body></html>
