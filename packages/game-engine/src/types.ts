@@ -72,6 +72,9 @@ export interface GameState {
   megafonoTurns: Record<PlayerId, number>;
   lastResult: TurnResult | null;
   winners: PlayerId[] | null;
+  /** Spareggio a oltranza: si gioca un turno alla volta finché un giocatore ha più punti di tutti gli altri. */
+  goldenGoal: boolean;
+  goldenTurns: number;
 }
 
 export type Action =
@@ -91,6 +94,7 @@ export type GameEvent =
   | { type: "voteCast"; playerId: PlayerId }
   | { type: "resolved"; result: TurnResult }
   | { type: "turnEnded"; turn: number }
+  | { type: "goldenGoal"; leaders: PlayerId[] }
   | { type: "gameOver"; winners: PlayerId[] };
 
 export type EngineErrorCode =

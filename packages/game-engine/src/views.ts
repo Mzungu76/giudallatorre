@@ -21,6 +21,7 @@ export interface PlayerView {
   votes: Record<PlayerId, number> | null;
   lastResult: TurnResult | null;
   winners: PlayerId[] | null;
+  goldenGoal: boolean;
   drawPileCount: number; discardCount: number;
 }
 
@@ -42,7 +43,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed ? s.lastResult : null,
-    winners: s.winners,
+    winners: s.winners, goldenGoal: s.goldenGoal,
     drawPileCount: s.drawPile.length, discardCount: s.discardPile.length,
   };
 }

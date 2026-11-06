@@ -9,6 +9,6 @@ export function checkInvariants(s: GameState, fullDeck: readonly string[]): stri
   const seen = new Set<string>();
   for (const c of all) { if (seen.has(c)) problems.push(`carta duplicata ${c}`); seen.add(c); }
   for (const c of fullDeck) if (!seen.has(c)) problems.push(`carta mancante ${c}`);
-  for (const p of s.playerIds) if (s.scores[p]! < 0) problems.push(`punteggio negativo ${p}`);
+  for (const p of s.playerIds) if (!Number.isInteger(s.scores[p])) problems.push(`punteggio non intero ${p}`);
   return problems;
 }

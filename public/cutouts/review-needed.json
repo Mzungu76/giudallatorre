@@ -7,8 +7,33 @@
   "p08-i08",
   "p08-i09",
   "p08-i10",
+  "p13-i08",
   "p14-i03",
-  "p14-i04"
+  "p14-i04",
+  "p08-i04",
+  "p11-i02",
+  "p01-i06",
+  "p02-i05",
+  "p12-i08",
+  "p12-i01"
  ],
- "nota": "Maschera automatica fallita o carta-scena; fino al ritocco usare la carta intera come ripiego."
+ "motivi": {
+  "p03-i03": "scena (aula), non un personaggio",
+  "p04-i06": "scena (macerie)",
+  "p06-i02": "solo icona like",
+  "p08-i07": "macchia gialla",
+  "p08-i08": "residui neri della sedia",
+  "p08-i09": "scena (faro sul palco)",
+  "p08-i10": "frammenti (testa e pugni)",
+  "p13-i08": "scena (bar con la fila)",
+  "p14-i03": "scena (stanza con piante)",
+  "p14-i04": "residui di muro",
+  "p08-i04": "panchina con fondo giallo residuo",
+  "p11-i02": "tavolo con fondo residuo",
+  "p01-i06": "tappeto colorato residuo",
+  "p02-i05": "sedia scura residua",
+  "p12-i08": "sagoma nera residua",
+  "p12-i01": "auto smontata: ritaglio disordinato"
+ },
+ "nota": "Revisione visiva di tutti i ritagli automatici. Per queste carte si usa la carta intera finché non vengono ritoccate a mano."
 }
