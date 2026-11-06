@@ -9,6 +9,7 @@
 body{background:#2a2a30;min-height:100vh;display:flex;flex-wrap:wrap;gap:24px;justify-content:center;align-items:center;padding:20px max(16px,env(safe-area-inset-right,0px)) 20px max(16px,env(safe-area-inset-left,0px));font-family:Nunito,sans-serif;color:#fff}
 .phone{width:390px;height:844px;border-radius:44px;border:9px solid #0b0b10;position:relative;overflow:hidden;background:#5db4e6;box-shadow:0 30px 80px #000a;color:var(--navy);flex:none}
 .sky{position:absolute;inset:0;background:repeating-conic-gradient(from -4deg at 50% 36%,#79d3ee 0 6deg,#4fbce6 6deg 12deg)}
+.skyg{position:absolute;inset:0;background:linear-gradient(0deg,rgba(255,199,44,.5),transparent 42%)}
 .skyh{position:absolute;inset:0;background:radial-gradient(circle,#fff 0 26%,transparent 28%) 0 0/10px 10px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.55}
 .sky2{position:absolute;inset:0;background:linear-gradient(180deg,#ffd36b,#ffe9a8);opacity:0}
 .far,.world{position:absolute;left:0;top:0;will-change:transform;transform-origin:0 0}
@@ -75,14 +76,31 @@ body{background:#2a2a30;min-height:100vh;display:flex;flex-wrap:wrap;gap:24px;ju
 .zoom .zb button{font:400 24px/1 Anton;text-transform:uppercase;padding:14px;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);cursor:pointer}
 .zoom .zb .ok{background:var(--mus);color:var(--navy)}.zoom .zb .no{background:#fff;color:var(--navy);font-size:18px;padding:10px}
 .panel .it{font:800 12px/1.3 Nunito;color:var(--navy);opacity:.8;margin:-2px 0 6px}
+
+.frame{position:absolute;inset:0;z-index:58;pointer-events:none;border-radius:35px;box-shadow:inset 0 0 0 5px #13224a,inset 0 0 0 9px #f4e3bd,inset 0 0 0 13px #13224a}
+.frame::before,.frame::after{content:"";position:absolute;width:120px;height:120px;background:radial-gradient(circle,#e8362b 0 26%,transparent 28%) 0 0/8px 8px;opacity:.7}
+.frame::before{left:13px;bottom:13px;-webkit-mask-image:radial-gradient(circle at 0 100%,#000,transparent 70%);mask-image:radial-gradient(circle at 0 100%,#000,transparent 70%)}
+.frame::after{right:13px;bottom:13px;background:radial-gradient(circle,#ffc72c 0 26%,transparent 28%) 0 0/8px 8px;-webkit-mask-image:radial-gradient(circle at 100% 100%,#000,transparent 70%);mask-image:radial-gradient(circle at 100% 100%,#000,transparent 70%)}
+.flash{position:absolute;inset:0;z-index:57;background:#fff;opacity:0;pointer-events:none}
+.ops{position:absolute;z-index:23;left:50%;width:200px;height:140px;margin-left:-100px;display:grid;place-items:center;opacity:0;font:400 40px/1 Anton;color:#fff;text-transform:uppercase;text-shadow:3px 3px 0 var(--red)}
+.ops::before{content:"";position:absolute;inset:0;background:var(--red);clip-path:polygon(50% 0,60% 18%,82% 6%,78% 30%,100% 36%,82% 52%,96% 74%,72% 72%,66% 96%,50% 80%,34% 96%,28% 72%,4% 74%,18% 52%,0 36%,22% 30%,18% 6%,40% 18%);filter:drop-shadow(5px 5px 0 var(--navy))}
+.ops span{position:relative;transform:rotate(6deg)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes wob{0%,100%{transform:rotate(-.8deg)}50%{transform:rotate(.8deg)}}
+@keyframes tw{0%,100%{opacity:.25;transform:scale(.6)}50%{opacity:1;transform:scale(1.1)}}
+.ticket{animation:pulse 1.6s ease-in-out infinite}.hl{animation:wob 2.4s ease-in-out infinite}
+.sp{position:absolute;color:#fff;text-shadow:0 0 0 #13224a;font-size:20px;animation:tw 2.2s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.ticket,.hl,.sp{animation:none}}
+.fx{pointer-events:none}
 </style>
 
 <div class="phone"><div id="vp" style="position:absolute;inset:0;overflow:hidden">
- <div class="sky"></div><div class="skyh"></div><div class="sky2" id="sky2"></div>
+ <div class="sky"></div><div class="skyg"></div><div class="skyh"></div><div class="sky2" id="sky2"></div>
  <div class="far" id="far"></div>
  <div class="world" id="world"></div>
  <div class="lines" id="lines"></div>
  <div class="hud">
+  <div class="frame"></div><div class="flash" id="flash"></div><div class="ops" id="ops"><span>Spinto!</span></div>
   <div class="zoom" id="zoom"><div class="zt">guardalo bene, poi decidi</div><div class="zc"><img id="zimg" alt=""><div class="zn" id="znum">2</div></div><div class="arr al" id="zl">‹</div><div class="arr ar" id="zr">›</div><div class="zb"><button class="ok" id="zok">Voto il n. 2</button><button class="no" id="zno">Torna sulla torre</button></div></div>
   <div class="top"><span><i style="background:#2f7be0"></i>Luca</span><span>📣 Marta</span><span>Turno 3/10</span></div>
   <div class="strip" id="strip">★ AVVISO ALLA CITTADINANZA ★</div>
@@ -123,7 +141,7 @@ land.innerHTML=`<defs><pattern id="ht" width="9" height="9" patternUnits="userSp
 ${Array.from({length:60},(_,i)=>`<path d="M${(i*23)%1400} ${320+(i*41)%340}l4 -13l4 13z" fill="#13224a" opacity=".6"/>`).join('')}`;
 W.appendChild(land);
 // ---- torre (regolamento, versione pop): i personaggi fanno capolino dietro i merli
-const TX=61,TY=420,PAD=8/1.5,TWW=391/1.5,THH=2506/1.5;
+const MT_=2034;const TX=61,TY=420,PAD=8/1.5,TWW=391/1.5,THH=2506/1.5;
 const tsh=document.createElement('img');tsh.src=window.IMGS.tower;tsh.style.cssText=`left:${TX-PAD+13}px;top:${TY-PAD+10}px;width:${TWW}px;height:${THH}px;z-index:3;pointer-events:none;filter:brightness(0) opacity(.28)`;W.appendChild(tsh);
 const tf=document.createElement('img');tf.src=window.IMGS.tower;tf.style.cssText=`left:${TX-PAD}px;top:${TY-PAD}px;width:${TWW}px;height:${THH}px;z-index:6;pointer-events:none`;W.appendChild(tf);
 add('Torre del<br>Giudizio Spicciolo<small>vietato lanciare oggetti. Persone sì.</small>',`left:${TX+30}px;top:1010px;z-index:7;transform:rotate(-3deg)`,'gag');
@@ -131,7 +149,7 @@ add(`<svg width="64" height="56" viewBox="0 0 64 56"><path d="M8 36q4-22 26-20q1
 add('«tra 200 m,<br>svolta a destra»',`left:${TX+80}px;top:1150px;z-index:7;transform:rotate(-4deg);font-size:12px`,'gag');
 add('Ingresso<small>solo andata</small>',`left:${TX+78}px;top:1895px;z-index:7;transform:rotate(2deg);font-size:15px`,'gag');
 // ---- personaggi: stanno dietro la corona (si vedono volti e busti), leggermente distanziati
-const CH=[{n:1,x:80,feet:TY+70,h:140,z:7},{n:2,x:133,feet:TY+34,h:150,z:7},{n:3,x:186,feet:TY+70,h:140,z:7},{n:4,x:239,feet:TY+34,h:150,z:7},{n:5,x:292,feet:TY+70,h:140,z:7}];
+const CH=[{n:1,x:80,feet:TY+70,h:140,z:5},{n:2,x:133,feet:TY+34,h:150,z:5},{n:3,x:186,feet:TY+70,h:140,z:5},{n:4,x:239,feet:TY+34,h:150,z:5},{n:5,x:292,feet:TY+70,h:140,z:5}];
 const ch={};
 CH.forEach(c=>{const img=document.createElement('img');img.className='cut stk pick';img.src=CUT('p05-i0'+c.n);img.style.cssText=`height:${c.h}px;z-index:${c.z}`;img.dataset.n=c.n;W.appendChild(img);ch[c.n]=img;
  add(c.n,`left:${c.x-13}px;top:${TY+86}px;z-index:9;pointer-events:none`,'bd')});
@@ -218,6 +236,17 @@ function placeObjects(seed){const r=mulberry(seed*7919+13);tiles.forEach(t=>t.og
  cand.sort(()=>r()-.5);
  keys.forEach((k,j)=>{const c=cand[j];if(!c)return;const o=document.createElementNS(NS,'g');o.setAttribute('transform',`translate(${c.p.x} ${c.p.y+4}) scale(${.45+c.p.sc*1.4})`);o.innerHTML=OBJ[k];c.t.og.appendChild(o)});
  const el=$('items');if(el)el.textContent='Il pubblico ha portato: '+keys.map(k=>NAMES[k]).join(', ')+'.'}
+
+// ---- effetti spettacolari
+const star4=(c)=>`<svg width="26" height="26" viewBox="-13 -13 26 26"><path d="M0 -12Q2 -2 12 0Q2 2 0 12Q-2 2 -12 0Q-2 -2 0 -12Z" fill="${c}" stroke="#13224a" stroke-width="1.6"/></svg>`;
+[[40,120],[320,90],[60,380],[300,330],[180,200],[20,620],[330,560],[250,760],[90,900],[310,980],[150,1100],[50,1250]].forEach(([x,y],i)=>{const e=document.createElement('div');e.className='sp';e.style.cssText=`left:${x}px;top:${y}px;animation-delay:${-i*.37}s`;e.innerHTML=star4(i%3?'#fff':'#ffc72c');F.appendChild(e)});
+const cone=add('',`left:0;top:${TY-330}px;width:190px;height:420px;z-index:4;pointer-events:none;mix-blend-mode:screen;background:linear-gradient(180deg,#fff7b8cc,#ffe27a55 55%,transparent);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%)`);
+const burst=add('',`left:${196-210}px;top:${MT_-230}px;width:420px;height:420px;z-index:31;pointer-events:none;opacity:0;background:repeating-conic-gradient(#ffc72c 0 9deg,#e8362b 9deg 18deg);-webkit-mask-image:radial-gradient(circle,transparent 8%,#000 28%,transparent 72%);mask-image:radial-gradient(circle,transparent 8%,#000 28%,transparent 72%);border-radius:50%`);
+const rings=[0,1].map(i=>add(`<svg width="300" height="90" viewBox="-150 -45 300 90"><ellipse rx="140" ry="36" fill="none" stroke="#13224a" stroke-width="9"/><ellipse rx="140" ry="36" fill="none" stroke="#fff" stroke-width="4"/></svg>`,`left:${196-150}px;top:${MT_+2-45}px;z-index:31;pointer-events:none;opacity:0`));
+const CONF=[];(function(){let sd=3;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;const g=document.createElementNS(NS,'svg');g.setAttribute('viewBox','-520 1500 1400 900');g.style.cssText='left:-520px;top:1500px;width:1400px;height:900px;z-index:33;pointer-events:none;overflow:visible';W.appendChild(g);
+ const cols=['#e8362b','#ffc72c','#14a3a1','#fff7e0','#ff7aa8','#13224a'];
+ for(let i=0;i<80;i++){const e=document.createElementNS(NS,'rect');const w=7+r()*8,h=4+r()*7;e.setAttribute('width',w);e.setAttribute('height',h);e.setAttribute('fill',cols[i%6]);e.setAttribute('stroke','#13224a');e.setAttribute('stroke-width','1');e.setAttribute('opacity','0');g.appendChild(e);CONF.push({e,vx:-300+r()*600,vy:-760+r()*420,rs:(r()-.5)*900,w,h,dl:r()*.25})}})();
+const back=x=>{x=Math.min(1,Math.max(0,x));const c=1.70158,c3=c+1;return 1+c3*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
 // ---- polvere e stelle
 const puffs=[[30,2040],[96,2050],[300,2048],[230,2040],[160,2030]].map(([x,y])=>add('',`left:${x}px;top:${y}px;z-index:31`,'puff'));
 const stars=add('<b>★</b><b>★</b><b>★</b>','width:70px;height:30px;z-index:32;opacity:0','stars');
@@ -243,11 +272,12 @@ let RES=outcome();
 function render(T){
  const t=T-T_FALL;
  $('ticket').style.transform=`translateY(${sm(0,.4,T)*140}px)`;$('ticket').style.opacity=T>=.45?0:1;
- tokens.forEach(([e,n,i])=>{e.style.transform=`scale(${sm(.3+i*.18+(n-1)*.1,.6+i*.18+(n-1)*.1,T)})`;e.style.opacity=t>.3?1-sm(.3,.6,t):1});
+ tokens.forEach(([e,n,i])=>{e.style.transform=`scale(${back((T-(.3+i*.18+(n-1)*.1))/.35)})`;e.style.opacity=t>.3?1-sm(.3,.6,t):1});
  const lc=CH[LUI_ON-1];lui.style.left=(lc.x+22)+'px';lui.style.top=(lc.feet-lc.h-14)+'px';lui.style.transform=`rotate(8deg) scale(${sm(1.2,1.5,T)*(1-sm(.1,.5,t))})`;
- $('stamp').style.transform=`rotate(-6deg) scale(${sm(1.6,1.85,T)*(t>.3?1-sm(.3,.6,t):1)})`;
+ {const u=Math.min(1,Math.max(0,(T-1.6)/.25)),sk=(T>1.85&&T<2.1)?Math.sin(T*90)*4*(2.1-T)/.25:0;$('stamp').style.transform=`translate(${sk}px,${sk*.6}px) rotate(${-6+(1-u)*10}deg) scale(${(1+(1-u)*1.6)*u*(t>.3?1-sm(.3,.6,t):1)})`}
  $('hl').style.opacity=1-sm(1.5,1.8,T);
  const sus=t<0?sm(1.7,T_FALL,T):0;
+ {const cx_=CH[sel-1].x;cone.style.left=(cx_-95)+'px';cone.style.opacity=(t<.3?1:0)*(.55+.45*Math.sin(T*3));}
  CH.forEach(c=>{const im=ch[c.n];im.classList.toggle('sel',c.n===sel&&t<.4);if(c.n!==FN||t<0&&false){}
   if(c.n!==FN)im.style.transform=`rotate(${(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
  const c=cardState(t),wob=t<0?Math.sin(T*28)*sus*3:0,h=fc.h,dp=dip(t);
@@ -256,7 +286,8 @@ function render(T){
  if(t<TS*.3){f.style.zIndex=fc.z;f.style.left=(fc.x-w/2)+'px';f.style.top=(startY()-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob}deg)`}
  else{f.style.zIndex=30;f.style.left=(c.x-w/2)+'px';f.style.top=(c.y-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${c.r}deg) scale(${(c.sx||1)*c.k},${(c.sy||1)*c.k})`}
  const cm=cam(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
- W.style.transform=`translate(${sh}px,${sh}px) scale(${cm.s}) translate(${-cm.cx}px,${-cm.cy}px)`;F.style.transform=`translateY(${-(cm.cy-CY0)*cm.s*.35}px)`;
+ const dutch=-3*sm(.5,1.3,t)*(1-sm(TI-.3,TI+.4,t));const shk=(T>1.85&&T<2.1)?Math.sin(T*80)*3:0;
+ W.style.transform=`translate(${sh+shk}px,${sh}px) translate(186px,413px) rotate(${dutch}deg) translate(-186px,-413px) scale(${cm.s}) translate(${-cm.cx}px,${-cm.cy}px)`;F.style.transform=`translateY(${-(cm.cy-CY0)*cm.s*.35}px)`;
  $('sky2').style.opacity=Math.min(1,Math.max(0,(cm.cy-CY0)/1500))*.75;
  mats.forEach((m,i)=>m.update(dp*[.25,.55,1][i],dp*[.08,.14,.22][i]));
   tiles.forEach(a=>{const j=t>TI+.1?Math.abs(Math.sin((t-TI)*9+a.ph))*(a.layer==2?20:a.layer==1?14:8)*Math.min(1,(t-TI)/.4)*(t>TI+2.6?0:1):Math.sin(T*1.6+a.ph)*(a.layer+1)*1.4;const wv=t>TI+.1?Math.sin((t-TI)*11+a.ph)*.05:Math.sin(T*1.3+a.ph)*.02;a.g.setAttribute('transform',`translate(0 ${-j}) rotate(${wv*57.3} ${a.cx} ${a.base})`)});
@@ -266,6 +297,12 @@ function render(T){
  const sy=(c.y-cm.cy)*cm.s;
  const ca=$('aaah');ca.style.opacity=(t>.55&&t<TI-.05)?1:0;ca.style.left='34px';ca.style.top=(sy-110)+'px';ca.style.transform=`rotate(${-8+Math.sin(t*20)*3}deg) scale(${1+v*.5})`;
  const bo=$('boing'),d=t-TI;bo.style.opacity=(d>0&&d<1)?1:0;bo.style.top=(sy-215)+'px';bo.style.transform=`scale(${d>0?(.95-.15*sm(0,.2,d))*(1-sm(.6,1,d)):0}) rotate(-4deg)`;
+ {const d2=t-TI;
+  $('flash').style.opacity=d2>0&&d2<.2?.85*(1-d2/.2):0;
+  burst.style.opacity=d2>0&&d2<.45?(1-d2/.45)*.95:0;burst.style.transform=`scale(${.25+Math.max(0,d2)*3.2}) rotate(${d2*60}deg)`;
+  rings.forEach((rg,i)=>{const q=d2-.05-i*.18;rg.style.opacity=q>0&&q<.7?(1-q/.7)*.95:0;rg.style.transform=`scale(${.2+Math.max(0,q)*2.6})`});
+  CONF.forEach(c=>{const q=d2-c.dl;if(q<0||q>2.6){c.e.setAttribute('opacity','0');return}const x=196+c.vx*q,y=MT_-30+c.vy*q+.5*800*q*q;c.e.setAttribute('opacity',String(1-sm(1.9,2.6,q)));c.e.setAttribute('transform',`translate(${x} ${y}) rotate(${c.rs*q})`)});
+  const op=$('ops');op.style.opacity=(t>.12&&t<.8)?1:0;op.style.top=((c.y-cm.cy)*cm.s-120)+'px';op.style.left='62%';op.style.transform=`scale(${back((t-.12)/.2)*(1-sm(.6,.8,t))}) rotate(${Math.sin(t*30)*3}deg)`}
  $('strip').textContent=t>.4?'★ BOLLETTINO DELLA CADUTA ★':'★ AVVISO ALLA CITTADINANZA ★';
  const pt=t-(TI+1.0);$('panel').style.transform=`translateY(${(1-sm(0,.5,pt))*120}%)`;
  document.querySelectorAll('.row').forEach((r,i)=>{const s=sm(.3+i*.18,.55+i*.18,pt);r.style.opacity=s;r.style.transform=`translateX(${(1-s)*-14}px)`});
