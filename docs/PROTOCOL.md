@@ -1,0 +1,36 @@
+# PROTOCOLLO — HTTP e WebSocket (`packages/game-protocol`)
+
+Tutti i messaggi sono validati lato server con **zod** (schemi *strict*: campi extra = errore). L'identità del mittente non viaggia mai nei messaggi: la decide il server dal token.
+
+## HTTP (stesso dominio dell'app)
+| Metodo e percorso | Corpo | Risposta |
+|---|---|---|
+| `POST /api/rooms` | `{nickname, mode?: "table"\|"remote", megafonoSa?: boolean}` | `{code, playerId, token}` — crea la stanza, chi crea è host |
+| `POST /api/rooms/:code/join` | `{nickname}` | `{code, playerId, token}`; 409 se `NICKNAME_TAKEN`, `ROOM_FULL`, `GAME_STARTED` |
+| `GET /api/rooms/:code/info` | — | `{exists, stage?, players?, full?, mode?}` (nessun dato privato) |
+| `GET /ws/:code` (Upgrade) | — | WebSocket; il primo messaggio deve essere `hello` |
+| `GET /api/health` | — | `{ok:true}` |
+
+Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 0, 1). Nickname: 1–16 caratteri (lettere, numeri, spazi, `_ . ' -`), unico nella stanza senza distinguere maiuscole. Token: 128 bit casuali (22 caratteri); il server conserva solo l'hash SHA-256.
+
+## WebSocket — client → server
+| `t` | Campi | Note |
+|---|---|---|
+| `hello` | `token` | **obbligatorio come primo messaggio** (entro 10 s) |
+| `ping` | — | risposta `{"t":"pong"}` automatica, senza svegliare la stanza (stringa esatta `{"t":"ping"}`) |
+| `setOptions` | `megafonoSa?`, `mode?`, `turnTimerSec?` (0/30/60/90/120) | solo host, solo lobby |
+| `kick` | `playerId` | solo host, solo lobby |
+| `start` | — | solo host, da 3 giocatori |
+| `leave` | — | in lobby esce; in partita chiude soltanto la connessione |
+| `act` | `reqId?`, `action` | azioni di gioco: `choosePhrase{mode:"card",index}\|{mode:"free"}`, `playCard{cardId}`, `placeLui{kind,position}`, `vote{position}`, `advance` |
+
+## WebSocket — server → client
+`room` (stanza, giocatori e presenza, opzioni, `seq`), `view` (vista privata del giocatore + eventi per le animazioni + `deadline` del timer), `error{code,message,reqId?}`, `kicked`, `closed{reason}`, `pong`.
+
+Dopo **ogni** cambiamento ogni giocatore connesso riceve `room` e `view` con `seq` crescente. Alla (ri)connessione riceve subito uno snapshot completo: nessun ricaricamento della pagina e nessuna perdita di stato.
+
+## Codici di chiusura
+4001 token non valido · 4002 sostituita da una connessione più recente · 4003 espulso · 4004 stanza chiusa · 4008 troppi messaggi · 4400 messaggio non valido · 4401 `hello` mancante/scaduto · 1009 messaggio troppo grande (>2 KB).
+
+## Errori di gioco (`error.code`)
+`WRONG_PHASE`, `NOT_ALLOWED`, `ALREADY_DONE` (doppio invio/voto), `CARD_NOT_IN_HAND`, `INVALID_POSITION`, `INVALID_CHOICE`, `NOT_HOST`, `WRONG_STAGE`, `NOT_ENOUGH_PLAYERS`, `INVALID_TARGET`, `INVALID_MESSAGE`, `RATE_LIMIT`, `BAD_TOKEN`. Gli errori non chiudono la connessione e riportano `reqId`; i messaggi fuori sequenza (per esempio un voto mentre si gioca) sono semplicemente rifiutati.

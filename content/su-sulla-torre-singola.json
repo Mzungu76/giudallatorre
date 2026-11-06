@@ -1,0 +1,66 @@
+{
+ "fonte": "Carte_singola frase.pdf",
+ "nota": "Importazione letterale (punteggiatura originale inclusa). 15 frasi in 18 slot: 3 carte vuote nel PDF; il regolamento prevede 20 carte.",
+ "carte": [
+  {
+   "id": "singola-01",
+   "frase": "Ammetto che sono stato più volte in vacanza con uno dei personaggi sopra la Torre, e siamo finiti insieme nelle foto peggiori."
+  },
+  {
+   "id": "singola-02",
+   "frase": "Ammetto di essermi infiltrato e abbuffato di cibo a una festa insieme a uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-03",
+   "frase": "Ammetto, di essere cugino/cugina di uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-04",
+   "frase": "Ammetto di essere stato per anni nello stesso gruppo di amici di un personaggio sopra alla torre"
+  },
+  {
+   "id": "singola-05",
+   "frase": "Ammetto di aver condiviso un viaggio lunghissimo in macchina con uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-06",
+   "frase": "Ammetto di aver partecipato a una festa imbarazzante insieme a uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-07",
+   "frase": "Ammetto di aver fatto una pessima figuraccia in pubblico insieme a uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-08",
+   "frase": "Ammetto di aver detto “fidati di noi” insieme a uno dei personaggi sopra la Torre"
+  },
+  {
+   "id": "singola-09",
+   "frase": "Ammetto di aver condiviso un segreto imbarazzante con uno dei personaggi sopra la Torre"
+  },
+  {
+   "id": "singola-10",
+   "frase": "Ammetto di aver fatto da palo insieme a uno dei personaggi sopra la Torre per una cosa che non si doveva fare"
+  },
+  {
+   "id": "singola-11",
+   "frase": "Ammetto di aver passato un intero pomeriggio a sparlare di voi con uno dei personaggi sopra la Torre."
+  },
+  {
+   "id": "singola-12",
+   "frase": "Ammetto di aver riso a crepapelle insieme a uno dei personaggi sopra la Torre in un momento in cui non si doveva ridere."
+  },
+  {
+   "id": "singola-13",
+   "frase": "Ammetto di aver cantato in pubblico al karaoke di paese insieme a uno dei personaggi sopra la Torre"
+  },
+  {
+   "id": "singola-14",
+   "frase": "Ammetto di aver accettato un favore da uno dei personaggi sopra la Torre, e di essere rimasto in debito con lui per sempre."
+  },
+  {
+   "id": "singola-15",
+   "frase": "Ammetto di aver partecipato ad uno scherzo ideato da uno dei personaggi sopra la Torre, e di aver detto pure “è geniale”."
+  }
+ ]
+}

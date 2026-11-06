@@ -1,0 +1,30 @@
+{
+  "name": "giu-dalla-torre",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/game-engine/tsconfig.json --noEmit && tsc -p packages/game-protocol/tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
+    "dev": "wrangler dev",
+    "e2e": "bash scripts/run-e2e.sh",
+    "deploy": "wrangler deploy",
+    "build": "vite build --config apps/web/vite.config.ts",
+    "dev:web": "vite --config apps/web/vite.config.ts",
+    "e2e:ui": "bash scripts/run-e2e-ui.sh"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20261006.1",
+    "@types/node": "22.10.2",
+    "@types/ws": "^8.5.13",
+    "typescript": "5.6.3",
+    "vitest": "2.1.8",
+    "wrangler": "^4.150.0",
+    "ws": "^8.18.0",
+    "zod": "^3.24.1"
+  }
+}

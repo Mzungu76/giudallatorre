@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wow B — Manifesto</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--pink:#ff7aa8;}
+*{box-sizing:border-box;margin:0}
+body{background:#2a2a30;min-height:100vh;display:grid;place-items:center;padding:20px;font-family:Nunito,sans-serif}
+.phone{width:390px;height:844px;border-radius:44px;border:9px solid #0b0b10;position:relative;overflow:hidden;background:var(--paper);box-shadow:0 30px 80px #000a;color:var(--navy)}
+/* paper grain + halftone */
+.grain{position:absolute;inset:0;pointer-events:none;z-index:50;mix-blend-mode:multiply;opacity:.5;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.half{position:absolute;inset:0;background:radial-gradient(circle,#e8362b 0 28%,transparent 30%) 0 0/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 100% 100%,#000 0,transparent 62%);mask-image:radial-gradient(ellipse at 100% 100%,#000 0,transparent 62%);opacity:.75}
+.half2{position:absolute;inset:0;background:radial-gradient(circle,#14a3a1 0 28%,transparent 30%) 4px 4px/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 0 0,#000 0,transparent 55%);mask-image:radial-gradient(ellipse at 0 0,#000 0,transparent 55%);opacity:.55}
+.strip{position:absolute;left:-10px;right:-10px;top:42px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 17px/1 Anton;letter-spacing:.16em;padding:9px 0 8px;text-align:center;box-shadow:0 5px 0 #0005}
+.hl{position:absolute;left:20px;right:16px;top:96px;font:400 54px/.9 Anton;text-transform:uppercase;color:var(--red);letter-spacing:.005em}
+.hl span{display:block}
+.hl .sh{position:absolute;inset:0;color:var(--teal);transform:translate(4px,4px);z-index:-1;mix-blend-mode:multiply}
+.hl small{display:block;font:400 22px/1 'Caveat Brush';color:var(--navy);text-transform:none;margin-bottom:6px;letter-spacing:.01em;transform:rotate(-1.5deg)}
+.stk{position:absolute;width:104px;height:156px;border-radius:12px;background:center/cover;border:6px solid #fff;box-shadow:5px 6px 0 var(--navy);z-index:5}
+.stk .n{position:absolute;left:-14px;bottom:-14px;width:34px;height:34px;border-radius:50%;background:var(--red);border:3px solid var(--navy);color:#fff;font:400 20px/28px Anton;text-align:center}
+.stk.sel{z-index:9;transform:rotate(-3deg) scale(1.22)!important;box-shadow:8px 10px 0 var(--navy),0 0 0 4px var(--mus)}
+.tape{position:absolute;left:50%;top:-14px;width:68px;height:22px;margin-left:-34px;background:#ffc72ccc;transform:rotate(4deg);box-shadow:0 1px 0 #0003}
+.tok{position:absolute;right:-18px;top:-18px;width:40px;height:40px;border-radius:50%;background:#2f7be0;border:4px solid #fff;color:#fff;font:400 20px/32px Anton;text-align:center;box-shadow:3px 3px 0 var(--navy);z-index:2}
+.tag{position:absolute;left:-18px;top:54px;background:var(--red);color:#fff;font:400 15px/1 Anton;letter-spacing:.08em;padding:6px 10px;transform:rotate(-8deg);box-shadow:3px 3px 0 var(--navy)}
+.stamp{position:absolute;left:216px;top:500px;width:150px;height:150px;border-radius:50%;border:6px solid var(--red);color:var(--red);display:grid;place-items:center;transform:rotate(-12deg);font:400 42px/.9 Anton;text-align:center;mix-blend-mode:multiply;z-index:10;text-transform:uppercase}
+.stamp::before{content:"";position:absolute;inset:7px;border-radius:50%;border:2px dashed var(--red)}
+.stamp small{display:block;font:400 14px/1 Anton;letter-spacing:.2em;margin-top:6px}
+.top{position:absolute;left:14px;right:14px;top:14px;display:flex;justify-content:space-between;z-index:20;font:800 12px Nunito}
+.top span{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:4px 9px;box-shadow:2px 2px 0 var(--navy);display:flex;gap:5px;align-items:center}
+.top i{width:11px;height:11px;border-radius:50%;border:2px solid var(--navy)}
+.ticket{position:absolute;left:14px;right:14px;bottom:16px;height:96px;z-index:30;display:flex;filter:drop-shadow(4px 5px 0 var(--navy))}
+.ticket .m{flex:1;background:var(--mus);border-radius:12px 0 0 12px;padding:12px 14px;position:relative;-webkit-mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 0 50%,transparent 9px,#000 10px)}
+.ticket .m b{display:block;font:400 30px/1 Anton;letter-spacing:.02em;text-transform:uppercase}
+.ticket .m small{font:800 12px Nunito;opacity:.8;display:block;margin-top:5px}
+.ticket .s{width:92px;background:var(--red);color:#fff;border-radius:0 12px 12px 0;border-left:4px dashed var(--navy);display:grid;place-items:center;text-align:center;font:400 24px/1 Anton;-webkit-mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px);mask:radial-gradient(circle at 100% 50%,transparent 9px,#000 10px)}
+.s small{display:block;font:800 11px Nunito;opacity:.9;margin-top:3px}
+.scribble{position:absolute;font:400 22px/1 'Caveat Brush';color:var(--navy);transform:rotate(6deg);z-index:6}
+</style></head><body>
+<div class="phone">
+ <div class="half"></div><div class="half2"></div>
+ <div class="top"><span><i style="background:#2f7be0"></i>Luca</span><span>📣 Marta</span><span>Turno 3/10</span></div>
+ <div class="strip">★ AVVISO ALLA CITTADINANZA ★</div>
+ <div class="hl"><span class="sh"><small>&nbsp;</small>Oggi sale sulla torre chi manda vocali da nove minuti.</span><small>Oggi sale sulla torre…</small><span>chi manda vocali da nove minuti.</span></div>
+
+ <div class="stk" style="left:22px;top:318px;transform:rotate(-5deg);background-image:url(../../public/cards/p05-i01.webp)"><div class="n">1</div></div>
+ <div class="stk sel" style="left:140px;top:300px;background-image:url(../../public/cards/p05-i02.webp)"><div class="tape"></div><div class="n">2</div><div class="tok">L</div><div class="tag">IL TUO VOTO</div></div>
+ <div class="stk" style="left:262px;top:322px;transform:rotate(4deg);background-image:url(../../public/cards/p05-i03.webp)"><div class="n" style="left:auto;right:-12px">3</div></div>
+ <div class="stk" style="left:40px;top:488px;transform:rotate(3deg);background-image:url(../../public/cards/p05-i04.webp)"><div class="n">4</div></div>
+ <div class="stk" style="left:156px;top:506px;transform:rotate(-4deg);background-image:url(../../public/cards/p05-i05.webp)"><div class="n">5</div></div>
+ <div class="stamp"><div>Vota<small>in segreto</small></div></div>
+ <div class="scribble" style="left:290px;top:268px">chi sarà?!</div>
+ <div class="ticket"><div class="m"><b>Conferma il n. 2</b><small>2 su 5 hanno già votato. Nessuno saprà chi hai scelto.</small></div><div class="s"><div>GIÙ!<small>tocca</small></div></div></div>
+ <div class="grain"></div>
+</div></body></html>
