@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup inquadrature della Torre</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--pink:#ff7aa8;--sky1:#79d3ee;--sky2:#4fbce6}
+*{box-sizing:border-box;margin:0}
+body{background:#23232a;color:#fff;font-family:Nunito,system-ui,sans-serif;min-height:100vh;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.g{padding:18px 0 6px}header.g h1{font:400 34px/1 Anton;color:var(--mus);letter-spacing:.02em}header.g p{opacity:.75;font-size:14px;max-width:760px;margin-top:6px}
+nav.g{display:flex;flex-wrap:wrap;gap:6px;padding:10px 0;position:sticky;top:0;background:#23232a;z-index:90}
+nav.g button{font:800 13px Nunito;border:0;border-radius:99px;padding:7px 12px;background:#3a3a46;color:#fff;cursor:pointer}nav.g button.on{background:var(--mus);color:var(--navy)}
+main.g{padding:10px 0 60px}.sec{margin-bottom:40px}.sec h2{font:400 26px/1 Anton;margin:8px 0 4px;letter-spacing:.02em}.sec p.note{font-size:14px;opacity:.8;max-width:720px;line-height:1.45;margin-bottom:14px}
+.row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}.cap{font-size:12px;opacity:.65;text-align:center;margin-top:6px}
+.phw{width:390px;flex:none}.ph{width:390px;height:844px;border-radius:44px;border:9px solid #07070b;position:relative;overflow:hidden;background:var(--paper);box-shadow:0 24px 60px #000a;color:var(--navy)}
+.dw{flex:none}.dk{width:1280px;height:720px;border-radius:16px;border:9px solid #07070b;position:relative;overflow:hidden;background:var(--paper);color:var(--navy);transform-origin:0 0;box-shadow:0 24px 60px #000a}
+.s{position:absolute;inset:0;overflow:hidden}.s>*{position:absolute}
+.sky{background:repeating-conic-gradient(from -4deg at 50% 34%,var(--sky1) 0 6deg,var(--sky2) 6deg 12deg)}
+.skyg{background:linear-gradient(0deg,rgba(255,199,44,.5),transparent 42%)}
+.dots{background:radial-gradient(circle,#fff 0 26%,transparent 28%) 0 0/10px 10px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.5}
+.pap{background:var(--paper)}
+.hr{background:radial-gradient(circle,#e8362b 0 26%,transparent 28%) 0 0/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);opacity:.6}
+.ht{background:radial-gradient(circle,#14a3a1 0 26%,transparent 28%) 4px 4px/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 0 0,#000,transparent 55%);mask-image:radial-gradient(ellipse at 0 0,#000,transparent 55%);opacity:.5}
+.fr{inset:0;pointer-events:none;border-radius:35px;box-shadow:inset 0 0 0 5px #13224a,inset 0 0 0 9px #f4e3bd,inset 0 0 0 13px #13224a;z-index:50}
+.grain{inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.4;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.chips{left:16px;right:16px;top:22px;display:flex;justify-content:space-between;z-index:20;font:800 12px Nunito}
+.chip{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:4px 9px;box-shadow:2px 2px 0 var(--navy);display:flex;gap:5px;align-items:center;color:var(--navy)}
+.dc{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid var(--navy);flex:none}.dc.l{width:30px;height:30px;border-width:3px}.dc.xl{width:46px;height:46px;border-width:4px}
+.strip{left:-10px;right:-10px;top:56px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 17px/1 Anton;letter-spacing:.16em;padding:9px 0 8px;text-align:center;box-shadow:0 5px 0 #0005;z-index:19}
+.h{font:400 44px/.9 Anton;text-transform:uppercase;color:#fff;text-shadow:4px 4px 0 var(--red),7px 7px 0 var(--navy);z-index:18;left:20px;right:16px}
+.h.r{color:var(--red);text-shadow:3px 3px 0 var(--navy)}
+.h small{display:block;font:400 21px/1 'Caveat Brush';text-transform:none;margin-bottom:5px;transform:rotate(-1.5deg);text-shadow:2px 2px 0 var(--navy);color:#fff}.h.r small{color:var(--navy);text-shadow:none}
+.bt{display:flex;align-items:center;justify-content:center;gap:8px;font:400 25px/1 Anton;text-transform:uppercase;letter-spacing:.02em;padding:15px 12px;border:3px solid var(--navy);box-shadow:5px 5px 0 var(--navy);color:var(--navy);background:var(--mus);text-align:center}
+.bt.red{background:var(--red);color:#fff}.bt.pap{background:#fff7e0}.bt.dis{background:#c9c3b0;color:#8c8672;box-shadow:5px 5px 0 #7b7766}
+.bt small{display:block;font:800 11px Nunito;text-transform:none;letter-spacing:0;margin-top:2px}
+.in{background:#fff;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:11px 12px;font:800 20px Nunito;display:flex;align-items:center;min-height:52px}.in .ph2{opacity:.35}
+.lb{font:400 22px/1 'Caveat Brush';color:var(--navy);margin-bottom:5px;display:block;transform:rotate(-1deg)}
+.pp{background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px}
+.tape{position:absolute;left:50%;top:-12px;width:60px;height:20px;margin-left:-30px;background:#ffc72ccc;transform:rotate(3deg)}
+.cut{display:block}.stk{filter:drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(5px 6px 0 #13224a)}
+.card{width:104px;height:156px;border-radius:11px;background:center/cover;border:6px solid #fff;box-shadow:5px 6px 0 var(--navy)}
+.card.sel{box-shadow:0 0 0 4px var(--mus),0 0 26px 10px #ffc72caa,6px 8px 0 var(--navy)}
+.sp{color:#fff;font-size:20px}
+.seg{display:flex;gap:10px}.seg .bt{flex:1;font-size:19px;padding:12px 6px}
+.sw{width:56px;height:32px;border:3px solid var(--navy);background:#c9c3b0;position:relative;flex:none;border-radius:99px}.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;border:2px solid var(--navy)}.sw.on{background:var(--mus)}.sw.on::after{left:auto;right:3px}
+.cb{display:flex;gap:8px;justify-content:center}.cb b{width:50px;height:64px;background:#fff;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);display:grid;place-items:center;font:400 38px/1 Anton}.cb b.e{border-style:dashed;box-shadow:none;opacity:.6}
+.pl{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:6px 10px;font:800 16px Nunito}.pl .tg{margin-left:auto;background:var(--mus);border:2px solid var(--navy);font:400 12px/1 Anton;padding:3px 7px;letter-spacing:.06em}.pl .x{margin-left:8px;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;border:2px solid var(--navy);font-weight:800;font-size:13px}.pl.em{border-style:dashed;box-shadow:none;background:#fff7e0aa;opacity:.8;min-height:44px}
+.bn{background:var(--red);color:#fff;border:3px solid var(--navy);box-shadow:5px 5px 0 var(--navy);padding:10px 14px;font:700 15px/1.25 Nunito}.bn small{display:block;font:400 12px/1 Anton;letter-spacing:.08em;text-transform:uppercase;opacity:.9;margin-bottom:3px}
+.opt{background:#fff7e0;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:8px 11px;font:800 13.5px/1.25 Nunito;position:relative}.opt.on{background:var(--mus);box-shadow:0 0 0 3px #fff,0 0 20px 6px #ffc72caa,4px 4px 0 var(--navy)}
+.pod{display:flex;align-items:flex-end;gap:8px}.pod div{flex:1;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);display:flex;flex-direction:column;align-items:center;padding-top:8px;gap:3px;color:#fff;font:400 18px/1 Anton}
+.qr{background:#fff;border:3px solid var(--navy);padding:6px}.qr svg{display:block;width:100%;height:100%}
+.hands{left:-40px;width:480px;z-index:5}
+
+.phw.sm{width:auto}
+.vp{position:relative;overflow:hidden;border:6px solid #07070b;border-radius:26px;box-shadow:0 18px 40px #000a;background:var(--paper);color:var(--navy);flex:none}
+.vp .s{position:absolute;inset:0}
+.sizes{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-end}
+.lbl2{font:800 12px Nunito;opacity:.7;text-align:center;margin-top:6px}
+.tok{display:inline-block;filter:drop-shadow(3px 4px 0 #13224a)}
+.tok svg{display:block}
+.beat{width:390px;flex:none}
+.beat .ph{margin-bottom:8px}
+.beat h3{font:400 20px/1.1 Anton;color:var(--mus);text-transform:uppercase;letter-spacing:.02em}
+.beat p{font-size:13px;opacity:.85;line-height:1.4;margin-top:4px}
+.title-card{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:0 24px;z-index:30}
+.big{font:400 58px/.88 Anton;color:#fff;text-shadow:4px 4px 0 var(--red),8px 8px 0 var(--navy);text-transform:uppercase}
+.sub{font:400 26px 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 var(--navy)}
+.ring{width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--mus) 0 70%,#fff7e0 70%);border:4px solid var(--navy);display:grid;place-items:center;box-shadow:3px 3px 0 var(--navy)}
+.ring b{width:62px;height:62px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font:400 34px Anton}
+.bar{height:20px;border:2px solid var(--navy);background:#fff;position:relative;flex:1}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:var(--teal)}
+.delta{font:400 15px Anton;padding:2px 6px;border:2px solid var(--navy);background:var(--mus)}
+.delta.up{background:#9be28f}.delta.dn{background:#ff9d93}
+.steps{display:flex;gap:6px;justify-content:center}
+.steps i{width:30px;height:8px;border:2px solid var(--navy);background:#fff7e0}.steps i.on{background:var(--mus)}.steps i.dn{background:var(--navy)}
+.ta{background:#fff;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:12px;font:800 19px/1.25 Nunito;min-height:112px}
+.pre{display:inline-block;background:var(--red);color:#fff;font:400 15px Anton;padding:4px 9px;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);letter-spacing:.04em;text-transform:uppercase}
+.caret{display:inline-block;width:2px;height:22px;background:var(--navy);vertical-align:-4px;animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.big-opt{display:flex;align-items:center;gap:12px;background:#fff7e0;border:4px solid var(--navy);box-shadow:5px 5px 0 var(--navy);padding:14px;text-align:left}
+.big-opt b{font:400 22px/1 Anton;text-transform:uppercase;display:block}.big-opt small{font:800 12px/1.3 Nunito;opacity:.8;display:block;margin-top:3px}
+.big-opt.on{background:var(--mus);outline:4px solid #fff}
+.ic{font-size:30px;flex:none}
+.bottom{position:absolute;left:16px;right:16px;bottom:24px;z-index:30;display:flex;flex-direction:column;gap:8px}.bottom.two{flex-direction:row}.bottom.two .bt{flex:1}.hint-bottom{text-align:center;font:400 20px 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 var(--navy)}
+.note2{font:800 12px/1.35 Nunito;background:#fff;border:2px solid var(--navy);padding:6px 9px}
+</style><style>
+.cd{position:absolute;border-radius:8px;background:center/cover;border:4px solid #fff;box-shadow:3px 4px 0 #13224a;transform-origin:50% 100%}
+.cd i{position:absolute;left:-9px;top:-9px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a0,#e0a52c 70%);border:3px solid #6e4310;color:#4a2a06;font:400 13px/18px Anton;text-align:center;font-style:normal;box-shadow:0 2px 0 #0006}
+.cd.sel{outline:4px solid var(--mus);box-shadow:0 0 18px 6px #ffc72caa,3px 4px 0 #13224a}
+.vt{position:absolute;width:20px;height:20px;border-radius:50%;border:3px solid #fff;box-shadow:2px 2px 0 #13224a;display:grid;place-items:center;font:400 10px Anton;color:#fff;z-index:30}
+.zoomc{position:absolute;inset:0;background:rgba(19,34,74,.92);z-index:50}
+.zoomc>*{position:absolute}
+</style><style>
+.pl3{position:absolute;filter:drop-shadow(0 6px 0 rgba(19,34,74,.35))}
+.cd2{position:absolute;border-radius:8px;background:center/cover;border:4px solid #fff;box-shadow:3px 4px 0 #13224a}
+.cd2 i{position:absolute;left:-8px;top:-8px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a0,#e0a52c 70%);border:3px solid #6e4310;color:#4a2a06;font:400 13px/18px Anton;text-align:center;font-style:normal;box-shadow:0 2px 0 #0006}
+.cd2.sel{outline:4px solid var(--mus);box-shadow:0 0 18px 6px #ffc72caa,3px 4px 0 #13224a}
+.shad{position:absolute;border-radius:50%;background:#13224a;opacity:.3}
+.thumb{position:absolute;width:38px;height:57px;border-radius:5px;background:center/cover;border:3px solid #fff;box-shadow:2px 2px 0 #13224a}
+.thumb b{position:absolute;left:50%;bottom:-9px;transform:translateX(-50%);background:#13224a;color:#fff7e0;font:400 10px/1 Anton;padding:2px 5px}
+.thumb.on{border-color:var(--mus);transform:translateY(-8px);box-shadow:0 0 12px #ffc72c}
+</style></head><body><header class="g"><h1>Giù dalla Torre — 3 inquadrature della cima</h1><p>Tre modi diversi di mostrare i personaggi come carte, pensati per vederli bene anche a 8 giocatori. Ogni versione è mostrata con 8 giocatori (il caso più difficile) e con 5.</p></header>
+<nav class="g"></nav><main class="g" id="main"></main>
+<script>
+window.IMGS=window.IMGS||(()=>{const o={};for(let p=1;p<=6;p++)for(let i=1;i<=9;i++){const id='p0'+p+'-i0'+i;o[id]='../public/cards/'+id+'.webp'};o.tower='../public/scene/tower_pop.webp';return o})();
+const A=id=>window.IMGS[id];
+const PLN=[['Marta','#e5384b'],['Luca','#2f7be0'],['Giulia','#f4c20d'],['Omar','#3aa655'],['Elena','#8a5a3b'],['Paolo','#8e44c8'],['Sara','#ee7bb0'],['Tommi','#222']];
+const dc=(c,k='')=>`<i class="dc ${k}" style="background:${c}"></i>`;
+const chips=(w=1)=>`<div class="chips"><span class="chip">${dc(PLN[w][1])} ${PLN[w][0]}</span><span class="chip">📣 Marta</span><span class="chip">Turno 3/10</span></div>`;
+const skyBg=`<div class="sky" style="inset:0"></div><div class="skyg" style="inset:0"></div><div class="dots" style="inset:0"></div>`;
+const FR=`<div class="fr"></div><div class="grain"></div>`;
+const IDS=['p01-i01','p02-i03','p03-i02','p04-i04','p05-i04','p05-i05','p06-i03','p06-i09'];
+const head=(sub,t)=>`<div class="h" style="top:92px;font-size:32px"><small>${sub}</small>${t}</div>`;
+const num=(n,x,y)=>`<i style="position:absolute;left:${x}px;top:${y}px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffe9a0,#e0a52c 70%);border:3px solid #6e4310;color:#4a2a06;font:400 13px/18px Anton;text-align:center;font-style:normal;box-shadow:0 2px 0 #0006;z-index:12">${n}</i>`;
+const luiBack=(x,y,sz=30)=>`<div style="position:absolute;left:${x}px;top:${y}px;z-index:14;filter:drop-shadow(2px 3px 0 #13224a)"><svg width="${sz}" height="${sz}" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#13224a" stroke="#fff7e0" stroke-width="6"/><text x="50" y="66" text-anchor="middle" font-family="Anton" font-size="52" fill="#ffc72c">?</text></svg></div>`;
+const bottom=`<div class="bottom"><div class="bt">Scegli chi cade</div></div>`;
+/* ---------- A. TERRAZZA vista dall'alto ---------- */
+function terrace(n){
+  const back=n<=5?Math.floor(n/2):Math.ceil(n/2)-0, rows=n<=5?[[0,1],[2,3,4]]:[[0,1,2,3],[4,5,6,7]];
+  const rowA=n<=5?[0,1]:[0,1,2,3], rowB=n<=5?[2,3,4]:[4,5,6,7];
+  let o=`<svg style="position:absolute;left:0;top:300px;z-index:2" width="372" height="520" viewBox="0 0 372 520"><defs><pattern id="br" width="40" height="24" patternUnits="userSpaceOnUse"><rect width="40" height="24" fill="#d9bd88"/><path d="M0 0h40M0 12h40M20 0v12M0 12v12" stroke="#13224a" stroke-opacity=".25" stroke-width="2"/></pattern></defs>
+   <path d="M50 120 L322 120 L372 420 L0 420Z" fill="#ecd7a8" stroke="#13224a" stroke-width="5" stroke-linejoin="round"/>
+   ${[1,2,3,4,5].map(i=>`<path d="M${50+i*45.3} 120 L${i*62} 420" stroke="#13224a" stroke-opacity=".22" stroke-width="2.5"/>`).join('')}
+   ${[185,255,335].map(y=>`<path d="M${50-(y-120)*.167} ${y}H${322+(y-120)*.167}" stroke="#13224a" stroke-opacity=".22" stroke-width="2.5"/>`).join('')}
+   ${[0,1,2,3,4,5].map(i=>`<rect x="${56+i*44}" y="72" width="32" height="50" fill="#d9bd88" stroke="#13224a" stroke-width="4"/>`).join('')}
+   <rect x="0" y="420" width="372" height="100" fill="url(#br)" stroke="#13224a" stroke-width="5"/>
+   ${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${6+i*46}" y="396" width="34" height="26" fill="#d9bd88" stroke="#13224a" stroke-width="4"/>`).join('')}
+  </svg>`;
+  const place=(list,feetY,w,scaleTilt)=>{const m=(list.length-1)/2,gap=(372-40)/Math.max(list.length,4);list.forEach((i,k)=>{const h=Math.round(w*1.5),x=186+(k-m)*gap-w/2;
+     o+=`<div class="shad" style="left:${x+6}px;top:${feetY-6}px;width:${w-12}px;height:14px;z-index:5"></div><div class="cd2" style="left:${x}px;top:${feetY-h}px;width:${w}px;height:${h}px;background-image:url(${A(IDS[i])});transform:rotate(${(k-m)*1.8}deg);z-index:${6+i}"><i>${i+1}</i></div>`})};
+  place(rowA,n<=5?500:470,n<=5?84:80); place(rowB,n<=5?640:630,n<=5?96:92);
+  return o}
+/* ---------- B. RIPIANI: due ripiani di pietra a schermo largo ---------- */
+function shelves(n){
+  const rows=n<=5?[[0,1],[2,3,4]]:[[0,1,2,3],[4,5,6,7]];let o='';
+  const ledge=(y)=>`<svg style="position:absolute;left:0;top:${y}px;z-index:4" width="372" height="62" viewBox="0 0 372 62"><rect x="-4" y="14" width="380" height="44" fill="#d9bd88" stroke="#13224a" stroke-width="5"/>${Array.from({length:12},(_,i)=>`<rect x="${6+i*32}" y="0" width="22" height="18" fill="#d9bd88" stroke="#13224a" stroke-width="4"/>`).join('')}<path d="M-4 34H376" stroke="#13224a" stroke-opacity=".25" stroke-width="2"/></svg>`;
+  const rowY=[400,610];
+  rows.forEach((r,ri)=>{const w=n<=5?(ri?100:108):88,h=Math.round(w*1.5),m=(r.length-1)/2,gap=n<=5?112:88;
+    r.forEach((i,k)=>{const x=186+(k-m)*gap-w/2;o+=`<div class="cd2" style="left:${x}px;top:${rowY[ri]-h+8}px;width:${w}px;height:${h}px;background-image:url(${A(IDS[i])});transform:rotate(${(k-m)*2}deg);z-index:6"><i>${i+1}</i></div>`});
+    o+=ledge(rowY[ri]);});
+  o+=`<div style="position:absolute;left:0;right:0;top:600px;height:140px;background:linear-gradient(180deg,#d9bd88,#b99a68);z-index:3;border-top:5px solid #13224a;opacity:.0"></div>`;
+  return o}
+/* ---------- C. CAROSELLO a 3D ---------- */
+function carousel(n,sel=2){
+  let o='';const m=sel;
+  const slots=[[-2,.55],[-1,.78],[0,1],[1,.78],[2,.55]];
+  slots.forEach(([d,sc])=>{const i=(sel+d+n)%n,w=Math.round(180*sc),h=Math.round(w*1.5),x=186+d*(d?96*(d>0?1:1):0)*1-w/2+(d?Math.sign(d)*(Math.abs(d)==2?-6:0):0),y=(d?400:372)-h/2+ (d?0:0);
+    o+=`<div class="cd2 ${d==0?'sel':''}" style="left:${x}px;top:${y-(d==0?0:0)+ (d==0?-30:0)}px;width:${w}px;height:${h}px;background-image:url(${A(IDS[i])});transform:perspective(600px) rotateY(${-d*22}deg);filter:${d?'brightness(.7)':'none'};z-index:${10-Math.abs(d)}"><i style="left:-10px;top:-10px;width:${d?24:32}px;height:${d?24:32}px;font-size:${d?13:18}px;line-height:${d?18:26}px">${i+1}</i></div>`});
+  o+=`<svg style="position:absolute;left:0;top:590px;z-index:11" width="372" height="64" viewBox="0 0 372 64"><rect x="-4" y="16" width="380" height="40" fill="#d9bd88" stroke="#13224a" stroke-width="5"/>${Array.from({length:12},(_,i)=>`<rect x="${6+i*32}" y="2" width="22" height="18" fill="#d9bd88" stroke="#13224a" stroke-width="4"/>`).join('')}</svg>`;
+  const tw=n<=5?52:38,th=Math.round(tw*1.5),gap=n<=5?60:42,x0=186-((n-1)*gap)/2-tw/2;
+  for(let i=0;i<n;i++)o+=`<div class="thumb ${i==sel?'on':''}" style="left:${x0+i*gap}px;top:${650+(i==sel?-8:0)}px;width:${tw}px;height:${th}px;background-image:url(${A(IDS[i])})"><b>${i+1}</b></div>`;
+  o+=`<div class="arr" style="left:6px;top:380px;width:40px;height:40px;border-radius:50%;background:var(--mus);border:4px solid var(--navy);font:400 22px/30px Anton;text-align:center;z-index:30;box-shadow:3px 3px 0 var(--navy)">‹</div><div class="arr" style="right:6px;top:380px;width:40px;height:40px;border-radius:50%;background:var(--mus);border:4px solid var(--navy);font:400 22px/30px Anton;text-align:center;z-index:30;box-shadow:3px 3px 0 var(--navy)">›</div>`;
+  return o}
+const S={};
+const frame=(inner,strip='VOTA IN SEGRETO')=>`<div class="s">${skyBg}${chips(1)}<div class="strip">★ ${strip} ★</div>${head('Oggi sale sulla torre…','chi manda vocali da nove minuti')}${inner}${FR}</div>`;
+S.a={t:'Versione A · La terrazza vista dall’alto',n:'La camera sale e guarda la cima dall’alto, in prospettiva: le carte stanno in piedi sul pavimento di pietra in due file, tutte intere e nessuna coperta dal parapetto. Sembra davvero una “cima di torre” e il fondale resta lo stesso. Con 8 giocatori sono due file da 4; con 5 giocatori 2 dietro e 3 davanti. Punto debole: la torre non si vede più in tutta la sua altezza (si vede quando la carta cade).',
+ phones:[frame(terrace(8)+bottom),frame(terrace(5)+bottom)]};
+S.b={t:'Versione B · I ripiani (inquadratura frontale da vicino)',n:'La camera si avvicina alla cima, di fronte: i personaggi stanno su due ripiani di pietra come su una mensola, a tutta larghezza. Carte grandi e allineate, facilissime da confrontare, con i merli che le incorniciano. È la più leggibile in assoluto. Punto debole: la Torre diventa un’idea (la vediamo come mensole), non l’oggetto intero.',
+ phones:[frame(shelves(8)+bottom),frame(shelves(5)+bottom)]};
+S.c={t:'Versione C · Il carosello',n:'Una carta alla volta in primo piano, grande e nitida (con le vicine di lato in prospettiva), e sotto una striscia con tutte le miniature numerate. Si scorre con il dito o le frecce; il voto si dà sulla carta in primo piano. La Torre diventa il davanzale su cui poggia il carosello. È la versione che mostra meglio i dettagli (le illustrazioni sono piccole e questo le valorizza) e funziona uguale con 3 o 8 giocatori. Punto debole: non si vedono tutte le carte insieme in grande, serve scorrere.',
+ phones:[frame(carousel(8,2)+'<div class="bottom"><div class="bt">Scegli chi cade: n. 3</div></div>'),frame(carousel(5,2)+'<div class="bottom"><div class="bt">Scegli chi cade: n. 3</div></div>')]};
+const order=['a','b','c'];const main=document.getElementById('main');
+order.forEach(k=>{const s=S[k],e=document.createElement('section');e.className='sec';e.innerHTML=`<h2>${s.t}</h2><p class="note">${s.n}</p><div class="row">${s.phones.map(h=>`<div class="phw"><div class="ph">${h}</div></div>`).join('')}</div>`;main.appendChild(e)});
+</script></body></html>
