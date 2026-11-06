@@ -8,9 +8,10 @@ which = sys.argv[1]
 if which == "b4":
     src = (root/"mockups/wow/b4-caduta.html").read_text()
     imgs = {f"p05-i0{n}": uri(f"public/cutouts/p05-i0{n}.webp") for n in range(1, 6)}
-    imgs["tower"] = uri("public/scene/tower_pop.webp")
+    imgs["tower"] = uri("public/scene/tower_pop.webp"); imgs["hands"] = uri("public/scene/hands_cut.webp")
     src = src.replace("const CUT=id=>`../../public/cutouts/${id}.webp`;", "const CUT=id=>window.IMGS[id];")
     src = src.replace("'../../public/scene/tower_pop.webp'", "window.IMGS.tower")
+    src = src.replace("window.IMGS?window.IMGS.hands:'../../public/scene/hands_cut.webp'", "window.IMGS.hands")
     out = root/"mockups/wow/dist/b4-artifact.html"
 else:
     src = (root/"mockups/index.html").read_text()
