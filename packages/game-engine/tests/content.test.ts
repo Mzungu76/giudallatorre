@@ -18,13 +18,14 @@ describe("contenuti originali del gioco", () => {
   it("125 carte Personaggio con identificativi univoci (decisione: sono 125)", () => {
     expect(deck).toHaveLength(125); expect(new Set(deck).size).toBe(125);
   });
-  it("carte frasi: 50 da 5 frasi + 15 singole, nessuna frase duplicata, tutte iniziano con l'incipit", () => {
+  it("carte frasi: 50 da 5 frasi + 15 singole, nessuna duplicata, incipit corretto (sale/salgono concordato col soggetto)", () => {
     expect(multi).toHaveLength(50); expect(multi.every((c) => c.frasi.length === 5)).toBe(true);
     expect(single).toHaveLength(15);
     const all = phraseDeck.flatMap((c) => c.phrases);
     expect(new Set(all).size).toBe(all.length);
-    expect(multi.flatMap((c) => c.frasi).every((f) => f.startsWith("Oggi sale sulla torre"))).toBe(true);
-    expect(single.every((c) => c.frase.startsWith("Ammetto"))).toBe(true);
+    expect(multi.flatMap((c) => c.frasi).every((f) => /^Oggi (sale|salgono) sulla torre /.test(f))).toBe(true);
+    expect(single.every((c) => c.frase.startsWith("Ammetto") && c.frase.endsWith("."))).toBe(true);
+    for (const f of multi.flatMap((c) => c.frasi)) { const plural = /^Oggi salgono sulla torre (le persone|quelli|i |gli |le )/.test(f); const singular = /^Oggi sale sulla torre chi /.test(f) || /^Oggi sale sulla torre (le persone|quelli|i |gli |le )/.test(f); expect(plural || /^Oggi sale sulla torre chi /.test(f)).toBe(true); expect(singular && !plural && /torre (le persone|quelli)/.test(f)).toBe(false); }
   });
   it("una partita completa con i contenuti reali (8 giocatori, variante Megafono sa)", () => {
     const players = Array.from({ length: 8 }, (_, i) => ({ id: `p${i + 1}`, name: `G${i + 1}` }));

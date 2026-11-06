@@ -12,7 +12,7 @@ const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().ca
 
 console.log("Home, creazione e ingresso");
 const A = await mk("A"), B = await mk("B"), C = await mk("C");
-await A.goto(BASE + "/"); check("home visibile", await vis(A, "home")); await shot(A, "01-home");
+await A.goto(BASE + "/"); await A.waitForSelector('[data-testid="home"]', { timeout: 15000 }).catch(() => {}); check("home visibile", await vis(A, "home")); await shot(A, "01-home");
 await A.click('[data-testid="go-create"]'); await A.fill("#nick", "Ann"); await shot(A, "02-crea");
 await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\/[A-Z0-9]{5}/);
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim(); check("stanza creata con codice", /^[A-HJ-NP-Z2-9]{5}$/.test(code), code);
@@ -41,7 +41,7 @@ async function stepPage(p) {
   if (await vis(p, "confirm-vote")) {
     const n = 1 + Math.floor(Math.random() * 3); await p.locator(`img.pick[data-pos="${n}"]`).dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]');
     await p.click('[data-testid="zoom-action"]'); if (!p.s3) { await shot(p, "09-voto"); p.s3 = 1; } await p.click('[data-testid="confirm-vote"]'); return true; }
-  if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); p.s4 = 1; } await p.click('[data-testid="skip"]'); return true; }
+  if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); p.s4 = 1; } await p.click('[data-testid="skip"]', { timeout: 5000 }); return true; }
   if (await vis(p, "advance")) { if (!p.s5) { await shot(p, "11-punti"); p.s5 = 1; } await p.click('[data-testid="advance"]'); turns++; return true; }
   return false;
 }

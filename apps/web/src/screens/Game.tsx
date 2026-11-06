@@ -9,7 +9,7 @@ import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { ResultCue, SceneApi } from "../scene/towerScene.ts";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
-const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su" };
+const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su", "lui-fallito": "Lui! sbagliato" };
 const TITLES: Record<string, string> = { PROCLAIM: "SU SULLA TORRE", PLAY: "SCEGLI LA CARTA", SUSPECT: "SCEGLI IL SOSPETTO", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 
 export function usePeople(room: RoomMsg) {
@@ -22,10 +22,10 @@ export function usePeople(room: RoomMsg) {
 function PhraseHead({ phrase }: { phrase: PlayerView["phrase"] }) {
   if (!phrase) return null;
   if (phrase.mode === "free") return <div className="h" style={{ top: 98, fontSize: 34 }}><small>Il Megafono ha urlato…</small>una frase tutta sua!</div>;
-  const pre = "Oggi sale sulla torre ";
+  const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /), pre = m ? m[0] : "Oggi sale sulla torre ";
   const t = phrase.text;
-  return t.startsWith(pre)
-    ? <div className={`h ${t.length > 80 ? "long" : ""}`} style={{ top: 94 }} data-testid="phrase"><small>Oggi sale sulla torre…</small>{t.slice(pre.length)}</div>
+  return m
+    ? <div className={`h ${t.length > 80 ? "long" : ""}`} style={{ top: 94 }} data-testid="phrase"><small>{`Oggi ${m![1]} sulla torre…`}</small>{t.slice(pre.length)}</div>
     : <div className={`h ${t.length > 90 ? "xlong" : "long"}`} style={{ top: 94 }} data-testid="phrase"><small>Il Megafono dice…</small>{t}</div>;
 }
 
@@ -86,7 +86,7 @@ function ResultPanel({ res, people, canAdvance, deadline, onAdvance, final }: { 
       <h3>{res.tie ? "Pareggio: cade il voto del Megafono" : "Giù dalla torre!"}</h3>
       <div>{ids.map((id) => {
         const pts = res.points[id] ?? 0, why = (res.reasons[id] ?? []).map((r) => REASON[r] ?? r).join(" + ");
-        return <div className="row on" key={id}><Disc color={people.get(id).color} />{people.get(id).name}<small>{why || "—"}</small><em>{pts ? `+${pts}` : "0"}</em></div>;
+        return <div className="row on" key={id}><Disc color={people.get(id).color} />{people.get(id).name}<small>{why || "—"}</small><em>{pts > 0 ? `+${pts}` : pts < 0 ? `−${Math.abs(pts)}` : "0"}</em></div>;
       })}</div>
       {canAdvance
         ? <Btn onClick={onAdvance} testId="advance" style={{ marginTop: 8, padding: 11, fontSize: 21 }}>{final ? "Vedi la classifica" : "Prossimo turno"}</Btn>
@@ -125,8 +125,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   return (
     <>
       {showScene && <SceneHost cardIds={ids} selected={phase === "RESULTS" ? null : pick} tokens={[]} lui={luiForScene} cue={cue} cueKey={turnKey} sound={sound} onPick={onPick} onDone={() => setDone(turnKey)} apiRef={apiRef} />}
-      <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={`Turno ${view.turn}/${view.totalTurns}`} />
-      <div className="strip" data-testid="strip">★ {isMega && phase === "PROCLAIM" ? "SEI IL MEGAFONO" : TITLES[phase]} ★</div>
+      <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
+      <div className="strip" data-testid="strip">★ {view.goldenGoal && phase === "PROCLAIM" ? "SPAREGGIO: GOLDEN GOAL" : isMega && phase === "PROCLAIM" ? "SEI IL MEGAFONO" : TITLES[phase]} ★</div>
       {deadline && phase !== "RESULTS" && <div className="cd"><Countdown deadline={deadline} /></div>}
       {phase !== "PROCLAIM" && phase !== "RESULTS" && <PhraseHead phrase={view.phrase} />}
 

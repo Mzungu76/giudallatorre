@@ -3,6 +3,10 @@ import type { Action, CardId, GameConfig, GameEvent, GameState, PlayerId, TowerS
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
+/** Malus del segnalino Lui! quando la scommessa fallisce. */
+export const LUI_FAIL_MALUS = 1;
+/** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
+export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
 export const roundsFor = (n: number) => (n <= 5 ? 2 : 1);
 
@@ -20,7 +24,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
-    lastResult: null, winners: null,
+    lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
   };
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = shuffle(config.phraseDeck, s);
@@ -150,6 +154,9 @@ function resolve(s: GameState, events: GameEvent[]) {
   if (s.lui) {
     if (s.lui.kind === "CADE" && s.lui.position === fallen) give(mega, 4, "lui-cade");
     if (s.lui.kind === "NON_CADE" && s.lui.position !== fallen) give(mega, 1, "lui-non-cade");
+    // scommessa fallita: malus
+    if (s.lui.kind === "CADE" && s.lui.position !== fallen) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
+    if (s.lui.kind === "NON_CADE" && s.lui.position === fallen) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen,
@@ -169,11 +176,17 @@ function endTurn(s: GameState, events: GameEvent[]) {
   s.megafonoTurns[mega]! += 1;
   events.push({ type: "turnEnded", turn: s.turnNumber });
   if (s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
-    const best = Math.max(...Object.values(s.scores));
-    s.winners = s.playerIds.filter((p) => s.scores[p] === best); s.phase = "GAME_OVER";
-    s.tower = []; s.played = {}; s.deckCard = null; s.lui = null; s.votes = {};
-    events.push({ type: "gameOver", winners: s.winners });
-    return;
+    // fine dei giri regolari: vince chi ha più punti; se più giocatori sono in testa si gioca a oltranza ("Golden goal")
+    const best = Math.max(...Object.values(s.scores)), leaders = s.playerIds.filter((p) => s.scores[p] === best);
+    if (leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {
+      s.goldenGoal = true; s.goldenTurns += 1; s.totalTurns += 1;
+      events.push({ type: "goldenGoal", leaders });
+    } else {
+      s.winners = leaders; s.phase = "GAME_OVER";
+      s.tower = []; s.played = {}; s.deckCard = null; s.lui = null; s.votes = {};
+      events.push({ type: "gameOver", winners: s.winners });
+      return;
+    }
   }
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;
   startTurn(s, events);

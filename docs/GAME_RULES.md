@@ -35,7 +35,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 3. Punti:
    - **+2** a chi ha votato il personaggio caduto;
    - **+2** a chi ha giocato la carta caduta;
-   - Megafono, segnalino "Lui!": **CADE LUI! → +4** se il personaggio è caduto; **NON CADE LUI! → +1** se non è caduto; altrimenti 0. Si somma agli altri punti.
+   - Megafono, segnalino "Lui!": **CADE LUI! → +4** se il personaggio è caduto; **NON CADE LUI! → +1** se non è caduto. **Se la scommessa fallisce: −1** (decisione utente; i punteggi possono diventare negativi). Si somma agli altri punti.
 4. Un giocatore può cumulare più bonus nel turno.
 
 ### Fine turno
@@ -45,7 +45,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 - Megafono + "Lui!" passano al giocatore alla **destra**.
 
 ## Fine partita
-Termina quando tutti hanno fatto il Megafono: **1 volta (6–8 giocatori)**, **2 volte (3–5)**. Vince chi ha più punti; parità → vittoria condivisa. (Rounds extra possibili, sempre pari per tutti.)
+Termina quando tutti hanno fatto il Megafono: **1 volta (6–8 giocatori)**, **2 volte (3–5)**. Vince chi ha più punti. **Parità in testa → Golden goal**: si giocano turni extra (tutti i giocatori, Megafono a rotazione) finché un solo giocatore ha più punti di tutti (tetto di sicurezza 30 turni, poi vittoria condivisa). (Rounds extra possibili, sempre pari per tutti.)
 
 ## Discussione libera
 Parlare è sempre consentito e non vincolante (bluff ammesso). **Vietato** rivelare la propria carta giocata prima del voto. Il Megafono "parla" solo con il megafono scenico. *(Online: regole sociali, non applicabili dal sistema; la chat testuale NON è inclusa salvo decisione.)*

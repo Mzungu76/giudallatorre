@@ -25,20 +25,29 @@ describe("punteggi", () => {
     const r = castVotes(g, { p1: f, p2: o, p3: f, p4: f });
     expect(r.lastResult!.points).toEqual({ p1: 6, p2: 2, p3: 2, p4: 2 }); // p1: voto 2 + lui 4; p2: carta 2
   });
-  it("Lui! CADE su un personaggio che NON cade: 0 punti dal segnalino", () => {
+  it("Lui! CADE su un personaggio che NON cade: malus -1 (scommessa fallita)", () => {
     const g = setup(4, (s) => ({ kind: "CADE", position: posOf(s, "p3") }));
     const f = posOf(g, "p2");
     const r = castVotes(g, { p1: f, p2: f, p3: f, p4: f });
-    expect(r.lastResult!.points.p1).toBe(2);
-    expect(r.lastResult!.reasons.p1).toEqual(["voto"]);
+    expect(r.lastResult!.points.p1).toBe(1);                       // +2 voto, -1 malus
+    expect(r.lastResult!.reasons.p1).toEqual(["voto", "lui-fallito"]);
   });
-  it("Lui! NON_CADE: +1 se il personaggio resta su, 0 se cade", () => {
+  it("Lui! NON_CADE: +1 se il personaggio resta su, malus -1 se cade", () => {
     let g = setup(4, (s) => ({ kind: "NON_CADE", position: posOf(s, "p3") }));
     let r = castVotes(g, { p1: posOf(g, "p2"), p2: posOf(g, "p2"), p3: posOf(g, "p2"), p4: posOf(g, "p2") });
     expect(r.lastResult!.points.p1).toBe(3);
     g = setup(4, (s) => ({ kind: "NON_CADE", position: posOf(s, "p2") }));
     r = castVotes(g, { p1: posOf(g, "p3"), p2: posOf(g, "p2"), p3: posOf(g, "p2"), p4: posOf(g, "p2") });
-    expect(r.lastResult!.points.p1).toBe(0);
+    expect(r.lastResult!.points.p1).toBe(-1);                      // il Megafono non ha votato il caduto e perde la scommessa
+    expect(r.lastResult!.reasons.p1).toEqual(["lui-fallito"]);
+  });
+  it("il malus può portare il punteggio sotto zero (nessun limite inferiore)", () => {
+    const g = setup(3, (s) => ({ kind: "CADE", position: posOf(s, "p3") }));
+    const f = posOf(g, "p2"), other = f === 1 ? 2 : 1;
+    // il Megafono vota un altro personaggio e la Folla fa cadere p2: p1 perde la scommessa e non prende punti
+    const r = castVotes(g, { p1: other === posOf(g, "p3") ? (f === 3 ? 2 : 3) : other, p2: f, p3: f });
+    expect(r.lastResult!.reasons.p1).toContain("lui-fallito");
+    expect(r.scores.p1).toBe(-1);
   });
   it("nessuno vota il caduto e nessuno lo ha giocato (carta del mazzo): nessun punto ai votanti, né 'carta'", () => {
     const g = setup(4, (s) => ({ kind: "NON_CADE", position: posOf(s, "p2") }));
@@ -77,7 +86,7 @@ describe("spareggio: cade SEMPRE il personaggio votato dal Megafono", () => {
     const [a, b, c, d] = [1, 2, 3, 4];
     const r = castVotes(g, { p1: c, p2: a, p3: b, p4: d });
     expect(r.lastResult!.tie).toBe(true); expect(r.lastResult!.fallenPosition).toBe(c);
-    expect(r.lastResult!.points.p1).toBe(2);
+    expect(r.lastResult!.points.p1).toBe(1);                       // +2 voto, -1 Lui! CADE su un altro personaggio
   });
   it("il voto del Megafono non è tra i pareggiati: cade comunque il suo (gli altri voti non contano)", () => {
     const g = setup(5, () => ({ kind: "NON_CADE", position: 1 }));

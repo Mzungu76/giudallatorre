@@ -1,12 +1,19 @@
 {
  "fonte": "Carte_frasi.docx",
- "nota": "Importazione letterale; 50 carte x 5 frasi. Vedi docs/RULES_AMBIGUITIES.md",
+ "nota": "Revisione sezione A (docs/REVISIONE_FRASI.md): plurale «salgono». Gli originali sono in content/originali/ e nel campo frasi_originali.",
  "carte": [
   {
    "id": "frasi-01",
    "numero": 1,
    "tema": "Cucina: sacrilegi famosi",
    "frasi": [
+    "Oggi sale sulla torre chi mette l’ananas sulla pizza.",
+    "Oggi sale sulla torre chi versa ketchup sulla carbonara.",
+    "Oggi salgono sulla torre le persone che spezzano gli spaghetti a metà.",
+    "Oggi sale sulla torre chi fa il tiramisù senza caffè.",
+    "Oggi sale sulla torre chi cuoce il pesto nel microonde."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi mette l’ananas sulla pizza.",
     "Oggi sale sulla torre chi versa ketchup sulla carbonara.",
     "Oggi sale sulla torre le persone che spezzano gli spaghetti a metà.",
@@ -19,6 +26,13 @@
    "numero": 2,
    "tema": "Digitale: fastidi universali",
    "frasi": [
+    "Oggi sale sulla torre chi manda vocali da nove minuti.",
+    "Oggi sale sulla torre chi risponde solo “k”.",
+    "Oggi salgono sulla torre le persone che scrivono in CAPS LOCK.",
+    "Oggi sale sulla torre chi tagga tutti nella foto peggiore.",
+    "Oggi sale sulla torre chi posta “niente social” sui social."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi manda vocali da nove minuti.",
     "Oggi sale sulla torre chi risponde solo “k”.",
     "Oggi sale sulla torre le persone che scrivono in CAPS LOCK.",
@@ -34,6 +48,13 @@
     "Oggi sale sulla torre chi lascia il rotolo finito, così.",
     "Oggi sale sulla torre chi rimette in frigo la bottiglia vuota.",
     "Oggi sale sulla torre chi lascia briciole nel letto.",
+    "Oggi salgono sulla torre le persone che spremono il dentifricio dal centro.",
+    "Oggi sale sulla torre chi lascia i piatti “a mollo” per due giorni."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi lascia il rotolo finito, così.",
+    "Oggi sale sulla torre chi rimette in frigo la bottiglia vuota.",
+    "Oggi sale sulla torre chi lascia briciole nel letto.",
     "Oggi sale sulla torre le persone che spremono il dentifricio dal centro.",
     "Oggi sale sulla torre chi lascia i piatti “a mollo” per due giorni."
    ]
@@ -43,6 +64,13 @@
    "numero": 4,
    "tema": "Trasporti: maleducazione pratica",
    "frasi": [
+    "Oggi sale sulla torre chi entra senza far scendere nessuno.",
+    "Oggi sale sulla torre chi parla in vivavoce sul treno.",
+    "Oggi salgono sulla torre le persone che occupano due posti con la giacca.",
+    "Oggi sale sulla torre chi preme il pulsante dell’ascensore dieci volte.",
+    "Oggi sale sulla torre chi blocca la porta dicendo “un secondo”."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi entra senza far scendere nessuno.",
     "Oggi sale sulla torre chi parla in vivavoce sul treno.",
     "Oggi sale sulla torre le persone che occupano due posti con la giacca.",
@@ -55,6 +83,13 @@
    "numero": 5,
    "tema": "Contraddizioni dette",
    "frasi": [
+    "Oggi sale sulla torre chi dice “sto arrivando” dal divano.",
+    "Oggi sale sulla torre chi giura “mai più” e poi lo rifà.",
+    "Oggi salgono sulla torre le persone che dicono “non ho fame” e poi finiscono il piatto.",
+    "Oggi sale sulla torre chi dice “niente spoiler” e poi spoilera.",
+    "Oggi sale sulla torre chi scrive “zero drama” e poi contatta l’ex."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi dice “sto arrivando” dal divano.",
     "Oggi sale sulla torre chi giura “mai più” e poi lo rifà.",
     "Oggi sale sulla torre le persone che dicono “non ho fame” e poi finiscono il piatto.",
@@ -70,6 +105,13 @@
     "Oggi sale sulla torre chi cerca gli occhiali mentre li indossa.",
     "Oggi sale sulla torre chi cerca il telecomando nel frigo.",
     "Oggi sale sulla torre chi cerca il telefono mentre sta chiamando.",
+    "Oggi salgono sulla torre le persone che cercano “felicità” su Google.",
+    "Oggi sale sulla torre chi cerca il Nord in salotto."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi cerca gli occhiali mentre li indossa.",
+    "Oggi sale sulla torre chi cerca il telecomando nel frigo.",
+    "Oggi sale sulla torre chi cerca il telefono mentre sta chiamando.",
     "Oggi sale sulla torre le persone che cercano “felicità” su Google.",
     "Oggi sale sulla torre chi cerca il Nord in salotto."
    ]
@@ -79,6 +121,13 @@
    "numero": 7,
    "tema": "Oggetti usati peggio",
    "frasi": [
+    "Oggi sale sulla torre chi usa il mouse come saponetta.",
+    "Oggi sale sulla torre chi usa il phon come stufetta.",
+    "Oggi salgono sulla torre le persone che pagano con il badge aziendale.",
+    "Oggi sale sulla torre chi usa lo scolapasta come cappello.",
+    "Oggi sale sulla torre chi apparecchia con il tappetino yoga."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi usa il mouse come saponetta.",
     "Oggi sale sulla torre chi usa il phon come stufetta.",
     "Oggi sale sulla torre le persone che pagano con il badge aziendale.",
@@ -93,6 +142,13 @@
    "frasi": [
     "Oggi sale sulla torre chi è rimasto chiuso fuori in pigiama.",
     "Oggi sale sulla torre chi è salito sul treno sbagliato convinto di essere su quello giusto.",
+    "Oggi salgono sulla torre le persone arrivate alla festa il giorno dopo.",
+    "Oggi sale sulla torre chi ha salutato un negozio sbagliato.",
+    "Oggi sale sulla torre chi ha suonato al citofono di sé stesso."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi è rimasto chiuso fuori in pigiama.",
+    "Oggi sale sulla torre chi è salito sul treno sbagliato convinto di essere su quello giusto.",
     "Oggi sale sulla torre le persone arrivate alla festa il giorno dopo.",
     "Oggi sale sulla torre chi ha salutato un negozio sbagliato.",
     "Oggi sale sulla torre chi ha suonato al citofono di sé stesso."
@@ -105,6 +161,13 @@
    "frasi": [
     "Oggi sale sulla torre chi ha visto applaudire un microonde.",
     "Oggi sale sulla torre chi ha visto tagliare la pizza con forbici da ufficio.",
+    "Oggi salgono sulla torre le persone che hanno visto salutare un manichino.",
+    "Oggi sale sulla torre chi ha visto parlare al frigorifero.",
+    "Oggi sale sulla torre chi ha visto un ombrello aperto in ascensore."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi ha visto applaudire un microonde.",
+    "Oggi sale sulla torre chi ha visto tagliare la pizza con forbici da ufficio.",
     "Oggi sale sulla torre le persone che hanno visto salutare un manichino.",
     "Oggi sale sulla torre chi ha visto parlare al frigorifero.",
     "Oggi sale sulla torre chi ha visto un ombrello aperto in ascensore."
@@ -115,6 +178,13 @@
    "numero": 10,
    "tema": "Promesse non mantenute",
    "frasi": [
+    "Oggi sale sulla torre chi promette di andare in palestra lunedì e poi ordina pizza.",
+    "Oggi sale sulla torre chi promette “ti richiamo” dal 2019.",
+    "Oggi salgono sulla torre le persone che promettono “niente social” e poi lo postano.",
+    "Oggi sale sulla torre chi promette “arrivo presto” mentre è in pigiama.",
+    "Oggi sale sulla torre chi promette “tempo per me” e poi dorme."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi promette di andare in palestra lunedì e poi ordina pizza.",
     "Oggi sale sulla torre chi promette “ti richiamo” dal 2019.",
     "Oggi sale sulla torre le persone che promettono “niente social” e poi lo postano.",
@@ -130,6 +200,13 @@
     "Oggi sale sulla torre chi finge di capire la trama.",
     "Oggi sale sulla torre chi inventa una riunione per scappare.",
     "Oggi sale sulla torre chi finge di ridere al vivavoce.",
+    "Oggi salgono sulla torre le persone che dicono “arrivo in cinque” e sono in pigiama.",
+    "Oggi sale sulla torre chi finge di essere offline e poi mette like."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi finge di capire la trama.",
+    "Oggi sale sulla torre chi inventa una riunione per scappare.",
+    "Oggi sale sulla torre chi finge di ridere al vivavoce.",
     "Oggi sale sulla torre le persone che dicono “arrivo in cinque” e sono in pigiama.",
     "Oggi sale sulla torre chi finge di essere offline e poi mette like."
    ]
@@ -139,6 +216,13 @@
    "numero": 12,
    "tema": "Ignorato / evitato",
    "frasi": [
+    "Oggi sale sulla torre chi ignora il timer e brucia tutto.",
+    "Oggi sale sulla torre chi spegne la sveglia con uno swipe, tre volte.",
+    "Oggi sale sulla torre chi finge “segnale scarso” in videochiamata.",
+    "Oggi salgono sulla torre le persone che saltano il pranzo “per sbaglio”.",
+    "Oggi sale sulla torre chi legge il messaggio e risponde domani."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi ignora il timer e brucia tutto.",
     "Oggi sale sulla torre chi spegne la sveglia con uno swipe, tre volte.",
     "Oggi sale sulla torre chi finge “segnale scarso” in videochiamata.",
@@ -153,6 +237,13 @@
    "frasi": [
     "Oggi sale sulla torre chi mette il sale nel caffè.",
     "Oggi sale sulla torre chi cuoce la pasta senza acqua.",
+    "Oggi salgono sulla torre le persone che grattugiano il formaggio con la pellicola ancora sopra.",
+    "Oggi sale sulla torre chi versa il latte nella moka.",
+    "Oggi sale sulla torre chi assaggia la farina “per vedere se è dolce”."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi mette il sale nel caffè.",
+    "Oggi sale sulla torre chi cuoce la pasta senza acqua.",
     "Oggi sale sulla torre le persone che grattugiano il formaggio con la pellicola ancora sopra.",
     "Oggi sale sulla torre chi versa il latte nella moka.",
     "Oggi sale sulla torre chi assaggia la farina “per vedere se è dolce”."
@@ -163,6 +254,13 @@
    "numero": 14,
    "tema": "Lavoro: etichetta fallita",
    "frasi": [
+    "Oggi sale sulla torre chi convoca riunioni che potevano essere una mail.",
+    "Oggi sale sulla torre chi scrive “URGENTE” ovunque.",
+    "Oggi salgono sulla torre le persone che rispondono “come da oggetto”.",
+    "Oggi sale sulla torre chi condivide lo schermo con chat imbarazzanti.",
+    "Oggi sale sulla torre chi stampa 100 copie per errore."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi convoca riunioni che potevano essere una mail.",
     "Oggi sale sulla torre chi scrive “URGENTE” ovunque.",
     "Oggi sale sulla torre le persone che rispondono “come da oggetto”.",
@@ -177,6 +275,13 @@
    "frasi": [
     "Oggi sale sulla torre chi fa la spesa senza portafogli.",
     "Oggi sale sulla torre chi riporta il carrello… in mezzo al parcheggio.",
+    "Oggi salgono sulla torre le persone che prendono solo snack “per sicurezza”.",
+    "Oggi sale sulla torre chi compra doppio perché non ricorda.",
+    "Oggi sale sulla torre chi sceglie la fila più lenta con convinzione."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi fa la spesa senza portafogli.",
+    "Oggi sale sulla torre chi riporta il carrello… in mezzo al parcheggio.",
     "Oggi sale sulla torre le persone che prendono solo snack “per sicurezza”.",
     "Oggi sale sulla torre chi compra doppio perché non ricorda.",
     "Oggi sale sulla torre chi sceglie la fila più lenta con convinzione."
@@ -189,6 +294,13 @@
    "frasi": [
     "Oggi sale sulla torre chi lava il pavimento e rientra subito.",
     "Oggi sale sulla torre chi spegne il PC dalla ciabatta.",
+    "Oggi salgono sulla torre le persone che appendono la giacca alla maniglia del frigo.",
+    "Oggi sale sulla torre chi stende i panni sotto la pioggia.",
+    "Oggi sale sulla torre chi lascia le luci accese “per compagnia”."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi lava il pavimento e rientra subito.",
+    "Oggi sale sulla torre chi spegne il PC dalla ciabatta.",
     "Oggi sale sulla torre le persone che appendono la giacca alla maniglia del frigo.",
     "Oggi sale sulla torre chi stende i panni sotto la pioggia.",
     "Oggi sale sulla torre chi lascia le luci accese “per compagnia”."
@@ -199,6 +311,13 @@
    "numero": 17,
    "tema": "Fitness: eroismo minimo",
    "frasi": [
+    "Oggi sale sulla torre chi corre verso il bar.",
+    "Oggi sale sulla torre chi compra scarpe e smette.",
+    "Oggi salgono sulla torre le persone che fanno un piegamento e una foto.",
+    "Oggi sale sulla torre chi confonde il riscaldamento con la sauna.",
+    "Oggi sale sulla torre chi conta i passi… da seduto."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi corre verso il bar.",
     "Oggi sale sulla torre chi compra scarpe e smette.",
     "Oggi sale sulla torre le persone che fanno un piegamento e una foto.",
@@ -214,6 +333,13 @@
     "Oggi sale sulla torre chi risponde “ok” a uno sfogo.",
     "Oggi sale sulla torre chi dice “ci vediamo” e poi sparisce.",
     "Oggi sale sulla torre chi promette aiuto e poi mette un like.",
+    "Oggi salgono sulla torre le persone che raccontano segreti “per sbaglio”.",
+    "Oggi sale sulla torre chi dà buca e dorme."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi risponde “ok” a uno sfogo.",
+    "Oggi sale sulla torre chi dice “ci vediamo” e poi sparisce.",
+    "Oggi sale sulla torre chi promette aiuto e poi mette un like.",
     "Oggi sale sulla torre le persone che raccontano segreti “per sbaglio”.",
     "Oggi sale sulla torre chi dà buca e dorme."
    ]
@@ -223,6 +349,13 @@
    "numero": 19,
    "tema": "Tecnologia: speranze ingenue",
    "frasi": [
+    "Oggi sale sulla torre chi cerca la torcia con la torcia.",
+    "Oggi sale sulla torre chi urla al router “funziona!”.",
+    "Oggi salgono sulla torre le persone che mettono la password nel microonde.",
+    "Oggi sale sulla torre chi pulisce lo schermo con il latte.",
+    "Oggi sale sulla torre chi spegne il telefono dicendo “caricati”."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi cerca la torcia con la torcia.",
     "Oggi sale sulla torre chi urla al router “funziona!”.",
     "Oggi sale sulla torre le persone che mettono la password nel microonde.",
@@ -237,6 +370,13 @@
    "frasi": [
     "Oggi sale sulla torre chi innaffia la pianta di plastica.",
     "Oggi sale sulla torre chi chiama il cane “password”.",
+    "Oggi salgono sulla torre le persone che salutano il gatto del vicino come sindaco.",
+    "Oggi sale sulla torre chi battezza ogni pianta e dimentica i nomi.",
+    "Oggi sale sulla torre chi dà croccantini… al telecomando."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi innaffia la pianta di plastica.",
+    "Oggi sale sulla torre chi chiama il cane “password”.",
     "Oggi sale sulla torre le persone che salutano il gatto del vicino come sindaco.",
     "Oggi sale sulla torre chi battezza ogni pianta e dimentica i nomi.",
     "Oggi sale sulla torre chi dà croccantini… al telecomando."
@@ -247,6 +387,13 @@
    "numero": 21,
    "tema": "Ristorante: galateo discutibile",
    "frasi": [
+    "Oggi sale sulla torre chi schiocca le dita al cameriere.",
+    "Oggi sale sulla torre chi assaggia dal piatto altrui “solo un boccone”.",
+    "Oggi salgono sulla torre le persone che spostano i tavoli senza chiedere.",
+    "Oggi sale sulla torre chi manda indietro l’acqua perché “sa d’acqua”.",
+    "Oggi sale sulla torre chi chiede il conto separato… a fine serata."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi schiocca le dita al cameriere.",
     "Oggi sale sulla torre chi assaggia dal piatto altrui “solo un boccone”.",
     "Oggi sale sulla torre le persone che spostano i tavoli senza chiedere.",
@@ -261,6 +408,13 @@
    "frasi": [
     "Oggi sale sulla torre chi parcheggia in doppia fila “un minuto”.",
     "Oggi sale sulla torre chi occupa due posti perché l’auto è nuova.",
+    "Oggi salgono sulla torre le persone che suonano appena scatta il verde.",
+    "Oggi sale sulla torre chi apre la portiera lato traffico.",
+    "Oggi sale sulla torre chi fa retromarcia senza guardare."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi parcheggia in doppia fila “un minuto”.",
+    "Oggi sale sulla torre chi occupa due posti perché l’auto è nuova.",
     "Oggi sale sulla torre le persone che suonano appena scatta il verde.",
     "Oggi sale sulla torre chi apre la portiera lato traffico.",
     "Oggi sale sulla torre chi fa retromarcia senza guardare."
@@ -271,6 +425,13 @@
    "numero": 23,
    "tema": "Messaggi e telefonate",
    "frasi": [
+    "Oggi sale sulla torre chi manda dieci messaggi invece di uno.",
+    "Oggi sale sulla torre chi risponde con sticker a tutto.",
+    "Oggi salgono sulla torre le persone che chiamano: “hai letto?”.",
+    "Oggi sale sulla torre chi fa videochiamata senza avvisare.",
+    "Oggi sale sulla torre chi manda audio mentre guida."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi manda dieci messaggi invece di uno.",
     "Oggi sale sulla torre chi risponde con sticker a tutto.",
     "Oggi sale sulla torre le persone che chiamano: “hai letto?”.",
@@ -285,6 +446,13 @@
    "frasi": [
     "Oggi sale sulla torre chi arriva senza avvisare e dice “passavo di qui”.",
     "Oggi sale sulla torre chi porta patatine già aperte.",
+    "Oggi salgono sulla torre le persone che mettono una playlist triste alla festa.",
+    "Oggi sale sulla torre chi sbaglia il nome del festeggiato sulla torta.",
+    "Oggi sale sulla torre chi spegne candeline non sue."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi arriva senza avvisare e dice “passavo di qui”.",
+    "Oggi sale sulla torre chi porta patatine già aperte.",
     "Oggi sale sulla torre le persone che mettono una playlist triste alla festa.",
     "Oggi sale sulla torre chi sbaglia il nome del festeggiato sulla torta.",
     "Oggi sale sulla torre chi spegne candeline non sue."
@@ -295,6 +463,13 @@
    "numero": 25,
    "tema": "Scuola e sport dei figli",
    "frasi": [
+    "Oggi sale sulla torre chi urla dai gradoni “arbitro!”.",
+    "Oggi sale sulla torre chi corregge i compiti con pennarello glitter.",
+    "Oggi salgono sulla torre le persone che filmano tutto, anche il riscaldamento.",
+    "Oggi sale sulla torre chi dà consigli in panchina a tutti.",
+    "Oggi sale sulla torre chi manda audio al gruppo classe alle 23:59."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi urla dai gradoni “arbitro!”.",
     "Oggi sale sulla torre chi corregge i compiti con pennarello glitter.",
     "Oggi sale sulla torre le persone che filmano tutto, anche il riscaldamento.",
@@ -309,6 +484,13 @@
    "frasi": [
     "Oggi sale sulla torre chi fa il trolley da 40 kg “cabin size”.",
     "Oggi sale sulla torre chi prenota l’hotel nella città sbagliata.",
+    "Oggi salgono sulla torre le persone che occupano lettini con l’asciugamano.",
+    "Oggi sale sulla torre chi fa foto al cibo… finché si raffredda.",
+    "Oggi sale sulla torre chi dimentica il passaporto sulla porta di casa."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi fa il trolley da 40 kg “cabin size”.",
+    "Oggi sale sulla torre chi prenota l’hotel nella città sbagliata.",
     "Oggi sale sulla torre le persone che occupano lettini con l’asciugamano.",
     "Oggi sale sulla torre chi fa foto al cibo… finché si raffredda.",
     "Oggi sale sulla torre chi dimentica il passaporto sulla porta di casa."
@@ -319,6 +501,13 @@
    "numero": 27,
    "tema": "Meteo e abiti",
    "frasi": [
+    "Oggi sale sulla torre chi esce col piumino a luglio.",
+    "Oggi sale sulla torre chi porta l’ombrello col sole e lo apre in negozio.",
+    "Oggi salgono sulla torre le persone in sandali sotto il diluvio.",
+    "Oggi sale sulla torre chi apre le finestre in piena tempesta.",
+    "Oggi sale sulla torre chi mette la sciarpa… in spiaggia."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi esce col piumino a luglio.",
     "Oggi sale sulla torre chi porta l’ombrello col sole e lo apre in negozio.",
     "Oggi sale sulla torre le persone in sandali sotto il diluvio.",
@@ -333,6 +522,13 @@
    "frasi": [
     "Oggi sale sulla torre chi chiede like alla nonna.",
     "Oggi sale sulla torre chi commenta senza leggere.",
+    "Oggi salgono sulla torre le persone che mettono #nofilter con il filtro.",
+    "Oggi sale sulla torre chi posta il pranzo… il giorno dopo.",
+    "Oggi sale sulla torre chi fa stories ai funerali e in coda."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi chiede like alla nonna.",
+    "Oggi sale sulla torre chi commenta senza leggere.",
     "Oggi sale sulla torre le persone che mettono #nofilter con il filtro.",
     "Oggi sale sulla torre chi posta il pranzo… il giorno dopo.",
     "Oggi sale sulla torre chi fa stories ai funerali e in coda."
@@ -343,6 +539,13 @@
    "numero": 29,
    "tema": "Ufficio: tecnicismi ridicoli",
    "frasi": [
+    "Oggi sale sulla torre chi scrive sempre “come anticipato in call”.",
+    "Oggi sale sulla torre chi inoltra senza leggere.",
+    "Oggi salgono sulla torre le persone che allegano e poi scrivono “dimenticato l’allegato”.",
+    "Oggi sale sulla torre chi condivide lo schermo col desktop caotico.",
+    "Oggi sale sulla torre chi manda PDF da firmare… in JPG."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi scrive sempre “come anticipato in call”.",
     "Oggi sale sulla torre chi inoltra senza leggere.",
     "Oggi sale sulla torre le persone che allegano e poi scrivono “dimenticato l’allegato”.",
@@ -357,6 +560,13 @@
    "frasi": [
     "Oggi sale sulla torre chi beve acqua “detox” e poi frigge tutto.",
     "Oggi sale sulla torre chi medita scrollando.",
+    "Oggi salgono sulla torre le persone che vanno a letto presto… domani.",
+    "Oggi sale sulla torre chi fa stretching sul letto.",
+    "Oggi sale sulla torre chi salta la colazione e poi ruba la merenda."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi beve acqua “detox” e poi frigge tutto.",
+    "Oggi sale sulla torre chi medita scrollando.",
     "Oggi sale sulla torre le persone che vanno a letto presto… domani.",
     "Oggi sale sulla torre chi fa stretching sul letto.",
     "Oggi sale sulla torre chi salta la colazione e poi ruba la merenda."
@@ -367,6 +577,13 @@
    "numero": 31,
    "tema": "Spazzatura e riciclo",
    "frasi": [
+    "Oggi sale sulla torre chi lascia il sacchetto fuori “tanto passano”.",
+    "Oggi sale sulla torre chi butta il vetro nella carta.",
+    "Oggi salgono sulla torre le persone che dimenticano il bidone per tutto il mese.",
+    "Oggi sale sulla torre chi porta in cantina… per sempre.",
+    "Oggi sale sulla torre chi riempie il cestino del parco con cartoni della pizza."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi lascia il sacchetto fuori “tanto passano”.",
     "Oggi sale sulla torre chi butta il vetro nella carta.",
     "Oggi sale sulla torre le persone che dimenticano il bidone per tutto il mese.",
@@ -381,6 +598,13 @@
    "frasi": [
     "Oggi sale sulla torre chi chiede il cappuccino dopo pranzo e poi giudica.",
     "Oggi sale sulla torre chi morde la brioche del partner “per assaggiare”.",
+    "Oggi salgono sulla torre le persone che occupano un tavolo un’ora con un caffè.",
+    "Oggi sale sulla torre chi chiede zucchero e lascia il pacchetto aperto.",
+    "Oggi sale sulla torre chi dice “offro io” e poi conta i centesimi."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi chiede il cappuccino dopo pranzo e poi giudica.",
+    "Oggi sale sulla torre chi morde la brioche del partner “per assaggiare”.",
     "Oggi sale sulla torre le persone che occupano un tavolo un’ora con un caffè.",
     "Oggi sale sulla torre chi chiede zucchero e lascia il pacchetto aperto.",
     "Oggi sale sulla torre chi dice “offro io” e poi conta i centesimi."
@@ -391,6 +615,13 @@
    "numero": 33,
    "tema": "Telefonini ovunque",
    "frasi": [
+    "Oggi sale sulla torre chi mette la suoneria a palla in pubblico.",
+    "Oggi sale sulla torre chi scrolla il telefono a cena.",
+    "Oggi salgono sulla torre le persone che parlano con gli auricolari e ti spaventano.",
+    "Oggi sale sulla torre chi fa foto con il flash ovunque.",
+    "Oggi sale sulla torre chi guarda film sul telefono a volume alto."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi mette la suoneria a palla in pubblico.",
     "Oggi sale sulla torre chi scrolla il telefono a cena.",
     "Oggi sale sulla torre le persone che parlano con gli auricolari e ti spaventano.",
@@ -405,6 +636,13 @@
    "frasi": [
     "Oggi sale sulla torre chi controlla l’ora e la dimentica.",
     "Oggi sale sulla torre chi entra in una stanza e non sa perché.",
+    "Oggi salgono sulla torre le persone che cercano le chiavi nella mano.",
+    "Oggi sale sulla torre chi sbaglia il PIN… la propria data.",
+    "Oggi sale sulla torre chi chiama con il telecomando."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi controlla l’ora e la dimentica.",
+    "Oggi sale sulla torre chi entra in una stanza e non sa perché.",
     "Oggi sale sulla torre le persone che cercano le chiavi nella mano.",
     "Oggi sale sulla torre chi sbaglia il PIN… la propria data.",
     "Oggi sale sulla torre chi chiama con il telecomando."
@@ -415,6 +653,13 @@
    "numero": 35,
    "tema": "Spesa online e consegne",
    "frasi": [
+    "Oggi sale sulla torre chi ordina e mette l’indirizzo dell’ufficio chiuso.",
+    "Oggi sale sulla torre chi scrive “citofono rotto” da mesi.",
+    "Oggi salgono sulla torre le persone che pretendono la consegna alle 23.",
+    "Oggi sale sulla torre chi manda la posizione… dell’anno scorso.",
+    "Oggi sale sulla torre chi restituisce tutto “per provare a casa”."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi ordina e mette l’indirizzo dell’ufficio chiuso.",
     "Oggi sale sulla torre chi scrive “citofono rotto” da mesi.",
     "Oggi sale sulla torre le persone che pretendono la consegna alle 23.",
@@ -429,6 +674,13 @@
    "frasi": [
     "Oggi sale sulla torre chi non asciuga il lavandino: “non è mio”.",
     "Oggi sale sulla torre chi esce senza lavarsi le mani.",
+    "Oggi salgono sulla torre le persone che parlano al telefono in bagno.",
+    "Oggi sale sulla torre chi lascia carta ovunque tranne nel cestino.",
+    "Oggi sale sulla torre chi occupa lo specchio per selfie."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi non asciuga il lavandino: “non è mio”.",
+    "Oggi sale sulla torre chi esce senza lavarsi le mani.",
     "Oggi sale sulla torre le persone che parlano al telefono in bagno.",
     "Oggi sale sulla torre chi lascia carta ovunque tranne nel cestino.",
     "Oggi sale sulla torre chi occupa lo specchio per selfie."
@@ -439,6 +691,13 @@
    "numero": 37,
    "tema": "Librerie e cultura pop",
    "frasi": [
+    "Oggi sale sulla torre chi compra libri per arredare.",
+    "Oggi sale sulla torre chi dice “ho visto il trailer, so tutto”.",
+    "Oggi salgono sulla torre le persone che spiegano il finale… al cinema.",
+    "Oggi sale sulla torre chi chiede lo spoiler “così capisco meglio”.",
+    "Oggi sale sulla torre chi sottolinea i libri della biblioteca."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi compra libri per arredare.",
     "Oggi sale sulla torre chi dice “ho visto il trailer, so tutto”.",
     "Oggi sale sulla torre le persone che spiegano il finale… al cinema.",
@@ -453,6 +712,13 @@
    "frasi": [
     "Oggi sale sulla torre chi aggiusta la sedia con lo scotch da cucina.",
     "Oggi sale sulla torre chi pittura senza spostare i quadri.",
+    "Oggi salgono sulla torre le persone a cui avanzano metà dei pezzi.",
+    "Oggi sale sulla torre chi legge il manuale… dopo.",
+    "Oggi sale sulla torre chi usa un coltello a serramanico… per aprire un pacco di biscotti."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi aggiusta la sedia con lo scotch da cucina.",
+    "Oggi sale sulla torre chi pittura senza spostare i quadri.",
     "Oggi sale sulla torre le persone a cui avanzano metà dei pezzi.",
     "Oggi sale sulla torre chi legge il manuale… dopo.",
     "Oggi sale sulla torre chi usa un coltello a serramanico… per aprire un pacco di biscotti."
@@ -463,6 +729,13 @@
    "numero": 39,
    "tema": "Vicinato delicato",
    "frasi": [
+    "Oggi sale sulla torre chi usa il trapano all’alba.",
+    "Oggi sale sulla torre chi prende il pacco del vicino: “pensavo fosse mio”.",
+    "Oggi salgono sulla torre le persone che salutano con il nome sbagliato per anni.",
+    "Oggi sale sulla torre chi occupa l’ascensore per fare stories.",
+    "Oggi sale sulla torre chi fuma sul pianerottolo “due secondi”."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi usa il trapano all’alba.",
     "Oggi sale sulla torre chi prende il pacco del vicino: “pensavo fosse mio”.",
     "Oggi sale sulla torre le persone che salutano con il nome sbagliato per anni.",
@@ -477,6 +750,13 @@
    "frasi": [
     "Oggi sale sulla torre chi si infila “veloce” davanti.",
     "Oggi sale sulla torre chi cambia coda e rallenta entrambe.",
+    "Oggi salgono sulla torre le persone che pagano contando i centesimi a Natale.",
+    "Oggi sale sulla torre chi litiga col numerino.",
+    "Oggi sale sulla torre chi compra al banco e resta a chiacchierare."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi si infila “veloce” davanti.",
+    "Oggi sale sulla torre chi cambia coda e rallenta entrambe.",
     "Oggi sale sulla torre le persone che pagano contando i centesimi a Natale.",
     "Oggi sale sulla torre chi litiga col numerino.",
     "Oggi sale sulla torre chi compra al banco e resta a chiacchierare."
@@ -487,6 +767,13 @@
    "numero": 41,
    "tema": "Colazione d’hotel",
    "frasi": [
+    "Oggi sale sulla torre chi fa scorta come per l’inverno.",
+    "Oggi sale sulla torre chi porta via il succo “per dopo”.",
+    "Oggi salgono sulla torre le persone che inventano allergie per la Nutella.",
+    "Oggi sale sulla torre chi occupa il tavolo e legge il giornale di tutti.",
+    "Oggi sale sulla torre chi fa la fila alla macchina del caffè tre volte."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi fa scorta come per l’inverno.",
     "Oggi sale sulla torre chi porta via il succo “per dopo”.",
     "Oggi sale sulla torre le persone che inventano allergie per la Nutella.",
@@ -501,6 +788,13 @@
    "frasi": [
     "Oggi sale sulla torre chi assaggia tutto e non compra.",
     "Oggi sale sulla torre chi contratta sul panino.",
+    "Oggi salgono sulla torre le persone che passano davanti agli altri “solo una domanda”.",
+    "Oggi sale sulla torre chi parcheggia sul prato dei nonni.",
+    "Oggi sale sulla torre chi occupa il tavolo con i souvenir."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi assaggia tutto e non compra.",
+    "Oggi sale sulla torre chi contratta sul panino.",
     "Oggi sale sulla torre le persone che passano davanti agli altri “solo una domanda”.",
     "Oggi sale sulla torre chi parcheggia sul prato dei nonni.",
     "Oggi sale sulla torre chi occupa il tavolo con i souvenir."
@@ -511,6 +805,13 @@
    "numero": 43,
    "tema": "Genitori imperfetti",
    "frasi": [
+    "Oggi sale sulla torre chi dice “cinque minuti” e resta un’ora.",
+    "Oggi sale sulla torre chi compra il gioco rumoroso ai figli degli altri.",
+    "Oggi salgono sulla torre le persone che criticano l’allenatore davanti ai bambini.",
+    "Oggi sale sulla torre chi posta foto dei figli di tutti.",
+    "Oggi sale sulla torre chi fa i compiti al posto del figlio."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi dice “cinque minuti” e resta un’ora.",
     "Oggi sale sulla torre chi compra il gioco rumoroso ai figli degli altri.",
     "Oggi sale sulla torre le persone che criticano l’allenatore davanti ai bambini.",
@@ -525,6 +826,13 @@
    "frasi": [
     "Oggi sale sulla torre chi scuote l’asciugamano addosso agli altri.",
     "Oggi sale sulla torre chi ascolta musica senza cuffie sul bagnasciuga.",
+    "Oggi salgono sulla torre le persone che rubano ombra “solo un secondo”.",
+    "Oggi sale sulla torre chi gioca a pallone tra gli ombrelloni.",
+    "Oggi sale sulla torre chi fa lo shampoo nella doccia pubblica."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi scuote l’asciugamano addosso agli altri.",
+    "Oggi sale sulla torre chi ascolta musica senza cuffie sul bagnasciuga.",
     "Oggi sale sulla torre le persone che rubano ombra “solo un secondo”.",
     "Oggi sale sulla torre chi gioca a pallone tra gli ombrelloni.",
     "Oggi sale sulla torre chi fa lo shampoo nella doccia pubblica."
@@ -535,6 +843,13 @@
    "numero": 45,
    "tema": "Natale e feste comandate",
    "frasi": [
+    "Oggi sale sulla torre chi apre i regali degli altri “per aiutare”.",
+    "Oggi sale sulla torre chi porta un panettone con l’uvetta e non avvisa.",
+    "Oggi salgono sulla torre le persone che mettono la tombola a volume stadio.",
+    "Oggi sale sulla torre chi regala buoni sconto già scaduti.",
+    "Oggi sale sulla torre chi mangia torrone rumorosamente in call."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi apre i regali degli altri “per aiutare”.",
     "Oggi sale sulla torre chi porta un panettone con l’uvetta e non avvisa.",
     "Oggi sale sulla torre le persone che mettono la tombola a volume stadio.",
@@ -549,6 +864,13 @@
    "frasi": [
     "Oggi sale sulla torre chi chiede “un filo” e torna rasato.",
     "Oggi sale sulla torre chi parla al telefono durante il taglio.",
+    "Oggi salgono sulla torre le persone che si lamentano… e poi non lasciano la mancia.",
+    "Oggi sale sulla torre chi porta foto impossibili e dice “uguale”.",
+    "Oggi sale sulla torre chi usa il lavandino del negozio “un attimo”."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi chiede “un filo” e torna rasato.",
+    "Oggi sale sulla torre chi parla al telefono durante il taglio.",
     "Oggi sale sulla torre le persone che si lamentano… e poi non lasciano la mancia.",
     "Oggi sale sulla torre chi porta foto impossibili e dice “uguale”.",
     "Oggi sale sulla torre chi usa il lavandino del negozio “un attimo”."
@@ -559,6 +881,13 @@
    "numero": 47,
    "tema": "Abbigliamento e stile",
    "frasi": [
+    "Oggi sale sulla torre chi indossa due scarpe diverse.",
+    "Oggi sale sulla torre chi mette la maglia al contrario.",
+    "Oggi salgono sulla torre le persone con calzini bianchi ai matrimoni.",
+    "Oggi sale sulla torre chi prova scarpe senza togliere i lacci.",
+    "Oggi sale sulla torre chi profuma la stanza… esagerando."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi indossa due scarpe diverse.",
     "Oggi sale sulla torre chi mette la maglia al contrario.",
     "Oggi sale sulla torre le persone con calzini bianchi ai matrimoni.",
@@ -573,6 +902,13 @@
    "frasi": [
     "Oggi sale sulla torre chi mette la maionese sulla margherita.",
     "Oggi sale sulla torre chi usa la panna nella carbonara.",
+    "Oggi salgono sulla torre le persone che mettono zucchero nel sugo.",
+    "Oggi sale sulla torre chi scalda la pizza in padella con il coperchio.",
+    "Oggi sale sulla torre chi mette ghiaccio nel vino rosso."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi mette la maionese sulla margherita.",
+    "Oggi sale sulla torre chi usa la panna nella carbonara.",
     "Oggi sale sulla torre le persone che mettono zucchero nel sugo.",
     "Oggi sale sulla torre chi scalda la pizza in padella con il coperchio.",
     "Oggi sale sulla torre chi mette ghiaccio nel vino rosso."
@@ -585,6 +921,13 @@
    "frasi": [
     "Oggi sale sulla torre chi saluta il vicino col cognome sbagliato.",
     "Oggi sale sulla torre chi dimentica anniversari… i propri.",
+    "Oggi salgono sulla torre le persone che sbagliano il giorno dell’appuntamento.",
+    "Oggi sale sulla torre chi promette “ricordo io” e poi non ricorda.",
+    "Oggi sale sulla torre chi chiede “che giorno è?” tre volte."
+   ],
+   "frasi_originali": [
+    "Oggi sale sulla torre chi saluta il vicino col cognome sbagliato.",
+    "Oggi sale sulla torre chi dimentica anniversari… i propri.",
     "Oggi sale sulla torre le persone che sbagliano il giorno dell’appuntamento.",
     "Oggi sale sulla torre chi promette “ricordo io” e poi non ricorda.",
     "Oggi sale sulla torre chi chiede “che giorno è?” tre volte."
@@ -595,6 +938,13 @@
    "numero": 50,
    "tema": "Filosofia quotidiana (autoironia)",
    "frasi": [
+    "Oggi sale sulla torre chi spiega al forno come cucinare.",
+    "Oggi sale sulla torre chi conta fino a dieci e dimentica perché.",
+    "Oggi salgono sulla torre le persone che chiudono la giornata con “vabbè” e patatine.",
+    "Oggi sale sulla torre chi dice “da domani” fino a venerdì.",
+    "Oggi sale sulla torre chi apre la settimana con “lunedì prossimo”."
+   ],
+   "frasi_originali": [
     "Oggi sale sulla torre chi spiega al forno come cucinare.",
     "Oggi sale sulla torre chi conta fino a dieci e dimentica perché.",
     "Oggi sale sulla torre le persone che chiudono la giornata con “vabbè” e patatine.",

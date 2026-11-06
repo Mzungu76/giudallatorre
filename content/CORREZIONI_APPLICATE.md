@@ -1,0 +1,62 @@
+# Correzioni applicate (sezione A)
+
+## Plurale «salgono» (50 frasi)
+- carta 1: «Oggi sale sulla torre le persone che spezzano gli spaghetti a metà.» → «Oggi salgono sulla torre le persone che spezzano gli spaghetti a metà.»
+- carta 2: «Oggi sale sulla torre le persone che scrivono in CAPS LOCK.» → «Oggi salgono sulla torre le persone che scrivono in CAPS LOCK.»
+- carta 3: «Oggi sale sulla torre le persone che spremono il dentifricio dal centro.» → «Oggi salgono sulla torre le persone che spremono il dentifricio dal centro.»
+- carta 4: «Oggi sale sulla torre le persone che occupano due posti con la giacca.» → «Oggi salgono sulla torre le persone che occupano due posti con la giacca.»
+- carta 5: «Oggi sale sulla torre le persone che dicono “non ho fame” e poi finiscono il piatto.» → «Oggi salgono sulla torre le persone che dicono “non ho fame” e poi finiscono il piatto.»
+- carta 6: «Oggi sale sulla torre le persone che cercano “felicità” su Google.» → «Oggi salgono sulla torre le persone che cercano “felicità” su Google.»
+- carta 7: «Oggi sale sulla torre le persone che pagano con il badge aziendale.» → «Oggi salgono sulla torre le persone che pagano con il badge aziendale.»
+- carta 8: «Oggi sale sulla torre le persone arrivate alla festa il giorno dopo.» → «Oggi salgono sulla torre le persone arrivate alla festa il giorno dopo.»
+- carta 9: «Oggi sale sulla torre le persone che hanno visto salutare un manichino.» → «Oggi salgono sulla torre le persone che hanno visto salutare un manichino.»
+- carta 10: «Oggi sale sulla torre le persone che promettono “niente social” e poi lo postano.» → «Oggi salgono sulla torre le persone che promettono “niente social” e poi lo postano.»
+- carta 11: «Oggi sale sulla torre le persone che dicono “arrivo in cinque” e sono in pigiama.» → «Oggi salgono sulla torre le persone che dicono “arrivo in cinque” e sono in pigiama.»
+- carta 12: «Oggi sale sulla torre le persone che saltano il pranzo “per sbaglio”.» → «Oggi salgono sulla torre le persone che saltano il pranzo “per sbaglio”.»
+- carta 13: «Oggi sale sulla torre le persone che grattugiano il formaggio con la pellicola ancora sopra.» → «Oggi salgono sulla torre le persone che grattugiano il formaggio con la pellicola ancora sopra.»
+- carta 14: «Oggi sale sulla torre le persone che rispondono “come da oggetto”.» → «Oggi salgono sulla torre le persone che rispondono “come da oggetto”.»
+- carta 15: «Oggi sale sulla torre le persone che prendono solo snack “per sicurezza”.» → «Oggi salgono sulla torre le persone che prendono solo snack “per sicurezza”.»
+- carta 16: «Oggi sale sulla torre le persone che appendono la giacca alla maniglia del frigo.» → «Oggi salgono sulla torre le persone che appendono la giacca alla maniglia del frigo.»
+- carta 17: «Oggi sale sulla torre le persone che fanno un piegamento e una foto.» → «Oggi salgono sulla torre le persone che fanno un piegamento e una foto.»
+- carta 18: «Oggi sale sulla torre le persone che raccontano segreti “per sbaglio”.» → «Oggi salgono sulla torre le persone che raccontano segreti “per sbaglio”.»
+- carta 19: «Oggi sale sulla torre le persone che mettono la password nel microonde.» → «Oggi salgono sulla torre le persone che mettono la password nel microonde.»
+- carta 20: «Oggi sale sulla torre le persone che salutano il gatto del vicino come sindaco.» → «Oggi salgono sulla torre le persone che salutano il gatto del vicino come sindaco.»
+- carta 21: «Oggi sale sulla torre le persone che spostano i tavoli senza chiedere.» → «Oggi salgono sulla torre le persone che spostano i tavoli senza chiedere.»
+- carta 22: «Oggi sale sulla torre le persone che suonano appena scatta il verde.» → «Oggi salgono sulla torre le persone che suonano appena scatta il verde.»
+- carta 23: «Oggi sale sulla torre le persone che chiamano: “hai letto?”.» → «Oggi salgono sulla torre le persone che chiamano: “hai letto?”.»
+- carta 24: «Oggi sale sulla torre le persone che mettono una playlist triste alla festa.» → «Oggi salgono sulla torre le persone che mettono una playlist triste alla festa.»
+- carta 25: «Oggi sale sulla torre le persone che filmano tutto, anche il riscaldamento.» → «Oggi salgono sulla torre le persone che filmano tutto, anche il riscaldamento.»
+- carta 26: «Oggi sale sulla torre le persone che occupano lettini con l’asciugamano.» → «Oggi salgono sulla torre le persone che occupano lettini con l’asciugamano.»
+- carta 27: «Oggi sale sulla torre le persone in sandali sotto il diluvio.» → «Oggi salgono sulla torre le persone in sandali sotto il diluvio.»
+- carta 28: «Oggi sale sulla torre le persone che mettono #nofilter con il filtro.» → «Oggi salgono sulla torre le persone che mettono #nofilter con il filtro.»
+- carta 29: «Oggi sale sulla torre le persone che allegano e poi scrivono “dimenticato l’allegato”.» → «Oggi salgono sulla torre le persone che allegano e poi scrivono “dimenticato l’allegato”.»
+- carta 30: «Oggi sale sulla torre le persone che vanno a letto presto… domani.» → «Oggi salgono sulla torre le persone che vanno a letto presto… domani.»
+- carta 31: «Oggi sale sulla torre le persone che dimenticano il bidone per tutto il mese.» → «Oggi salgono sulla torre le persone che dimenticano il bidone per tutto il mese.»
+- carta 32: «Oggi sale sulla torre le persone che occupano un tavolo un’ora con un caffè.» → «Oggi salgono sulla torre le persone che occupano un tavolo un’ora con un caffè.»
+- carta 33: «Oggi sale sulla torre le persone che parlano con gli auricolari e ti spaventano.» → «Oggi salgono sulla torre le persone che parlano con gli auricolari e ti spaventano.»
+- carta 34: «Oggi sale sulla torre le persone che cercano le chiavi nella mano.» → «Oggi salgono sulla torre le persone che cercano le chiavi nella mano.»
+- carta 35: «Oggi sale sulla torre le persone che pretendono la consegna alle 23.» → «Oggi salgono sulla torre le persone che pretendono la consegna alle 23.»
+- carta 36: «Oggi sale sulla torre le persone che parlano al telefono in bagno.» → «Oggi salgono sulla torre le persone che parlano al telefono in bagno.»
+- carta 37: «Oggi sale sulla torre le persone che spiegano il finale… al cinema.» → «Oggi salgono sulla torre le persone che spiegano il finale… al cinema.»
+- carta 38: «Oggi sale sulla torre le persone a cui avanzano metà dei pezzi.» → «Oggi salgono sulla torre le persone a cui avanzano metà dei pezzi.»
+- carta 39: «Oggi sale sulla torre le persone che salutano con il nome sbagliato per anni.» → «Oggi salgono sulla torre le persone che salutano con il nome sbagliato per anni.»
+- carta 40: «Oggi sale sulla torre le persone che pagano contando i centesimi a Natale.» → «Oggi salgono sulla torre le persone che pagano contando i centesimi a Natale.»
+- carta 41: «Oggi sale sulla torre le persone che inventano allergie per la Nutella.» → «Oggi salgono sulla torre le persone che inventano allergie per la Nutella.»
+- carta 42: «Oggi sale sulla torre le persone che passano davanti agli altri “solo una domanda”.» → «Oggi salgono sulla torre le persone che passano davanti agli altri “solo una domanda”.»
+- carta 43: «Oggi sale sulla torre le persone che criticano l’allenatore davanti ai bambini.» → «Oggi salgono sulla torre le persone che criticano l’allenatore davanti ai bambini.»
+- carta 44: «Oggi sale sulla torre le persone che rubano ombra “solo un secondo”.» → «Oggi salgono sulla torre le persone che rubano ombra “solo un secondo”.»
+- carta 45: «Oggi sale sulla torre le persone che mettono la tombola a volume stadio.» → «Oggi salgono sulla torre le persone che mettono la tombola a volume stadio.»
+- carta 46: «Oggi sale sulla torre le persone che si lamentano… e poi non lasciano la mancia.» → «Oggi salgono sulla torre le persone che si lamentano… e poi non lasciano la mancia.»
+- carta 47: «Oggi sale sulla torre le persone con calzini bianchi ai matrimoni.» → «Oggi salgono sulla torre le persone con calzini bianchi ai matrimoni.»
+- carta 48: «Oggi sale sulla torre le persone che mettono zucchero nel sugo.» → «Oggi salgono sulla torre le persone che mettono zucchero nel sugo.»
+- carta 49: «Oggi sale sulla torre le persone che sbagliano il giorno dell’appuntamento.» → «Oggi salgono sulla torre le persone che sbagliano il giorno dell’appuntamento.»
+- carta 50: «Oggi sale sulla torre le persone che chiudono la giornata con “vabbè” e patatine.» → «Oggi salgono sulla torre le persone che chiudono la giornata con “vabbè” e patatine.»
+
+## Frasi singole (7)
+- singola-03: «Ammetto, di essere cugino/cugina di uno dei personaggi sopra la Torre.» → «Ammetto di essere cugino/cugina di uno dei personaggi sopra la Torre.»
+- singola-04: «Ammetto di essere stato per anni nello stesso gruppo di amici di un personaggio sopra alla torre» → «Ammetto di essere stato per anni nello stesso gruppo di amici di un personaggio sopra la Torre.»
+- singola-08: «Ammetto di aver detto “fidati di noi” insieme a uno dei personaggi sopra la Torre» → «Ammetto di aver detto “fidati di noi” insieme a uno dei personaggi sopra la Torre.»
+- singola-09: «Ammetto di aver condiviso un segreto imbarazzante con uno dei personaggi sopra la Torre» → «Ammetto di aver condiviso un segreto imbarazzante con uno dei personaggi sopra la Torre.»
+- singola-10: «Ammetto di aver fatto da palo insieme a uno dei personaggi sopra la Torre per una cosa che non si doveva fare» → «Ammetto di aver fatto da palo insieme a uno dei personaggi sopra la Torre per una cosa che non si doveva fare.»
+- singola-13: «Ammetto di aver cantato in pubblico al karaoke di paese insieme a uno dei personaggi sopra la Torre» → «Ammetto di aver cantato in pubblico al karaoke di paese insieme a uno dei personaggi sopra la Torre.»
+- singola-15: «Ammetto di aver partecipato ad uno scherzo ideato da uno dei personaggi sopra la Torre, e di aver detto pure “è geniale”.» → «Ammetto di aver partecipato a uno scherzo ideato da uno dei personaggi sopra la Torre, e di aver detto pure “è geniale”.»

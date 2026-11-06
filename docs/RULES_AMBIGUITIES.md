@@ -28,3 +28,10 @@ Stato: **analisi su rev. 5.2l (provvisoria)**. Il regolamento definitivo NON è 
 - Refusi nel PDF (non riprodotti): "casualemente", "perdonaggi", "copertro", "scopertro".
 - Il PDF delle carte non ha nomi: id = pagina+posizione (`pNN-iNN`). Quasi-duplicato `p01`/`p08` (diff 3.65): tenute entrambe; duplicato esatto p13-i01 escluso (125 immagini estratte, 124 file).
 - Torre online dinamica: N carte (N = giocatori), non 45 caselle.
+
+## Decisioni del 2026-11-06 (seconda tornata)
+| Tema | Decisione |
+|---|---|
+| Lui! fallito | **Malus −1** al Megafono se la scommessa fallisce: CADE su un personaggio che non cade, oppure NON CADE su un personaggio che cade. I punteggi possono scendere sotto zero (assunzione: nessun limite inferiore — da confermare) |
+| Parità finale | **Golden goal**: si continua a giocare turni (tutti i giocatori, anche quelli non in parità; il Megafono ruota come al solito) finché un solo giocatore ha più punti di tutti. Tetto di sicurezza: 30 turni extra, poi vittoria condivisa |
+| Filtro frasi | Nessun filtro sulle frasi inventate dal Megafono; limite di lunghezza tecnico (80 caratteri) per proteggere l'interfaccia |
