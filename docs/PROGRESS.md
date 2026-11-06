@@ -1,7 +1,7 @@
 # PROGRESS
 
 ## Fase 1 — Analisi (completata)
-## Fase 2 — Mockup (in corso)
+## Fase 2 — Mockup (consegnati, in attesa di approvazione)
 - [x] Analisi repository (4 file originali + README minimale)
 - [x] Lettura regolamento **rev. 5.2l**
 - [x] Regolamento definitivo = rev. 5.2l (confermato)

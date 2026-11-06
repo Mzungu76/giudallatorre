@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Giù dalla Torre — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#8fd6ea; --sky2:#c9eef6; --teal:#14607e; --teal-d:#0c3f56; --orange:#f28a1e; --orange-d:#c96a08;
+  --cream:#fff4d6; --stone:#cdb995; --stone-d:#a8946f; --pink:#ffd9c9; --red:#e5384b; --green:#3aa655; --ink:#26303a; --white:#fff;
+  --p1:#e5384b; --p2:#2f7be0; --p3:#f4c20d; --p4:#3aa655; --p5:#8a5a3b; --p6:#8e44c8; --p7:#ee7bb0; --p8:#222;
+  --r:18px; --shadow:0 6px 0 rgba(12,63,86,.28);
+  --font-h:'League Spartan',system-ui,sans-serif; --font-b:'Nunito',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+body{font-family:var(--font-b);background:#1d2b36;color:#fff;min-height:100vh}
+/* ---------- gallery shell ---------- */
+header.g{padding:18px 20px 8px;display:flex;flex-wrap:wrap;gap:12px;align-items:baseline}
+header.g h1{font-family:var(--font-h);font-size:26px;font-weight:800;color:var(--orange)}
+header.g p{opacity:.75;font-size:14px}
+nav.g{display:flex;flex-wrap:wrap;gap:6px;padding:8px 20px 14px;position:sticky;top:0;background:#1d2b36;z-index:5}
+nav.g button{font:700 13px var(--font-b);border:0;border-radius:99px;padding:7px 12px;background:#2d4150;color:#fff;cursor:pointer}
+nav.g button.on{background:var(--orange);color:#1d2b36}
+main.g{padding:10px 20px 60px;display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.sec{width:100%}
+.sec>h2{font-family:var(--font-h);font-size:20px;margin:6px 0 4px}
+.sec>p.note{font-size:14px;opacity:.8;max-width:760px;margin-bottom:14px;line-height:1.4}
+.row{display:flex;flex-wrap:wrap;gap:26px;align-items:flex-start}
+.cap{font-size:12px;opacity:.7;margin-top:6px;text-align:center}
+.hidden{display:none}
+/* ---------- device frames ---------- */
+.phone{width:360px;height:740px;border-radius:38px;border:8px solid #0e161c;overflow:hidden;position:relative;background:var(--sky);box-shadow:0 12px 30px rgba(0,0,0,.5);flex:none}
+.desk{width:1280px;height:720px;border-radius:14px;border:8px solid #0e161c;overflow:hidden;position:relative;background:var(--sky);transform-origin:top left;flex:none}
+.deskwrap{width:calc(1280px*.62 + 16px*.62);height:calc(720px*.62 + 16px*.62);}
+.deskwrap .desk{transform:scale(.62)}
+@media (max-width:900px){.deskwrap{width:calc(1280px*.27);height:calc(720px*.27)}.deskwrap .desk{transform:scale(.27)}}
+/* ---------- app ui ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;color:var(--ink);font-family:var(--font-b)}
+.bg-sky{background:linear-gradient(180deg,var(--sky) 0%,var(--sky2) 70%,#e9f8f0 100%)}
+.bg-tower{background:linear-gradient(180deg,var(--sky) 0,var(--sky2) 100%)}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 14px 6px}
+.chip{background:rgba(255,255,255,.85);border-radius:99px;padding:5px 10px;font:700 12px var(--font-b);color:var(--teal-d);display:inline-flex;gap:6px;align-items:center}
+.disc{width:22px;height:22px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25);flex:none;display:inline-block}
+.disc.sm{width:16px;height:16px;border-width:2px}.disc.lg{width:40px;height:40px;border-width:4px}
+.steps{display:flex;gap:4px;padding:0 14px 6px}
+.steps i{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.55)}
+.steps i.on{background:var(--orange)}.steps i.done{background:var(--teal)}
+.phase{font:800 11px var(--font-h);letter-spacing:.08em;text-transform:uppercase;padding:0 14px;color:var(--teal-d)}
+.h1{font:800 30px/1 var(--font-h);color:var(--teal-d)}
+.h2{font:800 21px/1.05 var(--font-h);color:var(--teal-d)}
+.logo{font-family:var(--font-h);font-weight:800;text-align:center;line-height:.82;color:var(--teal);
+ -webkit-text-stroke:5px var(--teal-d);paint-order:stroke fill;text-shadow:0 5px 0 var(--orange)}
+.logo span{display:block}
+.logo .big{font-size:84px;letter-spacing:-.02em}
+.logo .mid{font-size:56px;color:#fff;-webkit-text-stroke:5px var(--teal-d);transform:rotate(-4deg)}
+.btn{font:800 17px var(--font-h);border:0;border-radius:16px;padding:14px 16px;min-height:52px;width:100%;color:#fff;background:var(--orange);box-shadow:0 5px 0 var(--orange-d);display:flex;align-items:center;justify-content:center;gap:8px;text-align:center}
+.btn.teal{background:var(--teal);box-shadow:0 5px 0 var(--teal-d)}
+.btn.ghost{background:rgba(255,255,255,.9);color:var(--teal-d);box-shadow:0 5px 0 rgba(12,63,86,.25)}
+.btn.dis{background:#b8c4c9;box-shadow:0 5px 0 #8e9aa0;color:#eef}
+.btn.red{background:var(--red);box-shadow:0 5px 0 #a5222f}
+.panel{background:var(--cream);border-radius:var(--r);padding:14px;box-shadow:var(--shadow);border:3px solid #fff}
+.panel.pink{background:var(--pink)}
+.lbl{font:800 12px var(--font-h);letter-spacing:.06em;text-transform:uppercase;color:var(--teal-d);margin-bottom:6px;display:block}
+.input{background:#fff;border:3px solid var(--teal);border-radius:14px;padding:12px;font:800 18px var(--font-b);color:var(--ink);display:flex;align-items:center;min-height:52px}
+.input .ph{opacity:.35}
+.seg{display:flex;background:#fff;border-radius:16px;padding:4px;gap:4px;border:3px solid var(--teal)}
+.seg b{flex:1;text-align:center;padding:10px 4px;border-radius:11px;font:800 14px var(--font-h);color:var(--teal-d)}
+.seg b.on{background:var(--teal);color:#fff}
+.toggle{display:flex;align-items:center;gap:12px}
+.toggle .sw{width:52px;height:30px;border-radius:99px;background:var(--orange);position:relative;flex:none}
+.toggle .sw::after{content:"";position:absolute;right:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff}
+.toggle .sw.off{background:#b8c4c9}.toggle .sw.off::after{right:auto;left:3px}
+.stack{display:flex;flex-direction:column;gap:12px;padding:10px 16px}
+.grow{flex:1}.sp{flex:1}
+.foot{padding:10px 16px 18px;display:flex;flex-direction:column;gap:10px}
+/* tower */
+.tower{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:210px}
+.tower svg{display:block;width:100%}
+/* cards */
+.card{width:86px;aspect-ratio:2/3;border-radius:9px;background:#ddd center/cover no-repeat;border:3px solid #fff7e0;box-shadow:0 4px 0 rgba(12,63,86,.3);position:relative;flex:none}
+.card.back{background:linear-gradient(135deg,var(--teal) 0 50%,var(--teal-d) 50%);}
+.card.back::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font:800 40px var(--font-h);color:#fff;-webkit-text-stroke:0}
+.card .n{position:absolute;left:-6px;top:-6px;width:26px;height:26px;border-radius:50%;background:var(--teal-d);color:#fff;border:2px solid #fff;font:800 13px var(--font-h);display:grid;place-items:center}
+.card.sel{transform:translateY(-16px) scale(1.05);outline:5px solid var(--orange);box-shadow:0 10px 0 rgba(12,63,86,.3)}
+.card.lg{width:104px}.card.hd{width:92px}.card.xl{width:150px}.card.sm{width:64px}
+.card.fall{outline:5px solid var(--red)}
+.tok{position:absolute;width:30px;height:30px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font:800 13px var(--font-h);color:#fff;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.lui{position:absolute;right:-8px;bottom:-8px;width:44px;height:44px;border-radius:12px;background:var(--red);color:#fff;border:3px solid #fff;font:800 10px/1 var(--font-h);display:grid;place-items:center;text-align:center;transform:rotate(8deg);box-shadow:0 3px 0 rgba(0,0,0,.3)}
+.lui.q{background:var(--teal-d)}
+.grid{display:grid;gap:14px 12px;justify-content:center;padding:6px 16px}
+.stone{background:linear-gradient(180deg,#d9c8a6,var(--stone));border:4px solid var(--stone-d);border-radius:14px;padding:14px 10px 12px;position:relative;box-shadow:inset 0 0 0 3px rgba(255,255,255,.25)}
+.banner{background:var(--red);color:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 5px 0 #a5222f;font:700 15px/1.25 var(--font-b);position:relative}
+.banner small{display:block;font:800 11px var(--font-h);letter-spacing:.08em;text-transform:uppercase;opacity:.85;margin-bottom:3px}
+.plist{display:flex;flex-direction:column;gap:8px}
+.pl{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:9px 12px;font:800 16px var(--font-b);color:var(--ink);box-shadow:0 3px 0 rgba(12,63,86,.15)}
+.pl .tag{margin-left:auto;font:800 11px var(--font-h);background:var(--cream);border-radius:99px;padding:3px 8px;color:var(--teal-d)}
+.pl .x{margin-left:8px;width:26px;height:26px;border-radius:50%;background:#fde0e3;color:var(--red);display:grid;place-items:center;font-weight:800}
+.ok{color:var(--green)}.wait{opacity:.55}
+.pts{position:absolute;font:800 24px var(--font-h);color:#fff;-webkit-text-stroke:5px var(--teal-d);paint-order:stroke fill}
+.confetti i{position:absolute;width:10px;height:16px;border-radius:2px}
+.codebox{display:flex;gap:8px;justify-content:center}
+.codebox b{width:48px;height:62px;background:#fff;border:3px solid var(--teal);border-radius:12px;display:grid;place-items:center;font:800 30px var(--font-h);color:var(--teal-d)}
+.codebox b.e{border-style:dashed;opacity:.6}
+.qr{width:110px;height:110px;background:#fff;border-radius:10px;padding:8px;flex:none}
+.qr svg{width:100%;height:100%}
+.hint{font:700 12px/1.3 var(--font-b);color:var(--teal-d);opacity:.85;text-align:center}
+.bignum{font:800 54px/1 var(--font-h)}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;padding:6px 14px}
+.podium div{flex:1;border-radius:14px 14px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10px;color:#fff;font:800 14px var(--font-h);gap:3px}
+.podium .one{height:130px;background:var(--orange)}.podium .two{height:96px;background:var(--teal)}.podium .three{height:74px;background:var(--stone-d)}
+.sharing{display:flex;gap:10px}
+.sharing .btn{min-height:46px;font-size:14px}
+.mic{width:20px;height:20px;display:inline-block}
+.shake{animation:wob 2.4s ease-in-out infinite}
+@keyframes wob{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}}
+</style>
+</head>
+<body>
+<header class="g">
+  <h1>Giù dalla Torre — Mockup v1</h1>
+  <p>13 schermate richieste · smartphone (360×740) e desktop/schermo condiviso (1280×720). Le carte sono le illustrazioni originali (<code>public/cards</code>). Non è il frontend definitivo.</p>
+</header>
+<nav class="g" id="nav"></nav>
+<main class="g" id="main"></main>
+
+<script>
+const C=(p,i)=>`../public/cards/p${String(p).padStart(2,'0')}-i${String(i).padStart(2,'0')}.webp`;
+const PL=[['Marta','var(--p1)'],['Luca','var(--p2)'],['Giulia','var(--p3)'],['Omar','var(--p4)'],['Elena','var(--p5)']];
+const card=(src,cls='',inner='')=>`<div class="card ${cls}" style="background-image:url('${src}')">${inner}</div>`;
+const back=(cls='')=>`<div class="card back ${cls}"></div>`;
+const disc=(c,cls='')=>`<i class="disc ${cls}" style="background:${c}"></i>`;
+const MEGA=`<svg class="mic" viewBox="0 0 24 24"><path d="M3 9l11-5v16L3 15z" fill="currentColor"/><path d="M17 8c2 2 2 6 0 8" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`;
+const TOWER=`<svg viewBox="0 0 210 380"><defs><pattern id="br" width="30" height="20" patternUnits="userSpaceOnUse"><rect width="30" height="20" fill="#cdb995"/><path d="M0 0h30v20H0z M15 0v10 M0 10h30 M0 20" stroke="#a8946f" stroke-width="2" fill="none"/></pattern></defs>
+<path d="M45 360V70h120v290z" fill="url(#br)" stroke="#a8946f" stroke-width="4"/><path d="M35 70V40h20v14h20V40h20v14h20V40h20v14h20V40h20v30z" fill="#cdb995" stroke="#a8946f" stroke-width="4"/>
+<rect x="88" y="105" width="34" height="56" rx="17" fill="#3b4a55"/><rect x="88" y="215" width="34" height="56" rx="17" fill="#3b4a55"/><path d="M82 360v-52a23 23 0 0146 0v52z" fill="#7a4a24" stroke="#4d2d12" stroke-width="4"/></svg>`;
+const QR=`<div class="qr"><svg viewBox="0 0 21 21" shape-rendering="crispEdges"><rect width="21" height="21" fill="#fff"/><g fill="#0c3f56"><path d="M0 0h7v7H0zM14 0h7v7h-7zM0 14h7v7H0z"/><path fill="#fff" d="M1 1h5v5H1zM15 1h5v5h-5zM1 15h5v5H1z"/><path d="M2 2h3v3H2zM16 2h3v3h-3zM2 16h3v3H2zM8 1h2v2H8zM11 3h2v2h-2zM8 6h3v2H8zM9 9h2v2H9zM12 8h2v3h-2zM15 9h3v2h-3zM8 12h2v3H8zM11 13h3v2h-3zM15 12h2v2h-2zM18 14h2v3h-2zM15 16h2v4h-2zM9 17h3v2H9zM12 19h2v2h-2zM18 19h3v2h-3z"/></g></svg></div>`;
+const steps=(n)=>`<div class="steps">${[1,2,3].map(i=>`<i class="${i<n?'done':i==n?'on':''}"></i>`).join('')}</div>`;
+const topbar=(who,ph,txt)=>`<div class="bar"><span class="chip">${disc(who[1],'sm')} ${who[0]}</span><span class="chip">${MEGA} Megafono: Marta</span><span class="chip" style="margin-left:auto">Turno 3/10</span></div>${steps(ph)}<div class="phase">${txt}</div>`;
+const PHRASE='Oggi sale sulla torre chi manda vocali da nove minuti.';
+const hand=[C(3,1),C(3,2),C(3,3),C(3,4),C(3,5)];
+const tower5=[C(5,1),C(5,2),C(5,3),C(5,4),C(5,5)];
+
+const S={}; // id -> {title,note,phones:[],desks:[]}
+S.home={t:'1 · Home',n:'Logo e torre in primo piano, tre azioni chiare. Nessun login: solo nickname e codice.',
+phones:[`<div class="scr bg-sky"><div class="sp"></div><div class="logo" style="margin-top:20px"><span class="mid">Giù</span><span class="mid" style="transform:rotate(3deg)">dalla</span><span class="big">TORRE!</span></div><div style="text-align:center;font:800 15px var(--font-h);color:var(--teal-d);margin-top:14px">Chi butteresti giù dalla torre oggi?</div><div class="sp"></div><div class="tower" style="z-index:0;width:190px;opacity:.3">${TOWER}</div><div class="foot" style="position:relative;z-index:2"><div class="btn">Crea partita</div><div class="btn teal">Entra con un codice</div><div class="btn ghost">Come si gioca</div></div></div>`],
+desks:[`<div class="scr bg-sky" style="flex-direction:row;align-items:center;padding:0 90px;gap:60px"><div style="flex:1"><div class="logo" style="text-align:left"><span class="mid" style="transform:rotate(-3deg);display:inline-block">Giù dalla</span><span class="big" style="font-size:150px">TORRE!</span></div><div style="font:800 28px var(--font-h);color:var(--teal-d);margin:26px 0">Chi butteresti giù dalla torre oggi?<br><span style="font-size:18px;opacity:.7">Party game online da 3 a 8 giocatori · gratis · senza account</span></div><div style="display:flex;gap:16px;width:560px"><div class="btn" style="font-size:24px;min-height:70px">Crea partita</div><div class="btn teal" style="font-size:24px;min-height:70px">Entra con codice</div></div></div><div style="width:300px;height:100%;position:relative"><div class="tower" style="width:300px">${TOWER}</div></div></div>`]};
+S.crea={t:'2 · Creazione partita',n:'Modalità (Tavolo/Remota), variante “Il Megafono sa” (opzione di stanza), nickname. Nessuna altra impostazione: il numero di turni è fissato dal regolamento (1 giro a 6–8 giocatori, 2 giri a 3–5).',
+phones:[`<div class="scr bg-sky"><div class="bar"><span class="chip">← Indietro</span></div><div class="stack"><div class="h1">Crea partita</div>
+<div><span class="lbl">Il tuo nickname</span><div class="input">Marta<span style="margin-left:auto;opacity:.4">5/12</span></div></div>
+<div><span class="lbl">Come si gioca?</span><div class="seg"><b class="on">Stesso tavolo</b><b>A distanza</b></div><div class="hint" style="margin-top:6px;text-align:left">Tutti nella stessa stanza, ognuno col proprio telefono. Un tablet/PC può fare da schermo condiviso.</div></div>
+<div class="panel"><div class="toggle"><div class="sw off"></div><div><b style="font:800 15px var(--font-h);color:var(--teal-d)">Variante “Il Megafono sa”</b><div style="font-size:12px;opacity:.75;line-height:1.3">Il Megafono gioca una carta dalla sua mano invece di pescarla. Più strategia, meno caos.</div></div></div></div></div>
+<div class="sp"></div><div class="foot"><div class="btn">Crea e invita gli amici</div></div></div>`]};
+S.accesso={t:'3 · Accesso con codice',n:'Codice a 5 caratteri (senza lettere ambigue), nickname, oppure QR/link. Il codice da solo non basta per impersonare qualcuno: la riconnessione usa il token del dispositivo.',
+phones:[`<div class="scr bg-sky"><div class="bar"><span class="chip">← Indietro</span></div><div class="stack"><div class="h1">Entra in partita</div>
+<div><span class="lbl">Codice partita</span><div class="codebox"><b>T</b><b>O</b><b>R</b><b class="e"></b><b class="e"></b></div></div>
+<div class="hint">oppure</div><div class="btn ghost">📷 Inquadra il QR code</div>
+<div><span class="lbl">Il tuo nickname</span><div class="input"><span class="ph">Es. Giulia</span></div><div class="hint" style="margin-top:6px;text-align:left;color:var(--red)">“Marta” è già in uso in questa stanza — scegline un altro.</div></div></div>
+<div class="sp"></div><div class="foot"><div class="btn dis">Entra</div></div></div>`]};
+const lobbyList=(kick)=>`<div class="plist">${PL.map((p,i)=>`<div class="pl">${disc(p[1])}${p[0]}${i==0?'<span class="tag">👑 Host</span>':''}${kick&&i>0?'<span class="x">×</span>':''}</div>`).join('')}<div class="pl wait" style="border:3px dashed var(--teal);background:transparent;box-shadow:none">In attesa di altri giocatori…</div></div>`;
+S.lobby={t:'4 · Lobby',n:'Codice grande, QR e link; elenco giocatori con colore (= disco e segnalino voto). L’host può espellere prima dell’avvio. “Avvia” si attiva da 3 giocatori. La partita prosegue anche se l’host esce.',
+phones:[`<div class="scr bg-sky"><div class="bar"><span class="chip">Lobby</span><span class="chip" style="margin-left:auto">5/8 giocatori</span></div><div class="stack"><div class="panel" style="display:flex;gap:12px;align-items:center">${QR}<div><span class="lbl" style="margin:0">Codice</span><div class="bignum" style="color:var(--teal-d);letter-spacing:.04em;font-size:40px">TORRE</div><div class="sharing" style="margin-top:8px"><div class="btn ghost" style="padding:6px;min-height:36px;font-size:13px">Copia link</div></div></div></div>${lobbyList(true)}</div><div class="sp"></div><div class="foot"><div class="hint">Modalità: Stesso tavolo · Variante Megafono sa: no</div><div class="btn">Avvia partita</div></div></div>`],
+desks:[`<div class="scr bg-sky" style="padding:30px 50px;gap:24px;flex-direction:row"><div style="flex:1"><div class="h1" style="font-size:54px">Lobby</div><div style="font:700 20px var(--font-b);margin:8px 0 22px;color:var(--teal-d)">Scansiona il QR o apri il link del gioco (indirizzo definitivo da stabilire) e inserisci il codice e inserisci il codice</div><div class="panel" style="display:flex;gap:28px;align-items:center;padding:24px"><div class="qr" style="width:220px;height:220px">${QR.replace('<div class="qr">','').replace(/<\/div>$/,'')}</div><div><span class="lbl">Codice partita</span><div class="bignum" style="font-size:120px;color:var(--teal-d);letter-spacing:.06em">TORRE</div></div></div></div><div style="width:380px">${lobbyList(false)}</div></div>`]};
+S.megafono={t:'5 · Schermata del Megafono',n:'Fase 1. Il Megafono vede la carta “Su sulla Torre”: se ha 4–5 frasi ne sceglie UNA (tocca); se è a frase singola è obbligato (bottone unico). Poi “Proclama!” e la carta del mazzo va sulla Torre. A voce usa il megafono scenico: l’app mostra la frase a tutti.',
+phones:[`<div class="scr bg-sky">${topbar(PL[0],1,'1 · Su sulla Torre — sei il Megafono')}<div class="stack" style="gap:9px"><div class="panel pink" style="padding:10px"><span class="lbl">Carta con più frasi — scegline una</span>
+<div class="plist" style="gap:6px">${['chi mette l’ananas sulla pizza','chi manda vocali da nove minuti','le persone che scrivono in CAPS LOCK','chi lascia i piatti “a mollo” per due giorni','chi giura “mai più” e poi lo rifà'].map((t,i)=>`<div class="pl" style="font-size:13px;line-height:1.2;${i==1?'outline:4px solid var(--orange)':''}">Oggi sale sulla torre ${t}.</div>`).join('')}</div></div><div class="hint">…oppure inventa una frase tua e dilla ad alta voce</div></div><div class="sp"></div><div class="foot"><div class="btn red shake">${MEGA} Proclama!</div></div></div>`,
+`<div class="scr bg-sky">${topbar(PL[0],1,'1 · Su sulla Torre — sei il Megafono')}<div class="stack"><div class="panel pink"><span class="lbl">Carta a frase singola — è obbligatoria</span><div class="banner" style="font-size:16px"><small>Devi dire</small>Ammetto di aver cantato in pubblico al karaoke di paese insieme a uno dei personaggi sopra la Torre</div></div></div><div class="sp"></div><div class="foot"><div class="btn red">${MEGA} Proclama!</div></div></div>`]};
+S.carte={t:'6 · Selezione carte Personaggio',n:'La Folla vede la frase in alto e la propria mano di 5 carte (private). Tocca per sollevare, “Gioca” conferma (nessun annullo dopo l’invio: evita doppi invii). Gli altri vedono solo chi ha già giocato.',
+phones:[`<div class="scr bg-sky">${topbar(PL[1],1,'1 · Scegli la carta che ci sta meglio')}<div class="stack"><div class="banner"><small>Marta dice</small>${PHRASE}</div></div>
+<div style="display:flex;justify-content:center;gap:8px;padding:14px 10px 0;margin-top:2px">${hand.map((s,i)=>card(s,'hd'+(i==2?' sel':''))).slice(0,3).join('')}</div><div style="display:flex;justify-content:center;gap:8px;padding:16px 10px 0">${hand.slice(3).map(s=>card(s,'hd')).join('')}</div>
+<div class="sp"></div><div style="display:flex;gap:6px;justify-content:center;padding:6px">${PL.map((p,i)=>`<span class="chip">${disc(p[1],'sm')}${i==2||i==3?'<span class="ok">✓</span>':'<span class="wait">…</span>'}</span>`).join('')}</div><div class="foot"><div class="btn">Gioca questa carta</div></div></div>`]};
+const towerGrid=(extra)=>`<div class="stone"><div class="grid" style="grid-template-columns:repeat(3,86px)">${tower5.map((s,i)=>card(s,'',`<span class="n">${i+1}</span>${extra&&extra[i]||''}`)).join('')}</div></div>`;
+S.torre={t:'7 · Visualizzazione della Torre',n:'Le carte giocate (+ quella pescata dal mazzo) vengono mescolate e rivelate sulla Torre, numerate come nel regolamento (sinistra→destra, alto→basso). Animazione: le carte salgono una a una.',
+phones:[`<div class="scr bg-tower">${topbar(PL[1],1,'1 · La Torre è pronta')}<div class="stack"><div class="banner"><small>Marta dice</small>${PHRASE}</div></div><div style="padding:22px 14px 0">${towerGrid()}</div><div class="sp"></div><div class="foot"><div class="hint">Nessuno sa chi ha giocato cosa. Discutete pure: bluffare è lecito!</div></div></div>`]};
+S.sospetto={t:'8 · Scelta del Sospetto (segnalino “Lui!”)',n:'Fase 2, solo Megafono: sceglie il segnalino (CADE / NON CADE LUI!) e lo posa coperto su un personaggio. Gli altri giocatori vedono sulla Torre solo un segnalino coperto.',
+phones:[`<div class="scr bg-tower">${topbar(PL[0],2,'2 · Voto — metti il “Lui!”')}<div class="stack" style="padding-bottom:0"><div class="seg"><b class="on">CADE LUI! (+4)</b><b>NON CADE (+1)</b></div></div><div style="padding:22px 14px 0">${towerGrid({2:'<span class="lui">CADE<br>LUI!</span>'})}</div><div class="sp"></div><div class="foot"><div class="btn">Conferma segnalino su n. 3</div></div></div>`,
+`<div class="scr bg-tower">${topbar(PL[1],2,'2 · Il Megafono sta scegliendo…')}<div class="stack"><div class="panel"><b style="font:800 16px var(--font-h);color:var(--teal-d)">Marta posa il segnalino “Lui!”</b><div class="hint" style="text-align:left;margin-top:4px">Occhio: se la Folla lo capisce, può usarlo contro di lei.</div></div></div><div style="padding:14px 14px 0">${towerGrid({2:'<span class="lui q">?</span>'})}</div></div>`]};
+S.voto={t:'9 · Votazione segreta',n:'Tutti (Megafono incluso) votano un personaggio, anche la propria carta. Il voto è inviato al server e resta segreto; i doppi invii sono ignorati. Si può cambiare scelta solo prima di “Conferma”.',
+phones:[`<div class="scr bg-tower">${topbar(PL[1],2,'2 · Chi merita di cadere?')}<div class="stack"><div class="banner"><small>Marta dice</small>${PHRASE}</div></div><div style="padding:16px 14px 0">${towerGrid({1:'<span class="tok" style="left:30px;bottom:-12px;background:var(--p2)">✓</span>'}).replace('<div class="card " style="background-image:url(\'../public/cards/p05-i02.webp\')">','<div class="card sel" style="background-image:url(\'../public/cards/p05-i02.webp\')">')}</div><div class="sp"></div><div style="display:flex;gap:6px;justify-content:center;padding:6px">${PL.map((p,i)=>`<span class="chip">${disc(p[1],'sm')}${i<2?'<span class="ok">✓</span>':'<span class="wait">…</span>'}</span>`).join('')}</div><div class="foot"><div class="btn">Conferma voto: n. 2</div></div></div>`,
+`<div class="scr bg-tower">${topbar(PL[1],2,'2 · Voto inviato')}<div class="stack" style="align-items:center;text-align:center;margin-top:60px"><div style="font-size:60px">🔒</div><div class="h2">Voto registrato!</div><div class="hint">Aspettiamo gli altri… 3 su 5 hanno votato</div></div></div>`]};
+S.risultati={t:'10 · Rivelazione dei risultati',n:'Fase 3: i segnalini voto vengono svelati in ordine di turno (dal giocatore dopo il Megafono) e si accumulano sotto le carte. In caso di pareggio vale il voto del Megafono (anche se è l’unico voto), con avviso esplicito.',
+phones:[`<div class="scr bg-tower">${topbar(PL[1],3,'3 · Giù dalla Torre — i voti')}<div class="stack" style="padding-bottom:0"><div class="banner"><small>Marta dice</small>${PHRASE}</div></div><div style="padding:20px 14px 0">${towerGrid({0:`<span class="tok" style="left:4px;bottom:-14px;background:var(--p1)">1</span>`,1:`<span class="tok" style="left:2px;bottom:-14px;background:var(--p2)">2</span><span class="tok" style="left:26px;bottom:-14px;background:var(--p4)">4</span>`,2:`<span class="tok" style="left:2px;bottom:-14px;background:var(--p3)">3</span><span class="tok" style="left:26px;bottom:-14px;background:var(--p5)">5</span>`})}</div><div class="stack"><div class="panel pink"><b style="font:800 15px var(--font-h);color:var(--red)">Pareggio tra n. 2 e n. 3!</b><div style="font-size:13px;margin-top:2px">Regola della Torre: cade sempre il personaggio votato dal Megafono, anche se ha solo il suo voto: <b>n. 1</b>.</div></div></div></div>`]};
+S.caduta={t:'11 · Caduta dalla Torre',n:'Il personaggio caduto scivola giù dalla Torre (animazione breve, saltabile); poi i punti compaiono sui giocatori: +2 votanti, +2 chi ha giocato la carta, Megafono +4 / +1 con il “Lui!” rivelato.',
+phones:[`<div class="scr bg-tower">${topbar(PL[1],3,'3 · Giù dalla Torre!')}<div style="position:relative;flex:1;overflow:hidden"><div class="tower" style="width:180px;left:35%;opacity:.85">${TOWER}</div><div style="position:absolute;left:120px;top:90px;transform:rotate(24deg)">${card(tower5[0],'xl fall')}</div><div style="position:absolute;left:216px;top:200px;transform:rotate(-34deg);opacity:.35">${card(tower5[0],'sm')}</div><div style="position:absolute;left:230px;top:300px;font:800 26px var(--font-h);color:var(--red);-webkit-text-stroke:0;transform:rotate(-8deg)">AAAAH!</div></div><div class="stack" style="gap:6px"><div class="pl">${disc(PL[0][1])}Marta <span class="tag">+2 voto +4 “Lui!”</span><b style="margin-left:6px;color:var(--green)">+6</b></div><div class="pl">${disc(PL[3][1])}Omar <span class="tag">+2 carta giocata</span><b style="margin-left:6px;color:var(--green)">+2</b></div><div class="pl wait">${disc(PL[1][1])}Luca <span class="tag">0</span></div><div class="pl wait">${disc(PL[4][1])}Elena <span class="tag">0</span></div></div><div class="foot" style="padding-top:0"><div class="btn">Continua</div></div></div>`]};
+S.finale={t:'12 · Classifica finale',n:'Podio, tabella punti e titolo “Gran Megafono”. Parità = vittoria condivisa. Azioni: nuova partita nella stessa stanza, esci.',
+phones:[`<div class="scr bg-sky"><div class="bar"><span class="chip">Fine partita</span></div><div class="stack" style="padding-top:0;gap:6px;align-items:center"><div class="h1" style="font-size:34px">Gran Megafono!</div><div style="font:800 16px var(--font-h);color:var(--orange-d)">Marta vince con 31 punti</div></div><div class="podium"><div class="two">${disc(PL[1][1],'lg')}Luca<span style="font-size:22px">27</span></div><div class="one">👑${disc(PL[0][1],'lg')}Marta<span style="font-size:26px">31</span></div><div class="three">${disc(PL[3][1],'lg')}Omar<span style="font-size:20px">22</span></div></div><div class="stack" style="padding-top:8px"><div class="plist" style="gap:6px"><div class="pl">4 ${disc(PL[2][1])}Giulia<span class="tag">19</span></div><div class="pl">5 ${disc(PL[4][1])}Elena<span class="tag">14</span></div></div></div><div class="sp"></div><div class="foot"><div class="btn">Rigioca con gli stessi amici</div><div class="btn ghost">Esci</div></div></div>`]};
+S.schermo={t:'13 · Schermo condiviso (tablet / PC / TV)',n:'Solo informazioni pubbliche: frase, Torre, chi ha già giocato/votato, punteggi, codice+QR. Mai mani o voti prima della rivelazione. Si apre da /schermo/CODICE senza giocare.',
+desks:[`<div class="scr bg-tower" style="flex-direction:row;padding:24px 30px;gap:26px"><div style="width:270px;display:flex;flex-direction:column;gap:12px"><div class="chip" style="font-size:15px;align-self:flex-start">Turno 3 di 10 · Fase 2: Voto</div><div class="panel" style="padding:10px;display:flex;gap:10px;align-items:center"><div class="qr" style="width:72px;height:72px;padding:4px">${QR.replace('<div class="qr">','').replace(/<\/div>$/,'')}</div><div><span class="lbl" style="margin:0">Codice</span><b style="font:800 30px var(--font-h);color:var(--teal-d)">TORRE</b></div></div><div class="plist">${PL.map((p,i)=>`<div class="pl">${disc(p[1])}${p[0]}${i==0?' '+MEGA:''}<span class="tag">${[31,27,19,22,14][i]} pt ${i<3?'✓':'…'}</span></div>`).join('')}</div></div><div style="flex:1;display:flex;flex-direction:column;gap:16px"><div class="banner" style="font-size:26px;padding:16px 22px"><small style="font-size:14px">Marta, il Megafono, dice</small>${PHRASE}</div><div class="stone" style="align-self:center;margin-top:20px;padding:22px 30px"><div class="grid" style="grid-template-columns:repeat(5,138px);gap:16px">${tower5.map((s,i)=>card(s,'lg',`<span class="n">${i+1}</span>`).replace('class="card lg"','class="card lg" style="width:138px;background-image:url(\''+s+'\')"')).join('')}</div></div><div class="hint" style="font-size:16px">3 su 5 hanno votato · ricordate: bluffare è lecito!</div></div></div>`]};
+
+const order=['home','crea','accesso','lobby','megafono','carte','torre','sospetto','voto','risultati','caduta','finale','schermo'];
+const nav=document.getElementById('nav'),main=document.getElementById('main');
+function render(id){
+  main.innerHTML='';
+  (id==='all'?order:[id]).forEach(k=>{const s=S[k];const el=document.createElement('section');el.className='sec';
+    el.innerHTML=`<h2>${s.t}</h2><p class="note">${s.n}</p><div class="row">${(s.phones||[]).map(h=>`<div><div class="phone">${h}</div><div class="cap">smartphone</div></div>`).join('')}${(s.desks||[]).map(h=>`<div><div class="deskwrap"><div class="desk">${h}</div></div><div class="cap">desktop / tablet</div></div>`).join('')}</div>`;main.appendChild(el)});
+  [...nav.children].forEach(b=>b.classList.toggle('on',b.dataset.id===id));history.replaceState(null,'','#'+id);
+}
+[['all','Tutte']].concat(order.map(k=>[k,S[k].t])).forEach(([k,t])=>{const b=document.createElement('button');b.textContent=t;b.dataset.id=k;b.onclick=()=>render(k);nav.appendChild(b)});
+render(order.includes(location.hash.slice(1))||location.hash==='#all'?location.hash.slice(1):'all');
+</script>
+</body>
+</html>
