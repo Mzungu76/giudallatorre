@@ -1,0 +1,400 @@
+<title>Layout telefono</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/*__APPCSS__*/
+</style>
+<style>
+/*__CARDVARS__*/
+</style>
+<style>
+/* Layout: galleria a sezioni. Prima l'analisi misurata, poi le tre varianti, ognuna in una riga di telefoni scorrevole. */
+:root{
+  --g-bg:#eef1f7;--g-surf:#ffffff;--g-surf2:#e3e8f2;--g-ink:#13224a;--g-mute:#4b5a82;--g-line:#c9d2e6;
+  --g-red:#e8362b;--g-mus:#ffc72c;--g-teal:#14a3a1;--g-ok:#1f8a4c;
+  --f-disp:Anton,Impact,"Arial Narrow",sans-serif;--f-body:Nunito,system-ui,sans-serif;--f-hand:"Caveat Brush",cursive;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g-bg:#0c1431;--g-surf:#141f47;--g-surf2:#1c2a5c;--g-ink:#eaeefb;--g-mute:#a5b2d9;--g-line:#2b3a73;--g-red:#ff6a5e;--g-ok:#4fd08a;color-scheme:dark}}
+:root[data-theme="dark"]{--g-bg:#0c1431;--g-surf:#141f47;--g-surf2:#1c2a5c;--g-ink:#eaeefb;--g-mute:#a5b2d9;--g-line:#2b3a73;--g-red:#ff6a5e;--g-ok:#4fd08a;color-scheme:dark}
+html,body{height:auto;overflow:visible}
+body{display:block;background:var(--g-bg) !important;color:var(--g-ink);font:600 16px/1.55 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;user-select:auto;-webkit-user-select:auto;touch-action:auto}
+#root{display:block;height:auto}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{padding:40px 0 20px;display:grid;gap:10px}
+header.top h1{font:400 clamp(34px,6vw,60px)/.95 var(--f-disp);text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+header.top h1 em{font-style:normal;color:var(--g-red)}
+header.top p{max-width:68ch;color:var(--g-mute);font-size:17px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--g-bg)}
+nav.toc a{font:800 13px var(--f-body);color:var(--g-ink);text-decoration:none;border:2px solid var(--g-ink);border-radius:99px;padding:5px 12px;background:var(--g-surf)}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--g-mus);color:#13224a;outline:none}
+section.blk{padding:36px 0 8px;display:grid;gap:18px}
+section.blk>h2{font:400 clamp(26px,4vw,38px)/1 var(--f-disp);text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+section.blk>h2 small{display:block;font:800 13px var(--f-body);letter-spacing:.12em;color:var(--g-red);margin-bottom:6px}
+.lead{max-width:70ch;color:var(--g-mute);font-size:17px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.kc{background:var(--g-surf);border:2px solid var(--g-ink);border-radius:14px;padding:16px 18px;display:grid;gap:8px;align-content:start;min-width:0}
+.kc h3{font:400 21px/1.05 var(--f-disp);text-transform:uppercase;letter-spacing:.02em}
+.kc p,.kc li{font-size:15px;color:var(--g-ink)}
+.kc ul{padding-left:18px;display:grid;gap:5px}
+.kc .num{font:400 28px/1 var(--f-disp);color:var(--g-red)}
+.tag{display:inline-block;font:800 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;background:var(--g-mus);color:#13224a;border-radius:6px;padding:2px 8px;width:fit-content}
+/* barre di misura */
+.bars{display:grid;gap:14px}
+.bar{display:grid;gap:6px}
+.bar>b{font:800 14px var(--f-body)}
+.bar>b span{font-weight:600;color:var(--g-mute)}
+.bar .brow{display:flex;height:44px;border:2px solid var(--g-ink);border-radius:10px;overflow:hidden;font:800 12.5px var(--f-body)}
+.bar .brow>div{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;padding:0 4px;min-width:0}
+.sg-t{background:var(--g-red);color:#fff}.sg-s{background:var(--g-teal);color:#fff}.sg-b{background:var(--g-mus);color:#13224a}.sg-x{background:var(--g-surf2);color:var(--g-ink)}
+.legendk{display:flex;gap:14px;flex-wrap:wrap;font:700 13px var(--f-body);color:var(--g-mute)}
+.legendk i{display:inline-block;width:12px;height:12px;border:2px solid var(--g-ink);border-radius:3px;margin-right:6px;vertical-align:-2px}
+/* screenshot reali con zone */
+.shots{display:flex;gap:18px;overflow-x:auto;padding:6px 2px 14px;scroll-snap-type:x proximity}
+.shot{flex:none;width:234px;scroll-snap-align:start;display:grid;gap:8px;align-content:start}
+.shot .im{position:relative;width:234px;border:3px solid var(--g-ink);border-radius:22px;overflow:hidden;background:#000}
+.shot img{display:block;width:100%;height:auto}
+.shot .z{position:absolute;left:0;right:0;border-top:2px dashed #fff;color:#fff;font:800 10px var(--f-body);letter-spacing:.06em;padding:2px 6px;text-shadow:0 1px 2px #000}
+.shot figcaption{font:700 13px/1.35 var(--f-body);color:var(--g-mute)}
+.shot figcaption b{color:var(--g-ink)}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px;min-width:560px}
+table.t th,table.t td{text-align:left;padding:9px 10px;border-bottom:2px solid var(--g-line);vertical-align:top}
+table.t th{font:400 15px var(--f-disp);text-transform:uppercase;letter-spacing:.04em}
+.scrollx{overflow-x:auto;border:2px solid var(--g-ink);border-radius:14px;background:var(--g-surf)}
+/* barra dimensioni */
+.sizer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 0;position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);z-index:25;background:var(--g-bg)}
+.sizer>span{font:800 13px var(--f-body);color:var(--g-mute);margin-right:4px}
+.sizer button{font:800 13px var(--f-body);border:2px solid var(--g-ink);background:var(--g-surf);color:var(--g-ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.sizer button[aria-pressed="true"]{background:var(--g-ink);color:var(--g-bg)}
+.sizer button:focus-visible{outline:3px solid var(--g-mus);outline-offset:2px}
+/* varianti */
+.var{display:grid;gap:14px;padding:6px 0 18px;border-top:3px solid var(--g-ink);margin-top:20px}
+.var>header{display:grid;gap:8px;grid-template-columns:minmax(0,1fr);padding-top:16px}
+.var>header h3{font:400 clamp(26px,4vw,36px)/1 var(--f-disp);text-transform:uppercase}
+.var>header h3 span{color:var(--g-red)}
+.var .idea{max-width:72ch;font-size:17px}
+.sc{display:flex;gap:10px;flex-wrap:wrap;font:800 13px var(--f-body)}
+.sc span{background:var(--g-surf2);border:2px solid var(--g-ink);border-radius:8px;padding:4px 10px}
+.sc span b{color:var(--g-red)}
+.prc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.prc div{background:var(--g-surf);border:2px solid var(--g-ink);border-radius:12px;padding:10px 14px;font-size:14.5px}
+.prc b{font:400 15px var(--f-disp);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px}
+.prc .pro b{color:var(--g-ok)}.prc .con b{color:var(--g-red)}
+.prc ul{padding-left:18px;display:grid;gap:3px}
+.rowph{display:flex;gap:20px;overflow-x:auto;padding:12px 4px 22px;scroll-snap-type:x proximity;align-items:flex-start}
+.pw{flex:none;scroll-snap-align:start;display:grid;gap:8px;justify-items:center}
+.pw cap,.pw .cap{font:800 13px var(--f-body);color:var(--g-mute);text-align:center;max-width:240px}
+.pf{position:relative;border:6px solid #07070b;border-radius:34px;overflow:hidden;background:#07070b;box-shadow:0 14px 30px #0006}
+.pf .zb{position:absolute;right:8px;top:8px;z-index:80;width:30px;height:30px;border-radius:50%;border:2px solid #13224a;background:#fff7e0;color:#13224a;font:800 14px/1 var(--f-body);cursor:pointer;opacity:.0;transition:opacity .15s}
+.pf:hover .zb,.pf .zb:focus-visible{opacity:1}
+@media (hover:none){.pf .zb{display:none}}
+.open-q{display:grid;gap:12px}
+.open-q ol{padding-left:22px;display:grid;gap:8px;max-width:75ch}
+.foot{margin-top:30px;font-size:13.5px;color:var(--g-mute);max-width:75ch}
+#lb{position:fixed;inset:0;z-index:100;background:#000c;display:none;overflow:auto;padding:16px;place-items:center}
+#lb.on{display:grid}
+#lb .x{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 12px);z-index:101;font:800 14px var(--f-body);background:#fff7e0;color:#13224a;border:3px solid #13224a;border-radius:99px;padding:8px 16px;cursor:pointer}
+
+/* ===== telefono: contenitore flessibile al posto dello "stage" a coordinate fisse. Tutte le grafiche vengono da app.css ===== */
+.dev{position:relative;overflow:hidden;display:flex;flex-direction:column;background:#4fb6e6;color:#13224a;transform-origin:0 0;font-family:Nunito,system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+.dev>.vig,.dev>.grain,.dev>.sky,.dev>.skyg,.dev>.skyh{position:absolute;inset:0}
+.dev>.sky,.dev>.skyg,.dev>.skyh{pointer-events:none}
+.dev>*:not(.sky):not(.skyg):not(.skyh):not(.vig):not(.grain){position:relative;z-index:5}
+.dev>.A,.dev>.B,.dev>.C{flex:1 1 0;min-height:0;display:flex;flex-direction:column}
+.dev .chips{position:relative;left:auto;right:auto;top:auto;margin:0 10px;gap:6px;flex:none;align-items:center}
+.dev .chip{height:32px;padding:0 10px 0 4px;font-size:12px;border-width:3px;white-space:nowrap}
+.dev .chip .dc{width:20px;height:20px}
+.dev .chip.nb{padding:0 10px}
+.dev .strip{position:relative;left:auto;right:auto;top:auto;margin:6px -14px;flex:none}
+.dev .strip.sl{height:28px;font-size:14px;letter-spacing:.18em;border-width:2px}
+.dev .phrase-card{position:relative;left:auto;right:auto;top:auto;margin:10px 14px 0;flex:none;padding:6px 12px 8px 44px}
+.dev .phrase-card .ctx{font-size:11.5px;margin:0 0 2px 6px !important}
+.dev .tip{position:relative;left:auto;right:auto;margin:0 14px;flex:none;font-size:12.5px}
+.dev .tip.row{display:flex;gap:8px;align-items:center;text-align:left}
+.dev .tip.row>span{flex:1;min-width:0}
+.dev .bt{flex:none}
+.ibtn{flex:none;width:34px;height:34px;border-radius:50%;border:3px solid #13224a;background:#fff7e0;color:#13224a;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;padding:0;font:800 16px/1 Nunito,sans-serif}
+.ibtn.s{width:28px;height:28px;font-size:14px;border-width:2px}
+.dev .ltray{margin-left:2px}
+.scene{flex:1 1 0;min-height:0;position:relative;display:grid;place-items:center;overflow:hidden}
+.tz{position:relative;overflow:hidden;flex:none}
+.tzin{position:absolute;left:0;top:0;width:372px;height:826px;transform-origin:0 0}
+.tzin>div{position:absolute;left:0;top:0;width:372px;height:826px}
+.tzin .hit{position:absolute;background:transparent;border:0;padding:0;border-radius:10px;cursor:pointer;z-index:100}
+.tzin .hit.sel{outline:4px solid #ffc72c;outline-offset:2px;box-shadow:0 0 18px #ffc72c}
+.hand{position:relative}
+.hand .card{position:absolute;padding:0;transition:top .15s,transform .15s;background-size:cover;background-position:center}
+.pdots{display:flex;gap:6px;justify-content:center}
+.pdots i{width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #13224a}
+.pdots i.on{background:#ffc72c}
+.dev .botw{padding:0 14px 16px;display:grid;gap:8px;flex:none}
+/* A */
+.A .phrase-card b{font-size:20px}
+/* B */
+.dev .phrase-card.pk{padding:5px 34px 7px 44px;cursor:pointer}
+.pk small{display:none}.pk.open small{display:block}
+.pk b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:17px !important}
+.pk.open b{-webkit-line-clamp:unset;font-size:22px !important}
+.pk .chev{position:absolute;right:10px;top:50%;margin-top:-10px;font:800 16px/20px Nunito;font-style:normal}
+.dev .pp.shb{margin:0 10px 12px;padding:10px 12px 12px;display:grid;gap:8px;flex:none}
+.shb .hd{display:flex;align-items:center;gap:8px}
+.shb .hd b{font:400 21px/1 Anton;text-transform:uppercase;color:#e8362b;flex:1;min-width:0}
+.shb .hd small{display:block;font:800 11.5px Nunito;color:#13224a;opacity:.8;text-transform:none;margin-top:3px}
+.shb .grip{position:absolute;left:50%;top:5px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:#13224a55}
+/* C */
+.cpost{flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0 14px}
+.cpost .phrase-card{margin:0;padding:12px 16px 16px 52px}
+.cpost .phrase-card small{font-size:24px}
+.cpost .phrase-card b{font-size:30px;line-height:1.05}
+.cpost .whoa{display:flex;align-items:center;gap:10px;justify-content:center;font:400 18px Anton;text-transform:uppercase;color:#fff;text-shadow:2px 2px 0 #13224a}
+.dev .phrase-card.mini{padding:4px 30px 5px 40px;margin-top:8px}
+.mini small{display:none}
+.mini b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:15px !important}
+.hero{font:400 64px/1 Anton;color:#2a9d57;text-shadow:0 3px 0 #13224a;text-align:center}
+.hero small{display:block;font:800 13px Nunito;color:#13224a;text-shadow:none}
+.dev .pb{position:relative;left:auto;right:auto;top:auto;bottom:auto;margin:0 10px 10px;flex:none;max-height:none;animation:none}
+.dev .pb-blk,.dev .pb-sum{opacity:1;animation:none}
+.dev .rv-t{display:block}
+</style>
+<div class="wrap">
+<header class="top">
+  <h1>Giù dalla Torre<br><em>più aria sul telefono</em></h1>
+  <p>Analisi dello spazio e tre proposte di layout per lo smartphone. Grafica, colori, componenti e regole di gioco restano quelli di oggi: cambia solo come sono disposti. Ogni telefono qui sotto è disegnato con il CSS e la terrazza reali dell'app.</p>
+</header>
+<nav class="toc" aria-label="Sezioni">
+  <a href="#analisi">Analisi</a><a href="#ux">UX da tavolo</a><a href="#oggi">Oggi</a><a href="#var-a">A · Respiro</a><a href="#var-b">B · Pannello</a><a href="#var-c">C · Una cosa alla volta</a><a href="#domande">Da decidere</a>
+</nav>
+
+<section class="blk" id="analisi">
+  <h2><small>1 · Misure sull'app attuale</small>Dove finisce lo spazio</h2>
+  <p class="lead">Ho avviato l'app vera in una partita con bot e misurato la schermata di voto. Il banner in alto (pillole, nastro del titolo, frase) e il blocco in basso (suggerimento, bottone) occupano più della scena di gioco, soprattutto sui telefoni più piccoli o con la barra di Safari visibile.</p>
+  <div class="bars" role="img" aria-label="Ripartizione dell'altezza dello schermo nella fase di voto, per tre formati di telefono">
+    <div class="bar"><b>390 × 844 <span>· iPhone a tutto schermo (app installata)</span></b><div class="brow"><div class="sg-t" style="flex:251">Alto 251 · 30%</div><div class="sg-s" style="flex:389">Scena 389 · 46%</div><div class="sg-b" style="flex:204">Basso 204 · 24%</div></div></div>
+    <div class="bar"><b>390 × 664 <span>· con la barra di Safari</span></b><div class="brow"><div class="sg-t" style="flex:256">Alto 256 · 39%</div><div class="sg-s" style="flex:206">Scena 206 · 31%</div><div class="sg-b" style="flex:202">Basso 202 · 30%</div></div></div>
+    <div class="bar"><b>360 × 640 <span>· telefono piccolo</span></b><div class="brow"><div class="sg-t" style="flex:230">Alto 230 · 36%</div><div class="sg-s" style="flex:222">Scena 222 · 35%</div><div class="sg-b" style="flex:188">Basso 188 · 29%</div></div></div>
+  </div>
+  <div class="legendk"><span><i style="background:var(--g-red)"></i>Alto: pillole + nastro + frase</span><span><i style="background:var(--g-teal)"></i>Scena: torre o mano</span><span><i style="background:var(--g-mus)"></i>Basso: suggerimento + bottone</span></div>
+
+  <div class="cols">
+    <div class="kc"><span class="tag">Misurato</span><h3>Tre strati prima del gioco</h3><p>Pillole giocatore 36 px, nastro del titolo 64 px, frase del Megafono 126–133 px. Sono 251–258 px su 844 e nessuno è la cosa che il giocatore deve toccare.</p></div>
+    <div class="kc"><span class="tag">Misurato</span><h3>Suggerimenti lunghi, ogni turno</h3><p>In voto il riquadro con le istruzioni è alto 108 px (fino a 4 righe più un avviso rosso). Il testo è sempre lo stesso a ogni turno. Sotto le carte della mano il suggerimento scende a 10,5 px.</p></div>
+    <div class="kc"><span class="tag">Misurato</span><h3>Quattro tasti piccoli sul nastro</h3><p>Chat, regole, classifica e audio sono cerchi da 28 px sopra il nastro. Sono sotto i 44 px consigliati per il tocco e sopra l'area dove cade la frase.</p></div>
+    <div class="kc"><span class="tag">Dal codice</span><h3>Pannello punti sempre a tutta altezza</h3><p>«Chi prende punti» è bloccato da y=128 a fondo−58, anche con una sola riga: nello screenshot sotto resta più della metà vuota, mentre la scena sparisce.</p></div>
+    <div class="kc"><span class="tag">Dal codice</span><h3>Coordinate fisse su 372 px</h3><p>Frase, mano e bottoni sono posizionati in assoluto su un palco largo 372 px, poi scalato. La torre si rimpicciolisce (fino al 70%) per entrare tra frase e suggerimento.</p></div>
+    <div class="kc"><span class="tag">Dal codice</span><h3>Mano: carte da 104 px</h3><p>Le carte sono il cuore del gioco ma occupano 28% della larghezza. Su 390 px c'è spazio per carte più grandi se il contorno si riduce.</p></div>
+  </div>
+</section>
+
+<section class="blk" id="ux">
+  <h2><small>2 · UX dei giochi da tavolo su telefono</small>Il telefono è la tua mano, non il tavolo</h2>
+  <p class="lead">Con lo schermo comune acceso, il telefono serve a tre cose: vedere le proprie carte, decidere in segreto, confermare. Il resto è pubblico e può stare sul tavolo o in un cassetto.</p>
+  <div class="cols">
+    <div class="kc"><div class="num">1</div><h3>Privato sul telefono, pubblico sul tavolo</h3><p>Sul telefono restano mano, voto e gettoni Lui!. Turno, classifica, chi ha già votato e il Megafono di turno sono già sullo schermo comune.</p></div>
+    <div class="kc"><div class="num">2</div><h3>Al centro l'oggetto di gioco</h3><p>Carte e torre devono prendere la maggior parte dell'altezza (indicativamente 60% o più). L'interfaccia deve ritirarsi, come le istruzioni stampate nel coperchio della scatola.</p></div>
+    <div class="kc"><div class="num">3</div><h3>Pollice in basso, informazioni in alto</h3><p>Le azioni che contano (gioca, conferma, Lui!) vanno nel terzo inferiore, raggiungibile con una mano. In alto solo ciò che si legge e non si tocca.</p></div>
+    <div class="kc"><div class="num">4</div><h3>Una decisione per schermata</h3><p>Ogni fase ha una sola domanda: «quale carta?», «chi cade?», «quale gettone?». Le istruzioni lunghe si leggono una volta e poi si aprono a richiesta.</p></div>
+    <div class="kc"><div class="num">5</div><h3>Il contesto si riduce, non sparisce</h3><p>La frase del Megafono è il tema del turno: va letta bene la prima volta, poi basta una riga sempre a portata di tocco.</p></div>
+    <div class="kc"><div class="num">6</div><h3>Pensa all'uso reale</h3><p>Luce bassa, una mano sola, bicchiere nell'altra, barra di Safari che ruba 180 px. Il layout deve reggere 360 × 640 e 390 × 664, non solo il caso migliore.</p></div>
+  </div>
+  <div class="scrollx"><table class="t">
+    <thead><tr><th>Fase</th><th>Serve sul telefono</th><th>Può stare altrove</th></tr></thead>
+    <tbody>
+      <tr><td>Il Megafono sceglie</td><td>Le frasi della carta, «dico la mia»</td><td>Turno, Megafono, chi ha già giocato</td></tr>
+      <tr><td>Scegli la carta</td><td>La frase, la mano, «Gioca»</td><td>Classifica, chat, audio, regole estese</td></tr>
+      <tr><td>Lui! del Megafono</td><td>La torre, i due gettoni, conferma</td><td>Legenda dei punti, chi ha votato</td></tr>
+      <tr><td>Vota in segreto</td><td>La torre, il mio voto, «Conferma»</td><td>Avvisi sul bluff del Lui!, timer</td></tr>
+      <tr><td>Chi prende punti</td><td>I miei punti e perché</td><td>Dettaglio degli altri, classifica completa</td></tr>
+    </tbody></table></div>
+</section>
+
+<section class="blk" id="oggi">
+  <h2><small>3 · Punto di partenza</small>Com'è oggi, sul telefono vero</h2>
+  <p class="lead">Screenshot reali dell'app a 390 × 844 (non sono mockup). Le linee tratteggiate mostrano i confini del banner in alto e del blocco in basso.</p>
+  <div class="shots" id="shots"></div>
+</section>
+
+<section class="blk" id="varianti">
+  <h2><small>4 · Tre proposte</small>Stesso gioco, tre modi di dare aria</h2>
+  <p class="lead">Ogni riga mostra le stesse cinque schermate: scegli la carta, vota (6 giocatori), Lui! del Megafono, vota con 8 giocatori (caso peggiore, frase lunga) e risultati. Cambia formato con i pulsanti: i layout sono flessibili e si adattano. Tocca le carte per selezionarle e la frase per aprirla.</p>
+  <div class="sizer" role="group" aria-label="Formato del telefono"><span>Formato</span>
+    <button type="button" data-size="full" aria-pressed="true">390 × 844 · app installata</button>
+    <button type="button" data-size="safari" aria-pressed="false">390 × 664 · barra Safari</button>
+    <button type="button" data-size="small" aria-pressed="false">360 × 640 · piccolo</button>
+  </div>
+  <div id="variants"></div>
+</section>
+
+<section class="blk" id="domande">
+  <h2><small>5 · Prossimi passi</small>Da decidere insieme</h2>
+  <div class="open-q">
+    <ol>
+      <li><b>Quale direzione tenere?</b> Una variante intera, oppure una per fase (ad esempio il pannello B per il voto e la lettura della frase di C per la mano).</li>
+      <li><b>Chat, classifica, regole e audio</b> possono diventare un menu unico (A, B) o una barra di tre icone nel pannello (B). Sono tutte funzioni esistenti: cambia solo dove si aprono.</li>
+      <li><b>Testi dei suggerimenti.</b> Posso accorciarli a una riga e spostare l'avviso sul bluff del Lui! dietro un tasto «i». Va bene perdere il testo fisso a ogni turno?</li>
+      <li><b>Passo di lettura (C).</b> È solo uno stato dell'interfaccia sul telefono, il motore non cambia. Preferisci averlo sempre, solo al primo turno, o mai?</li>
+    </ol>
+    <p class="foot">Nota tecnica: i cambiamenti toccherebbero <code>Game.tsx</code>, <code>ui.tsx</code> e <code>app.css</code>: da posizionamento assoluto a una colonna flessibile. Il disegno della terrazza si scala già con <code>ts</code> e <code>ty</code>. <code>game-engine</code>, <code>game-protocol</code> e il worker restano invariati. Sono mockup statici: non ho modificato l'app.</p>
+  </div>
+</section>
+</div>
+<div id="lb" role="dialog" aria-label="Telefono a dimensione reale"><button class="x" type="button" id="lbx">Chiudi</button><div id="lbc"></div></div>
+
+<script>
+const D = /*__DATA__*/;
+const SHOTS = /*__SHOTS__*/;
+const SIZES = { full:[390,844], safari:[390,664], small:[360,640] };
+let size = 'full';
+const ME='#e5384b', COLS=['#e5384b','#2f7be0','#f4c20d','#3aa655','#8a5a3b','#8e44c8','#ee7bb0','#222222'];
+const P1={tag:'NEI SOGNI',pre:'Oggi sale sulla torre…',body:'CHI HA SOGNATO DI VOLARE E SI È SVEGLIATO CON IL NASO SULLA PARETE.'};
+const P2={tag:'SUI MEZZI E IN ASCENSORE',pre:'Oggi sale sulla torre…',body:'CHI HA SCOREGGIATO IN ASCENSORE E HA GUARDATO L’ALTRO CON ARIA OFFESA.'};
+const lt = D.luiMini.map(s=>'<span class="lt">'+s+'</span>').join('');
+const chipMe = (nm='Io')=>'<span class="chip"><i class="dc" style="background:'+ME+'"></i><span class="nm">'+nm+'</span><span class="ltray">'+lt+'</span></span>';
+const chipMega = (nm)=>'<span class="chip nb">📣 '+nm+'</span>';
+const chipTurn = (t)=>'<span class="chip nb">'+t+'</span>';
+const menuBtn = '<button type="button" class="ibtn" aria-label="Menu: classifica, regole, chat, audio">⋯</button>';
+const sky = '<div class="sky"></div><div class="skyg"></div><div class="skyh"></div>';
+const fin = '<div class="vig"></div><div class="grain"></div>';
+const phrase = (p,cls='')=>'<div class="phrase-card '+cls+'"><span class="mega-ic" aria-hidden="true">📣</span><span class="ctx">'+p.tag+'</span><small>'+p.pre+'</small><b>'+p.body+'</b></div>';
+const phraseK = (p)=>'<div class="phrase-card pk" data-toggle="open"><span class="mega-ic" aria-hidden="true">📣</span><span class="ctx">'+p.tag+'</span><small>'+p.pre+'</small><b>'+p.body+'</b><em class="chev">▾</em></div>';
+const phraseMini = (p)=>'<div class="phrase-card mini" data-toggle="open"><span class="mega-ic" aria-hidden="true">📣</span><b>'+p.body+'</b><em class="chev" style="position:absolute;right:10px;top:50%;margin-top:-10px;font:800 16px/20px Nunito;font-style:normal">▾</em></div>';
+const strip = (t,sl)=>'<div class="strip'+(sl?' sl':'')+'">★ '+t+' ★</div>';
+const slotT = (n,o={})=>'<div class="scene"><div class="tslot" data-n="'+n+'" data-kind="'+(o.kind||'vote')+'" data-sel="'+(o.sel||0)+'" data-tower="'+(o.tower?1:0)+'" data-max="'+(o.max||1.3)+'"></div></div>';
+const slotH = (o={})=>'<div class="scene"><div class="hslot" data-mode="'+(o.mode||'fan')+'"></div></div>';
+const cta = (txt,kind='',extra='')=>'<button type="button" class="bt '+kind+'" '+extra+'>'+txt+'</button>';
+
+const TIPS = {
+  hand:'Scegli chi lo farebbe di sicuro. Tocca una carta, poi ancora per ingrandirla. Resta segreta!',
+  vote:'Il più votato cade e chi l’ha votato fa +2. Il bordo giallo è il Lui! del Megafono.',
+  lui:'Tocca la carta su cui scommetti, poi scegli il gettone Lui!.'
+};
+
+/* ---------- schermate per variante ---------- */
+const V = {
+  A:{
+    hand:()=>'<div class="A">'+chipsA('Tito','1/6')+strip('SCEGLI LA CARTA',1)+phrase(P1,'cmp')+slotH()+tipA(TIPS.hand)+'<div class="botw">'+cta('Gioca questa carta','','data-cta="play"')+'</div></div>',
+    vote6:()=>'<div class="A">'+chipsA('Tito','1/6')+strip('VOTA IN SEGRETO',1)+phrase(P1,'cmp')+slotT(6,{sel:2})+tipA(TIPS.vote)+'<div class="botw">'+cta('Conferma il n. 2','','data-cta="vote"')+'</div></div>',
+    lui:()=>'<div class="A">'+chipsA('Io','1/6')+strip('IL MEGAFONO SCOMMETTE',1)+phrase(P1,'cmp')+slotT(6,{kind:'lui',sel:1})+'<div class="botw" style="padding-top:2px">'+luiRow()+'</div></div>',
+    vote8:()=>'<div class="A">'+chipsA('Tito','1/8')+strip('VOTA IN SEGRETO',1)+phrase(P2,'cmp')+slotT(8,{sel:2})+tipA(TIPS.vote)+'<div class="botw">'+cta('Conferma il n. 2','','data-cta="vote"')+'</div></div>',
+    res:()=>'<div class="A">'+chipsA('Tito','1/6')+strip('GIÙ DALLA TORRE!',1)+slotT(6,{sel:2,max:.9})+pointsPanel(3)+'</div>'
+  },
+  B:{
+    hand:()=>'<div class="B">'+chipsB('Tito','1/6')+phraseK(P1)+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Chi lo farebbe di sicuro? Resta segreta.',cta('Gioca questa carta','','data-cta="play"'))+'</div>',
+    vote6:()=>'<div class="B">'+chipsB('Tito','1/6')+phraseK(P1)+slotT(6,{sel:2,tower:0})+sheet('VOTA IN SEGRETO','Il più votato cade: +2 a chi l’ha votato.',cta('Conferma il n. 2','','data-cta="vote"'))+'</div>',
+    lui:()=>'<div class="B">'+chipsB('Io','1/6')+phraseK(P1)+slotT(6,{kind:'lui',sel:1})+sheetLui()+'</div>',
+    vote8:()=>'<div class="B">'+chipsB('Tito','1/8')+phraseK(P2)+slotT(8,{sel:2})+sheet('VOTA IN SEGRETO','Il più votato cade: +2 a chi l’ha votato.',cta('Conferma il n. 2','','data-cta="vote"'))+'</div>',
+    res:()=>'<div class="B">'+chipsB('Tito','1/6')+slotT(6,{sel:2,max:.9})+pointsSheet()+'</div>'
+  },
+  C:{
+    read:()=>'<div class="C">'+chipsC('Tito',2,6)+strip('ASCOLTA IL MEGAFONO',1)+'<div class="cpost"><div class="whoa">Bot Tito urla:</div>'+phrase(P1,'')+'</div><div class="botw">'+cta('Ho letto, scelgo la carta ›')+'</div></div>',
+    hand:()=>'<div class="C">'+chipsC('Tito',2,6)+strip('SCEGLI LA CARTA',1)+phraseMini(P1)+slotH({mode:'car2'})+'<div class="botw">'+cta('Gioca questa carta','','data-cta="play"')+'</div></div>',
+    vote6:()=>'<div class="C">'+chipsC('Tito',2,6)+strip('VOTA IN SEGRETO',1)+phraseMini(P1)+slotT(6,{sel:2,tower:0,max:1.4})+'<div class="botw">'+cta('Conferma il n. 2','','data-cta="vote"')+'</div></div>',
+    lui:()=>'<div class="C">'+chipsC('Io',2,6)+strip('SCOMMETTI CON LUI!',1)+phraseMini(P1)+slotT(6,{kind:'lui',sel:1,max:1.4})+'<div class="botw" style="padding-top:2px">'+luiRow()+'</div></div>',
+    vote8:()=>'<div class="C">'+chipsC('Tito',2,8)+strip('VOTA IN SEGRETO',1)+phraseMini(P2)+slotT(8,{sel:2,max:1.4})+'<div class="botw">'+cta('Conferma il n. 2','','data-cta="vote"')+'</div></div>',
+    res:()=>'<div class="C">'+chipsC('Tito',2,6)+strip('GIÙ DALLA TORRE!',1)+slotT(6,{sel:2,max:.85})+pointsFocus()+'</div>'
+  }
+};
+const dotsTurn=(c,n)=>'<span class="chip nb" aria-label="Turno '+c+' di '+n+'" style="gap:4px">'+Array.from({length:n},(_,i)=>'<i style="width:9px;height:9px;border-radius:50%;border:2px solid #13224a;background:'+(i<c?'#ffc72c':'#fff')+'"></i>').join('')+'</span>';
+function chipsA(mega,turn){return '<div class="chips" style="margin-top:20px">'+chipMe()+chipMega('Bot '+mega)+chipTurn(turn)+menuBtn+'</div>'}
+function chipsB(mega,turn){return '<div class="chips" style="margin-top:20px">'+chipMe()+chipMega('Bot '+mega)+chipTurn(turn)+menuBtn+'</div>'}
+function chipsC(mega,c,n){return '<div class="chips" style="margin-top:20px">'+chipMe()+dotsTurn(c,n)+menuBtn+'</div>'}
+function tipA(t){return '<div class="tip row"><span>'+t+'</span><button type="button" class="ibtn s" aria-label="Regole complete">i</button></div>'}
+function luiRow(){return '<div class="lui-opts"><button type="button" class="lk lui-zero">'+'<span>'+D.luiToks[0]+'</span><b>Nessun voto</b><small>+5 punti</small></button><button type="button" class="lk lui-k3 red">'+'<span>'+D.luiToks[1]+'</span><b>Almeno 3 voti</b><small>+14 punti</small></button></div>'+'<div class="tip" style="margin:0;font-size:12px">Lui! sul <b>n. 1</b>: quanti voti prenderà dagli altri?</div>'}
+function sheet(t,s,btn){return '<div class="pp shb"><span class="grip"></span><div class="hd"><b>'+t+'<small>'+s+'</small></b><button type="button" class="ibtn s" aria-label="Regole">i</button><button type="button" class="ibtn s" aria-label="Classifica">🏆</button><button type="button" class="ibtn s" aria-label="Chat">💬</button></div>'+btn+'</div>'}
+function sheetLui(){return '<div class="pp shb"><span class="grip"></span><div class="hd"><b>LUI! SUL N. 1<small>Quanti voti prenderà dagli altri?</small></b><button type="button" class="ibtn s" aria-label="Regole">i</button></div>'+luiRow().replace(/<div class="tip.*$/,'')+'</div>'}
+const nm=(n,c,t='')=>'<span class="pb-nm"><i class="dc" style="background:'+c+'"></i>'+n+(t?' <em>'+t+'</em>':'')+'</span>';
+const thumb=(i,n)=>'<span class="pb-c" style="background-image:var(--c'+(i)+')"><i>'+n+'</i></span>';
+function blk1(){return '<div class="pb-blk"><div class="pb-h"><span class="pb-th">'+thumb(1,2)+'</span><span class="pb-tx"><b>Voto giusto</b><small>Hanno votato il n. 2, che cade</small></span><span class="pb-pts">+2 a testa</span></div><div class="pb-who">'+nm('Io',ME)+nm('Bot Mara',COLS[2])+nm('Bot Pino',COLS[3])+'</div></div>'}
+function blk2(){return '<div class="pb-blk"><div class="pb-h"><span class="pb-th">'+thumb(1,2)+'</span><span class="pb-tx"><b>Carta caduta</b><small>Aveva giocato la carta caduta</small></span><span class="pb-pts">+2</span></div><div class="pb-who">'+nm('Bot Gino',COLS[1])+'</div></div>'}
+function tot(){return '<div class="pb-sum"><b>In totale nel turno</b><span>'+nm('Io',ME,'+2')+nm('Bot Mara',COLS[2],'+2')+nm('Bot Pino',COLS[3],'+2')+nm('Bot Gino',COLS[1],'+2')+'</span></div>'}
+function pointsPanel(){return '<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll" style="overflow:visible">'+blk1()+blk2()+tot()+'</div><button type="button" class="pb-go">Continua ›</button></div>'}
+function pointsSheet(){return '<div class="pp shb"><span class="grip"></span><div class="hd"><b>CHI PRENDE PUNTI<small>Io +2 · Mara +2 · Pino +2 · Gino +2</small></b><button type="button" class="ibtn s" aria-label="Perché">▾</button></div>'+'<div class="pb-blk" style="margin:0"><div class="pb-h"><span class="pb-th">'+thumb(1,2)+'</span><span class="pb-tx"><b>Voto giusto</b><small>Hanno votato il n. 2, che cade</small></span><span class="pb-pts">+2 a testa</span></div></div>'+cta('Continua ›')+'</div>'}
+function pointsFocus(){return '<div class="pp shb" style="text-align:center"><span class="grip"></span><div class="hero">+2<small>Hai votato il n. 2, che è caduto</small></div><div class="pb-who" style="justify-content:center">'+nm('Mara',COLS[2],'+2')+nm('Pino',COLS[3],'+2')+nm('Gino',COLS[1],'+2')+'</div>'+cta('Continua ›')+'</div>'}
+
+/* ---------- montaggio ---------- */
+const SCREENS={A:[['hand','Scegli la carta'],['vote6','Voto · 6 giocatori'],['lui','Lui! del Megafono'],['vote8','Voto · 8 giocatori'],['res','Chi prende punti']],
+ B:[['hand','Scegli la carta'],['vote6','Voto · 6 giocatori'],['lui','Lui! del Megafono'],['vote8','Voto · 8 giocatori'],['res','Chi prende punti']],
+ C:[['read','Prima: leggi la frase'],['hand','Scegli la carta'],['vote6','Voto · 6 giocatori'],['lui','Lui! del Megafono'],['vote8','Voto · 8 giocatori'],['res','Chi prende punti']]};
+const INFO={
+ A:{name:'A',title:'Respiro',idea:'Stessa struttura di oggi, ma più compatta: una sola barra in alto, nastro sottile, frase su due righe, suggerimento ridotto a una riga con tasto «i». Tutti i tasti di servizio (chat, regole, classifica, audio) stanno in un menu «⋯».',
+  pro:['Il più vicino all’app attuale: rischio basso, migliorie visibili subito','La frase resta sempre visibile e leggibile','Pochi file da toccare'],con:['Il guadagno di spazio è medio','Il bottone resta in basso ma la scena non è a tutto schermo']},
+ B:{name:'B',title:'Pannello in basso',idea:'La scena prende tutto lo spazio. Il nastro del titolo sparisce e diventa l’intestazione di un pannello fisso sotto il pollice che contiene titolo, istruzione breve, scorciatoie (regole, classifica, chat) e il bottone. La frase è una striscia a due righe che si apre con un tocco.',
+  pro:['Tutto ciò che si tocca sta in un solo punto, raggiungibile con il pollice','La mano diventa un carosello con carte molto più grandi','Le funzioni secondarie sono sempre a un tocco'],con:['La frase chiusa mostra solo due righe: c’è il rischio di non leggerla','Il pannello copre una fascia in basso (si può comprimere)']},
+ C:{name:'C',title:'Una cosa alla volta',idea:'Prima si legge la frase grande, a tutto schermo, poi si passa alla scelta con la frase ridotta a una riga. Niente suggerimenti ripetuti: il titolo della fase dice già cosa fare. Il turno diventa una fila di puntini. Il punteggio personale diventa il protagonista dei risultati.',
+  pro:['Massima scena possibile durante carta e voto','La frase viene letta bene una volta sola, a corpo grande','Meno testo, più gioco: adatto a telefoni piccoli'],con:['Un tocco in più a ogni turno (si può saltare dal secondo giro)','Per i giocatori esperti è più lento; è solo uno stato dell’interfaccia, il motore non cambia']}
+};
+function phone(variant,key,label){
+  const [w,h]=SIZES[size];
+  const z = Math.min(0.62, 250/w);
+  const html = V[variant][key]();
+  return '<figure class="pw" data-v="'+variant+'" data-k="'+key+'"><div class="pf" style="width:'+Math.round((w*z))+'px;height:'+Math.round(h*z)+'px;border-width:5px"><button type="button" class="zb" aria-label="Apri a dimensione reale" data-zoom="1">⤢</button><div class="dev" style="width:'+w+'px;height:'+h+'px;transform:scale('+z+')">'+sky+html+fin+'</div></div><figcaption class="cap">'+label+'</figcaption></figure>';
+}
+function render(){
+  const root=document.getElementById('variants'); let out='';
+  ['A','B','C'].forEach(v=>{const I=INFO[v];
+    out+='<article class="var" id="var-'+v.toLowerCase()+'"><header><h3><span>'+v+' ·</span> '+I.title+'</h3><p class="idea">'+I.idea+'</p><div class="sc" data-sc="'+v+'"></div><div class="prc"><div class="pro"><b>Pro</b><ul>'+I.pro.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="con"><b>Compromessi</b><ul>'+I.con.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></div></header><div class="rowph">'+SCREENS[v].map(s=>phone(v,s[0],s[1])).join('')+'</div></article>';});
+  root.innerHTML=out; layout(); score();
+}
+/* misura gli slot flessibili e disegna terrazza e mano */
+function layout(){
+  document.querySelectorAll('.tslot').forEach(el=>{
+    const sc=el.parentElement, n=+el.dataset.n, W=sc.clientWidth, Hh=sc.clientHeight, tower=el.dataset.tower==='1';
+    const cap=+el.dataset.max||1.3;
+    const s=Math.min(W/372,Hh/392,cap), ch=Math.max(392,Math.min(Hh/s,540));
+    const kind=el.dataset.kind, sel=+el.dataset.sel;
+    const cards = kind==='lui'? D['cards'+n] : D['cardsLui'+n];
+    const pos=D['pos'+n];
+    const hits=Object.entries(pos).map(([i,c])=>'<button type="button" class="hit'+((+i+1)===sel?' sel':'')+'" data-pos="'+(+i+1)+'" aria-label="Carta numero '+(+i+1)+'" style="left:'+c.x+'px;top:'+(c.f-c.h-6)+'px;width:'+c.w+'px;height:'+(c.h+10)+'px"></button>').join('');
+    el.style.cssText='width:'+Math.round(372*s)+'px;height:'+Math.round(ch*s)+'px;position:relative;overflow:hidden';
+    el.className='tz tslot';
+    el.innerHTML='<div class="tzin" style="transform:scale('+s+') translateY(-278px)"><div>'+D.base+'</div><div>'+cards+'</div><div>'+hits+'</div></div>';
+    el.dataset.scale=s.toFixed(3);
+  });
+  document.querySelectorAll('.hslot').forEach(el=>{
+    const sc=el.parentElement, W=sc.clientWidth, Hh=sc.clientHeight, mode=el.dataset.mode, n=5, sel=2;
+    el.style.cssText='position:relative;width:'+W+'px;height:'+Hh+'px';
+    let h='';
+    if(mode==='fan'){
+      const cH=Math.max(150,Math.min(Hh*0.62,240)), cW=cH/1.5, step=Math.min(cW*0.66,(W-cW-20)/(n-1)), left0=(W-(cW+step*(n-1)))/2, mid=(n-1)/2;
+      for(let i=0;i<n;i++){const d=i-mid,l=i===sel;h+='<button type="button" class="card'+(l?' sel':'')+'" data-i="'+i+'" aria-label="Carta '+(i+1)+'" style="width:'+cW+'px;height:'+cH+'px;left:'+(left0+step*i)+'px;top:'+(Hh/2-cH/2+d*d*6-(l?26:0))+'px;background-image:var(--c'+i+');transform:rotate('+d*6+'deg);z-index:'+(10+i+(l?20:0))+'"></button>';}
+    } else if(mode==='car'){
+      const cH=Math.min(Hh*0.84,330), cW=cH/1.5, off=cW*0.86;
+      [[-1,1],[1,3],[0,2]].forEach(([k,i])=>{const c=k===0;h+='<button type="button" class="card'+(c?' sel':'')+'" data-i="'+i+'" aria-label="Carta '+(i+1)+'" style="width:'+cW*(c?1:.78)+'px;height:'+cH*(c?1:.78)+'px;left:'+(W/2-cW*(c?1:.78)/2+k*off)+'px;top:'+(Hh/2-cH*(c?1:.78)/2+(c?-6:8))+'px;background-image:var(--c'+i+');transform:rotate('+k*7+'deg);z-index:'+(c?20:10)+'"></button>';});
+      h+='<div class="pdots" style="position:absolute;left:0;right:0;bottom:2px">'+[0,1,2,3,4].map(i=>'<i class="'+(i===2?'on':'')+'"></i>').join('')+'</div>';
+    } else {
+      const th=Math.round(Math.min(Hh*0.2,74)), tw=th/1.5, mH=Math.min(Hh-th-22,340), mW=mH/1.5;
+      h+='<button type="button" class="card sel" data-main="1" aria-label="Carta scelta" style="width:'+mW+'px;height:'+mH+'px;left:'+(W/2-mW/2)+'px;top:6px;background-image:var(--c2);z-index:5"></button>';
+      const gap=8, tot=5*tw+4*gap, l0=(W-tot)/2;
+      for(let i=0;i<5;i++){h+='<button type="button" class="card'+(i===2?' sel':'')+'" data-i="'+i+'" data-thumb="1" aria-label="Carta '+(i+1)+'" style="width:'+tw+'px;height:'+th+'px;left:'+(l0+i*(tw+gap))+'px;top:'+(Hh-th-6)+'px;background-image:var(--c'+i+');border-width:3px;border-radius:7px;box-shadow:2px 3px 0 #13224a;z-index:6"></button>';}
+    }
+    el.innerHTML=h;
+  });
+}
+/* scena disponibile, per confronto con l'app di oggi */
+const TODAY={full:[389,46],safari:[206,31],small:[222,35]};
+function score(){
+  ['A','B','C'].forEach(v=>{
+    const f=document.querySelector('.pw[data-v="'+v+'"][data-k="vote6"] .scene'); const box=document.querySelector('[data-sc="'+v+'"]');
+    if(!f||!box)return; const H=SIZES[size][1]; const sh=f.clientHeight; const t=TODAY[size];
+    box.innerHTML='<span>Scena nel voto: <b>'+sh+' px</b> ('+Math.round(sh/H*100)+'%)</span><span>Oggi: '+t[0]+' px ('+t[1]+'%)</span><span>Differenza: <b>'+(sh>=t[0]?'+':'')+Math.round((sh/t[0]-1)*100)+'%</b></span>';
+  });
+}
+/* screenshot reali */
+(function(){
+  const z=[[251,'ALTO · 251 px'],[640,'BASSO · da 640 px']];
+  document.getElementById('shots').innerHTML=SHOTS.map(s=>'<figure class="shot"><div class="im"><img src="'+s.src+'" alt="'+s.alt+'" width="390" height="844">'+(s.zones?s.zones.map(zz=>'<div class="z" style="top:'+(zz[0]/844*100)+'%">'+zz[1]+'</div>').join(''):'')+'</div><figcaption><b>'+s.title+'</b><br>'+s.cap+'</figcaption></figure>').join('');
+})();
+/* interazioni */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-toggle]'); if(!t)return;
+  const dev=t.closest('.dev');
+  if(t.dataset.size){size=t.dataset.size;document.querySelectorAll('.sizer button').forEach(b=>b.setAttribute('aria-pressed',b===t?'true':'false'));render();return;}
+  if(t.id==='lbx'){document.getElementById('lb').classList.remove('on');return;}
+  if(t.dataset.zoom){const pw=t.closest('.pw');const d=pw.querySelector('.dev').cloneNode(true);const [w,h]=SIZES[size];const k=Math.min(1,(innerWidth-32)/w,(innerHeight-90)/h);d.style.transform='scale('+k+')';const box=document.createElement('div');box.style.cssText='width:'+w*k+'px;height:'+h*k+'px;border:6px solid #07070b;border-radius:34px;overflow:hidden;background:#07070b';box.appendChild(d);const c=document.getElementById('lbc');c.innerHTML='';c.appendChild(box);document.getElementById('lb').classList.add('on');return;}
+  if(!dev)return;
+  if(t.matches('[data-toggle]')){t.classList.toggle('open');return;}
+  if(t.classList.contains('hit')){const root=t.closest('.tzin');root.querySelectorAll('.hit').forEach(h=>h.classList.toggle('sel',h===t));const c=dev.querySelector('[data-cta="vote"]');if(c){c.textContent='Conferma il n. '+t.dataset.pos;}return;}
+  if(t.classList.contains('card')){const hs=t.closest('.hslot');hs.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c===t||(t.dataset.thumb&&c.dataset.main)&&false));if(t.dataset.thumb){const m=hs.querySelector('[data-main]');m.style.backgroundImage='var(--c'+t.dataset.i+')';hs.querySelectorAll('[data-thumb]').forEach(c=>c.classList.toggle('sel',c===t));m.classList.add('sel');}else{t.classList.add('sel');}return;}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lb').classList.remove('on')});
+function boot(){render();document.fonts&&document.fonts.ready.then(()=>{layout();score()});}
+boot();
+</script>
