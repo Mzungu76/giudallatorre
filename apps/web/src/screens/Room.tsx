@@ -9,7 +9,20 @@ import type { ChatDto } from "@gdt/game-protocol";
 import Final from "./Final.tsx";
 import { forgetSession } from "../lib/session.ts";
 import type { ClientMessage } from "@gdt/game-protocol";
+import type { ReactNode } from "react";
+import type { PlayerView } from "@gdt/game-engine";
 
+/** Su schermi larghi la partita sta al centro di una plancia con codice a sinistra e giocatori a destra. */
+function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | null; children: ReactNode }) {
+  const list = view ? view.players.map((p) => ({ id: p.id, name: p.name, score: p.score })) : room.players.map((p) => ({ id: p.id, name: p.nickname, score: null as number | null }));
+  return (
+    <div className="plancia">
+      <aside className="pside l" aria-hidden><div className="plogo">Giù dalla<b>Torre!</b></div><div className="pp pcode"><small>codice della stanza</small><strong>{room.code}</strong></div></aside>
+      {children}
+      <aside className="pside r"><div className="pp pplayers"><h4>Giocatori</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={PLAYER_COLORS[i % 8]!} />{p.name}{p.id === view?.megafonoId ? " 📣" : ""}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
+    </div>
+  );
+}
 function useSound() {
   const [on, setOn] = useState(() => { try { return localStorage.getItem("gdt.sound") !== "0"; } catch { return true; } });
   return [on, (v: boolean) => { setOn(v); try { localStorage.setItem("gdt.sound", v ? "1" : "0"); } catch { /* */ } }] as const;
@@ -64,9 +77,10 @@ export default function RoomScreen({ code }: { code: string }) {
   if (status === "closed" && !room) return <Stage bg="sky"><div className="center-msg"><h2>Stanza chiusa</h2><p>La stanza non esiste più o è aperta su un altro dispositivo.</p><Btn onClick={() => navigate("/")}>Torna alla home</Btn></div></Stage>;
   if (!room) return <Stage bg="sky" testId="loading"><div className="center-msg"><h2>Mi collego…</h2></div></Stage>;
   const reconnecting = status === "reconnecting";
-  if (room.stage === "LOBBY") return <><Lobby room={room} send={send} chat={chat} />{reconnecting && <div className="banner-conn">Riconnessione…</div>}<Toast text={error} /></>;
+  if (room.stage === "LOBBY") return <><Plancia room={room} view={null}><Lobby room={room} send={send} chat={chat} /></Plancia>{reconnecting && <div className="banner-conn">Riconnessione…</div>}<Toast text={error} /></>;
   if (!view) return <Stage bg="sky"><div className="center-msg"><h2>Carico la partita…</h2></div></Stage>;
   return (
+    <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
       {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} />}
       <Chat chat={chat} me={room.you} players={room.players} send={send} />
@@ -74,5 +88,6 @@ export default function RoomScreen({ code }: { code: string }) {
       {reconnecting && <div className="banner-conn">Riconnessione…</div>}
       <Toast text={error} />
     </Stage>
+    </Plancia>
   );
 }

@@ -18,7 +18,7 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 |---|---|---|
 | `hello` | `token` | **obbligatorio come primo messaggio** (entro 10 s) |
 | `ping` | — | risposta `{"t":"pong"}` automatica, senza svegliare la stanza (stringa esatta `{"t":"ping"}`) |
-| `setOptions` | `megafonoSa?`, `justifyVotes?`, `herd?` (regole da testare), `mode?`, `turnTimerSec?` (0/30/60/90/120) | solo host, solo lobby |
+| `setOptions` | `megafonoSa?`, `mode?`, `turnTimerSec?` (0/30/60/90/120) | solo host, solo lobby |
 | `kick` | `playerId` | solo host, solo lobby |
 | `chat` | `text` (≤ 140 caratteri dopo la pulizia) | messaggio a tutta la stanza; errori `INVALID_MESSAGE`, `RATE_LIMIT` |
 | `start` | — | solo host, da 3 giocatori (i bot contano) |

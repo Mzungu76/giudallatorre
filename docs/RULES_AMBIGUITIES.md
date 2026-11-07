@@ -8,7 +8,7 @@ Stato: **analisi su rev. 5.2l (provvisoria)**. Il regolamento definitivo NON è 
 | B1 | Il regolamento definitivo è **`Giù dalla Torre! rev. 5.2l.pdf`** già nel repo (identico all'allegato) |
 | B2 | Le carte Personaggio sono **125** (tutte le illustrazioni estratte; il regolamento che dice 100 è da considerarsi superato) |
 | B3 | Carte a frase singola aggiunte in `Carte_singola frase.pdf` (vedi D1) |
-| B4 | In caso di pareggio cade **sempre** il personaggio votato dal Megafono, anche se è il solo con il suo voto; gli altri voti non contano |
+| B4 | In caso di pareggio **cadono tutte le carte a pari merito**, anche quella votata dal Megafono (regola sostituita: prima la carta del Megafono cadeva sempre, poi restava su). Il Megafono prende +1 per ogni voto altrui sulla carta che ha votato, cada o no |
 | B5 | Il Megafono **può** votare la carta pescata dal mazzo |
 | B6 | Si **può** votare la propria carta |
 | B8 | Variante "Il Megafono sa": **sì**, opzione di stanza |

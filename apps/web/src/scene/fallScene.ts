@@ -5,7 +5,7 @@ import { cardFull } from "../lib/cards.ts";
 import { profileShaft, profileBack, profileFront, profLayout } from "./draw.ts";
 
 
-export interface ResultCue { fallPos: number; seed: number }
+export interface ResultCue { fallPositions: number[]; seed: number }
 export interface SceneOptions { cardIds: string[]; sound: () => boolean; reduced: boolean; }
 export interface SceneApi {
   setSelected(pos: number | null): void;
@@ -149,7 +149,7 @@ const back=x=>{x=Math.min(1,Math.max(0,x));const c=1.70158,c3=c+1;return 1+c3*Ma
 const puffs=[[30,2040],[96,2050],[300,2048],[230,2040],[160,2030]].map(([x,y])=>add('',`left:${x}px;top:${y}px;z-index:31`,'puff'));
 const stars=add('<b>★</b><b>★</b><b>★</b>','width:70px;height:30px;z-index:32;opacity:0','stars');
 const S0=N<=5?1.3:Math.max(1.16,1.3-0.045*(N-5)),CY0=TY+30-470/S0;
-let FN=1,fc=CH[0],f=ch[1];
+let FN=1,FNS:number[]=[1],fc=CH[0],f=ch[1];
 const G=1000,Y0=TY-20,MT=2034,YI=MT-42,TF=Math.sqrt(2*(YI-Y0)/G),TS=0.65,TI=TS+TF;
 const T_FALL=1.3,BNC=[[.55,170],[.34,70],[.2,24]];
 const startY=()=>fc.feet-fc.h/2;
@@ -182,13 +182,17 @@ const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFi
 
  const sus=t<0?sm(.3,T_FALL,T):0;
  {const sc=sel?CH[sel-1]:null;cone.style.opacity=sc&&t<.3?String((.55+.45*Math.sin(T*3))):'0';if(sc)cone.style.left=(sc.x-95)+'px';}
- CH.forEach(c=>{const im=ch[c.n];im.classList.toggle('sel',c.n===sel&&t<.4);if(c.n!==FN||t<0&&false){}
-  if(c.n!==FN)im.style.transform=`rotate(${c.rot+(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
+ CH.forEach(c=>{const im=ch[c.n];im.classList.toggle('sel',c.n===sel&&t<.4);if(!FNS.includes(c.n)){}
+  if(!FNS.includes(c.n))im.style.transform=`rotate(${c.rot+(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
  const c=cardState(t),wob=t<0?Math.sin(T*28)*sus*3:0,h=fc.h,dp=dip(t);
  const hg=Math.max(0,YI-c.y);c.y+=dp*Math.max(0,Math.min(1,1-hg/22));
  const w=fc.w;
  if(t<TS*.3){f.style.zIndex=fc.z;f.style.left=(fc.x-w/2)+'px';f.style.top=(startY()-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob+(fc.rot||0)}deg)`}
  else{f.style.zIndex=30;f.style.left=(c.x-w/2)+'px';f.style.top=(c.y-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${c.r}deg) scale(${(c.sx||1)*c.k},${(c.sy||1)*c.k})`}
+ FNS.slice(1).forEach((n,k)=>{const sfc=CH[n-1],sf=ch[n],keep=fc;fc=sfc;const tt=t-.07*(k+1),cc=cardState(Math.max(tt,-1));fc=keep;
+  const dx=(k%2?1:-1)*(26+16*k)*sm(TS*.4,TI,tt),w2=sfc.w;
+  if(tt<TS*.3){sf.style.zIndex=sfc.z;sf.style.left=(sfc.x-w2/2)+'px';sf.style.top=(sfc.feet-sfc.h/2-sfc.h/2)+'px';sf.style.transformOrigin='50% 50%';sf.style.transform=`rotate(${wob+(sfc.rot||0)}deg)`}
+  else{sf.style.zIndex=30+k;sf.style.left=(cc.x+dx-w2/2)+'px';sf.style.top=(cc.y-sfc.h/2)+'px';sf.style.transformOrigin='50% 50%';sf.style.transform=`rotate(${cc.r}deg) scale(${(cc.sx||1)*cc.k},${(cc.sy||1)*cc.k})`}});
  const cm=cam(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
  const dutch=-3*sm(.5,1.3,t)*(1-sm(TI-.3,TI+.4,t));const shk=0;
  W.style.transform=`translate(${sh+shk}px,${sh}px) translate(186px,413px) rotate(${dutch}deg) translate(-186px,-413px) scale(${cm.s}) translate(${-cm.cx}px,${-cm.cy}px)`;F.style.transform=`translateY(${-(cm.cy-CY0)*cm.s*.35}px)`;
@@ -215,7 +219,7 @@ const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFi
     setSelected(pos){sel=pos;if(!cue)render(-1)},
     setLui(l){luiInfo=l;if(!cue)render(-1)},
     showTokens(list){buildTokens(list);if(!cue)render(-1)},
-    play(c,done){cancelAnimationFrame(raf);cue=c;FN=c.fallPos;fc=CH[FN-1];f=ch[FN];sel=null;placeObjects(c.seed);doneCb=done;firedEv={};
+    play(c,done){cancelAnimationFrame(raf);cue=c;FNS=c.fallPositions.length?c.fallPositions:[1];FN=FNS[0]!;fc=CH[FN-1];f=ch[FN];sel=null;placeObjects(c.seed);doneCb=done;firedEv={};
       if(opts.reduced){render(T_END);cue.finished=true;done();return}
       T0=performance.now();try{ac()}catch{}
       const loop=(now:number)=>{if(destroyed)return;const T=(now-T0)/1000;render(Math.min(T,T_END));EVENTS.forEach((e,i)=>{if(!firedEv[i]&&T>=e[0]){firedEv[i]=1;e[1]()}});

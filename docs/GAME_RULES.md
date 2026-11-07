@@ -30,11 +30,12 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 - Transizione: tutti hanno votato → Fase 3.
 
 ### Fase 3 — Giù dalla Torre
-1. Rivelazione voti (a partire dal giocatore successivo al Megafono).
-2. Cade il personaggio con più voti. **Pareggio: cade SEMPRE il personaggio votato dal Megafono**, anche se ha solo il voto del Megafono (gli altri voti sono ignorati).
+1. Rivelazione voti (a partire dal giocatore successivo al Megafono; il Megafono per ultimo).
+2. Cade il personaggio con più voti. **Pareggio: cadono insieme tutte le carte a pari merito**, anche quella votata dal Megafono. Chi ha votato una carta caduta fa +2, chi aveva giocato una carta caduta fa +2 (bonus carta, per ciascuna carta caduta).
 3. Punti:
    - **+2** a chi ha votato il personaggio caduto;
    - **+2** a chi ha giocato la carta caduta;
+   - Megafono: **+1 per ogni voto degli altri** sulla carta che ha votato, cada o no (il suo voto non conta; si somma, non si moltiplica);
    - Megafono, segnalino "Lui!": **CADE LUI! → +4** se il personaggio è caduto; **NON CADE LUI! → +1** se non è caduto. **Se la scommessa fallisce: −1** (decisione utente; i punteggi possono diventare negativi). Si somma agli altri punti.
 4. Un giocatore può cumulare più bonus nel turno.
 
@@ -61,15 +62,16 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 - **Frase**: all'inizio del turno si pesca una carta "Su sulla Torre" visibile solo al Megafono. Può scegliere una frase della carta (carta singola: obbligatoria) oppure inventarla a voce (`free`). Mazzo frasi che si rimescola quando finisce.
 - **Torre**: modalità base = N−1 carte giocate dalla Folla + 1 pescata dal mazzo (nessun proprietario); variante "Il Megafono sa" = N carte dalle mani. Le carte vengono mescolate e numerate 1..N solo quando tutti hanno giocato.
 - **Voto**: tutti votano una volta, Megafono incluso, anche la propria carta e quella del mazzo.
-- **Pareggio**: se il massimo di voti è condiviso, cade **sempre** il personaggio votato dal Megafono (anche se ha solo il suo voto).
-- **Punti**: +2 a ogni votante del caduto; +2 a chi ha giocato la carta caduta (nessuno se era del mazzo); Lui! CADE sul caduto +4; Lui! NON CADE su un personaggio che resta su +1; i punti si sommano.
+- **Cade** la carta con più voti; in caso di **pareggio cadono insieme tutte le carte a pari merito**, anche quella votata dal Megafono.
+- **Punti**: +2 a chi ha votato una carta caduta (Megafono compreso); +2 a chi ha giocato ciascuna carta caduta (nessuno se era del mazzo); **il Megafono prende inoltre 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su** (il suo voto non conta; i voti si sommano, non si moltiplicano); Lui! CADE sulla carta caduta +4; Lui! NON CADE su una carta che resta su +1; scommessa sbagliata −1. I punti si sommano.
+- **Spoglio**: i voti escono uno alla volta, il Megafono per ultimo (suo gettone più grande); poi la carta caduta, chi l'aveva giocata (+2), chi ha votato giusto (+2), i voti raccolti dal Megafono, il Lui!. I punti salgono e svaniscono dalla carta; la classifica del turno mostra l'operazione di ognuno.
 - **Fine turno**: la Torre va nello scarto; pesca 1 carta chi ha giocato (la Folla; nella variante anche il Megafono); mazzo Personaggio rimescolato dallo scarto se finisce; il Megafono passa al giocatore successivo in ordine di ingresso.
 - **Fine partita**: tutti hanno fatto il Megafono 2 volte (3–5 giocatori) o 1 volta (6–8). Vince il punteggio più alto, parità = vittoria condivisa.
 - **Mazzo**: 125 carte Personaggio (decisione utente; la carta p13-i01 è identica a un'altra immagine ma resta una carta distinta).
 - **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
 
-## Regola del gregge (definitiva)
-Se la carta che cade è **la stessa che ha votato il Megafono**, i +2 del voto li fa solo il Megafono: gli altri che l'hanno votata non prendono i loro +2. Il +2 del proprietario della carta e i punti del Lui! restano. Non c'entra il gettone Lui!: conta solo il voto del Megafono. Per questo i votanti sono invitati a "evitare il voto del Megafono" (che però non conoscono finché non c'è lo spoglio). (La regola "chi vota scrive perché" è stata provata e tolta.)
+## Voti raccolti dal Megafono (sostituisce il gregge)
+Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato, cada o no (es.: 3 voti degli altri = 3 punti; se la carta cade anche, +2 = 5). I voti sono segreti: il Megafono punta ad attirare voti (frase e Lui!), gli altri cercano di capire dove vota per non regalargli punti. La regola del gregge e la regola "il Megafono vince il pareggio" sono state tolte.
 
 ## Messaggi tra i giocatori
 Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.

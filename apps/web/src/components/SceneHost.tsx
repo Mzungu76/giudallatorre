@@ -13,6 +13,6 @@ export default function SceneHost(p: SceneHostProps) {
     if (p.apiRef) p.apiRef.current = s;
     s.play(p.cue, () => cb.current.onDone());
     return () => { s.destroy(); if (p.apiRef) p.apiRef.current = null; };
-  }, [p.cardIds.join("|"), p.cue.fallPos, p.cue.seed]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [p.cardIds.join("|"), p.cue.fallPositions.join(","), p.cue.seed]); // eslint-disable-line react-hooks/exhaustive-deps
   return <div className="scene-root" ref={el} data-testid="scene" />;
 }

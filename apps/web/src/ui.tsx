@@ -18,8 +18,8 @@ export const FAST: boolean = (() => { try { return /[?&]fast=1/.test(location.se
 try { if (/[?&]fast=1/.test(location.search)) sessionStorage.setItem("gdt.fast", "1"); } catch { /* */ }
 
 /** Dimensione logica del palco: larghezza fissa 372, altezza che si adatta al telefono (640–940). */
-export interface StageDims { k: number; H: number; dy: number }
-export const StageCtx = createContext<StageDims>({ k: 1, H: 826, dy: 0 });
+export interface StageDims { k: number; H: number; dy: number; ts: number; ty: number }
+export const StageCtx = createContext<StageDims>({ k: 1, H: 826, dy: 0, ts: 1, ty: -27 });
 export const useStage = () => useContext(StageCtx);
 const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 function calcDims(maxScale: number): StageDims {
@@ -27,7 +27,9 @@ function calcDims(maxScale: number): StageDims {
   let k = Math.max(0.3, Math.min(maxScale, window.innerWidth / 372)), H = vh / k;
   if (H < 640) { H = 640; k = vh / 640; }
   H = Math.min(H, 940);
-  return { k, H, dy: clamp((H - 826) * 0.6, -80, 70) };
+  // La torre (alta ~310 nel disegno, dal punto 300) deve stare tra la frase in alto e il suggerimento in basso: si rimpicciolisce se serve.
+  const T0 = 236, avail = H - 206 - T0, ts = clamp(avail / 310, 0.7, 1), y0 = T0 + Math.max(0, (avail - 310 * ts) / 2);
+  return { k, H, dy: clamp((H - 826) * 0.6, -80, 70), ts, ty: y0 - 300 };
 }
 export function useAdaptive(maxScale = 1.5): StageDims {
   const [d, setD] = useState(() => calcDims(maxScale));
@@ -37,7 +39,7 @@ export function useAdaptive(maxScale = 1.5): StageDims {
 
 /** Palco 372×H: tutto il disegno è in queste coordinate e viene scalato. L'altezza H si adatta allo schermo. */
 export function Stage({ children, bg = "paper", frame = true, testId, fixed }: { children: ReactNode; bg?: "paper" | "sky" | "none"; frame?: boolean; testId?: string; fixed?: boolean }) {
-  const ad = useAdaptive(), fk = useFit(), d: StageDims = fixed ? { k: fk, H: 826, dy: 0 } : ad;
+  const ad = useAdaptive(), fk = useFit(), d: StageDims = fixed ? { k: fk, H: 826, dy: 0, ts: 1, ty: -27 } : ad;
   return (
     <StageCtx.Provider value={d}>
       <div className="stage-outer" style={{ width: 372 * d.k, height: d.H * d.k }} data-testid={testId}>
@@ -45,7 +47,7 @@ export function Stage({ children, bg = "paper", frame = true, testId, fixed }: {
           {bg === "paper" && (<><div className="pap" /><div className="hr" /><div className="ht" /></>)}
           {bg === "sky" && (<><div className="sky" /><div className="skyg" /><div className="skyh" /></>)}
           {children}
-          {frame && <div className="fr" />}
+          <div className="vig" />
           <div className="grain" />
         </div>
       </div>

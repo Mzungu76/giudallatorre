@@ -13,14 +13,14 @@ export interface TerraceProps {
 
 /** La terrazza vista dall'alto: carte intere su piedini neri, gettoni sopra. Disegno dal mockup approvato. */
 export function Terrace(p: TerraceProps) {
-  const { dy } = useStage(), n = p.cardIds.length;
+  const { ts, ty } = useStage(), n = p.cardIds.length;
   const base = useMemo(() => terraceBaseHtml(), []);
   const pos = useMemo(() => terracePos(n), [n]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
   const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui]);
   const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, lui: p.lui?.pos, luiKind: p.lui?.kind ?? "CADE", luiBack: !!p.lui && !p.lui.kind }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="layer" style={{ transform: `translateY(${dy}px)` }} data-testid="terrace">
+    <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace">
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
       {p.onPick && Object.entries(pos).map(([i, c]) => {
@@ -102,15 +102,19 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 }
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
-type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui" | "herd" | "stamp"; i?: number };
+type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "owners" | "gain" | "mega" | "lui" | "stamp"; i?: number };
+export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
-/** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti, la scommessa del Megafono, l'eventuale gregge e il timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, herd, megaName, sound, skip, interactive, onDone }: {
+/** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
+export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, owners, megaName, sound, skip, interactive, onDone }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
-  lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPos: number; herd: boolean; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
+  lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPositions: number[]; owners: FallOwner[]; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
 }) {
-  const { dy } = useStage(), m = voters.length;
+  const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
+  const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0, megaFalls = fallPositions.includes(megaVote);
+  const collected = voters.filter((x) => !x.mega && votes[x.id] === megaVote).length;
+  const gainers = voters.filter((x) => !x.mega && fallPositions.includes(votes[x.id]!));
   const steps = useMemo(() => {
     const st: Step[] = []; let t = 0;
     const add = (kind: Step["kind"], d: number, i?: number) => { st.push({ t0: t, t1: t + d, kind, i }); t += d; };
@@ -119,12 +123,14 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, herd
       if (i === m - 1 && m > 1) add("suspense", 1.3);
       add("vote", 2.2, i);
     });
-    add("tally", 3.0);
+    add("tally", 3.2);
+    add("owners", 3.4);
     if (lui) add("lui", 3.2);
-    if (herd) add("herd", 3.6);
+    add("gain", 1.8 + 0.32 * voters.filter((x) => !x.mega && fallPositions.includes(votes[x.id]!)).length);
+    add("mega", 3.4);
     add("stamp", 2.0);
     return st;
-  }, [voters, lui, herd, m]);
+  }, [voters, lui, m]);
   const END = steps[steps.length - 1]!.t1;
   const seek = useRef<((t: number) => void) | null>(null);
   const T = useClock(END, onDone, skip, seek);
@@ -137,6 +143,8 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, herd
       else if (cur.kind === "vote") sfx.tap(sound, 480 + (cur.i ?? 0) * 30);
       else if (cur.kind === "suspense") sfx.drum(sound, 0.8);
       else if (cur.kind === "tally") sfx.tap(sound, 640);
+      else if (cur.kind === "owners" || cur.kind === "mega") sfx.tada(sound);
+      else if (cur.kind === "gain") sfx.tap(sound, 560);
       else if (cur.kind === "lui") sfx.tap(sound, 360);
       else if (cur.kind === "stamp") sfx.stamp(sound);
     });
@@ -146,38 +154,40 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, herd
   const lastShown = shown[shown.length - 1];
   const toks: VoteTok[] = shown.map(({ v }) => ({ p: votes[v.id]!, c: v.color, mega: v.mega }));
   const luiStart = steps.find((s) => s.kind === "lui")?.t0 ?? 0;
-  const luiOpen = !!lui && (cur.kind === "lui" || cur.kind === "herd" || cur.kind === "stamp") && T >= luiStart + 0.9;
+  const luiOpen = !!lui && (cur.kind === "lui" || cur.kind === "stamp") && T >= luiStart + 0.9;
   const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
   const byCard: Record<number, Voter[]> = {}; shown.forEach(({ v }) => { (byCard[votes[v.id]!] ??= []).push(v); });
-  const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "lui" && lui ? lui.pos : cur.kind === "tally" || cur.kind === "herd" || cur.kind === "stamp" ? fallPos : 0;
+  const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "lui" && lui ? lui.pos : cur.kind === "tally" || cur.kind === "owners" || cur.kind === "gain" || cur.kind === "stamp" ? -1 : cur.kind === "mega" ? megaVote : 0;
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
   const v = cur.kind === "vote" ? voters[cur.i!]! : null, vp = v ? votes[v.id]! : 0;
-  const luiHit = lui ? (lui.kind === "CADE" ? lui.pos === fallPos : lui.pos !== fallPos) : false;
-  const total = voters.length, fp = focusPos > 0 ? pos[focusPos - 1] : null;
+  const luiHit = lui ? (lui.kind === "CADE" ? fallPositions.includes(lui.pos) : !fallPositions.includes(lui.pos)) : false;
+  const total = voters.length, focusList = focusPos === -1 ? fallPositions : focusPos > 0 ? [focusPos] : [];
+  const showOwners = cur.kind === "owners" || cur.kind === "stamp";
   return (
     <>
       <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.pos, kind: luiOpen ? lui.kind : null } : null} />
       <div className="darkv" />
-      {fp && <div className="focus" style={{ left: fp.x - 5, top: fp.f - fp.h - 11 + dy, width: fp.w + 10, height: fp.h + 16 }} />}
+      {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
+      {showOwners && owners.map((o) => { const fp = pos[o.pos - 1]; return fp ? <div key={o.pos} className="ownbadge" data-testid="owner-badge" style={{ left: mx(fp.x + fp.w / 2) - 38, top: my(fp.f - 18) }}><i className="dc" style={{ background: o.color }} />{o.name ? `${o.name} +2` : "dal mazzo"}</div> : null; })}
+      {cur.kind === "gain" && gainers.map((x, k) => { const fp = pos[votes[x.id]! - 1]; return fp ? <div key={`g${x.id}`} className="flt" data-testid="float" style={{ left: mx(fp.x + fp.w / 2), top: my(fp.f - fp.h * 0.7), animationDelay: `${0.15 + k * 0.32}s` }}><i className="dc" style={{ background: x.color }} />+2</div> : null; })}
+      {cur.kind === "mega" && (() => { const fp = pos[megaVote - 1]; return fp ? <>
+        {collected > 0 && <div key="mc" className="flt big" data-testid="float" style={{ left: mx(fp.x + fp.w / 2), top: my(fp.f - fp.h * 0.7), animationDelay: "0.4s" }}>+{collected}</div>}
+        {megaFalls && <div key="mf" className="flt big" style={{ left: mx(fp.x + fp.w / 2), top: my(fp.f - fp.h * 0.7), animationDelay: "1.5s" }}>+2</div>}</> : null; })()}
       <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
         {cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi. Un voto alla volta.</span></>}
-        {cur.kind === "suspense" && <><b className="rv-t">Manca un voto…</b><span>Aspettiamo {voters[m - 1]!.name}.</span></>}
+        {cur.kind === "suspense" && <><b className="rv-t">Manca l’ultimo voto…</b><span>{voters[m - 1]!.mega ? `Aspettiamo il Megafono, ${megaName}!` : `Aspettiamo ${voters[m - 1]!.name}.`}</span></>}
         {cur.kind === "vote" && v && (
           <div className="rv-row">
             <span className="rv-th" style={thumb(cardIds[vp - 1]!)}><i>{vp}</i></span>
             <div className="rv-col"><span className="rv-n">Voto {cur.i! + 1} di {total}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{v.name} ha votato il n. {vp}</b></div>
           </div>
         )}
-        {cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Decide il Megafono (${megaName}): cade il n. ${fallPos}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
+        {cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
+        {cur.kind === "owners" && <><b className="rv-t" data-testid="owners-title">{multi ? "Chi aveva giocato le carte cadute" : "Chi aveva giocato la carta caduta"}</b>{owners.map((o) => <span className="rv-own" key={o.pos}><span className="mini" style={thumb(cardIds[o.pos - 1]!)}><i>{o.pos}</i></span>{o.name ? <><i className="dc" style={{ background: o.color }} /><b>{o.name}</b> prende il bonus carta <em className="ok">+2</em></> : <>Carta del mazzo: <b>nessun bonus</b></>}</span>)}</>}
         {cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span>{lui.kind === "CADE" ? `Aveva scommesso: CADE il n. ${lui.pos} (la carta col bordo giallo).` : `Aveva scommesso: il n. ${lui.pos} NON CADE (la carta col bordo giallo).`}</span>{T >= luiStart + 1.2 && <em className={luiHit ? "ok" : "ko"}>{luiHit ? (lui.kind === "CADE" ? "Azzeccato! +4" : "Azzeccato! +1") : "Sbagliato: −1"}</em>}</>}
-        {cur.kind === "herd" && <><b className="rv-t">🐑 Regola del gregge</b><span>{megaName} ha votato proprio la carta che cade: i +2 di chi l’ha votata li fa solo lui.</span></>}
-        {cur.kind === "stamp" && <b className="rv-t">Cade il n. {fallPos}!</b>}
-        {cur.kind !== "stamp" && cur.kind !== "intro" && (
-          <div className="rv-tally" aria-label="Voti finora">
-            {cardIds.map((id, k) => { const vs = byCard[k + 1] ?? []; const lead = (cur.kind === "tally" || cur.kind === "lui" || cur.kind === "herd") && k + 1 === fallPos;
-              return <div key={id} className={`tl ${lead ? "lead" : ""} ${focusPos === k + 1 ? "cur" : ""}`}><span className="th" style={thumb(id)}><i>{k + 1}</i></span><b>{vs.length}</b><span className="dots">{vs.map((x) => <i key={x.id} style={{ background: x.color }} />)}</span></div>; })}
-          </div>
-        )}
+        {cur.kind === "gain" && <><b className="rv-t">Voto giusto: +2</b><span>{gainers.length ? gainers.map((x) => x.name).join(", ") + (gainers.length > 1 ? " hanno" : " ha") + " votato la carta che cade." : "Nessun altro aveva votato la carta che cade."}</span></>}
+        {cur.kind === "mega" && <><b className="rv-t" data-testid="mega-title">{megaName} raccoglie i voti</b><span data-testid="mega-calc">{collected === 0 ? `Nessuno ha votato come lui (n. ${megaVote}): +0.` : `${collected} ${collected === 1 ? "voto" : "voti"} degli altri sulla sua carta (n. ${megaVote}) = +${collected}.`}{megaFalls ? ` E la carta cade: voto giusto +2 → ${collected + 2} punti.` : " La carta resta su: niente +2."}</span></>}
+        {cur.kind === "stamp" && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
       </div>
       {interactive && cur.kind !== "stamp" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
     </>
