@@ -48,7 +48,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     tower: s.tower.map((t) => ({ position: t.position, cardId: t.cardId, ownerId: revealed ? t.ownerId : null })),
     luiPosition: s.lui ? s.lui.position : null,
     luiSlot: s.lui && (isMega || revealed) ? s.lui.slot : null,
-    luiTokens: luiTokens(s.playerIds.length), luiSpent: Object.fromEntries(s.playerIds.map((p) => [p, (s.luiSpent?.[p] ?? []).slice()])),
+    luiTokens: luiTokens(s), luiSpent: Object.fromEntries(s.playerIds.map((p) => [p, (s.luiSpent?.[p] ?? []).slice()])),
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed && !inMini ? s.lastResult : null,

@@ -21,7 +21,7 @@ describe("separazione dati pubblici e privati (vista per giocatore)", () => {
   it("durante la partita i proprietari delle carte in Torre sono nascosti; si svelano ai risultati", () => {
     const g = toSuspect(start(5));
     for (const p of g.playerIds) expect(viewFor(g, p).tower.every((t) => t.ownerId === null)).toBe(true);
-    const v = act(g, { type: "placeLui", playerId: "p1", slot: "bassa", position: 1 });
+    const v = act(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 1 });
     const f = posOf(v, "p2"), r = castVotes(v, Object.fromEntries(v.playerIds.map((p) => [p, f])));
     expect(viewFor(r, "p3").tower.some((t) => t.ownerId === "p2")).toBe(true);
   });

@@ -33,7 +33,7 @@ const act = z.union([
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("card"), index: z.number().int().min(0).max(9) }).strict(),
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("free"), text: z.string().max(200).optional() }).strict(),
   z.object({ type: z.literal("playCard"), cardId: z.string().regex(/^p\d{2}-i\d{2}$|^c\d{1,4}$/).max(16) }).strict(),
-  z.object({ type: z.literal("placeLui"), slot: z.enum(["bassa", "alta", "zero"]), position: z.number().int().min(1).max(8) }).strict(),
+  z.object({ type: z.literal("placeLui"), slot: z.string().regex(/^(zero|k[1-7])$/), position: z.number().int().min(1).max(8) }).strict(),
   z.object({ type: z.literal("vote"), position: z.number().int().min(1).max(8) }).strict(),
   z.object({ type: z.literal("advance") }).strict(),
 ]);

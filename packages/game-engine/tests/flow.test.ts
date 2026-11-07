@@ -4,7 +4,7 @@ import { applyAction, checkInvariants, megafonoOf, simulateGame, createGame, sug
 import type { GameState } from "../src/index.ts";
 
 function finishTurn(s: ReturnType<typeof start>) {
-  const g = act(toSuspect(s), { type: "placeLui", playerId: megafonoOf(toSuspect(s)), slot: "bassa", position: 1 });
+  const g = act(toSuspect(s), { type: "placeLui", playerId: megafonoOf(toSuspect(s)), slot: "k1", position: 1 });
   return castVotes(g, Object.fromEntries(g.playerIds.map((p) => [p, 1])));
 }
 

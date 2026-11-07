@@ -92,15 +92,16 @@ Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca *
 Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).
 
 ## Segnalini Lui! (sostituiscono "Cade lui / Non cade")
-Ogni giocatore ha **3 segnalini monouso**: *bassa*, *alta* e *zero*. Quando è Megafono ne posa uno, coperto, su una carta della torre e scommette sul **numero di voti che la carta riceve dagli ALTRI giocatori** (il voto del Megafono non conta). Il segnalino *bassa* e *alta* riescono con **almeno k voti** degli altri e valgono **2 × k** punti; lo **0** riesce solo se **nessun altro** vota la carta e vale una cifra fissa. Se sbaglia, il Megafono non perde punti ma il segnalino è speso (pubblico: tutti vedono quali ha già usato). Finiti i tre, tornano tutti (spareggio).
+Ogni partita ha **2 segnalini Lui!**, estratti a caso da un **pool adatto al numero di giocatori** e **uguali per tutti i giocatori**; ognuno si usa **una volta sola** (spesi = visibili a tutti). Quando è Megafono, il giocatore posa uno dei suoi gettoni, coperto, su una carta e scommette sul **numero di voti che la carta riceve dagli ALTRI** (il voto del Megafono non conta). "k voti" riesce con **almeno k** voti degli altri; lo **0** riesce solo se **nessun altro** vota la carta. Se riesce, il Megafono incassa i punti stampati; se no, niente (nessun malus, ma il gettone è speso). Finiti i gettoni (spareggio) tornano tutti.
 
-| Giocatori | bassa | alta | zero |
-|---|---|---|---|
-| 3 | almeno 1 → 2 | almeno 2 → 4 | 2 |
-| 4 | almeno 1 → 2 | almeno 3 → 6 | 2 |
-| 5 | almeno 2 → 4 | almeno 3 → 6 | 3 |
-| 6, 7, 8 | almeno 2 → 4 | almeno 4 → 8 | 3 |
+I punti stampati sono **tarati sulla probabilità di riuscita** (simulazioni con i bot, `tools/analysis/lui-pool.ts`): più il segnalino è difficile, più paga.
+
+| Giocatori | Pool (gettone → punti) |
+|---|---|
+| 3 | 0 → 5 · almeno 1 → 4 · almeno 2 → 10 |
+| 4 | 0 → 5 · almeno 1 → 4 · almeno 2 → 7 · almeno 3 → 16 |
+| 5–8 | 0 → 5 · almeno 1 → 4 · almeno 2 → 7 · almeno 3 → 14 |
 
 Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade (e +2 se cade la carta che ha giocato nella variante "Il Megafono sa"). Spariscono "Cade lui!/Non cade", il malus −1 e il +1 per voto raccolto.
 
-**Bot.** Il Megafono bot sceglie segnalino e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero: stimano quali segnalini restano al Megafono e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).
+**Bot.** Il Megafono bot sceglie gettone e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero: stimano quali gettoni restano al Megafono e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).

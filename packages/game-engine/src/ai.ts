@@ -66,7 +66,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     }
     case "SUSPECT": {
       if (me !== mega) return null;
-      const av = luiAvailable(s, me), specs = luiTokens(s.playerIds.length).filter((x) => av.includes(x.slot));
+      const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
       if (level === "easy") return { type: "placeLui", playerId: me, slot: pick(specs).slot, position: 1 + Math.floor(rand() * n) };
       // scommessa sul numero di voti degli ALTRI sulla carta: valore atteso di ogni (segnalino, carta) con voti simulati dalla stima del gruppo; scelgo in modo imprevedibile tra le migliori
       const p = crowdProbs(s, mem, level), voters = s.playerIds.length - 1, samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, voters, rand));
@@ -74,7 +74,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       for (const sp of specs) for (let pos = 0; pos < n; pos++) { let ev = 0; for (const c of samples) if (luiHit(sp.slot === "zero", sp.k, c[pos]!)) ev += sp.pts; cands.push({ slot: sp.slot, pos, ev: ev / samples.length }); }
       const tau = level === "hard" ? TUNE.luiTempHard : TUNE.luiTempMed, best = Math.max(...cands.map((c) => c.ev));
       const w = softmax(cands.map((c) => (c.ev - best) / tau)), ch = cands[pickProb(w, rand)]!;
-      return { type: "placeLui", playerId: me, slot: ch.slot as "bassa" | "alta" | "zero", position: ch.pos + 1 };
+      return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos + 1 };
     }
     case "VOTE": {
       if (s.votes[me] !== undefined) return null;
@@ -85,7 +85,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       if (lui && me !== mega) {
         // Vedo il Lui! su X ma non il numero: stimo quale segnalino ha giocato (tra quelli che gli restano, i più sensati) e quanto il mio voto su X gli regala o gli toglie
         X = lui.position - 1;
-        const specs = luiTokens(s.playerIds.length).filter((x) => luiAvailable(s, mega).includes(x.slot)), others = s.playerIds.length - 2;
+        const specs = luiTokens(s).filter((x) => luiAvailable(s, mega).includes(x.slot)), others = s.playerIds.length - 2;
         const samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, others, rand));
         const ev = specs.map((sp) => samples.reduce((a, c) => a + (luiHit(sp.slot === "zero", sp.k, c[X]!) ? sp.pts : 0), 0) / samples.length), top = Math.max(...ev);
         const wt = softmax(ev.map((e) => (e - top) / 1.0));

@@ -7,12 +7,12 @@ const phraseDeck = Array.from({ length: 10 }, (_, i) => ({ id: `f${i}`, phrases:
 const players = ["a", "b", "c", "d"].map((id) => ({ id, name: id.toUpperCase() }));
 
 /** Porta una partita fino a VOTE con il Lui! sulla posizione `luiPos`. */
-function toVote(opts: { slot?: "bassa" | "alta" | "zero"; luiPos?: number }): GameState {
-  let s = createGame({ players, seed: 5, deck, phraseDeck, ...opts }).state;
+function toVote(opts: { slot?: "k1" | "k3" | "zero"; luiPos?: number }): GameState {
+  let s = createGame({ players, seed: 5, deck, phraseDeck, luiSlots: ["k1", "k2", "k3", "zero"], ...opts }).state;
   const mega = megafonoOf(s);
   s = applyAction(s, { type: "choosePhrase", playerId: mega, mode: "card", index: 0 }).state;
   for (const p of s.playerIds) if (p !== mega) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
-  s = applyAction(s, { type: "placeLui", playerId: mega, slot: opts.slot ?? "bassa", position: opts.luiPos ?? 1 }).state;
+  s = applyAction(s, { type: "placeLui", playerId: mega, slot: opts.slot ?? "k1", position: opts.luiPos ?? 1 }).state;
   return s;
 }
 const voteAll = (s: GameState, pos: Record<string, number>) => {
@@ -32,7 +32,7 @@ describe("il Megafono fa punti come gli altri più il Lui!", () => {
     }
   });
   it("se la carta votata dal Megafono non cade non prende nulla (senza Lui! azzeccato)", () => {
-    const base = toVote({ slot: "alta", luiPos: 3 }), m = mega(base);
+    const base = toVote({ slot: "k3", luiPos: 3 }), m = mega(base);
     const votes = Object.fromEntries(base.playerIds.map((p) => [p, p === m ? 1 : 2]));
     const r = voteAll(base, votes).lastResult!;
     expect(r.fallenPosition).toBe(2);

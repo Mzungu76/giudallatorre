@@ -8,7 +8,7 @@ export const HOWTO_INTRO = [
 export const HOWTO_STEPS: [string, string][] = [
   ["📣", "Il Megafono urla una frase: «Oggi sale sulla torre chi…». Ogni turno tocca a uno di voi."],
   ["🃏", "Tutti gli altri scelgono in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
-  ["🎯", "Le carte salgono sulla torre. Il Megafono mette un gettone Lui! su una carta, scommettendo su quanti voti prenderà dagli altri (anche zero!)."],
+  ["🎯", "Le carte salgono sulla torre. Il Megafono mette un gettone Lui! su una carta, scommettendo su quanti voti prenderà dagli altri (anche zero!). Ogni partita ha 2 gettoni diversi, uguali per tutti, da usare una volta sola."],
   ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre (se è un pareggio, cadono tutti i più votati)."],
   ["⭐", "Si contano i punti e si passa il Megafono al giocatore dopo. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
 ];
@@ -16,7 +16,7 @@ export const HOWTO_STEPS: [string, string][] = [
 export const HOWTO_POINTS: [string, string][] = [
   ["+2", "hai votato un personaggio che cade"],
   ["+2", "la carta che hai giocato cade"],
-  ["+2…12", "Megafono: il Lui! azzecca i voti scritti sul gettone (almeno quelli, o zero)"],
+  ["+4…16", "Megafono: il Lui! azzecca i voti scritti sul gettone (più è difficile, più paga)"],
   ["0", "Megafono: Lui! mancato, non perde punti ma il gettone è speso"],
 ];
 

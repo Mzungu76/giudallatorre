@@ -4,9 +4,8 @@ export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI
 /** Mini-giochi di metà partita: Accusa, La storia d'amore, Il raccomandato. */
 export type MiniKind = "accusa" | "amore" | "raccomandato";
 export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "raccomandato"];
-/** I tre segnalini Lui! di ogni giocatore (monouso): soglia bassa, soglia alta, e lo 0 "secco". */
-export type LuiSlot = "bassa" | "alta" | "zero";
-export const LUI_SLOTS: LuiSlot[] = ["bassa", "alta", "zero"];
+/** Identificativo di un segnalino Lui!: "zero" (nessun voto dagli altri) oppure "k1", "k2", "k3" (almeno 1, 2, 3 voti dagli altri). */
+export type LuiSlot = string;
 /** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
 export interface LuiSpec { slot: LuiSlot; k: number; pts: number }
 
@@ -29,6 +28,8 @@ export interface GameConfig {
   miniGame?: false | "random" | MiniKind;
   /** Elenco delle accuse (testi) per il mini-gioco Accusa. */
   accuseDeck?: string[];
+  /** Solo test: forza i segnalini Lui! della partita (id dal pool, es. ["k1","zero"]); di norma sono 2 a caso. */
+  luiSlots?: string[];
 }
 
 export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId | null }
@@ -128,6 +129,8 @@ export interface GameState {
   miniResult?: MiniResult | null;
   /** Segnalini Lui! già spesi da ciascun giocatore (pubblico). */
   luiSpent?: Record<PlayerId, LuiSlot[]>;
+  /** I 2 segnalini Lui! di questa partita (estratti a caso da un pool adatto al numero di giocatori, uguali per tutti). */
+  luiSet?: LuiSpec[];
 }
 
 export type Action =

@@ -1,19 +1,22 @@
 import { EngineError } from "./types.ts";
-import { LUI_SLOTS, MINI_KINDS } from "./types.ts";
+import { MINI_KINDS } from "./types.ts";
 import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
-/** Segnalini Lui! per numero di giocatori: soglie "almeno k voti degli altri" (2 punti per voto richiesto) e lo 0 secco. Tarati con le simulazioni (tools/analysis). */
-const LUI_TABLE: Record<number, { low: number; high: number; zero: number }> = { 3: { low: 1, high: 2, zero: 2 }, 4: { low: 1, high: 3, zero: 2 }, 5: { low: 2, high: 3, zero: 3 }, 6: { low: 2, high: 4, zero: 3 }, 7: { low: 2, high: 4, zero: 3 }, 8: { low: 2, high: 4, zero: 3 } };
-export function luiTokens(n: number): LuiSpec[] {
-  const t = LUI_TABLE[Math.max(3, Math.min(8, n))]!;
-  return [{ slot: "bassa", k: t.low, pts: 2 * t.low }, { slot: "alta", k: t.high, pts: 2 * t.high }, { slot: "zero", k: 0, pts: t.zero }];
+/** Pool di segnalini Lui! adatti al numero di giocatori. La scommessa è "almeno k voti degli altri" (oppure nessun voto); i punti sono tarati sulla probabilità di riuscita (simulazioni con i bot, tools/analysis/lui-pool.ts): più è difficile, più paga. */
+export function luiPool(n: number): LuiSpec[] {
+  const pool: LuiSpec[] = [{ slot: "zero", k: 0, pts: 5 }, { slot: "k1", k: 1, pts: 4 }];
+  if (n === 3) pool.push({ slot: "k2", k: 2, pts: 10 });
+  else { pool.push({ slot: "k2", k: 2, pts: 7 }); pool.push({ slot: "k3", k: 3, pts: n === 4 ? 16 : 14 }); }
+  return pool;
 }
+/** I segnalini della partita (2). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
+export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
-  const spent = s.luiSpent?.[p] ?? [], left = LUI_SLOTS.filter((x) => !spent.includes(x));
-  return left.length ? left : LUI_SLOTS.slice();
+  const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
+  return left.length ? left : all;
 }
 /** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
 export const MAX_PHRASE_CHARS = 80;
@@ -48,8 +51,9 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])),
+    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
   };
+  s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : shuffle(luiPool(n), s).slice(0, 2).sort((a, b) => a.k - b.k);
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
@@ -129,7 +133,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
     case "placeLui": {
       mustBe(s, "SUSPECT"); known(s, action.playerId);
       if (action.playerId !== megafonoOf(s)) throw new EngineError("NOT_ALLOWED", "solo il Megafono posa il segnalino");
-      if (!LUI_SLOTS.includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido");
+      if (!luiTokens(s).some((x) => x.slot === action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido");
       if (!luiAvailable(s, action.playerId).includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino già usato");
       checkPosition(s, action.position);
       s.lui = { slot: action.slot, position: action.position }; s.phase = "VOTE";
@@ -186,12 +190,12 @@ function resolve(s: GameState, events: GameEvent[]) {
   // Segnalino Lui!: "almeno k voti degli ALTRI" sulla sua carta (lo 0: nessun voto degli altri). Il Megafono non perde punti se sbaglia, ma il segnalino è speso.
   let lui: TurnResult["lui"] = null;
   if (s.lui) {
-    const spec = luiTokens(s.playerIds.length).find((x) => x.slot === s.lui!.slot)!;
+    const spec = luiTokens(s).find((x) => x.slot === s.lui!.slot)!;
     const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
     const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
     lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
     if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
-    const spent = (s.luiSpent ??= {})[mega] ??= []; if (LUI_SLOTS.every((x) => spent.includes(x))) spent.length = 0; spent.push(s.lui.slot);
+    const spent = (s.luiSpent ??= {})[mega] ??= []; if (luiTokens(s).every((x) => spent.includes(x.slot))) spent.length = 0; spent.push(s.lui.slot);
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,

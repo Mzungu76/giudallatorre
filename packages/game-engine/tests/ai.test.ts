@@ -88,28 +88,28 @@ describe("giocatori virtuali con etichette", () => {
       const mem = newBotMemory(); let r = seed; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
       s = applyAction(s, { type: "choosePhrase", playerId: megafonoOf(s), mode: "free" }).state;
       for (const p of s.playerIds) if (p !== megafonoOf(s)) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
-      s.luiSpent = { ...(s.luiSpent ?? {}), [megafonoOf(s)]: ["bassa"] };
+      s.luiSpent = { ...(s.luiSpent ?? {}), [megafonoOf(s)]: ["k1"] };
       const a = chooseBotAction(s, megafonoOf(s), "hard", mem, rand);
-      if (a && a.type === "placeLui") { slots.add(a.slot); n++; expect(a.slot).not.toBe("bassa"); }
+      if (a && a.type === "placeLui") { slots.add(a.slot); n++; expect(a.slot).not.toBe("k1"); }
     }
-    expect(n).toBe(60); expect(slots.size).toBe(2);
+    expect(n).toBe(60); expect(slots.size).toBe(3);
   });
   it("i bot non Megafono reagiscono al Lui!: con la soglia che temono votano meno la carta del Lui! di quando non c'è", () => {
     const base = () => createGame(cfg(6, { seed: 5 })).state;
-    const toVoteWith = (slot: "bassa" | "alta" | "zero") => {
+    const toVoteWith = (slot: "k1" | "k3" | "zero") => {
       let s = base(); const m = megafonoOf(s);
       s = applyAction(s, { type: "choosePhrase", playerId: m, mode: "free" }).state;
       for (const p of s.playerIds) if (p !== m) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
       s = applyAction(s, { type: "placeLui", playerId: m, slot, position: 1 }).state; return s;
     };
-    const share = (slot: "bassa" | "alta" | "zero") => {
+    const share = (slot: "k1" | "k3" | "zero") => {
       let on = 0, tot = 0; const s = toVoteWith(slot), m = megafonoOf(s);
       for (let k = 0; k < 400; k++) { let r = k + 11; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
         const me = s.playerIds.find((p) => p !== m)!, a = chooseBotAction(s, me, "hard", newBotMemory(), rand); if (a && a.type === "vote") { tot++; if (a.position === 1) on++; } }
       return on / tot;
     };
     // il bot non conosce il segnalino: ragiona su quelli rimasti, quindi il comportamento è lo stesso per qualunque segnalino posato (non "sbircia" la mano del Megafono)
-    expect(Math.abs(share("bassa") - share("zero"))).toBeLessThan(0.12);
+    expect(Math.abs(share("k1") - share("zero"))).toBeLessThan(0.12);
   });
   void MAX_PLAYERS;
 });
