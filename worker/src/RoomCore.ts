@@ -210,7 +210,10 @@ export class RoomCore {
         (d.stage === "FINISHED" && d.finishedAt !== null && now - d.finishedAt > LIMITS.finishedMs)) {
       out.destroy = true; return { ...out, alarmAt: null };
     }
-    if (d.stage === "LOBBY" && d.hostLostAt !== null && now - d.hostLostAt >= LIMITS.hostGraceMs && this.promoteHost(out)) this.broadcastRoom(out);
+    if (d.stage === "LOBBY" && d.hostLostAt !== null && now - d.hostLostAt >= LIMITS.hostGraceMs) {
+      // Se non c'è nessun altro umano connesso non si può passare il ruolo: si smette di aspettare, altrimenti la scadenza resta nel passato e la stanza si risveglia ogni 50 ms.
+      if (this.promoteHost(out)) this.broadcastRoom(out); else d.hostLostAt = null;
+    }
     // giocatori virtuali: un'azione a testa quando scade il loro ritardo
     if (d.stage === "PLAYING" && d.game && d.botAt !== null && now >= d.botAt) {
       d.botAt = null; const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296;
