@@ -22,9 +22,7 @@ let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 (async () => { while (sampling && n < 400) { await p.screenshot({ path: `${SHOTS}/s${String(n++).padStart(3, "0")}.png` }).catch(() => {}); await sleep(450); } })();
 async function step() {
   if (await vis("phrase-picker")) {
-    const bb = () => p.locator('[data-testid="phrase-go"]').evaluate((e) => { const r = e.getBoundingClientRect(); return [r.x, r.y, r.width, r.height].map((v) => Math.round(v * 10) / 10).join(","); });
-    const seq = []; for (let i = 0; i < 6; i++) { seq.push(await bb()); await sleep(80); }
-    if (new Set(seq).size > 1 && !globalThis.__b) { globalThis.__b = 1; console.log("BBOX-MOVES", seq.join(" | ")); }
+    if (!globalThis.__b) { globalThis.__b = 1; await p.evaluate(() => { window.__rm = 0; window.__ad = 0; new MutationObserver((ms) => { for (const m of ms) { m.removedNodes.forEach((n) => { if (n.querySelector?.('[data-testid="phrase-go"]') || n.dataset?.testid === "phrase-go") window.__rm++; }); m.addedNodes.forEach((n) => { if (n.querySelector?.('[data-testid="phrase-go"]') || n.dataset?.testid === "phrase-go") window.__ad++; }); } }).observe(document.body, { childList: true, subtree: true }); }); await sleep(2500); console.log("REMOUNTS", await p.evaluate(() => [window.__rm, window.__ad])); }
     await p.click('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
   if (await vis("hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis("place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="place-lui"]'); return true; }
