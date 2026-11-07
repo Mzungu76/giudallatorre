@@ -61,7 +61,7 @@ function PhraseHead({ phrase, megaName, onBottom }: { phrase: PlayerView["phrase
 }
 
 /** Cosa devo fare adesso: una riga chiara, sempre visibile. */
-function Tip({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) { return <div className="tip" style={style} data-testid="tip">{children}</div>; }
+function Tip({ children, style, className = "" }: { children: React.ReactNode; style?: React.CSSProperties; className?: string }) { return <div className={`tip ${className}`} style={style} data-testid="tip">{children}</div>; }
 
 function Waiting({ text, sub, flags, people, bottom }: { text: string; sub?: string; flags: { id: string; done: boolean }[]; people: ReturnType<typeof usePeople>; bottom?: boolean }) {
   const { H } = useStage();
@@ -109,10 +109,10 @@ function HandPicker({ view, send, top }: { view: PlayerView; send: GameProps["se
   const { H } = useStage(), hand = view.myHand, [sel, setSel] = useState<number | null>(null), [zoom, setZoom] = useState(false);
   const step = Math.min(66, (372 - 104 - 16) / Math.max(1, hand.length - 1)), left0 = (372 - (104 + step * (hand.length - 1))) / 2;
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
-  const tipTop = top + 14, cardsTop = Math.min(Math.max(H - 386, tipTop + 98), H - 280);
+  const cardsTop = top + Math.max(44, (H - 140 - top - 190) / 2);   // carte centrate tra la frase e il suggerimento, che sta in basso
   return (
     <div className="picker" data-testid="hand">
-      <Tip style={{ top: tipTop }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!<strong className="tip-warn tip-gain" data-testid="tip-gain"> Se la tua carta è la più votata, cade ma ti porta +2 punti.</strong></Tip>
+      <Tip className="tip-sm" style={{ top: "auto", bottom: 92 }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!<strong className="tip-warn tip-gain" data-testid="tip-gain"> Se la tua carta è la più votata, cade ma ti porta +2 punti.</strong></Tip>
       {hand.map((c, i) => {
         const mid = (hand.length - 1) / 2, d = i - mid, lifted = sel === i;
         return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
