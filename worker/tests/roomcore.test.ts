@@ -302,3 +302,19 @@ describe("messaggi tra i giocatori", () => {
     expect(copy.data.chat.map((m) => m.text)).toEqual(["resto qui"]);
   });
 });
+
+describe("sveglie della stanza (quota gratuita dei Durable Objects)", () => {
+  it("lobby con soli bot e host disconnesso: nessun giro a vuoto, la stanza viene poi cancellata", () => {
+    const c = RoomCore.create("TESTX", deps(3), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
+    const core = c.core; core.onConnect(c.playerId, 0); core.onDisconnect(c.playerId, 1000);
+    let now = 1000, alarms = 0, destroyed = false;
+    for (let i = 0; i < 5000 && !destroyed; i++) {
+      const at = core.nextAlarm(); if (at === null) break;
+      now = Math.max(now + 50, at); alarms++;
+      destroyed = !!core.tick(now).destroy;
+    }
+    expect(destroyed).toBe(true);
+    expect(alarms).toBeLessThan(10); // prima del correttivo erano ~22.800 (una ogni 50 ms per 20 minuti)
+  });
+});
+

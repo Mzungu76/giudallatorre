@@ -9,8 +9,8 @@ const BLK_DT = 1.9;
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Spiegazione dei punti del turno, DOPO la caduta: un blocco per motivo (chi e perché), si chiude a mano. */
-export default function PointsPanel({ cardIds, voters, lines, lui, fallPositions, sound, interactive, onContinue }: {
-  cardIds: string[]; voters: Voter[]; lines: Record<string, ScoreLine[]>; lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; interactive: boolean; onContinue: () => void;
+export default function PointsPanel({ cardIds, voters, lines, lui, fallPositions, sound, interactive, hideGo, onContinue }: {
+  cardIds: string[]; voters: Voter[]; lines: Record<string, ScoreLine[]>; lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; interactive: boolean; hideGo?: boolean; onContinue: () => void;
 }) {
   const multi = fallPositions.length > 1, fallPos = fallPositions[0]!;
   useEffect(() => { sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -47,7 +47,7 @@ export default function PointsPanel({ cardIds, voters, lines, lui, fallPositions
               </div>))}
             {totals.length > 0 && <div className="pb-sum" data-testid="points-total" style={{ animationDelay: `${0.4 + blocks.length * BLK_DT}s` }}><b>In totale nel turno</b><span>{totals.map((x) => <span className={`pb-nm ${x.t < 0 ? "neg" : ""}`} key={x.v.id}><i className="dc" style={{ background: x.v.color }} />{x.v.name} <em>{x.t > 0 ? "+" : "−"}{Math.abs(x.t)}</em></span>)}</span></div>}
           </div>
-          {interactive
+          {hideGo ? null : interactive
             ? <button className="pb-go" onClick={onContinue} data-testid="points-continue">Continua ›</button>
             : <span className="pb-wait">Il Megafono prosegue…</span>}
         </div>)

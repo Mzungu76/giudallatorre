@@ -5,7 +5,7 @@ const BASE = process.env.BASE ?? "http://127.0.0.1:8787", SHOTS = process.env.SH
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failures = 0; const check = (n, c, x = "") => { console.log((c ? "  ok   " : "  FAIL ") + n + (c ? "" : " " + x)); if (!c) failures++; };
 const browser = await chromium.launch();
-const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1.5 }); const p = await ctx.newPage(); p.setDefaultTimeout(5000); await p.addInitScript((fast) => { try { localStorage.setItem("gdt.intro", "1"); sessionStorage.setItem("gdt.fast", fast); } catch {} }, process.env.FAST === "0" ? "0" : "1"); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
+const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1.5 }); const p = await ctx.newPage(); p.setDefaultTimeout(5000); await p.addInitScript((fast) => { try { localStorage.setItem("gdt.intro", "1"); localStorage.setItem("gdt.nochar", "1"); sessionStorage.setItem("gdt.fast", fast); } catch {} }, process.env.FAST === "0" ? "0" : "1"); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
 const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 const A = await mk(), B = await mk();
 await A.goto(BASE + "/crea"); await A.fill("#nick", "Ann"); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="create-submit"]'); await A.waitForSelector('[data-testid="lobby"]');
@@ -21,10 +21,10 @@ await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.wa
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
 async function step(p, name) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
+  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
-  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
-  if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
+  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); await p.click('[data-testid="phrase-go"]'); return true; }
+  if (await vis(p, "hand")) { await p.locator('[data-testid="hand-card-0"]').dispatchEvent("click"); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis(p, "confirm-vote")) {
     await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]');

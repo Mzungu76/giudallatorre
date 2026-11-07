@@ -2,7 +2,7 @@ import { cardFull } from "../lib/cards.ts";
 import { Btn } from "../ui.tsx";
 
 /** Personaggio a schermo intero: si guarda bene, si scorre con le frecce, poi si sceglie. */
-export default function Zoom({ cardId, pos, total, onClose, onNav, actionLabel, onAction, title = "guardalo bene, poi decidi" }: {
+export default function Zoom({ cardId, pos, total, onClose, onNav, actionLabel, onAction, title = "guardala bene" }: {
   cardId: string; pos: number; total: number; onClose: () => void; onNav: (pos: number) => void; actionLabel: string; onAction: () => void; title?: string;
 }) {
   return (

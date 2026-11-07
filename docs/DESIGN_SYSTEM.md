@@ -36,3 +36,17 @@ Illustrazioni 320×480: ottime fino a ~150 px CSS, morbide a tutto schermo. Prot
 - **Intermezzi**: striscioni a ogni cambio fase ("Scegliete la carta!", "Votate!", "Spareggio!"…).
 - **Layout adattivo**: larghezza logica 372, altezza logica 640–940 in base allo schermo (`ui.tsx`, `Stage`, `useStage`): i bottoni stanno ancorati in basso, la scena si sposta in verticale e la frase si riduce sugli schermi bassi. Provato a 360×640, 390×844 e 412×915.
 - **Modalità veloce**: `?fast=1` (o "riduci animazioni" del sistema) salta salita, spoglio e caduta; è usata dai test automatici.
+
+## Personaggi, carte e segnalini (illustrati)
+Gli otto giocatori sono otto personaggi (`public/giocatori/`): `card-N.webp` (carta giocatore), `tok-N.webp` (segnalino tondo), `torre.webp` (torre della schermata finale). Il colore del giocatore (`CHAR_COLORS` in `lib/characters.ts`) decide la coppia carta/segnalino; a inizio partita ognuno vede il proprio personaggio (`CharIntro`). Tutti i dischetti `.dc`, i gettoni di voto e le pedine della torre usano il segnalino. Il segnalino del Megafono ha il megafono in alto a sinistra e l'icona di spareggio "=" in alto a destra (a metà fuori dal bordo; lampeggia quando lo spareggio è usato). La schermata finale (`FinalScene`) usa la torre illustrata e le carte dei giocatori: salgono, il primo butta giù le altre sui materassi.
+
+## Layout B (smartphone): pannello in basso
+Sostituisce barra in alto + nastro del titolo + riquadri di istruzioni. Mockup di riferimento: `mockups/layout-telefono-b.html` (generato da `tools/mockup_layout_b.*`).
+- **In alto** (`BMeta`, `PhrasePill` in `components/BUi.tsx`): una riga con turno (e timer) e Megafono; sotto, la frase su due righe. Un tocco la apre, un altro la chiude, e si richiude da sola dopo 6 s (`useTimedOpen`, barra rossa). Vale anche per le frasi tra cui sceglie il Megafono.
+- **In basso** (`BSheet`): titolo e istruzione breve, tasti chat, classifica e regolamento («i»), poi il bottone della fase. A sinistra del bottone i segnalini Lui! del giocatore (`LuiTray`, un tocco li apre grandi: `LuiPopup`).
+- **Scena** (`ui.tsx`, `calcDims`): la terrazza sta tra la frase (~102 px) e il pannello (~196 px); la torre prosegue sotto il pannello. `Terrace`, `Climb` e `Reveal` usano le stesse misure.
+- **Finestre** (gestite in `Room.tsx`): chat a tutto schermo (`Chat.tsx`), classifica rapida (`Standings`), regolamento a schede con i suoni (`HowTo.tsx`), segnalini Lui!.
+- **Mano**: carosello (`HandPicker`); un tocco sceglie la carta, un secondo la ingrandisce. La frase del Megafono si sceglie con un tocco e si conferma con «Proclama».
+- **Intervallo** (`MiniGame.tsx`): annuncio con nastro, carta illustrata e tre passi; poi stessa struttura del turno.
+- Lo schermo condiviso (sola visione) usa gli stessi componenti senza icone né segnalini.
+- Motore, protocollo e worker non cambiano. I test end-to-end usano `phrase-go` per confermare la frase e un secondo tocco su `confirm-vote` anche nell'intervallo.

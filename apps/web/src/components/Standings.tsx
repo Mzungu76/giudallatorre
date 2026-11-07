@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { animalMarkup } from "../lib/animals.ts";
+import { tokenUrl } from "../lib/characters.ts";
 import { useStage } from "../ui.tsx";
 
 export interface StandRow { id: string; name: string; color: string; score: number; /** Punteggio prima del turno: se c'è, le pedine partono da lì e salgono al nuovo. */ prev?: number }
 const NV = "#13224a";
 
-/** Pedina: disco colorato con l'animale del giocatore. */
+/** Pedina: il segnalino del personaggio. */
 export function Pawn({ color, size = 40 }: { color: string; size?: number }) {
-  const html = `<svg width="${size}" height="${size + 8}" viewBox="-20 -20 40 48" style="overflow:visible"><ellipse cx="0" cy="19" rx="15" ry="5" fill="#0005"/><circle r="19" fill="${color}" stroke="${NV}" stroke-width="3.4"/><circle r="13.6" fill="#fff" stroke="${NV}" stroke-width="2.4"/><g transform="translate(-9.4 -9.4) scale(.188)">${animalMarkup(color, true)}</g></svg>`;
-  return <span className="pawn" dangerouslySetInnerHTML={{ __html: html }} />;
+  return <span className="pawn"><img src={tokenUrl(color)} width={size} height={size} alt="" style={{ display: "block", filter: "drop-shadow(0 3px 0 #13224a88)" }} /></span>;
 }
 
 /** Classifica come salita lungo la torre: le pedine stanno al centro e salgono in base ai punti.

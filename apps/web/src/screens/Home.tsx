@@ -17,8 +17,10 @@ export default function Home() {
       <div className="home-btns">
         <Btn onClick={() => navigate("/crea")} testId="go-create">Crea partita</Btn>
         <Btn kind="red" onClick={() => navigate("/entra")} testId="go-join">Entra con un codice</Btn>
-        <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 19, padding: 11 }} testId="go-solo">Gioca da solo (con bot)</Btn>
-        <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 19, padding: 11 }}>Come si gioca</Btn>
+        <div className="seg">
+          <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-solo">Gioca da solo</Btn>
+          <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-how">Come si gioca</Btn>
+        </div>
       </div>
       <HomeTools />
       <div className="credit" data-testid="credit">Un gioco di <b>D. Mansetti</b></div>
