@@ -26,7 +26,7 @@ export default function DisplayScreen({ code }: { code: string }) {
             <div className="stage" style={{ transform: `scale(${k})` }}>
               <div className="sky" /><div className="skyg" /><div className="skyh" />
               {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} readOnly /> : <Game room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} />}
-              <div className="fr" /><div className="grain" />
+              <div className="vig" /><div className="grain" />
             </div>
           </div>
         ) : <div className="big-wait"><h1>Aspettiamo i giocatori</h1><p>Entra da telefono con il codice <b>{code}</b></p></div>}

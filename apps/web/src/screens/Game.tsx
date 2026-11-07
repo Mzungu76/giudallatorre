@@ -43,7 +43,7 @@ function PhraseHead({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaNa
   const theme = phrase.mode === "card" ? phrase.theme : undefined;
   const len = body.length, size = len > 80 ? " xl" : len > 50 ? " l" : "";
   return (
-    <div className={`phrase-card${size}${cmp}`} style={{ top: 90 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
+    <div className={`phrase-card${size}${cmp}`} style={{ top: 122 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
       <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
@@ -72,7 +72,7 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
   const go = () => send({ t: "act", action: own ? { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } : { type: "choosePhrase", mode: "card", index: i } });
   return (
     <div className="picker" data-testid="phrase-picker">
-      <div className="h" style={{ top: 98, fontSize: 34 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
+      <div className="h" style={{ top: 124, fontSize: 32 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
       <div className="opts">
         {!own && card.phrases.map((t, k) => (
           <button key={k} className={`opt ${k === i ? "on" : ""}`} onClick={() => setI(k)} data-testid={`phrase-${k}`}>{card.themes?.[k] && <span className="opt-ctx">{card.themes[k]}</span>}{single ? <b>{t}</b> : t}</button>
@@ -100,7 +100,7 @@ function HandPicker({ view, send }: { view: PlayerView; send: GameProps["send"] 
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
   return (
     <div className="picker" data-testid="hand">
-      <Tip style={{ top: Math.max(196, H - 480) }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!</Tip>
+      <Tip style={{ top: Math.max(262, H - 470) }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!</Tip>
       {hand.map((c, i) => {
         const mid = (hand.length - 1) / 2, d = i - mid, lifted = sel === i;
         return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
@@ -126,10 +126,10 @@ function useCount(from: number, to: number, delay: number, dur = 0.9): number {
   }, [from, to, delay, dur]);
   return v;
 }
-function ScoreRow({ rank, name, color, why, delta, from, to, delay, leader }: { rank: number; name: string; color: string; why: string; delta: number; from: number; to: number; delay: number; leader: boolean }) {
+function ScoreRow({ rank, name, color, why, delta, from, to, delay, leader, max }: { max: number; rank: number; name: string; color: string; why: string; delta: number; from: number; to: number; delay: number; leader: boolean }) {
   const v = useCount(from, to, delay);
   return (
-    <div className={`rw ${delta !== 0 ? "up" : ""}`} data-testid="score-row">
+    <div className={`rw ${delta !== 0 ? "up" : ""}`} data-testid="score-row" style={{ ["--w" as string]: `${Math.max(0, Math.round((100 * Math.max(0, to)) / Math.max(1, max)))}%` }}>
       <span className="rk">{leader ? "👑" : rank}</span><Disc color={color} />
       <span className="nm">{name}<small>{why}</small></span>
       <span className={`dl ${delta > 0 ? "" : delta < 0 ? "n" : "z"}`}>{signed(delta)}</span>
@@ -147,7 +147,7 @@ function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, fin
     <div className={`score ${compact ? "c8" : ""}`} data-testid="result-panel">
       <h3>{view.goldenGoal ? "⚡ Spareggio · classifica" : title}</h3>
       <div>{ranked.map((r, i) => <ScoreRow key={r.p.id} rank={i + 1} name={people.get(r.p.id).name} color={people.get(r.p.id).color} leader={r.to === top && top > 0 && i === 0}
-        why={(res.reasons[r.p.id] ?? []).map((x) => REASON[x] ?? x).join(" + ") || "—"} delta={r.d} from={r.from} to={r.to} delay={0.15 + i * 0.12} />)}</div>
+        why={(res.reasons[r.p.id] ?? []).map((x) => REASON[x] ?? x).join(" + ") || "—"} delta={r.d} from={r.from} to={r.to} delay={0.15 + i * 0.12} max={top} />)}</div>
       {canAdvance
         ? <Btn onClick={onAdvance} testId="advance" style={{ marginTop: 8, padding: 11, fontSize: 21 }}>{final ? "Vedi la classifica finale" : view.roundEnd ? "Nuovo giro" : "Prossimo turno"}</Btn>
         : <div className="hint" style={{ marginTop: 8 }}>Prosegue il Megafono… <Countdown deadline={deadline} /></div>}
@@ -232,13 +232,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
   return (
     <>
-      {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPos: res.fallenPosition, seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
+      {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? "Votate!" : "Il Megafono scommette", sub: v ? "in segreto: chi cade?" : "cade o non cade?" }); } }} />}
       {!climbing && needTerrace && !revealing && (
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => setZoomPos(n) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPos={res.fallenPosition} herd={!!res.herd} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} owners={(res.fallenPositions ?? [res.fallenPosition]).map((pos, i) => { const id = (res.fallenOwnerIds ?? [res.fallenOwnerId])[i]; return { pos, name: id ? people.get(id).name : null, color: id ? people.get(id).color : "#999" }; })} herd={!!res.herd} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>

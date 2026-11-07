@@ -158,27 +158,28 @@ function resolve(s: GameState, events: GameEvent[]) {
   for (const p of s.playerIds) { const v = s.votes[p]!; counts[v] = (counts[v] ?? 0) + 1; }
   const top = Math.max(...Object.values(counts));
   const leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top);
-  const mega = megafonoOf(s), tie = leaders.length > 1;
-  // Regola: in caso di pareggio cade SEMPRE il personaggio votato dal Megafono.
-  const fallen = tie ? s.votes[mega]! : leaders[0]!;
-  const slot = s.tower.find((t) => t.position === fallen)!;
+  const mega = megafonoOf(s), tie = leaders.length > 1, megaVote = s.votes[mega]!;
+  // Pareggio: la carta votata dal Megafono RESTA SU e cadono insieme tutte le altre carte in parità.
+  const fallen = tie ? leaders.filter((k) => k !== megaVote).sort((x, y) => x - y) : [leaders[0]!];
+  const slots = fallen.map((f) => s.tower.find((t) => t.position === f)!);
   const points: Record<PlayerId, number> = {}, reasons: Record<PlayerId, string[]> = {};
   for (const p of s.playerIds) { points[p] = 0; reasons[p] = []; }
   const give = (p: PlayerId, n: number, why: string) => { points[p]! += n; reasons[p]!.push(why); };
-  // Regola del gregge: se la carta che cade è anche quella votata dal Megafono, i +2 dei votanti li fa solo lui.
-  const herd = s.votes[mega] === fallen && s.playerIds.some((p) => p !== mega && s.votes[p] === fallen);
-  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (s.votes[mega] === fallen && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
-  if (slot.ownerId !== null) give(slot.ownerId, 2, "carta");
+  // Regola del gregge: se cade la carta votata anche dal Megafono, i +2 dei votanti li fa solo lui.
+  const herd = fallen.includes(megaVote) && s.playerIds.some((p) => p !== mega && s.votes[p] === megaVote);
+  for (const p of s.playerIds) if (fallen.includes(s.votes[p]!)) { if (s.votes[p] === megaVote && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
+  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta");
   if (s.lui) {
-    if (s.lui.kind === "CADE" && s.lui.position === fallen) give(mega, 4, "lui-cade");
-    if (s.lui.kind === "NON_CADE" && s.lui.position !== fallen) give(mega, 1, "lui-non-cade");
+    const hit = fallen.includes(s.lui.position);
+    if (s.lui.kind === "CADE" && hit) give(mega, 4, "lui-cade");
+    if (s.lui.kind === "NON_CADE" && !hit) give(mega, 1, "lui-non-cade");
     // scommessa fallita: malus
-    if (s.lui.kind === "CADE" && s.lui.position !== fallen) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
-    if (s.lui.kind === "NON_CADE" && s.lui.position === fallen) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
+    if (s.lui.kind === "CADE" && !hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
+    if (s.lui.kind === "NON_CADE" && hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
-  const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen,
-    fallenCardId: slot.cardId, fallenOwnerId: slot.ownerId, lui: s.lui ? { ...s.lui } : null, points, reasons, herd };
+  const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,
+    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui: s.lui ? { ...s.lui } : null, points, reasons, herd };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

@@ -319,3 +319,76 @@ button.card{position:absolute;padding:0;background-size:cover;background-positio
 .phrase-card .ctx{position:static !important;float:right;margin:-2px -4px 2px 8px;font-size:13px;max-width:55%;box-shadow:2px 2px 0 #e8362b}
 .opt-ctx{display:inline-block;background:#13224a;color:#ffc72c;font:400 11px/1.3 Anton;text-transform:uppercase;letter-spacing:.05em;padding:1px 7px;margin-right:6px;vertical-align:middle}
 .tip-warn{display:block;margin-top:4px;color:#e8362b;font-weight:800;text-transform:none}
+.ownbadge{z-index:92;display:flex;align-items:center;gap:5px;background:#fff7e0;border:3px solid #13224a;border-radius:99px;padding:2px 10px 2px 4px;font:800 12px Nunito;box-shadow:2px 3px 0 #13224a;white-space:nowrap;animation:popin .45s cubic-bezier(.2,1.2,.4,1) both;color:#13224a}
+.rv-own{display:flex;align-items:center;gap:6px;font:800 13.5px/1.3 Nunito}.rv-own .mini{width:26px;height:39px;flex:none}.rv-own em{font:400 20px Anton;font-style:normal;color:#2a9d57}
+
+/* ====================== GRAFICA DEFINITIVA (v4) ====================== */
+:root{--gold2:#ffe27a;--paper2:#f4e3bd}
+body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
+.stage-outer{border-radius:0 !important;box-shadow:0 0 80px #000a !important}
+.fr{display:none !important}
+.vig{inset:0;pointer-events:none;z-index:48;background:radial-gradient(ellipse at 50% 45%,transparent 50%,#0b1a4a55 100%)}
+/* fondale: raggi con alone, mezzatinta in basso */
+.sky,.stage>.sky{background:radial-gradient(ellipse at 50% 34%,#fff8 0,#fff0 55%),repeating-conic-gradient(from 3deg at 50% 34%,#4fb6e6 0 7.5deg,#8bd3f2 7.5deg 15deg) !important}
+.skyh{background:radial-gradient(circle,#13224a30 1.6px,transparent 2px) 0 0/9px 9px !important}
+/* pillole giocatore e monete-avatar */
+.chip{border:3px solid var(--navy);box-shadow:0 3px 0 var(--navy);height:34px;padding:0 12px 0 5px;font:800 13px Nunito}
+.dc{box-shadow:inset 0 -3px 0 #0003,inset 0 2px 0 #fff7;border-width:3px;width:22px;height:22px}.dc.l{width:36px;height:36px;border-width:3px}.dc.xl{width:52px;height:52px;border-width:4px}
+/* nastro del titolo */
+.strip{left:-14px;right:-14px;top:66px;height:46px;display:grid;place-items:center;padding:0 !important;background:linear-gradient(var(--navy),#0e1a3b);border-top:3px solid #3b4f95;border-bottom:3px solid #070d22;font-size:19px;letter-spacing:.2em;box-shadow:0 8px 0 #0004 !important;text-shadow:0 2px 0 #000a}
+/* pulsanti pieni con riflesso */
+.bt{position:relative;overflow:hidden;border:4px solid var(--navy);border-radius:18px;box-shadow:0 7px 0 var(--navy),0 12px 0 #0003,inset 0 3px 0 #fff9 !important;background:linear-gradient(var(--gold2),var(--mus) 55%,#f2a900);font-size:25px;padding:14px 12px;transition:transform .08s,box-shadow .08s}
+.bt::after{content:"";position:absolute;top:-40%;left:-30%;width:40%;height:180%;background:#fff6;transform:rotate(22deg);pointer-events:none}
+.bt:active{transform:translateY(5px);box-shadow:0 2px 0 var(--navy),inset 0 3px 0 #fff9 !important}
+.bt.red{background:linear-gradient(#ff8a6e,var(--red) 55%,#c62a20);color:#fff;text-shadow:0 2px 0 #0006}
+.bt.pap{background:linear-gradient(#fffaf0,var(--paper2))}
+.bt.dis{background:#c9c1ac;color:#8b8573;box-shadow:0 7px 0 #6b6552,inset 0 3px 0 #fff5 !important}.bt.dis::after{display:none}
+.bt.on{outline:4px solid #fff;box-shadow:0 0 0 7px var(--mus),0 7px 0 7px var(--navy) !important}
+/* pannelli a fumetto */
+.pp,.panel,.tip,.how,.sheet,.score,.chat{background:linear-gradient(#fffaf0,var(--paper)) !important;border:4px solid var(--navy) !important;border-radius:18px !important;box-shadow:0 7px 0 var(--navy),0 14px 18px #0003 !important}
+.pp::before,.score::before{content:"";position:absolute;inset:5px;border:2px dashed #13224a30;border-radius:12px;pointer-events:none}
+.tip{border-radius:14px !important;border-width:3px !important;box-shadow:0 4px 0 var(--navy) !important}
+.phrase-card{border-radius:16px !important;box-shadow:0 6px 0 var(--navy),0 12px 0 #e8362b88 !important}
+/* sedili della lobby */
+.pl{border-radius:14px;background:linear-gradient(#fffaf0,var(--paper));box-shadow:0 4px 0 var(--navy);min-height:50px}
+.pl.em{border-style:dashed;box-shadow:none;background:transparent;color:#fff;text-shadow:1px 1px 0 var(--navy);opacity:.85}
+.codepanel{border-radius:22px !important;overflow:visible}
+.codepanel::before,.codepanel::after{content:"";position:absolute;top:calc(50% - 12px);width:24px;height:24px;border-radius:50%;background:var(--sky1);border:4px solid var(--navy)}
+.codepanel::before{left:-14px;clip-path:inset(0 0 0 50%)}.codepanel::after{right:-14px;clip-path:inset(0 50% 0 0)}
+.code-big{font-size:54px}
+/* logo a rilievo */
+.logo .l1,.logo .l2,.logo .l3{text-shadow:0 1px 0 var(--navy),0 2px 0 var(--navy),0 3px 0 var(--navy),0 4px 0 var(--navy),0 5px 0 var(--navy),0 6px 0 var(--navy),0 7px 0 var(--navy),0 8px 0 var(--navy),0 12px 10px #0005 !important;-webkit-text-stroke:0 !important}
+.logo .l1{color:var(--mus)}.logo .l3{text-shadow:0 1px 0 var(--navy),0 2px 0 var(--navy),0 3px 0 var(--navy),0 4px 0 var(--navy),0 5px 0 var(--navy),0 6px 0 var(--navy),0 7px 0 var(--navy),0 8px 0 var(--navy),0 9px 0 var(--navy),0 10px 0 var(--navy),6px 13px 0 var(--red),0 18px 16px #0006 !important}
+.h{text-shadow:0 1px 0 var(--navy),0 2px 0 var(--navy),0 3px 0 var(--navy),0 4px 0 var(--navy),0 5px 0 var(--navy),0 6px 0 var(--navy),3px 8px 0 var(--red),0 12px 10px #0004}
+/* classifica: righe-medaglia con barra */
+.score .rw{position:relative;border:3px solid var(--navy);border-radius:12px;background:#fffaf0;margin:5px 0;padding:4px 8px;box-shadow:0 3px 0 var(--navy);overflow:hidden}
+.score .rw:first-of-type{border-top:3px solid var(--navy)}
+.score .rw::before{content:"";position:absolute;left:0;top:0;bottom:0;width:var(--w,0%);background:linear-gradient(90deg,#ffc72c88,#ffc72c11);z-index:0}
+.score .rw>*{position:relative;z-index:1}
+.score .rw .rk{width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--mus);display:grid;place-items:center;font:400 14px Anton}
+.score .rw .tt{font-size:26px}
+.score h3{font-size:24px}
+/* podio */
+.pod>div{border-radius:14px 14px 0 0;border-bottom:0 !important;box-shadow:inset 0 6px 0 #fff4,4px 4px 0 var(--navy) !important}
+.pod-0{background:linear-gradient(#ff7a5e,var(--red) 60%,#a82219) !important}.pod-1{background:linear-gradient(#2dc1be,var(--teal) 60%,#0c7573) !important}.pod-2{background:linear-gradient(#c79a45,#8a6b2e 60%,#5e4720) !important}
+/* sedile e carte */
+.card{border-radius:12px}
+.cdA{border-radius:9px}
+.lk{border-radius:14px;box-shadow:0 5px 0 var(--navy)}
+.opt{border-radius:14px;box-shadow:0 4px 0 var(--navy)}
+.seg .bt{font-size:18px}
+/* plancia desktop */
+.plancia{display:grid;grid-template-columns:minmax(250px,1fr) auto minmax(250px,1fr);gap:22px;align-items:center;justify-items:center;width:100%;height:100%;padding:0 22px}
+.plancia .pside{width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px;align-self:center}
+.plancia .pside.l{justify-self:end}.plancia .pside.r{justify-self:start}
+.plancia .plogo{font:400 clamp(30px,3.6vw,56px)/.84 Anton;text-transform:uppercase;color:#fff;transform:rotate(-3deg);text-shadow:0 1px 0 var(--navy),0 2px 0 var(--navy),0 3px 0 var(--navy),0 4px 0 var(--navy),0 5px 0 var(--navy),0 6px 0 var(--navy),0 7px 0 var(--navy),0 11px 8px #0005}
+.plancia .plogo b{display:block;color:var(--mus);font-weight:400}
+.plancia .pcode{padding:12px 14px !important;position:relative}.plancia .pcode small{display:block;font:400 17px 'Caveat Brush';color:var(--red)}.plancia .pcode strong{font:400 52px/1 Anton;color:var(--red);text-shadow:3px 3px 0 var(--navy);letter-spacing:.04em}
+.plancia .pplayers{padding:12px 14px !important;position:relative}.plancia .pplayers h4{font:400 20px Anton;text-transform:uppercase;color:var(--red)}
+.plancia .prow{display:flex;align-items:center;gap:9px;padding:6px 0;border-top:2px dashed #13224a30;font:800 15px Nunito;color:var(--navy)}.plancia .prow b{margin-left:auto;font:400 24px Anton}
+@media (max-width:1000px){.plancia{display:block;padding:0}.plancia .pside{display:none}}
+@media (max-width:1000px){.plancia>.stage-outer{margin:0 auto}}
+.opts{top:262px}
+.codepanel{top:100px}.plist{top:236px}.pl{min-height:42px}
+.score .bt{width:100%}
+.wait{top:auto}

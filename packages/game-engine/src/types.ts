@@ -34,8 +34,14 @@ export interface TurnResult {
   votes: Record<PlayerId, number>;
   counts: Record<number, number>;
   tie: boolean;
+  /** Carta principale che cade (la prima di `fallenPositions`). */
   fallenPosition: number;
   fallenCardId: CardId;
+  /** Tutte le carte che cadono: più di una solo in caso di pareggio (la carta votata dal Megafono resta su). */
+  fallenPositions: number[];
+  fallenCardIds: CardId[];
+  /** Chi aveva giocato ciascuna carta caduta (stesso ordine; null = carta del mazzo), che prende il +2 della carta. */
+  fallenOwnerIds: (PlayerId | null)[];
   /** Chi ha giocato la carta caduta (null = carta pescata dal mazzo). */
   fallenOwnerId: PlayerId | null;
   lui: LuiToken | null;

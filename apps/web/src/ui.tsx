@@ -45,7 +45,7 @@ export function Stage({ children, bg = "paper", frame = true, testId, fixed }: {
           {bg === "paper" && (<><div className="pap" /><div className="hr" /><div className="ht" /></>)}
           {bg === "sky" && (<><div className="sky" /><div className="skyg" /><div className="skyh" /></>)}
           {children}
-          {frame && <div className="fr" />}
+          <div className="vig" />
           <div className="grain" />
         </div>
       </div>

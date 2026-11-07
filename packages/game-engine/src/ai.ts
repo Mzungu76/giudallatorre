@@ -14,7 +14,7 @@ export interface BotMemory { shown: Record<CardId, number>; fell: Record<CardId,
 export const newBotMemory = (): BotMemory => ({ shown: {}, fell: {}, turns: 0, lui: {} });
 export function learnFromResult(mem: BotMemory, tower: { cardId: CardId }[], result: TurnResult): void {
   for (const t of tower) mem.shown[t.cardId] = (mem.shown[t.cardId] ?? 0) + 1;
-  mem.fell[result.fallenCardId] = (mem.fell[result.fallenCardId] ?? 0) + 1; mem.turns += 1;
+  for (const c of result.fallenCardIds ?? [result.fallenCardId]) mem.fell[c] = (mem.fell[c] ?? 0) + 1; mem.turns += 1;
   if (result.lui) { mem.lui ??= {}; const m = (mem.lui[result.megafonoId] ??= { c: 0, n: 0 }); m.n++; if (result.lui.kind === "CADE") m.c++; }
 }
 /** Quanto gli altri si aspettano che questo Megafono scommetta "Cade lui!" (con un a priori del 50%). */
