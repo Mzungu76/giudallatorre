@@ -29,7 +29,7 @@ async function step() {
   if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await p.click('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
   return false;
 }
-while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch { /* */ } if (!a) await sleep(150); }
+while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch (e) { if (!globalThis.__e) { globalThis.__e = 1; console.log("STEPERR", String(e.message).slice(0, 400)); } } if (!a) await sleep(150); }
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("la partita da solo arriva alla classifica finale", await vis("final")); if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-finale.png` });
