@@ -22,6 +22,7 @@ let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 (async () => { while (sampling && n < 400) { await p.screenshot({ path: `${SHOTS}/s${String(n++).padStart(3, "0")}.png` }).catch(() => {}); await sleep(450); } })();
 const clk = (sel, o) => { globalThis.__s = "click " + sel; return p.click(sel, o); }; const wfs = (sel, o) => { globalThis.__s = "wait " + sel; return p.waitForSelector(sel, o); };
 async function step() {
+  if (await vis("howto")) { await clk('[data-testid="howto-close"]'); return true; }
   if (await vis("phrase-picker")) {
     await clk('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
   if (await vis("hand")) {
