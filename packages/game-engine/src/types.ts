@@ -4,13 +4,19 @@ export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "GAME
 export type LuiKind = "CADE" | "NON_CADE";
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
-export interface PhraseCard { id: string; phrases: string[] }
+export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string; /** Contesto di ciascuna frase (stesso ordine di `phrases`). */ themes?: string[] }
 
 export interface GameConfig {
   players: { id: PlayerId; name: string }[];
   seed: number;
   /** Variante "Il Megafono sa": il Megafono gioca una carta dalla propria mano invece di pescarla dal mazzo. */
   megafonoSa?: boolean;
+  /** Regola da testare: chi vota deve scrivere una frase che spiega il voto (rivelata allo spoglio). */
+  justifyVotes?: boolean;
+  /** Regola da testare ("gregge"): se il Megafono indovina la carta che cade, i +2 di chi l'ha votata vanno solo a lui. */
+  herd?: boolean;
+  /** Mescola a caso le frasi di tutte le carte (ogni frase porta il proprio contesto) e le ridistribuisce in gruppi da 5. */
+  mixPhrases?: boolean;
   deck: CardId[];
   phraseDeck: PhraseCard[];
   handSize?: number;
@@ -21,8 +27,8 @@ export interface GameConfig {
 export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId | null }
 
 export type PhraseChoice =
-  | { mode: "card"; cardId: string; index: number; text: string }
-  | { mode: "free" };
+  | { mode: "card"; cardId: string; index: number; text: string; theme?: string }
+  | { mode: "free"; text?: string };
 
 export interface LuiToken { kind: LuiKind; position: number }
 
@@ -39,6 +45,10 @@ export interface TurnResult {
   lui: LuiToken | null;
   points: Record<PlayerId, number>;
   reasons: Record<PlayerId, string[]>;
+  /** Frasi con cui i giocatori hanno motivato il voto (vuoto se la regola è spenta). */
+  voteReasons: Record<PlayerId, string>;
+  /** True se la regola del gregge ha tolto i +2 ai votanti della carta caduta. */
+  herd: boolean;
 }
 
 export interface GameState {
@@ -46,6 +56,9 @@ export interface GameState {
   playerIds: PlayerId[];
   names: Record<PlayerId, string>;
   megafonoSa: boolean;
+  justifyVotes: boolean;
+  herd: boolean;
+  mixPhrases: boolean;
   handSize: number;
   rounds: number;
   totalTurns: number;
@@ -68,6 +81,8 @@ export interface GameState {
   tower: TowerSlot[];
   lui: LuiToken | null;
   votes: Record<PlayerId, number>;
+  /** Motivazioni dei voti (solo con la regola attiva); segrete fino ai risultati. */
+  voteReasons: Record<PlayerId, string>;
   scores: Record<PlayerId, number>;
   megafonoTurns: Record<PlayerId, number>;
   lastResult: TurnResult | null;
@@ -79,10 +94,10 @@ export interface GameState {
 
 export type Action =
   | { type: "choosePhrase"; playerId: PlayerId; mode: "card"; index: number }
-  | { type: "choosePhrase"; playerId: PlayerId; mode: "free" }
+  | { type: "choosePhrase"; playerId: PlayerId; mode: "free"; text?: string }
   | { type: "playCard"; playerId: PlayerId; cardId: CardId }
   | { type: "placeLui"; playerId: PlayerId; kind: LuiKind; position: number }
-  | { type: "vote"; playerId: PlayerId; position: number }
+  | { type: "vote"; playerId: PlayerId; position: number; reason?: string }
   | { type: "advance"; playerId?: PlayerId };
 
 export type GameEvent =

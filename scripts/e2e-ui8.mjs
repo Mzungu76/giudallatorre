@@ -5,7 +5,7 @@ const BASE = process.env.BASE ?? "http://127.0.0.1:8787", SHOTS = process.env.SH
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failures = 0; const check = (n, c, x = "") => { console.log((c ? "  ok   " : "  FAIL ") + n + (c ? "" : " " + x)); if (!c) failures++; };
 const browser = await chromium.launch();
-const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const p = await ctx.newPage(); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
+const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const p = await ctx.newPage(); await p.addInitScript(() => { try { localStorage.setItem("gdt.intro", "1"); } catch {} }); if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} }); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
 const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 const pages = await Promise.all(Array.from({ length: 8 }, mk));
 await pages[0].goto(BASE + "/crea"); await pages[0].fill("#nick", "Host"); await pages[0].click('[data-testid="create-submit"]'); await pages[0].waitForURL(/stanza/);
@@ -19,8 +19,8 @@ let sShot = false; const t0 = Date.now(); let sawResults = false;
 async function step(p) {
   if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-go"]'); return true; }
   if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
-  if (await vis(p, "place-lui")) { await p.locator('img.pick[data-pos="3"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); if (!sShot) { await sleep(400); await p.screenshot({ path: `${SHOTS}/20-otto-torre.png` }); sShot = true; } await p.click('[data-testid="place-lui"]'); return true; }
-  if (await vis(p, "confirm-vote")) { await p.locator(`img.pick[data-pos="${1 + Math.floor(Math.random() * 8)}"]`).dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis(p, "place-lui")) { await p.locator('button.hit[data-pos="3"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); if (!sShot) { await sleep(400); await p.screenshot({ path: `${SHOTS}/20-otto-torre.png` }); sShot = true; } await p.click('[data-testid="place-lui"]'); return true; }
+  if (await vis(p, "confirm-vote")) { await p.locator(`button.hit[data-pos="${1 + Math.floor(Math.random() * 8)}"]`).dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "skip")) { if (!sawResults) { await sleep(3300); await p.screenshot({ path: `${SHOTS}/21-otto-caduta.png` }); sawResults = true; } await p.click('[data-testid="skip"]'); return true; }
   return false;
 }

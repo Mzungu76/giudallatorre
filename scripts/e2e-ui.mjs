@@ -6,7 +6,7 @@ const BASE = process.env.BASE ?? "http://127.0.0.1:8787", SHOTS = process.env.SH
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failures = 0; const check = (n, c, x = "") => { console.log((c ? "  ok   " : "  FAIL ") + n + (c ? "" : " " + x)); if (!c) failures++; };
 const browser = await chromium.launch();
-const mk = async (name, w = 390, h = 844) => { const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, locale: "it-IT" }); const p = await ctx.newPage(); p.name = name; p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); p.on("console", (m) => m.type() === "error" && !/Failed to load resource/.test(m.text()) && p.errors.push(m.text())); return p; };
+const mk = async (name, w = 390, h = 844) => { const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: 2, locale: "it-IT" }); const p = await ctx.newPage(); await p.addInitScript(() => { try { localStorage.setItem("gdt.intro", "1"); } catch {} }); if (process.env.FAST !== "0") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} }); p.name = name; p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); p.on("console", (m) => m.type() === "error" && !/Failed to load resource/.test(m.text()) && p.errors.push(m.text())); return p; };
 const shot = async (p, n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}.png` }); };
 const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 
@@ -36,12 +36,12 @@ async function stepPage(p) {
   if (await vis(p, "phrase-picker")) { if (shots < 1) { await shot(p, "06-frase"); shots++; } await p.click('[data-testid="phrase-go"]'); return true; }
   if (await vis(p, "hand")) { if (!p.s1) { await shot(p, "07-mano"); p.s1 = 1; } await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "place-lui")) {
-    await p.locator('img.pick[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); if (!p.s2) { await shot(p, "08-zoom"); p.s2 = 1; }
+    await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); if (!p.s2) { await shot(p, "08-zoom"); p.s2 = 1; }
     await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="place-lui"]'); return true; }
   if (await vis(p, "confirm-vote")) {
-    const n = 1 + Math.floor(Math.random() * 3); await p.locator(`img.pick[data-pos="${n}"]`).dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]');
+    const n = 1 + Math.floor(Math.random() * 3); await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]');
     await p.click('[data-testid="zoom-action"]'); if (!p.s3) { await shot(p, "09-voto"); p.s3 = 1; } await p.click('[data-testid="confirm-vote"]'); return true; }
-  if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); p.s4 = 1; } await p.click('[data-testid="skip"]', { timeout: 5000 }); return true; }
+  if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); await shot(D, "10b-schermo-in-partita"); p.s4 = 1; } await p.click('[data-testid="skip"]', { timeout: 5000 }); return true; }
   if (await vis(p, "advance")) { if (!p.s5) { await shot(p, "11-punti"); p.s5 = 1; } await p.click('[data-testid="advance"]'); turns++; return true; }
   return false;
 }

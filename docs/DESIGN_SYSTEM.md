@@ -26,3 +26,13 @@ Telefono 360–430 px a colonna singola; schermo condiviso 16:9 con soli dati pu
 
 ## Limiti noti
 Illustrazioni 320×480: ottime fino a ~150 px CSS, morbide a tutto schermo. Prototipo non provato su telefoni reali. Disposizione a 8 giocatori da validare con più prove su schermi piccoli.
+
+## Fase 6 — Terrazza, salita, spoglio, caduta (dai mockup approvati)
+- **Terrazza** (`components/Terrace.tsx`, `scene/draw.ts`): vista quasi dall'alto, pietra sabbia con contorno inchiostro e mezzatinta a puntini, bordo con merli su tutto il perimetro e fascia di beccatelli. Carte **intere** su **un solo piedino nero centrato**, con ombra, leggermente irregolari e sovrapposte. Gettoni di voto direttamente sulla carta (colore del giocatore; il Megafono ha il megafono). Lui!: giallo **CADE "4"**, **NON CADE "1"**, coperto = scuro con "?". Tasto **?** = come si fanno punti.
+- **Salita** (`Climb`, ~2,4 s + piazzamento + giro): le carte coperte salgono la scala interna della Torre, si vedono passare dalle finestre (92×138, un po' più piccole del mockup), poi si piazzano coperte in ordine casuale e si girano una a una.
+- **Spoglio** (`Reveal`, ~5 s): sfondo scuro, rullo, un gettone per volta direttamente sulla carta con "X ha votato… il N!", contatore, pausa "Manca un voto…", il Lui! si gira, timbro "Cade il n. N!" (o "Pareggio! Decide il Megafono").
+- **Caduta** (`scene/fallScene.ts`): torre di profilo con terrazza, merli e carte che spuntano; la carta votata viene spinta giù, materassi, mani con oggetti buffi (invariati).
+- **Classifica** dopo ogni turno (punti del turno + totale che si somma, ordinata), classifica del giro a fine giro, Spareggio (Golden goal) segnalato; malus −1 mostrato con "−".
+- **Intermezzi**: striscioni a ogni cambio fase ("Scegliete la carta!", "Votate!", "Spareggio!"…).
+- **Layout adattivo**: larghezza logica 372, altezza logica 640–940 in base allo schermo (`ui.tsx`, `Stage`, `useStage`): i bottoni stanno ancorati in basso, la scena si sposta in verticale e la frase si riduce sugli schermi bassi. Provato a 360×640, 390×844 e 412×915.
+- **Modalità veloce**: `?fast=1` (o "riduci animazioni" del sistema) salta salita, spoglio e caduta; è usata dai test automatici.

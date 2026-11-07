@@ -103,3 +103,18 @@ describe("segnalino Lui! e voto", () => {
     expect(castVotes(toVote(start(3)), { p1: 1, p2: 1, p3: 1 }).phase).toBe("RESULTS");
   });
 });
+
+describe("frase personale del Megafono", () => {
+  it("la frase inventata viene normalizzata e mostrata a tutti (limite 80 caratteri, nessun filtro sui contenuti)", () => {
+    const s = act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free", text: "  chi   risponde\n ai vocali \t con un vocale  " });
+    expect(s.phrase).toEqual({ mode: "free", text: "chi risponde ai vocali con un vocale" });
+    const ok = act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free", text: "x".repeat(80) });
+    expect((ok.phrase as { text: string }).text).toHaveLength(80);
+  });
+  it("frase troppo lunga o non testuale rifiutata; senza testo resta 'a voce'", () => {
+    err(() => applyAction(start(4), { type: "choosePhrase", playerId: "p1", mode: "free", text: "x".repeat(81) }), "INVALID_CHOICE");
+    err(() => applyAction(start(4), { type: "choosePhrase", playerId: "p1", mode: "free", text: 5 as never }), "INVALID_CHOICE");
+    expect(act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free" }).phrase).toEqual({ mode: "free" });
+    expect(act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free", text: "   " }).phrase).toEqual({ mode: "free" });
+  });
+});

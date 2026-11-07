@@ -20,3 +20,6 @@ npm run e2e         # Worker reale in locale + WebSocket
 npm run dev         # wrangler dev su http://localhost:8787
 ```
 Ambienti: sviluppo = `wrangler dev` (stato in `.wrangler/`, ignorato da git); produzione = `wrangler deploy` dal CI su `main`.
+
+## Anteprima delle pull request
+A ogni aggiornamento di una pull request (dello stesso repository) la GitHub Action `Anteprima` pubblica una **copia separata** del gioco su `https://giu-dalla-torre-anteprima.giudallatorre.workers.dev` (Worker `giu-dalla-torre-anteprima`, con le sue stanze e il suo Durable Object: il gioco vero non viene toccato). Usa gli stessi segreti del deploy. L'anteprima mostra l'ultima PR aggiornata; a ogni nuovo aggiornamento viene sovrascritta. Si può anche lanciare a mano da *Actions → Anteprima → Run workflow*.

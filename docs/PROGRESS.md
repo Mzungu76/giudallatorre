@@ -37,3 +37,10 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] PWA: manifest, icone (192/512/maskable), service worker per i soli contenuti statici (il gioco richiede Internet)
 - [x] Prove su browser reali: `npm run e2e:ui` (3 telefoni + schermo condiviso, partita intera da 6 turni) e `scripts/e2e-ui8.mjs` (8 telefoni fino alla caduta, nono giocatore respinto)
 - [ ] Da rifare a mano: scontorno delle 9 carte segnalate (`public/cutouts/review-needed.json`); per ora la carta intera
+
+## Fase 6 — Grafica definitiva, giocatori virtuali, regole di equilibrio (in revisione)
+- [x] Regole: malus −1 per il Lui! sbagliato, **Golden goal** se si finisce in parità in testa (tetto 30 turni extra), frase libera semplice (testo ≤ 80 caratteri oppure solo a voce)
+- [x] **Giocatori virtuali** facile/medio/difficile (`docs/BOTS.md`), partita da solo, lobby con aggiunta/rimozione
+- [x] Terrazza di carte, salita, spoglio con suspense, caduta su torre di profilo, classifica per turno e per giro, intermezzi, legenda "?", layout adattivo (`docs/DESIGN_SYSTEM.md`)
+- [x] Prove: 116 test unit, `npm run e2e` (3 giocatori via WebSocket), `npm run e2e:ui` (3 browser + schermo condiviso), `scripts/e2e-ui8.mjs` (8 browser), `scripts/e2e-solo.mjs` (1 umano + bot, anche 7 bot a 360×640)
+- [ ] Da provare a mano su telefoni veri (Doogee Blade Ultra, Redmi Note, Samsung più vecchio) con Chrome

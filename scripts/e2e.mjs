@@ -78,11 +78,11 @@ check("nessuna mano altrui nei messaggi ricevuti", !leak);
 let dropped = false;
 for (let i = 0; i < 4000; i++) {
   if (clients[0].view?.view?.phase === "GAME_OVER" || clients[1].room?.stage === "FINISHED") break;
-  let acted = false; for (const c of clients) if (botStep(c)) { acted = true; await sleep(8); c.view = { ...c.view, view: { ...c.view.view, phase: "__wait__" } }; break; }
+  let acted = false; for (const c of clients) if (botStep(c)) { acted = true; c.view = { ...c.view, view: { ...c.view.view, phase: "__wait__" } }; await sleep(8); break; }
   if (!acted) await sleep(15);
   if (!dropped && clients[1].view?.view?.turn >= 2) { dropped = true; clients[1].ws.terminate(); await sleep(100); const B2 = new Client(code, j2.json, "B2"); await B2.connect(); await B2.until(() => B2.view); clients[1] = B2; check("riconnessione a metà partita: vista aggiornata", B2.view?.view?.phase !== undefined && B2.view.view.myHand.length >= 4); }
 }
-const fin = await clients[0].until(() => clients[0].room?.stage === "FINISHED" || clients[0].view?.view?.phase === "GAME_OVER", 3000);
+const fin = await clients[0].until(() => (clients[0].view?.view?.winners?.length ?? 0) >= 1, 5000);
 check("partita conclusa con vincitori", fin && clients[0].view?.view?.winners?.length >= 1, JSON.stringify(clients[0].view?.view?.winners));
 const e = clients.flatMap((c) => c.errors).filter((x) => !["WRONG_PHASE", "ALREADY_DONE"].includes(x.code)); check("nessun errore imprevisto", e.length === 0, JSON.stringify(e));
 

@@ -1,3 +1,5 @@
+> **Aggiornamento (v2):** le 250 frasi delle 50 carte sono state **riscritte** (comportamenti umani buffi e irriverenti, pensati per i tipi umani dei personaggi). Quelle del documento originale restano nel campo `frasi_originali` di `content/su-sulla-torre.json`. Le 15 frasi singole ("Ammetto…") non sono cambiate. Questo documento descrive la revisione precedente.
+
 # Revisione delle frasi — proposta (nessuna frase è stata ancora modificata)
 
 Fonti: `Carte_frasi.docx` (50 carte × 5 frasi) e `Carte_singola frase.pdf` (15 frasi singole). I file originali restano intatti: le correzioni, se approvate, vanno in `content/` e si ricostruiscono con uno script, mantenendo lo storico.

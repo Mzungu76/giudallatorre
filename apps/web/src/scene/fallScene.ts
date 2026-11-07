@@ -1,11 +1,12 @@
 // Scena della torre: costruita dal prototipo approvato (mockups/wow/b4-caduta.html) e resa un modulo con API tipizzata.
 // Il corpo è volutamente "grezzo" (nessun controllo dei tipi interno): l'interfaccia pubblica è quella di SceneApi.
 // @ts-nocheck
-import { cardImage } from "../lib/cards.ts";
+import { cardFull } from "../lib/cards.ts";
+import { profileShaft, profileBack, profileFront, profLayout } from "./draw.ts";
 
-export interface Token { pos: number; color: string; label: string; name?: string }
-export interface ResultCue { fallPos: number; stampTitle: string; stampSub: string; tokens: Token[]; lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; seed: number }
-export interface SceneOptions { cardIds: string[]; sound: () => boolean; reduced: boolean; onPick: (pos: number) => void }
+
+export interface ResultCue { fallPos: number; seed: number }
+export interface SceneOptions { cardIds: string[]; sound: () => boolean; reduced: boolean; }
 export interface SceneApi {
   setSelected(pos: number | null): void;
   setLui(l: { pos: number; kind: "CADE" | "NON_CADE" | null } | null): void;
@@ -16,7 +17,7 @@ export interface SceneApi {
   itemsText(): string;
   fitScale(): number;
 }
-const TEMPLATE = `<div class="sky"></div><div class="skyg"></div><div class="skyh"></div><div class="sky2" id="sky2"></div><div class="far" id="far"></div><div class="world" id="world"></div><div class="lines" id="lines"></div><div class="stamp" id="stamp"></div><div class="aaah" id="aaah">AAAAAH!</div><div class="boing" id="boing"><span>BOING!</span></div><div class="ops" id="ops"><span>Spinto!</span></div><div class="flash" id="flash"></div>`;
+const TEMPLATE = `<div class="sky"></div><div class="skyg"></div><div class="skyh"></div><div class="sky2" id="sky2"></div><div class="far" id="far"></div><div class="world" id="world"></div><div class="lines" id="lines"></div><div class="aaah" id="aaah">AAAAAH!</div><div class="boing" id="boing"><span>BOING!</span></div><div class="ops" id="ops"><span>Spinto!</span></div><div class="flash" id="flash"></div>`;
 
 export function createScene(root: HTMLElement, opts: SceneOptions): SceneApi {
   root.innerHTML = TEMPLATE;
@@ -42,8 +43,8 @@ ${Array.from({length:60},(_,i)=>`<path d="M${(i*23)%1400} ${320+(i*41)%340}l4 -1
 W.appendChild(land);
 // ---- torre (regolamento, versione pop): i personaggi fanno capolino dietro i merli
 const MT_=2034;const TX=61,TY=420,PAD=8/1.5,TWW=391/1.5,THH=2506/1.5;
-const tsh=document.createElement('img');tsh.src='/scene/tower_pop.webp';tsh.style.cssText=`left:${TX-PAD+13}px;top:${TY-PAD+10}px;width:${TWW}px;height:${THH}px;z-index:3;pointer-events:none;filter:brightness(0) opacity(.28)`;W.appendChild(tsh);
-const tf=document.createElement('img');tf.src='/scene/tower_pop.webp';tf.style.cssText=`left:${TX-PAD}px;top:${TY-PAD}px;width:${TWW}px;height:${THH}px;z-index:6;pointer-events:none`;W.appendChild(tf);
+W.insertAdjacentHTML('beforeend',profileShaft(TY,{height:2160-(TY+96),svgH:2300,windows:Array.from({length:7},(_,k)=>[k%2?198:70,TY+190+k*232,[]])}));W.insertAdjacentHTML('beforeend',profileBack(TY).replace('z-index:3','z-index:4'));W.insertAdjacentHTML('beforeend',profileFront(TY).replace('z-index:30','z-index:9'));
+
 add('Torre del<br>Giudizio Spicciolo<small>vietato lanciare oggetti. Persone sì.</small>',`left:${TX+30}px;top:1010px;z-index:7;transform:rotate(-3deg)`,'gag');
 add(`<svg width="64" height="56" viewBox="0 0 64 56"><path d="M8 36q4-22 26-20q16 2 18 16q-8 10-26 10z" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><circle cx="46" cy="20" r="9" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><path d="M54 21l9 3l-9 3z" fill="#ffc72c" stroke="#13224a" stroke-width="2"/><circle cx="48" cy="18" r="2" fill="#13224a"/><path d="M14 34q14-8 28 2" stroke="#13224a" stroke-width="3" fill="none"/><path d="M26 44v8M34 44v8" stroke="#13224a" stroke-width="3"/></svg>`,`left:${TX+176}px;top:1180px;z-index:7`);
 add('«tra 200 m,<br>svolta a destra»',`left:${TX+80}px;top:1150px;z-index:7;transform:rotate(-4deg);font-size:12px`,'gag');
@@ -61,12 +62,8 @@ add('Ingresso<small>solo andata</small>',`left:${TX+78}px;top:1895px;z-index:7;t
 
   // ---- personaggi (per posizione 1..N)
   const CH:any[]=[], ch:any={};
-  if(N<=5){for(let i=0;i<N;i++){const back_=i%2===0;CH.push({n:i+1,x:Math.round(186+(i-(N-1)/2)*53),feet:TY+(back_?70:34),h:back_?140:150,z:5,rot:0})}}
-  else{for(let i=0;i<N;i++){const dd=Math.abs(i-(N-1)/2),k=7/(N-1);CH.push({n:i+1,x:Math.round(186+(i-(N-1)/2)*(175/(N-1))),feet:TY+86+dd*5*k,h:Math.round(150-dd*6*k),z:5,rot:(i-(N-1)/2)*(35/(N-1))})}}
-  CH.forEach(c=>{const info=cardImage(opts.cardIds[c.n-1]!);const img=document.createElement('img');img.className=(info.cut?'cut stk':'cut cardstk')+' pick';img.src=info.src;img.alt='';img.draggable=false;img.dataset.pos=String(c.n);img.style.cssText=`height:${c.h}px;z-index:${c.z}`;
-    img.addEventListener('click',()=>{if(!cue)opts.onPick(c.n)});W.appendChild(img);ch[c.n]=img;
-    const place=()=>{const w=img.naturalWidth/img.naturalHeight*c.h;img.style.left=(c.x-w/2)+'px';img.style.top=(c.feet-c.h)+'px'};if(img.complete&&img.naturalWidth)place();else img.addEventListener('load',place);
-    add(String(c.n),`left:${c.x-13}px;top:${TY+86}px;z-index:9;pointer-events:none;${N>=7?'transform:scale(.82)':''}`,'bd')});
+  profLayout(N,TY).forEach((c:any)=>CH.push({n:c.i+1,x:c.x,feet:c.bottom,h:c.h,w:c.w,z:c.z>=20?7:5,rot:c.rot}));
+  CH.forEach((c:any)=>{const d=document.createElement('div');d.className='cdA';d.dataset.pos=String(c.n);d.style.cssText=`width:${c.w}px;height:${c.h}px;left:${c.x-c.w/2}px;top:${c.feet-c.h}px;background-image:url(${cardFull(opts.cardIds[c.n-1]!)});z-index:${c.z};transform-origin:50% 100%;transform:rotate(${c.rot}deg)`;d.innerHTML=`<i>${c.n}</i>`;W.appendChild(d);ch[c.n]=d});
 
 // ---- materassi: si piegano sotto il peso
 const MX=70,MW=232;
@@ -153,8 +150,8 @@ const puffs=[[30,2040],[96,2050],[300,2048],[230,2040],[160,2030]].map(([x,y])=>
 const stars=add('<b>★</b><b>★</b><b>★</b>','width:70px;height:30px;z-index:32;opacity:0','stars');
 const S0=N<=5?1.3:Math.max(1.16,1.3-0.045*(N-5)),CY0=TY+30-470/S0;
 let FN=1,fc=CH[0],f=ch[1];
-const G=1000,Y0=TY+50,MT=2034,YI=MT-42,TF=Math.sqrt(2*(YI-Y0)/G),TS=0.65,TI=TS+TF;
-const T_FALL=2.7,BNC=[[.55,170],[.34,70],[.2,24]];
+const G=1000,Y0=TY-20,MT=2034,YI=MT-42,TF=Math.sqrt(2*(YI-Y0)/G),TS=0.65,TI=TS+TF;
+const T_FALL=1.3,BNC=[[.55,170],[.34,70],[.2,24]];
 const startY=()=>fc.feet-fc.h/2;
 function cardState(t){
  if(t<0)return{x:fc.x,y:startY(),r:0,k:1};
@@ -181,19 +178,19 @@ const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFi
    const t=T-T_FALL, playing=!!cue;
    tokenEls.forEach(k=>{const s=playing?back((T-(.3+k.i*.18+(k.pos-1)*.1))/.35):1;k.e.style.transform=`scale(${Math.max(0,s)})`;k.e.style.opacity=playing&&t>.3?String(1-sm(.3,.6,t)):'1'});
    if(luiInfo){const lc=CH[luiInfo.pos-1];lui.textContent=luiInfo.kind==='CADE'?'CADE LUI!':luiInfo.kind==='NON_CADE'?'NON CADE':'?';lui.classList.toggle('q',!luiInfo.kind);lui.style.left=(lc.x+22)+'px';lui.style.top=(lc.feet-lc.h-14)+'px';lui.style.transform=`rotate(8deg) scale(${playing?sm(1.2,1.5,T)*(1-sm(.1,.5,t)):1})`}else lui.style.transform='scale(0)';
-   const st=$('stamp');
-   if(playing){const u=Math.min(1,Math.max(0,(T-1.6)/.25)),sk=(T>1.85&&T<2.1)?Math.sin(T*90)*4*(2.1-T)/.25:0;st.style.transform=`translate(${sk}px,${sk*.6}px) rotate(${-6+(1-u)*10}deg) scale(${(1+(1-u)*1.6)*u*(t>.3?1-sm(.3,.6,t):1)})`}else st.style.transform='rotate(-6deg) scale(0)';
- const sus=t<0?sm(1.7,T_FALL,T):0;
+
+
+ const sus=t<0?sm(.3,T_FALL,T):0;
  {const sc=sel?CH[sel-1]:null;cone.style.opacity=sc&&t<.3?String((.55+.45*Math.sin(T*3))):'0';if(sc)cone.style.left=(sc.x-95)+'px';}
  CH.forEach(c=>{const im=ch[c.n];im.classList.toggle('sel',c.n===sel&&t<.4);if(c.n!==FN||t<0&&false){}
   if(c.n!==FN)im.style.transform=`rotate(${c.rot+(c.n%2?-1:1)*sus*2.5}deg)`;im.style.transformOrigin='50% 100%'});
  const c=cardState(t),wob=t<0?Math.sin(T*28)*sus*3:0,h=fc.h,dp=dip(t);
  const hg=Math.max(0,YI-c.y);c.y+=dp*Math.max(0,Math.min(1,1-hg/22));
- const w=f.naturalWidth/f.naturalHeight*h;
+ const w=fc.w;
  if(t<TS*.3){f.style.zIndex=fc.z;f.style.left=(fc.x-w/2)+'px';f.style.top=(startY()-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${wob+(fc.rot||0)}deg)`}
  else{f.style.zIndex=30;f.style.left=(c.x-w/2)+'px';f.style.top=(c.y-h/2)+'px';f.style.transformOrigin='50% 50%';f.style.transform=`rotate(${c.r}deg) scale(${(c.sx||1)*c.k},${(c.sy||1)*c.k})`}
  const cm=cam(t),sh=t>TI?Math.sin((t-TI)*50)*Math.exp(-(t-TI)*7)*7:0;
- const dutch=-3*sm(.5,1.3,t)*(1-sm(TI-.3,TI+.4,t));const shk=(T>1.85&&T<2.1)?Math.sin(T*80)*3:0;
+ const dutch=-3*sm(.5,1.3,t)*(1-sm(TI-.3,TI+.4,t));const shk=0;
  W.style.transform=`translate(${sh+shk}px,${sh}px) translate(186px,413px) rotate(${dutch}deg) translate(-186px,-413px) scale(${cm.s}) translate(${-cm.cx}px,${-cm.cy}px)`;F.style.transform=`translateY(${-(cm.cy-CY0)*cm.s*.35}px)`;
  $('sky2').style.opacity=Math.min(1,Math.max(0,(cm.cy-CY0)/1500))*.75;
  mats.forEach((m,i)=>m.update(dp*[.25,.55,1][i],dp*[.08,.14,.22][i]));
@@ -218,8 +215,7 @@ const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFi
     setSelected(pos){sel=pos;if(!cue)render(-1)},
     setLui(l){luiInfo=l;if(!cue)render(-1)},
     showTokens(list){buildTokens(list);if(!cue)render(-1)},
-    play(c,done){cancelAnimationFrame(raf);cue=c;FN=c.fallPos;fc=CH[FN-1];f=ch[FN];sel=null;luiInfo=c.lui;buildTokens(c.tokens);placeObjects(c.seed);doneCb=done;firedEv={};
-      $('stamp').innerHTML=`${c.stampTitle}<small>${c.stampSub}</small>`;
+    play(c,done){cancelAnimationFrame(raf);cue=c;FN=c.fallPos;fc=CH[FN-1];f=ch[FN];sel=null;placeObjects(c.seed);doneCb=done;firedEv={};
       if(opts.reduced){render(T_END);cue.finished=true;done();return}
       T0=performance.now();try{ac()}catch{}
       const loop=(now:number)=>{if(destroyed)return;const T=(now-T0)/1000;render(Math.min(T,T_END));EVENTS.forEach((e,i)=>{if(!firedEv[i]&&T>=e[0]){firedEv[i]=1;e[1]()}});

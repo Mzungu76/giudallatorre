@@ -12,7 +12,7 @@ describe("stanza: creazione, accesso e lobby", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta", mode: "remote", megafonoSa: true });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true });
+    expect(core.data.options).toEqual({ megafonoSa: true, justifyVotes: false, herd: false, mode: "remote", turnTimerSec: 0, display: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {
@@ -229,3 +229,95 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } });
   expect(upTo).toBe("VOTE");
 }
+
+describe("giocatori virtuali nella stanza", () => {
+  it("l'host aggiunge e toglie bot in lobby (max 8, nomi unici, solo host)", () => {
+    const r = makeRoom(1, 20);
+    expect(errCode(send(r, 0, { t: "addBot", level: "hard" }))).toBeUndefined();
+    send(r, 0, { t: "addBot", level: "easy" }); send(r, 0, { t: "addBot", level: "medium" });
+    const bots = r.core.data.players.filter((p) => p.isBot); expect(bots).toHaveLength(3);
+    expect(new Set(r.core.data.players.map((p) => p.nickname)).size).toBe(4);
+    for (let i = 0; i < 6; i++) send(r, 0, { t: "addBot", level: "medium" });
+    expect(r.core.data.players).toHaveLength(8);
+    expect(errCode(send(r, 0, { t: "addBot", level: "medium" }))).toBe("ROOM_FULL");
+    send(r, 0, { t: "removeBot", playerId: bots[0]!.id }); expect(r.core.data.players).toHaveLength(7);
+    expect(errCode(send(r, 0, { t: "removeBot", playerId: r.ids[0]! }))).toBe("INVALID_TARGET");
+  });
+  it("un giocatore non-host non può aggiungere bot; i bot non hanno token e non si autenticano", () => {
+    const r = makeRoom(2, 21); expect(errCode(send(r, 1, { t: "addBot", level: "easy" }))).toBe("NOT_HOST");
+    send(r, 0, { t: "addBot", level: "easy" });
+    expect(r.core.authenticate("")).toBeNull();
+    expect(JSON.stringify(r.core.data.players)).not.toContain('"tokenHash":"a');
+  });
+  it("partita in solitario: 1 umano + 3 bot (creati insieme alla stanza) arriva alla fine; i bot agiscono dal timer", () => {
+    const c = RoomCore.create("SOLOX", deps(5), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
+    const core = c.core; core.onConnect(c.playerId, 0);
+    expect(core.data.players).toHaveLength(4); expect(core.roomMsg(c.playerId).players.filter((p) => p.isBot && p.connected)).toHaveLength(3);
+    core.handle(c.playerId, { t: "start" }, 0);
+    let now = 0, guard = 0;
+    while (core.data.stage === "PLAYING" && guard++ < 4000) {
+      const g = core.data.game as GameState;
+      const a = suggestAction(g, c.playerId, Math.random);
+      if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; core.handle(c.playerId, { t: "act", action } as never, now); }
+      else if (g.phase === "RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
+      now += 1500; core.tick(now);
+    }
+    expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(4000);
+  });
+  it("con bot l'umano non Megafono può far proseguire quando il Megafono è un bot", () => {
+    const c = RoomCore.create("SOLOY", deps(6), 0, { nickname: "A", mode: "table", megafonoSa: false, bots: { count: 2, level: "easy" } });
+    const hostless = c.core; hostless.onConnect(c.playerId, 0); hostless.handle(c.playerId, { t: "start" }, 0);
+    expect(hostless.data.players.filter((p) => p.isBot)).toHaveLength(2);
+  });
+});
+import { suggestAction } from "@gdt/game-engine";
+
+describe("messaggi tra i giocatori", () => {
+  const chats = (o: ReturnType<typeof send>) => o.send.filter((m) => m.msg.t === "chat");
+  it("il messaggio arriva a tutti i connessi, ripulito e con il nome del mittente", () => {
+    const r = makeRoom(3, 40);
+    const o = send(r, 1, { t: "chat", text: "  ciao\t\tbelli\u0000 " }, 2_000_000);
+    expect(chats(o)).toHaveLength(3);
+    const m = chats(o)[0]!.msg as { t: "chat"; msg: { text: string; name: string; from: string } };
+    expect(m.msg.text).toBe("ciao belli"); expect(m.msg.name).toBe("Giocatore2"); expect(m.msg.from).toBe(r.ids[1]);
+  });
+  it("vuoto = rifiutato; troppo lungo = tagliato; messaggi ravvicinati = RATE_LIMIT", () => {
+    const r = makeRoom(3, 41);
+    expect(errCode(send(r, 0, { t: "chat", text: "   " }, 2_000_000))).toBe("INVALID_MESSAGE");
+    const o = send(r, 0, { t: "chat", text: "x".repeat(400) }, 2_001_000);
+    expect(((chats(o)[0]!.msg as { msg: { text: string } }).msg.text).length).toBe(140);
+    expect(errCode(send(r, 0, { t: "chat", text: "ancora" }, 2_001_100))).toBe("RATE_LIMIT");
+    expect(errCode(send(r, 0, { t: "chat", text: "ancora" }, 2_003_000))).toBeUndefined();
+  });
+  it("la cronologia (ultimi 60) arriva a chi si ricollega, non agli schermi condivisi", () => {
+    const r = makeRoom(2, 42);
+    for (let i = 0; i < 70; i++) send(r, i % 2, { t: "chat", text: `m${i}` }, 3_000_000 + i * 1000);
+    const snap = r.core.snapshot(r.ids[0]!).find((m) => m.msg.t === "chatlog")!.msg as { t: "chatlog"; msgs: { text: string }[] };
+    expect(snap.msgs).toHaveLength(60); expect(snap.msgs[0]!.text).toBe("m10"); expect(snap.msgs[59]!.text).toBe("m69");
+    expect(JSON.stringify(r.core.spectatorMessages())).not.toContain("m69");
+  });
+  it("sopravvive al ricaricamento dello stato della stanza", () => {
+    const r = makeRoom(2, 43); send(r, 0, { t: "chat", text: "resto qui" }, 4_000_000);
+    const copy = new RoomCore(JSON.parse(JSON.stringify(r.core.data)), deps(43));
+    expect(copy.data.chat.map((m) => m.text)).toEqual(["resto qui"]);
+  });
+});
+
+describe("regole da testare nella stanza", () => {
+  it("solo l'host le imposta, solo in lobby; di default sono spente", () => {
+    const r = makeRoom(3, 50);
+    expect(r.core.data.options.justifyVotes).toBe(false); expect(r.core.data.options.herd).toBe(false);
+    expect(errCode(send(r, 1, { t: "setOptions", herd: true }))).toBe("NOT_HOST");
+    send(r, 0, { t: "setOptions", justifyVotes: true, herd: true }); expect(r.core.data.options).toMatchObject({ justifyVotes: true, herd: true });
+    send(r, 0, { t: "start" }); expect(errCode(send(r, 0, { t: "setOptions", herd: false }))).toBe("WRONG_STAGE");
+  });
+  it("con le regole accese il voto senza frase è rifiutato e una partita intera termina", () => {
+    const r = makeRoom(3, 51); send(r, 0, { t: "setOptions", justifyVotes: true, herd: true }); send(r, 0, { t: "start" });
+    let g = r.core.data.game as GameState; let guard = 0;
+    while (g.phase !== "VOTE" && guard++ < 50) { for (const id of r.ids) { const a = suggestAction(g, id, Math.random); if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; send(r, r.ids.indexOf(id), { t: "act", action } as ClientMessage); g = r.core.data.game as GameState; } } }
+    expect(g.phase).toBe("VOTE");
+    expect(errCode(send(r, 0, { t: "act", action: { type: "vote", position: 1 } }))).toBe("INVALID_CHOICE");
+    expect(errCode(send(r, 0, { t: "act", action: { type: "vote", position: 1, reason: "è lui" } }))).toBeUndefined();
+    playToEnd(r); expect(r.core.data.stage).toBe("FINISHED");
+  });
+});

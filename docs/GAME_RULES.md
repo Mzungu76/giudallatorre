@@ -67,3 +67,11 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 - **Fine partita**: tutti hanno fatto il Megafono 2 volte (3–5 giocatori) o 1 volta (6–8). Vince il punteggio più alto, parità = vittoria condivisa.
 - **Mazzo**: 125 carte Personaggio (decisione utente; la carta p13-i01 è identica a un'altra immagine ma resta una carta distinta).
 - **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
+
+## Regole da testare (opzionali, spente di default)
+L'host le attiva nella lobby ("Regole da testare"); se il test va bene diventeranno il regolamento.
+1. **Il voto si spiega.** Chi vota scrive anche una frase (max 80 caratteri) che spiega perché ha scelto quel personaggio. La frase è segreta fino allo spoglio, dove compare accanto al nome di chi ha votato. I bot scrivono una frase di circostanza.
+2. **Gregge.** Se il Megafono indovina la carta che cade ("Cade lui!" sulla carta caduta), i +2 di chi ha votato la carta caduta vanno **solo al Megafono** (se l'ha votata anche lui); gli altri non li prendono. Il +2 del proprietario della carta e il +4 del Lui! restano.
+
+## Messaggi tra i giocatori
+Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.

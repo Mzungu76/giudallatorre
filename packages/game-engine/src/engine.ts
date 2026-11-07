@@ -1,14 +1,29 @@
 import { EngineError } from "./types.ts";
-import type { Action, CardId, GameConfig, GameEvent, GameState, PlayerId, TowerSlot, TurnResult } from "./types.ts";
+import type { Action, CardId, GameConfig, GameEvent, GameState, PhraseCard, PlayerId, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 /** Malus del segnalino Lui! quando la scommessa fallisce. */
 export const LUI_FAIL_MALUS = 1;
+/** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
+export const MAX_PHRASE_CHARS = 80;
+/** Lunghezza massima della frase che motiva il voto (regola da testare). */
+export const MAX_REASON_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
 export const roundsFor = (n: number) => (n <= 5 ? 2 : 1);
+
+/** Mescola le frasi di tutte le carte a più frasi (ognuna col proprio contesto) e le rimette in gruppi da 5; le carte a frase singola restano intere. */
+function mixPhrases(cards: PhraseCard[], s: GameState): PhraseCard[] {
+  const multi = cards.filter((c) => c.phrases.length > 1), single = cards.filter((c) => c.phrases.length <= 1);
+  const items = shuffle(multi.flatMap((c) => c.phrases.map((p, i) => ({ p, t: c.themes?.[i] ?? c.theme }))), s), out: PhraseCard[] = [];
+  for (let i = 0; i < items.length; i += 5) {
+    const g = items.slice(i, i + 5);
+    out.push({ id: `mix-${i / 5 + 1}`, phrases: g.map((x) => x.p), ...(g.every((x) => x.t) ? { themes: g.map((x) => x.t!) } : {}) });
+  }
+  return shuffle([...out, ...single], s);
+}
 
 export function createGame(config: GameConfig): { state: GameState; events: GameEvent[] } {
   const n = config.players.length, handSize = config.handSize ?? 5;
@@ -20,14 +35,14 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    megafonoSa: !!config.megafonoSa, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    megafonoSa: !!config.megafonoSa, justifyVotes: !!config.justifyVotes, herd: !!config.herd, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
-    rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
+    rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {}, voteReasons: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
   };
   s.drawPile = shuffle(config.deck, s);
-  s.phraseDraw = shuffle(config.phraseDeck, s);
+  s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
   for (let k = 0; k < handSize; k++) for (const id of ids) s.hands[id]!.push(draw(s));
   s.megafonoIndex = config.firstMegafonoIndex ?? randomInt(n, s);
@@ -47,13 +62,13 @@ function draw(s: GameState): CardId {
   return s.drawPile.shift()!;
 }
 function drawPhrase(s: GameState) {
-  if (s.phraseDraw.length === 0) { s.phraseDraw = shuffle(s.phraseDiscard, s); s.phraseDiscard = []; }
+  if (s.phraseDraw.length === 0) { s.phraseDraw = s.mixPhrases ? mixPhrases(s.phraseDiscard, s) : shuffle(s.phraseDiscard, s); s.phraseDiscard = []; }
   return s.phraseDraw.shift()!;
 }
 
 function startTurn(s: GameState, events: GameEvent[]) {
   s.phase = "PROCLAIM"; s.proclaim = drawPhrase(s); s.phrase = null; s.played = {}; s.deckCard = null;
-  s.tower = []; s.lui = null; s.votes = {};
+  s.tower = []; s.lui = null; s.votes = {}; s.voteReasons = {};
   events.push({ type: "turnStarted", turn: s.turnNumber, megafonoId: megafonoOf(s) });
 }
 
@@ -77,10 +92,13 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
         const idx = action.index;
         if (!Number.isInteger(idx) || idx < 0 || idx >= card.phrases.length) throw new EngineError("INVALID_CHOICE", "frase inesistente");
         if (card.phrases.length === 1 && idx !== 0) throw new EngineError("INVALID_CHOICE", "carta a frase singola: va pronunciata");
-        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]! };
+        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]!, ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
         events.push({ type: "phraseChosen", mode: "card", text: s.phrase.text });
       } else {
-        s.phrase = { mode: "free" }; events.push({ type: "phraseChosen", mode: "free" });
+        const raw = action.text, text = typeof raw === "string" ? raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim() : "";
+        if (raw !== undefined && typeof raw !== "string") throw new EngineError("INVALID_CHOICE", "testo non valido");
+        if (text.length > MAX_PHRASE_CHARS) throw new EngineError("INVALID_CHOICE", `frase troppo lunga (massimo ${MAX_PHRASE_CHARS} caratteri)`);
+        s.phrase = text ? { mode: "free", text } : { mode: "free" }; events.push({ type: "phraseChosen", mode: "free", ...(text ? { text } : {}) });
       }
       s.phraseDiscard.push(card); s.proclaim = null;
       if (!s.megafonoSa) s.deckCard = draw(s);
@@ -111,6 +129,14 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       mustBe(s, "VOTE"); known(s, action.playerId);
       if (s.votes[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "voto già espresso");
       checkPosition(s, action.position);
+      if (s.justifyVotes) {
+        const raw = action.reason;
+        if (typeof raw !== "string") throw new EngineError("INVALID_CHOICE", "scrivi perché voti questo personaggio");
+        const text = raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim();
+        if (!text) throw new EngineError("INVALID_CHOICE", "scrivi perché voti questo personaggio");
+        if (text.length > MAX_REASON_CHARS) throw new EngineError("INVALID_CHOICE", `motivazione troppo lunga (massimo ${MAX_REASON_CHARS} caratteri)`);
+        s.voteReasons[action.playerId] = text;
+      }
       s.votes[action.playerId] = action.position;
       events.push({ type: "voteCast", playerId: action.playerId });
       if (s.playerIds.every((p) => s.votes[p] !== undefined)) resolve(s, events);
@@ -149,7 +175,9 @@ function resolve(s: GameState, events: GameEvent[]) {
   const points: Record<PlayerId, number> = {}, reasons: Record<PlayerId, string[]> = {};
   for (const p of s.playerIds) { points[p] = 0; reasons[p] = []; }
   const give = (p: PlayerId, n: number, why: string) => { points[p]! += n; reasons[p]!.push(why); };
-  for (const p of s.playerIds) if (s.votes[p] === fallen) give(p, 2, "voto");
+  // Regola del gregge: se il Megafono ha indovinato la carta che cade, i +2 dei votanti vanno solo a lui.
+  const herd = s.herd && !!s.lui && s.lui.kind === "CADE" && s.lui.position === fallen;
+  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (herd && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
   if (slot.ownerId !== null) give(slot.ownerId, 2, "carta");
   if (s.lui) {
     if (s.lui.kind === "CADE" && s.lui.position === fallen) give(mega, 4, "lui-cade");
@@ -160,7 +188,7 @@ function resolve(s: GameState, events: GameEvent[]) {
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen,
-    fallenCardId: slot.cardId, fallenOwnerId: slot.ownerId, lui: s.lui ? { ...s.lui } : null, points, reasons };
+    fallenCardId: slot.cardId, fallenOwnerId: slot.ownerId, lui: s.lui ? { ...s.lui } : null, points, reasons, voteReasons: { ...s.voteReasons }, herd };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

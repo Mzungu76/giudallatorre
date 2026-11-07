@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
+import HowTo from "../components/HowTo.tsx";
 
 export default function Home() {
   const [how, setHow] = useState(false);
@@ -15,23 +16,10 @@ export default function Home() {
       <div className="home-btns">
         <Btn onClick={() => navigate("/crea")} testId="go-create">Crea partita</Btn>
         <Btn kind="red" onClick={() => navigate("/entra")} testId="go-join">Entra con un codice</Btn>
+        <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 19, padding: 11 }} testId="go-solo">Gioca da solo (con bot)</Btn>
         <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 19, padding: 11 }}>Come si gioca</Btn>
       </div>
-      {how && (
-        <div className="zoom on" onClick={() => setHow(false)} role="dialog" aria-label="Come si gioca">
-          <div className="how">
-            <h2>Come si gioca</h2>
-            <ol>
-              <li><b>Il Megafono</b> urla una frase: “Oggi sale sulla torre…”</li>
-              <li><b>La Folla</b> gioca in segreto la carta Personaggio che ci sta meglio. La Torre si riempie.</li>
-              <li>Il Megafono posa il <b>“Lui!”</b> per scommettere. Poi <b>tutti votano</b> in segreto chi cade.</li>
-              <li>Chi ha votato il caduto <b>+2</b>, chi ha giocato la sua carta <b>+2</b>, il Lui! vale <b>+4 / +1</b>. Pareggio: cade il personaggio votato dal Megafono.</li>
-              <li>Tutti fanno il Megafono (2 volte fino a 5 giocatori, 1 volta da 6 a 8). Vince chi ha più punti.</li>
-            </ol>
-            <Btn onClick={() => setHow(false)}>Ho capito</Btn>
-          </div>
-        </div>
-      )}
+      {how && <HowTo onClose={() => setHow(false)} />}
     </Stage>
   );
 }
