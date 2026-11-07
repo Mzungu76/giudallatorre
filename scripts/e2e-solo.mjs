@@ -8,8 +8,6 @@ const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: W, height: HH }, deviceScaleFactor: 1.5, locale: "it-IT" });
 const p = await ctx.newPage(); p.setDefaultTimeout(5000); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); p.on("console", (m) => { if (m.type() === "error") p.errors.push(m.text()); });
 if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} });
-await p.addInitScript(() => { window.__rm = {}; const o = new MutationObserver((ms) => { for (const m of ms) m.removedNodes.forEach((n) => { if (n.nodeType !== 1) return; const q = [n, ...n.querySelectorAll?.('[data-testid]') ?? []]; for (const e of q) { const t = e.dataset?.testid; if (t) window.__rm[t] = (window.__rm[t] || 0) + 1; } }); }); document.addEventListener('DOMContentLoaded', () => o.observe(document.body, { childList: true, subtree: true })); });
-let wsn = 0, wsc = 0, fr = 0; p.on("websocket", (w) => { wsn++; w.on("framereceived", () => fr++); w.on("close", () => wsc++); }); setInterval(async () => console.log("WS", wsn, "closed", wsc, "frames", fr, "RM", JSON.stringify(await p.evaluate(() => window.__rm).catch(() => null))), 5000);
 const vis = (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
 await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="bot-hard"]'); for (let i = 3; i < +(process.env.BOTS ?? 3); i++) await p.click('[data-testid="bots-plus"]');
@@ -27,14 +25,14 @@ async function step() {
   if (await vis("phrase-picker")) {
     await clk('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
   if (await vis("hand")) {
-    if (!globalThis.__f) { globalThis.__f = 1; const r = await p.evaluate(() => new Promise((res) => { let n = 0, lt = 0; try { new PerformanceObserver((l) => { lt += l.getEntries().length; }).observe({ entryTypes: ["longtask"] }); } catch {} const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else res({ frames: n, longtasks: lt, mut: window.__mut }); }; requestAnimationFrame(f); })); console.log("FPS", JSON.stringify(r)); } await clk('[data-testid="hand-card-0"]'); await clk('[data-testid="play-card"]'); return true; }
+     await clk('[data-testid="hand-card-0"]'); await clk('[data-testid="play-card"]'); return true; }
   if (await vis("place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="place-lui"]'); return true; }
   if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="confirm-vote"]'); return true; }
   if (await vis("skip") && !SAMPLE) { await clk('[data-testid="skip"]', { timeout: 3000 }); return true; }
   if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await clk('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
   return false;
 }
-while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch (e) { if (!globalThis.__e) { globalThis.__e = 1; console.log("STEPERR", globalThis.__s, String(e.message).slice(0, 300)); } } if (!a) await sleep(150); }
+while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch { /* stato cambiato nel frattempo */ } if (!a) await sleep(150); }
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("la partita da solo arriva alla classifica finale", await vis("final")); if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-finale.png` });
