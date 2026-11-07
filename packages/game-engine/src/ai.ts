@@ -42,7 +42,7 @@ function sampleVotes(p: number[], n: number, rand: () => number): number[] {
 const luiHit = (zero: boolean, k: number, others: number) => (zero ? others === 0 : others >= k);
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { reactHard: 0.5, reactMed: 0.25, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.3, voteTempMed: 0.4, medNoise: 1.0, medVary: 0.25 };
+export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
@@ -83,9 +83,9 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       let harm = 0, X = -1;
       if (lui && me !== mega) {
-        // Vedo il Lui! su X ma non il numero: stimo quale segnalino ha giocato (tra quelli che gli restano, i più sensati) e quanto il mio voto su X gli regala o gli toglie
+        // Vedo il Lui! su X ma non il numero né quali gettoni gli restano: stimo quale ha giocato tra i due della partita e quanto il mio voto su X gli regala o gli toglie
         X = lui.position - 1;
-        const specs = luiTokens(s).filter((x) => luiAvailable(s, mega).includes(x.slot)), others = s.playerIds.length - 2;
+        const specs = luiTokens(s), others = s.playerIds.length - 2;
         const samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, others, rand));
         const ev = specs.map((sp) => samples.reduce((a, c) => a + (luiHit(sp.slot === "zero", sp.k, c[X]!) ? sp.pts : 0), 0) / samples.length), top = Math.max(...ev);
         const wt = softmax(ev.map((e) => (e - top) / 1.0));

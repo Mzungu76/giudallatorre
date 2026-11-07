@@ -20,16 +20,16 @@ describe("segnalini Lui! (tabella e monouso)", () => {
     expect(t(6)).toBe("zero:0→5 k1:1→4 k2:2→7 k3:3→14");
     for (let n = 3; n <= 8; n++) for (const x of luiPool(n)) if (x.slot !== "zero") expect(x.k).toBeLessThanOrEqual(n - 1);   // gli altri sono N−1
   });
-  it("ogni partita pesca 2 segnalini a caso dal pool, uguali per tutti i giocatori; seed diversi danno coppie diverse", () => {
+  it("ogni partita ha 2 segnalini uguali per tutti: sempre lo 0 più una soglia a caso dal pool; seed diversi, soglie diverse", () => {
     const seen = new Set<string>();
     for (let seed = 1; seed <= 40; seed++) {
       const g = createGame({ ...cfg(5, { seed }), luiSlots: undefined }).state, set = luiTokens(g);
-      expect(set).toHaveLength(2); expect(new Set(set.map((x) => x.slot)).size).toBe(2);
+      expect(set).toHaveLength(2); expect(set.some((x) => x.slot === "zero")).toBe(true); expect(new Set(set.map((x) => x.slot)).size).toBe(2);
       for (const x of set) expect(luiPool(5).some((y) => y.slot === x.slot)).toBe(true);
       expect(viewFor(g, "p1").luiTokens).toEqual(viewFor(g, "p3").luiTokens);
       seen.add(set.map((x) => x.slot).join("+"));
     }
-    expect(seen.size).toBeGreaterThanOrEqual(4);
+    expect(seen.size).toBe(3);                       // zero+k1, zero+k2, zero+k3
     const a = createGame({ ...cfg(5, { seed: 9 }), luiSlots: undefined }).state, b = createGame({ ...cfg(5, { seed: 9 }), luiSlots: undefined }).state;
     expect(luiTokens(a)).toEqual(luiTokens(b));
   });

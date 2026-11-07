@@ -1,5 +1,5 @@
 import type { CardId, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
-import { luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Vista di un singolo giocatore: è l'UNICA cosa che il server invia al client. Nessun dato privato altrui. */
 export interface PlayerView {
@@ -16,9 +16,9 @@ export interface PlayerView {
   luiPosition: number | null;
   /** Quale segnalino è stato posato: noto solo al Megafono fino ai risultati. */
   luiSlot: LuiSlot | null;
-  /** I tre segnalini di questa partita (soglie e punti) e quelli già spesi da ciascun giocatore (pubblico). */
+  /** I 2 segnalini di questa partita (uguali per tutti) e quali ti restano: i segnalini degli altri non si vedono. */
   luiTokens: LuiSpec[];
-  luiSpent: Record<PlayerId, LuiSlot[]>;
+  myLuiLeft: LuiSlot[];
   myVote: number | null;
   /** Tutti i voti, solo da RESULTS in poi. */
   votes: Record<PlayerId, number> | null;
@@ -48,7 +48,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     tower: s.tower.map((t) => ({ position: t.position, cardId: t.cardId, ownerId: revealed ? t.ownerId : null })),
     luiPosition: s.lui ? s.lui.position : null,
     luiSlot: s.lui && (isMega || revealed) ? s.lui.slot : null,
-    luiTokens: luiTokens(s), luiSpent: Object.fromEntries(s.playerIds.map((p) => [p, (s.luiSpent?.[p] ?? []).slice()])),
+    luiTokens: luiTokens(s), myLuiLeft: luiAvailable(s, viewer),
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed && !inMini ? s.lastResult : null,

@@ -33,8 +33,14 @@ const BANNERS: Record<string, [string, string]> = {
   SUSPECT: ["Salgono le carte!", "il Megafono sta per scommettere sui voti"],
   VOTE: ["Votate!", "in segreto: chi cade?"],
 };
-/** Segnalini Lui! che restano a un giocatore (finiti tutti, tornano tutti). */
-const leftTokens = (view: PlayerView, id: PlayerId) => { const spent = view.luiSpent[id] ?? [], left = view.luiTokens.map((t) => t.slot).filter((x) => !spent.includes(x)); return left.length ? left : view.luiTokens.map((t) => t.slot); };
+/** I tuoi segnalini Lui!: sempre visibili in alto; quelli già spesi sono grigi. Gli altri giocatori non vedono i tuoi. */
+function LuiTray({ view }: { view: PlayerView }) {
+  return (
+    <span className="ltray" data-testid="lui-tray" aria-label={`I tuoi segnalini Lui!: ${view.luiTokens.filter((t) => view.myLuiLeft.includes(t.slot)).map((t) => luiLabel(t)).join(", ") || "nessuno"}`}>
+      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${view.myLuiLeft.includes(sp.slot) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${view.myLuiLeft.includes(sp.slot) ? "" : " (già usato)"}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 24) }} />)}
+    </span>
+  );
+}
 const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : "0");
 
 export function usePeople(room: RoomMsg) {
@@ -261,7 +267,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       {revealing && res && (
         <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
-      <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
+      <Chips left={<><Disc color={people.get(me).color} /><span className="nm">{readOnly ? "Schermo condiviso" : people.get(me).name}</span>{!readOnly && <LuiTray view={view} />}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
       {deadline && phase !== "RESULTS" && <div className="cd"><Countdown deadline={deadline} /></div>}
       {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} megaName={people.get(view.megafonoId).name} onBottom={setPhraseB} />}
@@ -281,7 +287,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
             : <>
               <Tip>Lui! sul <b>n. {pick}</b>: quanti voti prenderà dagli altri? <small>(il tuo voto non conta)</small></Tip>
               <div className="lui-opts">
-                {view.luiTokens.map((sp) => { const left = leftTokens(view, me).includes(sp.slot);
+                {view.luiTokens.map((sp) => { const left = view.myLuiLeft.includes(sp.slot);
                   return <button key={sp.slot} className={`lk lui-${sp.slot}`} disabled={!left} onClick={() => act({ t: "act", action: { type: "placeLui", slot: sp.slot, position: pick } })} data-testid={`lui-${sp.slot}`}>
                     <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? `+${sp.pts} punti` : "già usato"}</small></button>; })}
               </div>
@@ -293,7 +299,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
             <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo): scommette sui voti che prende. ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega
-              ? <strong className="tip-warn" data-testid="tip-herd"> Non sai quale gettone ha usato, gli restano: <span className="tchips">{leftTokens(view, view.megafonoId).map((x) => <span key={x} className="tchip" dangerouslySetInnerHTML={{ __html: luiTok(view.luiTokens.find((t) => t.slot === x)!, 32) }} />)}</span> Votare quella carta può aiutarlo… o rovinargli lo 0!</strong>
+              ? <strong className="tip-warn" data-testid="tip-herd"> Non sai quale gettone ha usato: votare quella carta può aiutarlo… o rovinargli lo 0!</strong>
               : <strong className="tip-warn" data-testid="tip-herd"> Il tuo Lui! conta solo i voti degli altri.</strong>}</Tip>
             <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}

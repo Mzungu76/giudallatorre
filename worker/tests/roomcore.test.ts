@@ -153,7 +153,7 @@ function playOneTurn(r: ReturnType<typeof makeRoom>) {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
   for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: "k1", position: 1 } });
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
   for (const id of r.ids) send(r, r.ids.indexOf(id), { t: "act", action: { type: "vote", position: 1 } });
 }
 
@@ -226,7 +226,7 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
   for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: "k1", position: 1 } });
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
   expect(upTo).toBe("VOTE");
 }
 

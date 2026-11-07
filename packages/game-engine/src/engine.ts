@@ -11,7 +11,7 @@ export function luiPool(n: number): LuiSpec[] {
   else { pool.push({ slot: "k2", k: 2, pts: 7 }); pool.push({ slot: "k3", k: 3, pts: n === 4 ? 16 : 14 }); }
   return pool;
 }
-/** I segnalini della partita (2). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
+/** I segnalini della partita (2: lo 0 e una soglia a caso). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
 export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
@@ -53,7 +53,8 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
     miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
   };
-  s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : shuffle(luiPool(n), s).slice(0, 2).sort((a, b) => a.k - b.k);
+  // i due segnalini: sempre lo 0 (senza, chi si sente minacciato non voterebbe mai la carta del Lui!) più una soglia a caso
+  s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : [luiPool(n).find((x) => x.slot === "zero")!, shuffle(luiPool(n).filter((x) => x.slot !== "zero"), s)[0]!];
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
