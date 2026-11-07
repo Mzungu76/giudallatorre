@@ -11,12 +11,14 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       const c = s.proclaim!;
       return rand() < 0.15 ? { type: "choosePhrase", playerId, mode: "free" } : { type: "choosePhrase", playerId, mode: "card", index: Math.floor(rand() * c.phrases.length) };
     }
+    case "MINI_PLAY":
     case "PLAY":
       if (!requiredPlayers(s).includes(playerId) || s.played[playerId] !== undefined) return null;
       return { type: "playCard", playerId, cardId: pick(s.hands[playerId]!) };
     case "SUSPECT":
       if (playerId !== mega) return null;
       return { type: "placeLui", playerId, kind: rand() < 0.5 ? "CADE" : "NON_CADE", position: 1 + Math.floor(rand() * s.tower.length) };
+    case "MINI_VOTE":
     case "VOTE":
       if (s.votes[playerId] !== undefined) return null;
       return { type: "vote", playerId, position: 1 + Math.floor(rand() * s.tower.length) };

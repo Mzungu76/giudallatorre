@@ -5,6 +5,7 @@ export function checkInvariants(s: GameState, fullDeck: readonly string[]): stri
   const problems: string[] = [];
   const all: string[] = [...s.drawPile, ...s.discardPile, ...Object.values(s.hands).flat(), ...Object.values(s.played), ...s.tower.map((t) => t.cardId)];
   if (s.deckCard !== null && !s.tower.length) all.push(s.deckCard);
+  if (s.mini?.cardId) all.push(s.mini.cardId);
   if (all.length !== fullDeck.length) problems.push(`carte totali ${all.length} ≠ ${fullDeck.length}`);
   const seen = new Set<string>();
   for (const c of all) { if (seen.has(c)) problems.push(`carta duplicata ${c}`); seen.add(c); }

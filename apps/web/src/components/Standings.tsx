@@ -13,7 +13,7 @@ export function Pawn({ color, size = 40 }: { color: string; size?: number }) {
 
 /** Classifica come salita lungo la torre: le pedine stanno al centro e salgono in base ai punti.
  *  Oltre l'ultima tacca la torre si allunga (la scala passa a multipli di 10), così nessuno "esce" dal disegno. */
-export default function Standings({ rows, turn, total, onClose }: { rows: StandRow[]; turn: number; total: number; onClose: () => void }) {
+export default function Standings({ rows, turn, total, onClose, action, title }: { rows: StandRow[]; turn: number; total: number; onClose: () => void; /** Pulsante principale (es. "Prosegui") o un messaggio di attesa al suo posto. */ action?: { label: string; onClick: () => void } | { wait: string }; title?: string }) {
   const { H } = useStage();
   const best = Math.max(0, ...rows.map((r) => r.score));
   const top = Math.max(30, Math.ceil((best + 1) / 10) * 10), step = top > 60 ? 10 : 5;
@@ -37,7 +37,7 @@ export default function Standings({ rows, turn, total, onClose }: { rows: StandR
   return (
     <div className="zoom on top stbd" role="dialog" aria-label="Classifica" data-testid="standings" style={{ height: H }}>
       <div className="stbd-sky" /><div className="stbd-rays" />
-      <div className="stbd-title"><b>Classifica</b><small>{turn <= total ? `Turno ${turn} di ${total}` : "Spareggio"}{top > 30 ? ` · la torre è arrivata a ${top}!` : ""}</small></div>
+      <div className="stbd-title"><b>{title ?? "Classifica"}</b><small>{turn <= total ? `Turno ${turn} di ${total}` : "Spareggio"}{top > 30 ? ` · la torre è arrivata a ${top}!` : ""}</small></div>
       <button className="stbd-x" onClick={onClose} aria-label="Chiudi" data-testid="standings-close">×</button>
       <div className="stbd-tower" style={{ top: yTop - 34, height: span + 78 }}>
         <div className="stbd-merl">{Array.from({ length: 5 }, (_, i) => <i key={i} />)}</div>
@@ -58,7 +58,8 @@ export default function Standings({ rows, turn, total, onClose }: { rows: StandR
           </div>
         </div>
       ))}
-      <button className="stbd-ok" onClick={onClose} data-testid="standings-ok">Chiudi</button>
+      {action && "wait" in action ? <div className="stbd-wait" data-testid="standings-wait">{action.wait}</div>
+        : <button className="stbd-ok" onClick={action ? action.onClick : onClose} data-testid={action ? "standings-action" : "standings-ok"}>{action ? action.label : "Chiudi"}</button>}
     </div>
   );
 }

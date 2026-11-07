@@ -1,0 +1,547 @@
+[
+ {
+  "testo": "Mi ha rubato il panino al prosciutto e ha detto che era un malinteso!",
+  "tipo": [
+   "furbo",
+   "avaro"
+  ],
+  "temi": [
+   "cibo"
+  ]
+ },
+ {
+  "testo": "Ha parcheggiato davanti al mio garage e ha lasciato un biglietto con scritto «torno subito». Sono passati tre giorni.",
+  "tipo": [
+   "pigro",
+   "furbo"
+  ],
+  "temi": [
+   "mezzi"
+  ]
+ },
+ {
+  "testo": "Ha risposto al mio «come stai?» con quaranta minuti di vocale.",
+  "tipo": [
+   "drammatico",
+   "vanitoso"
+  ],
+  "temi": [
+   "social"
+  ]
+ },
+ {
+  "testo": "Mi ha spoilerato il finale della serie e poi ha detto «io lo sapevo da tempo».",
+  "tipo": [
+   "saputello",
+   "nerd"
+  ],
+  "temi": [
+   "spettacolo"
+  ]
+ },
+ {
+  "testo": "Ha mangiato il mio yogurt e ha rimesso il vasetto vuoto in frigo.",
+  "tipo": [
+   "furbo",
+   "pigro"
+  ],
+  "temi": [
+   "cibo",
+   "casa"
+  ]
+ },
+ {
+  "testo": "Mi ha chiesto dei soldi in prestito per un caffè nel 2019.",
+  "tipo": [
+   "avaro",
+   "furbo"
+  ],
+  "temi": [
+   "soldi"
+  ]
+ },
+ {
+  "testo": "Ha corretto il mio congiuntivo davanti a tutti, al mio compleanno.",
+  "tipo": [
+   "saputello"
+  ],
+  "temi": [
+   "cultura",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha taggato mia nonna in una foto in cui io facevo una faccia terribile.",
+  "tipo": [
+   "vanitoso",
+   "furbo"
+  ],
+  "temi": [
+   "social",
+   "famiglia"
+  ]
+ },
+ {
+  "testo": "Mi ha fatto una predica sulla vita sana mentre mangiava il mio dolce.",
+  "tipo": [
+   "religioso",
+   "saputello"
+  ],
+  "temi": [
+   "salute",
+   "cibo"
+  ]
+ },
+ {
+  "testo": "Ha portato un gatto in ufficio e ha detto che è un «collega di supporto emotivo».",
+  "tipo": [
+   "furbo",
+   "pigro"
+  ],
+  "temi": [
+   "animali",
+   "lavoro"
+  ]
+ },
+ {
+  "testo": "Ha cambiato la mia password del wifi «per il mio bene».",
+  "tipo": [
+   "saputello",
+   "nerd"
+  ],
+  "temi": [
+   "tecnologia",
+   "casa"
+  ]
+ },
+ {
+  "testo": "Ha raccontato davanti a tutti il segreto che mi aveva giurato di non dire a nessuno.",
+  "tipo": [
+   "bugiardo",
+   "politico"
+  ],
+  "temi": [
+   "pettegolo"
+  ]
+ },
+ {
+  "testo": "Mi ha prestato un libro, lo ha sottolineato tutto e ha scritto «assurdo» a margine.",
+  "tipo": [
+   "saputello",
+   "artista"
+  ],
+  "temi": [
+   "cultura"
+  ]
+ },
+ {
+  "testo": "Mi ha suonato il clacson per tre chilometri dicendo che stavo guidando «con pensiero».",
+  "tipo": [
+   "rabbioso"
+  ],
+  "temi": [
+   "mezzi",
+   "rabbia"
+  ]
+ },
+ {
+  "testo": "Ha fatto il solletico alla suocera durante la benedizione.",
+  "tipo": [
+   "goffo",
+   "religioso"
+  ],
+  "temi": [
+   "famiglia",
+   "religione",
+   "imbarazzo"
+  ]
+ },
+ {
+  "testo": "Mi ha venduto una bicicletta «quasi nuova» che aveva un solo pedale.",
+  "tipo": [
+   "furbo",
+   "bugiardo"
+  ],
+  "temi": [
+   "soldi",
+   "mezzi"
+  ]
+ },
+ {
+  "testo": "Ha litigato con me per una discussione su chi aveva ragione sull'ananas sulla pizza. Non ha mai chiesto scusa.",
+  "tipo": [
+   "rabbioso",
+   "saputello"
+  ],
+  "temi": [
+   "cibo",
+   "rabbia"
+  ]
+ },
+ {
+  "testo": "Mi ha chiesto «posso usare il bagno?» e ci è rimasto più della durata di una messa.",
+  "tipo": [
+   "pigro",
+   "goffo"
+  ],
+  "temi": [
+   "casa",
+   "corpo"
+  ]
+ },
+ {
+  "testo": "Ha cantato per tutta la cena e ha detto che «porta gioia».",
+  "tipo": [
+   "artista",
+   "vanitoso"
+  ],
+  "temi": [
+   "musica",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Si è seduto sul mio posto al cinema e ha detto «tanto sei basso».",
+  "tipo": [
+   "rabbioso",
+   "vanitoso"
+  ],
+  "temi": [
+   "spettacolo"
+  ]
+ },
+ {
+  "testo": "Ha dato la colpa al cane per una cosa che il cane non può aver fatto: aprire il frigo.",
+  "tipo": [
+   "bugiardo",
+   "furbo"
+  ],
+  "temi": [
+   "animali",
+   "bugie",
+   "casa"
+  ]
+ },
+ {
+  "testo": "Ha tenuto in vivavoce una telefonata privata nel mezzo del supermercato.",
+  "tipo": [
+   "vanitoso",
+   "politico"
+  ],
+  "temi": [
+   "imbarazzo",
+   "social"
+  ]
+ },
+ {
+  "testo": "Mi ha pestato un piede e ha detto che ero io a essere «nel suo percorso».",
+  "tipo": [
+   "rabbioso",
+   "goffo"
+  ],
+  "temi": [
+   "rabbia",
+   "imbarazzo"
+  ]
+ },
+ {
+  "testo": "Ha dato il mio numero di telefono a una compagnia di assicurazioni dicendo che ero «interessato».",
+  "tipo": [
+   "furbo",
+   "politico"
+  ],
+  "temi": [
+   "soldi",
+   "bugie"
+  ]
+ },
+ {
+  "testo": "Ha sbagliato il mio nome per sette anni e ora dice che «ormai è un soprannome».",
+  "tipo": [
+   "pigro",
+   "vecchio"
+  ],
+  "temi": [
+   "imbarazzo",
+   "famiglia"
+  ]
+ },
+ {
+  "testo": "Mi ha regalato una candela già usata, incartata male.",
+  "tipo": [
+   "avaro",
+   "furbo"
+  ],
+  "temi": [
+   "soldi",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha dichiarato di essere a dieta e poi ha mangiato la mia porzione di tiramisù.",
+  "tipo": [
+   "pigro",
+   "avaro"
+  ],
+  "temi": [
+   "cibo",
+   "salute"
+  ]
+ },
+ {
+  "testo": "Ha scritto una recensione di una sola stella al mio ristorante preferito perché il tavolo «non aveva energia».",
+  "tipo": [
+   "vanitoso",
+   "drammatico"
+  ],
+  "temi": [
+   "cibo",
+   "social"
+  ]
+ },
+ {
+  "testo": "Ha litigato con l'arbitro, il guardalinee e il pallone. Era una partita tra bambini.",
+  "tipo": [
+   "sportivo",
+   "rabbioso"
+  ],
+  "temi": [
+   "sport",
+   "bambini",
+   "rabbia"
+  ]
+ },
+ {
+  "testo": "Mi ha fatto una foto mentre dormivo in treno e l'ha mandata a tutta la famiglia.",
+  "tipo": [
+   "furbo",
+   "vanitoso"
+  ],
+  "temi": [
+   "viaggio",
+   "famiglia",
+   "social"
+  ]
+ },
+ {
+  "testo": "Ha usato il mio spazzolino «solo una volta» e ha detto «non si nota».",
+  "tipo": [
+   "pigro",
+   "goffo"
+  ],
+  "temi": [
+   "corpo",
+   "casa"
+  ]
+ },
+ {
+  "testo": "Mi ha chiesto di fargli il trasloco, poi mi ha pagato con una pacca sulla spalla.",
+  "tipo": [
+   "avaro",
+   "furbo"
+  ],
+  "temi": [
+   "casa",
+   "soldi"
+  ]
+ },
+ {
+  "testo": "Ha dato un consiglio sulla mia relazione che ha fatto litigare tutti e poi ha detto «io ve l'avevo detto».",
+  "tipo": [
+   "saputello",
+   "politico"
+  ],
+  "temi": [
+   "amore",
+   "pettegolo"
+  ]
+ },
+ {
+  "testo": "Ha portato il vino a una cena e se l'è bevuto tutto lui.",
+  "tipo": [
+   "furbo",
+   "avaro"
+  ],
+  "temi": [
+   "alcol",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha ballato sul tavolo, poi sul divano, poi sul cugino.",
+  "tipo": [
+   "vanitoso",
+   "artista"
+  ],
+  "temi": [
+   "feste",
+   "imbarazzo"
+  ]
+ },
+ {
+  "testo": "Ha confuso il mio matrimonio con il suo e ha fatto un discorso.",
+  "tipo": [
+   "drammatico",
+   "vanitoso"
+  ],
+  "temi": [
+   "amore",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha messo un like a una mia foto di cinque anni fa, alle 3 di notte.",
+  "tipo": [
+   "vanitoso",
+   "nerd"
+  ],
+  "temi": [
+   "social",
+   "notte"
+  ]
+ },
+ {
+  "testo": "Ha dichiarato di aver letto tutto Dante e poi ha chiesto chi fosse Beatrice.",
+  "tipo": [
+   "saputello",
+   "bugiardo"
+  ],
+  "temi": [
+   "cultura",
+   "bugie"
+  ]
+ },
+ {
+  "testo": "Mi ha detto che il mio cane è «adorabile» e poi gli ha dato il suo gelato, cono compreso.",
+  "tipo": [
+   "furbo",
+   "goffo"
+  ],
+  "temi": [
+   "animali",
+   "cibo"
+  ]
+ },
+ {
+  "testo": "Ha organizzato una raccolta fondi per «le sue vacanze di emergenza».",
+  "tipo": [
+   "avaro",
+   "furbo"
+  ],
+  "temi": [
+   "soldi",
+   "viaggio"
+  ]
+ },
+ {
+  "testo": "Ha insistito per fare il brindisi, ha parlato un'ora e poi ha brindato col mio bicchiere.",
+  "tipo": [
+   "vanitoso",
+   "politico"
+  ],
+  "temi": [
+   "alcol",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha pregato per la mia partita di calcetto dicendo che «un miracolo non basterà».",
+  "tipo": [
+   "religioso",
+   "sportivo"
+  ],
+  "temi": [
+   "religione",
+   "sport"
+  ]
+ },
+ {
+  "testo": "Mi ha chiamato tre volte alle 6 del mattino per chiedere se dormivo.",
+  "tipo": [
+   "rabbioso",
+   "drammatico"
+  ],
+  "temi": [
+   "notte",
+   "imbarazzo"
+  ]
+ },
+ {
+  "testo": "Ha guidato per un'ora nella direzione sbagliata dicendo «ho il navigatore nel sangue».",
+  "tipo": [
+   "goffo",
+   "vanitoso"
+  ],
+  "temi": [
+   "mezzi",
+   "viaggio"
+  ]
+ },
+ {
+  "testo": "Ha scoperto di essere allergico al mio regalo dopo averlo aperto, scartato e usato.",
+  "tipo": [
+   "goffo",
+   "drammatico"
+  ],
+  "temi": [
+   "salute",
+   "feste"
+  ]
+ },
+ {
+  "testo": "Ha fatto un video di me che cadevo dalla sedia e ha scritto «fail dell'anno».",
+  "tipo": [
+   "furbo",
+   "vanitoso"
+  ],
+  "temi": [
+   "social",
+   "imbarazzo"
+  ]
+ },
+ {
+  "testo": "Mi ha spiegato come si fa una cosa che sto facendo da vent'anni.",
+  "tipo": [
+   "saputello",
+   "vecchio"
+  ],
+  "temi": [
+   "lavoro",
+   "faidate"
+  ]
+ },
+ {
+  "testo": "Ha sostituito il mio sapone con una bottiglia di «prodotto biologico del cugino».",
+  "tipo": [
+   "furbo",
+   "politico"
+  ],
+  "temi": [
+   "casa",
+   "faidate"
+  ]
+ },
+ {
+  "testo": "Ha ammesso la colpa solo dopo aver controllato che nessuno guardasse. Poi ha negato di nuovo.",
+  "tipo": [
+   "bugiardo",
+   "politico"
+  ],
+  "temi": [
+   "bugie",
+   "legge"
+  ]
+ },
+ {
+  "testo": "Ha litigato con il condominio per un vaso di fiori, ora vive nel vaso.",
+  "tipo": [
+   "rabbioso",
+   "vecchio"
+  ],
+  "temi": [
+   "casa",
+   "rabbia",
+   "natura"
+  ]
+ }
+]

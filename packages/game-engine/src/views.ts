@@ -1,4 +1,4 @@
-import type { CardId, GameState, LuiKind, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
+import type { CardId, GameState, LuiKind, MiniKind, MiniResult, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
 import { megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Vista di un singolo giocatore: è l'UNICA cosa che il server invia al client. Nessun dato privato altrui. */
@@ -20,6 +20,9 @@ export interface PlayerView {
   /** Tutti i voti, solo da RESULTS in poi. */
   votes: Record<PlayerId, number> | null;
   lastResult: TurnResult | null;
+  /** Mini-gioco di metà partita in corso (carta pescata e accusa, se c'è) e, a fine voto, il risultato. */
+  mini: { kind: MiniKind; cardId: CardId | null; text: string | null } | null;
+  miniResult: MiniResult | null;
   winners: PlayerId[] | null;
   goldenGoal: boolean;
   /** Giro corrente (1..rounds, oltre = spareggio), giri regolari e se il turno appena risolto chiude un giro. */
@@ -28,7 +31,7 @@ export interface PlayerView {
 }
 
 export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
-  const revealed = s.phase === "RESULTS" || s.phase === "GAME_OVER";
+  const revealed = s.phase === "RESULTS" || s.phase === "MINI_RESULTS" || s.phase === "GAME_OVER", inMini = s.phase.startsWith("MINI");
   const isMega = viewer === megafonoOf(s);
   return {
     viewerId: viewer, phase: s.phase, turn: s.turnNumber, totalTurns: s.totalTurns,
@@ -44,7 +47,8 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     luiKind: s.lui && (isMega || revealed) ? s.lui.kind : null,
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
-    lastResult: revealed ? s.lastResult : null,
+    lastResult: revealed && !inMini ? s.lastResult : null,
+    mini: inMini && s.mini ? { ...s.mini } : null, miniResult: s.phase === "MINI_RESULTS" ? s.miniResult ?? null : null,
     winners: s.winners, goldenGoal: s.goldenGoal,
     round: Math.ceil(s.turnNumber / s.playerIds.length), rounds: s.rounds, roundEnd: s.phase === "RESULTS" && s.turnNumber % s.playerIds.length === 0,
     drawPileCount: s.drawPile.length, discardCount: s.discardPile.length,

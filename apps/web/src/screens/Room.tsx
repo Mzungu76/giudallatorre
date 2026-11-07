@@ -4,6 +4,7 @@ import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
+import MiniGame from "../components/MiniGame.tsx";
 import Chat from "../components/Chat.tsx";
 import type { ChatDto } from "@gdt/game-protocol";
 import Final from "./Final.tsx";
@@ -82,7 +83,7 @@ export default function RoomScreen({ code }: { code: string }) {
   return (
     <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
-      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} />}
+      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} />)}
       <Chat chat={chat} me={room.you} players={room.players} send={send} sound={sound} />
       <button className="snd" aria-label={sound ? "Disattiva i suoni" : "Attiva i suoni"} onClick={() => setSound(!sound)}>{sound ? "🔊" : "🔇"}</button>
       {reconnecting && <div className="banner-conn">Riconnessione…</div>}

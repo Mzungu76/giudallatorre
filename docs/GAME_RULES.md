@@ -75,3 +75,18 @@ Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato,
 
 ## Messaggi tra i giocatori
 Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.
+
+## Mini-gioco di metà partita
+Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca **un solo mini-gioco**, scelto a caso tra tre. Non c'è il Megafono né il Lui!. Prima c'è un **intervallo** (suono, schermata speciale con il nome del gioco e cosa fare, si chiude con un pulsante). Tutte le mani vengono **rinnovate** (5 carte nuove a tutti; le vecchie vanno nello scarto). Tutti i giocatori giocano una carta, le carte salgono sulla torre e si vota in segreto; **si può votare anche la propria carta**. Dopo il mini-gioco ognuno pesca una carta e si riprende con il turno successivo.
+
+- **L'Accusa** — una carta pescata a caso (l'accusatore, mostrata a parte e non votabile) accusa uno dei giocatori di una marachella (50 accuse). Ognuno gioca il colpevole.
+- **La storia d'amore** — una carta pescata a caso (il protagonista, mostrata a parte) ha una nuova storia d'amore: ognuno gioca il partner ideale.
+- **Il raccomandato** — nessuna frase né accusa: si vota chi buttare giù.
+
+**Punteggio di Accusa e Storia d'amore.** Restano sulla torre le carte con più voti (tutte quelle a pari merito); le altre **cadono**. Chi ha votato una carta in testa prende **tanti punti quanti sono i voti su quella carta (compreso il proprio)**; chi ha giocato una carta in testa prende il **doppio dei voti** ricevuti. Chi ha votato una carta caduta, e chi ha giocato una carta caduta, non prende nulla. Se tutte le carte hanno gli stessi voti non cade nessuna.
+
+**Punteggio del Raccomandato.** Cade la carta più votata (o tutte quelle a pari merito in testa). Chi ha giocato una carta caduta **perde tanti punti quanti sono i voti ricevuti**, senza scendere sotto zero. I votanti non prendono nulla.
+
+**Tetto.** Nei mini-giochi con punti positivi nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la seconda metà resta aperta.
+
+Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).

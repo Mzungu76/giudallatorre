@@ -3,6 +3,7 @@ import { useRoom } from "../hooks/useRoom.ts";
 import { Disc, PLAYER_COLORS, useFit, navigate } from "../ui.tsx";
 import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
+import MiniGame from "../components/MiniGame.tsx";
 import Final from "./Final.tsx";
 
 /** Schermo condiviso (tablet / PC / TV): sola visione, solo informazioni pubbliche. */
@@ -25,7 +26,7 @@ export default function DisplayScreen({ code }: { code: string }) {
           <div className="stage-outer" style={{ width: 372 * k, height: 826 * k }}>
             <div className="stage" style={{ transform: `scale(${k})` }}>
               <div className="sky" /><div className="skyg" /><div className="skyh" />
-              {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} readOnly /> : <Game room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} />}
+              {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} readOnly /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} /> : <Game room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} />)}
               <div className="vig" /><div className="grain" />
             </div>
           </div>

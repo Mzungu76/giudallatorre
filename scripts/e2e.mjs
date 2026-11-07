@@ -29,6 +29,9 @@ function botStep(c) {
   if (v.phase === "PLAY" && !mine.hasPlayed && (v.megafonoSa || me !== mega)) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
   if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } }); return true; }
   if (v.phase === "VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
+  if (v.phase === "MINI_PLAY" && !mine.hasPlayed) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
+  if (v.phase === "MINI_VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
+  if (v.phase === "MINI_RESULTS" && c.room?.hostId === me) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   if (v.phase === "RESULTS" && me === mega) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   return false;
 }

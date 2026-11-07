@@ -1,6 +1,9 @@
 export type PlayerId = string;
 export type CardId = string;
-export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "GAME_OVER";
+export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI_PLAY" | "MINI_VOTE" | "MINI_RESULTS" | "GAME_OVER";
+/** Mini-giochi di metà partita: Accusa, La storia d'amore, Il raccomandato. */
+export type MiniKind = "accusa" | "amore" | "raccomandato";
+export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "raccomandato"];
 export type LuiKind = "CADE" | "NON_CADE";
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
@@ -18,6 +21,10 @@ export interface GameConfig {
   handSize?: number;
   /** Indice del primo Megafono; se omesso è scelto a caso (seed). */
   firstMegafonoIndex?: number;
+  /** Mini-gioco a metà partita: `false` (default) = nessuno, "random" = uno a caso tra i tre, oppure uno fisso. */
+  miniGame?: false | "random" | MiniKind;
+  /** Elenco delle accuse (testi) per il mini-gioco Accusa. */
+  accuseDeck?: string[];
 }
 
 export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId | null }
@@ -54,7 +61,22 @@ export interface TurnResult {
   megaVote: number;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }
+
+/** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
+export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
+export interface MiniResult {
+  kind: MiniKind; cardId: CardId | null; text: string | null;
+  votes: Record<PlayerId, number>; counts: Record<number, number>;
+  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Raccomandato: sono quelle che cadono). */
+  leaders: number[];
+  fallenPositions: number[]; fallenCardIds: CardId[];
+  /** Chi aveva giocato ciascuna carta (posizione → giocatore). */
+  owners: Record<number, PlayerId>;
+  points: Record<PlayerId, number>; lines: Record<PlayerId, ScoreLine[]>;
+  /** Tetto ai punti guadagnati da un giocatore nel mini-gioco. */
+  cap: number;
+}
 
 export interface GameState {
   version: 1;
@@ -91,6 +113,13 @@ export interface GameState {
   /** Spareggio a oltranza: si gioca un turno alla volta finché un giocatore ha più punti di tutti gli altri. */
   goldenGoal: boolean;
   goldenTurns: number;
+  /** Mini-gioco di metà partita (campi assenti nelle partite salvate prima: nessun mini-gioco). */
+  miniGame?: false | "random" | MiniKind;
+  accuseDeck?: string[];
+  miniAt?: number;
+  miniDone?: boolean;
+  mini?: Mini | null;
+  miniResult?: MiniResult | null;
 }
 
 export type Action =
@@ -110,6 +139,8 @@ export type GameEvent =
   | { type: "voteCast"; playerId: PlayerId }
   | { type: "resolved"; result: TurnResult }
   | { type: "turnEnded"; turn: number }
+  | { type: "miniStarted"; kind: MiniKind }
+  | { type: "miniResolved"; result: MiniResult }
   | { type: "goldenGoal"; leaders: PlayerId[] }
   | { type: "gameOver"; winners: PlayerId[] };
 

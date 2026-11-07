@@ -259,7 +259,7 @@ describe("giocatori virtuali nella stanza", () => {
       const g = core.data.game as GameState;
       const a = suggestAction(g, c.playerId, Math.random);
       if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; core.handle(c.playerId, { t: "act", action } as never, now); }
-      else if (g.phase === "RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
+      else if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
       now += 1500; core.tick(now);
     }
     expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(4000);

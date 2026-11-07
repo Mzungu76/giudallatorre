@@ -23,7 +23,7 @@ export interface Outbox {
   /** Eventi di gioco dell'ultima azione, per gli schermi condivisi (sola visione). */
   events?: GameEvent[];
 }
-export interface Deps { rng: RandomBytes; deck: CardId[]; phraseDeck: PhraseCard[] }
+export interface Deps { rng: RandomBytes; deck: CardId[]; phraseDeck: PhraseCard[]; accuseDeck?: string[] }
 
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
 
@@ -170,7 +170,7 @@ export class RoomCore {
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "la partita è già avviata");
         if (d.players.length < LIMITS.minPlayers) return err("NOT_ENOUGH_PLAYERS", "servono almeno 3 giocatori");
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, mixPhrases: true, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, mixPhrases: true, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);
@@ -197,7 +197,7 @@ export class RoomCore {
   }
   private armDeadline(now: number) {
     const d = this.data, g = d.game; if (!g || g.phase === "GAME_OVER") { d.deadline = null; return; }
-    if (g.phase === "RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
+    if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
     else d.deadline = d.options.turnTimerSec > 0 ? now + d.options.turnTimerSec * 1000 : null;
   }
 
@@ -224,7 +224,7 @@ export class RoomCore {
     // scadenza di fase
     if (d.stage === "PLAYING" && d.game && d.deadline !== null && now >= d.deadline) {
       const g0 = d.game;
-      if (g0.phase === "RESULTS") out = this.applyGame(out, { type: "advance" }, now);
+      if (g0.phase === "RESULTS" || g0.phase === "MINI_RESULTS") out = this.applyGame(out, { type: "advance" }, now);
       else {
         const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296;
         for (let guard = 0; guard < 40 && d.game!.phase === g0.phase; guard++) {
