@@ -40,12 +40,12 @@ function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {
 /** Come cambia il voto del gruppo quando vede il Lui! su X e pensa che il Megafono voti proprio X (chi vota come lui gli regala 1 punto a voto: gli altri evitano di votarla). */
 function scared(p: number[], x: number, q: number, lambda: number): number[] { return normalize(p.map((v, i) => (i === x ? v * (1 - lambda * q) : v))); }
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { voteScare: 0.2, megaScare: 0.2, bluff: true, bluffRate: 0.15, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35 };
+export const TUNE = { voteScare: 0.2, megaScare: 0.2, bluff: true, bluffRate: 0.15, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.3, voteTempMed: 0.4, medNoise: 1.0, medVary: 0.25 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
   const mega = megafonoOf(s), pick = <T,>(a: readonly T[]) => a[Math.floor(rand() * a.length)]!;
-  const noise = level === "hard" ? TUNE.hardNoise : 0.4, n = s.tower.length;
+  const noise = level === "hard" ? TUNE.hardNoise : TUNE.medNoise, n = s.tower.length;
   switch (s.phase) {
     case "PROCLAIM": {
       if (me !== mega) return null;
@@ -70,6 +70,8 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const top = argmax(p);
       if (TUNE.bluff && level === "hard" && q > 0.62 && p[top]! > 0.3 && rand() < TUNE.bluffRate) return { type: "placeLui", playerId: me, kind: "NON_CADE", position: top + 1 };
       if (TUNE.bluff && level === "hard" && q < 0.35 && p[top]! > 0.35 && rand() < TUNE.bluffRate * 1.2) return { type: "placeLui", playerId: me, kind: "CADE", position: top + 1 };
+      // il Medio non è prevedibile: ogni tanto gioca "Non cade" su una carta poco probabile
+      if (level === "medium" && rand() < TUNE.medVary) { const low = p.map((v, i) => [v, i] as const).filter(([, i]) => i !== top).sort((x, y) => x[0] - y[0]).slice(0, Math.max(1, Math.ceil(n / 2))); return { type: "placeLui", playerId: me, kind: "NON_CADE", position: pick(low)[1] + 1 }; }
       let best: { kind: "CADE" | "NON_CADE"; x: number } = { kind: "NON_CADE", x: 0 }, bestV = -Infinity;
       for (let x = 0; x < n; x++) {
         const pp = scared(p, x, q, lambda), pe = Math.min(0.95, pp[x]! + 0.1), pn = Math.max(0.01, pp[x]! - 0.04);
@@ -97,11 +99,10 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const hard = level === "hard", m = p.map(() => 0);
       if (lui) { const q = reputation(mem, mega), x = lui.position - 1, alt = argmax(p.map((v, i) => (i === x ? -1 : v))); m[x]! += q; m[alt]! += 1 - q; } else m[argmax(p)] = 1;
       const pp = hard ? normalize(p.map((v, i) => v * (1 - TUNE.voteScare * m[i]!))) : p;
-      let best = 0, bestV = -Infinity;
-      for (let k = 0; k < n; k++) {
-        const v = pp[k]! * (2 + (k + 1 === ownPos ? 2 : 0)) - (hard ? TUNE.feedMega * m[k]! : 0) + rand() * noise;
-        if (v > bestV) { bestV = v; best = k; }
-      }
+      // Voto "a probabilità": scelgo tra le carte in proporzione al loro valore atteso (non sempre la prima), così i bot non votano tutti la stessa carta
+      const val = pp.map((x, k) => x * (2 + (k + 1 === ownPos ? 2 : 0)) - (hard ? TUNE.feedMega * m[k]! : 0));
+      const w = softmax(val.map((x) => x / (hard ? TUNE.voteTemp : TUNE.voteTempMed)));
+      let u = rand(), best = n - 1; for (let k = 0; k < n; k++) { u -= w[k]!; if (u <= 0) { best = k; break; } }
       return vote(best + 1);
     }
     default: return null;

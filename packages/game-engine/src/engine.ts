@@ -164,20 +164,20 @@ function resolve(s: GameState, events: GameEvent[]) {
   const slots = fallen.map((f) => s.tower.find((t) => t.position === f)!);
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
-  const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts } : { kind, pts, n }); };
+  const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
   // Voto giusto: +2 a chi ha votato una carta caduta (Megafono compreso).
-  for (const p of s.playerIds) if (fallen.includes(s.votes[p]!)) give(p, 2, "voto");
+  for (const p of s.playerIds) if (fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
   // Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su (il suo voto non conta).
   const collected = s.playerIds.filter((p) => p !== mega && s.votes[p] === megaVote).length;
-  if (collected > 0) give(mega, collected, "raccolti", collected);
-  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta");
+  if (collected > 0) give(mega, collected, "raccolti", megaVote, collected);
+  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
   if (s.lui) {
     const hit = fallen.includes(s.lui.position);
-    if (s.lui.kind === "CADE" && hit) give(mega, 4, "lui-cade");
-    if (s.lui.kind === "NON_CADE" && !hit) give(mega, 1, "lui-non-cade");
+    if (s.lui.kind === "CADE" && hit) give(mega, 4, "lui-cade", s.lui.position);
+    if (s.lui.kind === "NON_CADE" && !hit) give(mega, 1, "lui-non-cade", s.lui.position);
     // scommessa fallita: malus
-    if (s.lui.kind === "CADE" && !hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
-    if (s.lui.kind === "NON_CADE" && hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito");
+    if (s.lui.kind === "CADE" && !hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito", s.lui.position);
+    if (s.lui.kind === "NON_CADE" && hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito", s.lui.position);
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,
