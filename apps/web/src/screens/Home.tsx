@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
 import HowTo from "../components/HowTo.tsx";
+import HomeTools from "../components/HomeTools.tsx";
 
 export default function Home() {
   const [how, setHow] = useState(false);
@@ -19,6 +20,7 @@ export default function Home() {
         <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 19, padding: 11 }} testId="go-solo">Gioca da solo (con bot)</Btn>
         <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 19, padding: 11 }}>Come si gioca</Btn>
       </div>
+      <HomeTools />
       {how && <HowTo onClose={() => setHow(false)} />}
     </Stage>
   );
