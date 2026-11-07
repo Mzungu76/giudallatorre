@@ -48,7 +48,7 @@ data.conf = Array.from({ length: 34 }, (_, i) => [(i * 53) % 360, 60 + ((i * 97)
 const how = readFileSync("apps/web/src/components/HowTo.tsx", "utf8");
 const grab = (name: string) => { const m = how.match(new RegExp(`export const ${name}[^=]*= (\\[[\\s\\S]*?\\n\\]);`)); return m ? (0, eval)(m[1]) : []; };
 data.howIntro = grab("HOWTO_INTRO"); data.howSteps = grab("HOWTO_STEPS"); data.howPts = grab("HOWTO_POINTS");
-data.mini = ["Un personaggio accusa uno di voi di aver fatto una marachella.", "Giocate la carta del colpevole, poi votate (anche la vostra!).", "Le carte più votate restano e fanno punti. Le altre cadono dalla torre!"];
+data.mini = ["Un personaggio accusa qualcuno di una marachella.", "Giocate la carta del colpevole e votate, anche la vostra.", "Le carte più votate restano e fanno punti. Le altre cadono dalla torre."];
 const json = JSON.stringify(data).replaceAll("LUIPNG", luiPng).replaceAll("</", "<\\/");
 const rgb = (hex: string) => { const n = parseInt(hex.slice(1), 16); return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`; };
 // Come installCharDiscs() dell'app: il dischetto colorato diventa il segnalino del personaggio.
