@@ -41,10 +41,11 @@ function PhraseHead({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaNa
     const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /);
     if (m) { label = `Oggi ${m[1]} sulla torre…`; body = phrase.text.slice(m[0].length); } else body = phrase.text;
   }
+  const theme = phrase.mode === "card" ? phrase.theme : undefined;
   const len = body.length, size = len > 80 ? " xl" : len > 50 ? " l" : "";
   return (
     <div className={`phrase-card${size}${cmp}`} style={{ top: 90 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
-      <span className="mega-ic" aria-hidden>📣</span><small>{label}</small><b>{body}</b>
+      <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
 }
@@ -72,6 +73,7 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
   const go = () => send({ t: "act", action: own ? { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } : { type: "choosePhrase", mode: "card", index: i } });
   return (
     <div className="picker" data-testid="phrase-picker">
+      {!own && card.theme && <div className="ctx-pick" data-testid="pick-theme">📍 {card.theme}</div>}
       <div className="h" style={{ top: 98, fontSize: 34 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
       <div className="opts">
         {!own && card.phrases.map((t, k) => (

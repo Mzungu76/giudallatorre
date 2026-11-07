@@ -12,7 +12,7 @@ export interface PlayerView {
   players: { id: PlayerId; name: string; score: number; megafonoTurns: number; handCount: number; hasPlayed: boolean; hasVoted: boolean }[];
   myHand: CardId[];
   /** Solo per il Megafono durante PROCLAIM. */
-  proclaimCard: { id: string; phrases: string[] } | null;
+  proclaimCard: { id: string; phrases: string[]; theme?: string } | null;
   phrase: PhraseChoice | null;
   tower: { position: number; cardId: CardId; ownerId: PlayerId | null }[];
   luiPosition: number | null;
@@ -39,7 +39,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
       handCount: s.hands[id]!.length, hasPlayed: s.played[id] !== undefined || (s.tower.length > 0 && requiredPlayers(s).includes(id)),
       hasVoted: s.votes[id] !== undefined })),
     myHand: s.hands[viewer]?.slice() ?? [],
-    proclaimCard: s.phase === "PROCLAIM" && isMega && s.proclaim ? { id: s.proclaim.id, phrases: s.proclaim.phrases.slice() } : null,
+    proclaimCard: s.phase === "PROCLAIM" && isMega && s.proclaim ? { id: s.proclaim.id, phrases: s.proclaim.phrases.slice(), ...(s.proclaim.theme ? { theme: s.proclaim.theme } : {}) } : null,
     phrase: s.phrase,
     tower: s.tower.map((t) => ({ position: t.position, cardId: t.cardId, ownerId: revealed ? t.ownerId : null })),
     luiPosition: s.lui ? s.lui.position : null,

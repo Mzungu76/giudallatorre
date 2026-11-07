@@ -73,3 +73,14 @@ describe("regola da testare: gregge", () => {
     expect(r2.herd).toBe(false); for (const p of off.playerIds) expect(r2.reasons[p]).not.toContain("gregge");
   });
 });
+
+describe("contesto della frase", () => {
+  it("il tema della carta frase arriva al Megafono e poi a tutti con la frase scelta", () => {
+    let s = createGame({ players, seed: 9, deck, phraseDeck: phraseDeck.map((c) => ({ ...c, theme: "In palestra" })) }).state;
+    const mega = megafonoOf(s);
+    expect(viewFor(s, mega).proclaimCard!.theme).toBe("In palestra");
+    s = applyAction(s, { type: "choosePhrase", playerId: mega, mode: "card", index: 0 }).state;
+    const ph = viewFor(s, s.playerIds.find((p) => p !== mega)!).phrase;
+    expect(ph && ph.mode === "card" && ph.theme).toBe("In palestra");
+  });
+});

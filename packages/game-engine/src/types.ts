@@ -4,7 +4,7 @@ export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "GAME
 export type LuiKind = "CADE" | "NON_CADE";
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
-export interface PhraseCard { id: string; phrases: string[] }
+export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string }
 
 export interface GameConfig {
   players: { id: PlayerId; name: string }[];
@@ -25,7 +25,7 @@ export interface GameConfig {
 export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId | null }
 
 export type PhraseChoice =
-  | { mode: "card"; cardId: string; index: number; text: string }
+  | { mode: "card"; cardId: string; index: number; text: string; theme?: string }
   | { mode: "free"; text?: string };
 
 export interface LuiToken { kind: LuiKind; position: number }
