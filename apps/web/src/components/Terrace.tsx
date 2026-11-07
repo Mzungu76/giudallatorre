@@ -104,20 +104,32 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
 type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui" | "points" | "stamp"; i?: number };
-const PT_DT = 0.85;
-const chipText = (l: ScoreLine) => l.kind === "voto" ? "✓ Voto giusto" : l.kind === "carta" ? "🃏 Sua carta caduta" : l.kind === "raccolti" ? `📣 ${l.n} ${l.n === 1 ? "voto raccolto" : "voti raccolti"}` : l.kind === "lui-cade" ? "🎯 Lui! azzeccato" : l.kind === "lui-non-cade" ? "🎯 Lui! azzeccato" : "🎯 Lui! sbagliato";
+const BLK_DT = 1.9;
 export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, lines, megaName, sound, skip, interactive, onDone }: {
+export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, lines, megaName, sound, skip, interactive, onDone, onLock }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
-  lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPositions: number[]; lines: Record<string, ScoreLine[]>; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
+  lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPositions: number[]; lines: Record<string, ScoreLine[]>; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void; onLock?: (locked: boolean) => void;
 }) {
   const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
   const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0;
-  const rows = voters.map((v) => ({ v, ls: lines[v.id] ?? [], tot: (lines[v.id] ?? []).reduce((a, l) => a + l.pts, 0) })).filter((r) => r.ls.length > 0).sort((a, b) => b.tot - a.tot);
-  const zero = voters.filter((v) => !(lines[v.id] ?? []).length);
+  const who = (kinds: string[]) => voters.flatMap((v) => (lines[v.id] ?? []).filter((l) => kinds.includes(l.kind)).map(() => ({ name: v.name + (v.mega ? " 📣" : ""), color: v.color })));
+  const lineOf = (kinds: string[]) => voters.flatMap((v) => (lines[v.id] ?? []).filter((l) => kinds.includes(l.kind)))[0];
+  const blocks = (() => {
+    const b: { key: string; title: string; sub: string; label: string; who: { name: string; color: string }[]; thumbs: number[]; neg?: boolean }[] = [];
+    const vw = who(["voto"]);
+    if (vw.length) b.push({ key: "voto", title: "Voto giusto", sub: multi ? "Hanno votato una delle carte cadute" : `Hanno votato il n. ${fallPos}, che cade`, label: "+2 a testa", who: vw, thumbs: fallPositions });
+    const cw = who(["carta"]);
+    if (cw.length) b.push({ key: "carta", title: "Carta caduta", sub: multi ? "Avevano giocato le carte cadute" : "Aveva giocato la carta caduta", label: "+2 a carta", who: cw, thumbs: fallPositions });
+    const rl = lineOf(["raccolti"]);
+    if (rl) b.push({ key: "raccolti", title: "Voti raccolti dal Megafono", sub: `${rl.n} ${rl.n === 1 ? "voto" : "voti"} degli altri sulla sua carta (n. ${rl.pos}): 1 punto ciascuno`, label: `+${rl.pts}`, who: who(["raccolti"]), thumbs: [rl.pos] });
+    const ll = lineOf(["lui-cade", "lui-non-cade", "lui-fallito"]);
+    if (ll) b.push({ key: "lui", title: ll.kind === "lui-fallito" ? "Lui! sbagliato" : "Lui! azzeccato", sub: ll.kind === "lui-cade" ? `Aveva scommesso: cade il n. ${ll.pos}` : ll.kind === "lui-non-cade" ? `Aveva scommesso: il n. ${ll.pos} non cade` : `La scommessa sul n. ${ll.pos} non era giusta`, label: `${ll.pts > 0 ? "+" : "−"}${Math.abs(ll.pts)}`, who: who(["lui-cade", "lui-non-cade", "lui-fallito"]), thumbs: [ll.pos], neg: ll.pts < 0 });
+    return b;
+  })();
+  const totals = voters.map((v) => ({ v, t: (lines[v.id] ?? []).reduce((a, l) => a + l.pts, 0) })).filter((x) => (lines[x.v.id] ?? []).length > 0).sort((a, b) => b.t - a.t);
   const steps = useMemo(() => {
     const st: Step[] = []; let t = 0;
     const add = (kind: Step["kind"], d: number, i?: number) => { st.push({ t0: t, t1: t + d, kind, i }); t += d; };
@@ -128,13 +140,16 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
     });
     add("tally", 3.2);
     if (lui) add("lui", 3.2);
-    add("points", 1.4 + PT_DT * rows.length + 1.6);
+    add("points", 0.6 + BLK_DT * Math.max(1, blocks.length) + 2.6);
     add("stamp", 2.0);
     return st;
-  }, [voters, lui, m, rows.length]);
+  }, [voters, lui, m, blocks.length]);
   const END = steps[steps.length - 1]!.t1;
   const seek = useRef<((t: number) => void) | null>(null);
-  const T = useClock(END, onDone, skip, seek);
+  const T = useClock(END, onDone, 0, seek);
+  const ptsT0 = steps.find((x) => x.kind === "points")?.t0 ?? 0;
+  const skip0 = useRef(skip);
+  useEffect(() => { if (skip > skip0.current) { skip0.current = skip; if (T < ptsT0) seek.current?.(ptsT0); } }, [skip]); // eslint-disable-line react-hooks/exhaustive-deps
   const cur = steps.find((s) => T >= s.t0 && T < s.t1) ?? steps[steps.length - 1]!;
   const fired = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -158,18 +173,34 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
   const byCard: Record<number, Voter[]> = {}; shown.forEach(({ v }) => { (byCard[votes[v.id]!] ??= []).push(v); });
   const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "lui" && lui ? lui.pos : cur.kind === "tally" || cur.kind === "points" || cur.kind === "stamp" ? -1 : 0;
-  const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
+  const nextT = () => Math.min(steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END, ptsT0 > T ? ptsT0 : END);
   const v = cur.kind === "vote" ? voters[cur.i!]! : null, vp = v ? votes[v.id]! : 0;
   const luiHit = lui ? (lui.kind === "CADE" ? fallPositions.includes(lui.pos) : !fallPositions.includes(lui.pos)) : false;
   const total = voters.length, focusList = focusPos === -1 ? fallPositions : focusPos > 0 ? [focusPos] : [];
-  const tp = T - cur.t0, shownRows = cur.kind === "points" ? Math.min(rows.length, Math.max(0, Math.floor((tp - 0.5) / PT_DT) + 1)) : 0;
+  const tp = T - cur.t0, shownB = cur.kind === "points" ? Math.min(blocks.length, Math.max(0, Math.floor((tp - 0.5) / BLK_DT) + 1)) : 0, showTot = cur.kind === "points" && tp >= 0.5 + Math.max(1, blocks.length) * BLK_DT;
+  const locked = cur.kind === "points";
+  useEffect(() => { onLock?.(locked); return () => onLock?.(false); }, [locked]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.pos, kind: luiOpen ? lui.kind : null } : null} />
       <div className="darkv" />
       {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
-      {cur.kind === "points" && rows.flatMap((r, ri) => r.ls.map((l, li) => { const fp = pos[l.pos - 1]; return fp ? <div key={`${r.v.id}${li}`} className={`flt ${l.pts < 0 ? "neg" : ""}`} data-testid="float" style={{ left: mx(fp.x + fp.w / 2) + (li % 2 ? 14 : -14), top: my(fp.f - fp.h * 0.7), animationDelay: `${0.5 + ri * PT_DT + li * 0.25}s` }}><i className="dc" style={{ background: r.v.color }} />{l.pts > 0 ? "+" : "−"}{Math.abs(l.pts)}</div> : null; }))}
-      <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
+      {cur.kind === "points" && (
+        <div className="pb" data-testid="points-panel">
+          <b className="rv-t" data-testid="points-title">Chi prende punti</b>
+          {blocks.length === 0 && tp >= 0.5 && <span className="pb-none">Questa volta nessuno prende punti.</span>}
+          {blocks.slice(0, shownB).map((b) => (
+            <div className={`pb-blk ${b.neg ? "neg" : ""}`} key={b.key} data-testid="points-block">
+              <div className="pb-h">
+                <span className="pb-th">{b.thumbs.map((p) => <span key={p} className="pb-c" style={thumb(cardIds[p - 1]!)}><i>{p}</i></span>)}</span>
+                <span className="pb-tx"><b>{b.title}</b><small>{b.sub}</small></span>
+                <span className="pb-pts">{b.label}</span>
+              </div>
+              <div className="pb-who">{b.who.map((w, k) => <span className="pb-nm" key={k}><i className="dc" style={{ background: w.color }} />{w.name}</span>)}</div>
+            </div>))}
+          {showTot && totals.length > 0 && <div className="pb-sum" data-testid="points-total"><b>In totale nel turno</b><span>{totals.map((x) => <span className={`pb-nm ${x.t < 0 ? "neg" : ""}`} key={x.v.id}><i className="dc" style={{ background: x.v.color }} />{x.v.name} <em>{x.t > 0 ? "+" : "−"}{Math.abs(x.t)}</em></span>)}</span></div>}
+        </div>)}
+      {cur.kind !== "points" && <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
         {cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi. Un voto alla volta.</span></>}
         {cur.kind === "suspense" && <><b className="rv-t">Manca l’ultimo voto…</b><span>{voters[m - 1]!.mega ? `Aspettiamo il Megafono, ${megaName}!` : `Aspettiamo ${voters[m - 1]!.name}.`}</span></>}
         {cur.kind === "vote" && v && (
@@ -179,16 +210,10 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
           </div>
         )}
         {cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
-        {cur.kind === "points" && <><b className="rv-t" data-testid="points-title">Chi prende punti</b>
-          <div className="pt-list" data-testid="points-list">{rows.slice(0, shownRows).map((r) => (
-            <div className="pt-row" key={r.v.id} data-testid="points-row"><span className="pt-who"><i className="dc" style={{ background: r.v.color }} />{r.v.name}{r.v.mega ? " 📣" : ""}</span>
-              <span className="pt-why">{r.ls.map((l, k) => <span key={k} className={`pt-chip ${l.pts < 0 ? "neg" : ""}`}>{chipText(l)}<b>{l.pts > 0 ? "+" : "−"}{Math.abs(l.pts)}</b></span>)}</span>
-              <span className={`pt-tot ${r.tot < 0 ? "neg" : ""}`}>{r.tot > 0 ? "+" : "−"}{Math.abs(r.tot)}</span></div>))}</div>
-          {shownRows >= rows.length && zero.length > 0 && <span className="pt-zero">Nessun punto: {zero.map((z) => z.name).join(", ")}.</span>}</>}
         {cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span>{lui.kind === "CADE" ? `Aveva scommesso: CADE il n. ${lui.pos} (la carta col bordo giallo).` : `Aveva scommesso: il n. ${lui.pos} NON CADE (la carta col bordo giallo).`}</span>{T >= luiStart + 1.2 && <em className={luiHit ? "ok" : "ko"}>{luiHit ? (lui.kind === "CADE" ? "Azzeccato! +4" : "Azzeccato! +1") : "Sbagliato: −1"}</em>}</>}
         {cur.kind === "stamp" && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
-      </div>
-      {interactive && cur.kind !== "stamp" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
+      </div>}
+      {interactive && cur.kind !== "stamp" && cur.kind !== "points" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
     </>
   );
 }

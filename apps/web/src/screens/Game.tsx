@@ -79,14 +79,15 @@ function Waiting({ text, sub, flags, people, bottom }: { text: string; sub?: str
 /** Il Megafono sceglie cosa urlare: la frase della carta oppure la propria (“Oggi sale sulla torre…” + testo libero, anche solo a voce). */
 function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"] }) {
   const card = view.proclaimCard!, single = card.phrases.length === 1;
-  const [i, setI] = useState(0), [own, setOwn] = useState(false), [text, setText] = useState(""), [voice, setVoice] = useState(false);
-  const go = () => send({ t: "act", action: own ? { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } : { type: "choosePhrase", mode: "card", index: i } });
+  const [own, setOwn] = useState(false), [text, setText] = useState(""), [voice, setVoice] = useState(false);
+  const say = (i: number) => send({ t: "act", action: { type: "choosePhrase", mode: "card", index: i } });
+  const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } });
   return (
     <div className="picker" data-testid="phrase-picker">
-      <div className="h" style={{ top: 124, fontSize: 32 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
+      <div className="h" style={{ top: 124, fontSize: 30 }}><small>{own ? "Una frase tutta tua" : "Sei il Megafono!"}</small>{own ? "Inventala!" : "Tocca la frase da urlare"}</div>
       <div className="opts">
         {!own && card.phrases.map((t, k) => (
-          <button key={k} className={`opt ${k === i ? "on" : ""}`} onClick={() => setI(k)} data-testid={`phrase-${k}`}>{card.themes?.[k] && <span className="opt-ctx">{card.themes[k]}</span>}{single ? <b>{t}</b> : t}</button>
+          <button key={k} className="opt" onClick={() => say(k)} data-testid={`phrase-${k}`}>{card.themes?.[k] && <span className="opt-ctx">{card.themes[k]}</span>}{single ? <b>{t}</b> : t}<em className="opt-go">📣</em></button>
         ))}
         {own && (
           <div className="phr-opts">
@@ -97,10 +98,12 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
           </div>
         )}
       </div>
-      <div className="bottom two">
-        {!single && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 17 }} testId="phrase-free">{own ? "Torna alle frasi" : "Dico la mia"}</Btn>}
-        <Btn kind="red" onClick={go} testId="phrase-go" disabled={own && !voice && !text.trim() && false}>📣 Proclama!</Btn>
-      </div>
+      {(!single || own) && (
+        <div className="bottom two">
+          <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 16, padding: 10 }} testId="phrase-free">{own ? "Torna alle frasi" : "Preferisco dire la mia"}</Btn>
+          {own && <Btn kind="red" onClick={goOwn} testId="phrase-go">📣 Proclama!</Btn>}
+        </div>
+      )}
     </div>
   );
 }
@@ -187,9 +190,9 @@ function Legend({ onClose }: { onClose: () => void }) {
 
 export default function Game({ room, view, deadline, send, readOnly, sound }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
-  const [phraseB, setPhraseB] = useState(220);
+  const [phraseB, setPhraseB] = useState(220), [skipLock, setSkipLock] = useState(false);
   const megaBot = people.get(view.megafonoId).bot;
-  const [pick, setPick] = useState<number | null>(null), [kind, setKind] = useState<"CADE" | "NON_CADE">("CADE");
+  const [pick, setPick] = useState<number | null>(null);
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
@@ -230,7 +233,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
   const canVote = phase === "VOTE" && !readOnly && view.myVote === null;
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
-  const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, kind } : view.luiPosition != null ? { pos: view.luiPosition, kind: view.luiKind } : null;
+  const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, kind: null } : view.luiPosition != null ? { pos: view.luiPosition, kind: view.luiKind } : null;
   const voteToks: VoteTok[] = useMemo(() => {
     if (res) return voters.map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));
     if (phase === "VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color, mega: isMega }];
@@ -250,10 +253,10 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? "Votate!" : "Il Megafono scommette", sub: v ? "in segreto: chi cade?" : "cade o non cade?" }); } }} />}
       {!climbing && needTerrace && !revealing && (
-        <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => setZoomPos(n) : undefined} />
+        <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : setZoomPos(n)) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
@@ -268,13 +271,17 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       {phase === "PLAY" && (readOnly || mine?.hasPlayed || (!view.megafonoSa && isMega)) && <Waiting text={!readOnly && !view.megafonoSa && isMega ? "Hai pescato la tua carta dal mazzo. Aspetta la Folla…" : "Carta giocata! Aspettiamo gli altri…"} sub="Tra poco le carte salgono sulla torre." flags={flagsPlay} people={people} />}
 
       {phase === "SUSPECT" && !climbing && (isMega && !readOnly ? (
-        <div className="bottom">
-          <Tip>Tocca la carta su cui scommetti col gettone Lui!, poi scegli: cade o non cade.</Tip>
-          <div className="lui-opts">
-            <button className={`lk red ${kind === "CADE" ? "on" : ""}`} onClick={() => setKind("CADE")} data-testid="kind-cade">Cade lui!<small>+4 se cade · −1 se sbagli</small></button>
-            <button className={`lk ${kind === "NON_CADE" ? "on" : ""}`} onClick={() => setKind("NON_CADE")} data-testid="kind-non">Non cade<small>+1 se resta su · −1 se cade</small></button>
-          </div>
-          <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "placeLui", kind, position: pick } })} testId="place-lui">{pick ? `Posa il Lui! sul n. ${pick}` : "Tocca una carta"}</Btn>
+        <div className="bottom" data-testid="lui-chooser">
+          {!pick
+            ? <Tip>👆 Tocca la carta su cui vuoi scommettere col gettone Lui!</Tip>
+            : <>
+              <Tip>Gettone Lui! sul <b>n. {pick}</b>. Cosa scommetti?</Tip>
+              <div className="lui-opts">
+                <button className="lk red" onClick={() => act({ t: "act", action: { type: "placeLui", kind: "CADE", position: pick } })} data-testid="kind-cade"><span dangerouslySetInnerHTML={{ __html: luiTok("CADE", 40) }} />Cade lui!<small>+4 se cade · −1 se sbagli</small></button>
+                <button className="lk" onClick={() => act({ t: "act", action: { type: "placeLui", kind: "NON_CADE", position: pick } })} data-testid="kind-non"><span dangerouslySetInnerHTML={{ __html: luiTok("NON", 40) }} />Non cade<small>+1 se resta su · −1 se cade</small></button>
+              </div>
+              <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">🔍 Guarda bene la carta · tocca un'altra carta per cambiare</button>
+            </>}
         </div>
       ) : <div className="bottom"><Tip>{people.get(view.megafonoId).name} scommette col gettone Lui!: “cade” o “non cade”?</Tip></div>)}
 
@@ -285,7 +292,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
 
-      {animating && !readOnly && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">Salta ›</button>}
+      {animating && !readOnly && !skipLock && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">Salta ›</button>}
       {showPanel && res && (
         <Scoreboard H={H} res={res} view={view} people={people} canAdvance={!readOnly && (isMega || isHost || megaBot)} deadline={deadline} final={view.turn >= view.totalTurns}
           onAdvance={() => act({ t: "act", action: { type: "advance" } })} />

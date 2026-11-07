@@ -430,3 +430,37 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .pt-zero{font:700 11px Nunito;color:#555;margin-top:3px;display:block}
 .flt.neg{color:#ffb4ab}
 @keyframes popin2{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+
+/* Megafono: una frase = un tocco; Lui! = tocca la carta e scegli il gettone */
+.opts{top:218px !important;bottom:84px;overflow-y:auto;padding:2px 3px 6px;gap:7px !important}
+.opts .opt{font-size:13px;padding:7px 36px 7px 10px;line-height:1.25}
+.opt-go{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;font-size:18px;opacity:.55}
+.opts .opt:active{transform:translateY(2px)}
+.lui-opts .lk{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px}
+.lui-opts .lk span{line-height:0}
+.linkbtn{background:none;border:0;color:#fff;font:800 12px Nunito;text-align:center;text-shadow:0 1px 0 #13224a,0 0 6px #13224a;padding:2px;cursor:pointer}
+
+/* resoconto punti: un blocco per motivo (chi + perché), non si salta */
+.pb{left:12px;right:12px;top:128px;bottom:58px;z-index:91;background:#fff7e0;color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 6px 0 #13224a,0 12px 0 #e8362b;padding:10px 12px;display:flex;flex-direction:column;gap:7px;overflow:hidden;animation:rvin .25s ease both}
+.pb-none{font:800 14px Nunito}
+.pb-blk{background:#fff;border:3px solid #13224a;border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;gap:5px;animation:popin2 .35s ease-out both;box-shadow:0 3px 0 #13224a}
+.pb-blk.neg{border-color:#e8362b}
+.pb-h{display:flex;align-items:center;gap:8px}
+.pb-th{display:flex;gap:-4px;flex:none}
+.pb-c{position:relative;width:30px;height:44px;border-radius:5px;border:2px solid #13224a;background-size:cover;background-position:center;margin-right:-6px;box-shadow:1px 2px 0 #13224a}
+.pb-c i{position:absolute;left:-6px;top:-7px;width:16px;height:16px;border-radius:50%;background:#ffc72c;border:2px solid #13224a;font:400 10px/12px Anton;text-align:center;font-style:normal}
+.pb-tx{flex:1;display:flex;flex-direction:column;margin-left:8px;min-width:0}
+.pb-tx b{font:400 17px/1.05 Anton;text-transform:uppercase}
+.pb-tx small{font:700 11.5px/1.25 Nunito;opacity:.8}
+.pb-pts{font:400 22px Anton;color:#2a9d57;white-space:nowrap;text-align:right;line-height:1}
+.pb-blk.neg .pb-pts{color:#e8362b}
+.pb-who,.pb-sum>span{display:flex;flex-wrap:wrap;gap:5px}
+.pb-nm{display:inline-flex;align-items:center;gap:4px;background:#e7f6ea;border:2px solid #13224a;border-radius:99px;padding:1px 9px 1px 4px;font:800 12.5px Nunito}
+.pb-nm .dc{width:13px;height:13px;border-radius:50%;border:2px solid #13224a;display:inline-block}
+.pb-nm em{font:400 15px Anton;font-style:normal;color:#2a9d57;margin-left:2px}.pb-nm.neg em{color:#e8362b}
+.pb-sum{margin-top:auto;display:flex;flex-direction:column;gap:4px;border-top:3px dashed #13224a55;padding-top:6px;animation:popin2 .35s ease-out both}
+.pb-sum>b{font:400 15px Anton;text-transform:uppercase;color:#e8362b}
+
+/* nastro: titolo più compatto, così "?" e pulsanti non lo coprono */
+.strip{font-size:17px !important;letter-spacing:.12em !important}
+.legend2{left:40px !important;right:auto !important;top:80px !important}
