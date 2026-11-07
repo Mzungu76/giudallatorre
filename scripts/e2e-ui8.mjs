@@ -8,7 +8,7 @@ const browser = await chromium.launch();
 const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }); const p = await ctx.newPage(); await p.addInitScript(() => { try { localStorage.setItem("gdt.intro", "1"); } catch {} }); if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} }); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
 const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 const pages = await Promise.all(Array.from({ length: 8 }, mk));
-await pages[0].goto(BASE + "/crea"); await pages[0].fill("#nick", "Host"); await pages[0].click('[data-testid="create-submit"]'); await pages[0].waitForURL(/stanza/);
+await pages[0].goto(BASE + "/crea"); await pages[0].fill("#nick", "Host"); await pages[0].click('[data-testid="step-next"]'); await pages[0].click('[data-testid="step-next"]'); await pages[0].click('[data-testid="create-submit"]'); await pages[0].waitForURL(/stanza/);
 const code = (await pages[0].locator('[data-testid="room-code"]').textContent()).trim();
 for (let i = 1; i < 8; i++) { await pages[i].goto(`${BASE}/entra?c=${code}`); await pages[i].fill("#nick", "Gioc" + i); await pages[i].click('[data-testid="join-submit"]'); await pages[i].waitForURL(/stanza/); }
 await sleep(600); check("8 giocatori in lobby", (await pages[0].locator('[data-testid="player-row"]').count()) === 8);

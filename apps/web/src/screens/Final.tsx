@@ -21,7 +21,7 @@ export default function Final({ room, view, readOnly }: { room: RoomMsg; view: P
         ))}
       </div>
       <div className="rank">{rank.slice(3).map((p, i) => <div key={p.id} className="pl"><b className="num">{i + 4}</b><Disc color={people.get(p.id).color} />{p.name}<span className="tg">{pts(p.score)}</span></div>)}</div>
-      {!readOnly && <div className="bottom two"><Btn kind="pap" style={{ fontSize: 18 }} onClick={() => { forgetSession(room.code); navigate("/"); }} testId="leave-final">Esci</Btn><Btn onClick={() => { forgetSession(room.code); navigate("/crea"); }} style={{ fontSize: 19 }}>Nuova partita</Btn></div>}
+      {!readOnly && <div className="bottom two"><Btn kind="pap" style={{ fontSize: 18 }} onClick={() => { forgetSession(room.code); navigate("/"); }} testId="leave-final">Home</Btn><Btn onClick={() => { forgetSession(room.code); navigate("/crea"); }} style={{ fontSize: 19 }}>Nuova partita</Btn></div>}
     </div>
   );
 }

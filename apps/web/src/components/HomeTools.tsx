@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { canPromptInstall, isIOS, isStandalone, promptInstall, shareApp, subscribeInstall } from "../lib/install.ts";
 
-/** Due icone in Home: condividi l'app e installa l'app. */
+/** Due icone in Home (nella barra delle utility): condividi l'app e installa l'app. */
 export default function HomeTools() {
   const [, force] = useState(0), [msg, setMsg] = useState<string | null>(null), [help, setHelp] = useState(false);
   useEffect(() => subscribeInstall(() => force((n) => n + 1)), []);

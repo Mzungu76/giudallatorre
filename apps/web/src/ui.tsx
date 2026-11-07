@@ -55,6 +55,11 @@ export function Stage({ children, bg = "paper", frame = true, testId, fixed }: {
   );
 }
 
+/** Pagina a flusso (Home, Crea, Entra): colonna singola su smartphone, pannelli affiancati da tablet in su. Stesso stile del palco. */
+export function Page({ children, testId, wide, bg = "paper" }: { children: ReactNode; testId?: string; wide?: boolean; bg?: "paper" | "sky" }) {
+  return <div className={`pg ${bg}`} data-testid={testId}><div className={`pg-in${wide ? " wide" : ""}`}>{children}</div></div>;
+}
+
 export function Btn({ children, onClick, kind = "mus", disabled, style, testId, type = "button" }: { children: ReactNode; onClick?: () => void; kind?: "mus" | "red" | "pap" | "dis"; disabled?: boolean; style?: CSSProperties; testId?: string; type?: "button" | "submit" }) {
   return <button type={type} className={`bt ${disabled ? "dis" : kind}`} disabled={disabled} onClick={onClick} style={style} data-testid={testId}>{children}</button>;
 }

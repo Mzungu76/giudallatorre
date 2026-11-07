@@ -14,7 +14,7 @@ console.log("Home, creazione e ingresso");
 const A = await mk("A"), B = await mk("B"), C = await mk("C");
 await A.goto(BASE + "/"); await A.waitForSelector('[data-testid="home"]', { timeout: 15000 }).catch(() => {}); check("home visibile", await vis(A, "home")); await shot(A, "01-home");
 await A.click('[data-testid="go-create"]'); await A.fill("#nick", "Ann"); await shot(A, "02-crea");
-await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\/[A-Z0-9]{5}/);
+await A.click('[data-testid="step-next"]'); await A.click('[data-testid="step-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\/[A-Z0-9]{5}/);
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim(); check("stanza creata con codice", /^[A-HJ-NP-Z2-9]{5}$/.test(code), code);
 for (const [p, n] of [[B, "Bea"], [C, "Cle"]]) { await p.goto(`${BASE}/entra?c=${code}`); await p.fill("#nick", n); await p.click('[data-testid="join-submit"]'); await p.waitForURL(/\/stanza\//); }
 await B.waitForSelector('[data-testid="lobby"]'); await sleep(400);
