@@ -6,7 +6,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failures = 0; const check = (n, c, x = "") => { console.log((c ? "  ok   " : "  FAIL ") + n + (c ? "" : " " + x)); if (!c) failures++; };
 const browser = await chromium.launch();
 const ctx = await browser.newContext({ viewport: { width: W, height: HH }, deviceScaleFactor: 1.5, locale: "it-IT" });
-const p = await ctx.newPage(); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); p.on("console", (m) => { if (m.type() === "error") p.errors.push(m.text()); });
+const p = await ctx.newPage(); p.setDefaultTimeout(5000); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); p.on("console", (m) => { if (m.type() === "error") p.errors.push(m.text()); });
 if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} });
 await p.addInitScript(() => { window.__rm = {}; const o = new MutationObserver((ms) => { for (const m of ms) m.removedNodes.forEach((n) => { if (n.nodeType !== 1) return; const q = [n, ...n.querySelectorAll?.('[data-testid]') ?? []]; for (const e of q) { const t = e.dataset?.testid; if (t) window.__rm[t] = (window.__rm[t] || 0) + 1; } }); }); document.addEventListener('DOMContentLoaded', () => o.observe(document.body, { childList: true, subtree: true })); });
 let wsn = 0, wsc = 0, fr = 0; p.on("websocket", (w) => { wsn++; w.on("framereceived", () => fr++); w.on("close", () => wsc++); }); setInterval(async () => console.log("WS", wsn, "closed", wsc, "frames", fr, "RM", JSON.stringify(await p.evaluate(() => window.__rm).catch(() => null))), 5000);
