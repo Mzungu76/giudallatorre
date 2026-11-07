@@ -392,3 +392,9 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .codepanel{top:100px}.plist{top:236px}.pl{min-height:42px}
 .score .bt{width:100%}
 .wait{top:auto}
+
+/* v4.1: pulsanti sopra il nastro, senza sovrapporsi; etichetta del contesto dentro la frase */
+.snd{top:70px !important;right:8px !important;width:28px !important;height:28px !important;font-size:13px !important;line-height:22px !important;z-index:22}
+.chatbtn{top:78px !important;left:8px !important;right:auto !important;width:28px !important;height:28px !important;font-size:13px !important;z-index:22}
+.legend2{top:70px !important;left:auto !important;right:42px !important;width:28px !important;height:28px !important;font-size:17px !important;line-height:22px !important}
+.phrase-card .ctx{margin:0 0 2px 8px !important}

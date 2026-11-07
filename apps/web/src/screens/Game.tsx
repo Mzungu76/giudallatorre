@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PlayerView, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
@@ -30,8 +30,9 @@ export function usePeople(room: RoomMsg) {
   }, [room.players]);
 }
 
-function PhraseHead({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaName: string }) {
-  const { H } = useStage();
+function PhraseHead({ phrase, megaName, onBottom }: { phrase: PlayerView["phrase"]; megaName: string; onBottom?: (b: number) => void }) {
+  const { H } = useStage(), ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => { if (ref.current && onBottom) onBottom(ref.current.offsetTop + ref.current.offsetHeight); });
   if (!phrase) return null;
   const cmp = H < 700 ? " cmp" : "";
   let label = "Il Megafono urla:", body: string;
@@ -43,7 +44,7 @@ function PhraseHead({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaNa
   const theme = phrase.mode === "card" ? phrase.theme : undefined;
   const len = body.length, size = len > 80 ? " xl" : len > 50 ? " l" : "";
   return (
-    <div className={`phrase-card${size}${cmp}`} style={{ top: 122 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
+    <div ref={ref} className={`phrase-card${size}${cmp}`} style={{ top: 122 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
       <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
@@ -94,17 +95,18 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
   );
 }
 
-function HandPicker({ view, send }: { view: PlayerView; send: GameProps["send"] }) {
+function HandPicker({ view, send, top }: { view: PlayerView; send: GameProps["send"]; top: number }) {
   const { H } = useStage(), hand = view.myHand, [sel, setSel] = useState<number | null>(null), [zoom, setZoom] = useState(false);
   const step = Math.min(66, (372 - 104 - 16) / Math.max(1, hand.length - 1)), left0 = (372 - (104 + step * (hand.length - 1))) / 2;
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
+  const tipTop = top + 14, cardsTop = Math.min(Math.max(H - 386, tipTop + 98), H - 280);
   return (
     <div className="picker" data-testid="hand">
-      <Tip style={{ top: Math.max(262, H - 470) }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!</Tip>
+      <Tip style={{ top: tipTop }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!<strong className="tip-warn tip-gain" data-testid="tip-gain"> Se la tua carta è la più votata, cade ma ti porta +2 punti.</strong></Tip>
       {hand.map((c, i) => {
         const mid = (hand.length - 1) / 2, d = i - mid, lifted = sel === i;
         return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
-          style={{ left: left0 + step * i, top: H - 386 + d * d * 7 - (lifted ? 34 : 0), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 6}deg)`, zIndex: 10 + i + (lifted ? 20 : 0) }}
+          style={{ left: left0 + step * i, top: cardsTop + d * d * 7 - (lifted ? 34 : 0), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 6}deg)`, zIndex: 10 + i + (lifted ? 20 : 0) }}
           onClick={() => (sel === i ? setZoom(true) : setSel(i))} />;
       })}
       <div className="bottom"><Btn disabled={sel === null} onClick={() => sel !== null && play(sel)} testId="play-card">{sel === null ? "Scegli una carta" : "Gioca questa carta"}</Btn></div>
@@ -174,6 +176,7 @@ function Legend({ onClose }: { onClose: () => void }) {
 
 export default function Game({ room, view, deadline, send, readOnly, sound }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
+  const [phraseB, setPhraseB] = useState(220);
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null), [kind, setKind] = useState<"CADE" | "NON_CADE">("CADE");
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
@@ -243,13 +246,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
       {deadline && phase !== "RESULTS" && <div className="cd"><Countdown deadline={deadline} /></div>}
-      {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} megaName={people.get(view.megafonoId).name} />}
+      {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} megaName={people.get(view.megafonoId).name} onBottom={setPhraseB} />}
       {needTerrace && !animating && <button className="legend2" onClick={() => setLegend(true)} aria-label="Come si fanno punti" data-testid="legend-btn">?</button>}
       {tag && <div className="roundtag" style={{ top: 130 }}><b>{tag}</b></div>}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
       {phase === "PROCLAIM" && (isMega && !readOnly ? <PhrasePicker view={view} send={act} /> : <Waiting text={`${people.get(view.megafonoId).name} è il Megafono e sta scegliendo cosa urlare…`} sub="Poi sceglierai, in segreto, dalla tua mano il personaggio che quella cosa la farebbe di sicuro." flags={[]} people={people} />)}
-      {phase === "PLAY" && !readOnly && !mine?.hasPlayed && (view.megafonoSa || !isMega) && <HandPicker view={view} send={act} />}
+      {phase === "PLAY" && !readOnly && !mine?.hasPlayed && (view.megafonoSa || !isMega) && <HandPicker view={view} send={act} top={phraseB} />}
       {phase === "PLAY" && (readOnly || mine?.hasPlayed || (!view.megafonoSa && isMega)) && <Waiting text={!readOnly && !view.megafonoSa && isMega ? "Hai pescato la tua carta dal mazzo. Aspetta la Folla…" : "Carta giocata! Aspettiamo gli altri…"} sub="Tra poco le carte salgono sulla torre." flags={flagsPlay} people={people} />}
 
       {phase === "SUSPECT" && !climbing && (isMega && !readOnly ? (
@@ -265,7 +268,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
-            <Tip>{view.luiPosition ? `Il Lui! del Megafono (bordo giallo) è sul n. ${view.luiPosition}. ` : ""}Vota chi farebbe di più questa cosa: il più votato cade giù e chi l'ha votato fa +2.{!isMega && <strong className="tip-warn" data-testid="tip-herd"> Evita il voto del Megafono! Se cade la carta che ha votato anche lui, i punti del voto sono solo suoi.</strong>}</Tip>
+            <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo). ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega && <strong className="tip-warn" data-testid="tip-herd"> Evita il voto del Megafono: se cade la carta che ha votato anche lui, i +2 sono solo suoi.</strong>}</Tip>
             <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}

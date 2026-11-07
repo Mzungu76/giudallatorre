@@ -13,14 +13,14 @@ export interface TerraceProps {
 
 /** La terrazza vista dall'alto: carte intere su piedini neri, gettoni sopra. Disegno dal mockup approvato. */
 export function Terrace(p: TerraceProps) {
-  const { dy } = useStage(), n = p.cardIds.length;
+  const { ts, ty } = useStage(), n = p.cardIds.length;
   const base = useMemo(() => terraceBaseHtml(), []);
   const pos = useMemo(() => terracePos(n), [n]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
   const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui]);
   const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, lui: p.lui?.pos, luiKind: p.lui?.kind ?? "CADE", luiBack: !!p.lui && !p.lui.kind }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="layer" style={{ transform: `translateY(${dy}px)` }} data-testid="terrace">
+    <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace">
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
       {p.onPick && Object.entries(pos).map(([i, c]) => {
@@ -111,7 +111,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
   lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPositions: number[]; owners: FallOwner[]; herd: boolean; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
 }) {
-  const { dy } = useStage(), m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
+  const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
   const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0;
   const steps = useMemo(() => {
     const st: Step[] = []; let t = 0;
@@ -163,8 +163,8 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
     <>
       <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.pos, kind: luiOpen ? lui.kind : null } : null} />
       <div className="darkv" />
-      {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: fp.x - 5, top: fp.f - fp.h - 11 + dy, width: fp.w + 10, height: fp.h + 16 }} /> : null; })}
-      {showOwners && owners.map((o) => { const fp = pos[o.pos - 1]; return fp ? <div key={o.pos} className="ownbadge" data-testid="owner-badge" style={{ left: fp.x + fp.w / 2 - 38, top: fp.f - 18 + dy }}><i className="dc" style={{ background: o.color }} />{o.name ? `${o.name} +2` : "dal mazzo"}</div> : null; })}
+      {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
+      {showOwners && owners.map((o) => { const fp = pos[o.pos - 1]; return fp ? <div key={o.pos} className="ownbadge" data-testid="owner-badge" style={{ left: mx(fp.x + fp.w / 2) - 38, top: my(fp.f - 18) }}><i className="dc" style={{ background: o.color }} />{o.name ? `${o.name} +2` : "dal mazzo"}</div> : null; })}
       <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
         {cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi. Un voto alla volta.</span></>}
         {cur.kind === "suspense" && <><b className="rv-t">Manca un voto…</b><span>Aspettiamo {voters[m - 1]!.name}.</span></>}
