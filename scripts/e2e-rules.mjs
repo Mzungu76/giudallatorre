@@ -26,7 +26,7 @@ async function step(p, name) {
   if (await vis(p, "confirm-vote")) {
     await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]');
     await p.click('[data-testid="confirm-vote"]'); return true; }
-  if (await vis(p, "reveal-panel")) { const t = await p.locator('[data-testid="reveal-panel"]').innerText(); if (/Voto \d di \d/.test(t)) seenReason = true; if (/gregge/i.test(t)) sawHerd = true; if (SHOTS && p === A && (globalThis.__n ?? 0) < 24 && t !== globalThis.__last) { globalThis.__last = t; await p.screenshot({ path: `${SHOTS}/rv${String(globalThis.__n = (globalThis.__n ?? 0) + 1).padStart(2, "0")}.png` }); } await p.click('[data-testid="reveal-next"]', { timeout: 1500 }).catch(() => {}); return true; }
+  if (await vis(p, "reveal-panel")) { const t = await p.locator('[data-testid="reveal-panel"]').innerText(); if (/voto \d di \d/i.test(t)) seenReason = true; if (/gregge/i.test(t)) sawHerd = true; if (SHOTS && p === A && (globalThis.__n ?? 0) < 24 && t !== globalThis.__last) { globalThis.__last = t; await p.screenshot({ path: `${SHOTS}/rv${String(globalThis.__n = (globalThis.__n ?? 0) + 1).padStart(2, "0")}.png` }); } await p.click('[data-testid="reveal-next"]', { timeout: 1500 }).catch(() => {}); return true; }
   if (await vis(p, "skip")) { await p.click('[data-testid="skip"]', { timeout: 1500 }).catch(() => {}); return true; }
   if (await vis(p, "advance")) { await p.click('[data-testid="advance"]'); turns++; return true; }
   return false;
