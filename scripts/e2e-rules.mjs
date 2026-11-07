@@ -13,7 +13,7 @@ const code = (await A.locator('[data-testid="room-code"]').textContent()).trim()
 await B.goto(`${BASE}/entra?c=${code}`); await B.fill("#nick", "Bea"); await B.click('[data-testid="join-submit"]'); await B.waitForSelector('[data-testid="lobby"]');
 await A.click('[data-testid="add-bot"]'); await A.click('[data-testid="add-bot"]'); await sleep(300);
 check("i giocatori non-host non vedono le regole spente", !(await vis(B, "rules-box")));
-await A.check('[data-testid="opt-justify"]'); await A.check('[data-testid="opt-herd"]'); await sleep(400);
+await A.click('[data-testid="opt-justify"]'); await sleep(300); await A.click('[data-testid="opt-herd"]'); await sleep(400);
 check("le regole accese si vedono a tutti (in sola lettura per chi non è host)", (await B.locator('[data-testid="opt-justify"]').isChecked()) && (await B.locator('[data-testid="opt-herd"]').isDisabled()));
 // chat
 await A.click('[data-testid="chat-open"]'); await A.fill('[data-testid="chat-input"]', "Ciao Bea, preparati a perdere"); await A.click('[data-testid="chat-send"]'); await sleep(500);
