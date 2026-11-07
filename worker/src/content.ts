@@ -1,7 +1,10 @@
 import manifest from "../../public/cards/manifest.json";
 import multi from "../../content/su-sulla-torre.json";
 import single from "../../content/su-sulla-torre-singola.json";
+import { registerTags } from "@gdt/game-engine";
 import type { PhraseCard } from "@gdt/game-engine";
+import tagsCards from "../../content/tags-personaggi.json";
+import tagsPhrases from "../../content/tags-frasi.json";
 
 /** 120 carte Personaggio (125 immagini nel PDF, ma 5 sono livelli sovrapposti a un'altra carta: vedi tools/fix_overlays.py) e 65 carte frasi: 50 da 5 frasi + 15 singole. */
 export const DECK: string[] = (manifest as { id: string; overlay_of?: string }[]).filter((m) => !m.overlay_of).map((m) => m.id);
@@ -9,3 +12,6 @@ export const PHRASE_DECK: PhraseCard[] = [
   ...(multi.carte as { id: string; frasi: string[]; contesti?: string[] }[]).map((c) => ({ id: c.id, phrases: c.frasi, themes: (c as { contesti?: string[] }).contesti })),
   ...(single.carte as { id: string; frase: string; contesto?: string }[]).map((c) => ({ id: c.id, phrases: [c.frase], theme: c.contesto })),
 ];
+
+/** Etichette nascoste per i giocatori virtuali (mai inviate ai client). */
+registerTags(tagsCards as Record<string, { tipo: string[]; temi: string[] }>, tagsPhrases as Record<string, { tipo: string[]; temi: string[] }>);

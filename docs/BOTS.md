@@ -14,3 +14,10 @@
 **Regole speciali.** I bot non hanno token (la loro azione parte dal server); se il Megafono è un bot qualunque umano può far proseguire dopo i risultati; in assenza di umani connessi la stanza si chiude come le altre. La memoria dei bot (`botMem`) è salvata nello stato della stanza e sopravvive a un riavvio del Durable Object.
 
 **Sicurezza.** Le viste dei bot sono costruite come quelle dei giocatori (`viewFor`): nessun bot vede le mani altrui o il tipo del Lui! prima del tempo. Test: `packages/game-engine/tests/ai.test.ts`, `worker/tests/roomcore.test.ts` ("giocatori virtuali nella stanza"), `scripts/e2e-solo.mjs`.
+
+## Aggiornamento: etichette nascoste e bluff
+Ogni personaggio (120) ha un tipo umano e dei temi (`content/tags-personaggi.json`, scritti a mano); ogni frase (250) ha temi e tipo derivati dal contesto e da parole chiave (`content/tags-frasi.json`, `tools/make_tags.py`). Non vengono mai inviate ai client. I bot stimano l'affinità (temi in comune ×2, tipo ×3) per:
+- **giocare la carta** che meglio rappresenta la frase;
+- **votare** la carta che il gruppo voterà (e, se il Lui! è su una carta, tenere conto del rischio gregge in base alla reputazione del Megafono);
+- **fare il Megafono**: scelgono "Cade lui!" o "Non cade" e la carta in base al valore atteso e alla reputazione (se tutti li credono sempre "Cade lui!", a volte scommettono "Non cade" sulla carta ovvia per spaventare il gruppo: il bluff; se li credono prudenti, tentano il colpo); il Difficile preferisce frasi con più etichette.
+Misure (mazzo reale, 150–300 partite, `tools/analysis/bot-bench.ts`, `bot-mega.ts`): Medio e Difficile battono i bot Facili nel 64–70% delle partite a 4 (25% è il caso); il Megafono Difficile fa 4,5 punti a turno contro 1,5 del Facile e azzecca "Cade lui!" nell'85% dei casi. Medio e Difficile si equivalgono tra bot: il vantaggio del bluff si vedrà solo contro persone.

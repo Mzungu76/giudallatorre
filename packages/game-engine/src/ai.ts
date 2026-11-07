@@ -1,67 +1,103 @@
 import { megafonoOf, requiredPlayers } from "./engine.ts";
+import { affinity, phraseTagCount } from "./tags.ts";
 import type { Action, CardId, GameState, PlayerId, TurnResult } from "./types.ts";
 
-/** Livelli dei giocatori virtuali. Nessuno "capisce" frasi o illustrazioni: la competitività è tattica (punteggio atteso, spareggi, memoria dei personaggi caduti). */
-const BOT_REASONS = ["Ha proprio la faccia giusta.", "Istinto, non si discute.", "Mi ricorda mio cugino.", "Lo farebbe di sicuro, ci giurerei.", "Basta guardarlo negli occhi.", "Si vede lontano un miglio.", "Elementare, direi.", "Ci metto la mano sul fuoco.", "Lo conosco, è proprio lui.", "Non c’è storia, è quello."];
+/**
+ * Giocatori virtuali. Usano le etichette nascoste (personaggio ↔ frase, vedi tags.ts) per stimare chi cadrà, il punteggio atteso,
+ * la regola del gregge e il bluff del Megafono. Senza etichette (mazzi di prova) ripiegano sulla memoria dei personaggi caduti.
+ */
 export const BOT_LEVELS = ["easy", "medium", "hard"] as const;
 export type BotLevel = (typeof BOT_LEVELS)[number];
 
-/** Memoria condivisa della stanza: quante volte ogni carta è stata sulla Torre e quante è caduta. Serializzabile. */
-export interface BotMemory { shown: Record<CardId, number>; fell: Record<CardId, number>; turns: number }
-export const newBotMemory = (): BotMemory => ({ shown: {}, fell: {}, turns: 0 });
+/** Memoria della stanza: personaggi mostrati/caduti e, per ogni Megafono, quante volte ha scommesso "Cade lui!" (reputazione). Serializzabile. */
+export interface BotMemory { shown: Record<CardId, number>; fell: Record<CardId, number>; turns: number; lui?: Record<PlayerId, { c: number; n: number }> }
+export const newBotMemory = (): BotMemory => ({ shown: {}, fell: {}, turns: 0, lui: {} });
 export function learnFromResult(mem: BotMemory, tower: { cardId: CardId }[], result: TurnResult): void {
   for (const t of tower) mem.shown[t.cardId] = (mem.shown[t.cardId] ?? 0) + 1;
   mem.fell[result.fallenCardId] = (mem.fell[result.fallenCardId] ?? 0) + 1; mem.turns += 1;
+  if (result.lui) { mem.lui ??= {}; const m = (mem.lui[result.megafonoId] ??= { c: 0, n: 0 }); m.n++; if (result.lui.kind === "CADE") m.c++; }
 }
+/** Quanto gli altri si aspettano che questo Megafono scommetta "Cade lui!" (con un a priori del 50%). */
+const reputation = (mem: BotMemory, who: PlayerId): number => { const m = mem.lui?.[who]; return ((m?.c ?? 0) + 1) / ((m?.n ?? 0) + 2); };
 
-/** Probabilità stimata che ciascuna posizione cada (somma 1): uniforme senza storia, poi inclina verso le carte che cadono spesso. */
-function fallProbs(s: GameState, mem: BotMemory, strength: number): number[] {
-  const w = s.tower.map((t) => 1 + strength * ((mem.fell[t.cardId] ?? 0) + 0.5) / ((mem.shown[t.cardId] ?? 0) + 2) * s.tower.length);
-  const sum = w.reduce((a, b) => a + b, 0); return w.map((x) => x / sum);
+/** Stima dalla sola storia: uniforme senza dati, poi inclina verso le carte che cadono spesso. */
+function histProbs(s: GameState, mem: BotMemory): number[] {
+  const w = s.tower.map((t) => 1 + ((mem.fell[t.cardId] ?? 0) + 0.5) / ((mem.shown[t.cardId] ?? 0) + 2) * s.tower.length);
+  const z = w.reduce((a, b) => a + b, 0); return w.map((x) => x / z);
 }
+const softmax = (xs: number[]) => { const m = Math.max(...xs), e = xs.map((x) => Math.exp(x - m)), z = e.reduce((a, b) => a + b, 0); return e.map((x) => x / z); };
+const normalize = (p: number[]) => { const z = p.reduce((a, b) => a + b, 0); return p.map((x) => x / z); };
+const phraseText = (s: GameState) => (s.phrase && s.phrase.mode === "card" ? s.phrase.text : undefined);
+
+/** Probabilità stimata che il gruppo voti (e quindi cada) ciascuna posizione della Torre. */
+function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {
+  const hist = histProbs(s, mem), text = phraseText(s);
+  const aff = text ? s.tower.map((t) => affinity(t.cardId, text)) : [];
+  if (!text || aff.some((a) => a === null)) return hist;
+  const p = softmax((aff as number[]).map((a) => a / (level === "hard" ? TUNE.tempHard : 3)));
+  return p.map((x, i) => 0.85 * x + 0.15 * hist[i]!);
+}
+/** Come cambia il voto del gruppo quando vede il Lui! su X e teme che sia "Cade lui!" (regola del gregge: chi vota il caduto perde i +2). */
+function scared(p: number[], x: number, q: number, lambda: number): number[] { return normalize(p.map((v, i) => (i === x ? v * (1 - lambda * q) : v))); }
+/** Parametri di taratura dei bot (modificabili dai test di taratura). */
+export const TUNE = { voteScare: 0.45, megaScare: 0.45, bluff: true, tempHard: 1.6, ownBonus: true, hardNoise: 0.12 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
-const argmin = (a: number[]) => a.indexOf(Math.min(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
   const mega = megafonoOf(s), pick = <T,>(a: readonly T[]) => a[Math.floor(rand() * a.length)]!;
-  const strength = level === "hard" ? 1 : level === "medium" ? 0.6 : 0;
+  const noise = level === "hard" ? TUNE.hardNoise : 0.4, n = s.tower.length;
   switch (s.phase) {
     case "PROCLAIM": {
       if (me !== mega) return null;
-      const c = s.proclaim!; return { type: "choosePhrase", playerId: me, mode: "card", index: Math.floor(rand() * c.phrases.length) };
+      const c = s.proclaim!; let idx = Math.floor(rand() * c.phrases.length);
+      if (level === "hard") { const t = c.phrases.map(phraseTagCount), best = Math.max(...t); if (best > 0) { const top = t.flatMap((v, i) => (v === best ? [i] : [])); idx = pick(top); } }
+      return { type: "choosePhrase", playerId: me, mode: "card", index: idx };
     }
     case "PLAY": {
       if (!requiredPlayers(s).includes(me) || s.played[me] !== undefined) return null;
-      const hand = s.hands[me]!;
+      const hand = s.hands[me]!, text = phraseText(s);
       if (level === "easy") return { type: "playCard", playerId: me, cardId: pick(hand) };
-      // gioca la carta che storicamente cade di più: se cade prende +2 come proprietario
-      const score = (c: CardId) => ((mem.fell[c] ?? 0) + 0.5) / ((mem.shown[c] ?? 0) + 2) + (level === "hard" ? 0 : rand() * 0.15);
+      // la carta che meglio rappresenta la frase è quella che il gruppo voterà: se cade, +2 anche a me
+      const hist = (c: CardId) => ((mem.fell[c] ?? 0) + 0.5) / ((mem.shown[c] ?? 0) + 2);
+      const score = (c: CardId) => { const a = text ? affinity(c, text) : null; return (a ?? hist(c) * 3) + rand() * (level === "hard" ? 0.6 : 2.5); };
       return { type: "playCard", playerId: me, cardId: hand.slice().sort((a, b) => score(b) - score(a))[0]! };
     }
     case "SUSPECT": {
       if (me !== mega) return null;
-      const n = s.tower.length;
       if (level === "easy") return { type: "placeLui", playerId: me, kind: rand() < 0.5 ? "CADE" : "NON_CADE", position: 1 + Math.floor(rand() * n) };
-      const p = fallProbs(s, mem, strength), hi = argmax(p), lo = argmin(p);
-      // valore atteso con il malus: CADE = 4·p − (1−p) ; NON CADE = 1·(1−p) − p
-      const evCade = 5 * p[hi]! - 1, evNon = 1 - 2 * p[lo]!;
-      return evCade > evNon ? { type: "placeLui", playerId: me, kind: "CADE", position: hi + 1 } : { type: "placeLui", playerId: me, kind: "NON_CADE", position: lo + 1 };
+      const p = crowdProbs(s, mem, level), q = reputation(mem, me), lambda = level === "hard" ? TUNE.megaScare : 0;
+      // bluff: se tutti mi credono un "Cade lui!" fisso, scommetto "Non cade" sulla carta ovvia per spaventare il gruppo; se mi credono prudente, tento il colpo
+      const top = argmax(p);
+      if (TUNE.bluff && level === "hard" && q > 0.62 && p[top]! > 0.3 && rand() < 0.35) return { type: "placeLui", playerId: me, kind: "NON_CADE", position: top + 1 };
+      if (TUNE.bluff && level === "hard" && q < 0.35 && p[top]! > 0.35 && rand() < 0.4) return { type: "placeLui", playerId: me, kind: "CADE", position: top + 1 };
+      let best: { kind: "CADE" | "NON_CADE"; x: number } = { kind: "NON_CADE", x: 0 }, bestV = -Infinity;
+      for (let x = 0; x < n; x++) {
+        const pp = scared(p, x, q, lambda), pe = Math.min(0.95, pp[x]! + 0.1), pn = Math.max(0.01, pp[x]! - 0.04);
+        const scare = 0.5 * (p[x]! - pp[x]!) * (n - 1);                                  // punti tolti agli altri deviando il loro voto
+        const evCade = pe * 6 - (1 - pe) + 0.3 * pe * (n - 1) * pe + scare;                // +4 Lui!, +2 mio voto, −1 se sbaglio, +gregge
+        const evNon = 1 - 2 * pn + scare;
+        const jitter = (rand() - 0.5) * noise;
+        if (evCade + jitter > bestV) { bestV = evCade + jitter; best = { kind: "CADE", x }; }
+        if (evNon + jitter > bestV) { bestV = evNon + jitter; best = { kind: "NON_CADE", x }; }
+      }
+      return { type: "placeLui", playerId: me, kind: best.kind, position: best.x + 1 };
     }
     case "VOTE": {
       if (s.votes[me] !== undefined) return null;
-      const n = s.tower.length;
-      const vote = (position: number): Action => ({ type: "vote", playerId: me, position, ...(s.justifyVotes ? { reason: BOT_REASONS[Math.floor(rand() * BOT_REASONS.length)]! } : {}) });
+      const vote = (position: number): Action => ({ type: "vote", playerId: me, position });
       if (level === "easy") return vote(1 + Math.floor(rand() * n));
-      const p = fallProbs(s, mem, strength), ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1; // ogni giocatore conosce la propria carta
-      const lui = s.lui; let best = 0, bestV = -1;
+      const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1;
+      if (me === mega && lui) {
+        // il Megafono decide i pareggi: CADE → voto la carta scommessa; NON CADE → voto la più probabile tra le altre
+        if (lui.kind === "CADE") return vote(lui.position);
+        const alt = p.map((v, i) => (i + 1 === lui.position ? -1 : v)); return vote(argmax(alt) + 1);
+      }
+      const q = lui ? reputation(mem, mega) : 0, hard = level === "hard", pp = lui && hard ? scared(p, lui.position - 1, q, TUNE.voteScare) : p;
+      let best = 0, bestV = -Infinity;
       for (let k = 0; k < n; k++) {
-        let v = p[k]! * (2 + (k + 1 === ownPos ? 2 : 0));            // +2 se è il caduto, +2 in più se è la mia carta
-        if (level === "hard") {
-          // il Megafono decide i pareggi: coerente con la propria scommessa (se so quale, lo scopro solo se sono io)
-          if (me === mega && lui) v += (lui.kind === "CADE" ? (lui.position === k + 1 ? 0.8 : 0) : (lui.position === k + 1 ? -2 : 0.3));
-          if (me !== mega && lui && lui.position === k + 1) v += 0.15; // il Megafono spesso scommette su ciò che sospetta
-        }
-        v += rand() * (level === "hard" ? 0.12 : 0.35);
+        const luiHere = !!lui && lui.position === k + 1;
+        // se il Lui! è un "Cade lui!" sulla carta che cade, chi l'ha votata non prende i +2 (gregge)
+        const v = pp[k]! * (2 * (luiHere && hard && TUNE.voteScare > 0 ? 1 - q : 1) + (k + 1 === ownPos ? 2 : 0)) + rand() * noise;
         if (v > bestV) { bestV = v; best = k; }
       }
       return vote(best + 1);

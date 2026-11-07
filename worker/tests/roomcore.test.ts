@@ -12,7 +12,7 @@ describe("stanza: creazione, accesso e lobby", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta", mode: "remote", megafonoSa: true });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ megafonoSa: true, justifyVotes: false, herd: false, mode: "remote", turnTimerSec: 0, display: true });
+    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {
@@ -300,24 +300,5 @@ describe("messaggi tra i giocatori", () => {
     const r = makeRoom(2, 43); send(r, 0, { t: "chat", text: "resto qui" }, 4_000_000);
     const copy = new RoomCore(JSON.parse(JSON.stringify(r.core.data)), deps(43));
     expect(copy.data.chat.map((m) => m.text)).toEqual(["resto qui"]);
-  });
-});
-
-describe("regole da testare nella stanza", () => {
-  it("solo l'host le imposta, solo in lobby; di default sono spente", () => {
-    const r = makeRoom(3, 50);
-    expect(r.core.data.options.justifyVotes).toBe(false); expect(r.core.data.options.herd).toBe(false);
-    expect(errCode(send(r, 1, { t: "setOptions", herd: true }))).toBe("NOT_HOST");
-    send(r, 0, { t: "setOptions", justifyVotes: true, herd: true }); expect(r.core.data.options).toMatchObject({ justifyVotes: true, herd: true });
-    send(r, 0, { t: "start" }); expect(errCode(send(r, 0, { t: "setOptions", herd: false }))).toBe("WRONG_STAGE");
-  });
-  it("con le regole accese il voto senza frase è rifiutato e una partita intera termina", () => {
-    const r = makeRoom(3, 51); send(r, 0, { t: "setOptions", justifyVotes: true, herd: true }); send(r, 0, { t: "start" });
-    let g = r.core.data.game as GameState; let guard = 0;
-    while (g.phase !== "VOTE" && guard++ < 50) { for (const id of r.ids) { const a = suggestAction(g, id, Math.random); if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; send(r, r.ids.indexOf(id), { t: "act", action } as ClientMessage); g = r.core.data.game as GameState; } } }
-    expect(g.phase).toBe("VOTE");
-    expect(errCode(send(r, 0, { t: "act", action: { type: "vote", position: 1 } }))).toBe("INVALID_CHOICE");
-    expect(errCode(send(r, 0, { t: "act", action: { type: "vote", position: 1, reason: "è lui" } }))).toBeUndefined();
-    playToEnd(r); expect(r.core.data.stage).toBe("FINISHED");
   });
 });

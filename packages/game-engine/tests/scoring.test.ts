@@ -23,7 +23,7 @@ describe("punteggi", () => {
     const g = setup(4, (s) => ({ kind: "CADE", position: posOf(s, "p2") }));
     const f = posOf(g, "p2"), o = posOf(g, "p3");
     const r = castVotes(g, { p1: f, p2: o, p3: f, p4: f });
-    expect(r.lastResult!.points).toEqual({ p1: 6, p2: 2, p3: 2, p4: 2 }); // p1: voto 2 + lui 4; p2: carta 2
+    expect(r.lastResult!.points).toEqual({ p1: 6, p2: 2, p3: 0, p4: 0 }); // gregge: il Megafono indovina, i +2 dei votanti sono solo suoi (p1: voto 2 + lui 4; p2: carta 2)
   });
   it("Lui! CADE su un personaggio che NON cade: malus -1 (scommessa fallita)", () => {
     const g = setup(4, (s) => ({ kind: "CADE", position: posOf(s, "p3") }));
@@ -67,9 +67,9 @@ describe("punteggi", () => {
     let g = setup(3, (s) => ({ kind: "CADE", position: posOf(s, "p2") }));
     const f = posOf(g, "p2");
     g = castVotes(g, { p1: f, p2: f, p3: f });
-    expect(g.scores).toEqual({ p1: 6, p2: 4, p3: 2 });
+    expect(g.scores).toEqual({ p1: 6, p2: 2, p3: 0 });
     g = act(g, { type: "advance" });
-    expect(g.scores).toEqual({ p1: 6, p2: 4, p3: 2 });
+    expect(g.scores).toEqual({ p1: 6, p2: 2, p3: 0 });
   });
 });
 

@@ -47,13 +47,6 @@ function Lobby({ room, send, chat }: { room: RoomMsg; send: (m: ClientMessage) =
               <option value={0}>nessuno</option><option value={30}>30 s</option><option value={60}>60 s</option><option value={90}>90 s</option><option value={120}>120 s</option></select></label>
           </div>
         )}
-        {(host || o.justifyVotes || o.herd) && (
-          <div className="rules-box" data-testid="rules-box">
-            <b>Regole da testare</b>
-            <label><input type="checkbox" disabled={!host} checked={o.justifyVotes} onChange={(e) => send({ t: "setOptions", justifyVotes: e.target.checked })} data-testid="opt-justify" /> Chi vota scrive perché (la frase si scopre allo spoglio)</label>
-            <label><input type="checkbox" disabled={!host} checked={o.herd} onChange={(e) => send({ t: "setOptions", herd: e.target.checked })} data-testid="opt-herd" /> Gregge: se il Megafono indovina la carta che cade, i +2 dei votanti sono solo suoi</label>
-          </div>
-        )}
         <a className="lnk" onClick={() => window.open(`/schermo/${room.code}`, "_blank")} role="button" tabIndex={0}>Apri lo schermo condiviso (tablet / PC)</a>
         {host && room.players.length < 8 && (
           <div className="opts-row" data-testid="add-bot-row">
