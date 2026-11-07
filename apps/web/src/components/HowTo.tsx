@@ -9,7 +9,7 @@ export const HOWTO_STEPS: [string, string][] = [
   ["📣", "Il Megafono urla una frase: «Oggi sale sulla torre chi…». Ogni turno tocca a uno di voi."],
   ["🃏", "Tutti gli altri scelgono in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
   ["🎯", "Le carte salgono sulla torre. Il Megafono mette un gettone Lui! su una carta, scommettendo su quanti voti prenderà dagli altri (anche zero!). Ogni partita ha 2 gettoni diversi, uguali per tutti, da usare una volta sola."],
-  ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre (se è un pareggio, cadono tutti i più votati)."],
+  ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre. In caso di pareggio decide il Megafono: se ha votato una delle carte pari merito cade la sua, altrimenti cadono tutte."],
   ["⭐", "Si contano i punti e si passa il Megafono al giocatore dopo. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
 ];
 

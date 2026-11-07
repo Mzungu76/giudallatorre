@@ -116,27 +116,31 @@ describe("punteggi", () => {
   });
 });
 
-describe("pareggio: cadono insieme tutte le carte a pari merito (anche quella votata dal Megafono)", () => {
-  it("pareggio 2-2: cadono entrambe le carte; chi le ha giocate e chi le ha votate prende i punti", () => {
+describe("pareggio: se il Megafono ha votato una carta a pari merito cade solo la sua; altrimenti cadono tutte le pari merito", () => {
+  it("pareggio 2-2 con la carta del Megafono tra le pari: cade solo la sua, l'altra si salva", () => {
     const g = setup(4, () => ({ slot: "zero", position: 1 }));
     const a = posOf(g, "p2"), b = posOf(g, "p3");
-    const r = castVotes(g, { p1: b, p2: a, p3: b, p4: a }).lastResult!;
-    expect(r.tie).toBe(true); expect(r.fallenPositions).toEqual([a, b].sort((x, y) => x - y)); expect(r.fallenPosition).toBe(r.fallenPositions[0]);
-    expect(noLui(r, "p2")).toBe(2 + 2); expect(noLui(r, "p3")).toBe(2 + 2); expect(noLui(r, "p4")).toBe(2); expect(noLui(r, "p1")).toBe(2);
+    const r = castVotes(g, { p1: b, p2: a, p3: b, p4: a }).lastResult!;       // il Megafono (p1) vota b
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(true); expect(r.fallenPositions).toEqual([b]); expect(r.fallenPosition).toBe(b);
+    expect(noLui(r, "p1")).toBe(2); expect(noLui(r, "p3")).toBe(2 + 2); expect(noLui(r, "p2")).toBe(0); expect(noLui(r, "p4")).toBe(0);   // chi ha votato/giocato la carta salvata non prende nulla
   });
-  it("tutti votano diversamente (1 voto a testa): cadono tutte le carte votate", () => {
+  it("pareggio in cui il Megafono ha votato un'altra carta: cadono insieme tutte le pari merito", () => {
+    const g = setup(5, () => ({ slot: "zero", position: 1 }));
+    const a = posOf(g, "p2"), b = posOf(g, "p3"), c = posOf(g, "p4");
+    const r = castVotes(g, { p1: c, p2: a, p3: a, p4: b, p5: b }).lastResult!;
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(false); expect(r.fallenPositions).toEqual([a, b].sort((x, y) => x - y));
+    for (const p of ["p2", "p3", "p4", "p5"]) expect(kinds(r, p)).toContain("voto");
+  });
+  it("tutti votano diversamente (1 voto a testa): cade la carta votata dal Megafono", () => {
     const g = setup(4, () => ({ slot: "zero", position: 1 }));
     const r = castVotes(g, { p1: 3, p2: 1, p3: 2, p4: 4 }).lastResult!;
-    expect(r.tie).toBe(true); expect(r.fallenPositions).toEqual([1, 2, 3, 4]); expect(r.fallenCardIds).toHaveLength(4);
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(true); expect(r.fallenPositions).toEqual([3]); expect(r.fallenCardIds).toHaveLength(1);
     expect(noLui(r, "p1")).toBe(2 + (r.fallenOwnerIds.includes("p1") ? 2 : 0));
   });
-  it("più carte cadute: ogni giocatore che le aveva giocate prende il +2 della carta e ogni votante di una caduta il +2 del voto", () => {
-    const g = setup(5, () => ({ slot: "k1", position: 2 }));
-    const r = castVotes(g, { p1: 5, p2: 2, p3: 2, p4: 1, p5: 1 }).lastResult!;
-    expect(r.tie).toBe(true); expect(r.fallenPositions).toEqual([1, 2]);
-    for (const o of r.fallenOwnerIds) if (o && o !== "p1") expect(kinds(r, o)).toContain("carta");
-    for (const p of ["p2", "p3", "p4", "p5"]) expect(kinds(r, p)).toContain("voto");
-    expect(kinds(r, "p1")).not.toContain("voto");
+  it("senza pareggio non c'è spareggio: tieBreak è falso", () => {
+    const g = setup(4, () => ({ slot: "zero", position: 1 }));
+    const r = castVotes(g, { p1: 4, p2: 2, p3: 2, p4: 2 }).lastResult!;
+    expect(r.tie).toBe(false); expect(r.tieBreak).toBe(false);
   });
   it("senza pareggio vince la maggioranza anche contro il Megafono", () => {
     const g = setup(4, () => ({ slot: "k1", position: 1 }));

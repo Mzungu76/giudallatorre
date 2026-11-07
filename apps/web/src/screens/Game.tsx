@@ -161,7 +161,7 @@ function ScoreRow({ rank, name, color, why, delta, from, to, delay, leader, max 
 function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, final }: { H: number; res: TurnResult; view: PlayerView; people: ReturnType<typeof usePeople>; canAdvance: boolean; deadline: number | null; onAdvance: () => void; final: boolean }) {
   const rows = view.players.map((p) => ({ p, d: res.points[p.id] ?? 0, from: p.score - (res.points[p.id] ?? 0), to: p.score }));
   const ranked = [...rows].sort((a, b) => b.to - a.to), top = ranked[0]?.to ?? 0, compact = rows.length > 6 || H < 700;
-  const title = view.roundEnd ? `Classifica · giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : res.tie ? "Pareggio: cadono insieme" : "Classifica del turno";
+  const title = view.roundEnd ? `Classifica · giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : res.tieBreak ? "Pareggio: ha deciso il Megafono" : res.tie ? "Pareggio: cadono insieme" : "Classifica del turno";
   return (
     <div className={`score ${compact ? "c8" : ""}`} data-testid="result-panel">
       <h3>{view.goldenGoal ? "⚡ Spareggio · classifica" : title}</h3>
@@ -182,6 +182,7 @@ function Legend({ onClose, tokens }: { onClose: () => void; tokens: LuiSpec[] })
         <h3>Come si fanno punti</h3>
         {row(voteTok("#2f7be0", 30), "Hai votato il personaggio caduto", "il tuo gettone è sulla sua carta", "+2")}
         {row(`<div style="width:24px;height:34px;border-radius:4px;border:3px solid #fff;background:#14a3a1;box-shadow:1px 2px 0 #13224a"></div>`, "La carta che hai giocato è quella caduta", "la carta del mazzo non è di nessuno", "+2")}
+        {row(voteTok("#e8362b", 32, true), "Pareggio: decide il Megafono", "se ha votato una delle carte pari merito cade la sua, le altre si salvano", "=")}
         {tokens.map((sp) => row(luiTok(sp, 34), `Megafono · Lui!: ${luiLabel(sp)}`, sp.slot === "zero" ? "si conta solo i voti degli altri: se nessuno vota la carta, vince" : "voti degli altri sulla carta del gettone (il suo non conta)", `+${sp.pts}`))}
         <div className="hint" style={{ textAlign: "left", fontSize: 12, marginTop: 6 }}>Ogni gettone si usa una volta sola; se sbaglia, il Megafono non perde punti.</div>
         <div className="hint" style={{ textAlign: "center", marginTop: 8 }}>tocca per chiudere</div>
@@ -258,7 +259,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : setZoomPos(n)) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>

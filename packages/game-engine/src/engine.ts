@@ -177,8 +177,9 @@ function resolve(s: GameState, events: GameEvent[]) {
   const top = Math.max(...Object.values(counts));
   const leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top);
   const mega = megafonoOf(s), tie = leaders.length > 1, megaVote = s.votes[mega]!;
-  // Cade la carta col maggior numero di voti; in caso di pareggio cadono insieme tutte le carte a pari merito (anche quella votata dal Megafono).
-  const fallen = leaders.sort((x, y) => x - y);
+  // Cade la carta col maggior numero di voti. Pareggio: se il Megafono ha votato una delle carte pari merito, cade solo la sua (le altre si salvano); altrimenti cadono insieme tutte le pari merito.
+  const tieBreak = tie && leaders.includes(megaVote);
+  const fallen = tieBreak ? [megaVote] : leaders.sort((x, y) => x - y);
   const slots = fallen.map((f) => s.tower.find((t) => t.position === f)!);
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
@@ -199,7 +200,7 @@ function resolve(s: GameState, events: GameEvent[]) {
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,
-    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui, points, lines, collected, megaVote };
+    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui, points, lines, collected, megaVote, tieBreak };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

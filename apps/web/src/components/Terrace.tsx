@@ -6,7 +6,7 @@ import { sfx } from "../lib/sfx.ts";
 import type { LuiOutcome, LuiSpec, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
 
-export interface VoteTok { p: number; c: string; mega?: boolean }
+export interface VoteTok { p: number; c: string; mega?: boolean; glow?: boolean }
 export interface TerraceProps {
   cardIds: string[]; down?: boolean; show?: number[]; pop?: number; flip?: Record<number, number>;
   votes?: VoteTok[]; lastVote?: number; lui?: { pos: number; spec?: LuiSpec | null } | null;
@@ -110,9 +110,9 @@ export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, lines, megaName, sound, skip, interactive, onDone, onLock }: {
+export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, lines, tieBreak, megaName, sound, skip, interactive, onDone, onLock }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
-  lui: LuiOutcome | null; tie: boolean; fallPositions: number[]; lines: Record<string, ScoreLine[]>; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void; onLock?: (locked: boolean) => void;
+  lui: LuiOutcome | null; tie: boolean; tieBreak: boolean; fallPositions: number[]; lines: Record<string, ScoreLine[]>; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void; onLock?: (locked: boolean) => void;
 }) {
   const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
   const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0;
@@ -165,7 +165,8 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const voteStep = (i: number) => steps.find((s) => s.kind === "vote" && s.i === i)!;
   const shown = voters.map((v, i) => ({ v, i })).filter(({ i }) => T >= voteStep(i).t0);
   const lastShown = shown[shown.length - 1];
-  const toks: VoteTok[] = shown.map(({ v }) => ({ p: votes[v.id]!, c: v.color, mega: v.mega }));
+  const showTb = tieBreak && (cur.kind === "tally" || cur.kind === "lui" || phase !== "clock");
+  const toks: VoteTok[] = shown.map(({ v }) => ({ p: votes[v.id]!, c: v.color, mega: v.mega, glow: v.mega && showTb }));
   const luiStart = steps.find((s) => s.kind === "lui")?.t0 ?? 0;
   const luiOpen = !!lui && (cur.kind === "lui" || phase !== "clock") && T >= luiStart + 0.9;
   const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
@@ -210,7 +211,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
             <div className="rv-col"><span className="rv-n">Voto {cur.i! + 1} di {total}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{v.name} ha votato il n. {vp}</b></div>
           </div>
         )}
-        {phase === "clock" && cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
+        {phase === "clock" && cur.kind === "tally" && <><b className="rv-t">{tie ? (tieBreak ? "Pareggio! Decide il Megafono" : "Pareggio!") : `Il più votato: n. ${fallPos}`}</b><span data-testid="tally-text">{tie ? (tieBreak ? `${megaName} ha votato il n. ${fallPos}, tra le carte pari merito: cade la sua, le altre si salvano.` : `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.`) : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
         {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span data-testid="lui-reveal">Scommetteva: <b>{luiLabel(lui)}</b> sul n. {lui.position} (la carta col bordo giallo, +{lui.pts} punti). Gli altri gliene hanno dati {lui.others}: <b>{lui.hit ? `azzeccato! +${lui.pts}` : "mancato"}</b>.</span></>}
         {phase === "stamp" && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
       </div>}

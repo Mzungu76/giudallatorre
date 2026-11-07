@@ -66,6 +66,8 @@ export interface TurnResult {
   collected: number;
   /** La carta votata dal Megafono. */
   megaVote: number;
+  /** True se c'era un pareggio in testa e ha deciso il voto del Megafono (cade solo la sua carta). */
+  tieBreak: boolean;
 }
 
 export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }

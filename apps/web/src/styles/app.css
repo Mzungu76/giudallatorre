@@ -583,3 +583,8 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .lui-opts .lk.lui-k1{background:#e3f4ff !important}.lui-opts .lk.lui-k2{background:#ffe8cf !important}.lui-opts .lk.lui-k3{background:#ffdcd6 !important}.lui-opts .lk.lui-zero{background:#f0e3fb !important}
 .lui-opts .lk:disabled{opacity:.45;filter:grayscale(.8)}
 .tchips{display:inline-flex;gap:3px;vertical-align:middle}.tchip{display:inline-block;line-height:0}
+
+/* il gettone del Megafono lampeggia quando il suo voto decide un pareggio */
+.tbg{animation:tbg 0.7s ease-in-out infinite;z-index:80 !important}
+.tbg .tbbadge circle{fill:#fff59a;stroke:#e8362b}
+@keyframes tbg{0%,100%{filter:drop-shadow(0 0 0 #ffd24d);transform:scale(1)}50%{filter:drop-shadow(0 0 12px #ffe27a) drop-shadow(0 0 22px #ffd24d);transform:scale(1.28)}}

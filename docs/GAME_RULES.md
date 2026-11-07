@@ -31,7 +31,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 
 ### Fase 3 — Giù dalla Torre
 1. Rivelazione voti (a partire dal giocatore successivo al Megafono; il Megafono per ultimo).
-2. Cade il personaggio con più voti. **Pareggio: cadono insieme tutte le carte a pari merito**, anche quella votata dal Megafono. Chi ha votato una carta caduta fa +2, chi aveva giocato una carta caduta fa +2 (bonus carta, per ciascuna carta caduta).
+2. Cade il personaggio con più voti. **Pareggio: decide il Megafono** — se ha votato una delle carte pari merito cade solo la sua (le altre si salvano), altrimenti cadono insieme tutte le pari merito. Chi ha votato una carta caduta fa +2, chi aveva giocato una carta caduta fa +2 (bonus carta, per ciascuna carta caduta).
 3. Punti:
    - **+2** a chi ha votato il personaggio caduto;
    - **+2** a chi ha giocato la carta caduta;
@@ -62,7 +62,7 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 - **Frase**: all'inizio del turno si pesca una carta "Su sulla Torre" visibile solo al Megafono. Può scegliere una frase della carta (carta singola: obbligatoria) oppure inventarla a voce (`free`). Mazzo frasi che si rimescola quando finisce.
 - **Torre**: modalità base = N−1 carte giocate dalla Folla + 1 pescata dal mazzo (nessun proprietario); variante "Il Megafono sa" = N carte dalle mani. Le carte vengono mescolate e numerate 1..N solo quando tutti hanno giocato.
 - **Voto**: tutti votano una volta, Megafono incluso, anche la propria carta e quella del mazzo.
-- **Cade** la carta con più voti; in caso di **pareggio cadono insieme tutte le carte a pari merito**, anche quella votata dal Megafono.
+- **Cade** la carta con più voti; in caso di **pareggio decide il Megafono**: se ha votato una delle carte pari merito cade solo la sua, le altre si salvano; se ha votato un'altra carta cadono tutte le pari merito. Il suo gettone di voto ha un simbolo "=" che lampeggia e si illumina quando usa questo bonus.
 - **Punti**: +2 a chi ha votato una carta caduta (Megafono compreso); +2 a chi ha giocato ciascuna carta caduta (nessuno se era del mazzo); **il Megafono prende inoltre 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su** (il suo voto non conta; i voti si sommano, non si moltiplicano); Lui! CADE sulla carta caduta +4; Lui! NON CADE su una carta che resta su +1; scommessa sbagliata −1. I punti si sommano.
 - **Spoglio**: i voti escono uno alla volta, il Megafono per ultimo (suo gettone più grande); poi la carta più votata, il Lui! e il pannello "Chi prende punti": una riga per giocatore con i motivi (voto giusto, sua carta caduta, voti raccolti, Lui!) e il totale. I "+N" salgono dalle carte; la classifica del turno mostra l'operazione di ognuno.
 - **Fine turno**: la Torre va nello scarto; pesca 1 carta chi ha giocato (la Folla; nella variante anche il Megafono); mazzo Personaggio rimescolato dallo scarto se finisce; il Megafono passa al giocatore successivo in ordine di ingresso.
