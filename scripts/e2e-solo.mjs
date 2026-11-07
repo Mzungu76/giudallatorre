@@ -22,9 +22,9 @@ let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 (async () => { while (sampling && n < 400) { await p.screenshot({ path: `${SHOTS}/s${String(n++).padStart(3, "0")}.png` }).catch(() => {}); await sleep(450); } })();
 async function step() {
   if (await vis("phrase-picker")) {
-    if (!globalThis.__b) { globalThis.__b = 1; await p.evaluate(() => { window.__rm = 0; window.__ad = 0; new MutationObserver((ms) => { for (const m of ms) { m.removedNodes.forEach((n) => { if (n.querySelector?.('[data-testid="phrase-go"]') || n.dataset?.testid === "phrase-go") window.__rm++; }); m.addedNodes.forEach((n) => { if (n.querySelector?.('[data-testid="phrase-go"]') || n.dataset?.testid === "phrase-go") window.__ad++; }); } }).observe(document.body, { childList: true, subtree: true }); }); await sleep(2500); console.log("REMOUNTS", await p.evaluate(() => [window.__rm, window.__ad])); }
     await p.click('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
-  if (await vis("hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
+  if (await vis("hand")) {
+    if (!globalThis.__f) { globalThis.__f = 1; const r = await p.evaluate(() => new Promise((res) => { let n = 0, lt = 0; try { new PerformanceObserver((l) => { lt += l.getEntries().length; }).observe({ entryTypes: ["longtask"] }); } catch {} const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else res({ frames: n, longtasks: lt, mut: window.__mut }); }; requestAnimationFrame(f); })); console.log("FPS", JSON.stringify(r)); } await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis("place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="place-lui"]'); return true; }
   if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis("skip") && !SAMPLE) { await p.click('[data-testid="skip"]', { timeout: 3000 }); return true; }
