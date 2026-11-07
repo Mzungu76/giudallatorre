@@ -3,7 +3,7 @@ import Home from "./screens/Home.tsx";
 import { CreateScreen, JoinScreen } from "./screens/Forms.tsx";
 import RoomScreen from "./screens/Room.tsx";
 import DisplayScreen from "./screens/Display.tsx";
-import StandingsDemo, { TieDemo } from "./screens/StandingsDemo.tsx";
+import StandingsDemo, { TieDemo, FinalDemo } from "./screens/StandingsDemo.tsx";
 
 type Route = { name: "home" } | { name: "create" } | { name: "join"; code: string } | { name: "room"; code: string } | { name: "display"; code: string };
 function parse(): Route {
@@ -19,6 +19,7 @@ export default function App() {
   const [route, setRoute] = useState<Route>(parse);
   useEffect(() => { const f = () => setRoute(parse()); window.addEventListener("popstate", f); return () => window.removeEventListener("popstate", f); }, []);
   if (import.meta.env.DEV && location.pathname === "/__classifica") return <StandingsDemo />;
+  if (import.meta.env.DEV && location.pathname === "/__finale") return <FinalDemo />;
   if (import.meta.env.DEV && location.pathname === "/__pareggio") return <TieDemo />;
   switch (route.name) {
     case "create": return <CreateScreen />;
