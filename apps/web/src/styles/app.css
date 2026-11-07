@@ -301,3 +301,4 @@ button.card{position:absolute;padding:0;background-size:cover;background-positio
 .chat-f button{border:3px solid #13224a;background:#e8362b;color:#fff;font:400 16px Anton;text-transform:uppercase;padding:0 12px;box-shadow:3px 3px 0 #13224a}.chat-f button:disabled{opacity:.5}
 .rules-box{background:#fff7e0;border:3px dashed #13224a;padding:6px 9px;display:flex;flex-direction:column;gap:4px;font:800 12px/1.3 Nunito;color:#13224a}
 .rules-box b{font:400 15px Anton;text-transform:uppercase;color:#e8362b}.rules-box label{display:flex;gap:6px;align-items:flex-start}.rules-box input{margin-top:2px}
+.next{right:auto !important;width:auto !important}

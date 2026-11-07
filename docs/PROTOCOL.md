@@ -18,17 +18,18 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 |---|---|---|
 | `hello` | `token` | **obbligatorio come primo messaggio** (entro 10 s) |
 | `ping` | — | risposta `{"t":"pong"}` automatica, senza svegliare la stanza (stringa esatta `{"t":"ping"}`) |
-| `setOptions` | `megafonoSa?`, `mode?`, `turnTimerSec?` (0/30/60/90/120) | solo host, solo lobby |
+| `setOptions` | `megafonoSa?`, `justifyVotes?`, `herd?` (regole da testare), `mode?`, `turnTimerSec?` (0/30/60/90/120) | solo host, solo lobby |
 | `kick` | `playerId` | solo host, solo lobby |
+| `chat` | `text` (≤ 140 caratteri dopo la pulizia) | messaggio a tutta la stanza; errori `INVALID_MESSAGE`, `RATE_LIMIT` |
 | `start` | — | solo host, da 3 giocatori (i bot contano) |
 | `addBot` | `level` (`easy`\|`medium`\|`hard`) | solo host, solo lobby, fino a 8 giocatori totali |
 | `removeBot` | `playerId` | solo host, solo lobby |
 | `watch` | — | schermo condiviso (sola visione, solo dati pubblici) |
 | `leave` | — | in lobby esce; in partita chiude soltanto la connessione |
-| `act` | `reqId?`, `action` | azioni di gioco: `choosePhrase{mode:"card",index}\|{mode:"free", text?}` (testo libero opzionale, max 80 caratteri; senza testo la frase è solo a voce), `playCard{cardId}`, `placeLui{kind,position}`, `vote{position}`, `advance` |
+| `act` | `reqId?`, `action` | azioni di gioco: `choosePhrase{mode:"card",index}\|{mode:"free", text?}` (testo libero opzionale, max 80 caratteri; senza testo la frase è solo a voce), `playCard{cardId}`, `placeLui{kind,position}`, `vote{position, reason?}` (con `justifyVotes` la frase è obbligatoria, max 80 caratteri), `advance` |
 
 ## WebSocket — server → client
-`room` (stanza, giocatori e presenza, opzioni, `seq`), `view` (vista privata del giocatore + eventi per le animazioni + `deadline` del timer), `error{code,message,reqId?}`, `kicked`, `closed{reason}`, `pong`.
+`room` (stanza, giocatori e presenza, opzioni, `seq`), `view` (vista privata del giocatore + eventi per le animazioni + `deadline` del timer), `chat{msg}` e `chatlog{msgs}` (cronologia alla connessione), `error{code,message,reqId?}`, `kicked`, `closed{reason}`, `pong`.
 
 Dopo **ogni** cambiamento ogni giocatore connesso riceve `room` e `view` con `seq` crescente. Alla (ri)connessione riceve subito uno snapshot completo: nessun ricaricamento della pagina e nessuna perdita di stato.
 
