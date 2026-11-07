@@ -28,7 +28,8 @@ export default {
       // Un'eccezione non gestita (ad esempio un limite gratuito di Cloudflare esaurito) diventa un errore leggibile e finisce nei log con il suo testo.
       const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
       console.error("errore API", new URL(request.url).pathname, msg);
-      return /exceed|limit|quota|overload/i.test(msg) ? reply({ error: "QUOTA" }, 503) : reply({ error: "SERVER" }, 500);
+      const detail = msg.slice(0, 200); // solo testo dell'eccezione: aiuta a capire quale limite o guasto è in gioco
+      return /exceed|limit|quota|overload/i.test(msg) ? reply({ error: "QUOTA", detail }, 503) : reply({ error: "SERVER", detail }, 500);
     }
   },
 };
