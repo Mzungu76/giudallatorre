@@ -16,8 +16,9 @@ describe("punteggi", () => {
     const r = castVotes(g, { p1: fallen, p2: fallen, p3: fallen, p4: other, p5: other });
     expect(r.phase).toBe("RESULTS");
     expect(r.lastResult!.fallenPosition).toBe(fallen);
-    expect(r.lastResult!.points).toEqual({ p1: 3, p2: 2, p3: 2, p4: 2, p5: 0 });
-    expect(r.scores).toEqual({ p1: 3, p2: 2, p3: 2, p4: 2, p5: 0 });
+    // gregge: il Megafono ha votato la carta che cade, quindi p2 e p3 non fanno i +2 del voto
+    expect(r.lastResult!.points).toEqual({ p1: 3, p2: 0, p3: 0, p4: 2, p5: 0 });
+    expect(r.scores).toEqual({ p1: 3, p2: 0, p3: 0, p4: 2, p5: 0 });
   });
   it("Lui! CADE sul personaggio caduto: Megafono +4 (si somma agli altri punti)", () => {
     const g = setup(4, (s) => ({ kind: "CADE", position: posOf(s, "p2") }));
@@ -54,7 +55,7 @@ describe("punteggi", () => {
     const deck = posOf(g, null), others = [posOf(g, "p2"), posOf(g, "p3"), posOf(g, "p4")];
     const r = castVotes(g, { p1: deck, p2: deck, p3: deck, p4: deck });
     expect(r.lastResult!.fallenOwnerId).toBeNull();
-    expect(r.lastResult!.points).toEqual({ p1: 2 + 1, p2: 2, p3: 2, p4: 2 }); // NON_CADE su p2 che resta su: +1
+    expect(r.lastResult!.points).toEqual({ p1: 2 + 1, p2: 0, p3: 0, p4: 0 }); // NON_CADE su p2 che resta su: +1; gregge: gli altri non fanno il +2
     expect(others).toHaveLength(3);
   });
   it("variante Megafono sa: il Megafono può prendere voto + carta + Lui! nello stesso turno (2+2+4)", () => {

@@ -165,9 +165,9 @@ function resolve(s: GameState, events: GameEvent[]) {
   const points: Record<PlayerId, number> = {}, reasons: Record<PlayerId, string[]> = {};
   for (const p of s.playerIds) { points[p] = 0; reasons[p] = []; }
   const give = (p: PlayerId, n: number, why: string) => { points[p]! += n; reasons[p]!.push(why); };
-  // Regola del gregge: se il Megafono ha indovinato la carta che cade, i +2 dei votanti vanno solo a lui.
-  const herd = !!s.lui && s.lui.kind === "CADE" && s.lui.position === fallen;
-  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (herd && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
+  // Regola del gregge: se la carta che cade è anche quella votata dal Megafono, i +2 dei votanti li fa solo lui.
+  const herd = s.votes[mega] === fallen && s.playerIds.some((p) => p !== mega && s.votes[p] === fallen);
+  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (s.votes[mega] === fallen && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
   if (slot.ownerId !== null) give(slot.ownerId, 2, "carta");
   if (s.lui) {
     if (s.lui.kind === "CADE" && s.lui.position === fallen) give(mega, 4, "lui-cade");

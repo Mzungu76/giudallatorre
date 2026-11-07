@@ -69,7 +69,7 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 - **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
 
 ## Regola del gregge (definitiva)
-Se il Megafono indovina la carta che cade ("Cade lui!" sulla carta caduta), i +2 di chi ha votato la carta caduta vanno **solo al Megafono** (se l'ha votata anche lui); gli altri non li prendono. Il +2 del proprietario della carta e il +4 del Lui! restano. (La regola "chi vota scrive perché" è stata provata e tolta.)
+Se la carta che cade è **la stessa che ha votato il Megafono**, i +2 del voto li fa solo il Megafono: gli altri che l'hanno votata non prendono i loro +2. Il +2 del proprietario della carta e i punti del Lui! restano. Non c'entra il gettone Lui!: conta solo il voto del Megafono. Per questo i votanti sono invitati a "evitare il voto del Megafono" (che però non conoscono finché non c'è lo spoglio). (La regola "chi vota scrive perché" è stata provata e tolta.)
 
 ## Messaggi tra i giocatori
 Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.

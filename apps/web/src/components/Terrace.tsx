@@ -170,7 +170,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, herd
         )}
         {cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Decide il Megafono (${megaName}): cade il n. ${fallPos}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
         {cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span>{lui.kind === "CADE" ? `Aveva scommesso: CADE il n. ${lui.pos} (la carta col bordo giallo).` : `Aveva scommesso: il n. ${lui.pos} NON CADE (la carta col bordo giallo).`}</span>{T >= luiStart + 1.2 && <em className={luiHit ? "ok" : "ko"}>{luiHit ? (lui.kind === "CADE" ? "Azzeccato! +4" : "Azzeccato! +1") : "Sbagliato: −1"}</em>}</>}
-        {cur.kind === "herd" && <><b className="rv-t">🐑 Regola del gregge</b><span>{megaName} ha indovinato la carta che cade: i +2 di chi l’ha votata vanno solo a lui.</span></>}
+        {cur.kind === "herd" && <><b className="rv-t">🐑 Regola del gregge</b><span>{megaName} ha votato proprio la carta che cade: i +2 di chi l’ha votata li fa solo lui.</span></>}
         {cur.kind === "stamp" && <b className="rv-t">Cade il n. {fallPos}!</b>}
         {cur.kind !== "stamp" && cur.kind !== "intro" && (
           <div className="rv-tally" aria-label="Voti finora">

@@ -41,7 +41,7 @@ export interface TurnResult {
   lui: LuiToken | null;
   points: Record<PlayerId, number>;
   reasons: Record<PlayerId, string[]>;
-  /** True se la regola del gregge ha tolto i +2 ai votanti della carta caduta. */
+  /** True se la regola del gregge ha tolto i +2 ai votanti della carta caduta (votata anche dal Megafono). */
   herd: boolean;
 }
 

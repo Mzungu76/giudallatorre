@@ -37,10 +37,10 @@ function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {
   const p = softmax((aff as number[]).map((a) => a / (level === "hard" ? TUNE.tempHard : 3)));
   return p.map((x, i) => 0.85 * x + 0.15 * hist[i]!);
 }
-/** Come cambia il voto del gruppo quando vede il Lui! su X e teme che sia "Cade lui!" (regola del gregge: chi vota il caduto perde i +2). */
+/** Come cambia il voto del gruppo quando vede il Lui! su X e pensa che il Megafono voti proprio X (regola del gregge: se cade, i +2 sono solo suoi). */
 function scared(p: number[], x: number, q: number, lambda: number): number[] { return normalize(p.map((v, i) => (i === x ? v * (1 - lambda * q) : v))); }
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { voteScare: 0.45, megaScare: 0.45, bluff: true, tempHard: 1.6, ownBonus: true, hardNoise: 0.12 };
+export const TUNE = { voteScare: 0.2, megaScare: 0.2, bluff: true, bluffRate: 0.15, tempHard: 1.6, ownBonus: true, hardNoise: 0.12 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
@@ -68,14 +68,15 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const p = crowdProbs(s, mem, level), q = reputation(mem, me), lambda = level === "hard" ? TUNE.megaScare : 0;
       // bluff: se tutti mi credono un "Cade lui!" fisso, scommetto "Non cade" sulla carta ovvia per spaventare il gruppo; se mi credono prudente, tento il colpo
       const top = argmax(p);
-      if (TUNE.bluff && level === "hard" && q > 0.62 && p[top]! > 0.3 && rand() < 0.35) return { type: "placeLui", playerId: me, kind: "NON_CADE", position: top + 1 };
-      if (TUNE.bluff && level === "hard" && q < 0.35 && p[top]! > 0.35 && rand() < 0.4) return { type: "placeLui", playerId: me, kind: "CADE", position: top + 1 };
+      if (TUNE.bluff && level === "hard" && q > 0.62 && p[top]! > 0.3 && rand() < TUNE.bluffRate) return { type: "placeLui", playerId: me, kind: "NON_CADE", position: top + 1 };
+      if (TUNE.bluff && level === "hard" && q < 0.35 && p[top]! > 0.35 && rand() < TUNE.bluffRate * 1.2) return { type: "placeLui", playerId: me, kind: "CADE", position: top + 1 };
       let best: { kind: "CADE" | "NON_CADE"; x: number } = { kind: "NON_CADE", x: 0 }, bestV = -Infinity;
       for (let x = 0; x < n; x++) {
         const pp = scared(p, x, q, lambda), pe = Math.min(0.95, pp[x]! + 0.1), pn = Math.max(0.01, pp[x]! - 0.04);
         const scare = 0.5 * (p[x]! - pp[x]!) * (n - 1);                                  // punti tolti agli altri deviando il loro voto
         const evCade = pe * 6 - (1 - pe) + 0.3 * pe * (n - 1) * pe + scare;                // +4 Lui!, +2 mio voto, −1 se sbaglio, +gregge
-        const evNon = 1 - 2 * pn + scare;
+        const pAlt = Math.max(...pp.map((v, i) => (i === x ? -1 : v)));                    // voterò la carta più probabile: se cade, i +2 sono solo miei
+        const evNon = 1 - 2 * pn + scare + pAlt * (2 + 0.3 * (n - 1) * pAlt);
         const jitter = (rand() - 0.5) * noise;
         if (evCade + jitter > bestV) { bestV = evCade + jitter; best = { kind: "CADE", x }; }
         if (evNon + jitter > bestV) { bestV = evNon + jitter; best = { kind: "NON_CADE", x }; }
@@ -88,16 +89,17 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       if (level === "easy") return vote(1 + Math.floor(rand() * n));
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1;
       if (me === mega && lui) {
-        // il Megafono decide i pareggi: CADE → voto la carta scommessa; NON CADE → voto la più probabile tra le altre
+        // il Megafono decide i pareggi e, se vota la carta che cade, fa lui solo i punti del voto (gregge): CADE → voto la carta scommessa; NON CADE → la più probabile tra le altre
         if (lui.kind === "CADE") return vote(lui.position);
         const alt = p.map((v, i) => (i + 1 === lui.position ? -1 : v)); return vote(argmax(alt) + 1);
       }
-      const q = lui ? reputation(mem, mega) : 0, hard = level === "hard", pp = lui && hard ? scared(p, lui.position - 1, q, TUNE.voteScare) : p;
+      // regola del gregge: se cade la carta votata anche dal Megafono, i miei +2 non contano. Il suo voto è segreto: lo stimo (Lui! = probabile "Cade lui!", altrimenti la carta più probabile)
+      const hard = level === "hard", m = p.map(() => 0);
+      if (lui) { const q = reputation(mem, mega), x = lui.position - 1, alt = argmax(p.map((v, i) => (i === x ? -1 : v))); m[x]! += q; m[alt]! += 1 - q; } else m[argmax(p)] = 1;
+      const pp = hard ? normalize(p.map((v, i) => v * (1 - TUNE.voteScare * m[i]!))) : p;
       let best = 0, bestV = -Infinity;
       for (let k = 0; k < n; k++) {
-        const luiHere = !!lui && lui.position === k + 1;
-        // se il Lui! è un "Cade lui!" sulla carta che cade, chi l'ha votata non prende i +2 (gregge)
-        const v = pp[k]! * (2 * (luiHere && hard && TUNE.voteScare > 0 ? 1 - q : 1) + (k + 1 === ownPos ? 2 : 0)) + rand() * noise;
+        const v = pp[k]! * (2 * (hard ? 1 - m[k]! : 1) + (k + 1 === ownPos ? 2 : 0)) + rand() * noise;
         if (v > bestV) { bestV = v; best = k; }
       }
       return vote(best + 1);

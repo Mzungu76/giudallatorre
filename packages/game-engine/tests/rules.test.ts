@@ -22,26 +22,27 @@ const voteAll = (s: GameState, pos: Record<string, number>) => {
 
 describe("regola del gregge (sempre attiva)", () => {
   const mega = (s: GameState) => megafonoOf(s);
-  it("Lui! CADE indovinato: i +2 dei votanti vanno solo al Megafono", () => {
-    const base = toVote({ luiPos: 2 }), m = mega(base);
-    const votes = Object.fromEntries(base.playerIds.map((p) => [p, 2]));
-    const r = voteAll(base, votes).lastResult!;
+  it("se cade la carta votata anche dal Megafono, i +2 dei votanti li fa solo lui (il +2 della carta resta al proprietario)", () => {
+    const base = toVote({ kind: "NON_CADE", luiPos: 1 }), m = mega(base);
+    const r = voteAll(base, Object.fromEntries(base.playerIds.map((p) => [p, 2]))).lastResult!;
     expect(r.herd).toBe(true);
     for (const p of base.playerIds) {
-      if (p === m) expect(r.points[p]).toBe(2 + 4 + (r.fallenOwnerId === p ? 2 : 0));
-      else { expect(r.reasons[p]).toContain("gregge"); expect(r.points[p]).toBe(r.fallenOwnerId === p ? 2 : 0); }
+      const owner = r.fallenOwnerId === p ? 2 : 0;
+      if (p === m) expect(r.points[p]).toBe(2 + owner + 1);               // voto + (carta) + Non cade azzeccato
+      else { expect(r.reasons[p]).toContain("gregge"); expect(r.points[p]).toBe(owner); }
     }
   });
-  it("Megafono che non ha votato la carta caduta non prende il +2 dei votanti", () => {
-    const base = toVote({ luiPos: 2 }), m = mega(base);
+  it("vale anche con il Lui! \"Cade lui!\" (non conta il gettone ma il voto del Megafono)", () => {
+    const base = toVote({ kind: "CADE", luiPos: 2 }), m = mega(base);
+    const r = voteAll(base, Object.fromEntries(base.playerIds.map((p) => [p, 2]))).lastResult!;
+    expect(r.herd).toBe(true); expect(r.points[m]).toBe(2 + 4 + (r.fallenOwnerId === m ? 2 : 0));
+  });
+  it("se il Megafono ha votato un'altra carta, tutti prendono i punti di sempre (anche con il Lui! azzeccato)", () => {
+    const base = toVote({ kind: "CADE", luiPos: 2 }), m = mega(base);
     const votes = Object.fromEntries(base.playerIds.map((p) => [p, p === m ? 1 : 2]));
     const r = voteAll(base, votes).lastResult!;
-    expect(r.fallenPosition).toBe(2); expect(r.points[m]).toBe(4 + (r.fallenOwnerId === m ? 2 : 0));
-  });
-  it("senza Lui! CADE azzeccato i punti sono quelli di sempre", () => {
-    const base = toVote({ kind: "NON_CADE", luiPos: 1 }), votes = Object.fromEntries(base.playerIds.map((p) => [p, 2]));
-    const r = voteAll(base, votes).lastResult!; expect(r.herd).toBe(false);
-    for (const p of base.playerIds) expect(r.points[p]).toBeGreaterThanOrEqual(2 - (p === mega(base) ? 1 : 0) - 1);
+    expect(r.fallenPosition).toBe(2); expect(r.herd).toBe(false);
+    for (const p of base.playerIds) if (p !== m) { expect(r.reasons[p]).not.toContain("gregge"); expect(r.points[p]).toBeGreaterThanOrEqual(2); }
   });
 });
 
