@@ -500,3 +500,45 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .how-pts b{flex:none;min-width:62px;text-align:center;background:#e7f6ea;color:#1c6b3c;border:2px solid #13224a;border-radius:99px;padding:1px 6px;font:400 16px Anton}
 .how-pts b.neg{background:#fde6e4;color:#b3261e}
 .credit{left:14px;top:20px;text-align:left;max-width:150px;line-height:1.2;font:800 11.5px Nunito;color:#fff;text-shadow:0 1px 0 #13224a,0 0 6px #13224a;letter-spacing:.04em;z-index:30;pointer-events:none}
+
+/* classifica: salita lungo la torre */
+.zoom.stbd{position:absolute;left:0;right:0;top:0;overflow:hidden;background:none;padding:0}
+.stbd-sky{position:absolute;inset:0;background:linear-gradient(#7cc4f0,#3f8fd0 55%,#2f6fb0)}
+.stbd-rays{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 38%,#ffffff26 0 6deg,transparent 6deg 12deg)}
+.stbd-title{position:absolute;left:0;right:0;top:16px;text-align:center;pointer-events:none}
+.stbd-title b{display:block;font:400 36px/1 Anton;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;text-transform:uppercase;letter-spacing:.04em}
+.stbd-title small{display:inline-block;margin-top:6px;background:#13224a;color:#ffc72c;border:2px solid #fff;border-radius:99px;padding:1px 12px;font:800 12px Nunito}
+.stbd-x{position:absolute;right:10px;top:12px;width:34px;height:34px;border-radius:50%;border:3px solid #13224a;background:#fff7e0;box-shadow:0 3px 0 #13224a;font:400 22px/26px Anton;padding:0;color:#13224a;z-index:5;cursor:pointer}
+.stbd-tower{position:absolute;left:calc(50% - 82px);width:164px}
+.stbd-merl{position:absolute;left:-6px;right:-6px;top:0;height:30px;display:flex;justify-content:space-between}
+.stbd-merl i{width:26px;height:30px;background:#e9cf94;border:4px solid #13224a;border-bottom:0;box-shadow:inset -5px 0 0 #c9a85f}
+.stbd-body{position:absolute;left:0;right:0;top:26px;bottom:0;border:5px solid #13224a;border-top-width:6px;
+  background:linear-gradient(90deg,#f3dda4 0,#e9cf94 30%,#e0c283 70%,#c9a35f 100%);
+  box-shadow:inset 0 0 0 3px #ffffff30}
+.stbd-body:before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,transparent 0 22px,#b9964f55 22px 24px),
+  repeating-linear-gradient(90deg,transparent 0 38px,#b9964f44 38px 40px)}
+.stbd-body:after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,#3aa65588)}
+.stbd-door{position:absolute;left:calc(50% - 30px);width:60px;height:78px;bottom:0;background:#1d2740;border:5px solid #13224a;border-radius:30px 30px 0 0;z-index:1}
+.stbd-flag{position:absolute;left:calc(50% - 2px);width:4px;height:60px;background:#13224a}
+.stbd-flag i{position:absolute;left:4px;top:2px;width:44px;height:26px;background:#e8362b;border:3px solid #13224a;clip-path:polygon(0 0,100% 50%,0 100%)}
+.stbd-flag b{position:absolute;left:8px;top:6px;font:400 12px Anton;color:#fff}
+.stbd-tick{position:absolute;left:calc(50% - 96px);width:192px;height:0;border-top:4px solid #13224a;z-index:2}
+.stbd-tick:after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:#8a5a3b;border-bottom:2px solid #13224a;opacity:.85}
+.stbd-tick span{position:absolute;left:-2px;top:-15px;min-width:38px;text-align:center;background:#ffe27a;border:3px solid #13224a;border-radius:9px;padding:0 4px;font:400 15px/20px Anton;color:#13224a;box-shadow:0 2px 0 #13224a;z-index:3}
+.stbd-tick.top span{background:#ffc72c;min-width:46px}
+.stbd-pawn{position:absolute;margin-left:-20px;z-index:6;animation:stup .8s cubic-bezier(.3,1.4,.5,1) both}
+.stbd-pawn .pawn{display:block;line-height:0;filter:drop-shadow(0 3px 0 #13224a66)}
+.stbd-crown{position:absolute;left:6px;top:-18px;font-style:normal;font-size:22px;z-index:2;filter:drop-shadow(0 2px 0 #13224a)}
+@keyframes stup{from{transform:translateY(70px);opacity:0}to{transform:none;opacity:1}}
+.stbd-tag{position:absolute;display:flex;align-items:center;gap:4px;background:#fff7e0;border:3px solid #13224a;border-radius:99px;padding:1px 7px 1px 4px;box-shadow:0 3px 0 #13224a;font:800 11.5px/1.2 Nunito;color:#13224a;z-index:7;max-width:104px}
+.stbd-tag.R{left:calc(50% + 96px)}.stbd-tag.L{right:calc(50% + 96px)}
+.stbd-tag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60px}
+.stbd-tag b{font:400 17px Anton;margin-left:auto}
+.stbd-tag .dc{width:14px;height:14px;border-width:2px}
+.stbd-lead{position:absolute;height:0;border-top:3px dashed #ffffffcc;z-index:5}
+.stbd-lead.R{left:calc(50% + var(--dx) + 22px);width:calc(76px - var(--dx))}
+.stbd-lead.L{right:calc(50% - var(--dx) + 22px);width:calc(76px + var(--dx))}
+.stbd-ok{position:absolute;left:16px;right:16px;bottom:18px;background:linear-gradient(#ffd24d,#f4a900);color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 5px 0 #13224a;font:400 24px Anton;text-transform:uppercase;padding:10px;cursor:pointer;z-index:8}
+
+.stbd-grp{display:contents}
