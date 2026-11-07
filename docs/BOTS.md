@@ -15,9 +15,9 @@
 
 **Sicurezza.** Le viste dei bot sono costruite come quelle dei giocatori (`viewFor`): nessun bot vede le mani altrui o il tipo del Lui! prima del tempo. Test: `packages/game-engine/tests/ai.test.ts`, `worker/tests/roomcore.test.ts` ("giocatori virtuali nella stanza"), `scripts/e2e-solo.mjs`.
 
-## Etichette nascoste, gregge e bluff
+## Etichette nascoste, voti raccolti e bluff
 Ogni personaggio (120) ha un tipo umano e dei temi (`content/tags-personaggi.json`, scritti a mano); ogni frase (250) ha temi e tipo derivati dal contesto e da parole chiave (`content/tags-frasi.json`, `tools/make_tags.py`). Non vengono mai inviate ai client. I bot stimano l'affinità (temi in comune ×2, tipo ×3) per:
 - **giocare la carta** che meglio rappresenta la frase;
-- **votare** la carta che il gruppo voterà; il Difficile tiene conto del gregge (se cade la carta votata anche dal Megafono, i suoi +2 non contano) stimando il voto segreto del Megafono (la carta del Lui! con la probabilità che sia "Cade lui!", altrimenti la più probabile);
+- **votare** la carta che il gruppo voterà; il Difficile evita di votare come il Megafono (ogni voto uguale al suo gli regala 1 punto) stimando il suo voto segreto (la carta del Lui! con la probabilità che sia "Cade lui!", altrimenti la più probabile);
 - **fare il Megafono**: scelgono "Cade lui!" o "Non cade" e la carta in base al valore atteso e alla reputazione (se tutti lo credono sempre "Cade lui!", ogni tanto scommette "Non cade" sulla carta ovvia per spaventare il gruppo: il bluff; se lo credono prudente, ogni tanto tenta il colpo); poi vota la carta più probabile, così il gregge lavora per lui; il Difficile preferisce le frasi con più etichette.
 Misure (mazzo reale, `tools/analysis/bot-bench.ts`, `bot-mega.ts`): Medio e Difficile battono i bot Facili nel 64–70% delle partite a 4 (25% è il caso); il Megafono Medio e Difficile fanno 4,3 punti a turno contro 1,7 del Facile, e il Difficile azzecca "Cade lui!" nel 92% dei casi. **Medio e Difficile si equivalgono tra bot**: con parametri più aggressivi il bluff e la paura del gregge facevano perdere circa 2 punti contro bot che non li usano, quindi sono tarati bassi (`TUNE` in `ai.ts`). Il valore del bluff si vedrà solo contro persone.

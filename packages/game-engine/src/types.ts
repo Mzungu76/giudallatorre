@@ -37,7 +37,7 @@ export interface TurnResult {
   /** Carta principale che cade (la prima di `fallenPositions`). */
   fallenPosition: number;
   fallenCardId: CardId;
-  /** Tutte le carte che cadono: più di una solo in caso di pareggio (la carta votata dal Megafono resta su). */
+  /** Tutte le carte che cadono: più di una solo in caso di pareggio (cadono tutte le carte a pari merito). */
   fallenPositions: number[];
   fallenCardIds: CardId[];
   /** Chi aveva giocato ciascuna carta caduta (stesso ordine; null = carta del mazzo), che prende il +2 della carta. */
@@ -46,10 +46,15 @@ export interface TurnResult {
   fallenOwnerId: PlayerId | null;
   lui: LuiToken | null;
   points: Record<PlayerId, number>;
-  reasons: Record<PlayerId, string[]>;
-  /** True se la regola del gregge ha tolto i +2 ai votanti della carta caduta (votata anche dal Megafono). */
-  herd: boolean;
+  /** Le voci del punteggio di ciascuno, per mostrare l'operazione in chiaro. */
+  lines: Record<PlayerId, ScoreLine[]>;
+  /** Voti degli altri sulla carta votata dal Megafono (1 punto ciascuno per il Megafono, cada o no). */
+  collected: number;
+  /** La carta votata dal Megafono. */
+  megaVote: number;
 }
+
+export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito"; pts: number; n?: number }
 
 export interface GameState {
   version: 1;

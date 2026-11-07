@@ -88,7 +88,7 @@ describe("fine partita", () => {
   it("il Megafono ruota sempre in ordine di tavolo", () => {
     const { log, initialEvents } = simulateGame(cfg(6, { firstMegafonoIndex: 2 }), 2);
     const megas = [...initialEvents, ...log.flatMap((l) => l.events)].filter((e) => e.type === "turnStarted").map((e) => (e as { megafonoId: string }).megafonoId);
-    expect(megas).toEqual(["p3", "p4", "p5", "p6", "p1", "p2"]);
+    expect(megas.slice(0, 6)).toEqual(["p3", "p4", "p5", "p6", "p1", "p2"]);   // poi eventuali turni di spareggio, sempre in ordine
   });
 });
 

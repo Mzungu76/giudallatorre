@@ -14,7 +14,17 @@ import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
-const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su", "lui-fallito": "Lui! sbagliato", gregge: "gregge: niente +2" };
+const lineText = (l: { kind: string; pts: number; n?: number }) => {
+  const pts = l.pts < 0 ? `−${-l.pts}` : `+${l.pts}`;
+  switch (l.kind) {
+    case "voto": return `voto giusto ${pts}`;
+    case "carta": return `carta caduta ${pts}`;
+    case "raccolti": return `${l.n} ${l.n === 1 ? "voto raccolto" : "voti raccolti"} ${pts}`;
+    case "lui-cade": return `Lui! cade ${pts}`;
+    case "lui-non-cade": return `Lui! resta su ${pts}`;
+    default: return `Lui! sbagliato ${pts}`;
+  }
+};
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 const BANNERS: Record<string, [string, string]> = {
   PLAY: ["Scegliete la carta!", "quella che sta meglio sulla torre"],
@@ -144,12 +154,12 @@ function ScoreRow({ rank, name, color, why, delta, from, to, delay, leader, max 
 function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, final }: { H: number; res: TurnResult; view: PlayerView; people: ReturnType<typeof usePeople>; canAdvance: boolean; deadline: number | null; onAdvance: () => void; final: boolean }) {
   const rows = view.players.map((p) => ({ p, d: res.points[p.id] ?? 0, from: p.score - (res.points[p.id] ?? 0), to: p.score }));
   const ranked = [...rows].sort((a, b) => b.to - a.to), top = ranked[0]?.to ?? 0, compact = rows.length > 6 || H < 700;
-  const title = view.roundEnd ? `Classifica · giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : res.tie ? "Pareggio: cade il voto del Megafono" : "Classifica del turno";
+  const title = view.roundEnd ? `Classifica · giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : res.tie ? "Pareggio: cadono insieme" : "Classifica del turno";
   return (
     <div className={`score ${compact ? "c8" : ""}`} data-testid="result-panel">
       <h3>{view.goldenGoal ? "⚡ Spareggio · classifica" : title}</h3>
       <div>{ranked.map((r, i) => <ScoreRow key={r.p.id} rank={i + 1} name={people.get(r.p.id).name} color={people.get(r.p.id).color} leader={r.to === top && top > 0 && i === 0}
-        why={(res.reasons[r.p.id] ?? []).map((x) => REASON[x] ?? x).join(" + ") || "—"} delta={r.d} from={r.from} to={r.to} delay={0.15 + i * 0.12} max={top} />)}</div>
+        why={(res.lines[r.p.id] ?? []).map(lineText).join(" · ") || "—"} delta={r.d} from={r.from} to={r.to} delay={0.15 + i * 0.12} max={top} />)}</div>
       {canAdvance
         ? <Btn onClick={onAdvance} testId="advance" style={{ marginTop: 8, padding: 11, fontSize: 21 }}>{final ? "Vedi la classifica finale" : view.roundEnd ? "Nuovo giro" : "Prossimo turno"}</Btn>
         : <div className="hint" style={{ marginTop: 8 }}>Prosegue il Megafono… <Countdown deadline={deadline} /></div>}
@@ -165,6 +175,7 @@ function Legend({ onClose }: { onClose: () => void }) {
         <h3>Come si fanno punti</h3>
         {row(voteTok("#2f7be0", 30), "Hai votato il personaggio caduto", "il tuo gettone è sulla sua carta", "+2")}
         {row(`<div style="width:24px;height:34px;border-radius:4px;border:3px solid #fff;background:#14a3a1;box-shadow:1px 2px 0 #13224a"></div>`, "La carta che hai giocato è quella caduta", "la carta del mazzo non è di nessuno", "+2")}
+        {row(voteTok("#e8362b", 30, true), "Megafono: voti raccolti", "1 punto per ogni voto degli altri sulla carta che ha votato (+2 se cade)", "+1")}
         {row(luiTok("CADE", 32), "Megafono: “CADE LUI!” azzeccato", "il gettone è sul personaggio caduto", "+4")}
         {row(luiTok("NON", 32), "Megafono: “NON CADE” azzeccato", "il gettone è su uno che resta su", "+1")}
         {row(luiTok("CADE", 32, true), "Megafono: scommessa sbagliata", "il Lui! non azzecca la carta", "−1", true)}
@@ -211,8 +222,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
 
   const voters: Voter[] = useMemo(() => {
+    // Gli altri in ordine di tavolo, il Megafono per ultimo (rullo di tamburi).
     const order = people.all, i0 = Math.max(0, order.findIndex((p) => p.id === view.megafonoId));
-    return [...order.slice(i0), ...order.slice(0, i0)].filter((p) => res?.votes[p.id] !== undefined).map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: p.id === view.megafonoId }));
+    return [...order.slice(i0 + 1), ...order.slice(0, i0), order[i0]!].filter((p) => res?.votes[p.id] !== undefined).map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: p.id === view.megafonoId }));
   }, [people, res, view.megafonoId]);
   const seed = useMemo(() => { let h = 7; for (const c of room.code) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) + turn; }, [room.code, turn]);
 
@@ -241,7 +253,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => setZoomPos(n) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} owners={(res.fallenPositions ?? [res.fallenPosition]).map((pos, i) => { const id = (res.fallenOwnerIds ?? [res.fallenOwnerId])[i]; return { pos, name: id ? people.get(id).name : null, color: id ? people.get(id).color : "#999" }; })} herd={!!res.herd} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} owners={(res.fallenPositions ?? [res.fallenPosition]).map((pos, i) => { const id = (res.fallenOwnerIds ?? [res.fallenOwnerId])[i]; return { pos, name: id ? people.get(id).name : null, color: id ? people.get(id).color : "#999" }; })} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
@@ -268,7 +280,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
-            <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo). ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega && <strong className="tip-warn" data-testid="tip-herd"> Evita il voto del Megafono: se cade la carta che ha votato anche lui, i +2 sono solo suoi.</strong>}</Tip>
+            <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo). ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega ? <strong className="tip-warn" data-testid="tip-herd"> Evita di votare come il Megafono: ogni voto uguale al suo gli regala 1 punto.</strong> : <strong className="tip-warn" data-testid="tip-herd"> Ogni voto degli altri sulla carta che voti ti dà +1 (cada o no).</strong>}</Tip>
             <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}

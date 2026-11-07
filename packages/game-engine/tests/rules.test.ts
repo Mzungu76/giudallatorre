@@ -20,29 +20,24 @@ const voteAll = (s: GameState, pos: Record<string, number>) => {
   return s;
 };
 
-describe("regola del gregge (sempre attiva)", () => {
+describe("voti raccolti dal Megafono (niente gregge)", () => {
   const mega = (s: GameState) => megafonoOf(s);
-  it("se cade la carta votata anche dal Megafono, i +2 dei votanti li fa solo lui (il +2 della carta resta al proprietario)", () => {
+  it("se cade la carta votata dal Megafono, i votanti prendono comunque i loro +2; il Megafono prende anche 1 punto per ogni voto degli altri", () => {
     const base = toVote({ kind: "NON_CADE", luiPos: 1 }), m = mega(base);
     const r = voteAll(base, Object.fromEntries(base.playerIds.map((p) => [p, 2]))).lastResult!;
-    expect(r.herd).toBe(true);
+    expect(r.collected).toBe(3);
     for (const p of base.playerIds) {
       const owner = r.fallenOwnerId === p ? 2 : 0;
-      if (p === m) expect(r.points[p]).toBe(2 + owner + 1);               // voto + (carta) + Non cade azzeccato
-      else { expect(r.reasons[p]).toContain("gregge"); expect(r.points[p]).toBe(owner); }
+      if (p === m) expect(r.points[p]).toBe(2 + 3 + owner + 1);          // voto + 3 raccolti + (carta) + Non cade azzeccato
+      else expect(r.points[p]).toBe(2 + owner);
     }
   });
-  it("vale anche con il Lui! \"Cade lui!\" (non conta il gettone ma il voto del Megafono)", () => {
-    const base = toVote({ kind: "CADE", luiPos: 2 }), m = mega(base);
-    const r = voteAll(base, Object.fromEntries(base.playerIds.map((p) => [p, 2]))).lastResult!;
-    expect(r.herd).toBe(true); expect(r.points[m]).toBe(2 + 4 + (r.fallenOwnerId === m ? 2 : 0));
-  });
-  it("se il Megafono ha votato un'altra carta, tutti prendono i punti di sempre (anche con il Lui! azzeccato)", () => {
+  it("se la carta votata dal Megafono NON cade e nessuno lo segue, non prende voti raccolti", () => {
     const base = toVote({ kind: "CADE", luiPos: 2 }), m = mega(base);
     const votes = Object.fromEntries(base.playerIds.map((p) => [p, p === m ? 1 : 2]));
     const r = voteAll(base, votes).lastResult!;
-    expect(r.fallenPosition).toBe(2); expect(r.herd).toBe(false);
-    for (const p of base.playerIds) if (p !== m) { expect(r.reasons[p]).not.toContain("gregge"); expect(r.points[p]).toBeGreaterThanOrEqual(2); }
+    expect(r.fallenPosition).toBe(2); expect(r.collected).toBe(0);
+    expect(r.points[m]).toBe(4 + (r.fallenOwnerId === m ? 2 : 0));           // solo il Lui! CADE
   });
 });
 

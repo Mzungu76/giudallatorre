@@ -398,3 +398,9 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .chatbtn{top:78px !important;left:8px !important;right:auto !important;width:28px !important;height:28px !important;font-size:13px !important;z-index:22}
 .legend2{top:70px !important;left:auto !important;right:42px !important;width:28px !important;height:28px !important;font-size:17px !important;line-height:22px !important}
 .phrase-card .ctx{margin:0 0 2px 8px !important}
+
+/* punti che salgono dalla carta */
+.flt{z-index:96;display:flex;align-items:center;gap:4px;font:400 24px Anton;color:#fff;-webkit-text-stroke:1px #13224a;text-shadow:0 2px 0 #13224a,0 0 10px #2a9d57;transform:translateX(-50%);opacity:0;animation:flt 1.7s ease-out both;pointer-events:none;white-space:nowrap}
+.flt .dc{width:14px;height:14px;border-radius:50%;border:2px solid #13224a;display:inline-block}
+.flt.big{font-size:40px;color:#ffe27a}
+@keyframes flt{0%{opacity:0;transform:translate(-50%,10px) scale(.7)}15%{opacity:1;transform:translate(-50%,0) scale(1.15)}70%{opacity:1}100%{opacity:0;transform:translate(-50%,-62px) scale(1)}}
