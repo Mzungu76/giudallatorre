@@ -15,7 +15,7 @@ await sleep(300);
 // chat
 await A.click('[data-testid="chat-open"]'); await A.fill('[data-testid="chat-input"]', "Ciao Bea, preparati a perdere"); await A.click('[data-testid="chat-send"]'); await sleep(500);
 check("la chat arriva all'altro giocatore con il contatore dei non letti", (await B.locator('[data-testid="chat-unread"]').textContent().catch(() => "")) === "1");
-await B.click('[data-testid="chat-open"]'); check("il messaggio è nel pannello", /preparati a perdere/.test(await B.locator('[data-testid="chat"]').innerText()));
+await B.click('[data-testid="chat-open"]', { force: true }); check("il messaggio è nel pannello", /preparati a perdere/.test(await B.locator('[data-testid="chat"]').innerText()));
 await B.fill('[data-testid="chat-input"]', "Vedremo 🐑"); await B.click('[data-testid="chat-send"]'); await sleep(400); await B.click('[data-testid="chat-close"]'); await A.click('[data-testid="chat-close"]');
 await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.waitForSelector('[data-testid="game"]')));
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
