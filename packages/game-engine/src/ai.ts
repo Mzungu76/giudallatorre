@@ -30,7 +30,7 @@ const normalize = (p: number[]) => { const z = p.reduce((a, b) => a + b, 0); ret
 const phraseText = (s: GameState) => (s.phrase && s.phrase.mode === "card" ? s.phrase.text : undefined);
 
 /** Probabilità stimata che il gruppo voti (e quindi cada) ciascuna posizione della Torre. */
-function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {
+export function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {
   const hist = histProbs(s, mem), text = phraseText(s);
   const aff = text ? s.tower.map((t) => affinity(t.cardId, text)) : [];
   if (!text || aff.some((a) => a === null)) return hist;
