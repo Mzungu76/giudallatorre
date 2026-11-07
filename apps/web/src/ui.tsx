@@ -28,7 +28,7 @@ function calcDims(maxScale: number): StageDims {
   if (H < 640) { H = 640; k = vh / 640; }
   H = Math.min(H, 940);
   // La torre (alta ~310 nel disegno, dal punto 300) deve stare tra la frase in alto e il suggerimento in basso: si rimpicciolisce se serve.
-  const T0 = 236, avail = H - 206 - T0, ts = clamp(avail / 310, 0.7, 1), y0 = T0 + Math.max(0, (avail - 310 * ts) / 2);
+  const T0 = 254, avail = H - 206 - T0, ts = clamp(avail / 310, 0.7, 1), y0 = T0 + Math.max(0, (avail - 310 * ts) / 2);
   return { k, H, dy: clamp((H - 826) * 0.6, -80, 70), ts, ty: y0 - 300 };
 }
 export function useAdaptive(maxScale = 1.5): StageDims {

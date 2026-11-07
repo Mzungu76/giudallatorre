@@ -170,6 +170,25 @@ function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, fin
   );
 }
 
+/** Classifica attuale, consultabile quando si vuole. */
+function Standings({ view, people, onClose }: { view: PlayerView; people: ReturnType<typeof usePeople>; onClose: () => void }) {
+  const ranked = [...view.players].sort((a, b) => b.score - a.score), top = Math.max(1, ranked[0]?.score ?? 1);
+  return (
+    <div className="zoom on top" onClick={onClose} role="dialog" aria-label="Classifica" data-testid="standings">
+      <div className="sheet stand" style={{ position: "absolute" }}>
+        <h3>Classifica · turno {Math.min(view.turn, view.totalTurns)}/{view.totalTurns}</h3>
+        {ranked.map((p, i) => (
+          <div className="sr2" key={p.id}>
+            <span className="rk">{i === 0 && p.score > 0 ? "👑" : i + 1}</span><Disc color={people.get(p.id).color} size="l" />
+            <span className="nm">{people.get(p.id).name}<i style={{ width: `${Math.max(4, (100 * Math.max(0, p.score)) / top)}%` }} /></span>
+            <b>{p.score}</b>
+          </div>))}
+        <div className="hint" style={{ textAlign: "center", marginTop: 8 }}>tocca per chiudere</div>
+      </div>
+    </div>
+  );
+}
+
 function Legend({ onClose }: { onClose: () => void }) {
   const row = (ic: string, t: string, sub: string, pt: string, neg = false) => <div className="sr"><span className="ic" dangerouslySetInnerHTML={{ __html: ic }} /><span>{t}<small>{sub}</small></span><span className={`pt ${neg ? "neg" : ""}`}>{pt}</span></div>;
   return (
@@ -190,7 +209,7 @@ function Legend({ onClose }: { onClose: () => void }) {
 
 export default function Game({ room, view, deadline, send, readOnly, sound }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
-  const [phraseB, setPhraseB] = useState(220), [skipLock, setSkipLock] = useState(false);
+  const [phraseB, setPhraseB] = useState(220), [skipLock, setSkipLock] = useState(false), [board, setBoard] = useState(false);
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
@@ -262,6 +281,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
       {deadline && phase !== "RESULTS" && <div className="cd"><Countdown deadline={deadline} /></div>}
       {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} megaName={people.get(view.megafonoId).name} onBottom={setPhraseB} />}
+      <button className="trophybtn" onClick={() => setBoard(true)} aria-label="Classifica attuale" data-testid="standings-btn">🏆</button>
       {needTerrace && !animating && <button className="legend2" onClick={() => setLegend(true)} aria-label="Come si fanno punti" data-testid="legend-btn">?</button>}
       {tag && <div className="roundtag" style={{ top: 130 }}><b>{tag}</b></div>}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
@@ -303,6 +323,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
           actionLabel={phase === "SUSPECT" ? `Il Lui! va sul n. ${zoomPos}` : `Voto il n. ${zoomPos}`} onAction={() => { setPick(zoomPos); setZoomPos(null); }} />
       )}
       {legend && <Legend onClose={() => setLegend(false)} />}
+      {board && <Standings view={view} people={people} onClose={() => setBoard(false)} />}
       {intro && <HowTo onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
     </>
   );
