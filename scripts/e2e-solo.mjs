@@ -22,18 +22,19 @@ await p.click('[data-testid="add-bot"]'); await sleep(400); check("posso aggiung
 await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="game"]');
 let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 (async () => { while (sampling && n < 400) { await p.screenshot({ path: `${SHOTS}/s${String(n++).padStart(3, "0")}.png` }).catch(() => {}); await sleep(450); } })();
+const clk = (sel, o) => { globalThis.__s = "click " + sel; return p.click(sel, o); }; const wfs = (sel, o) => { globalThis.__s = "wait " + sel; return p.waitForSelector(sel, o); };
 async function step() {
   if (await vis("phrase-picker")) {
-    await p.click('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
+    await clk('[data-testid="phrase-go"]', { timeout: 4000 }); return true; }
   if (await vis("hand")) {
-    if (!globalThis.__f) { globalThis.__f = 1; const r = await p.evaluate(() => new Promise((res) => { let n = 0, lt = 0; try { new PerformanceObserver((l) => { lt += l.getEntries().length; }).observe({ entryTypes: ["longtask"] }); } catch {} const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else res({ frames: n, longtasks: lt, mut: window.__mut }); }; requestAnimationFrame(f); })); console.log("FPS", JSON.stringify(r)); } await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
-  if (await vis("place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="place-lui"]'); return true; }
-  if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
-  if (await vis("skip") && !SAMPLE) { await p.click('[data-testid="skip"]', { timeout: 3000 }); return true; }
-  if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await p.click('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
+    if (!globalThis.__f) { globalThis.__f = 1; const r = await p.evaluate(() => new Promise((res) => { let n = 0, lt = 0; try { new PerformanceObserver((l) => { lt += l.getEntries().length; }).observe({ entryTypes: ["longtask"] }); } catch {} const t0 = performance.now(); const f = () => { n++; if (performance.now() - t0 < 2000) requestAnimationFrame(f); else res({ frames: n, longtasks: lt, mut: window.__mut }); }; requestAnimationFrame(f); })); console.log("FPS", JSON.stringify(r)); } await clk('[data-testid="hand-card-0"]'); await clk('[data-testid="play-card"]'); return true; }
+  if (await vis("place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="place-lui"]'); return true; }
+  if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="confirm-vote"]'); return true; }
+  if (await vis("skip") && !SAMPLE) { await clk('[data-testid="skip"]', { timeout: 3000 }); return true; }
+  if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await clk('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
   return false;
 }
-while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch (e) { if (!globalThis.__e) { globalThis.__e = 1; console.log("STEPERR", String(e.message).slice(0, 400)); } } if (!a) await sleep(150); }
+while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch (e) { if (!globalThis.__e) { globalThis.__e = 1; console.log("STEPERR", globalThis.__s, String(e.message).slice(0, 300)); } } if (!a) await sleep(150); }
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("la partita da solo arriva alla classifica finale", await vis("final")); if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-finale.png` });
