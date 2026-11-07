@@ -499,7 +499,8 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .how-pts li{display:flex;gap:10px;align-items:center;font:800 13px/1.3 Nunito;color:#13224a}
 .how-pts b{flex:none;min-width:62px;text-align:center;background:#e7f6ea;color:#1c6b3c;border:2px solid #13224a;border-radius:99px;padding:1px 6px;font:400 16px Anton}
 .how-pts b.neg{background:#fde6e4;color:#b3261e}
-.credit{left:14px;top:20px;text-align:left;max-width:150px;line-height:1.2;font:800 11.5px Nunito;color:#fff;text-shadow:0 1px 0 #13224a,0 0 6px #13224a;letter-spacing:.04em;z-index:30;pointer-events:none}
+.credit{left:0;right:0;top:204px;text-align:center;font:400 22px/1 'Caveat Brush',cursive;color:#fff;text-shadow:2px 2px 0 #13224a,0 0 8px #13224a99;letter-spacing:.03em;z-index:30;pointer-events:none;transform:rotate(-2deg)}
+.credit b{font:400 24px 'Caveat Brush',cursive;color:#ffc72c}
 
 /* classifica: salita lungo la torre */
 .zoom.stbd{position:absolute;left:0;right:0;top:0;overflow:hidden;background:none;padding:0}
