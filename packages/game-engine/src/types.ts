@@ -54,7 +54,7 @@ export interface TurnResult {
   megaVote: number;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito"; pts: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito"; pts: number; pos: number; n?: number }
 
 export interface GameState {
   version: 1;

@@ -253,7 +253,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => setZoomPos(n) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} owners={(res.fallenPositions ?? [res.fallenPosition]).map((pos, i) => { const id = (res.fallenOwnerIds ?? [res.fallenOwnerId])[i]; return { pos, name: id ? people.get(id).name : null, color: id ? people.get(id).color : "#999" }; })} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
