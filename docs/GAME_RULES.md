@@ -30,11 +30,12 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 - Transizione: tutti hanno votato → Fase 3.
 
 ### Fase 3 — Giù dalla Torre
-1. Rivelazione voti (a partire dal giocatore successivo al Megafono).
-2. Cade il personaggio con più voti. **Pareggio: la carta votata dal Megafono resta su e cadono insieme tutte le altre carte in parità** (se la carta del Megafono non è tra le pareggiate, cadono tutte). Chi ha votato una carta caduta fa +2, chi aveva giocato una carta caduta fa +2 (bonus carta, per ciascuna carta caduta).
+1. Rivelazione voti (a partire dal giocatore successivo al Megafono; il Megafono per ultimo).
+2. Cade il personaggio con più voti. **Pareggio: cadono insieme tutte le carte a pari merito**, anche quella votata dal Megafono. Chi ha votato una carta caduta fa +2, chi aveva giocato una carta caduta fa +2 (bonus carta, per ciascuna carta caduta).
 3. Punti:
    - **+2** a chi ha votato il personaggio caduto;
    - **+2** a chi ha giocato la carta caduta;
+   - Megafono: **+1 per ogni voto degli altri** sulla carta che ha votato, cada o no (il suo voto non conta; si somma, non si moltiplica);
    - Megafono, segnalino "Lui!": **CADE LUI! → +4** se il personaggio è caduto; **NON CADE LUI! → +1** se non è caduto. **Se la scommessa fallisce: −1** (decisione utente; i punteggi possono diventare negativi). Si somma agli altri punti.
 4. Un giocatore può cumulare più bonus nel turno.
 

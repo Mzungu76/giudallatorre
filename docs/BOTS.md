@@ -7,7 +7,7 @@
 |---|---|
 | Facile | sceglie a caso (carta, Lui!, voto) |
 | Medio | ricorda quali carte sono già cadute/mostrate nei turni passati e stima la probabilità di caduta; scommette il Lui! (CADE/NON CADE) sul valore atteso (CADE = 5p−1, NON CADE = 1−2p); vota la carta più probabile |
-| Difficile | come il medio + bonus per il voto sulla propria carta giocata e coerenza con il pareggio (se il Megafono è lui, vota la carta che vuole far cadere) |
+| Difficile | come il medio + bonus per il voto sulla propria carta giocata e coerenza con la propria scommessa (se il Megafono è lui, vota la carta che vuole far cadere e raccogliere voti) ed evita di votare come il Megafono |
 
 **Limiti dichiarati.** I bot non leggono le frasi né capiscono le immagini: sono competitivi solo sul piano tattico (probabilità, punteggio, pareggi). Il giudizio "umoristico" resta agli umani. Nei test simulati (3 bot facili contro 1 difficile, 4 giocatori) il difficile vince il 53% delle partite contro il 25% del caso e fa in media 16,4 punti contro 11,8.
 

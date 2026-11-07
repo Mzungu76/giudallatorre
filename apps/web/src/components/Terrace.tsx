@@ -106,7 +106,7 @@ type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tal
 export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
-/** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti, la scommessa del Megafono, l'eventuale gregge e il timbro. */
+/** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
 export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, owners, megaName, sound, skip, interactive, onDone }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
   lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPositions: number[]; owners: FallOwner[]; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
