@@ -17,7 +17,7 @@ check("il nono giocatore è respinto con messaggio chiaro", /piena/.test(await f
 await pages[0].click('[data-testid="start"]'); await Promise.all(pages.map((p) => p.waitForSelector('[data-testid="game"]')));
 let sShot = false; const t0 = Date.now(); let sawResults = false;
 async function step(p) {
-  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]'); return true; }
+  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }

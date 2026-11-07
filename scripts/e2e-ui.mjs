@@ -33,7 +33,7 @@ console.log("Partita completa tramite interfaccia");
 const pages = [A, B, C]; let shots = 0, turns = 0, lastTurn = "";
 const t0 = Date.now();
 async function stepPage(p) {
-  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]'); return true; }
+  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }

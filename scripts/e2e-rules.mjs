@@ -20,7 +20,7 @@ await B.fill('[data-testid="chat-input"]', "Vedremo 🐑"); await B.click('[data
 await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.waitForSelector('[data-testid="game"]')));
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
 async function step(p, name) {
-  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]'); return true; }
+  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }
   if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
