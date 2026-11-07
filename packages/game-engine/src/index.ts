@@ -1,5 +1,5 @@
 export * from "./types.ts";
-export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, MIN_PLAYERS, MAX_PLAYERS, LUI_FAIL_MALUS, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
+export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, MIN_PLAYERS, MAX_PLAYERS, LUI_FAIL_MALUS, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS, MAX_REASON_CHARS } from "./engine.ts";
 export { viewFor } from "./views.ts";
 export type { PlayerView } from "./views.ts";
 export { suggestAction } from "./bot.ts";

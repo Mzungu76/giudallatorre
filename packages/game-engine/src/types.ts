@@ -11,6 +11,10 @@ export interface GameConfig {
   seed: number;
   /** Variante "Il Megafono sa": il Megafono gioca una carta dalla propria mano invece di pescarla dal mazzo. */
   megafonoSa?: boolean;
+  /** Regola da testare: chi vota deve scrivere una frase che spiega il voto (rivelata allo spoglio). */
+  justifyVotes?: boolean;
+  /** Regola da testare ("gregge"): se il Megafono indovina la carta che cade, i +2 di chi l'ha votata vanno solo a lui. */
+  herd?: boolean;
   deck: CardId[];
   phraseDeck: PhraseCard[];
   handSize?: number;
@@ -39,6 +43,10 @@ export interface TurnResult {
   lui: LuiToken | null;
   points: Record<PlayerId, number>;
   reasons: Record<PlayerId, string[]>;
+  /** Frasi con cui i giocatori hanno motivato il voto (vuoto se la regola è spenta). */
+  voteReasons: Record<PlayerId, string>;
+  /** True se la regola del gregge ha tolto i +2 ai votanti della carta caduta. */
+  herd: boolean;
 }
 
 export interface GameState {
@@ -46,6 +54,8 @@ export interface GameState {
   playerIds: PlayerId[];
   names: Record<PlayerId, string>;
   megafonoSa: boolean;
+  justifyVotes: boolean;
+  herd: boolean;
   handSize: number;
   rounds: number;
   totalTurns: number;
@@ -68,6 +78,8 @@ export interface GameState {
   tower: TowerSlot[];
   lui: LuiToken | null;
   votes: Record<PlayerId, number>;
+  /** Motivazioni dei voti (solo con la regola attiva); segrete fino ai risultati. */
+  voteReasons: Record<PlayerId, string>;
   scores: Record<PlayerId, number>;
   megafonoTurns: Record<PlayerId, number>;
   lastResult: TurnResult | null;
@@ -82,7 +94,7 @@ export type Action =
   | { type: "choosePhrase"; playerId: PlayerId; mode: "free"; text?: string }
   | { type: "playCard"; playerId: PlayerId; cardId: CardId }
   | { type: "placeLui"; playerId: PlayerId; kind: LuiKind; position: number }
-  | { type: "vote"; playerId: PlayerId; position: number }
+  | { type: "vote"; playerId: PlayerId; position: number; reason?: string }
   | { type: "advance"; playerId?: PlayerId };
 
 export type GameEvent =

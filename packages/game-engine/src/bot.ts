@@ -19,7 +19,7 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       return { type: "placeLui", playerId, kind: rand() < 0.5 ? "CADE" : "NON_CADE", position: 1 + Math.floor(rand() * s.tower.length) };
     case "VOTE":
       if (s.votes[playerId] !== undefined) return null;
-      return { type: "vote", playerId, position: 1 + Math.floor(rand() * s.tower.length) };
+      return { type: "vote", playerId, position: 1 + Math.floor(rand() * s.tower.length), ...(s.justifyVotes ? { reason: "Non ho avuto tempo di spiegarmi." } : {}) };
     default: return null;
   }
 }

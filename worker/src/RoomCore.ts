@@ -1,6 +1,7 @@
 import { applyAction, chooseBotAction, createGame, EngineError, learnFromResult, megafonoOf, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard } from "@gdt/game-engine";
-import type { ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
+import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
+import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
 import type { RandomBytes } from "./security.ts";
 
@@ -12,6 +13,8 @@ export interface RoomData {
   hostLostAt: number | null;
   /** Memoria dei giocatori virtuali (personaggi caduti) e prossimo istante in cui agiscono. */
   botMem: BotMemory; botAt: number | null;
+  /** Messaggi tra i giocatori (ultimi CHAT_KEEP) e contatore per gli identificativi. */
+  chat: ChatDto[]; chatSeq: number;
 }
 export interface Outbox {
   send: { to: string; msg: ServerMessage }[];
@@ -26,7 +29,7 @@ export class RoomError extends Error { constructor(public code: string, message:
 
 export const LIMITS = {
   maxPlayers: 8, minPlayers: 3,
-  hostGraceMs: 60_000, lobbyIdleMs: 20 * 60_000, playingIdleMs: 6 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100,
+  hostGraceMs: 60_000, lobbyIdleMs: 20 * 60_000, playingIdleMs: 6 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
 };
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
 const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
@@ -35,13 +38,17 @@ export const BOT_NAMES = ["Bot Gino", "Bot Mara", "Bot Pino", "Bot Lella", "Bot 
 
 export class RoomCore {
   readonly connected = new Set<string>();
-  constructor(public data: RoomData, private deps: Deps) { data.botMem ??= newBotMemory(); data.botAt ??= null; }
+  private lastChat = new Map<string, number>();
+  constructor(public data: RoomData, private deps: Deps) {
+    data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0;
+    data.options.justifyVotes ??= false; data.options.herd ??= false; // stanze salvate prima di queste opzioni
+  }
 
   static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0, display: true }, botMem: newBotMemory(), botAt: null,
+      options: { megafonoSa: p.megafonoSa, justifyVotes: false, herd: false, mode: p.mode, turnTimerSec: 0, display: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now }],
     };
     const core = new RoomCore(data, deps);
@@ -110,10 +117,24 @@ export class RoomCore {
         if (!me.isHost) return err("NOT_HOST", "solo l'host cambia le opzioni");
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "le opzioni si cambiano prima dell'avvio");
         if (msg.megafonoSa !== undefined) d.options.megafonoSa = msg.megafonoSa;
+        if (msg.justifyVotes !== undefined) d.options.justifyVotes = msg.justifyVotes;
+        if (msg.herd !== undefined) d.options.herd = msg.herd;
         if (msg.mode !== undefined) d.options.mode = msg.mode;
         if (msg.display !== undefined) d.options.display = msg.display;
         if (msg.turnTimerSec !== undefined) d.options.turnTimerSec = msg.turnTimerSec;
         d.seq++; out.persist = true; return this.broadcastRoom(out);
+      }
+      case "chat": {
+        const text = msg.text.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim().slice(0, MAX_CHAT_CHARS);
+        if (!text) return err("INVALID_MESSAGE", "messaggio vuoto");
+        const last = this.lastChat.get(playerId) ?? 0;
+        if (now - last < LIMITS.chatMinGapMs) return err("RATE_LIMIT", "troppi messaggi ravvicinati");
+        this.lastChat.set(playerId, now);
+        d.chatSeq++; const m: ChatDto = { id: d.chatSeq, from: playerId, name: me.nickname, text, ts: now };
+        d.chat.push(m); if (d.chat.length > LIMITS.chatKeep) d.chat.splice(0, d.chat.length - LIMITS.chatKeep);
+        out.persist = true;
+        for (const p of d.players) if (this.connected.has(p.id)) out.send.push({ to: p.id, msg: { t: "chat", msg: m } });
+        return out;
       }
       case "addBot": {
         if (!me.isHost) return err("NOT_HOST", "solo l'host aggiunge giocatori virtuali");
@@ -152,7 +173,7 @@ export class RoomCore {
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "la partita è già avviata");
         if (d.players.length < LIMITS.minPlayers) return err("NOT_ENOUGH_PLAYERS", "servono almeno 3 giocatori");
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, justifyVotes: d.options.justifyVotes, herd: d.options.herd, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);
@@ -243,7 +264,8 @@ export class RoomCore {
       players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
   }
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
-    const res = [{ to: playerId, msg: this.roomMsg(playerId) }];
+    const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];
+    if (this.data.chat.length) res.push({ to: playerId, msg: { t: "chatlog", msgs: this.data.chat.slice() } });
     if (this.data.game) res.push({ to: playerId, msg: { t: "view", seq: this.data.seq, view: viewFor(this.data.game, playerId), events: [], deadline: this.data.deadline } });
     return res;
   }

@@ -2,6 +2,7 @@ import { megafonoOf, requiredPlayers } from "./engine.ts";
 import type { Action, CardId, GameState, PlayerId, TurnResult } from "./types.ts";
 
 /** Livelli dei giocatori virtuali. Nessuno "capisce" frasi o illustrazioni: la competitività è tattica (punteggio atteso, spareggi, memoria dei personaggi caduti). */
+const BOT_REASONS = ["Ha proprio la faccia giusta.", "Istinto, non si discute.", "Mi ricorda mio cugino.", "Lo farebbe di sicuro, ci giurerei.", "Basta guardarlo negli occhi.", "Si vede lontano un miglio.", "Elementare, direi.", "Ci metto la mano sul fuoco.", "Lo conosco, è proprio lui.", "Non c’è storia, è quello."];
 export const BOT_LEVELS = ["easy", "medium", "hard"] as const;
 export type BotLevel = (typeof BOT_LEVELS)[number];
 
@@ -49,7 +50,8 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "VOTE": {
       if (s.votes[me] !== undefined) return null;
       const n = s.tower.length;
-      if (level === "easy") return { type: "vote", playerId: me, position: 1 + Math.floor(rand() * n) };
+      const vote = (position: number): Action => ({ type: "vote", playerId: me, position, ...(s.justifyVotes ? { reason: BOT_REASONS[Math.floor(rand() * BOT_REASONS.length)]! } : {}) });
+      if (level === "easy") return vote(1 + Math.floor(rand() * n));
       const p = fallProbs(s, mem, strength), ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1; // ogni giocatore conosce la propria carta
       const lui = s.lui; let best = 0, bestV = -1;
       for (let k = 0; k < n; k++) {
@@ -62,7 +64,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
         v += rand() * (level === "hard" ? 0.12 : 0.35);
         if (v > bestV) { bestV = v; best = k; }
       }
-      return { type: "vote", playerId: me, position: best + 1 };
+      return vote(best + 1);
     }
     default: return null;
   }

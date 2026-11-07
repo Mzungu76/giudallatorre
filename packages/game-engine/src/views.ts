@@ -7,6 +7,8 @@ export interface PlayerView {
   phase: GameState["phase"];
   turn: number; totalTurns: number;
   megafonoId: PlayerId; megafonoSa: boolean;
+  /** Regole da testare attive in questa partita. */
+  rules: { justifyVotes: boolean; herd: boolean };
   players: { id: PlayerId; name: string; score: number; megafonoTurns: number; handCount: number; hasPlayed: boolean; hasVoted: boolean }[];
   myHand: CardId[];
   /** Solo per il Megafono durante PROCLAIM. */
@@ -32,7 +34,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
   const isMega = viewer === megafonoOf(s);
   return {
     viewerId: viewer, phase: s.phase, turn: s.turnNumber, totalTurns: s.totalTurns,
-    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa,
+    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa, rules: { justifyVotes: s.justifyVotes, herd: s.herd },
     players: s.playerIds.map((id) => ({ id, name: s.names[id]!, score: s.scores[id]!, megafonoTurns: s.megafonoTurns[id]!,
       handCount: s.hands[id]!.length, hasPlayed: s.played[id] !== undefined || (s.tower.length > 0 && requiredPlayers(s).includes(id)),
       hasVoted: s.votes[id] !== undefined })),
