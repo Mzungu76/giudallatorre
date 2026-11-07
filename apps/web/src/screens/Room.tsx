@@ -18,7 +18,7 @@ function useSound() {
 const LV = { easy: "facile", medium: "medio", hard: "difficile" } as const;
 function Lobby({ room, send, chat }: { room: RoomMsg; send: (m: ClientMessage) => void; chat: ChatDto[] }) {
   const me = room.you, host = room.hostId === me, link = `${location.origin}/entra?c=${room.code}`, o = room.options;
-  const [copied, setCopied] = useState(false), [lv, setLv] = useState<"easy" | "medium" | "hard">("medium");
+  const [copied, setCopied] = useState(false);
   async function share() {
     try { if (navigator.share) { await navigator.share({ title: "Giù dalla Torre", text: `Entra nella mia partita: codice ${room.code}`, url: link }); return; } } catch { /* annullato */ }
     try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* */ }
@@ -42,25 +42,11 @@ function Lobby({ room, send, chat }: { room: RoomMsg; send: (m: ClientMessage) =
       <div className="lobby-bottom">
         {host && (
           <div className="opts-row">
-            <label><input type="checkbox" checked={o.megafonoSa} onChange={(e) => send({ t: "setOptions", megafonoSa: e.target.checked })} data-testid="opt-sa" /> Il Megafono sa</label>
             <label>Timer <select value={o.turnTimerSec} onChange={(e) => send({ t: "setOptions", turnTimerSec: Number(e.target.value) as 0 })} data-testid="opt-timer">
               <option value={0}>nessuno</option><option value={30}>30 s</option><option value={60}>60 s</option><option value={90}>90 s</option><option value={120}>120 s</option></select></label>
           </div>
         )}
-        {(host || o.justifyVotes || o.herd) && (
-          <div className="rules-box" data-testid="rules-box">
-            <b>Regole da testare</b>
-            <label><input type="checkbox" disabled={!host} checked={o.justifyVotes} onChange={(e) => send({ t: "setOptions", justifyVotes: e.target.checked })} data-testid="opt-justify" /> Chi vota scrive perché (la frase si scopre allo spoglio)</label>
-            <label><input type="checkbox" disabled={!host} checked={o.herd} onChange={(e) => send({ t: "setOptions", herd: e.target.checked })} data-testid="opt-herd" /> Gregge: se il Megafono indovina la carta che cade, i +2 dei votanti sono solo suoi</label>
-          </div>
-        )}
         <a className="lnk" onClick={() => window.open(`/schermo/${room.code}`, "_blank")} role="button" tabIndex={0}>Apri lo schermo condiviso (tablet / PC)</a>
-        {host && room.players.length < 8 && (
-          <div className="opts-row" data-testid="add-bot-row">
-            <button className="bt pap" style={{ fontSize: 14, padding: "6px 10px", flex: 1 }} onClick={() => send({ t: "addBot", level: lv })} data-testid="add-bot">+ Giocatore virtuale</button>
-            <select value={lv} onChange={(e) => setLv(e.target.value as "easy" | "medium" | "hard")} data-testid="bot-level" aria-label="Livello del bot"><option value="easy">Facile</option><option value="medium">Medio</option><option value="hard">Difficile</option></select>
-          </div>
-        )}
         {host
           ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? "Servono 3 giocatori" : "Avvia partita"}</Btn>
           : <div className="pp mini">Aspetta che l'host avvii la partita…</div>}

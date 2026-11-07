@@ -1,0 +1,1394 @@
+{
+"p01-i01": {
+"tipo": [
+"politico",
+"bugiardo"
+],
+"temi": [
+"politica",
+"pubblico",
+"soldi"
+]
+},
+"p01-i02": {
+"tipo": [
+"ribelle",
+"vanitoso"
+],
+"temi": [
+"moda",
+"notte",
+"rabbia",
+"soldi"
+]
+},
+"p01-i03": {
+"tipo": [
+"influencer",
+"vanitoso"
+],
+"temi": [
+"social",
+"tecnologia",
+"moda",
+"soldi"
+]
+},
+"p01-i04": {
+"tipo": [
+"eccentrico",
+"pigro"
+],
+"temi": [
+"lavoro",
+"cultura",
+"curiosita"
+]
+},
+"p01-i05": {
+"tipo": [
+"saputello"
+],
+"temi": [
+"scuola",
+"cultura",
+"lavoro"
+]
+},
+"p01-i06": {
+"tipo": [
+"vecchio",
+"genitore"
+],
+"temi": [
+"bambini",
+"scuola",
+"famiglia",
+"casa"
+]
+},
+"p01-i07": {
+"tipo": [
+"giovane",
+"goffo"
+],
+"temi": [
+"scuola",
+"cultura",
+"imbarazzo"
+]
+},
+"p01-i08": {
+"tipo": [
+"sportivo",
+"vanitoso"
+],
+"temi": [
+"sport",
+"corpo",
+"salute",
+"tecnologia"
+]
+},
+"p01-i09": {
+"tipo": [
+"saputello",
+"rabbioso"
+],
+"temi": [
+"cibo",
+"ambiente",
+"social",
+"politica"
+]
+},
+"p02-i01": {
+"tipo": [
+"religioso",
+"influencer"
+],
+"temi": [
+"religione",
+"social",
+"tecnologia",
+"spettacolo"
+]
+},
+"p02-i02": {
+"tipo": [
+"vecchio",
+"influencer"
+],
+"temi": [
+"cibo",
+"social",
+"casa",
+"feste"
+]
+},
+"p02-i03": {
+"tipo": [
+"vanitoso",
+"eccentrico"
+],
+"temi": [
+"moda",
+"spettacolo",
+"notte"
+]
+},
+"p02-i04": {
+"tipo": [
+"drammatico",
+"giovane"
+],
+"temi": [
+"cultura",
+"scuola",
+"amore",
+"imbarazzo"
+]
+},
+"p02-i05": {
+"tipo": [
+"pettegolo",
+"rabbioso"
+],
+"temi": [
+"mezzi",
+"lavoro",
+"viaggio"
+]
+},
+"p02-i06": {
+"tipo": [
+"pigro",
+"nerd"
+],
+"temi": [
+"casa",
+"tecnologia",
+"notte",
+"social"
+]
+},
+"p02-i07": {
+"tipo": [
+"artista",
+"ribelle"
+],
+"temi": [
+"musica",
+"spettacolo",
+"alcol",
+"notte"
+]
+},
+"p02-i08": {
+"tipo": [
+"furbo",
+"bugiardo"
+],
+"temi": [
+"lavoro",
+"legge",
+"soldi"
+]
+},
+"p02-i09": {
+"tipo": [
+"saputello",
+"rabbioso"
+],
+"temi": [
+"ambiente",
+"natura",
+"politica"
+]
+},
+"p03-i01": {
+"tipo": [
+"pigro",
+"goffo"
+],
+"temi": [
+"cultura",
+"scuola",
+"imbarazzo"
+]
+},
+"p03-i02": {
+"tipo": [
+"goffo",
+"influencer"
+],
+"temi": [
+"natura",
+"viaggio",
+"sport",
+"animali",
+"social"
+]
+},
+"p03-i03": {
+"tipo": [
+"lavoratore",
+"rabbioso"
+],
+"temi": [
+"scuola",
+"bambini",
+"caos",
+"lavoro"
+]
+},
+"p03-i05": {
+"tipo": [
+"vecchio",
+"vanitoso"
+],
+"temi": [
+"vecchiaia",
+"soldi",
+"casa",
+"moda"
+]
+},
+"p03-i06": {
+"tipo": [
+"vanitoso",
+"lavoratore"
+],
+"temi": [
+"salute",
+"corpo",
+"social",
+"lavoro"
+]
+},
+"p03-i07": {
+"tipo": [
+"saputello",
+"rabbioso"
+],
+"temi": [
+"legge",
+"lavoro",
+"politica"
+]
+},
+"p03-i08": {
+"tipo": [
+"sportivo",
+"pigro"
+],
+"temi": [
+"sport",
+"corpo",
+"salute",
+"rabbia"
+]
+},
+"p03-i09": {
+"tipo": [
+"guru",
+"bugiardo"
+],
+"temi": [
+"social",
+"soldi",
+"tecnologia",
+"vanita"
+]
+},
+"p03-i10": {
+"tipo": [
+"guru",
+"pigro"
+],
+"temi": [
+"natura",
+"musica",
+"religione"
+]
+},
+"p04-i01": {
+"tipo": [
+"vanitoso",
+"drammatico"
+],
+"temi": [
+"moda",
+"spettacolo",
+"vecchiaia"
+]
+},
+"p04-i02": {
+"tipo": [
+"vecchio",
+"pettegolo"
+],
+"temi": [
+"tecnologia",
+"curiosita",
+"lavoro",
+"cultura"
+]
+},
+"p04-i03": {
+"tipo": [
+"saputello",
+"rabbioso"
+],
+"temi": [
+"lavoro",
+"scuola",
+"cultura"
+]
+},
+"p04-i04": {
+"tipo": [
+"influencer",
+"vanitoso"
+],
+"temi": [
+"social",
+"moda",
+"viaggio",
+"soldi"
+]
+},
+"p04-i05": {
+"tipo": [
+"artista",
+"vanitoso"
+],
+"temi": [
+"spettacolo",
+"feste",
+"soldi",
+"lavoro"
+]
+},
+"p04-i06": {
+"tipo": [
+"pettegolo",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"spettacolo",
+"curiosita",
+"caos"
+]
+},
+"p04-i08": {
+"tipo": [
+"giovane",
+"nerd"
+],
+"temi": [
+"tecnologia",
+"social",
+"curiosita"
+]
+},
+"p04-i09": {
+"tipo": [
+"eccentrico",
+"vanitoso"
+],
+"temi": [
+"cultura",
+"spettacolo",
+"vecchiaia"
+]
+},
+"p04-i10": {
+"tipo": [
+"guru",
+"vanitoso"
+],
+"temi": [
+"religione",
+"tecnologia",
+"corpo",
+"natura"
+]
+},
+"p05-i01": {
+"tipo": [
+"eccentrico",
+"lavoratore"
+],
+"temi": [
+"cibo",
+"viaggio",
+"cultura",
+"lavoro"
+]
+},
+"p05-i02": {
+"tipo": [
+"nerd",
+"pigro"
+],
+"temi": [
+"tecnologia",
+"notte",
+"rabbia",
+"casa"
+]
+},
+"p05-i03": {
+"tipo": [
+"nerd",
+"genitore"
+],
+"temi": [
+"casa",
+"feste",
+"cultura",
+"spettacolo"
+]
+},
+"p05-i04": {
+"tipo": [
+"rabbioso",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"legge",
+"notte"
+]
+},
+"p05-i05": {
+"tipo": [
+"ribelle",
+"giovane"
+],
+"temi": [
+"musica",
+"moda",
+"rabbia",
+"soldi"
+]
+},
+"p05-i06": {
+"tipo": [
+"complottista",
+"ribelle"
+],
+"temi": [
+"tecnologia",
+"politica",
+"legge",
+"social"
+]
+},
+"p05-i07": {
+"tipo": [
+"vanitoso",
+"rabbioso"
+],
+"temi": [
+"cibo",
+"lavoro",
+"saputello"
+]
+},
+"p05-i08": {
+"tipo": [
+"genitore",
+"drammatico"
+],
+"temi": [
+"famiglia",
+"bambini",
+"tecnologia",
+"casa",
+"imbarazzo"
+]
+},
+"p05-i09": {
+"tipo": [
+"avaro",
+"furbo"
+],
+"temi": [
+"soldi",
+"lavoro",
+"politica",
+"bugie"
+]
+},
+"p06-i01": {
+"tipo": [
+"saputello",
+"influencer"
+],
+"temi": [
+"tecnologia",
+"social",
+"musica",
+"casa"
+]
+},
+"p06-i03": {
+"tipo": [
+"furbo",
+"complottista"
+],
+"temi": [
+"tecnologia",
+"legge",
+"notte"
+]
+},
+"p06-i04": {
+"tipo": [
+"goffo",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"mezzi",
+"imbarazzo",
+"corpo"
+]
+},
+"p06-i05": {
+"tipo": [
+"vanitoso",
+"drammatico"
+],
+"temi": [
+"amore",
+"feste",
+"famiglia",
+"moda"
+]
+},
+"p06-i06": {
+"tipo": [
+"pettegolo",
+"saputello"
+],
+"temi": [
+"social",
+"politica",
+"curiosita",
+"lavoro"
+]
+},
+"p06-i07": {
+"tipo": [
+"saputello",
+"vanitoso"
+],
+"temi": [
+"spettacolo",
+"politica",
+"cultura"
+]
+},
+"p06-i08": {
+"tipo": [
+"pigro",
+"drammatico"
+],
+"temi": [
+"lavoro",
+"casa",
+"salute",
+"imbarazzo"
+]
+},
+"p06-i09": {
+"tipo": [
+"influencer",
+"goffo"
+],
+"temi": [
+"social",
+"sport",
+"tecnologia"
+]
+},
+"p06-i10": {
+"tipo": [
+"pigro",
+"lavoratore"
+],
+"temi": [
+"legge",
+"lavoro",
+"politica"
+]
+},
+"p07-i01": {
+"tipo": [
+"giovane",
+"rabbioso"
+],
+"temi": [
+"scuola",
+"cultura",
+"imbarazzo"
+]
+},
+"p07-i02": {
+"tipo": [
+"influencer",
+"vanitoso"
+],
+"temi": [
+"social",
+"moda",
+"tecnologia"
+]
+},
+"p07-i03": {
+"tipo": [
+"vecchio",
+"rabbioso"
+],
+"temi": [
+"vecchiaia",
+"casa",
+"famiglia",
+"pettegolezzo"
+]
+},
+"p07-i04": {
+"tipo": [
+"pigro",
+"goffo"
+],
+"temi": [
+"alcol",
+"notte",
+"sport",
+"imbarazzo"
+]
+},
+"p07-i05": {
+"tipo": [
+"lavoratore",
+"pettegolo"
+],
+"temi": [
+"lavoro",
+"casa",
+"viaggio",
+"curiosita"
+]
+},
+"p07-i06": {
+"tipo": [
+"furbo",
+"bugiardo"
+],
+"temi": [
+"lavoro",
+"casa",
+"soldi",
+"faidate"
+]
+},
+"p07-i07": {
+"tipo": [
+"ribelle",
+"artista"
+],
+"temi": [
+"musica",
+"alcol",
+"notte",
+"spettacolo"
+]
+},
+"p07-i08": {
+"tipo": [
+"vanitoso",
+"pigro"
+],
+"temi": [
+"viaggio",
+"soldi",
+"moda",
+"tecnologia"
+]
+},
+"p07-i09": {
+"tipo": [
+"lavoratore",
+"politico"
+],
+"temi": [
+"lavoro",
+"politica",
+"soldi"
+]
+},
+"p08-i01": {
+"tipo": [
+"artista",
+"goffo"
+],
+"temi": [
+"spettacolo",
+"imbarazzo",
+"cibo"
+]
+},
+"p08-i02": {
+"tipo": [
+"goffo",
+"giovane"
+],
+"temi": [
+"imbarazzo",
+"amore",
+"scuola"
+]
+},
+"p08-i03": {
+"tipo": [
+"saputello",
+"pigro"
+],
+"temi": [
+"casa",
+"corpo",
+"tecnologia"
+]
+},
+"p08-i04": {
+"tipo": [
+"pigro",
+"goffo"
+],
+"temi": [
+"natura",
+"social",
+"tecnologia",
+"casa"
+]
+},
+"p08-i05": {
+"tipo": [
+"vanitoso",
+"influencer"
+],
+"temi": [
+"animali",
+"social",
+"moda"
+]
+},
+"p08-i06": {
+"tipo": [
+"genitore",
+"drammatico"
+],
+"temi": [
+"famiglia",
+"bambini",
+"casa",
+"spettacolo"
+]
+},
+"p08-i07": {
+"tipo": [
+"pettegolo",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"spettacolo",
+"curiosita"
+]
+},
+"p08-i09": {
+"tipo": [
+"drammatico",
+"rabbioso"
+],
+"temi": [
+"spettacolo",
+"notte",
+"caos"
+]
+},
+"p08-i11": {
+"tipo": [
+"sportivo",
+"goffo"
+],
+"temi": [
+"sport",
+"corpo",
+"salute",
+"pigrizia"
+]
+},
+"p09-i01": {
+"tipo": [
+"vanitoso",
+"furbo"
+],
+"temi": [
+"mezzi",
+"soldi",
+"casa",
+"sport"
+]
+},
+"p09-i02": {
+"tipo": [
+"eccentrico",
+"vanitoso"
+],
+"temi": [
+"animali",
+"social",
+"casa"
+]
+},
+"p09-i03": {
+"tipo": [
+"saputello",
+"rabbioso"
+],
+"temi": [
+"cultura",
+"lavoro",
+"scuola"
+]
+},
+"p09-i04": {
+"tipo": [
+"rabbioso",
+"goffo"
+],
+"temi": [
+"spettacolo",
+"cibo",
+"imbarazzo"
+]
+},
+"p09-i05": {
+"tipo": [
+"nerd",
+"lavoratore"
+],
+"temi": [
+"tecnologia",
+"lavoro",
+"salute"
+]
+},
+"p09-i06": {
+"tipo": [
+"politico",
+"furbo"
+],
+"temi": [
+"politica",
+"soldi",
+"bugie",
+"legge"
+]
+},
+"p09-i07": {
+"tipo": [
+"artista",
+"rabbioso"
+],
+"temi": [
+"musica",
+"spettacolo",
+"soldi"
+]
+},
+"p09-i08": {
+"tipo": [
+"nerd",
+"avaro"
+],
+"temi": [
+"tecnologia",
+"soldi",
+"lavoro"
+]
+},
+"p09-i09": {
+"tipo": [
+"sportivo",
+"vanitoso"
+],
+"temi": [
+"sport",
+"corpo",
+"social",
+"salute"
+]
+},
+"p10-i01": {
+"tipo": [
+"sportivo",
+"rabbioso"
+],
+"temi": [
+"mezzi",
+"sport",
+"legge",
+"rabbia"
+]
+},
+"p10-i02": {
+"tipo": [
+"giovane",
+"drammatico"
+],
+"temi": [
+"social",
+"amore",
+"tecnologia"
+]
+},
+"p10-i03": {
+"tipo": [
+"goffo",
+"artista"
+],
+"temi": [
+"spettacolo",
+"sport",
+"imbarazzo"
+]
+},
+"p10-i04": {
+"tipo": [
+"religioso",
+"rabbioso"
+],
+"temi": [
+"religione",
+"pigrizia",
+"natura"
+]
+},
+"p10-i05": {
+"tipo": [
+"goffo",
+"drammatico"
+],
+"temi": [
+"salute",
+"corpo",
+"sport",
+"imbarazzo"
+]
+},
+"p10-i06": {
+"tipo": [
+"furbo",
+"bugiardo"
+],
+"temi": [
+"soldi",
+"superstizione",
+"spettacolo"
+]
+},
+"p10-i07": {
+"tipo": [
+"artista",
+"drammatico"
+],
+"temi": [
+"musica",
+"spettacolo",
+"imbarazzo"
+]
+},
+"p10-i08": {
+"tipo": [
+"vecchio",
+"rabbioso"
+],
+"temi": [
+"casa",
+"natura",
+"faidate",
+"pigrizia"
+]
+},
+"p10-i09": {
+"tipo": [
+"sportivo",
+"vanitoso"
+],
+"temi": [
+"sport",
+"corpo",
+"salute",
+"vanita"
+]
+},
+"p11-i01": {
+"tipo": [
+"vecchio",
+"pettegolo"
+],
+"temi": [
+"curiosita",
+"casa",
+"famiglia",
+"pettegolezzo"
+]
+},
+"p11-i02": {
+"tipo": [
+"rabbioso",
+"pigro"
+],
+"temi": [
+"cibo",
+"rabbia",
+"casa"
+]
+},
+"p11-i03": {
+"tipo": [
+"genitore",
+"vecchio"
+],
+"temi": [
+"cibo",
+"famiglia",
+"feste"
+]
+},
+"p11-i04": {
+"tipo": [
+"pigro",
+"goffo"
+],
+"temi": [
+"mezzi",
+"tecnologia",
+"notte",
+"cibo"
+]
+},
+"p11-i05": {
+"tipo": [
+"goffo",
+"vanitoso"
+],
+"temi": [
+"viaggio",
+"social",
+"soldi",
+"musica"
+]
+},
+"p11-i06": {
+"tipo": [
+"lavoratore",
+"rabbioso"
+],
+"temi": [
+"lavoro",
+"casa",
+"mezzi"
+]
+},
+"p11-i07": {
+"tipo": [
+"goffo",
+"lavoratore"
+],
+"temi": [
+"cibo",
+"lavoro",
+"imbarazzo",
+"caos"
+]
+},
+"p12-i01": {
+"tipo": [
+"goffo",
+"lavoratore"
+],
+"temi": [
+"mezzi",
+"faidate",
+"soldi",
+"imbarazzo"
+]
+},
+"p12-i02": {
+"tipo": [
+"furbo",
+"lavoratore"
+],
+"temi": [
+"soldi",
+"lavoro",
+"fumo",
+"politica"
+]
+},
+"p12-i03": {
+"tipo": [
+"eccentrico",
+"saputello"
+],
+"temi": [
+"cultura",
+"scuola",
+"caos",
+"animali"
+]
+},
+"p12-i04": {
+"tipo": [
+"pigro",
+"goffo"
+],
+"temi": [
+"casa",
+"pigrizia",
+"corpo",
+"cibo"
+]
+},
+"p12-i05": {
+"tipo": [
+"rabbioso",
+"lavoratore"
+],
+"temi": [
+"casa",
+"faidate",
+"rabbia"
+]
+},
+"p12-i06": {
+"tipo": [
+"goffo",
+"drammatico"
+],
+"temi": [
+"mezzi",
+"imbarazzo",
+"corpo"
+]
+},
+"p12-i07": {
+"tipo": [
+"saputello",
+"guru"
+],
+"temi": [
+"cibo",
+"ambiente",
+"salute",
+"soldi"
+]
+},
+"p12-i08": {
+"tipo": [
+"pettegolo",
+"goffo"
+],
+"temi": [
+"viaggio",
+"feste",
+"imbarazzo",
+"famiglia"
+]
+},
+"p12-i09": {
+"tipo": [
+"vanitoso",
+"drammatico"
+],
+"temi": [
+"cibo",
+"alcol",
+"amore",
+"notte"
+]
+},
+"p13-i01": {
+"tipo": [
+"rabbioso",
+"genitore"
+],
+"temi": [
+"bambini",
+"musica",
+"casa",
+"rabbia"
+]
+},
+"p13-i02": {
+"tipo": [
+"furbo",
+"pigro"
+],
+"temi": [
+"lavoro",
+"tecnologia",
+"casa",
+"imbarazzo"
+]
+},
+"p13-i03": {
+"tipo": [
+"vanitoso",
+"sportivo"
+],
+"temi": [
+"animali",
+"sport",
+"social"
+]
+},
+"p13-i04": {
+"tipo": [
+"guru",
+"goffo"
+],
+"temi": [
+"mezzi",
+"bambini",
+"salute",
+"religione"
+]
+},
+"p13-i05": {
+"tipo": [
+"complottista",
+"rabbioso"
+],
+"temi": [
+"politica",
+"curiosita",
+"tecnologia"
+]
+},
+"p13-i06": {
+"tipo": [
+"nerd",
+"goffo"
+],
+"temi": [
+"tecnologia",
+"lavoro",
+"caos",
+"cibo"
+]
+},
+"p13-i07": {
+"tipo": [
+"pigro",
+"drammatico"
+],
+"temi": [
+"lavoro",
+"pigrizia",
+"cibo",
+"imbarazzo"
+]
+},
+"p13-i08": {
+"tipo": [
+"rabbioso",
+"pettegolo"
+],
+"temi": [
+"cibo",
+"lavoro",
+"mezzi",
+"caos"
+]
+},
+"p13-i09": {
+"tipo": [
+"drammatico",
+"goffo"
+],
+"temi": [
+"salute",
+"famiglia",
+"imbarazzo"
+]
+},
+"p14-i02": {
+"tipo": [
+"ribelle",
+"goffo"
+],
+"temi": [
+"mezzi",
+"legge",
+"rabbia",
+"notte"
+]
+},
+"p14-i03": {
+"tipo": [
+"eccentrico",
+"vanitoso"
+],
+"temi": [
+"casa",
+"natura",
+"superstizione",
+"religione"
+]
+},
+"p14-i04": {
+"tipo": [
+"goffo",
+"rabbioso"
+],
+"temi": [
+"faidate",
+"casa",
+"caos",
+"rabbia"
+]
+},
+"p14-i05": {
+"tipo": [
+"sportivo",
+"pigro"
+],
+"temi": [
+"sport",
+"musica",
+"salute",
+"corpo"
+]
+},
+"p14-i01": {
+"tipo": [
+"rabbioso",
+"genitore"
+],
+"temi": [
+"bambini",
+"musica",
+"casa",
+"rabbia"
+]
+}
+}

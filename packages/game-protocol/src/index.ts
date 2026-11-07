@@ -34,14 +34,14 @@ const act = z.union([
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("free"), text: z.string().max(200).optional() }).strict(),
   z.object({ type: z.literal("playCard"), cardId: z.string().regex(/^p\d{2}-i\d{2}$|^c\d{1,4}$/).max(16) }).strict(),
   z.object({ type: z.literal("placeLui"), kind: z.enum(["CADE", "NON_CADE"]), position: z.number().int().min(1).max(8) }).strict(),
-  z.object({ type: z.literal("vote"), position: z.number().int().min(1).max(8), reason: z.string().max(200).optional() }).strict(),
+  z.object({ type: z.literal("vote"), position: z.number().int().min(1).max(8) }).strict(),
   z.object({ type: z.literal("advance") }).strict(),
 ]);
 export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("hello"), token: tokenSchema }).strict(),
   z.object({ t: z.literal("watch") }).strict(),
   z.object({ t: z.literal("ping") }).strict(),
-  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), justifyVotes: z.boolean().optional(), herd: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
+  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("addBot"), level: botLevelSchema.default("medium") }).strict(),
   z.object({ t: z.literal("removeBot"), playerId: playerIdSchema }).strict(),
@@ -55,7 +55,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
-export interface RoomOptionsDto { megafonoSa: boolean; /** Regole da testare (spente di default). */ justifyVotes: boolean; herd: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
+export interface RoomOptionsDto { megafonoSa: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
 export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; isBot?: boolean; level?: "easy" | "medium" | "hard" }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;

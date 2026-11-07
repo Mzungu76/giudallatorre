@@ -50,3 +50,50 @@ describe("giocatori virtuali", () => {
     expect(wins / G).toBeGreaterThan(0.27); expect(hard / G).toBeGreaterThan(easy / G);
   });
 });
+
+// ---- etichette nascoste: i bot "capiscono" quanto un personaggio c'entra con una frase ----
+import { readFileSync } from "node:fs";
+import { affinity, registerTags, phraseTagCount } from "../src/index.ts";
+import { MAX_PLAYERS } from "../src/index.ts";
+
+const json = (p: string) => JSON.parse(readFileSync(new URL(`../../../${p}`, import.meta.url), "utf8"));
+describe("giocatori virtuali con etichette", () => {
+  const cardsTags = json("content/tags-personaggi.json"), phraseTags = json("content/tags-frasi.json");
+  const manifest = (json("public/cards/manifest.json") as { id: string; overlay_of?: string }[]).filter((m) => !m.overlay_of).map((m) => m.id);
+  const phrases = Object.keys(phraseTags);
+  it("ogni personaggio e ogni frase ha etichette; l'affinità distingue casi chiari", () => {
+    registerTags(cardsTags, phraseTags);
+    for (const id of manifest) expect(cardsTags[id]?.temi.length).toBeGreaterThan(0);
+    for (const f of phrases) expect(phraseTags[f].temi.length).toBeGreaterThan(0);
+    const gym = phrases.find((f) => f.includes("manubrio"))!;
+    expect(affinity("p01-i08", gym)!).toBeGreaterThan(affinity("p06-i05", gym)!);   // personal trainer batte la sposa su una frase da palestra
+    expect(phraseTagCount(gym)).toBeGreaterThan(0); expect(affinity("p01-i08", "frase sconosciuta")).toBeNull();
+  });
+  const play = (levels: BotLevel[], seed: number) => {
+    const deck = manifest, phraseDeck = phrases.map((f, i) => ({ id: "t" + i, phrases: [f, f + " ", f + "  ", f + "   ", f + "    "] }));
+    return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck } as GameConfig, levels, seed * 31);
+  };
+  it("con le etichette il Medio e il Difficile battono nettamente il Facile (partite da 4)", () => {
+    registerTags(cardsTags, phraseTags);
+    for (const lvl of ["medium", "hard"] as BotLevel[]) {
+      let wins = 0; const games = 60;
+      for (let g = 0; g < games; g++) { const slot = g % 4, lv: BotLevel[] = ["easy", "easy", "easy", "easy"]; lv[slot] = lvl; const s = play(lv, 300 + g); if (s.winners?.includes("p" + slot)) wins++; }
+      expect(wins / games).toBeGreaterThan(0.4);   // il caso è 25%
+    }
+  });
+  it("il Megafono Difficile bluffa: con la reputazione di chi dice sempre CADE, a volte scommette NON CADE sulla carta ovvia", () => {
+    registerTags(cardsTags, phraseTags);
+    const kinds = new Set<string>(); let withLui = 0;
+    for (let g = 0; g < 40; g++) {
+      const levels: BotLevel[] = ["hard", "hard", "hard", "hard"];
+      let s = createGame({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed: 700 + g, deck: manifest, phraseDeck: [{ id: "m", phrases: phrases.slice(0, 5) }, ...phrases.slice(5, 60).map((f, i) => ({ id: "u" + i, phrases: [f, phrases[(i + 70) % 250]!] }))], mixPhrases: true }).state;
+      const mem = newBotMemory(); mem.lui = Object.fromEntries(s.playerIds.map((p) => [p, { c: 9, n: 10 }]));
+      let r = g + 5; const rand = () => { const x = nextRandom(r); r = x.state; return x.value; }; let guard = 0;
+      while (s.phase !== "SUSPECT" && guard++ < 200) for (const id of s.playerIds) { const a = chooseBotAction(s, id, "hard", mem, rand); if (a) { s = applyAction(s, a).state; break; } }
+      const a = chooseBotAction(s, megafonoOfState(s), "hard", mem, rand); if (a && a.type === "placeLui") { kinds.add(a.kind); withLui++; }
+    }
+    expect(withLui).toBeGreaterThan(30); expect(kinds.has("NON_CADE")).toBe(true); expect(kinds.has("CADE")).toBe(true);
+  });
+  void MAX_PLAYERS;
+});
+import { megafonoOf as megafonoOfState } from "../src/index.ts";

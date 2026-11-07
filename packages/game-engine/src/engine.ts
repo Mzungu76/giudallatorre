@@ -7,8 +7,6 @@ export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 export const LUI_FAIL_MALUS = 1;
 /** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
 export const MAX_PHRASE_CHARS = 80;
-/** Lunghezza massima della frase che motiva il voto (regola da testare). */
-export const MAX_REASON_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
@@ -35,9 +33,9 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    megafonoSa: !!config.megafonoSa, justifyVotes: !!config.justifyVotes, herd: !!config.herd, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    megafonoSa: !!config.megafonoSa, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
-    rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {}, voteReasons: {},
+    rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
   };
@@ -68,7 +66,7 @@ function drawPhrase(s: GameState) {
 
 function startTurn(s: GameState, events: GameEvent[]) {
   s.phase = "PROCLAIM"; s.proclaim = drawPhrase(s); s.phrase = null; s.played = {}; s.deckCard = null;
-  s.tower = []; s.lui = null; s.votes = {}; s.voteReasons = {};
+  s.tower = []; s.lui = null; s.votes = {};
   events.push({ type: "turnStarted", turn: s.turnNumber, megafonoId: megafonoOf(s) });
 }
 
@@ -129,14 +127,6 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       mustBe(s, "VOTE"); known(s, action.playerId);
       if (s.votes[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "voto già espresso");
       checkPosition(s, action.position);
-      if (s.justifyVotes) {
-        const raw = action.reason;
-        if (typeof raw !== "string") throw new EngineError("INVALID_CHOICE", "scrivi perché voti questo personaggio");
-        const text = raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim();
-        if (!text) throw new EngineError("INVALID_CHOICE", "scrivi perché voti questo personaggio");
-        if (text.length > MAX_REASON_CHARS) throw new EngineError("INVALID_CHOICE", `motivazione troppo lunga (massimo ${MAX_REASON_CHARS} caratteri)`);
-        s.voteReasons[action.playerId] = text;
-      }
       s.votes[action.playerId] = action.position;
       events.push({ type: "voteCast", playerId: action.playerId });
       if (s.playerIds.every((p) => s.votes[p] !== undefined)) resolve(s, events);
@@ -175,9 +165,9 @@ function resolve(s: GameState, events: GameEvent[]) {
   const points: Record<PlayerId, number> = {}, reasons: Record<PlayerId, string[]> = {};
   for (const p of s.playerIds) { points[p] = 0; reasons[p] = []; }
   const give = (p: PlayerId, n: number, why: string) => { points[p]! += n; reasons[p]!.push(why); };
-  // Regola del gregge: se il Megafono ha indovinato la carta che cade, i +2 dei votanti vanno solo a lui.
-  const herd = s.herd && !!s.lui && s.lui.kind === "CADE" && s.lui.position === fallen;
-  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (herd && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
+  // Regola del gregge: se la carta che cade è anche quella votata dal Megafono, i +2 dei votanti li fa solo lui.
+  const herd = s.votes[mega] === fallen && s.playerIds.some((p) => p !== mega && s.votes[p] === fallen);
+  for (const p of s.playerIds) if (s.votes[p] === fallen) { if (s.votes[mega] === fallen && p !== mega) reasons[p]!.push("gregge"); else give(p, 2, "voto"); }
   if (slot.ownerId !== null) give(slot.ownerId, 2, "carta");
   if (s.lui) {
     if (s.lui.kind === "CADE" && s.lui.position === fallen) give(mega, 4, "lui-cade");
@@ -188,7 +178,7 @@ function resolve(s: GameState, events: GameEvent[]) {
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen,
-    fallenCardId: slot.cardId, fallenOwnerId: slot.ownerId, lui: s.lui ? { ...s.lui } : null, points, reasons, voteReasons: { ...s.voteReasons }, herd };
+    fallenCardId: slot.cardId, fallenOwnerId: slot.ownerId, lui: s.lui ? { ...s.lui } : null, points, reasons, herd };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

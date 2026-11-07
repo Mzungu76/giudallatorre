@@ -5,7 +5,7 @@ export const HOWTO_STEPS: [string, string][] = [
   ["🃏", "La Folla (tutti gli altri) sceglie in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
   ["🎯", "Il Megafono scommette col gettone Lui!: “Cade lui!” (+4 se cade) oppure “Non cade” (+1 se resta su). Se sbaglia: −1."],
   ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre!"],
-  ["⭐", "Punti: +2 se hai votato quello caduto, +2 se era la tua carta. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
+  ["⭐", "Punti: +2 se hai votato quello caduto, +2 se era la tua carta. Gregge: se cade la carta votata anche dal Megafono, i +2 dei votanti sono solo suoi. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
 ];
 
 /** Come si gioca, in 5 passi. Si apre dalla Home, e da solo alla prima partita su questo dispositivo. */
