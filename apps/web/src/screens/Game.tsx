@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { PlayerView, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
+import { MAX_REASON_CHARS } from "@gdt/game-engine";
 import { Btn, Chips, Countdown, Disc, FAST, PLAYER_COLORS, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
@@ -14,7 +15,7 @@ import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
-const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su", "lui-fallito": "Lui! sbagliato" };
+const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su", "lui-fallito": "Lui! sbagliato", gregge: "gregge: niente +2" };
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 const BANNERS: Record<string, [string, string]> = {
   PLAY: ["Scegliete la carta!", "quella che sta meglio sulla torre"],
@@ -174,7 +175,7 @@ function Legend({ onClose }: { onClose: () => void }) {
 export default function Game({ room, view, deadline, send, readOnly, sound }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
   const megaBot = people.get(view.megafonoId).bot;
-  const [pick, setPick] = useState<number | null>(null), [kind, setKind] = useState<"CADE" | "NON_CADE">("CADE");
+  const [reason, setReason] = useState(""), [pick, setPick] = useState<number | null>(null), [kind, setKind] = useState<"CADE" | "NON_CADE">("CADE");
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
@@ -189,7 +190,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
     if (phase === "PLAY") sawPlay.current = turn;
     if (phase === "VOTE") sawVote.current = turn;
     if (prevPhase.current !== null && prevPhase.current !== phase) {
-      setPick(null); setZoomPos(null);
+      setPick(null); setZoomPos(null); setReason("");
       const b = BANNERS[phase];
       const extra = phase === "PROCLAIM" && view.goldenGoal ? ["⚡ Spareggio!", "Golden goal: chi ha più punti vince"] as [string, string] : null;
       const t = extra ?? b;
@@ -237,7 +238,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => setZoomPos(n) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPos={res.fallenPosition} sound={sound} skip={skip} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} voteReasons={res.voteReasons ?? {}} counts={res.counts} lui={resLui} tie={res.tie} fallPos={res.fallenPosition} herd={!!res.herd} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
@@ -263,7 +264,10 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       ) : <div className="bottom"><Tip>{people.get(view.megafonoId).name} scommette col gettone Lui!: “cade” o “non cade”?</Tip></div>)}
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
-        ? <div className="bottom"><Tip>Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2.</Tip><Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{pick ? `Conferma il n. ${pick}` : "Scegli chi cade"}</Btn></div>
+        ? <div className="bottom">
+            <Tip>Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2.{view.rules.herd ? " (Gregge: se il Megafono indovina la carta, i +2 sono solo suoi.)" : ""}</Tip>
+            {view.rules.justifyVotes && <div className="reason-box"><textarea className="phr-in" rows={2} maxLength={MAX_REASON_CHARS} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Perché proprio lui? Scrivilo in una frase (resta segreto fino allo spoglio)" data-testid="vote-reason" aria-label="Perché hai votato questo personaggio" /><small>{reason.length}/{MAX_REASON_CHARS}</small></div>}
+            <Btn disabled={!pick || (view.rules.justifyVotes && !reason.trim())} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick, ...(view.rules.justifyVotes ? { reason: reason.trim() } : {}) } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : view.rules.justifyVotes && !reason.trim() ? "Scrivi perché lo voti" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
 

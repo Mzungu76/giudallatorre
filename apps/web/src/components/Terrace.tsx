@@ -38,9 +38,10 @@ const ease = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x * x * (3 - 2 * x));
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 /** Orologio a requestAnimationFrame: restituisce il tempo in secondi; chiama onEnd una volta sola (anche con skip). */
-export function useClock(end: number, onEnd: () => void, skip: number): number {
+export function useClock(end: number, onEnd: () => void, skip: number, seekRef?: React.MutableRefObject<((t: number) => void) | null>): number {
   const [T, setT] = useState(FAST ? end : 0), cb = useRef(onEnd), done = useRef(false), t0 = useRef(performance.now()), off = useRef(0);
   cb.current = onEnd;
+  if (seekRef) seekRef.current = (t: number) => { off.current = t - (performance.now() - t0.current) / 1000; };
   useEffect(() => {
     let raf = 0;
     const fin = () => { if (!done.current) { done.current = true; cb.current(); } };
@@ -101,43 +102,74 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 }
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
-/** Lo spoglio: buio, rullo, un voto alla volta direttamente sulla carta, “manca un voto…”, il Lui! si gira, timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPos, sound, skip, onDone }: {
-  cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>; lui: { pos: number; kind: "CADE" | "NON_CADE" } | null;
-  tie: boolean; fallPos: number; sound: boolean; skip: number; onDone: () => void;
+type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui" | "herd" | "stamp"; i?: number };
+
+/** Lo spoglio, un passo alla volta: ogni voto con chi l'ha dato (e la sua spiegazione), poi il conteggio, la scommessa del Megafono, l'eventuale gregge e il timbro. */
+export function Reveal({ cardIds, voters, votes, voteReasons, counts, lui, tie, fallPos, herd, megaName, sound, skip, interactive, onDone }: {
+  cardIds: string[]; voters: Voter[]; votes: Record<string, number>; voteReasons: Record<string, string>; counts: Record<number, number>;
+  lui: { pos: number; kind: "CADE" | "NON_CADE" } | null; tie: boolean; fallPos: number; herd: boolean; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
 }) {
-  const m = voters.length, S = m <= 5 ? 0.45 : 0.28, TD = 0.7, pause = m > 1 ? 0.9 : 0;
-  const times = voters.map((_, i) => (i < m - 1 ? TD + i * S : TD + Math.max(0, m - 2) * S + S + pause));
-  const tLast = times[m - 1] ?? TD, tLui = tLast + 0.7, tStamp = tLui + 0.5, END = tStamp + 1.1;
-  const T = useClock(END, onDone, skip);
+  const { dy } = useStage(), m = voters.length;
+  const steps = useMemo(() => {
+    const st: Step[] = []; let t = 0;
+    const add = (kind: Step["kind"], d: number, i?: number) => { st.push({ t0: t, t1: t + d, kind, i }); t += d; };
+    add("intro", 1.4);
+    voters.forEach((v, i) => {
+      if (i === m - 1 && m > 1) add("suspense", 1.0);
+      add("vote", 1.5 + Math.min(2.6, (voteReasons[v.id]?.length ?? 0) * 0.04), i);
+    });
+    add("tally", 2.2);
+    if (lui) add("lui", 2.4);
+    if (herd) add("herd", 2.8);
+    add("stamp", 1.6);
+    return st;
+  }, [voters, voteReasons, lui, herd, m]);
+  const END = steps[steps.length - 1]!.t1;
+  const seek = useRef<((t: number) => void) | null>(null);
+  const T = useClock(END, onDone, skip, seek);
+  const cur = steps.find((s) => T >= s.t0 && T < s.t1) ?? steps[steps.length - 1]!;
   const fired = useRef<Set<string>>(new Set());
   useEffect(() => {
     const once = (k: string, f: () => void) => { if (!fired.current.has(k)) { fired.current.add(k); f(); } };
-    once("d", () => sfx.drum(sound, 0.6));
-    times.forEach((t, i) => { if (T >= t) once("v" + i, () => sfx.tap(sound, 480 + i * 30)); });
-    if (m > 1 && T >= times[m - 2]! + 0.2 && T < tLast) once("pz", () => sfx.drum(sound, 0.35));
-    if (T >= tStamp) once("s", () => sfx.stamp(sound));
-  }, [Math.floor(T * 20)]); // eslint-disable-line react-hooks/exhaustive-deps
-  const shown = voters.map((v, i) => ({ v, i })).filter(({ i }) => T >= times[i]!);
+    once(`${cur.kind}${cur.i ?? ""}`, () => {
+      if (cur.kind === "intro") sfx.drum(sound, 0.7);
+      else if (cur.kind === "vote") sfx.tap(sound, 480 + (cur.i ?? 0) * 30);
+      else if (cur.kind === "suspense") sfx.drum(sound, 0.8);
+      else if (cur.kind === "tally") sfx.tap(sound, 640);
+      else if (cur.kind === "lui") sfx.tap(sound, 360);
+      else if (cur.kind === "stamp") sfx.stamp(sound);
+    });
+  }, [cur.kind, cur.i]); // eslint-disable-line react-hooks/exhaustive-deps
+  const voteStep = (i: number) => steps.find((s) => s.kind === "vote" && s.i === i)!;
+  const shown = voters.map((v, i) => ({ v, i })).filter(({ i }) => T >= voteStep(i).t0);
+  const allShown = shown.length === m, lastShown = shown[shown.length - 1];
   const toks: VoteTok[] = shown.map(({ v }) => ({ p: votes[v.id]!, c: v.color, mega: v.mega }));
-  const last = shown[shown.length - 1], lastPos = last ? votes[last.v.id]! : 0;
-  const cnt = last ? shown.filter(({ v }) => votes[v.id] === lastPos).length : 0;
-  const inPause = shown.length === m - 1 && m > 1 && T < tLast;
-  const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]), pp = lastPos ? pos[lastPos - 1] : null;
-  const nextName = voters[shown.length]?.name, { dy } = useStage();
+  const luiOpen = !!lui && (cur.kind === "lui" || cur.kind === "herd" || cur.kind === "stamp") && T >= (steps.find((s) => s.kind === "lui")?.t0 ?? 0) + 0.7;
+  const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
+  const cnt: Record<number, number> = {}; shown.forEach(({ v }) => { const p = votes[v.id]!; cnt[p] = (cnt[p] ?? 0) + 1; });
+  const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "tally" || cur.kind === "lui" || cur.kind === "herd" || cur.kind === "stamp" ? (cur.kind === "lui" && lui ? lui.pos : fallPos) : 0;
+  const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
+  const v = cur.kind === "vote" ? voters[cur.i!]! : null, reason = v ? voteReasons[v.id] : "";
+  const luiHit = lui ? (lui.kind === "CADE" ? lui.pos === fallPos : lui.pos !== fallPos) : false;
+  const total = voters.length;
   return (
     <>
-      <Terrace cardIds={cardIds} votes={toks} lui={lui ? { pos: lui.pos, kind: T >= tLui ? lui.kind : null } : null} />
+      <Terrace cardIds={cardIds} votes={toks} lui={lui ? { pos: lui.pos, kind: luiOpen ? lui.kind : null } : null} />
       <div className="darkv" />
-      <div className="capx" style={{ top: "auto", bottom: 60 }}>
-        {T < TD && <div style={{ fontSize: 36 }}>Lo spoglio!</div>}
-        {last && T < tStamp && <>
-          <div style={{ fontSize: inPause ? 36 : 26, color: inPause ? "#ffc72c" : "#fff" }}>{tie && T >= tLast ? "Pareggio! Decide il Megafono" : inPause ? "Manca un voto…" : `Voto n. ${shown.length} di ${m}`}</div>
-          <div style={{ marginTop: 6 }}><span className="who" style={{ position: "static", display: "inline-block", fontSize: 13 }} data-testid="who">{last.v.name} ha votato… il {lastPos}!{inPause && nextName ? ` Manca ${nextName}…` : ""}</span></div>
-        </>}
+      {Object.entries(cnt).map(([p, c]) => { const pp = pos[Number(p) - 1]; if (!pp) return null; const lead = cur.kind !== "vote" && Number(p) === fallPos;
+        return <div className={`counter ${lead ? "lead" : ""}`} style={{ left: pp.x + pp.w - 18, top: pp.f - pp.h - 30 + dy }} key={`${p}-${c}`}>{c}</div>; })}
+      {focusPos > 0 && pos[focusPos - 1] && <div className="focus" style={{ left: pos[focusPos - 1]!.x - 5, top: pos[focusPos - 1]!.f - pos[focusPos - 1]!.h - 11 + dy, width: pos[focusPos - 1]!.w + 10, height: pos[focusPos - 1]!.h + 16 }} />}
+      <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
+        {cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi{Object.keys(voteReasons).length ? ", e perché" : ""}.</span></>}
+        {cur.kind === "suspense" && <><b className="rv-t">Manca un voto…</b><span>{lastShown ? `${lastShown.v.name} ha votato il n. ${votes[lastShown.v.id]}. ` : ""}Aspetta {voters[m - 1]!.name}…</span></>}
+        {cur.kind === "vote" && v && <><span className="rv-n">Voto {cur.i! + 1} di {total}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{v.name} ha votato il n. {votes[v.id]}</b>{reason && <q className="rv-q">{reason}</q>}</>}
+        {cur.kind === "tally" && <><b className="rv-t">{tie ? "Pareggio!" : `Il più votato: n. ${fallPos}`}</b><span>{tie ? `Decide il Megafono (${megaName}): cade il n. ${fallPos}.` : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
+        {cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span>{lui.kind === "CADE" ? `Aveva scommesso: CADE sul n. ${lui.pos}.` : `Aveva scommesso: il n. ${lui.pos} NON CADE.`}</span>{T >= (steps.find((s) => s.kind === "lui")?.t0 ?? 0) + 0.9 && <em className={luiHit ? "ok" : "ko"}>{luiHit ? (lui.kind === "CADE" ? "Azzeccato! +4" : "Azzeccato! +1") : "Sbagliato: −1"}</em>}</>}
+        {cur.kind === "herd" && <><b className="rv-t">🐑 Regola del gregge</b><span>{megaName} ha indovinato la carta che cade: i +2 di chi l’ha votata vanno solo a lui.</span></>}
+        {cur.kind === "stamp" && <><b className="rv-t">Cade il n. {fallPos}!</b></>}
       </div>
-      {last && T < tStamp && pp && <div className="counter" style={{ left: pp.x + pp.w / 2 - 14, top: pp.f - pp.h - 44 + dy }} key={`${lastPos}-${cnt}`}>{cnt}</div>}
-      {T >= tStamp && <div className="stampbox" style={{ top: 190 }} data-testid="stamp">{tie ? "Pareggio!" : `Cade il n. ${fallPos}!`}<small>{tie ? `Decide il Megafono: cade il n. ${fallPos}` : `${counts[fallPos] ?? 0} voti su ${m}${lui && lui.kind === "CADE" && lui.pos === fallPos ? " · lui lo sapeva!" : ""}`}</small></div>}
+      {allShown && null}
+      {interactive && cur.kind !== "stamp" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
     </>
   );
 }
