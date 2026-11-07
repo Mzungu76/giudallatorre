@@ -833,6 +833,37 @@ table.t td b{color:var(--g-red)}
 .dev .chat .chat-q button{font-size:24px;padding:4px 9px}
 .dev .chat .chat-f input{padding:12px;font-size:16px}
 .dev .chat .chat-f button{font-size:18px;padding:0 16px}
+/* intervallo */
+.dev.short .ivl-hero{display:none}.dev.short .ivl-title{font-size:34px}.dev.short .B>.strip{margin:10px -14px 4px}.dev.short .ivl-steps{margin-top:12px;padding:10px 12px;gap:9px}
+.dev .B>.strip{margin:16px -14px 8px;flex:none}
+.dev .ivl-title{text-align:center;margin:2px 14px 0;font:400 40px/.95 Anton;text-transform:uppercase;color:#fff;text-shadow:0 1px 0 #13224a,0 2px 0 #13224a,0 3px 0 #13224a,0 4px 0 #13224a,3px 6px 0 #e8362b,0 10px 8px #0004;flex:none}
+.dev .ivl-title small{display:block;font:400 21px/1 'Caveat Brush';text-transform:none;color:#ffe27a;text-shadow:2px 2px 0 #13224a;margin-top:4px;transform:rotate(-1.5deg)}
+.dev .ivl-hero{flex:none;display:grid;place-items:center;height:calc(var(--hh,184px) + 30px);margin-top:10px}
+.ivl-card{position:relative;height:var(--hh,184px);aspect-ratio:2/3;border-radius:12px;border:6px solid #fff;background-size:cover;background-position:center;box-shadow:0 6px 0 #13224a,0 0 0 3px #13224a,0 14px 18px #0003;transform:rotate(-3deg)}
+.ivl-card em{position:absolute;left:-12px;right:-12px;bottom:-14px;text-align:center;background:#13224a;color:#ffc72c;font:400 13px/1.6 Anton;text-transform:uppercase;letter-spacing:.06em;border:2px solid #fff;font-style:normal}
+.ivl-badge{position:absolute;right:-28px;top:-16px;width:50px;height:50px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;box-shadow:2px 3px 0 #13224a;display:grid;place-items:center;font-size:25px;transform:rotate(8deg);z-index:3}
+.ivl-fan{position:relative;height:var(--hh,184px);width:calc(var(--hh,184px) * 1.35)}
+.ivl-fan .ivl-card{position:absolute;height:calc(var(--hh,184px) * .86);top:50%;left:50%;margin-top:calc(var(--hh,184px) * -.43)}
+.dev .ivl-steps{margin:12px 14px 0;padding:12px 14px;display:grid;gap:12px;flex:none}
+.ivl-steps .rg-step{grid-template-columns:36px 1fr;gap:10px}
+.ivl-steps .rg-step .how-ic{width:36px;height:36px;font:400 18px/30px Anton;background:#ffc72c}
+.ivl-steps .rg-step b{font-size:16px}
+.ivl-steps .rg-step p{font-size:12.5px;line-height:1.35}
+.ivl-steps .rg-step:not(:last-child):after{left:17px;top:38px;bottom:-12px}
+.dev .ivl-thumb{position:absolute;left:-8px;top:-14px;width:42px;height:63px;border-radius:6px;border:3px solid #fff;background-size:cover;background-position:center;box-shadow:0 3px 0 #13224a,0 0 0 2px #13224a;transform:rotate(-5deg)}
+.dev .pk .ctx.ac{background:#13224a}
+.ivl-res{margin:8px 10px 0;padding:10px 12px 12px;flex:none}
+.ivl-res>b{display:block;font:400 22px/1 Anton;text-transform:uppercase;color:#e8362b;margin-bottom:8px}
+.ivl-row{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;align-items:end;text-align:center}
+.ivl-t{display:grid;gap:3px;justify-items:center;position:relative}
+.ivl-t .th{position:relative;display:block;width:100%;aspect-ratio:2/3;border-radius:6px;border:3px solid #fff;background-size:cover;background-position:center;box-shadow:0 2px 0 #13224a,0 0 0 2px #13224a}
+.ivl-t .th i{position:absolute;left:-6px;top:-7px;min-width:18px;height:18px;border-radius:9px;background:#ffe9a0;border:2px solid #6e4310;color:#4a2a06;font:400 11px/14px Anton;text-align:center;font-style:normal}
+.ivl-t b{font:400 17px/1 Anton}
+.ivl-t u{text-decoration:none;font:400 10.5px/1 Anton;letter-spacing:.06em;padding:1px 6px;border-radius:5px;border:2px solid #13224a;background:#e7f6ea;color:#1c6b3c}
+.ivl-t.out .th{filter:grayscale(1) brightness(.85);opacity:.7}
+.ivl-t.out b{opacity:.5}
+.ivl-t.out u{background:#fde6e4;color:#b3261e}
+.ivl-t.in .th{border-color:#ffc72c;box-shadow:0 0 0 2px #13224a,0 0 12px 3px #ffc72c}
 /* regolamento */
 .rg{background:#f4e3bd;display:flex;flex-direction:column;z-index:95}
 .rg>.pap,.rg>.hr,.rg>.ht{position:absolute;inset:0;pointer-events:none}
@@ -1027,6 +1058,13 @@ const nm=(n,c,t='')=>'<span class="pb-nm"><i class="dc" style="background:'+c+'"
 const thumb=(i,n)=>'<span class="pb-c" style="background-image:var(--c'+i+')"><i>'+n+'</i></span>';
 const pblk=(t,s,pts,i,n,who,neg)=>'<div class="pb-blk'+(neg?' neg':'')+'"><div class="pb-h"><span class="pb-th">'+thumb(i,n)+'</span><span class="pb-tx"><b>'+t+'</b><small>'+s+'</small></span><span class="pb-pts">'+pts+'</span></div><div class="pb-who">'+who+'</div></div>';
 const ptsPanel=()=>'<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto giusto','Hanno votato il n. 2, che cade','+2 a testa',1,2,nm('Io',ME)+nm('Mara',COLS[2])+nm('Pino',COLS[3]))+pblk('Carta caduta','Aveva giocato la carta caduta','+2',1,2,nm('Gino',COLS[1]))+pblk('Lui! azzeccato','Almeno 3 voti sul n. 2: 3 voti degli altri','+14',1,2,nm('Tito 📣',COLS[5]))+'<div class="pb-sum"><b>In totale nel turno</b><span>'+nm('Tito 📣',COLS[5],'+14')+nm('Io',ME,'+2')+nm('Mara',COLS[2],'+2')+nm('Pino',COLS[3],'+2')+nm('Gino',COLS[1],'+2')+'</span></div></div></div>';
+const IVL={
+ accusa:{t:'L’Accusa',tag:'Qualcuno ha fatto una marachella',hero:'<div class="ivl-card" style="background-image:var(--c4)"><span class="ivl-badge">🔍</span><em>L’accusatore</em></div>',steps:[['Un personaggio accusa','Una carta accusa uno di voi di una marachella.'],['Giocate il colpevole','Ognuno gioca in segreto la carta che l’avrebbe fatta.'],['Si vota','Le carte più votate restano e fanno punti. Le altre cadono dalla torre.']]},
+ amore:{t:'La storia d’amore',tag:'È nata una nuova coppia',hero:'<div class="ivl-card" style="background-image:var(--c5)"><span class="ivl-badge">💘</span><em>Il protagonista</em></div>',steps:[['Un personaggio si innamora','Una carta ha una nuova storia d’amore.'],['Giocate il partner','Ognuno gioca in segreto la carta che gli starebbe meglio accanto.'],['Si vota','Le carte più votate restano e fanno punti. Le altre cadono dalla torre.']]},
+ racc:{t:'Il raccomandato',tag:'Chi butteresti giù oggi?',hero:'<div class="ivl-fan"><div class="ivl-card" style="background-image:var(--c1);transform:translateX(-62%) rotate(-10deg)"></div><div class="ivl-card" style="background-image:var(--c3);transform:translateX(62%) rotate(10deg)"></div><div class="ivl-card" style="background-image:var(--c2);z-index:2"><span class="ivl-badge">🎩</span></div></div>',steps:[['Niente frase','Questa volta nessuno accusa nessuno.'],['Giocate una carta','Una qualsiasi: finirà sulla torre.'],['Si vota','Cadono le carte più votate. Chi le ha giocate perde punti.']]}
+};
+const ivlMeta=()=>'<div class="meta"><span>Turno 3/6</span><span>🎭 Intervallo · L’Accusa</span></div>';
+const phraseM=()=>'<div class="phrase-card pk" data-toggle="open" role="button" tabindex="0" aria-expanded="false"><span class="ivl-thumb" style="background-image:var(--c4)"></span><span class="ctx ac">Accusa</span><small>L’accusatore dice:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b><em class="chev">▾</em><i class="tbar"></i></div>';
 /* ---- schermate ---- */
 const stg=(inner,bg,k,H)=>'<div class="stage ovl" style="width:372px;height:'+(H/k)+'px;transform:scale('+k+');background:'+(bg==='paper'?'#f4e3bd':'transparent')+'">'+(bg==='paper'?paper:sky)+inner+'<div class="vig"></div><div class="grain"></div></div>';
 const S={
@@ -1063,10 +1101,10 @@ const S={
  punti:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+slotT(6,{sel:2,max:.8})+ptsPanel()+sheet('PUNTI DEL TURNO','Turno 1 di 6',crow(tray([]),cta('Continua ›')))+'</div>'}),
  classifica:(W,H)=>({html:'<div class="B"></div>',ov:standings(H,ROWS,'Classifica','Turno 1 di 6','Prossimo turno')}),
  /* INTERVALLO */
- miIntro:()=>({html:'<div class="B"></div>',ov:'<div class="mi ovl" style="background:radial-gradient(circle at 50% 40%,#5a2a9a,#1c1048 70%)"><div class="mi-rays"></div><div class="mi-body"><div class="mi-badge">⭐ INTERVALLO ⭐</div><div class="mi-ic">🕵️</div><h2>L’Accusa!</h2><p class="mi-tag">Qualcuno ha fatto una marachella</p><ul>'+D.mini.map(t=>'<li>'+t+'</li>').join('')+'</ul><button type="button" class="mi-go">Si parte</button></div></div>'}),
- miMano:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+'<div class="mhead"><div class="mh-card" style="background-image:var(--c4)"><em>L’accusatore</em></div><div class="mh-bubble" data-toggle="open"><small>Accusa:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b></div></div>'+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Chi ha fatto questa cosa? La scelta è segreta.',crow(tray(),cta('Gioca questa carta','','data-cta="play"')))+'</div>'}),
- miVoto:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+'<div class="mhead"><div class="mh-card" style="background-image:var(--c4)"><em>L’accusatore</em></div><div class="mh-bubble" data-toggle="open"><small>Accusa:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b></div></div>'+slotT(6,{sel:2})+sheet('CHI È IL COLPEVOLE?','Puoi votare anche la tua. Le più votate restano, le altre cadono.',crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
- miRes:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+slotT(6,{sel:2,max:.8})+'<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto in testa','Hanno votato la carta in testa (n. 2): tanti punti quanti i voti su quella carta.','',1,2,nm('Io',ME,'+3')+nm('Mara',COLS[2],'+3')+nm('Pino',COLS[3],'+3'))+pblk('Carta in testa ×2','Chi aveva giocato una carta in testa prende il doppio dei voti.','',1,2,nm('Gino',COLS[1],'+6'))+pblk('Tetto ai punti','Nessuno guadagna più di 6 punti in un mini-gioco.','',0,0,'',1)+'</div></div>'+sheet('FINE INTERVALLO','',crow(tray(),cta('Continua ›')))+'</div>'}),
+ miIntro:(k='accusa')=>{const K=IVL[k];return {html:'<div class="B"><div class="meta"><span>Turno 3/6</span><span>🎭 Intervallo</span></div><div class="strip">★ INTERVALLO ★</div><div class="ivl-title">'+K.t+'<small>'+K.tag+'</small></div><div class="ivl-hero">'+K.hero+'</div><div class="pp ivl-steps">'+K.steps.map((x,i)=>'<div class="rg-step"><span class="how-ic">'+(i+1)+'</span><div><b>'+x[0]+'</b><p>'+x[1]+'</p></div></div>').join('')+'</div><div style="flex:1"></div>'+sheet('SI GIOCA UN MINI-GIOCO','A metà partita, senza Megafono',crow(cta('Si parte')))+'</div>'}},
+ miMano:()=>({html:'<div class="B">'+ivlMeta()+phraseM()+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Chi ha fatto questa cosa? La scelta è segreta.',crow(tray(),cta('Gioca questa carta','','data-cta="play"')))+'</div>'}),
+ miVoto:()=>({html:'<div class="B">'+ivlMeta()+phraseM()+slotT(6,{sel:2})+sheet('CHI È IL COLPEVOLE?','Puoi votare anche la tua. Le più votate restano, le altre cadono.',crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
+ miRes:()=>({html:'<div class="B">'+ivlMeta()+'<div class="pp ivl-res"><b>Cosa resta sulla torre</b><div class="ivl-row">'+[1,3,0,1,0,1].map((v,i)=>'<div class="ivl-t '+(v===3?'in':'out')+'"><span class="th" style="background-image:var(--c'+i+')"><i>'+(i+1)+'</i></span><b>'+v+'</b><u>'+(v===3?'RESTA':'CADE')+'</u></div>').join('')+'</div></div><div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto in testa','Hanno votato il n. 2: tanti punti quanti i suoi voti, il proprio compreso.','',1,2,nm('Io',ME,'+3')+nm('Mara',COLS[2],'+3')+nm('Pino',COLS[3],'+3'))+pblk('Carta in testa ×2','Chi aveva giocato il n. 2 prende il doppio dei voti.','',1,2,nm('Gino',COLS[1],'+6'))+'</div></div><div style="flex:1"></div>'+sheet('FINE INTERVALLO','Si riprende con il turno 4',crow(tray(),cta('Continua ›')))+'</div>'}),
  /* FINE */
  final:(W,H)=>{let k=W/372,Hl=H/k;if(Hl<640){Hl=640;k=H/640}Hl=Math.min(Hl,940);const gy=Hl-112-3*37,top=Math.round(gy*k+8);
   const rows=[['Gino',21,2],['Mara',16,1],['Pino',16,2],['Dariaccio',8,3],['Lella',5,4],['Tito',3,5]];
@@ -1082,7 +1120,7 @@ const SCREENS={
  lui:[['lui0','Tocca la carta'],['lui1','Scegli il gettone'],['lui2','Visto dalla Folla'],['zoomL','Guarda bene la carta']],
  voto:[['voto6','Voto · 6 giocatori'],['voto8','Voto · 8 giocatori, frase lunga aperta'],['votoZ','Conferma dallo zoom'],['votoW','Voto inviato']],
  risultati:[['spoglio','Spoglio'],['caduta','Caduta: cade il n. 2'],['caduta2','Caduta: materassi'],['punti','Chi prende punti'],['classifica','Classifica del turno']],
- intervallo:[['miIntro','Annuncio'],['miMano','Scegli la carta'],['miVoto','Voto'],['miRes','Risultati']],
+ intervallo:[['miIntro:accusa','Annuncio: L’Accusa'],['miIntro:amore','Annuncio: La storia d’amore'],['miIntro:racc','Annuncio: Il raccomandato'],['miMano','Scegli la carta'],['miVoto','Voto'],['miRes','Risultati']],
  fine:[['final','Classifica finale']],
  finestre:[['mano+lui','Popup dei segnalini Lui!'],['mano+chat','Chat'],['voto6+rank','Classifica rapida'],['voto6+rules0','Regolamento: il turno'],['voto6+rules1','Regolamento: i punti'],['voto6+rules2','Regolamento: il Lui!'],['voto6+rules3','Regolamento: fine partita']]
 };
@@ -1090,6 +1128,7 @@ function build(key,W,H){
   let spec;
   if(key==='pick:open')spec=S.pick({open:2,sel:2});
   else if(key==='zoomL')spec=S.zoomc(W,H,'lui');
+  else if(key.startsWith('miIntro:'))spec=S.miIntro(key.slice(8));
   else if(key.includes('+')){const [b,o]=key.split('+');spec=S[b](W,H);spec.ov=o==='lui'?ovLui():o==='chat'?ovChat():o.startsWith('rules')?ovHow(+o.slice(5)):standings(H,ROWS,'Classifica','Turno 1 di 6',null);}
   else spec=S[key](W,H);
   return spec;
@@ -1097,7 +1136,7 @@ function build(key,W,H){
 function phone(key,label){
   const [w,h]=SIZES[size], z=Math.min(.62,250/w), spec=build(key,w,h);
   const inner=spec.raw?spec.raw:(spec.paper?paper:sky)+spec.html+(spec.ov||'')+fin;
-  return '<figure class="pw"><div class="pf" style="width:'+Math.round(w*z)+'px;height:'+Math.round(h*z)+'px"><button type="button" class="zbtn" aria-label="Apri a dimensione reale" data-zoom="1">⤢</button><div class="dev'+(spec.paper?' paper':'')+'" style="width:'+w+'px;height:'+h+'px;--fg:'+(h<700?14:22)+'px;transform:scale('+z+')">'+inner+'</div></div><figcaption class="cap">'+label+'</figcaption></figure>';
+  return '<figure class="pw"><div class="pf" style="width:'+Math.round(w*z)+'px;height:'+Math.round(h*z)+'px"><button type="button" class="zbtn" aria-label="Apri a dimensione reale" data-zoom="1">⤢</button><div class="dev'+(spec.paper?' paper':'')+(h<700?' short':'')+'" style="width:'+w+'px;height:'+h+'px;--fg:'+(h<700?14:22)+'px;--hh:'+(h<700?100:200)+'px;transform:scale('+z+')">'+inner+'</div></div><figcaption class="cap">'+label+'</figcaption></figure>';
 }
 function render(){
   document.querySelectorAll('[data-sec]').forEach(el=>{el.innerHTML=SCREENS[el.dataset.sec].map(s=>phone(s[0],s[1])).join('')});
