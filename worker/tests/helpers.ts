@@ -27,6 +27,7 @@ export function playToEnd(r: Room, now = 1_000_100, rand: () => number = Math.ra
     if (++guard > 5000) throw new Error("non termina");
     const g = r.core.data.game as GameState;
     if (g.phase === "RESULTS") { send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "advance" } }, now); continue; }
+    if (g.phase === "MINI_RESULTS") { send(r, 0, { t: "act", action: { type: "advance" } }, now); continue; }
     let done = false;
     for (const id of r.ids.slice().sort(() => rand() - 0.5)) {
       const a = suggestAction(g, id, rand); if (!a) continue;

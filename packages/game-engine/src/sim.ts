@@ -13,7 +13,7 @@ export function simulateGame(config: GameConfig, botSeed: number, opts: { checkE
   while (state.phase !== "GAME_OVER") {
     if (++guard > 5000) throw new Error("simulazione non termina");
     let action: Action | null = null;
-    if (state.phase === "RESULTS") action = { type: "advance" };
+    if (state.phase === "RESULTS" || state.phase === "MINI_RESULTS") action = { type: "advance" };
     else {
       const order = state.playerIds.slice().sort(() => rand() - 0.5); // ordine casuale = azioni "simultanee"
       for (const p of order) { action = suggestAction(state, p, rand); if (action) break; }

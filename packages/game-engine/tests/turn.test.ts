@@ -55,7 +55,7 @@ describe("fase di gioco delle carte", () => {
     g = act(g, { type: "playCard", playerId: "p2", cardId: g.hands.p2![0]! });
     err(() => applyAction(g, { type: "playCard", playerId: "p2", cardId: g.hands.p2![0]! }), "ALREADY_DONE");
     err(() => applyAction(g, { type: "vote", playerId: "p2", position: 1 }), "WRONG_PHASE");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", kind: "CADE", position: 1 }), "WRONG_PHASE");
+    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 1 }), "WRONG_PHASE");
   });
   it("la Torre non rivela nulla finché non hanno giocato tutti", () => {
     let g = act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free" });
@@ -68,12 +68,12 @@ describe("fase di gioco delle carte", () => {
 describe("segnalino Lui! e voto", () => {
   it("solo il Megafono posa il Lui!, su una posizione valida", () => {
     const g = toSuspect(start(4));
-    err(() => applyAction(g, { type: "placeLui", playerId: "p2", kind: "CADE", position: 1 }), "NOT_ALLOWED");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", kind: "CADE", position: 0 }), "INVALID_POSITION");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", kind: "CADE", position: 5 }), "INVALID_POSITION");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", kind: "BOH" as never, position: 1 }), "INVALID_CHOICE");
+    err(() => applyAction(g, { type: "placeLui", playerId: "p2", slot: "k1", position: 1 }), "NOT_ALLOWED");
+    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 0 }), "INVALID_POSITION");
+    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 5 }), "INVALID_POSITION");
+    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "BOH" as never, position: 1 }), "INVALID_CHOICE");
     err(() => applyAction(g, { type: "vote", playerId: "p2", position: 1 }), "WRONG_PHASE"); // non si vota prima del Lui!
-    expect(act(g, { type: "placeLui", playerId: "p1", kind: "NON_CADE", position: 2 }).phase).toBe("VOTE");
+    expect(act(g, { type: "placeLui", playerId: "p1", slot: "zero", position: 2 }).phase).toBe("VOTE");
   });
   it("tutti votano, Megafono incluso; si può votare la propria carta e quella del mazzo; niente doppi voti", () => {
     let g = toVote(start(4));

@@ -21,6 +21,7 @@ export default function Home() {
         <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 19, padding: 11 }}>Come si gioca</Btn>
       </div>
       <HomeTools />
+      <div className="credit" data-testid="credit">Un gioco di <b>D. Mansetti</b></div>
       {how && <HowTo onClose={() => setHow(false)} />}
     </Stage>
   );

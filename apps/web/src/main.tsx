@@ -2,6 +2,9 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./styles/app.css";
 import { loadCards } from "./lib/cards.ts";
+import { installAnimalDiscs } from "./lib/animals.ts";
+
+installAnimalDiscs();
 
 loadCards().finally(() => createRoot(document.getElementById("root")!).render(<App />));
 

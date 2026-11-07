@@ -21,7 +21,7 @@ describe("separazione dati pubblici e privati (vista per giocatore)", () => {
   it("durante la partita i proprietari delle carte in Torre sono nascosti; si svelano ai risultati", () => {
     const g = toSuspect(start(5));
     for (const p of g.playerIds) expect(viewFor(g, p).tower.every((t) => t.ownerId === null)).toBe(true);
-    const v = act(g, { type: "placeLui", playerId: "p1", kind: "CADE", position: 1 });
+    const v = act(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 1 });
     const f = posOf(v, "p2"), r = castVotes(v, Object.fromEntries(v.playerIds.map((p) => [p, f])));
     expect(viewFor(r, "p3").tower.some((t) => t.ownerId === "p2")).toBe(true);
   });
@@ -42,13 +42,14 @@ describe("separazione dati pubblici e privati (vista per giocatore)", () => {
     expect(v3.myVote).toBeNull(); expect(v3.votes).toBeNull();
     expect(v3.players.find((p) => p.id === "p2")!.hasVoted).toBe(true);
   });
-  it("il tipo di Lui! (CADE/NON CADE) lo conosce solo il Megafono finché non si risolve; la posizione è pubblica", () => {
-    const g = toVote(start(4), { kind: "NON_CADE", position: 2 });
-    expect(viewFor(g, "p1").luiKind).toBe("NON_CADE");
-    expect(viewFor(g, "p2").luiKind).toBeNull();
+  it("quale segnalino Lui! è stato posato lo conosce solo il Megafono finché non si risolve; la posizione è pubblica e i segnalini rimasti li vede solo il proprietario", () => {
+    const g = toVote(start(4), { slot: "zero", position: 2 });
+    expect(viewFor(g, "p1").luiSlot).toBe("zero");
+    expect(viewFor(g, "p2").luiSlot).toBeNull();
     expect(viewFor(g, "p2").luiPosition).toBe(2);
     const r = castVotes(g, { p1: 1, p2: 1, p3: 1, p4: 1 });
-    expect(viewFor(r, "p2").luiKind).toBe("NON_CADE");
+    expect(viewFor(r, "p2").luiSlot).toBe("zero"); expect(viewFor(r, "p1").myLuiLeft).not.toContain("zero"); expect(viewFor(r, "p3").myLuiLeft).toContain("zero");   // ognuno vede solo i propri
+    expect(JSON.stringify(viewFor(r, "p3"))).not.toContain("luiSpent");
     expect(viewFor(r, "p2").votes).toEqual({ p1: 1, p2: 1, p3: 1, p4: 1 });
   });
   it("un giocatore sconosciuto non ottiene mani", () => {

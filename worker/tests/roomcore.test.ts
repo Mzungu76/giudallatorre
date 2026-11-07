@@ -153,7 +153,7 @@ function playOneTurn(r: ReturnType<typeof makeRoom>) {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
   for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } });
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
   for (const id of r.ids) send(r, r.ids.indexOf(id), { t: "act", action: { type: "vote", position: 1 } });
 }
 
@@ -209,9 +209,9 @@ describe("schermo condiviso (sola visione)", () => {
     const g0 = r.core.data.game as GameState;
     playOneTurnTo(r, "VOTE");
     const msgs = r.core.spectatorMessages();
-    const view = msgs.find((m) => m.t === "view") as { view: { myHand: string[]; tower: { ownerId: string | null }[]; luiKind: string | null; votes: unknown } };
+    const view = msgs.find((m) => m.t === "view") as { view: { myHand: string[]; tower: { ownerId: string | null }[]; luiSlot: string | null; votes: unknown } };
     expect(view.view.myHand).toEqual([]); expect(view.view.tower.every((t) => t.ownerId === null)).toBe(true);
-    expect(view.view.luiKind).toBeNull(); expect(view.view.votes).toBeNull();
+    expect(view.view.luiSlot).toBeNull(); expect(view.view.votes).toBeNull();
     const json = JSON.stringify(msgs);
     for (const hand of Object.values((r.core.data.game as GameState).hands)) for (const c of hand) expect(json).not.toContain(`"${c}"`);
     expect(g0.turnNumber).toBe(1);
@@ -226,7 +226,7 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
   for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", kind: "CADE", position: 1 } });
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
   expect(upTo).toBe("VOTE");
 }
 
@@ -259,7 +259,7 @@ describe("giocatori virtuali nella stanza", () => {
       const g = core.data.game as GameState;
       const a = suggestAction(g, c.playerId, Math.random);
       if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; core.handle(c.playerId, { t: "act", action } as never, now); }
-      else if (g.phase === "RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
+      else if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") core.handle(c.playerId, { t: "act", action: { type: "advance" } }, now);
       now += 1500; core.tick(now);
     }
     expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(4000);

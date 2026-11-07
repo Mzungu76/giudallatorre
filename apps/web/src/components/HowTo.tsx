@@ -1,20 +1,36 @@
 import { Btn } from "../ui.tsx";
 
-export const HOWTO_STEPS: [string, string][] = [
-  ["📣", "Il Megafono urla una frase: “Oggi sale sulla torre chi…”. Ogni turno tocca a uno di voi."],
-  ["🃏", "La Folla (tutti gli altri) sceglie in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
-  ["🎯", "Il Megafono scommette col gettone Lui!: “Cade lui!” (+4 se cade) oppure “Non cade” (+1 se resta su). Se sbaglia: −1."],
-  ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre!"],
-  ["⭐", "Punti: +2 se hai votato quello caduto, +2 se era la tua carta. In caso di pareggio cadono tutte le carte a pari merito. Il Megafono prende anche +1 per ogni voto degli altri sulla carta che ha votato, cada o no: gli altri cercano di non votare come lui. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
+export const HOWTO_INTRO = [
+  "Da qualche parte, in un luogo talmente nascosto che persino i piccioni usano il GPS, svetta la mitica Torre del Giudizio Spicciolo. Fu costruita dopo una riunione del villaggio durata quattro giorni, in cui nessuno si mise d'accordo su niente, tranne su una cosa: buttare giù qualcuno quando serve.",
+  "Oggi la domanda è sempre quella: «Chi butteresti giù dalla torre oggi?». Qui si accusa, si vota in segreto e si ride del meraviglioso caos dei comportamenti umani. Tranquilli: sotto la torre ci sono i materassi.",
 ];
 
-/** Come si gioca, in 5 passi. Si apre dalla Home, e da solo alla prima partita su questo dispositivo. */
+export const HOWTO_STEPS: [string, string][] = [
+  ["📣", "Il Megafono urla una frase: «Oggi sale sulla torre chi…». Ogni turno tocca a uno di voi."],
+  ["🃏", "Tutti gli altri scelgono in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
+  ["🎯", "Le carte salgono sulla torre. Il Megafono mette un gettone Lui! su una carta, scommettendo su quanti voti prenderà dagli altri (anche zero!). Ogni partita ha 2 gettoni, uguali per tutti (sempre lo 0 e una soglia a caso), da usare una volta sola. I tuoi li vedi accanto al nome; quelli degli altri vanno ricordati!"],
+  ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre. In caso di pareggio decide il Megafono: se ha votato una delle carte pari merito cade la sua, altrimenti cadono tutte."],
+  ["⭐", "Si contano i punti e si passa il Megafono al giocatore dopo. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
+];
+
+export const HOWTO_POINTS: [string, string][] = [
+  ["+2", "hai votato un personaggio che cade"],
+  ["+2", "la carta che hai giocato cade"],
+  ["+4…16", "Megafono: il Lui! azzecca i voti scritti sul gettone (più è difficile, più paga)"],
+  ["0", "Megafono: Lui! mancato, non perde punti ma il gettone è speso"],
+];
+
+/** Come si gioca: introduzione, turno e punti. Si apre dalla Home, e da solo alla prima partita su questo dispositivo. */
 export default function HowTo({ onClose }: { onClose: () => void }) {
   return (
     <div className="zoom on" onClick={onClose} role="dialog" aria-label="Come si gioca" data-testid="howto">
       <div className="how" onClick={(e) => e.stopPropagation()}>
-        <h2>Come si gioca</h2>
+        <h2>Benvenuti!</h2>
+        <div className="how-intro" data-testid="howto-intro">{HOWTO_INTRO.map((t, i) => <p key={i}>{t}</p>)}</div>
+        <h3>Come si gioca</h3>
         <ol className="how-steps">{HOWTO_STEPS.map(([ic, t]) => <li key={ic}><span className="how-ic">{ic}</span><span>{t}</span></li>)}</ol>
+        <h3>Come si fanno punti</h3>
+        <ul className="how-pts">{HOWTO_POINTS.map(([p, t]) => <li key={t}><b className={p.startsWith("−") ? "neg" : ""}>{p}</b><span>{t}</span></li>)}</ul>
         <Btn onClick={onClose} testId="howto-close">Ho capito!</Btn>
       </div>
     </div>

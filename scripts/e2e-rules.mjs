@@ -15,18 +15,22 @@ await sleep(300);
 // chat
 await A.click('[data-testid="chat-open"]'); await A.fill('[data-testid="chat-input"]', "Ciao Bea, preparati a perdere"); await A.click('[data-testid="chat-send"]'); await sleep(500);
 check("la chat arriva all'altro giocatore con il contatore dei non letti", (await B.locator('[data-testid="chat-unread"]').textContent().catch(() => "")) === "1");
-await B.click('[data-testid="chat-open"]'); check("il messaggio è nel pannello", /preparati a perdere/.test(await B.locator('[data-testid="chat"]').innerText()));
+await B.click('[data-testid="chat-open"]', { force: true }); check("il messaggio è nel pannello", /preparati a perdere/.test(await B.locator('[data-testid="chat"]').innerText()));
 await B.fill('[data-testid="chat-input"]', "Vedremo 🐑"); await B.click('[data-testid="chat-send"]'); await sleep(400); await B.click('[data-testid="chat-close"]'); await A.click('[data-testid="chat-close"]');
 await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.waitForSelector('[data-testid="game"]')));
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
 async function step(p, name) {
-  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-go"]'); return true; }
+  if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
+  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
+  if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
+  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
   if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
-  if (await vis(p, "place-lui")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="place-lui"]'); return true; }
+  if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis(p, "confirm-vote")) {
     await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]');
     await p.click('[data-testid="confirm-vote"]'); return true; }
-  if (await vis(p, "reveal-panel")) { const t = await p.locator('[data-testid="reveal-panel"]').innerText(); if (/voto \d di \d/i.test(t)) seenReason = true; if (/chi prende punti/i.test(t)) sawMega = true; if (SHOTS && p === A && (globalThis.__n ?? 0) < 24 && t !== globalThis.__last) { globalThis.__last = t; await p.screenshot({ path: `${SHOTS}/rv${String(globalThis.__n = (globalThis.__n ?? 0) + 1).padStart(2, "0")}.png` }); } await p.click('[data-testid="reveal-next"]', { timeout: 1500 }).catch(() => {}); return true; }
+  if (await vis(p, "points-panel")) { sawMega = true; await sleep(2500); await p.click('[data-testid="points-continue"]', { timeout: 1500 }).catch(() => {}); return true; }
+  if (await vis(p, "reveal-panel")) { const t = await p.locator('[data-testid="reveal-panel"]').innerText(); if (/voto \d di \d/i.test(t)) seenReason = true; if (SHOTS && p === A && (globalThis.__n ?? 0) < 24 && t !== globalThis.__last) { globalThis.__last = t; await p.screenshot({ path: `${SHOTS}/rv${String(globalThis.__n = (globalThis.__n ?? 0) + 1).padStart(2, "0")}.png` }); } await p.click('[data-testid="reveal-next"]', { timeout: 1500 }).catch(() => {}); return true; }
   if (await vis(p, "skip")) { await p.click('[data-testid="skip"]', { timeout: 1500 }).catch(() => {}); return true; }
   if (await vis(p, "advance")) { await p.click('[data-testid="advance"]'); turns++; return true; }
   return false;

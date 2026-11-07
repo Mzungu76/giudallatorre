@@ -1,5 +1,5 @@
-import type { CardId, GameState, LuiKind, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
-import { megafonoOf, requiredPlayers } from "./engine.ts";
+import type { CardId, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
+import { luiAvailable, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Vista di un singolo giocatore: è l'UNICA cosa che il server invia al client. Nessun dato privato altrui. */
 export interface PlayerView {
@@ -14,12 +14,18 @@ export interface PlayerView {
   phrase: PhraseChoice | null;
   tower: { position: number; cardId: CardId; ownerId: PlayerId | null }[];
   luiPosition: number | null;
-  /** Il tipo del segnalino è noto solo al Megafono fino ai risultati. */
-  luiKind: LuiKind | null;
+  /** Quale segnalino è stato posato: noto solo al Megafono fino ai risultati. */
+  luiSlot: LuiSlot | null;
+  /** I 2 segnalini di questa partita (uguali per tutti) e quali ti restano: i segnalini degli altri non si vedono. */
+  luiTokens: LuiSpec[];
+  myLuiLeft: LuiSlot[];
   myVote: number | null;
   /** Tutti i voti, solo da RESULTS in poi. */
   votes: Record<PlayerId, number> | null;
   lastResult: TurnResult | null;
+  /** Mini-gioco di metà partita in corso (carta pescata e accusa, se c'è) e, a fine voto, il risultato. */
+  mini: { kind: MiniKind; cardId: CardId | null; text: string | null } | null;
+  miniResult: MiniResult | null;
   winners: PlayerId[] | null;
   goldenGoal: boolean;
   /** Giro corrente (1..rounds, oltre = spareggio), giri regolari e se il turno appena risolto chiude un giro. */
@@ -28,7 +34,7 @@ export interface PlayerView {
 }
 
 export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
-  const revealed = s.phase === "RESULTS" || s.phase === "GAME_OVER";
+  const revealed = s.phase === "RESULTS" || s.phase === "MINI_RESULTS" || s.phase === "GAME_OVER", inMini = s.phase.startsWith("MINI");
   const isMega = viewer === megafonoOf(s);
   return {
     viewerId: viewer, phase: s.phase, turn: s.turnNumber, totalTurns: s.totalTurns,
@@ -41,10 +47,12 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     phrase: s.phrase,
     tower: s.tower.map((t) => ({ position: t.position, cardId: t.cardId, ownerId: revealed ? t.ownerId : null })),
     luiPosition: s.lui ? s.lui.position : null,
-    luiKind: s.lui && (isMega || revealed) ? s.lui.kind : null,
+    luiSlot: s.lui && (isMega || revealed) ? s.lui.slot : null,
+    luiTokens: luiTokens(s), myLuiLeft: luiAvailable(s, viewer),
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
-    lastResult: revealed ? s.lastResult : null,
+    lastResult: revealed && !inMini ? s.lastResult : null,
+    mini: inMini && s.mini ? { ...s.mini } : null, miniResult: s.phase === "MINI_RESULTS" ? s.miniResult ?? null : null,
     winners: s.winners, goldenGoal: s.goldenGoal,
     round: Math.ceil(s.turnNumber / s.playerIds.length), rounds: s.rounds, roundEnd: s.phase === "RESULTS" && s.turnNumber % s.playerIds.length === 0,
     drawPileCount: s.drawPile.length, discardCount: s.discardPile.length,

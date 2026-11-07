@@ -5,6 +5,10 @@ import { registerTags } from "@gdt/game-engine";
 import type { PhraseCard } from "@gdt/game-engine";
 import tagsCards from "../../content/tags-personaggi.json";
 import tagsPhrases from "../../content/tags-frasi.json";
+import accuse from "../../content/accuse.json";
+
+/** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
+export const ACCUSE_DECK: string[] = (accuse as { testo: string }[]).map((a) => a.testo);
 
 /** 120 carte Personaggio (125 immagini nel PDF, ma 5 sono livelli sovrapposti a un'altra carta: vedi tools/fix_overlays.py) e 65 carte frasi: 50 da 5 frasi + 15 singole. */
 export const DECK: string[] = (manifest as { id: string; overlay_of?: string }[]).filter((m) => !m.overlay_of).map((m) => m.id);
@@ -14,4 +18,7 @@ export const PHRASE_DECK: PhraseCard[] = [
 ];
 
 /** Etichette nascoste per i giocatori virtuali (mai inviate ai client). */
-registerTags(tagsCards as Record<string, { tipo: string[]; temi: string[] }>, tagsPhrases as Record<string, { tipo: string[]; temi: string[] }>);
+registerTags(tagsCards as Record<string, { tipo: string[]; temi: string[] }>, {
+  ...(tagsPhrases as Record<string, { tipo: string[]; temi: string[] }>),
+  ...Object.fromEntries((accuse as { testo: string; tipo: string[]; temi: string[] }[]).map((a) => [a.testo, { tipo: a.tipo, temi: a.temi }])),
+});

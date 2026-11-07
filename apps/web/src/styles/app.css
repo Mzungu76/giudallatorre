@@ -430,3 +430,172 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .pt-zero{font:700 11px Nunito;color:#555;margin-top:3px;display:block}
 .flt.neg{color:#ffb4ab}
 @keyframes popin2{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+
+/* Megafono: una frase = un tocco; Lui! = tocca la carta e scegli il gettone */
+.opts{top:218px !important;bottom:84px;overflow-y:auto;padding:2px 3px 6px;gap:7px !important}
+.opts .opt{font-size:13px;padding:7px 36px 7px 10px;line-height:1.25}
+.opt-go{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;font-size:18px;opacity:.55}
+.opts .opt:active{transform:translateY(2px)}
+.lui-opts .lk{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 6px}
+.lui-opts .lk span{line-height:0}
+.linkbtn{background:none;border:0;color:#fff;font:800 12px Nunito;text-align:center;text-shadow:0 1px 0 #13224a,0 0 6px #13224a;padding:2px;cursor:pointer}
+
+/* resoconto punti: un blocco per motivo (chi + perché), non si salta */
+.pb{left:12px;right:12px;top:128px;bottom:58px;z-index:91;background:#fff7e0;color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 6px 0 #13224a,0 12px 0 #e8362b;padding:10px 12px;display:flex;flex-direction:column;gap:7px;overflow:hidden;animation:rvin .25s ease both}
+.pb-none{font:800 14px Nunito}
+.pb-blk{background:#fff;border:3px solid #13224a;border-radius:12px;padding:6px 8px;display:flex;flex-direction:column;gap:5px;animation:popin2 .35s ease-out both;box-shadow:0 3px 0 #13224a}
+.pb-blk.neg{border-color:#e8362b}
+.pb-h{display:flex;align-items:center;gap:8px}
+.pb-th{display:flex;gap:-4px;flex:none}
+.pb-c{position:relative;width:30px;height:44px;border-radius:5px;border:2px solid #13224a;background-size:cover;background-position:center;margin-right:-6px;box-shadow:1px 2px 0 #13224a}
+.pb-c i{position:absolute;left:-6px;top:-7px;width:16px;height:16px;border-radius:50%;background:#ffc72c;border:2px solid #13224a;font:400 10px/12px Anton;text-align:center;font-style:normal}
+.pb-tx{flex:1;display:flex;flex-direction:column;margin-left:8px;min-width:0}
+.pb-tx b{font:400 17px/1.05 Anton;text-transform:uppercase}
+.pb-tx small{font:700 11.5px/1.25 Nunito;opacity:.8}
+.pb-pts{font:400 22px Anton;color:#2a9d57;white-space:nowrap;text-align:right;line-height:1}
+.pb-blk.neg .pb-pts{color:#e8362b}
+.pb-who,.pb-sum>span{display:flex;flex-wrap:wrap;gap:5px}
+.pb-nm{display:inline-flex;align-items:center;gap:4px;background:#e7f6ea;border:2px solid #13224a;border-radius:99px;padding:1px 9px 1px 4px;font:800 12.5px Nunito}
+.pb-nm .dc{width:13px;height:13px;border-radius:50%;border:2px solid #13224a;display:inline-block}
+.pb-nm em{font:400 15px Anton;font-style:normal;color:#2a9d57;margin-left:2px}.pb-nm.neg em{color:#e8362b}
+.pb-sum{margin-top:auto;display:flex;flex-direction:column;gap:4px;border-top:3px dashed #13224a55;padding-top:6px;animation:popin2 .35s ease-out both}
+.pb-sum>b{font:400 15px Anton;text-transform:uppercase;color:#e8362b}
+
+/* nastro: titolo più compatto, così "?" e pulsanti non lo coprono */
+.strip{font-size:15px !important;letter-spacing:.08em !important}
+.legend2{left:auto !important;right:42px !important;top:72px !important}
+
+/* chat più visibile */
+.chatbtn{top:74px !important;left:6px !important;width:42px !important;height:42px !important;font-size:21px !important;line-height:1;z-index:23}
+.chatbtn i{min-width:22px !important;height:22px !important;border-radius:11px !important;font-size:12px !important;line-height:22px !important;right:-9px !important;top:-10px !important}
+.chatbtn.has{background:#ffc72c;animation:pulse 1s ease-in-out infinite}
+
+/* resoconto punti scorrevole, si chiude a mano */
+.pb{padding-bottom:8px !important}
+.pb-scroll{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:7px;padding:2px 2px 6px;-webkit-overflow-scrolling:touch}
+.pb-blk,.pb-sum{opacity:0;animation:popin2 .35s ease-out both}
+.pb-sum{margin-top:6px}
+.pb-go{flex:none;background:linear-gradient(#ffd24d,#f4a900);color:#13224a;border:3px solid #13224a;border-radius:14px;box-shadow:0 4px 0 #13224a;font:400 22px Anton;text-transform:uppercase;padding:9px;cursor:pointer}
+.pb-wait{flex:none;text-align:center;font:800 12px Nunito;opacity:.7}
+
+/* pulsanti sul nastro: a sinistra chat e ?, a destra suono e classifica */
+.legend2{right:auto !important;left:54px !important;top:84px !important}
+.trophybtn{position:absolute;top:72px;right:40px;z-index:22;width:28px;height:28px;border-radius:50%;border:3px solid #13224a;background:#ffc72c;box-shadow:2px 2px 0 #13224a;font-size:14px;line-height:22px;padding:0;cursor:pointer}
+.sheet.stand{max-height:80%;overflow-y:auto}
+.sr2{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:2px dashed #13224a33}
+.sr2 .rk{width:24px;text-align:center;font:400 18px Anton}
+.sr2 .nm{flex:1;font:800 14px Nunito;display:flex;flex-direction:column;gap:3px;color:#13224a}
+.sr2 .nm i{display:block;height:7px;border-radius:4px;background:#2a9d57}
+.sr2 b{font:400 24px Anton;min-width:34px;text-align:right;color:#13224a}
+
+.zoom.top{z-index:130 !important}.zoom.top .sheet{z-index:131}
+
+/* regolamento */
+.how{top:60px !important;max-height:calc(100% - 80px) !important}
+.how h3{font:400 18px/1 Anton;text-transform:uppercase;color:#13224a;margin:12px 0 7px;border-bottom:3px solid #13224a33;padding-bottom:3px}
+.how-intro{background:#fff7e0;border:2px dashed #13224a66;border-radius:12px;padding:8px 10px;font:italic 700 12.5px/1.4 Nunito;color:#13224a}
+.how-intro p{margin:0 0 6px}.how-intro p:last-child{margin:0}
+.how-pts{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:5px}
+.how-pts li{display:flex;gap:10px;align-items:center;font:800 13px/1.3 Nunito;color:#13224a}
+.how-pts b{flex:none;min-width:62px;text-align:center;background:#e7f6ea;color:#1c6b3c;border:2px solid #13224a;border-radius:99px;padding:1px 6px;font:400 16px Anton}
+.how-pts b.neg{background:#fde6e4;color:#b3261e}
+.credit{left:0;right:0;top:204px;text-align:center;font:400 22px/1 'Caveat Brush',cursive;color:#fff;text-shadow:2px 2px 0 #13224a,0 0 8px #13224a99;letter-spacing:.03em;z-index:30;pointer-events:none;transform:rotate(-2deg)}
+.credit b{font:400 24px 'Caveat Brush',cursive;color:#ffc72c}
+
+/* classifica: salita lungo la torre */
+.zoom.stbd{position:absolute;left:0;right:0;top:0;overflow:hidden;background:none;padding:0}
+.stbd-sky{position:absolute;inset:0;background:linear-gradient(#7cc4f0,#3f8fd0 55%,#2f6fb0)}
+.stbd-rays{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 38%,#ffffff26 0 6deg,transparent 6deg 12deg)}
+.stbd-title{position:absolute;left:0;right:0;top:16px;text-align:center;pointer-events:none}
+.stbd-title b{display:block;font:400 36px/1 Anton;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;text-transform:uppercase;letter-spacing:.04em}
+.stbd-title small{display:inline-block;margin-top:6px;background:#13224a;color:#ffc72c;border:2px solid #fff;border-radius:99px;padding:1px 12px;font:800 12px Nunito}
+.stbd-x{position:absolute;right:10px;top:12px;width:34px;height:34px;border-radius:50%;border:3px solid #13224a;background:#fff7e0;box-shadow:0 3px 0 #13224a;font:400 22px/26px Anton;padding:0;color:#13224a;z-index:5;cursor:pointer}
+.stbd-tower{position:absolute;left:calc(50% - 82px);width:164px}
+.stbd-merl{position:absolute;left:-6px;right:-6px;top:0;height:30px;display:flex;justify-content:space-between}
+.stbd-merl i{width:26px;height:30px;background:#e9cf94;border:4px solid #13224a;border-bottom:0;box-shadow:inset -5px 0 0 #c9a85f}
+.stbd-body{position:absolute;left:0;right:0;top:26px;bottom:0;border:5px solid #13224a;border-top-width:6px;
+  background:linear-gradient(90deg,#f3dda4 0,#e9cf94 30%,#e0c283 70%,#c9a35f 100%);
+  box-shadow:inset 0 0 0 3px #ffffff30}
+.stbd-body:before{content:"";position:absolute;inset:0;background:
+  repeating-linear-gradient(0deg,transparent 0 22px,#b9964f55 22px 24px),
+  repeating-linear-gradient(90deg,transparent 0 38px,#b9964f44 38px 40px)}
+.stbd-body:after{content:"";position:absolute;left:0;right:0;bottom:0;height:46px;background:linear-gradient(transparent,#3aa65588)}
+.stbd-door{position:absolute;left:calc(50% - 30px);width:60px;height:78px;bottom:0;background:#1d2740;border:5px solid #13224a;border-radius:30px 30px 0 0;z-index:1}
+.stbd-flag{position:absolute;left:calc(50% - 2px);width:4px;height:60px;background:#13224a}
+.stbd-flag i{position:absolute;left:4px;top:2px;width:44px;height:26px;background:#e8362b;border:3px solid #13224a;clip-path:polygon(0 0,100% 50%,0 100%)}
+.stbd-flag b{position:absolute;left:8px;top:6px;font:400 12px Anton;color:#fff}
+.stbd-tick{position:absolute;left:calc(50% - 96px);width:192px;height:0;border-top:4px solid #13224a;z-index:2}
+.stbd-tick:after{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:#8a5a3b;border-bottom:2px solid #13224a;opacity:.85}
+.stbd-tick span{position:absolute;left:-2px;top:-15px;min-width:38px;text-align:center;background:#ffe27a;border:3px solid #13224a;border-radius:9px;padding:0 4px;font:400 15px/20px Anton;color:#13224a;box-shadow:0 2px 0 #13224a;z-index:3}
+.stbd-tick.top span{background:#ffc72c;min-width:46px}
+.stbd-pawn{position:absolute;margin-left:-20px;z-index:6;animation:stup .8s cubic-bezier(.3,1.4,.5,1) both}
+.stbd-pawn .pawn{display:block;line-height:0;filter:drop-shadow(0 3px 0 #13224a66)}
+.stbd-crown{position:absolute;left:6px;top:-18px;font-style:normal;font-size:22px;z-index:2;filter:drop-shadow(0 2px 0 #13224a)}
+@keyframes stup{from{transform:translateY(70px);opacity:0}to{transform:none;opacity:1}}
+.stbd-tag{position:absolute;display:flex;align-items:center;gap:4px;background:#fff7e0;border:3px solid #13224a;border-radius:99px;padding:1px 7px 1px 4px;box-shadow:0 3px 0 #13224a;font:800 11.5px/1.2 Nunito;color:#13224a;z-index:7;max-width:104px}
+.stbd-tag.R{left:calc(50% + 96px)}.stbd-tag.L{right:calc(50% + 96px)}
+.stbd-tag span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60px}
+.stbd-tag b{font:400 17px Anton;margin-left:auto}
+.stbd-tag .dc{width:14px;height:14px;border-width:2px}
+.stbd-lead{position:absolute;height:0;border-top:3px dashed #ffffffcc;z-index:5}
+.stbd-lead.R{left:calc(50% + var(--dx) + 22px);width:calc(76px - var(--dx))}
+.stbd-lead.L{right:calc(50% - var(--dx) + 22px);width:calc(76px + var(--dx))}
+.stbd-ok{position:absolute;left:16px;right:16px;bottom:18px;background:linear-gradient(#ffd24d,#f4a900);color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 5px 0 #13224a;font:400 24px Anton;text-transform:uppercase;padding:10px;cursor:pointer;z-index:8}
+
+.stbd-grp{display:contents}
+
+/* mini-giochi: intervallo e carta pescata */
+.mi{position:absolute;inset:0;z-index:140;overflow:hidden;background:radial-gradient(circle at 50% 40%,#5a2a9a,#1c1048 70%);animation:mifade .3s ease both}
+.mi-rays{position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg,#ffffff1f 0 7deg,transparent 7deg 14deg);animation:mispin 24s linear infinite}
+.mi-curtain{position:absolute;top:0;bottom:0;width:52%;z-index:3;background:repeating-linear-gradient(90deg,#b3162a 0 18px,#8f0f20 18px 36px);box-shadow:inset -10px 0 30px #0008;pointer-events:none}
+.mi-curtain.l{left:0;animation:mil 1.1s .25s cubic-bezier(.6,0,.3,1) both}.mi-curtain.r{right:0;animation:mir 1.1s .25s cubic-bezier(.6,0,.3,1) both}
+@keyframes mil{to{transform:translateX(-102%)}}@keyframes mir{to{transform:translateX(102%)}}
+@keyframes mispin{to{transform:rotate(360deg)}}@keyframes mifade{from{opacity:0}to{opacity:1}}
+.mi-fl{position:absolute;bottom:-40px;z-index:2;animation:mifloat 5s linear infinite;opacity:.9}
+@keyframes mifloat{from{transform:translateY(0) rotate(0)}to{transform:translateY(-110vh) rotate(40deg)}}
+.mi-body{position:absolute;left:18px;right:18px;top:60px;bottom:30px;z-index:4;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;animation:mibody .6s 1s cubic-bezier(.3,1.5,.5,1) both}
+@keyframes mibody{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.mi-badge{background:#ffc72c;color:#13224a;border:3px solid #13224a;border-radius:99px;padding:3px 16px;font:400 16px Anton;letter-spacing:.14em;box-shadow:0 3px 0 #13224a;transform:rotate(-2deg)}
+.mi-ic{font-size:62px;line-height:1;filter:drop-shadow(0 5px 0 #0006);animation:mibounce 1.2s ease-in-out infinite}
+@keyframes mibounce{50%{transform:translateY(-8px) rotate(4deg)}}
+.mi h2{font:400 42px/1 Anton;color:#fff;text-transform:uppercase;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;margin:0}
+.mi-tag{margin:0;font:400 22px 'Caveat Brush',cursive;color:#ffe27a;text-shadow:2px 2px 0 #13224a}
+.mi ul{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:7px;text-align:left}
+.mi li{background:#fff7e0;color:#13224a;border:3px solid #13224a;border-radius:12px;padding:6px 10px 6px 30px;font:800 13.5px/1.3 Nunito;position:relative;box-shadow:0 3px 0 #13224a}
+.mi li:before{content:"★";position:absolute;left:9px;top:5px;color:#e8362b}
+.mi-go{margin-top:auto;width:100%;background:linear-gradient(#ffd24d,#f4a900);color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 5px 0 #13224a;font:400 28px Anton;text-transform:uppercase;padding:12px;cursor:pointer;animation:pulse 1.4s ease-in-out infinite}
+.mhead{left:12px;right:12px;top:122px;height:122px;z-index:18;display:flex;gap:10px;align-items:center;pointer-events:none}
+.mh-card{flex:none;position:relative;width:78px;height:117px;border-radius:9px;border:4px solid #fff;background-size:cover;background-position:center;box-shadow:0 5px 0 #13224a,0 0 0 3px #13224a;transform:rotate(-3deg)}
+.mh-card em{position:absolute;left:-6px;right:-6px;bottom:-12px;text-align:center;background:#13224a;color:#ffc72c;font:400 11px/1.5 Anton;text-transform:uppercase;letter-spacing:.05em;border:2px solid #fff;font-style:normal}
+.mh-bubble{position:relative;flex:1;background:#fff7e0;color:#13224a;border:4px solid #13224a;border-radius:16px;box-shadow:0 5px 0 #13224a;padding:8px 12px 9px}
+.mh-bubble:before{content:"";position:absolute;left:-14px;top:40px;border:9px solid transparent;border-right:12px solid #13224a}
+.mh-bubble small{display:block;font:400 17px/1 'Caveat Brush',cursive;color:#e8362b}
+.mh-bubble b{display:block;font:400 19px/1.1 Anton;text-transform:uppercase}
+.mhead.nocard{height:70px;top:122px;flex-direction:column;justify-content:center;align-items:center;background:#fff7e0;border:4px solid #13224a;border-radius:16px;box-shadow:0 5px 0 #13224a;color:#13224a;text-align:center;gap:2px}
+.mhead.nocard b{font:400 22px Anton;text-transform:uppercase}.mhead.nocard small{font:800 12px Nunito;opacity:.8}
+.stbd-wait{position:absolute;left:16px;right:16px;bottom:22px;text-align:center;background:#13224a;color:#fff;border:3px solid #fff;border-radius:14px;padding:12px;font:800 14px Nunito;z-index:8}
+
+/* segnalini Lui!: leggibili al volo */
+.lui-opts{gap:7px !important}
+.lui-opts .lk{padding:6px 4px 7px !important;gap:1px !important;min-width:0}
+.lui-opts .lk b{font:400 15px/1.05 Anton;text-transform:uppercase;color:#13224a}
+.lui-opts .lk small{font:800 11px Nunito !important;margin:0 !important}
+.lui-opts .lk.lui-k1{background:#e3f4ff !important}.lui-opts .lk.lui-k2{background:#ffe8cf !important}.lui-opts .lk.lui-k3{background:#ffdcd6 !important}.lui-opts .lk.lui-zero{background:#f0e3fb !important}
+.lui-opts .lk:disabled{opacity:.45;filter:grayscale(.8)}
+.tchips{display:inline-flex;gap:3px;vertical-align:middle}.tchip{display:inline-block;line-height:0}
+
+/* il gettone del Megafono lampeggia quando il suo voto decide un pareggio */
+.tbg{animation:tbg 0.7s ease-in-out infinite;z-index:80 !important}
+.tbg .tbbadge circle{fill:#fff59a;stroke:#e8362b}
+@keyframes tbg{0%,100%{filter:drop-shadow(0 0 0 #ffd24d);transform:scale(1)}50%{filter:drop-shadow(0 0 12px #ffe27a) drop-shadow(0 0 22px #ffd24d);transform:scale(1.28)}}
+
+/* i tuoi segnalini Lui! accanto al tuo nome */
+.chips .chip .nm{max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ltray{display:inline-flex;gap:2px;margin-left:3px;vertical-align:middle}
+.ltray .lt{display:inline-block;line-height:0}.ltray .lt.used{opacity:.35;filter:grayscale(1)}
+
+/* classifica che si aggiorna: le pedine salgono dal vecchio al nuovo punteggio */
+.stbd-pawn,.stbd-tag,.stbd-lead{transition:top 1.3s cubic-bezier(.45,.05,.3,1)}
+.stbd-tag b{transition:none}
+.stbd-d{position:absolute;right:-6px;top:-13px;background:#2a9d57;color:#fff;border:2px solid #13224a;border-radius:99px;padding:0 6px;font:400 13px/16px Anton;text-decoration:none;animation:popin2 .4s .3s ease-out both}
+.stbd-d.neg{background:#e8362b}
