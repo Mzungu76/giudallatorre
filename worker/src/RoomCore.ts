@@ -15,6 +15,10 @@ export interface RoomData {
   botMem: BotMemory; botAt: number | null;
   /** Messaggi tra i giocatori (ultimi CHAT_KEEP) e contatore per gli identificativi. */
   chat: ChatDto[]; chatSeq: number;
+  /** Da quando non c'è più nessun umano connesso (null = c'è qualcuno). Da qui parte il conto per chiudere la stanza. */
+  emptySince?: number | null;
+  /** Un giocatore è uscito di sua volontà a partita iniziata: se la stanza si svuota si chiude con il margine breve. */
+  leftExplicit?: boolean;
 }
 export interface Outbox {
   send: { to: string; msg: ServerMessage }[];
@@ -29,7 +33,7 @@ export class RoomError extends Error { constructor(public code: string, message:
 
 export const LIMITS = {
   maxPlayers: 8, minPlayers: 3,
-  hostGraceMs: 60_000, lobbyIdleMs: 20 * 60_000, playingIdleMs: 6 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
+  hostGraceMs: 60_000, lobbyIdleMs: 5 * 60_000, playingIdleMs: 45 * 60_000, maxLifeMs: 4 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
 };
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
 const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
@@ -40,7 +44,7 @@ export class RoomCore {
   readonly connected = new Set<string>();
   private lastChat = new Map<string, number>();
   constructor(public data: RoomData, private deps: Deps) {
-    data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0;
+    data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false;
   }
 
   static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; bots?: { count: number; level: BotLevel } }) {
@@ -83,17 +87,19 @@ export class RoomCore {
 
   // ---------- presenza ----------
   onConnect(playerId: string, now: number): Outbox {
-    this.connected.add(playerId); this.data.lastActivity = now;
+    this.connected.add(playerId); this.data.lastActivity = now; this.data.emptySince = null; this.data.leftExplicit = false;
     if (this.data.players.some((p) => p.id === playerId && p.isHost)) this.data.hostLostAt = null;
     const out = emptyOut(); out.send.push(...this.snapshot(playerId));
+    if (this.data.stage === "PLAYING" && this.data.botAt === null) { this.scheduleBots(now); out.persist = true; } // i bot riprendono quando torna un umano
     for (const p of this.data.players) if (p.id !== playerId && this.connected.has(p.id)) out.send.push({ to: p.id, msg: this.roomMsg(p.id) });
     return out;
   }
   onDisconnect(playerId: string, now: number): Outbox {
     this.connected.delete(playerId); this.data.lastActivity = now;
-    const d = this.data;
-    if (d.stage === "LOBBY" && d.players.some((p) => p.id === playerId && p.isHost)) d.hostLostAt = now; // periodo di tolleranza prima del passaggio di ruolo
-    return this.broadcastRoom({ ...emptyOut(), persist: d.hostLostAt === now });
+    const d = this.data; let persist = false;
+    if (d.stage === "LOBBY" && d.players.some((p) => p.id === playerId && p.isHost)) { d.hostLostAt = now; persist = true; } // periodo di tolleranza prima del passaggio di ruolo
+    if (this.connected.size === 0) { d.emptySince = now; d.botAt = null; persist = true; } // nessun umano: i bot si fermano e parte il conto per chiudere la stanza
+    return this.broadcastRoom({ ...emptyOut(), persist });
   }
   /** Passa il ruolo di host al primo giocatore connesso (più anziano). */
   private promoteHost(out: Outbox): boolean {
@@ -158,7 +164,7 @@ export class RoomCore {
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
       case "leave": {
-        if (d.stage !== "LOBBY") { out.close.push({ playerId, code: 1000, reason: "leave" }); return out; }
+        if (d.stage !== "LOBBY") { d.leftExplicit = true; out.persist = true; out.close.push({ playerId, code: 1000, reason: "leave" }); return out; }
         d.players = d.players.filter((p) => p.id !== playerId); this.connected.delete(playerId);
         out.close.push({ playerId, code: 1000, reason: "leave" });
         if (d.players.length === 0) { out.destroy = true; return out; }
@@ -204,10 +210,10 @@ export class RoomCore {
   // ---------- timer e pulizia ----------
   tick(now: number): Outbox & { alarmAt: number | null } {
     const d = this.data; let out: Outbox = emptyOut();
-    // pulizia stanze abbandonate / concluse
-    const idle = now - d.lastActivity, noOne = this.connected.size === 0;
-    if ((d.stage === "LOBBY" && noOne && idle > LIMITS.lobbyIdleMs) || (d.stage === "PLAYING" && noOne && idle > LIMITS.playingIdleMs) ||
-        (d.stage === "FINISHED" && d.finishedAt !== null && now - d.finishedAt > LIMITS.finishedMs)) {
+    // pulizia stanze abbandonate / concluse / troppo vecchie
+    const emptyAt = this.emptyAt(), grace = this.graceMs();
+    if ((emptyAt !== null && (d.stage === "LOBBY" || d.stage === "PLAYING") && now - emptyAt > grace) ||
+        (d.stage === "FINISHED" && d.finishedAt !== null && now - d.finishedAt > LIMITS.finishedMs) || now - d.createdAt > LIMITS.maxLifeMs) {
       out.destroy = true; return { ...out, alarmAt: null };
     }
     if (d.stage === "LOBBY" && d.hostLostAt !== null && now - d.hostLostAt >= LIMITS.hostGraceMs) {
@@ -242,17 +248,23 @@ export class RoomCore {
   /** Programma la prossima azione dei bot se ce n'è almeno una disponibile (ritardo umano: 0,9–2 s). */
   private scheduleBots(now: number) {
     const d = this.data;
-    if (d.stage !== "PLAYING" || !d.game || !d.players.some((p) => p.isBot)) { d.botAt = null; return; }
+    if (d.stage !== "PLAYING" || !d.game || !d.players.some((p) => p.isBot) || this.connected.size === 0) { d.botAt = null; return; }
     const g = d.game, any = d.players.some((p) => p.isBot && chooseBotAction(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null);
     if (!any) { d.botAt = null; return; }
     if (d.botAt === null) d.botAt = now + LIMITS.botMinMs + (new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296) * LIMITS.botJitterMs;
   }
+  /** Da quando la stanza è senza umani connessi (null se c'è qualcuno). Le stanze salvate prima di questo campo ripartono dall'ultima attività. */
+  private emptyAt(): number | null { return this.connected.size === 0 ? (this.data.emptySince ?? this.data.lastActivity) : null; }
+  /** Quanto si aspetta prima di chiudere una stanza vuota: poco in lobby o dopo un'uscita volontaria, di più a partita iniziata (telefoni in standby). */
+  private graceMs(): number { const d = this.data; return d.stage === "PLAYING" && !d.leftExplicit ? LIMITS.playingIdleMs : LIMITS.lobbyIdleMs; }
   nextAlarm(): number | null {
     const d = this.data; const c: number[] = [];
     if (d.botAt !== null) c.push(d.botAt);
     if (d.deadline !== null) c.push(d.deadline);
-    if (d.stage === "LOBBY") { c.push(d.lastActivity + LIMITS.lobbyIdleMs + 1000); if (d.hostLostAt !== null) c.push(d.hostLostAt + LIMITS.hostGraceMs); }
-    if (d.stage === "PLAYING") c.push(d.lastActivity + LIMITS.playingIdleMs + 1000);
+    const emptyAt = this.emptyAt();
+    if (d.stage === "LOBBY") { if (emptyAt !== null) c.push(emptyAt + this.graceMs() + 1000); if (d.hostLostAt !== null) c.push(d.hostLostAt + LIMITS.hostGraceMs); }
+    if (d.stage === "PLAYING" && emptyAt !== null) c.push(emptyAt + this.graceMs() + 1000);
+    c.push(d.createdAt + LIMITS.maxLifeMs + 1000);
     if (d.stage === "FINISHED" && d.finishedAt !== null) c.push(d.finishedAt + LIMITS.finishedMs + 1000);
     return c.length ? Math.min(...c) : null;
   }

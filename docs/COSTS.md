@@ -29,3 +29,9 @@ Hibernation API; nessun timer a polling (usare alarm solo per timeout); snapshot
 - **Durata**: con WebSocket Hibernation il tempo di attesa tra azioni non fattura durata; i ping `{"t":"ping"}` sono risposti dal runtime senza svegliare la stanza.
 - **Worker**: solo `/api/*` e `/ws/*` passano dal Worker; gli asset statici no (`run_worker_first` ristretto).
 - **Pulizia**: stanze vuote/inattive cancellate (`deleteAll`) → nessun accumulo di dati.
+
+## Chiusura delle stanze vuote (Worker)
+- Lobby senza umani connessi: si chiude dopo 5 minuti dall'ultima disconnessione. Partita iniziata senza umani: 45 minuti (5 se un giocatore è uscito di sua volontà). Partita finita: 30 minuti. Vita massima di una stanza: 4 ore.
+- I bot non agiscono se nessun umano è connesso e riprendono quando qualcuno torna.
+- Una scadenza già passata non deve mai restare tra le sveglie (`nextAlarm`): rimetterebbe in moto la stanza ogni 50 ms. Due casi reali erano costati ~24.000 richieste ciascuno (host disconnesso in una lobby con bot; umano connesso e fermo in lobby oltre il limite). Test di regressione in `worker/tests/roomcore.test.ts`.
+- Consumo misurato in simulazione: un'azione umana costa ~0,05 richieste (messaggi WebSocket 20:1); una sveglia dei bot costa 1 richiesta e copre le azioni di tutti i bot di quel momento.
