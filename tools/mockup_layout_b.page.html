@@ -190,10 +190,10 @@ table.t td b{color:var(--g-red)}
 <div class="wrap">
 <header class="top">
   <h1>Giù dalla Torre<br><em>Layout B, tutte le pagine</em></h1>
-  <p>La direzione scelta, applicata a ogni schermata dell'app. Grafica, colori e componenti restano quelli di oggi (ogni telefono è disegnato con il CSS reale). Cambia come sono disposti: via la barra in alto, un pannello fisso sotto il pollice, segnalini Lui!, chat e classifica sempre a portata, frasi che si aprono e si chiudono da sole.</p>
+  <p>La direzione scelta, applicata a ogni schermata dell'app, con la grafica aggiornata dalla PR #9 (personaggi illustrati, segnalini al posto dei dischetti, scena finale con la torre). Grafica, colori e componenti restano quelli di oggi (ogni telefono è disegnato con il CSS reale). Cambia come sono disposti: via la barra in alto, un pannello fisso sotto il pollice, segnalini Lui!, chat e classifica sempre a portata, frasi che si aprono e si chiudono da sole.</p>
 </header>
 <nav class="toc" aria-label="Sezioni">
-  <a href="#cosa">Cosa cambia</a><a href="#accesso">Accesso</a><a href="#lobby">Lobby</a><a href="#megafono">Megafono</a><a href="#folla">Carta</a><a href="#lui">Lui!</a><a href="#voto">Voto</a><a href="#risultati">Risultati</a><a href="#intervallo">Intervallo</a><a href="#fine">Fine</a><a href="#finestre">Finestre</a><a href="#domande">Da decidere</a>
+  <a href="#cosa">Cosa cambia</a><a href="#accesso">Accesso</a><a href="#lobby">Lobby</a><a href="#inizio">Personaggio</a><a href="#megafono">Megafono</a><a href="#folla">Carta</a><a href="#lui">Lui!</a><a href="#voto">Voto</a><a href="#risultati">Risultati</a><a href="#intervallo">Intervallo</a><a href="#fine">Fine</a><a href="#finestre">Finestre</a><a href="#domande">Da decidere</a>
 </nav>
 
 <section class="blk" id="cosa">
@@ -215,14 +215,15 @@ table.t td b{color:var(--g-red)}
 
 <section class="blk" id="accesso"><h2><small>1</small>Accesso</h2><div class="rowph" data-sec="accesso"></div></section>
 <section class="blk" id="lobby"><h2><small>2</small>Lobby</h2><div class="rowph" data-sec="lobby"></div></section>
-<section class="blk" id="megafono"><h2><small>3</small>Il Megafono sceglie la frase</h2><div class="rowph" data-sec="megafono"></div></section>
-<section class="blk" id="folla"><h2><small>4</small>La Folla sceglie la carta</h2><div class="rowph" data-sec="folla"></div></section>
-<section class="blk" id="lui"><h2><small>5</small>Lui! del Megafono</h2><div class="rowph" data-sec="lui"></div></section>
-<section class="blk" id="voto"><h2><small>6</small>Voto in segreto</h2><div class="rowph" data-sec="voto"></div></section>
-<section class="blk" id="risultati"><h2><small>7</small>Spoglio, caduta e punti</h2><div class="rowph" data-sec="risultati"></div></section>
-<section class="blk" id="intervallo"><h2><small>8</small>Intervallo (mini-gioco)</h2><div class="rowph" data-sec="intervallo"></div></section>
-<section class="blk" id="fine"><h2><small>9</small>Fine partita</h2><div class="rowph" data-sec="fine"></div></section>
-<section class="blk" id="finestre"><h2><small>10</small>Finestre che si aprono dal pannello</h2><div class="rowph" data-sec="finestre"></div></section>
+<section class="blk" id="inizio"><h2><small>3</small>Inizio partita: il tuo personaggio</h2><div class="rowph" data-sec="inizio"></div></section>
+<section class="blk" id="megafono"><h2><small>4</small>Il Megafono sceglie la frase</h2><div class="rowph" data-sec="megafono"></div></section>
+<section class="blk" id="folla"><h2><small>5</small>La Folla sceglie la carta</h2><div class="rowph" data-sec="folla"></div></section>
+<section class="blk" id="lui"><h2><small>6</small>Lui! del Megafono</h2><div class="rowph" data-sec="lui"></div></section>
+<section class="blk" id="voto"><h2><small>7</small>Voto in segreto</h2><div class="rowph" data-sec="voto"></div></section>
+<section class="blk" id="risultati"><h2><small>8</small>Spoglio, caduta e punti</h2><div class="rowph" data-sec="risultati"></div></section>
+<section class="blk" id="intervallo"><h2><small>9</small>Intervallo (mini-gioco)</h2><div class="rowph" data-sec="intervallo"></div></section>
+<section class="blk" id="fine"><h2><small>10</small>Fine partita</h2><div class="rowph" data-sec="fine"></div></section>
+<section class="blk" id="finestre"><h2><small>11</small>Finestre che si aprono dal pannello</h2><div class="rowph" data-sec="finestre"></div></section>
 
 <section class="blk" id="domande">
   <h2><small>Prossimi passi</small>Da decidere</h2>
@@ -241,7 +242,7 @@ const D = /*__DATA__*/;
 const SIZES = { full:[390,844], safari:[390,664], small:[360,640] };
 const TODAY = { full:{top:251,scene:389,bot:204}, safari:{top:256,scene:206,bot:202}, small:{top:230,scene:222,bot:188} };
 let size = 'full';
-const ME='#e5384b', COLS=['#e5384b','#2f7be0','#f4c20d','#3aa655','#8a5a3b','#8e44c8','#ee7bb0','#222222'];
+const COLS=D.colors, ME=COLS[0];
 const NAMES=['Io','Bot Gino','Bot Mara','Bot Pino','Bot Lella','Bot Tito'];
 const P1={tag:'NEI SOGNI',pre:'Oggi sale sulla torre…',body:'CHI HA SOGNATO DI VOLARE E SI È SVEGLIATO CON IL NASO SULLA PARETE.'};
 const P2={tag:'SUI MEZZI E IN ASCENSORE',pre:'Oggi sale sulla torre…',body:'CHI HA SCOREGGIATO IN ASCENSORE E HA GUARDATO L’ALTRO CON ARIA OFFESA.'};
@@ -296,6 +297,7 @@ const S={
  how:()=>({html:'<div class="B"></div>',ov:'<div class="ovl zoom on"><div class="how"><h2>Benvenuti!</h2><div class="how-intro">'+D.howIntro.map(t=>'<p>'+t+'</p>').join('')+'</div><h3>Come si gioca</h3><ol class="how-steps">'+D.howSteps.map(([i,t])=>'<li><span class="how-ic">'+i+'</span><span>'+t+'</span></li>').join('')+'</ol><h3>Come si fanno punti</h3><ul class="how-pts">'+D.howPts.map(([p,t])=>'<li><b>'+p+'</b><span>'+t+'</span></li>').join('')+'</ul>'+cta('Ho capito!')+'</div></div>'}),
  /* LOBBY */
  lobby:()=>({html:'<div class="B"><div class="meta" style="align-items:center;margin-top:18px"><span class="chip nb" style="text-shadow:none;color:#13224a">Lobby · 6/8</span><button type="button" class="ibtn s" data-open="chat" aria-label="Chat">💬<i class="bdg">1</i></button></div><div class="pp codepanel"><img class="qr" src="'+D.qr+'" width="84" height="84" alt="QR code"><div><div class="cap2">Codice</div><div class="code-big">442V6</div><a class="lnk" role="button" tabindex="0">Condividi il link</a></div></div><div class="plist2">'+NAMES.map((n,i)=>'<div class="pl"><i class="dc" style="background:'+COLS[i]+'"></i><span class="nmx">'+(i?n.replace('Bot ',''):'Io (tu)')+'</span>'+(i?'<span class="bot-tag">BOT</span>':'<span class="tg">HOST</span>')+'</div>').join('')+'<div class="pl em" style="grid-column:1/-1">In attesa di altri giocatori…</div></div><div class="pp shb"><span class="grip"></span><div class="opts-row"><label>Timer <select aria-label="Timer"><option>nessuno</option><option>30 s</option><option>60 s</option></select></label><span style="font:800 11.5px Nunito;opacity:.75">Bot: difficile</span></div>'+cta('Avvia partita')+'<div class="lnks"><a class="lnk" role="button" tabindex="0" style="color:#13224a;text-shadow:none">Schermo condiviso</a><a class="lnk" role="button" tabindex="0" style="color:#13224a;text-shadow:none">Esci dalla stanza</a></div></div></div>'}),
+ chi:(W,H)=>({html:'<div class="B"></div>',ov:'<div class="chi ovl" style="height:'+H+'px"><div class="stbd-sky"></div><div class="stbd-rays"></div><div class="chi-t"><small>Il tuo personaggio</small><b>'+D.charNames[2]+'</b></div><img class="chi-card" src="'+D.charCard+'" alt="'+D.charNames[2]+'" style="animation:none;transform:rotate(-2deg);top:'+Math.round(Math.min(104,H*.12))+'px"><div class="chi-s" style="bottom:96px"><img src="'+D.tok[2]+'" width="44" height="44" alt=""><span>'+D.charBlurb[2]+'.<br>Questo segnalino userai per votare.</span></div><button type="button" class="stbd-ok">Ci sono!</button></div>'}),
  /* MEGAFONO */
  pick:(o={})=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+'<div class="meta" style="margin:6px 14px 0;font:400 28px/1 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;letter-spacing:0;display:block"><small style="display:block;font:400 20px/1 \'Caveat Brush\';text-shadow:2px 2px 0 #13224a;transform:rotate(-1.5deg);margin-bottom:3px;text-transform:none">Sei il Megafono!</small>Tocca la frase da urlare</div><div class="scene" style="place-items:start center"><div class="opts2">'+OPTS.map((x,i)=>'<div class="opt'+(i===(o.sel??1)?' on':'')+(o.open===i?' open static':'')+'" data-pick="1"><span class="opt-ctx">'+x[0]+'</span><span class="tx">'+x[1]+'</span><button type="button" class="ex" data-toggle-opt="1" aria-label="Leggi tutta la frase">▾</button><i class="tbar"></i></div>').join('')+'</div></div>'+sheet('SCEGLI LA FRASE','Tocca per scegliere, ▾ per leggerla tutta',crow(cta('Dico la mia','pap sm'),cta('Proclama!','red','data-cta="proc"')))+'</div>'}),
  own:()=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+'<div class="scene" style="place-items:start center"><div class="opts2" style="gap:10px"><div class="meta" style="margin:6px 0 0;font:400 28px/1 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;display:block"><small style="display:block;font:400 20px/1 \'Caveat Brush\';text-transform:none;text-shadow:2px 2px 0 #13224a">Una frase tutta tua</small>Inventala!</div><div class="phr-opts"><div class="phr-fixed" style="color:#fff;text-shadow:2px 2px 0 #13224a">Oggi sale sulla torre…</div><textarea class="phr-in" aria-label="La tua frase" placeholder="…chi ha la scusa più creativa">…chi ha detto “arrivo tra cinque minuti” da un’ora</textarea><div class="hint" style="text-align:right;margin:0">52/120</div><label class="hint" style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox"> La dico solo a voce (non la scrivo)</label></div></div></div>'+sheet('UNA FRASE TUA','Scrivila o dilla a voce',crow(cta('Torna alle frasi','pap sm'),cta('Proclama!','red')))+'</div>'}),
@@ -326,12 +328,15 @@ const S={
  miVoto:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+'<div class="mhead"><div class="mh-card" style="background-image:var(--c4)"><em>L’accusatore</em></div><div class="mh-bubble" data-toggle="open"><small>Accusa:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b></div></div>'+slotT(6,{sel:2})+sheet('CHI È IL COLPEVOLE?','Puoi votare anche la tua carta. Le più votate restano, le altre cadono.',crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
  miRes:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+slotT(6,{sel:2,max:.8})+'<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto in testa','Hanno votato la carta in testa (n. 2): tanti punti quanti i voti su quella carta.','',1,2,nm('Io',ME,'+3')+nm('Mara',COLS[2],'+3')+nm('Pino',COLS[3],'+3'))+pblk('Carta in testa ×2','Chi aveva giocato una carta in testa prende il doppio dei voti.','',1,2,nm('Gino',COLS[1],'+6'))+pblk('Tetto ai punti','Nessuno guadagna più di 6 punti in un mini-gioco.','',0,0,'',1)+'</div></div>'+sheet('DOPO IL MINI-GIOCO','',crow(tray(),cta('Continua ›')))+'</div>'}),
  /* FINE */
- final:()=>({html:'<div class="B">'+D.conf.map(c=>'<i class="confetti" style="left:'+c[0]+'px;top:'+c[1]+'px;width:'+c[2]+'px;height:'+c[3]+'px;background:'+c[4]+';transform:rotate('+c[5]+'deg)"></i>').join('')+'<div class="h final-h"><small>Ha vinto…</small>Gran<br>Megafono!</div><div class="pod"><div class="pod-1" style="height:118px"><i class="dc xl" style="background:'+COLS[1]+'"></i>Gino<span style="font-size:24px">18</span></div><div class="pod-0" style="height:150px"><span style="font-size:30px">👑</span><i class="dc xl" style="background:'+COLS[0]+'"></i>Io<span style="font-size:30px">22</span></div><div class="pod-2" style="height:90px"><i class="dc xl" style="background:'+COLS[2]+'"></i>Mara<span style="font-size:22px">15</span></div></div><div class="rank">'+[['Pino',4,12,3],['Lella',5,9,4],['Tito',6,7,5]].map(r=>'<div class="pl"><b class="num">'+r[1]+'</b><i class="dc" style="background:'+COLS[r[3]]+'"></i>'+r[0]+'<span class="tg">'+r[2]+'</span></div>').join('')+'</div>'+sheet('FINE PARTITA','Complimenti a tutti!',crow(cta('Esci','pap sm'),cta('Nuova partita','','style="font-size:20px"')))+'</div>'}),
+ final:(W,H)=>{let k=W/372,Hl=H/k;if(Hl<640){Hl=640;k=H/640}Hl=Math.min(Hl,940);const gy=Hl-112-3*37,top=Math.round(gy*k+8);
+  const rows=[['Gino',21,2],['Mara',16,1],['Pino',16,2],['Dariaccio',8,3],['Lella',5,4],['Tito',3,5]];
+  return {html:'<div class="B" style="z-index:5"><img class="fall" src="'+D.fin[size]+'" alt="Scalata finale: il vincitore in cima alla torre" style="object-position:50% 0"><div class="fin-rank" style="position:absolute;left:14px;right:14px;top:'+top+'px;animation:none">'+rows.map((r,i)=>'<div class="fin-row'+(i===0?' win':'')+'"><b class="num">'+(i+1)+'</b><i class="dc" style="background:'+COLS[i]+'"></i><span>'+r[0]+'</span><u>'+r[1]+'</u></div>').join('')+'</div><div style="flex:1"></div><div class="pp shb" style="padding:10px"><div class="crow"><button type="button" class="ibtn" data-open="chat" aria-label="Chat">💬<i class="bdg">2</i></button><button type="button" class="ibtn" data-open="rank" aria-label="Classifica">🏆</button>'+cta('Esci','pap sm')+cta('Nuova partita','','style="font-size:18px"')+'</div></div></div>'}},
 };
 /* finestre: telefono con partita sotto e overlay aperto */
 const SCREENS={
  accesso:[['home','Home'],['crea','Crea partita'],['entra','Entra con un codice'],['how','Come si gioca']],
  lobby:[['lobby','Lobby (host)']],
+ inizio:[['chi','Il tuo personaggio (PR #9)']],
  megafono:[['pick','Scegli la frase (selezionata)'],['pick:open','Frase aperta, si richiude da sola'],['own','Frase tutta mia'],['wmega','Attesa del Megafono']],
  folla:[['mano','Scegli la carta'],['manoOpen','Frase aperta (6 s)'],['zoomc','Carta a schermo intero'],['wplay','Carta giocata, attesa']],
  lui:[['lui0','Tocca la carta'],['lui1','Scegli il gettone'],['lui2','Visto dalla Folla'],['zoomL','Guarda bene la carta']],
