@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { cardUrl } from "../lib/characters.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
+import type { UiCtl } from "./BUi.tsx";
 
 export interface FinalRow { id: string; name: string; color: string; score: number }
 const OFFS = [0, 1, -1, 2, -2, 3, -3, 4];
@@ -9,7 +10,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, onLeave, onNew }: { rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew }: { rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST ? 3 : 0), [inst, setInst] = useState(FAST), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -84,9 +85,15 @@ export default function FinalScene({ rows, winners, sound, readOnly, onLeave, on
         </div>
       )}
       {done && !readOnly && (
-        <div className="bottom two" onClick={(e) => e.stopPropagation()}>
-          <button className="bt pap" style={{ fontSize: 18 }} onClick={onLeave} data-testid="leave-final">Esci</button>
-          <button className="bt mus" style={{ fontSize: 19 }} onClick={onNew}>Nuova partita</button>
+        <div className="pp bsheet finsheet" onClick={(e) => e.stopPropagation()}>
+          <div className="bcrow">
+            {ui && <>
+              <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? `Chat, ${ui.unread} messaggi nuovi` : "Chat"} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
+              <button className="bib big" onClick={ui.rank} aria-label="Classifica" data-testid="standings-btn">🏆</button>
+            </>}
+            <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">Esci</button>
+            <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>Nuova partita</button>
+          </div>
         </div>
       )}
     </div>

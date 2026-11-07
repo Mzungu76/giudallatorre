@@ -18,18 +18,19 @@ await pages[0].click('[data-testid="start"]'); await Promise.all(pages.map((p) =
 let sShot = false; const t0 = Date.now(); let sawResults = false;
 async function step(p) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
+  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
-  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
-  if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
+  if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); await p.click('[data-testid="phrase-go"]'); return true; }
+  if (await vis(p, "hand")) { await p.locator('[data-testid="hand-card-0"]').dispatchEvent("click"); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="3"]').dispatchEvent("click"); if (!sShot) { await sleep(400); await p.screenshot({ path: `${SHOTS}/20-otto-torre.png` }); sShot = true; } await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis(p, "confirm-vote")) { await p.locator(`button.hit[data-pos="${1 + Math.floor(Math.random() * 8)}"]`).dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "skip")) { if (!sawResults) { await sleep(3300); await p.screenshot({ path: `${SHOTS}/21-otto-caduta.png` }); sawResults = true; } await p.click('[data-testid="skip"]'); return true; }
   return false;
 }
-while (Date.now() - t0 < 120_000 && !(await vis(pages[0], "result-panel"))) { let a = false; for (const p of pages) { try { if (await step(p)) a = true; } catch { /* */ } } if (!a) await sleep(100); }
-check("tutti e 8 vedono i risultati del primo turno", (await Promise.all(pages.map((p) => vis(p, "result-panel")))).filter(Boolean).length >= 7);
+while (Date.now() - t0 < 120_000 && !(await vis(pages[0], "points-panel"))) { let a = false; for (const p of pages) { try { if (await step(p)) a = true; } catch { /* */ } } if (!a) await sleep(100); }
+let seenRes = 0; for (let i = 0; i < 40 && seenRes < 7; i++) { for (const p of pages) { try { await step(p); } catch { /* */ } } seenRes = (await Promise.all(pages.map((p) => vis(p, "points-panel")))).filter(Boolean).length; if (seenRes < 7) await sleep(250); }
+check("tutti e 8 vedono i risultati del primo turno", seenRes >= 7);
 await pages[0].screenshot({ path: `${SHOTS}/22-otto-punti.png` });
 check("nessun errore JavaScript", pages.every((p) => p.errors.length === 0), JSON.stringify(pages.map((p) => p.errors)));
 await browser.close(); console.log(failures ? `\n${failures} falliti` : "\nTutti i controlli superati"); process.exit(failures ? 1 : 0);

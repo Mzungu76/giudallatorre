@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-import { Stage, Btn, Chips, Toast, navigate } from "../ui.tsx";
+import { Stage, Btn, Toast, navigate } from "../ui.tsx";
 import { createRoom, joinRoom, errText } from "../lib/api.ts";
 import type { BotLevel } from "../lib/api.ts";
 import { saveSession, loadSession, lastNickname, rememberNickname } from "../lib/session.ts";
@@ -19,41 +19,43 @@ export function CreateScreen() {
   }
   return (
     <Stage testId="create">
-      <Chips left={<a onClick={() => navigate("/")} role="button" tabIndex={0}>‹ Indietro</a>} />
-      <form onSubmit={submit}>
-        <div className="fscroll">
-        <div className="h r" style={{ top: 70 }}><small>Prima di salire…</small>Crea la partita</div>
-        <div className="fld" style={{ top: 196 }}>
-          <label className="lb" htmlFor="nick">Il tuo nickname</label>
-          <input id="nick" className="in" data-testid="nick" value={nick} maxLength={16} autoComplete="nickname" onChange={(e) => setNick(e.target.value)} placeholder="Es. Marta" />
+      <form className="fpage" onSubmit={submit}>
+        <div className="fhead">
+          <button type="button" className="bib big" onClick={() => navigate("/")} aria-label="Indietro">‹</button>
+          <div className="h r"><small>Prima di salire…</small>Crea la partita</div>
         </div>
-        <div className="fld" style={{ top: 292 }}>
-          <span className="lb">Come si gioca?</span>
-          <div className="seg">
-            <button type="button" className={`bt ${mode === "table" ? "mus on" : "pap"}`} onClick={() => setMode("table")} data-testid="mode-table">Stesso tavolo</button>
-            <button type="button" className={`bt ${mode === "remote" ? "mus on" : "pap"}`} onClick={() => setMode("remote")} data-testid="mode-remote">A distanza</button>
+        <div className="fbody">
+          <div className="fld">
+            <label className="lb" htmlFor="nick">Il tuo nickname</label>
+            <input id="nick" className="in" data-testid="nick" value={nick} maxLength={16} autoComplete="nickname" onChange={(e) => setNick(e.target.value)} placeholder="Es. Marta" />
           </div>
-          <div className="hint">{mode === "table" ? "Tutti insieme, ognuno col proprio telefono. Un tablet o un PC può fare da schermo condiviso." : "Ognuno da casa sua: serve una chiamata o una chat per scherzare a voce."}</div>
-        </div>
-        <label className="pp opt-pp" style={{ top: 470 }}>
-          <input type="checkbox" checked={sa} onChange={(e) => setSa(e.target.checked)} data-testid="mega-sa" />
-          <span className={`sw ${sa ? "on" : ""}`} aria-hidden />
-          <span><b>Il Megafono sa</b><small>Il Megafono gioca una carta dalla sua mano invece di pescarla. Più strategia, meno caos.</small></span>
-        </label>
-        <div className="fld" data-testid="bots-box">
-          <span className="lb">Giocatori virtuali (bot)</span>
-          <div className="seg">
-            <button type="button" className="bt pap" onClick={() => setBots(Math.max(0, bots - 1))} aria-label="Meno bot" data-testid="bots-minus">−</button>
-            <div className="bt pap" style={{ flex: 2, pointerEvents: "none" }} data-testid="bots-count">{bots === 0 ? "Nessuno" : `${bots} bot`}</div>
-            <button type="button" className="bt pap" onClick={() => setBots(Math.min(7, bots + 1))} aria-label="Più bot" data-testid="bots-plus">+</button>
+          <div className="fld">
+            <span className="lb">Dove giocate?</span>
+            <div className="seg">
+              <button type="button" className={`bt ${mode === "table" ? "mus on" : "pap"}`} onClick={() => setMode("table")} data-testid="mode-table">Stesso tavolo</button>
+              <button type="button" className={`bt ${mode === "remote" ? "mus on" : "pap"}`} onClick={() => setMode("remote")} data-testid="mode-remote">A distanza</button>
+            </div>
+            <div className="hint">{mode === "table" ? "Ognuno ha il proprio telefono. Un tablet o un PC può fare da schermo condiviso." : "Ognuno da casa: serve una chiamata o una chat per parlare."}</div>
           </div>
-          {bots > 0 && <div className="seg" style={{ marginTop: 6 }}>
-            {([["easy", "Facile"], ["medium", "Medio"], ["hard", "Difficile"]] as const).map(([k, l]) => <button key={k} type="button" className={`bt ${level === k ? "mus on" : "pap"}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`} style={{ fontSize: 14 }}>{l}</button>)}
-          </div>}
-          <div className="hint">{bots === 0 ? "Se siete in pochi, aggiungi bot per arrivare ad almeno 3 giocatori. Potrai cambiarli anche nella lobby." : "I bot giocano a carte coperte e votano come un avversario vero. Con 2 bot e te la partita parte subito."}</div>
+          <label className="pp opt-pp">
+            <input type="checkbox" checked={sa} onChange={(e) => setSa(e.target.checked)} data-testid="mega-sa" />
+            <span className={`sw ${sa ? "on" : ""}`} aria-hidden />
+            <span><b>Il Megafono sa</b><small>Il Megafono gioca una carta della sua mano invece di pescarla.</small></span>
+          </label>
+          <div className="fld" data-testid="bots-box">
+            <span className="lb">Bot</span>
+            <div className="seg cnt">
+              <button type="button" className="bt pap" onClick={() => setBots(Math.max(0, bots - 1))} aria-label="Meno bot" data-testid="bots-minus">−</button>
+              <div className="bt pap" style={{ pointerEvents: "none" }} data-testid="bots-count">{bots === 0 ? "Nessuno" : `${bots} bot`}</div>
+              <button type="button" className="bt pap" onClick={() => setBots(Math.min(7, bots + 1))} aria-label="Più bot" data-testid="bots-plus">+</button>
+            </div>
+            {bots > 0 && <div className="seg">
+              {([["easy", "Facile"], ["medium", "Medio"], ["hard", "Difficile"]] as const).map(([k, l]) => <button key={k} type="button" className={`bt ${level === k ? "mus on" : "pap"}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`} style={{ fontSize: 15 }}>{l}</button>)}
+            </div>}
+            <div className="hint">I bot giocano come avversari veri. In tutto servono almeno 3 giocatori.</div>
+          </div>
         </div>
-        </div>
-        <Btn type="submit" disabled={busy || !nick.trim()} style={{ position: "absolute", left: 16, right: 16, bottom: 24, zIndex: 30 }} testId="create-submit">{busy ? "Creo…" : "Crea e invita gli amici"}</Btn>
+        <div className="fbot"><Btn type="submit" disabled={busy || !nick.trim()} testId="create-submit">{busy ? "Creo…" : "Crea partita"}</Btn></div>
       </form>
       <Toast text={err} />
     </Stage>
@@ -74,23 +76,25 @@ export function JoinScreen({ initialCode }: { initialCode: string }) {
   }
   return (
     <Stage testId="join">
-      <Chips left={<a onClick={() => navigate("/")} role="button" tabIndex={0}>‹ Indietro</a>} />
-      <form onSubmit={submit}>
-        <div className="fscroll">
-        <div className="h r" style={{ top: 70 }}><small>Hai il codice?</small>Entra in partita</div>
-        <div className="fld" style={{ top: 196 }}>
-          <label className="lb" htmlFor="code">Codice partita</label>
-          <input id="code" className="in code" data-testid="code" value={code} onChange={(e) => setCode(clean(e.target.value))} placeholder="TORRE" autoCapitalize="characters" autoComplete="off" inputMode="text" />
+      <form className="fpage" onSubmit={submit}>
+        <div className="fhead">
+          <button type="button" className="bib big" onClick={() => navigate("/")} aria-label="Indietro">‹</button>
+          <div className="h r"><small>Hai un codice?</small>Entra in partita</div>
         </div>
-        <div className="fld" style={{ top: 310 }}>
-          <label className="lb" htmlFor="nick">Il tuo nickname</label>
-          <input id="nick" className="in" data-testid="nick" value={nick} maxLength={16} onChange={(e) => setNick(e.target.value)} placeholder="Es. Giulia" />
+        <div className="fbody">
+          <div className="fld">
+            <label className="lb" htmlFor="code">Codice partita</label>
+            <input id="code" className="in code" data-testid="code" value={code} onChange={(e) => setCode(clean(e.target.value))} placeholder="TORRE" autoCapitalize="characters" autoComplete="off" inputMode="text" />
+          </div>
+          <div className="fld">
+            <label className="lb" htmlFor="nick">Il tuo nickname</label>
+            <input id="nick" className="in" data-testid="nick" value={nick} maxLength={16} onChange={(e) => setNick(e.target.value)} placeholder="Es. Giulia" />
+          </div>
         </div>
-        <div className="fld" style={{ top: 420 }}>
-          <a className="lnk" onClick={() => code.length === 5 && navigate(`/schermo/${code}`)} role="button" tabIndex={0} data-testid="open-display">Sono un tablet o un PC: apri lo schermo condiviso</a>
+        <div className="fbot">
+          <a className="lnk" onClick={() => code.length === 5 && navigate(`/schermo/${code}`)} role="button" tabIndex={0} data-testid="open-display">Apri lo schermo condiviso (tablet o PC)</a>
+          <Btn type="submit" disabled={busy || code.length !== 5 || !nick.trim()} testId="join-submit">{busy ? "Entro…" : "Entra"}</Btn>
         </div>
-        </div>
-        <Btn type="submit" disabled={busy || code.length !== 5 || !nick.trim()} style={{ position: "absolute", left: 16, right: 16, bottom: 24, zIndex: 30 }} testId="join-submit">{busy ? "Entro…" : "Entra"}</Btn>
       </form>
       <Toast text={err} />
     </Stage>

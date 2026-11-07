@@ -28,8 +28,8 @@ function calcDims(maxScale: number): StageDims {
   let k = Math.max(0.3, Math.min(maxScale, window.innerWidth / 372)), H = vh / k;
   if (H < 640) { H = 640; k = vh / 640; }
   H = Math.min(H, 940);
-  // La torre (alta ~310 nel disegno, dal punto 300) deve stare tra la frase in alto e il suggerimento in basso: si rimpicciolisce se serve.
-  const T0 = 254, avail = H - 206 - T0, ts = clamp(avail / 310, 0.7, 1), y0 = T0 + Math.max(0, (avail - 310 * ts) / 2);
+  // Layout B: la terrazza (alta ~392 nel disegno, dal punto 278) sta tra la frase in alto (~102) e il pannello in basso (~196), la torre prosegue sotto.
+  const T0 = 102, avail = H - 196 - T0, ts = clamp(avail / 392, 0.72, 1), y0 = T0 + 22 * ts;
   return { k, H, dy: clamp((H - 826) * 0.6, -80, 70), ts, ty: y0 - 300 };
 }
 export function useAdaptive(maxScale = 1.5): StageDims {
