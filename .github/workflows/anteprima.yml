@@ -1,0 +1,35 @@
+name: Anteprima
+# Pubblica una COPIA separata del gioco (Worker "giu-dalla-torre-anteprima", con le sue stanze) a ogni aggiornamento di una pull request.
+# Non tocca il gioco vero. Funziona solo se i segreti Cloudflare sono configurati (vedi docs/DEPLOYMENT.md) e solo per PR dello stesso repository.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+concurrency:
+  group: anteprima-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  anteprima:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Controllo segreti
+        id: sec
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then echo "ok=false" >> "$GITHUB_OUTPUT"; echo "Segreti Cloudflare assenti: anteprima saltata."; else echo "ok=true" >> "$GITHUB_OUTPUT"; fi
+      - name: Build frontend
+        if: steps.sec.outputs.ok == 'true'
+        run: npm run build
+      - name: Pubblica l'anteprima
+        if: steps.sec.outputs.ok == 'true'
+        run: npx wrangler deploy --name giu-dalla-torre-anteprima
+      - name: Indirizzo
+        if: steps.sec.outputs.ok == 'true'
+        run: echo "Anteprima pubblicata: https://giu-dalla-torre-anteprima.giudallatorre.workers.dev" | tee -a "$GITHUB_STEP_SUMMARY"
