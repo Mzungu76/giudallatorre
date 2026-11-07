@@ -270,6 +270,7 @@ table.t td b{color:var(--g-red)}
   <h1>Giù dalla Torre<br><em>Layout B, tutte le pagine</em></h1>
   <p>Il layout B applicato a ogni schermata, con la grafica aggiornata dalla PR #9 (personaggi illustrati, segnalini, scena finale con la torre). Cambia solo la disposizione: niente barra in alto, un pannello fisso sotto il pollice, segnalini Lui!, chat e classifica sempre a portata, frasi che si aprono e si chiudono da sole. Ogni telefono usa il CSS reale dell'app.</p>
 </header>
+<div class="rowph" data-sec="hero" style="padding-top:4px"></div>
 <nav class="toc" aria-label="Sezioni">
   <a href="#cosa">Cosa cambia</a><a href="#accesso">Accesso</a><a href="#lobby">Lobby</a><a href="#inizio">Personaggio</a><a href="#megafono">Megafono</a><a href="#folla">Carta</a><a href="#lui">Lui!</a><a href="#voto">Voto</a><a href="#risultati">Risultati</a><a href="#intervallo">Intervallo</a><a href="#fine">Fine</a><a href="#finestre">Finestre</a><a href="#domande">Da decidere</a>
 </nav>
@@ -428,6 +429,7 @@ const S={
 };
 /* finestre: telefono con partita sotto e overlay aperto */
 const SCREENS={
+ hero:[['mano','Scegli la carta'],['voto6','Voto'],['lui1','Lui! del Megafono'],['mano+lui','Segnalini Lui!'],['mano+chat','Chat']],
  accesso:[['home','Home'],['crea','Crea partita'],['entra','Entra con un codice'],['how','Come si gioca']],
  lobby:[['lobby','Lobby (host)']],
  inizio:[['chi','Il tuo personaggio (PR #9)']],
