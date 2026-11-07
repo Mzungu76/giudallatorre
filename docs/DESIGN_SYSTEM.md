@@ -36,3 +36,6 @@ Illustrazioni 320×480: ottime fino a ~150 px CSS, morbide a tutto schermo. Prot
 - **Intermezzi**: striscioni a ogni cambio fase ("Scegliete la carta!", "Votate!", "Spareggio!"…).
 - **Layout adattivo**: larghezza logica 372, altezza logica 640–940 in base allo schermo (`ui.tsx`, `Stage`, `useStage`): i bottoni stanno ancorati in basso, la scena si sposta in verticale e la frase si riduce sugli schermi bassi. Provato a 360×640, 390×844 e 412×915.
 - **Modalità veloce**: `?fast=1` (o "riduci animazioni" del sistema) salta salita, spoglio e caduta; è usata dai test automatici.
+
+## Personaggi, carte e segnalini (illustrati)
+Gli otto giocatori sono otto personaggi (`public/giocatori/`): `card-N.webp` (carta giocatore), `tok-N.webp` (segnalino tondo), `torre.webp` (torre della schermata finale). Il colore del giocatore (`CHAR_COLORS` in `lib/characters.ts`) decide la coppia carta/segnalino; a inizio partita ognuno vede il proprio personaggio (`CharIntro`). Tutti i dischetti `.dc`, i gettoni di voto e le pedine della torre usano il segnalino. Il segnalino del Megafono ha il megafono in alto a sinistra e l'icona di spareggio "=" in alto a destra (a metà fuori dal bordo; lampeggia quando lo spareggio è usato). La schermata finale (`FinalScene`) usa la torre illustrata e le carte dei giocatori: salgono, il primo butta giù le altre sui materassi.

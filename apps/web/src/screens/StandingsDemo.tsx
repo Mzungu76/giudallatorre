@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CharIntro from "../components/CharIntro.tsx";
 import FinalScene from "../components/FinalScene.tsx";
 import { Stage } from "../ui.tsx";
 import { Terrace } from "../components/Terrace.tsx";
@@ -30,4 +31,10 @@ export function FinalDemo() {
   const rows = s.map((x, i) => ({ id: "p" + i, name: names[i]!, color: PLAYER_COLORS[i]!, score: x })).sort((a, b) => b.score - a.score);
   const top = rows[0]!.score;
   return <Stage bg="sky"><FinalScene rows={rows} winners={new Set(rows.filter((r) => r.score === top).map((r) => r.id))} sound={false} onLeave={() => undefined} onNew={() => undefined} /></Stage>;
+}
+
+/** Solo sviluppo: /__personaggio?c=2 mostra la schermata «Il tuo personaggio». */
+export function CharDemo() {
+  const c = +(new URLSearchParams(location.search).get("c") ?? "0");
+  return <Stage bg="sky"><CharIntro color={PLAYER_COLORS[c % 8]!} onClose={() => undefined} /></Stage>;
 }

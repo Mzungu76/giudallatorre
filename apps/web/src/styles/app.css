@@ -659,3 +659,18 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .fin-row.win{background:#ffd24d}
 .fin-rank:has(.fin-row:nth-child(3):last-child){grid-template-columns:1fr}
 .fin .bottom{position:absolute}
+.fin-tower{position:absolute;z-index:2;max-width:none;pointer-events:none}
+.fin-card{display:block;filter:drop-shadow(0 2px 0 #13224a)}
+.fin-fig.climbing .fin-in{animation:finSway .5s ease-in-out infinite alternate}
+@keyframes finSway{from{transform:rotate(-5deg)}to{transform:rotate(5deg) translateY(-3px)}}
+.fin-fig.cheer .fin-in{transform-origin:50% 100%;animation:finCheer .6s ease-in-out infinite}
+@keyframes finCheer{0%,100%{transform:scale(1.15) translateY(0)}50%{transform:scale(1.15) translateY(-7px)}}
+.fin-crown{top:-18px}
+.chi{position:absolute;left:0;right:0;top:0;z-index:90;overflow:hidden}
+.chi-t{position:absolute;left:0;right:0;top:20px;text-align:center}
+.chi-t small{display:block;font:400 20px/1.1 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 #13224a}
+.chi-t b{display:block;font:400 40px/1 Anton;color:#fff;text-transform:uppercase;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a}
+.chi-card{position:absolute;left:50%;top:104px;width:min(236px,calc(100% - 100px));margin-left:calc(min(236px,calc(100% - 100px)) / -2);filter:drop-shadow(0 6px 0 #13224a);animation:chiIn .7s cubic-bezier(.3,1.4,.5,1) both;transform-origin:50% 100%}
+@keyframes chiIn{from{opacity:0;transform:rotate(-14deg) scale(.4) translateY(80px)}to{opacity:1;transform:rotate(-2deg)}}
+.chi-s{position:absolute;left:18px;right:18px;bottom:96px;display:flex;align-items:center;gap:10px;background:#fff7e0;border:3px solid #13224a;border-radius:16px;padding:8px 12px;box-shadow:0 4px 0 #13224a;font:800 13px/1.3 Nunito;color:#13224a}
+.chi-s img{flex:none;filter:drop-shadow(0 2px 0 #13224a88)}
