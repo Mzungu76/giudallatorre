@@ -1,6 +1,6 @@
 {
  "fonte": "Carte_frasi.docx",
- "nota": "Revisione sezione A (docs/REVISIONE_FRASI.md): plurale «salgono». Gli originali sono in content/originali/ e nel campo frasi_originali. | Frasi riscritte (v3): scene concrete, assurde e imbarazzanti (registro “stamattina ha fatto la cacca sul bidet per sbaglio”). Le originali del documento restano in `frasi_originali`.",
+ "nota": "Revisione sezione A (docs/REVISIONE_FRASI.md): plurale «salgono». Gli originali sono in content/originali/ e nel campo frasi_originali. | Frasi v4: tenute quelle segnate e modificate dall'utente; le altre riscritte (irriverente, satira religiosa e di genere leggera, umorismo nero lieve, mai volgare). Le originali restano in `frasi_originali`.",
  "carte": [
   {
    "id": "frasi-01",
@@ -8,10 +8,10 @@
    "tema": "Bagno e figuracce del corpo",
    "frasi": [
     "Oggi sale sulla torre chi stamattina ha fatto la cacca sul bidet per sbaglio.",
-    "Oggi sale sulla torre chi è rimasto chiuso nello sgabuzzino credendo fosse il bagno.",
-    "Oggi sale sulla torre chi ha usato lo spazzolino del coniuge “solo una volta” e non lo ha mai detto.",
-    "Oggi sale sulla torre chi ha scoperto che il rotolo era finito quando era già troppo tardi.",
-    "Oggi salgono sulla torre quelli che hanno scoperto di avere il pigiama sotto i vestiti davanti al capo."
+    "Oggi sale sulla torre chi ha usato il phon per asciugare il gatto e ora il gatto fa il pappagallo.",
+    "Oggi sale sulla torre chi ha usato lo spazzolino del coniuge “per pulire il bagno una volta” e non lo ha mai detto.",
+    "Oggi sale sulla torre chi ha finito il rotolo di carta igienica per dispetto e non lo ha cambiato.",
+    "Oggi salgono sulla torre quelli che hanno scoperto di avere il pigiama sotto i vestiti solo davanti al capo."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi mette l’ananas sulla pizza.",
@@ -27,9 +27,9 @@
    "numero": 2,
    "tema": "Figuracce in pubblico",
    "frasi": [
-    "Oggi sale sulla torre chi ha baciato la persona sbagliata e ha continuato per educazione.",
-    "Oggi sale sulla torre chi è caduto dal marciapiede e ha detto “tutto previsto”.",
-    "Oggi sale sulla torre chi ha urlato “ti amo!” al telefono in vivavoce, in sala d’attesa.",
+    "Oggi sale sulla torre chi ha baciato la persona sbagliata e ha continuato \"per educazione\".",
+    "Oggi sale sulla torre chi è inciampato sul marciapiede e ha fatto finta di fare yoga.",
+    "Oggi sale sulla torre chi ha urlato “cambiati le mutande!” al telefono in sala d’attesa alle poste.",
     "Oggi sale sulla torre chi ha fatto un rutto durante il minuto di silenzio.",
     "Oggi salgono sulla torre quelli che hanno applaudito da soli alla fine del film, in una sala vuota."
    ],
@@ -50,8 +50,8 @@
     "Oggi sale sulla torre chi ha ordinato il piatto più piccante per fare colpo e ha pianto in silenzio.",
     "Oggi sale sulla torre chi ha sputato un osso di pollo nel tovagliolo del vicino.",
     "Oggi sale sulla torre chi ha mangiato mezza decorazione del piatto, ed era di plastica.",
-    "Oggi sale sulla torre chi ha chiesto al cameriere il bagno e ha aperto la porta della cucina.",
-    "Oggi salgono sulla torre quelli che hanno lasciato di mancia “siete gentilissimi” e due euro in spiccioli."
+    "Oggi sale sulla torre chi ha fatto il segno della croce davanti al conto.",
+    "Oggi salgono sulla torre quelli che hanno lasciato di mancia “siete gentilissimi” e due spiccioli."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi lascia il rotolo finito, così.",
@@ -70,8 +70,8 @@
     "Oggi sale sulla torre chi ha premuto tutti i bottoni dell’ascensore “per vedere cosa succede”.",
     "Oggi sale sulla torre chi ha scoreggiato in ascensore e ha guardato l’altro con aria offesa.",
     "Oggi sale sulla torre chi si è addormentato sul treno e ha sbavato sulla spalla di uno sconosciuto.",
-    "Oggi sale sulla torre chi ha urlato “fermata!” e poi è rimasto seduto, offeso con tutti.",
-    "Oggi salgono sulla torre quelli che hanno risposto “presente!” al controllore, per vedere l’effetto."
+    "Oggi sale sulla torre chi ha preso il posto riservato agli invalidi, e quando lo hanno fatto notare ha zoppicato.",
+    "Oggi salgono sulla torre quelli che hanno fatto una preghiera in treno e il treno è arrivato in orario: è un miracolo."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi entra senza far scendere nessuno.",
@@ -89,9 +89,9 @@
    "frasi": [
     "Oggi sale sulla torre chi ha pianto più della sposa e non conosceva nessuno dei due.",
     "Oggi sale sulla torre chi ha preso il bouquet con una scivolata da calciatore.",
-    "Oggi sale sulla torre chi ha fatto un brindisi di quaranta minuti e il testimone dormiva.",
+    "Oggi sale sulla torre chi al compleanno del nonno ha fatto quaranta brindisi solo per bere vino.",
     "Oggi sale sulla torre chi ha ricevuto una chiamata al funerale con la suoneria da discoteca.",
-    "Oggi salgono sulla torre quelli che hanno chiesto agli sposi “e il figlio?” durante il taglio della torta."
+    "Oggi salgono sulla torre quelli che hanno pregato per gli sposi e per il buffet, in quest’ordine."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi dice “sto arrivando” dal divano.",
@@ -107,11 +107,11 @@
    "numero": 6,
    "tema": "Suoceri e parenti",
    "frasi": [
-    "Oggi sale sulla torre chi ha chiamato la suocera “mamma” per sbaglio e poi è scappato in cucina.",
-    "Oggi sale sulla torre chi ha detto “che buono!” a un piatto che non ha assaggiato.",
-    "Oggi sale sulla torre chi ha dimenticato il nome del cane dei suoceri e lo ha chiamato “bello”.",
-    "Oggi sale sulla torre chi ha raccontato un segreto di famiglia alla persona sbagliata.",
-    "Oggi salgono sulla torre quelli che hanno regalato alla suocera “Come essere meno insopportabili”."
+    "Oggi sale sulla torre chi ha chiamato la suocera “mamma” per sbaglio e lei ha risposto “finalmente”.",
+    "Oggi sale sulla torre chi ha fatto il segno della croce davanti alla lasagna della suocera.",
+    "Oggi sale sulla torre chi ha detto alla zia “è buonissima” e ne ha preso un’altra porzione per punizione.",
+    "Oggi sale sulla torre chi ha detto “che bella casa!” e ha toccato tutto con le dita unte.",
+    "Oggi sale sulla torre la Suocera, quella con la S maiuscola."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi cerca gli occhiali mentre li indossa.",
@@ -125,13 +125,13 @@
   {
    "id": "frasi-07",
    "numero": 7,
-   "tema": "Primo appuntamento",
+   "tema": "Appuntamenti e cuori infranti",
    "frasi": [
-    "Oggi sale sulla torre chi ha mandato il messaggio d’amore alla persona sbagliata, la capa.",
-    "Oggi sale sulla torre chi ha parlato dell’ex per un’ora e poi ha chiesto “e tu?”.",
-    "Oggi sale sulla torre chi ha ordinato la pizza con le cipolle e ha provato a baciare.",
-    "Oggi sale sulla torre chi ha fatto finta di conoscere il vino e ne ha chiesto uno “molto rosso”.",
-    "Oggi salgono sulla torre quelli che hanno diviso il conto al centesimo, bacio compreso."
+    "Oggi sale sulla torre chi ha mandato per sbaglio foto compromettenti alla zia suora.",
+    "Oggi sale sulla torre chi ha fatto vedere le foto del gatto morto al primo bacio.",
+    "Oggi sale sulla torre chi ha baciato in fronte la ragazza, come un cardinale.",
+    "Oggi sale sulla torre chi ha scritto alla cugina “ti penso” e non era la cugina.",
+    "Oggi salgono sulla torre quelli che hanno detto “sei come una sorella per me” per vent’anni e poi si sono sposati."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi usa il mouse come saponetta.",
@@ -148,9 +148,9 @@
    "tema": "Riunioni e ufficio",
    "frasi": [
     "Oggi sale sulla torre chi si è dimenticato il microfono acceso ed è andato in bagno.",
-    "Oggi sale sulla torre chi ha fatto la domanda più lunga della storia e poi ha detto “lasciamo stare”.",
-    "Oggi sale sulla torre chi ha risposto “tutti” alla domanda “chi ha mangiato la mia merenda?”.",
-    "Oggi sale sulla torre chi ha mandato la mail “ti odio” al capo invece che alla sorella.",
+    "Oggi sale sulla torre chi ha dichiarato “sono un team player” e si è mangiato tutta la focaccia del team.",
+    "Oggi sale sulla torre chi ha mandato un cuore al capo per sbaglio, e il capo ha risposto con un altro.",
+    "Oggi sale sulla torre chi ha fatto il segno della croce prima di aprire la mail del direttore.",
     "Oggi salgono sulla torre quelli che hanno nascosto un panino nel cassetto per sei mesi: ora serve un esorcista."
    ],
    "frasi_originali": [
@@ -167,11 +167,11 @@
    "numero": 9,
    "tema": "Palestra, che sofferenza",
    "frasi": [
-    "Oggi sale sulla torre chi ha mollato il manubrio sul piede di un altro: “scusa, era pesante”.",
-    "Oggi sale sulla torre chi ha usato l’asciugamano di un altro per la faccia e poi lo ha rimesso a posto.",
+    "Oggi sale sulla torre chi ha lanciato il manubrio da 25 kg sul piede di quello grosso ed è da un po' che non lo vediamo.",
+    "Oggi sale sulla torre chi ha usato l’asciugamano del vicino per sbaglio per asciugarsi la faccia e poi lo ha rimesso a posto. Lui non lo sa, ma era quello del bidet.",
     "Oggi sale sulla torre chi ha urlato come in una finale olimpica per sollevare quattro chili.",
-    "Oggi sale sulla torre chi è scivolato sul tapis roulant e ha chiesto a tutti “è andata bene?”.",
-    "Oggi salgono sulla torre quelli che hanno scambiato la macchina per l’adduttore con una panca."
+    "Oggi sale sulla torre chi è stato scaraventato dal tapis roulant a tre metri di distanza gridando:\"correre fa beneeeeee!!!\"",
+    "Oggi salgono sulla torre quelli che hanno fatto un selfie nello spogliatoio, con alle spalle un signore nudo."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi ha visto applaudire un microonde.",
@@ -187,11 +187,11 @@
    "numero": 10,
    "tema": "Spiaggia e vacanze",
    "frasi": [
-    "Oggi sale sulla torre chi si è addormentato in spiaggia e si è cotto da un lato solo, come una bistecca.",
-    "Oggi sale sulla torre chi ha urlato “squalo!” per vedere se qualcuno veniva a salvarlo.",
-    "Oggi sale sulla torre chi ha perso il costume in acqua e ha chiesto aiuto a un bambino.",
-    "Oggi sale sulla torre chi ha fatto il bagno di mezzanotte e il giorno dopo non ricordava nulla.",
-    "Oggi salgono sulla torre quelli che hanno messo la crema ovunque tranne che sulla schiena e ora sono una grigliata."
+    "Oggi sale sulla torre chi ha messo la crema solo sulla faccia e ora ha un cappello bianco e il resto rosso.",
+    "Oggi sale sulla torre chi ha confuso il cartello “pericolo meduse” con una promozione.",
+    "Oggi sale sulla torre chi ha fatto un castello di sabbia e ci ha vissuto il resto della vacanza.",
+    "Oggi sale sulla torre chi si è sbagliato e ha salutato una famiglia di sconosciuti sulla spiaggia, ha fatto un picnic con loro.",
+    "Oggi salgono sulla torre quelli che hanno fatto il bagno al tramonto e ora dicono “siamo stati nel Mar Rosso”, ed era il rosso dell’insolazione."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi promette di andare in palestra lunedì e poi ordina pizza.",
@@ -207,11 +207,11 @@
    "numero": 11,
    "tema": "Social e telefono",
    "frasi": [
-    "Oggi sale sulla torre chi ha messo like per sbaglio a una foto di tre anni fa dell’ex.",
-    "Oggi sale sulla torre chi ha scritto “ok” a un messaggio che diceva “è morto il mio criceto”.",
-    "Oggi sale sulla torre chi ha inviato il vocale con la voce da imitazione al capo.",
-    "Oggi sale sulla torre chi si è fotografato in bagno e ha lasciato una cosa in primo piano.",
-    "Oggi salgono sulla torre quelli che hanno scritto “niente drammi” nella storia e dopo cinque minuti: dramma."
+    "Oggi sale sulla torre chi ha messo “mi piace” a una foto del defunto e poi ha scritto “bellissima”.",
+    "Oggi sale sulla torre chi ha taggato il vescovo in una foto di una festa piuttosto allegra.",
+    "Oggi sale sulla torre chi ha ricevuto un messaggio dell’ex e ha risposto con un vocale di undici minuti sul gatto.",
+    "Oggi sale sulla torre chi ha fatto la diretta mentre litigava con la moglie: la moglie ha ottenuto più like.",
+    "Oggi salgono sulla torre quelli che hanno chiamato “follower” la loro famiglia di quattro persone."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi finge di capire la trama.",
@@ -227,11 +227,11 @@
    "numero": 12,
    "tema": "Condominio e vicini",
    "frasi": [
-    "Oggi sale sulla torre chi ha suonato al citofono sbagliato per due mesi.",
-    "Oggi sale sulla torre chi ha lasciato il cane abbaiare tutta la notte e poi ha chiesto “chi c’è?”.",
-    "Oggi sale sulla torre chi ha steso i panni della vicina pensando fossero i suoi, mutande comprese.",
-    "Oggi sale sulla torre chi ha riempito di scarpe il pianerottolo e ora ci sono anche i funghi.",
-    "Oggi salgono sulla torre quelli che hanno fatto la festa con la musica “a volume morbido”, alle tre di notte."
+    "Oggi sale sulla torre chi ha attaccato il biglietto “vietato fare rumore” e poi ha fatto una festa con la banda.",
+    "Oggi sale sulla torre chi ha spiato i vicini col binocolo e ha scoperto che lo spiavano anche loro.",
+    "Oggi sale sulla torre chi ha fatto il presepe vivente sul pianerottolo, e il cane faceva il bue.",
+    "Oggi sale sulla torre chi ha chiesto al prete del palazzo di benedire anche la macchina del caffè.",
+    "Oggi salgono sulla torre quelli che hanno acceso il camino a luglio, “per fare atmosfera”."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi ignora il timer e brucia tutto.",
@@ -245,13 +245,13 @@
   {
    "id": "frasi-13",
    "numero": 13,
-   "tema": "Fai-da-te, catastrofe",
+   "tema": "Fai-da-te e catastrofi",
    "frasi": [
-    "Oggi sale sulla torre chi ha messo il chiodo nel muro e ha forato la tubatura del vicino.",
-    "Oggi sale sulla torre chi ha tagliato i capelli da solo e ora sembra un cespuglio.",
-    "Oggi sale sulla torre chi ha montato lo scaffale e ha avanzato tre viti, “per sicurezza”.",
-    "Oggi sale sulla torre chi ha riparato il rubinetto e ha allagato il salotto.",
-    "Oggi salgono sulla torre quelli che hanno dipinto la camera di verde acido e “si abitueranno”."
+    "Oggi sale sulla torre chi ha messo il chiodo nel muro e ha forato il tubo: ora hanno una fontana, e un prete.",
+    "Oggi sale sulla torre chi ha costruito uno scaffale e ha chiamato il suo capolavoro “Il Pisa”.",
+    "Oggi sale sulla torre chi ha pregato San Giuseppe prima di usare il trapano, e ha fatto bene.",
+    "Oggi sale sulla torre chi ha dipinto il soffitto con la vernice del pavimento e ora vive come un pipistrello.",
+    "Oggi salgono sulla torre quelli che hanno montato il mobile con le istruzioni e ne è venuto fuori un confessionale."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi mette il sale nel caffè.",
@@ -265,13 +265,13 @@
   {
    "id": "frasi-14",
    "numero": 14,
-   "tema": "Animali domestici, danni",
+   "tema": "Animali e piante",
    "frasi": [
-    "Oggi sale sulla torre chi ha insegnato al cane a fare le feste e ora salta in faccia ai suoceri.",
-    "Oggi sale sulla torre chi ha dato il nome di un ex al gatto, per vendetta.",
-    "Oggi sale sulla torre chi ha portato il pesce rosso in vacanza, in una tazza.",
-    "Oggi sale sulla torre chi ha nascosto che il criceto non c’è più e ne ha comprato un altro uguale.",
-    "Oggi salgono sulla torre quelli che hanno fatto il bagno al gatto e ora hanno un cuore tatuato sul braccio."
+    "Oggi sale sulla torre chi ha dato al gatto un nome da papa e ora il gatto si crede infallibile.",
+    "Oggi sale sulla torre chi ha portato il cane a messa e il cane ha fatto la comunione.",
+    "Oggi sale sulla torre chi ha seppellito il pesce rosso in giardino con un funerale di quaranta minuti.",
+    "Oggi sale sulla torre chi ha parlato per un anno alla pianta di plastica e le ha dato la colpa dei suoi guai.",
+    "Oggi salgono sulla torre quelli che hanno chiamato il criceto “Giuda”, perché si è dato alla fuga."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi convoca riunioni che potevano essere una mail.",
@@ -285,13 +285,13 @@
   {
    "id": "frasi-15",
    "numero": 15,
-   "tema": "Cucina, orrori",
+   "tema": "Cucina, orrori e sacrilegi",
    "frasi": [
-    "Oggi sale sulla torre chi ha cucinato la pasta e l’ha scolata nel lavandino, senza colino.",
-    "Oggi sale sulla torre chi ha usato il sale al posto dello zucchero nella torta della nonna.",
-    "Oggi sale sulla torre chi ha messo il pollo nel forno con la plastica e ha detto “sa di futuro”.",
+    "Oggi sale sulla torre chi ha scolato la pasta nel lavandino, senza colino, e ha detto “si lava due volte”.",
+    "Oggi sale sulla torre chi ha messo l’ananas sulla pizza e ha chiesto il perdono al forno.",
+    "Oggi sale sulla torre chi ha trasformato il pane in vino, e viceversa: era la muffa.",
     "Oggi sale sulla torre chi ha aperto la pentola a pressione “per vedere se è pronta”.",
-    "Oggi salgono sulla torre quelli che hanno servito la lasagna fredda e l’hanno chiamata “gourmet”."
+    "Oggi salgono sulla torre quelli che hanno fatto la carbonara con la panna e ora vivono sotto scorta."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi fa la spesa senza portafogli.",
@@ -305,13 +305,13 @@
   {
    "id": "frasi-16",
    "numero": 16,
-   "tema": "Notte e sonno",
+   "tema": "Notte, sogni e russatori",
    "frasi": [
-    "Oggi sale sulla torre chi ha sognato di stare in mutande davanti a tutti e si è svegliato sul balcone.",
-    "Oggi sale sulla torre chi ha russato così forte che il vicino ha risposto bussando al muro.",
-    "Oggi sale sulla torre chi si è svegliato alle tre per controllare se il gas fosse chiuso, e lo era.",
-    "Oggi sale sulla torre chi ha parlato nel sonno e ha confessato tutto alla moglie.",
-    "Oggi salgono sulla torre quelli che hanno messo la sveglia alle sei “per iniziare bene” e hanno dormito fino a mezzogiorno."
+    "Oggi sale sulla torre chi ha russato così forte che il vicino ha bussato con un crocifisso.",
+    "Oggi sale sulla torre chi ha parlato nel sonno e ha confessato tutto alla moglie, compreso il peccato che non ha commesso.",
+    "Oggi sale sulla torre chi si è alzato di notte e ha mangiato mezzo frigorifero, in sonno, come uno zombi.",
+    "Oggi sale sulla torre chi ha sognato il Papa che gli chiedeva “ma ci sei o ci fai?” e si è svegliato offeso.",
+    "Oggi salgono sulla torre quelli che hanno messo cinque sveglie e le hanno spente tutte, nel sonno, con la stessa mano."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi lava il pavimento e rientra subito.",
@@ -327,11 +327,11 @@
    "numero": 17,
    "tema": "Regali e compleanni",
    "frasi": [
-    "Oggi sale sulla torre chi ha regalato di nuovo il regalo che aveva ricevuto, alla stessa persona.",
-    "Oggi sale sulla torre chi ha dimenticato il compleanno della madre e ha detto “era uno scherzo”.",
-    "Oggi sale sulla torre chi ha spento le candeline con una scoreggia e lo ha negato.",
-    "Oggi sale sulla torre chi ha scritto un biglietto d’auguri con il nome sbagliato.",
-    "Oggi salgono sulla torre quelli che hanno fatto un video di auguri di nove minuti a chi non guarda i video."
+    "Oggi sale sulla torre chi ha regalato una candela già accesa e ha chiesto indietro i fiammiferi.",
+    "Oggi sale sulla torre chi ha spento le candeline con una scoreggia e lo ha negato davanti al nonno.",
+    "Oggi sale sulla torre chi ha regalato alla suocera un’agenda per segnare i giorni in cui non rompere.",
+    "Oggi sale sulla torre chi ha scartato il regalo davanti a tutti e ha urlato “ma io lo volevo!”, era una tovaglia.",
+    "Oggi salgono sulla torre quelli che hanno rifatto la festa a sorpresa, perché il festeggiato è arrivato prima."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi corre verso il bar.",
@@ -347,10 +347,10 @@
    "numero": 18,
    "tema": "Scuola e ricordi",
    "frasi": [
+    "Oggi sale sulla torre chi ha detto alla maestra che il cane aveva mangiato il compito, e il cane è morto da due anni.",
     "Oggi sale sulla torre chi ha copiato dal compagno la risposta sbagliata, ed era la propria.",
-    "Oggi sale sulla torre chi ha detto “presente” al posto di un altro e poi ha fatto finta di niente.",
-    "Oggi sale sulla torre chi ha mangiato la merenda del compagno e gli ha detto “l’ho trovata”.",
-    "Oggi sale sulla torre chi ha detto che il cane aveva mangiato il compito, e il cane è morto da due anni.",
+    "Oggi sale sulla torre chi ha pregato il crocifisso dell’aula durante la verifica e il crocifisso non ha suggerito.",
+    "Oggi sale sulla torre chi ha scambiato il preside per il bidello e gli ha chiesto di lucidare la cattedra.",
     "Oggi salgono sulla torre quelli che hanno pianto all’interrogazione per “mal di pancia emotivo”."
    ],
    "frasi_originali": [
@@ -365,13 +365,13 @@
   {
    "id": "frasi-19",
    "numero": 19,
-   "tema": "Dottori e farmacie",
+   "tema": "Dottori e malattie immaginarie",
    "frasi": [
-    "Oggi sale sulla torre chi ha chiesto “è grave?” al dottore prima ancora di entrare.",
-    "Oggi sale sulla torre chi si è tolto i pantaloni davanti all’infermiera: “era solo la schiena”.",
-    "Oggi sale sulla torre chi ha letto il bugiardino e ha deciso di morire.",
-    "Oggi sale sulla torre chi ha chiesto all’infermiera “fa male?” prima ancora di vedere l’ago.",
-    "Oggi salgono sulla torre quelli che hanno misurato la pressione per tre ore finché è uscito il numero giusto."
+    "Oggi sale sulla torre chi ha cercato i sintomi su internet e si è dato quindici giorni di vita.",
+    "Oggi sale sulla torre chi ha fatto testamento per la febbre a 37 e due.",
+    "Oggi sale sulla torre chi ha chiesto al dottore “ma è grave?” e lui era il dentista.",
+    "Oggi sale sulla torre chi ha preso una pillola “per sicurezza” ed era una caramella, e ora si sente un genio.",
+    "Oggi salgono sulla torre quelli che hanno recitato un rosario per il raffreddore."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi cerca la torcia con la torcia.",
@@ -385,13 +385,13 @@
   {
    "id": "frasi-20",
    "numero": 20,
-   "tema": "Parrucchiere e specchio",
+   "tema": "Parrucchieri e specchio",
    "frasi": [
-    "Oggi sale sulla torre chi ha chiesto “una spuntatina” e ha trovato un’altra faccia.",
-    "Oggi sale sulla torre chi si è tinto di rosso e ha fatto finta di niente per due settimane.",
-    "Oggi sale sulla torre chi si è strappato i peli del naso e ha urlato come un gabbiano.",
-    "Oggi sale sulla torre chi si è tatuato il nome dell’ex e lo ha coperto con un cuore che sembra un maiale.",
-    "Oggi salgono sulla torre quelli che hanno speso trecento euro per sembrare uguali a prima."
+    "Oggi sale sulla torre chi ha detto “una spuntatina” e il parrucchiere gli ha tolto la scriminatura, e il futuro.",
+    "Oggi sale sulla torre chi si è fatto tatuare un angelo e ora sembra un pollo.",
+    "Oggi sale sulla torre chi ha speso trecento euro per sembrare uguale alla foto dell’anno scorso.",
+    "Oggi sale sulla torre chi si è messo la parrucca “per scherzo” e ora non riesce più a toglierla in società.",
+    "Oggi salgono sulla torre quelli che hanno chiesto un taglio “come Brad Pitt” a un barbiere che non aveva mai sentito nominare Brad Pitt."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi innaffia la pianta di plastica.",
@@ -407,11 +407,11 @@
    "numero": 21,
    "tema": "Guidatori e parcheggi",
    "frasi": [
-    "Oggi sale sulla torre chi ha messo la retromarcia in autostrada e ha detto “ho sbagliato uscita”.",
-    "Oggi sale sulla torre chi ha parcheggiato sopra il marciapiede e lo ha chiamato “posto riservato”.",
-    "Oggi sale sulla torre chi ha suonato il clacson a un semaforo verde: era l’insegna di una farmacia.",
-    "Oggi sale sulla torre chi ha gridato “cosa guardi?” a uno specchietto.",
-    "Oggi salgono sulla torre quelli che hanno lasciato la macchina davanti a un passo carraio con scritto “torno subito”, tre giorni fa."
+    "Oggi sale sulla torre chi ha parcheggiato in doppia fila davanti alla chiesa e ha detto “faccio una preghiera veloce”.",
+    "Oggi sale sulla torre chi ha fatto il segno della croce davanti all’autovelox, e l’autovelox ha fatto il flash.",
+    "Oggi sale sulla torre chi ha chiesto la strada a un uomo e non lo ha ascoltato, per principio.",
+    "Oggi sale sulla torre chi ha tamponato la macchina davanti e ha detto “è stata colpa del destino”.",
+    "Oggi salgono sulla torre quelli che hanno acceso il navigatore e hanno litigato per tutto il viaggio con la voce."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi schiocca le dita al cameriere.",
@@ -427,11 +427,11 @@
    "numero": 22,
    "tema": "Negozi e shopping",
    "frasi": [
-    "Oggi sale sulla torre chi ha provato un vestito troppo stretto e ha dovuto chiamare le commesse.",
-    "Oggi sale sulla torre chi ha pagato un cappotto di pelliccia “eco” e ha pianto per due ore.",
-    "Oggi sale sulla torre chi ha rimesso a posto un prodotto aperto e assaggiato.",
-    "Oggi sale sulla torre chi ha urlato “lo voglio!” al commesso e poi ha visto il prezzo.",
-    "Oggi salgono sulla torre quelli che hanno acquistato un divano che non passa dalla porta."
+    "Oggi sale sulla torre chi ha provato un vestito troppo stretto e ha dovuto chiamare le commesse, e i pompieri.",
+    "Oggi sale sulla torre chi ha chiesto lo sconto in chiesa, sulla cassetta delle offerte.",
+    "Oggi sale sulla torre chi ha comprato un paio di scarpe “per la vita” e le ha già buttate.",
+    "Oggi sale sulla torre chi ha restituito il maglione dopo averlo indossato a tre feste.",
+    "Oggi salgono sulla torre quelli che hanno speso mille euro in saldi per risparmiarne cento."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi parcheggia in doppia fila “un minuto”.",
@@ -447,11 +447,11 @@
    "numero": 23,
    "tema": "Banche, poste, burocrazia",
    "frasi": [
-    "Oggi sale sulla torre chi ha fatto quattro ore di coda per scoprire che serviva un altro sportello.",
-    "Oggi sale sulla torre chi ha dimenticato il PIN e ha provato anche la data di nascita del gatto.",
-    "Oggi sale sulla torre chi ha firmato senza leggere e ora ha un tostapane da pagare per vent’anni.",
-    "Oggi sale sulla torre chi ha chiesto al funzionario “ma lei è umano?”.",
-    "Oggi salgono sulla torre quelli che hanno mandato una raccomandata a sé stessi, per sicurezza."
+    "Oggi sale sulla torre chi ha aspettato quattro ore in coda e allo sportello gli hanno detto “torni lunedì”.",
+    "Oggi sale sulla torre chi ha chiesto al funzionario “ma lei crede nel Fisco?”.",
+    "Oggi sale sulla torre chi ha pregato davanti al bancomat prima di digitare il PIN, e il bancomat ha trattenuto la carta.",
+    "Oggi sale sulla torre chi ha firmato il contratto senza leggerlo, e ora è sposato con un gestore telefonico.",
+    "Oggi salgono sulla torre quelli che hanno scritto al Papa per avere la pensione."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi manda dieci messaggi invece di uno.",
@@ -465,13 +465,13 @@
   {
    "id": "frasi-24",
    "numero": 24,
-   "tema": "Aeroporti e treni",
+   "tema": "Aeroporti e viaggi",
    "frasi": [
-    "Oggi sale sulla torre chi ha perso l’aereo perché stava facendo la foto all’aereo.",
-    "Oggi sale sulla torre chi ha riempito il trolley di formaggio e ora sa di Alpi.",
+    "Oggi sale sulla torre chi ha fatto il segno della croce all’atterraggio e anche al decollo, per essere sicuro.",
     "Oggi sale sulla torre chi ha messo il passaporto nel frigo e ha dato la colpa al formaggio.",
-    "Oggi sale sulla torre chi ha dormito sul sedile accanto al finestrino e ha baciato il finestrino.",
-    "Oggi salgono sulla torre quelli che hanno detto al controllore “non mi pare di aver pagato niente”."
+    "Oggi sale sulla torre chi ha dormito sul sedile dell’aeroporto e si è svegliato in un altro paese.",
+    "Oggi sale sulla torre chi ha lamentato il ritardo del volo al pilota che stava parlando con Dio.",
+    "Oggi salgono sulla torre quelli che hanno pianto all’imbarco per un trolley da quaranta chili."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi arriva senza avvisare e dice “passavo di qui”.",
@@ -487,11 +487,11 @@
    "numero": 25,
    "tema": "Alcol e feste",
    "frasi": [
-    "Oggi sale sulla torre chi ha ballato sul tavolo e il tavolo ha ceduto, con tutto il buffet.",
-    "Oggi sale sulla torre chi ha raccontato a tutti il segreto dell’amico “perché sono ubriaco”.",
-    "Oggi sale sulla torre chi ha scambiato la finestra per la porta, ed era al secondo piano.",
-    "Oggi sale sulla torre chi ha cantato la canzone d’amore a un lampione, che non ha risposto.",
-    "Oggi salgono sulla torre quelli che hanno promesso “solo un bicchiere” e si sono svegliati con un tatuaggio."
+    "Oggi sale sulla torre chi ha ballato sul tavolo del buffet e ha fatto crollare i tramezzini, e le speranze.",
+    "Oggi sale sulla torre chi ha raccontato un segreto in confessione, ed era il prete sbagliato: era l’invitato.",
+    "Oggi sale sulla torre chi ha baciato l’amico per sbaglio e il giorno dopo ha chiesto la mano alla madre, per riparare.",
+    "Oggi sale sulla torre chi ha cantato Ave Maria in karaoke con le mani sul cuore e la voce su un altro pianeta.",
+    "Oggi salgono sulla torre quelli che hanno fatto un brindisi alla salute e il giorno dopo è servito un prete e un dottore."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi urla dai gradoni “arbitro!”.",
@@ -505,13 +505,13 @@
   {
    "id": "frasi-26",
    "numero": 26,
-   "tema": "Pigrizia estrema",
+   "tema": "Pigrizia solenne",
    "frasi": [
-    "Oggi sale sulla torre chi ha chiamato il coniuge per farsi passare l’acqua, che era sul tavolo davanti a lui.",
-    "Oggi sale sulla torre chi ha ordinato la cena con una app a due metri dalla cucina.",
-    "Oggi sale sulla torre chi ha usato la spatola per prendere il telecomando e poi l’ha lasciata lì.",
-    "Oggi sale sulla torre chi è rimasto a letto tutto il fine settimana e dice “ho avuto tanto da fare”.",
-    "Oggi salgono sulla torre quelli che hanno chiesto al figlio di “portare il telecomando”, che avevano in mano."
+    "Oggi sale sulla torre chi ha chiamato il coniuge dal letto per farsi passare l’acqua, che aveva sul comodino.",
+    "Oggi sale sulla torre chi ha chiesto a un monaco in silenzio la spesa a domicilio.",
+    "Oggi sale sulla torre chi ha spento il telefono per “pregare in pace” e ha dormito tre giorni.",
+    "Oggi sale sulla torre chi si è portato la lavatrice in camera per non alzarsi.",
+    "Oggi salgono sulla torre quelli che hanno pregato per il successo e poi hanno spento la tv per un’ora."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi fa il trolley da 40 kg “cabin size”.",
@@ -525,13 +525,13 @@
   {
    "id": "frasi-27",
    "numero": 27,
-   "tema": "Bugie assurde",
+   "tema": "Bugie di alta scuola",
    "frasi": [
-    "Oggi sale sulla torre chi ha dato la colpa al cane per un odore che non è del cane.",
-    "Oggi sale sulla torre chi ha detto di aver perso il cellulare e lo aveva in tasca.",
-    "Oggi sale sulla torre chi ha dichiarato di essere allergico per non andare a casa dei suoceri.",
-    "Oggi sale sulla torre chi ha detto di aver letto il libro e lo ha scambiato con un altro.",
-    "Oggi salgono sulla torre quelli che hanno giurato di essere “quasi arrivati”, a dodici chilometri e in pigiama."
+    "Oggi sale sulla torre chi ha detto di essere stato “quasi un santo” e dopo il racconto lo hanno cacciato dalla chiesa.",
+    "Oggi sale sulla torre chi ha mentito sul curriculum e ora fa l’astronauta, in teoria.",
+    "Oggi sale sulla torre chi ha detto “sono contagioso” per non andare dai suoceri e ha dovuto restare in quarantena sul pianerottolo.",
+    "Oggi sale sulla torre chi ha scritto a tutti “sono in ritardo” e stava dormendo nel parcheggio.",
+    "Oggi salgono sulla torre quelli che hanno giurato sulla Bibbia di dire la verità, ma con le dita incrociate."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi esce col piumino a luglio.",
@@ -548,10 +548,10 @@
    "tema": "Segreti inconfessabili",
    "frasi": [
     "Oggi sale sulla torre chi ha mangiato il dolce di nascosto in bagno e poi ha finto un malore.",
-    "Oggi sale sulla torre chi ha letto i messaggi del partner sperando di trovare qualcosa.",
-    "Oggi sale sulla torre chi ha guardato il suo programma preferito con le cuffie, per vergogna.",
-    "Oggi sale sulla torre chi ha tenuto un anno la lettera della banca nel cassetto “per sicurezza”.",
-    "Oggi salgono sulla torre quelli che hanno cantato in macchina a squarciagola incrociando lo sguardo di un camionista."
+    "Oggi sale sulla torre chi ha confessato al prete un peccato che non aveva ancora commesso, per risparmiare tempo.",
+    "Oggi sale sulla torre chi ha letto i messaggi del partner e ha scoperto di essere lui il tradito, dal gatto.",
+    "Oggi sale sulla torre chi ha nascosto nel garage una statua di Padre Pio e un cartello di “offresi in affitto”.",
+    "Oggi salgono sulla torre quelli che hanno guardato un film vietato con le cuffie, e sono passati i suoceri."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi chiede like alla nonna.",
@@ -568,10 +568,10 @@
    "tema": "Superstizioni e manie",
    "frasi": [
     "Oggi sale sulla torre chi ha fatto tre giri su sé stesso prima di entrare in casa, per scaramanzia.",
-    "Oggi sale sulla torre chi ha rifiutato di passare sotto la scala ed è finito in mezzo alla strada.",
-    "Oggi sale sulla torre chi ha lavato la macchina per far smettere la pioggia.",
-    "Oggi sale sulla torre chi fa le corna a ogni gatto nero e ai gatti di tutti i colori, per sicurezza.",
-    "Oggi salgono sulla torre quelli che hanno toccato ferro e si sono presi la scossa."
+    "Oggi sale sulla torre chi ha baciato l’amuleto e si è preso la tosse.",
+    "Oggi sale sulla torre chi ha spruzzato acqua santa sul computer per aggiustare il wifi.",
+    "Oggi sale sulla torre chi ha toccato ferro e ha preso la scossa: una sentenza.",
+    "Oggi salgono sulla torre quelli che hanno acceso un cero a Sant’Antonio per ritrovare la fidanzata."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi scrive sempre “come anticipato in call”.",
@@ -587,11 +587,11 @@
    "numero": 30,
    "tema": "Tifosi e sport",
    "frasi": [
-    "Oggi sale sulla torre chi ha pianto per il gol della squadra avversaria perché “era troppo bello”.",
     "Oggi sale sulla torre chi ha lanciato il telecomando contro la tv e ora vede solo in bianco e nero.",
-    "Oggi sale sulla torre chi ha insultato l’arbitro in cortile durante una partita dei bambini.",
-    "Oggi sale sulla torre chi ha detto “io alleno meglio di lui” e non sa dove si trova la porta.",
-    "Oggi salgono sulla torre quelli che hanno gridato “fuorigioco!” a una partita di curling."
+    "Oggi sale sulla torre chi ha pregato per la propria squadra in ginocchio, e la squadra ha perso lo stesso: è un ateo, il portiere.",
+    "Oggi sale sulla torre chi ha pianto per un gol dell’avversario perché “era troppo bello”.",
+    "Oggi sale sulla torre chi ha urlato all’arbitro dalla finestra e l’arbitro ha risposto: era il vicino.",
+    "Oggi salgono sulla torre quelli che hanno fatto un voto: se vince la squadra, non mangiano più la carne, fino a domenica."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi beve acqua “detox” e poi frigge tutto.",
@@ -605,13 +605,13 @@
   {
    "id": "frasi-31",
    "numero": 31,
-   "tema": "Tecnologia, disastri",
+   "tema": "Tecnologia in crisi",
    "frasi": [
     "Oggi sale sulla torre chi ha cancellato tutte le foto delle vacanze e ha detto “erano brutte”.",
-    "Oggi sale sulla torre chi ha lanciato il telefono contro il muro per “far ripartire” lo schermo.",
-    "Oggi sale sulla torre chi ha dimenticato la password e ha riprovato la stessa per un’ora.",
-    "Oggi sale sulla torre chi ha messo il caricabatterie al contrario e ci ha litigato.",
-    "Oggi salgono sulla torre quelli che hanno condiviso lo schermo con trenta persone aprendo la cartella segreta."
+    "Oggi sale sulla torre chi ha chiesto al telefono “fai un miracolo!” e il telefono ha chiamato la mamma.",
+    "Oggi sale sulla torre chi ha condiviso lo schermo con trenta persone aprendo la cartella segreta.",
+    "Oggi sale sulla torre chi ha dimenticato la password e ha provato tutti i nomi dei santi.",
+    "Oggi salgono sulla torre quelli che hanno battezzato il robot aspirapolvere e gli hanno dato una cresima."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi lascia il sacchetto fuori “tanto passano”.",
@@ -628,10 +628,10 @@
    "tema": "Meteo e vestiti",
    "frasi": [
     "Oggi sale sulla torre chi è uscito con le ciabatte sotto la pioggia, perché “asciugano”.",
+    "Oggi sale sulla torre chi ha indossato un pigiama sotto il vestito per andare dal vescovo.",
     "Oggi sale sulla torre chi ha messo il cappotto a luglio perché “prima o poi cambia”.",
-    "Oggi sale sulla torre chi ha indossato due calzini diversi e li ha chiamati “uno stile”.",
-    "Oggi sale sulla torre chi ha dimenticato i pantaloni a casa e se ne è accorto in ufficio.",
-    "Oggi salgono sulla torre quelli che hanno aperto l’ombrello in casa e hanno fatto saltare il lampadario."
+    "Oggi sale sulla torre chi ha fatto la danza della pioggia, e dopo una settimana ha dovuto fare quella del sole.",
+    "Oggi salgono sulla torre quelli che hanno messo i calzini con i sandali e li hanno chiamati “moda”."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi chiede il cappuccino dopo pranzo e poi giudica.",
@@ -647,11 +647,11 @@
    "numero": 33,
    "tema": "Ex e gelosie",
    "frasi": [
-    "Oggi sale sulla torre chi ha guardato per due ore il profilo dell’ex e ha messo like per sbaglio.",
-    "Oggi sale sulla torre chi ha urlato il nome dell’ex durante una cena con il nuovo partner.",
+    "Oggi sale sulla torre chi ha guardato per due ore il profilo dell’ex e ha messo “mi piace” a una foto del 2014.",
+    "Oggi sale sulla torre chi ha chiesto scusa a Dio per l’ex, e Dio non ha risposto.",
     "Oggi sale sulla torre chi ha cambiato strada per non incontrare l’ex e si è ritrovato nel suo portone.",
-    "Oggi sale sulla torre chi ha scritto una lettera di addio, e l’ha spedita alla persona sbagliata.",
-    "Oggi salgono sulla torre quelli che hanno fatto “amicizia” con l’ex, solo per sapere se è felice."
+    "Oggi sale sulla torre chi ha scritto una lettera d’addio e l’ha spedita alla persona sbagliata, che ha risposto di sì.",
+    "Oggi salgono sulla torre quelli che hanno fatto amicizia con la nuova fidanzata dell’ex, per spiare."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi mette la suoneria a palla in pubblico.",
@@ -668,10 +668,10 @@
    "tema": "Vanità e specchio",
    "frasi": [
     "Oggi sale sulla torre chi si è fatto un selfie in ascensore ed è uscita la faccia di un lontano parente.",
-    "Oggi sale sulla torre chi ha speso mezz’ora a scegliere una foto in cui sembra naturale.",
-    "Oggi sale sulla torre chi si è tolto un anno su una domanda dell’età e ha dimenticato il resto.",
-    "Oggi sale sulla torre chi ha sorriso in bagno nello specchio ed è rimasto deluso.",
-    "Oggi salgono sulla torre quelli che hanno messo il filtro per sembrare giovani e ora sembrano un cartone animato."
+    "Oggi sale sulla torre chi ha messo il filtro per sembrare giovane e ora sembra il nipote.",
+    "Oggi sale sulla torre chi ha chiesto a Dio un fisico migliore e Dio gli ha mandato la palestra.",
+    "Oggi sale sulla torre chi ha scambiato lo specchio per un quadro e lo ha salutato.",
+    "Oggi salgono sulla torre quelli che hanno speso mezz’ora a scegliere un filtro e un secondo a scegliere il nome del figlio."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi controlla l’ora e la dimentica.",
@@ -687,10 +687,10 @@
    "numero": 35,
    "tema": "Soldi e avarizia",
    "frasi": [
-    "Oggi sale sulla torre chi ha chiesto lo sconto sul gelato, in gelateria.",
-    "Oggi sale sulla torre chi ha diviso il conto in sedici parti perché “io non ho bevuto”.",
+    "Oggi sale sulla torre chi ha chiesto lo sconto sul gelato, in gelateria, e anche sulla mancia al prete.",
     "Oggi sale sulla torre chi ha riusato la bustina del tè per tre giorni: “è più filosofica”.",
-    "Oggi sale sulla torre chi ha raccolto monetine da terra e ha fatto il segno della croce.",
+    "Oggi sale sulla torre chi ha diviso il conto in sedici parti per colpa di un’acqua.",
+    "Oggi sale sulla torre chi ha infilato la moneta nel carrello e ha dato la colpa alla Provvidenza.",
     "Oggi salgono sulla torre quelli che hanno fatto il matrimonio col pranzo al sacco “per risparmiare”."
    ],
    "frasi_originali": [
@@ -705,13 +705,13 @@
   {
    "id": "frasi-36",
    "numero": 36,
-   "tema": "Genitori, scene",
+   "tema": "Genitori e figli",
    "frasi": [
     "Oggi sale sulla torre chi ha urlato “non urlare!” al figlio mentre urlava.",
-    "Oggi sale sulla torre chi ha promesso un regalo e ha regalato una pacca sulla spalla.",
-    "Oggi sale sulla torre chi ha letto la favola della buonanotte e si è addormentato per primo.",
+    "Oggi sale sulla torre chi ha promesso a Gesù Bambino un regalo e ha regalato una pacca sulla spalla.",
+    "Oggi sale sulla torre chi ha nascosto le verdure nel dolce e ora il bambino odia il dolce.",
     "Oggi sale sulla torre chi ha dato la colpa al bambino per una scoreggia, a una cena con gli ospiti.",
-    "Oggi salgono sulla torre quelli che hanno nascosto le verdure nel dolce e ora il bambino odia il dolce."
+    "Oggi salgono sulla torre quelli che hanno dato il nome del cane al secondo figlio, per comodità."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi non asciuga il lavandino: “non è mio”.",
@@ -727,11 +727,11 @@
    "numero": 37,
    "tema": "Nonni e anziani",
    "frasi": [
-    "Oggi sale sulla torre chi ha mandato un messaggio vocale di quaranta minuti per dire “tutto bene”.",
-    "Oggi sale sulla torre chi ha parlato al cellulare tenendolo a un metro, urlando “PRONTO?!”.",
-    "Oggi sale sulla torre chi ha guardato il telegiornale a tutto volume e ora lo sa tutto il palazzo.",
     "Oggi sale sulla torre chi ha cercato gli occhiali per mezz’ora e li aveva sulla testa.",
-    "Oggi salgono sulla torre quelli che hanno regalato cento euro al nipote e lo hanno chiamato per dirlo."
+    "Oggi sale sulla torre chi ha chiesto al nipote di “scaricare Internet” sul telefono del nonno.",
+    "Oggi sale sulla torre chi ha guardato il telegiornale a tutto volume e ora lo sa tutto il palazzo.",
+    "Oggi sale sulla torre chi ha pregato la Madonna per la vincita al Gratta e Vinci, poi ha litigato con San Giuseppe.",
+    "Oggi salgono sulla torre quelli che hanno regalato al nipote cento euro “per comprare qualcosa di bello” e lo hanno chiamato per dirlo."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi compra libri per arredare.",
@@ -745,12 +745,12 @@
   {
    "id": "frasi-38",
    "numero": 38,
-   "tema": "Preti e benedizioni",
+   "tema": "Preti, suore e benedizioni",
    "frasi": [
     "Oggi sale sulla torre chi ha fatto il segno della croce davanti all’autovelox.",
-    "Oggi sale sulla torre chi ha benedetto il panino prima di darlo al cane.",
-    "Oggi sale sulla torre chi ha pregato per trovare parcheggio, lo ha trovato e ha detto “non serviva più”.",
-    "Oggi sale sulla torre chi ha confessato un peccato e ha dimenticato quale.",
+    "Oggi sale sulla torre chi ha benedetto il panino prima di darlo al cane, e il cane ha ringraziato.",
+    "Oggi sale sulla torre chi ha chiesto alla suora “ma lei quanto prega al giorno?” con l’app dei passi.",
+    "Oggi sale sulla torre chi ha pregato Dio di fargli trovare parcheggio, lo ha trovato, e ha detto “non serviva più”.",
     "Oggi salgono sulla torre quelli che hanno acceso una candela per la squadra e l’hanno spenta al primo gol subito."
    ],
    "frasi_originali": [
@@ -768,9 +768,9 @@
    "tema": "Politica da bar",
    "frasi": [
     "Oggi sale sulla torre chi ha urlato “ci vorrebbe uno forte!” alla tv, che non ha risposto.",
-    "Oggi sale sulla torre chi ha dato la colpa del traffico al governo, che c’entra come il cugino.",
-    "Oggi sale sulla torre chi ha promesso “cambierà tutto” e poi ha cambiato idea in cinque minuti.",
     "Oggi sale sulla torre chi ha votato un nome perché “suonava bene”.",
+    "Oggi sale sulla torre chi ha promesso “cambierà tutto” e poi ha cambiato idea in cinque minuti.",
+    "Oggi sale sulla torre chi ha detto “se ci fossi io…” e poi si è dimenticato di candidarsi.",
     "Oggi salgono sulla torre quelli che hanno criticato le tasse per un’ora e poi hanno chiesto lo scontrino al bar."
    ],
    "frasi_originali": [
@@ -785,13 +785,13 @@
   {
    "id": "frasi-40",
    "numero": 40,
-   "tema": "Cinema e serie TV",
+   "tema": "Cinema, serie e salotto",
    "frasi": [
-    "Oggi sale sulla torre chi ha fatto lo spoiler del finale a voce alta in sala, “per rilassare”.",
-    "Oggi sale sulla torre chi ha pianto per un cartone animato e ha detto “ho un moscerino nell’occhio”.",
-    "Oggi sale sulla torre chi ha mangiato i popcorn degli altri credendo fossero i suoi.",
+    "Oggi sale sulla torre chi ha detto lo spoiler del finale a voce alta in sala, “per rilassare”.",
+    "Oggi sale sulla torre chi ha pianto per un cartone animato e ha detto “è un moscerino nell’occhio”.",
     "Oggi sale sulla torre chi ha visto una stagione intera in una notte e ora parla come il protagonista.",
-    "Oggi salgono sulla torre quelli che hanno chiesto “ma chi è il cattivo?” alla fine del film."
+    "Oggi sale sulla torre chi ha scambiato il film dell’orrore per una commedia e ha riso nei momenti sbagliati.",
+    "Oggi salgono sulla torre quelli che hanno mangiato i popcorn degli altri credendo fossero i loro."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi si infila “veloce” davanti.",
@@ -807,10 +807,10 @@
    "numero": 41,
    "tema": "Musica e karaoke",
    "frasi": [
-    "Oggi sale sulla torre chi ha cantato al karaoke con la stessa passione di un gatto in un sacco.",
-    "Oggi sale sulla torre chi ha dedicato una canzone alla persona sbagliata, davanti a tutti.",
-    "Oggi sale sulla torre chi ha suonato la chitarra in treno e ha ricevuto un euro, e un’occhiataccia.",
-    "Oggi sale sulla torre chi ha pensato di avere una bella voce e ha registrato un vocale per tutti.",
+    "Oggi sale sulla torre chi ha cantato al karaoke come un gatto in un sacco.",
+    "Oggi sale sulla torre chi ha dedicato una canzone d’amore alla persona sbagliata, davanti a tutti.",
+    "Oggi sale sulla torre chi ha suonato la chitarra in treno e ha ricevuto un euro e un’occhiataccia.",
+    "Oggi sale sulla torre chi ha cantato in chiesa più forte del coro e ha rovinato un’Ave Maria.",
     "Oggi salgono sulla torre quelli che hanno ballato fuori tempo al concerto e il buttafuori li ha applauditi."
    ],
    "frasi_originali": [
@@ -825,13 +825,13 @@
   {
    "id": "frasi-42",
    "numero": 42,
-   "tema": "Giardino e campagna",
+   "tema": "Campagna e giardino",
    "frasi": [
-    "Oggi sale sulla torre chi ha confuso il basilico con una pianta velenosa e ha litigato con la nonna.",
-    "Oggi sale sulla torre chi ha tagliato il prato con il tagliaerba e anche con le tende.",
+    "Oggi sale sulla torre chi ha parlato alle piante e le piante sono morte di vergogna.",
     "Oggi sale sulla torre chi ha inseguito una gallina per un’ora e ha perso.",
-    "Oggi sale sulla torre chi ha fatto il bagno nel fosso per rinfrescarsi: era quello del vicino.",
-    "Oggi salgono sulla torre quelli che hanno parlato alle piante per un anno e le piante sono morte di vergogna."
+    "Oggi sale sulla torre chi ha tagliato il prato con il tagliaerba e anche con le tende.",
+    "Oggi sale sulla torre chi ha pregato Sant’Isidoro per la pioggia, e l’ha ottenuta: nel salotto.",
+    "Oggi salgono sulla torre quelli che hanno fatto il bagno nel fosso del vicino per “rinfrescarsi”."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi assaggia tutto e non compra.",
@@ -845,12 +845,12 @@
   {
    "id": "frasi-43",
    "numero": 43,
-   "tema": "Campeggio e gite",
+   "tema": "Gite e campeggio",
    "frasi": [
     "Oggi sale sulla torre chi ha montato la tenda al contrario e ha dormito dentro il telo.",
-    "Oggi sale sulla torre chi ha urlato per un orso, ed era un cane.",
-    "Oggi sale sulla torre chi ha dimenticato lo zaino e ha dato la colpa al sentiero.",
+    "Oggi sale sulla torre chi ha urlato per un orso ed era un cane, e il cane ha urlato per un ladro.",
     "Oggi sale sulla torre chi ha acceso il fuoco bruciando la tenda dell’amico.",
+    "Oggi sale sulla torre chi si è perso nel bosco e ha pregato di essere trovato: lo ha trovato un cinghiale.",
     "Oggi salgono sulla torre quelli che hanno fatto il giro di montagna in scarpe da ginnastica, “per restare leggeri”."
    ],
    "frasi_originali": [
@@ -865,12 +865,12 @@
   {
    "id": "frasi-44",
    "numero": 44,
-   "tema": "Bambini, figuracce",
+   "tema": "Bambini e figuracce",
    "frasi": [
     "Oggi sale sulla torre chi ha urlato in mezzo al supermercato che “papà ha fatto la scoreggia”.",
     "Oggi sale sulla torre chi ha raccontato alla maestra che a casa si urla ogni giorno.",
-    "Oggi sale sulla torre chi ha mangiato il gelato e poi lo ha rimesso sul naso del cane.",
-    "Oggi sale sulla torre chi ha disegnato sulla parete e ha dato la colpa a un amico invisibile.",
+    "Oggi sale sulla torre chi ha disegnato sulla parete e ha dato la colpa a un amico invisibile, che si chiama Gesù.",
+    "Oggi sale sulla torre chi ha chiesto a messa “ma quando si mangia?” a voce alta.",
     "Oggi salgono sulla torre quelli che hanno chiesto allo zio “perché sei grasso?” davanti a tutti."
    ],
    "frasi_originali": [
@@ -887,11 +887,11 @@
    "numero": 45,
    "tema": "Hotel e B&B",
    "frasi": [
-    "Oggi sale sulla torre chi ha rubato asciugamani, ciabatte e il cartello “non disturbare”.",
-    "Oggi sale sulla torre chi ha lasciato la tessera nella stanza e ha dormito nell’ascensore.",
+    "Oggi sale sulla torre chi ha rubato asciugamani, ciabatte e la Bibbia del comodino.",
     "Oggi sale sulla torre chi ha chiamato la reception alle tre per dire che il letto era “troppo letto”.",
     "Oggi sale sulla torre chi ha fatto colazione per tre giorni di fila, a tutte le ore.",
-    "Oggi salgono sulla torre quelli che hanno recensito l’hotel con “bello ma c’era il mare”."
+    "Oggi sale sulla torre chi ha lasciato una recensione “bello ma c’era il mare”.",
+    "Oggi salgono sulla torre quelli che hanno chiesto la stanza con vista sul Paradiso."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi apre i regali degli altri “per aiutare”.",
@@ -907,11 +907,11 @@
    "numero": 46,
    "tema": "Traslochi e scatoloni",
    "frasi": [
-    "Oggi sale sulla torre chi ha dimenticato di scrivere “fragile” sul vaso, e ora è polvere.",
-    "Oggi sale sulla torre chi ha caricato il frigo sulla macchina e ha lasciato a casa il frigo.",
-    "Oggi sale sulla torre chi ha lasciato il gatto in uno scatolone, “solo un momento”.",
-    "Oggi sale sulla torre chi ha scoperto che il divano non passa e ha cambiato la porta.",
-    "Oggi salgono sulla torre quelli che hanno promesso “vi offro una pizza” agli amici e hanno offerto una pizza in sei."
+    "Oggi sale sulla torre chi ha scoperto che il divano non passa dalla porta e ha cambiato la porta.",
+    "Oggi sale sulla torre chi ha scritto “fragile” sullo scatolone dei piatti e “Madonna” su quello dei bicchieri.",
+    "Oggi sale sulla torre chi ha caricato il frigo e ha lasciato a casa il camion.",
+    "Oggi sale sulla torre chi ha promesso “vi offro una pizza” agli amici e ha offerto una pizza in sei.",
+    "Oggi salgono sulla torre quelli che hanno trasportato una statua di santo e sono arrivati a destinazione senza un braccio."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi chiede “un filo” e torna rasato.",
@@ -925,12 +925,12 @@
   {
    "id": "frasi-47",
    "numero": 47,
-   "tema": "Freelance e lavoro creativo",
+   "tema": "Lavoro creativo e finto",
    "frasi": [
-    "Oggi sale sulla torre chi ha scritto “a breve” nel preventivo e “mai” in testa.",
-    "Oggi sale sulla torre chi ha spedito la fattura con un “grazie” al posto della cifra.",
+    "Oggi sale sulla torre chi ha scritto “a breve” nel preventivo e “mai” nel cuore.",
+    "Oggi sale sulla torre chi ha detto “sono in un’ottica di sinergia” e nessuno ha capito, nemmeno lui.",
     "Oggi sale sulla torre chi ha lavorato in pigiama per un anno e ha aperto al postino così.",
-    "Oggi sale sulla torre chi ha detto “sono in un’ottica di sinergia” e nessuno ha capito.",
+    "Oggi sale sulla torre chi ha fatto il segno della croce davanti alla fattura e l’ha pagata.",
     "Oggi salgono sulla torre quelli che hanno consegnato “in anticipo” alle tre di notte del giorno dopo."
    ],
    "frasi_originali": [
@@ -949,7 +949,7 @@
    "frasi": [
     "Oggi sale sulla torre chi ha organizzato una festa a sorpresa e non ha avvisato il festeggiato.",
     "Oggi sale sulla torre chi ha cantato “tanti auguri” con la voce di una pecora, due volte.",
-    "Oggi sale sulla torre chi ha mangiato metà torta prima che arrivassero gli ospiti.",
+    "Oggi sale sulla torre chi ha spento le candeline con la bocca di un altro.",
     "Oggi sale sulla torre chi ha pianto per un regalo, ed era il proprio.",
     "Oggi salgono sulla torre quelli che hanno invitato tutti tranne il festeggiato."
    ],
@@ -968,9 +968,9 @@
    "tema": "Sogni e fantasie",
    "frasi": [
     "Oggi sale sulla torre chi ha sognato di vincere alla lotteria e ha già speso tutto in un castello di cartone.",
-    "Oggi sale sulla torre chi si è immaginato di essere un supereroe e ha saltato dal divano.",
     "Oggi sale sulla torre chi ha deciso di diventare famoso e ha aperto una pagina con la foto del gatto.",
-    "Oggi sale sulla torre chi ha fantasticato di dire al capo “mi licenzio!” e lo ha detto al microonde.",
+    "Oggi sale sulla torre chi si è immaginato di essere un supereroe e ha saltato dal divano.",
+    "Oggi sale sulla torre chi ha sognato di diventare Papa e ha già scelto il nome: “Giorgio il Bello”.",
     "Oggi salgono sulla torre quelli che hanno giurato che cambiano vita “da lunedì”, da quattro anni."
    ],
    "frasi_originali": [
@@ -989,9 +989,9 @@
    "frasi": [
     "Oggi sale sulla torre chi ha cercato su Google “come si fa il caffè” con il caffè in mano.",
     "Oggi sale sulla torre chi ha messo il telefono in frigo per “farlo riposare”.",
-    "Oggi sale sulla torre chi ha spento la luce per risparmiare e ha spento anche il frigo.",
-    "Oggi sale sulla torre chi ha chiesto a un cieco “hai visto le mie chiavi?”.",
-    "Oggi salgono sulla torre quelli che hanno cercato gli occhiali con la torcia del telefono, che avevano già in mano."
+    "Oggi sale sulla torre chi ha cercato gli occhiali con la torcia del telefono, che aveva in mano.",
+    "Oggi sale sulla torre chi ha chiesto a Siri di fargli un miracolo, e Siri ha chiamato un prete.",
+    "Oggi salgono sulla torre quelli che hanno spento la luce per risparmiare e hanno spento anche il frigo."
    ],
    "frasi_originali": [
     "Oggi sale sulla torre chi spiega al forno come cucinare.",

@@ -25,7 +25,7 @@ describe("contenuti originali del gioco", () => {
     expect(new Set(all).size).toBe(all.length);
     expect(multi.flatMap((c) => c.frasi).every((f) => /^Oggi (sale|salgono) sulla torre /.test(f))).toBe(true);
     expect(single.every((c) => c.frase.startsWith("Ammetto") && c.frase.endsWith("."))).toBe(true);
-    for (const f of multi.flatMap((c) => c.frasi)) { const plural = /^Oggi salgono sulla torre (le persone|quelli|i |gli |le )/.test(f); const singular = /^Oggi sale sulla torre chi /.test(f) || /^Oggi sale sulla torre (le persone|quelli|i |gli |le )/.test(f); expect(plural || /^Oggi sale sulla torre chi /.test(f)).toBe(true); expect(singular && !plural && /torre (le persone|quelli)/.test(f)).toBe(false); }
+    for (const f of multi.flatMap((c) => c.frasi)) { const plural = /^Oggi salgono sulla torre (le persone|quelli|i |gli |le )/.test(f); const singular = /^Oggi sale sulla torre chi /.test(f) || /^Oggi sale sulla torre (le persone|quelli|i |gli |le )/.test(f); expect(plural || /^Oggi sale sulla torre (chi|la|il|lo|l’|un|una) /.test(f)).toBe(true); expect(singular && !plural && /torre (le persone|quelli)/.test(f)).toBe(false); }
   });
   it("una partita completa con i contenuti reali (8 giocatori, variante Megafono sa)", () => {
     const players = Array.from({ length: 8 }, (_, i) => ({ id: `p${i + 1}`, name: `G${i + 1}` }));
