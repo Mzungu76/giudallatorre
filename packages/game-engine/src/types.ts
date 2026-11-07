@@ -4,7 +4,7 @@ export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "GAME
 export type LuiKind = "CADE" | "NON_CADE";
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
-export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string }
+export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string; /** Contesto di ciascuna frase (stesso ordine di `phrases`). */ themes?: string[] }
 
 export interface GameConfig {
   players: { id: PlayerId; name: string }[];
@@ -15,6 +15,8 @@ export interface GameConfig {
   justifyVotes?: boolean;
   /** Regola da testare ("gregge"): se il Megafono indovina la carta che cade, i +2 di chi l'ha votata vanno solo a lui. */
   herd?: boolean;
+  /** Mescola a caso le frasi di tutte le carte (ogni frase porta il proprio contesto) e le ridistribuisce in gruppi da 5. */
+  mixPhrases?: boolean;
   deck: CardId[];
   phraseDeck: PhraseCard[];
   handSize?: number;
@@ -56,6 +58,7 @@ export interface GameState {
   megafonoSa: boolean;
   justifyVotes: boolean;
   herd: boolean;
+  mixPhrases: boolean;
   handSize: number;
   rounds: number;
   totalTurns: number;

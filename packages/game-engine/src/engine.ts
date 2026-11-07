@@ -1,5 +1,5 @@
 import { EngineError } from "./types.ts";
-import type { Action, CardId, GameConfig, GameEvent, GameState, PlayerId, TowerSlot, TurnResult } from "./types.ts";
+import type { Action, CardId, GameConfig, GameEvent, GameState, PhraseCard, PlayerId, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
@@ -14,6 +14,17 @@ export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
 export const roundsFor = (n: number) => (n <= 5 ? 2 : 1);
 
+/** Mescola le frasi di tutte le carte a più frasi (ognuna col proprio contesto) e le rimette in gruppi da 5; le carte a frase singola restano intere. */
+function mixPhrases(cards: PhraseCard[], s: GameState): PhraseCard[] {
+  const multi = cards.filter((c) => c.phrases.length > 1), single = cards.filter((c) => c.phrases.length <= 1);
+  const items = shuffle(multi.flatMap((c) => c.phrases.map((p, i) => ({ p, t: c.themes?.[i] ?? c.theme }))), s), out: PhraseCard[] = [];
+  for (let i = 0; i < items.length; i += 5) {
+    const g = items.slice(i, i + 5);
+    out.push({ id: `mix-${i / 5 + 1}`, phrases: g.map((x) => x.p), ...(g.every((x) => x.t) ? { themes: g.map((x) => x.t!) } : {}) });
+  }
+  return shuffle([...out, ...single], s);
+}
+
 export function createGame(config: GameConfig): { state: GameState; events: GameEvent[] } {
   const n = config.players.length, handSize = config.handSize ?? 5;
   if (n < MIN_PLAYERS || n > MAX_PLAYERS) throw new EngineError("INVALID_PLAYERS", `servono da ${MIN_PLAYERS} a ${MAX_PLAYERS} giocatori`);
@@ -24,14 +35,14 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    megafonoSa: !!config.megafonoSa, justifyVotes: !!config.justifyVotes, herd: !!config.herd, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    megafonoSa: !!config.megafonoSa, justifyVotes: !!config.justifyVotes, herd: !!config.herd, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {}, voteReasons: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
   };
   s.drawPile = shuffle(config.deck, s);
-  s.phraseDraw = shuffle(config.phraseDeck, s);
+  s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
   for (let k = 0; k < handSize; k++) for (const id of ids) s.hands[id]!.push(draw(s));
   s.megafonoIndex = config.firstMegafonoIndex ?? randomInt(n, s);
@@ -51,7 +62,7 @@ function draw(s: GameState): CardId {
   return s.drawPile.shift()!;
 }
 function drawPhrase(s: GameState) {
-  if (s.phraseDraw.length === 0) { s.phraseDraw = shuffle(s.phraseDiscard, s); s.phraseDiscard = []; }
+  if (s.phraseDraw.length === 0) { s.phraseDraw = s.mixPhrases ? mixPhrases(s.phraseDiscard, s) : shuffle(s.phraseDiscard, s); s.phraseDiscard = []; }
   return s.phraseDraw.shift()!;
 }
 
@@ -81,7 +92,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
         const idx = action.index;
         if (!Number.isInteger(idx) || idx < 0 || idx >= card.phrases.length) throw new EngineError("INVALID_CHOICE", "frase inesistente");
         if (card.phrases.length === 1 && idx !== 0) throw new EngineError("INVALID_CHOICE", "carta a frase singola: va pronunciata");
-        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]!, ...(card.theme ? { theme: card.theme } : {}) };
+        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]!, ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
         events.push({ type: "phraseChosen", mode: "card", text: s.phrase.text });
       } else {
         const raw = action.text, text = typeof raw === "string" ? raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim() : "";

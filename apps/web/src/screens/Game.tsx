@@ -73,11 +73,10 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
   const go = () => send({ t: "act", action: own ? { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } : { type: "choosePhrase", mode: "card", index: i } });
   return (
     <div className="picker" data-testid="phrase-picker">
-      {!own && card.theme && <div className="ctx-pick" data-testid="pick-theme">📍 {card.theme}</div>}
       <div className="h" style={{ top: 98, fontSize: 34 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
       <div className="opts">
         {!own && card.phrases.map((t, k) => (
-          <button key={k} className={`opt ${k === i ? "on" : ""}`} onClick={() => setI(k)} data-testid={`phrase-${k}`}>{single ? <b>{t}</b> : t}</button>
+          <button key={k} className={`opt ${k === i ? "on" : ""}`} onClick={() => setI(k)} data-testid={`phrase-${k}`}>{card.themes?.[k] && <span className="opt-ctx">{card.themes[k]}</span>}{single ? <b>{t}</b> : t}</button>
         ))}
         {own && (
           <div className="phr-opts">

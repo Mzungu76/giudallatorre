@@ -33,3 +33,12 @@ describe("contenuti originali del gioco", () => {
     expect(problems).toEqual([]); expect(state.phase).toBe("GAME_OVER");
   });
 });
+
+describe("contesti delle frasi", () => {
+  it("ogni frase delle 50 carte ha il proprio contesto breve", () => {
+    for (const c of (json("content/su-sulla-torre.json") as { carte: { frasi: string[]; contesti?: string[] }[] }).carte) {
+      expect(c.contesti).toHaveLength(c.frasi.length);
+      for (const t of c.contesti!) { expect(t.length).toBeGreaterThan(2); expect(t.length).toBeLessThanOrEqual(28); }
+    }
+  });
+});

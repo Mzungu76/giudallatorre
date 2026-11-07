@@ -173,7 +173,7 @@ export class RoomCore {
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "la partita è già avviata");
         if (d.players.length < LIMITS.minPlayers) return err("NOT_ENOUGH_PLAYERS", "servono almeno 3 giocatori");
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, justifyVotes: d.options.justifyVotes, herd: d.options.herd, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, justifyVotes: d.options.justifyVotes, herd: d.options.herd, mixPhrases: true, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);

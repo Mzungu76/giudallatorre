@@ -84,3 +84,25 @@ describe("contesto della frase", () => {
     expect(ph && ph.mode === "card" && ph.theme).toBe("In palestra");
   });
 });
+
+describe("frasi mescolate a caso", () => {
+  const cards = Array.from({ length: 6 }, (_, c) => ({ id: `k${c}`, phrases: Array.from({ length: 5 }, (_, i) => `frase ${c}-${i}`), themes: Array.from({ length: 5 }, (_, i) => `ctx ${c}-${i}`) }));
+  it("ogni frase tiene il proprio contesto anche dopo il rimescolamento, e le carte non sono più quelle di partenza", () => {
+    const seen = new Set<string>(); let regrouped = false;
+    for (let seed = 1; seed <= 20; seed++) {
+      let s = createGame({ players, seed, deck, phraseDeck: cards, mixPhrases: true }).state;
+      const proclaim = (s: GameState) => viewFor(s, megafonoOf(s)).proclaimCard!;
+      const pc = proclaim(s);
+      pc.phrases.forEach((f, i) => expect(pc.themes![i]).toBe(f.replace("frase", "ctx")));
+      if (new Set(pc.phrases.map((f) => f.split(" ")[1]!.split("-")[0])).size > 1) regrouped = true;
+      const mega = megafonoOf(s); s = applyAction(s, { type: "choosePhrase", playerId: mega, mode: "card", index: 2 }).state;
+      const ph = viewFor(s, mega).phrase!; expect(ph.mode === "card" && ph.theme).toBe(pc.themes![2]);
+      pc.phrases.forEach((f) => seen.add(f));
+    }
+    expect(regrouped).toBe(true); expect(seen.size).toBeGreaterThan(20);
+  });
+  it("senza l'opzione le carte restano com'erano", () => {
+    const s = createGame({ players, seed: 3, deck, phraseDeck: cards }).state;
+    const pc = viewFor(s, megafonoOf(s)).proclaimCard!; expect(new Set(pc.phrases.map((f) => f.split(" ")[1]!.split("-")[0])).size).toBe(1);
+  });
+});
