@@ -188,12 +188,6 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
         {cur.kind === "gain" && <><b className="rv-t">Voto giusto: +2</b><span>{gainers.length ? gainers.map((x) => x.name).join(", ") + (gainers.length > 1 ? " hanno" : " ha") + " votato la carta che cade." : "Nessun altro aveva votato la carta che cade."}</span></>}
         {cur.kind === "mega" && <><b className="rv-t" data-testid="mega-title">{megaName} raccoglie i voti</b><span data-testid="mega-calc">{collected === 0 ? `Nessuno ha votato come lui (n. ${megaVote}): +0.` : `${collected} ${collected === 1 ? "voto" : "voti"} degli altri sulla sua carta (n. ${megaVote}) = +${collected}.`}{megaFalls ? ` E la carta cade: voto giusto +2 → ${collected + 2} punti.` : " La carta resta su: niente +2."}</span></>}
         {cur.kind === "stamp" && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
-        {cur.kind !== "stamp" && cur.kind !== "intro" && (
-          <div className="rv-tally" aria-label="Voti finora">
-            {cardIds.map((id, k) => { const vs = byCard[k + 1] ?? []; const lead = (cur.kind === "tally" || cur.kind === "owners" || cur.kind === "gain" || cur.kind === "mega" || cur.kind === "lui") && fallPositions.includes(k + 1);
-              return <div key={id} className={`tl ${lead ? "lead" : ""} ${focusList.includes(k + 1) ? "cur" : ""}`}><span className="th" style={thumb(id)}><i>{k + 1}</i></span><b>{vs.length}</b><span className="dots">{vs.map((x) => <i key={x.id} style={{ background: x.color }} />)}</span></div>; })}
-          </div>
-        )}
       </div>
       {interactive && cur.kind !== "stamp" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
     </>
