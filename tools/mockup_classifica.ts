@@ -1,6 +1,7 @@
 // Mockup della classifica "da gioco da tavolo": A = percorso a serpentina con pedine, B = salita lungo la torre. Uso: npx tsx tools/mockup_classifica.ts
 import { writeFileSync } from "node:fs";
-import { animalMarkup } from "../apps/web/src/lib/animals.ts";
+import { CHAR_COLORS, tokenUrl } from "../apps/web/src/lib/characters.ts"; void CHAR_COLORS; void tokenUrl;
+const animalMarkup = (_c: string, _w?: boolean) => "";
 
 const NV = "#13224a";
 const P = [

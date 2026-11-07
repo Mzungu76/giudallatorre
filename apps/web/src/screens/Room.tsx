@@ -83,7 +83,7 @@ export default function RoomScreen({ code }: { code: string }) {
   return (
     <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
-      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} />)}
+      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} />)}
       <Chat chat={chat} me={room.you} players={room.players} send={send} sound={sound} />
       <button className="snd" aria-label={sound ? "Disattiva i suoni" : "Attiva i suoni"} onClick={() => setSound(!sound)}>{sound ? "🔊" : "🔇"}</button>
       {reconnecting && <div className="banner-conn">Riconnessione…</div>}

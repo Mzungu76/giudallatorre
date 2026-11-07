@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode, CSSProperties } from "react";
 
-export const PLAYER_COLORS = ["#e5384b", "#2f7be0", "#f4c20d", "#3aa655", "#8a5a3b", "#8e44c8", "#ee7bb0", "#222222"];
+import { CHAR_COLORS } from "./lib/characters.ts";
+export const PLAYER_COLORS = CHAR_COLORS;
 
 export function navigate(path: string) { history.pushState(null, "", path); window.dispatchEvent(new PopStateEvent("popstate")); }
 
