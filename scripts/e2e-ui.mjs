@@ -36,7 +36,7 @@ async function stepPage(p) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
-  if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }
+  if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
   if (await vis(p, "phrase-picker")) { if (shots < 1) { await shot(p, "06-frase"); shots++; } await p.click('[data-testid="phrase-0"]'); return true; }
   if (await vis(p, "hand")) { if (!p.s1) { await shot(p, "07-mano"); p.s1 = 1; } await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "lui-chooser")) {

@@ -105,32 +105,16 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
 type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui"; i?: number };
-const BLK_DT = 1.9;
 export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, lines, tieBreak, megaName, sound, skip, interactive, onDone, onLock }: {
+export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, tieBreak, megaName, sound, skip, interactive, onDone }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
-  lui: LuiOutcome | null; tie: boolean; tieBreak: boolean; fallPositions: number[]; lines: Record<string, ScoreLine[]>; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void; onLock?: (locked: boolean) => void;
+  lui: LuiOutcome | null; tie: boolean; tieBreak: boolean; fallPositions: number[]; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
 }) {
   const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
   const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0;
-  const who = (kinds: string[]) => voters.flatMap((v) => (lines[v.id] ?? []).filter((l) => kinds.includes(l.kind)).map(() => ({ name: v.name + (v.mega ? " 📣" : ""), color: v.color })));
-  const lineOf = (kinds: string[]) => voters.flatMap((v) => (lines[v.id] ?? []).filter((l) => kinds.includes(l.kind)))[0];
-  const blocks = (() => {
-    const b: { key: string; title: string; sub: string; label: string; who: { name: string; color: string }[]; thumbs: number[]; neg?: boolean }[] = [];
-    const vw = who(["voto"]);
-    if (vw.length) b.push({ key: "voto", title: "Voto giusto", sub: multi ? "Hanno votato una delle carte cadute" : `Hanno votato il n. ${fallPos}, che cade`, label: "+2 a testa", who: vw, thumbs: fallPositions });
-    const cw = who(["carta"]);
-    if (cw.length) b.push({ key: "carta", title: "Carta caduta", sub: multi ? "Avevano giocato le carte cadute" : "Aveva giocato la carta caduta", label: "+2 a carta", who: cw, thumbs: fallPositions });
-    if (lui) {
-      const hit = lui.hit, who2 = who(["lui", "lui-mancato"]);
-      b.push({ key: "lui", title: hit ? "Lui! azzeccato" : "Lui! mancato", sub: `${luiLabel(lui)} sul n. ${lui.position}: ${lui.others === 0 ? "nessun altro l'ha votata" : lui.others === 1 ? "1 voto degli altri" : lui.others + " voti degli altri"}${hit ? "" : " — niente punti, il segnalino è speso"}`, label: hit ? `+${lui.pts}` : "0", who: who2, thumbs: [lui.position], neg: !hit });
-    }
-    return b;
-  })();
-  const totals = voters.map((v) => ({ v, t: (lines[v.id] ?? []).reduce((a, l) => a + l.pts, 0) })).filter((x) => (lines[x.v.id] ?? []).length > 0).sort((a, b) => b.t - a.t);
   const steps = useMemo(() => {
     const st: Step[] = []; let t = 0;
     const add = (kind: Step["kind"], d: number, i?: number) => { st.push({ t0: t, t1: t + d, kind, i }); t += d; };
@@ -142,14 +126,14 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
     add("tally", 3.2);
     if (lui) add("lui", 3.2);
     return st;
-  }, [voters, lui, m, blocks.length]);
+  }, [voters, lui, m]);
   const END = steps[steps.length - 1]!.t1;
   const seek = useRef<((t: number) => void) | null>(null);
-  const [phase, setPhase] = useState<"clock" | "points" | "stamp">("clock");
-  const T = useClock(END, () => setPhase("points"), 0, seek);
+  const [phase, setPhase] = useState<"clock" | "stamp">("clock");
+  const T = useClock(END, () => setPhase("stamp"), 0, seek);
   const skip0 = useRef(skip);
   useEffect(() => { if (skip > skip0.current) { skip0.current = skip; if (phase === "clock") seek.current?.(END); } }, [skip]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { if (phase === "points") { sfx.tada(sound); if (!interactive) { const t = setTimeout(() => setPhase("stamp"), (2 + BLK_DT * Math.max(1, blocks.length) + 3) * 1000); return () => clearTimeout(t); } } if (phase === "stamp") { sfx.stamp(sound); const t = setTimeout(onDone, 1900); return () => clearTimeout(t); } return undefined; }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (phase === "stamp") { sfx.stamp(sound); const tt = setTimeout(onDone, 1900); return () => clearTimeout(tt); } return undefined; }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
   const cur = steps.find((s) => T >= s.t0 && T < s.t1) ?? steps[steps.length - 1]!;
   const fired = useRef<Set<string>>(new Set());
   useEffect(() => {
@@ -175,34 +159,12 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
   const v = cur.kind === "vote" ? voters[cur.i!]! : null, vp = v ? votes[v.id]! : 0;
   const total = voters.length, focusList = focusPos === -1 ? fallPositions : focusPos > 0 ? [focusPos] : [];
-  const locked = phase === "points";
-  useEffect(() => { onLock?.(locked); return () => onLock?.(false); }, [locked]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.position, spec: luiOpen ? { slot: lui.slot, k: lui.k, pts: lui.pts } : null } : null} />
       <div className="darkv" />
       {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
-      {phase === "points" && (
-        <div className="pb" data-testid="points-panel">
-          <b className="rv-t" data-testid="points-title">Chi prende punti</b>
-          <div className="pb-scroll">
-            {blocks.length === 0 && <span className="pb-none">Questa volta nessuno prende punti.</span>}
-            {blocks.map((b, bi) => (
-              <div className={`pb-blk ${b.neg ? "neg" : ""}`} key={b.key} data-testid="points-block" style={{ animationDelay: `${0.4 + bi * BLK_DT}s` }}>
-                <div className="pb-h">
-                  <span className="pb-th">{b.thumbs.map((p) => <span key={p} className="pb-c" style={thumb(cardIds[p - 1]!)}><i>{p}</i></span>)}</span>
-                  <span className="pb-tx"><b>{b.title}</b><small>{b.sub}</small></span>
-                  <span className="pb-pts">{b.label}</span>
-                </div>
-                <div className="pb-who">{b.who.map((w, k) => <span className="pb-nm" key={k}><i className="dc" style={{ background: w.color }} />{w.name}</span>)}</div>
-              </div>))}
-            {totals.length > 0 && <div className="pb-sum" data-testid="points-total" style={{ animationDelay: `${0.4 + blocks.length * BLK_DT}s` }}><b>In totale nel turno</b><span>{totals.map((x) => <span className={`pb-nm ${x.t < 0 ? "neg" : ""}`} key={x.v.id}><i className="dc" style={{ background: x.v.color }} />{x.v.name} <em>{x.t > 0 ? "+" : "−"}{Math.abs(x.t)}</em></span>)}</span></div>}
-          </div>
-          {interactive
-            ? <button className="pb-go" onClick={() => setPhase("stamp")} data-testid="points-continue">Continua ›</button>
-            : <span className="pb-wait">Il Megafono prosegue…</span>}
-        </div>)}
-      {phase !== "points" && <div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
+      {<div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
         {phase === "clock" && cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi. Un voto alla volta.</span></>}
         {phase === "clock" && cur.kind === "suspense" && <><b className="rv-t">Manca l’ultimo voto…</b><span>{voters[m - 1]!.mega ? `Aspettiamo il Megafono, ${megaName}!` : `Aspettiamo ${voters[m - 1]!.name}.`}</span></>}
         {phase === "clock" && cur.kind === "vote" && v && (

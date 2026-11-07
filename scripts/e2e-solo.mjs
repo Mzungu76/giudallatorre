@@ -24,7 +24,7 @@ async function step() {
   if (await vis("mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis("mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis("points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
-  if (await vis("standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }
+  if (await vis("standings-action")) { if (SAMPLE && turns === 0) await sleep(2500); await p.click('[data-testid="standings-action"]'); turns++; if (turns >= 1) sampling = false; return true; }
   if (await vis("phrase-picker")) {
     await clk('[data-testid="phrase-0"]', { timeout: 4000 }); return true; }
   if (await vis("hand")) {

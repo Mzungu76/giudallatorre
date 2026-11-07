@@ -20,7 +20,7 @@ async function step(p) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
-  if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }
+  if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
   if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
   if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="3"]').dispatchEvent("click"); if (!sShot) { await sleep(400); await p.screenshot({ path: `${SHOTS}/20-otto-torre.png` }); sShot = true; } await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }

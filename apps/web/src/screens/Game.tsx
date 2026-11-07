@@ -6,6 +6,7 @@ import { Btn, Chips, Countdown, Disc, FAST, PLAYER_COLORS, useStage } from "../u
 import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
+import PointsPanel from "../components/PointsPanel.tsx";
 import Zoom from "../components/Zoom.tsx";
 import { Climb, Reveal, Terrace } from "../components/Terrace.tsx";
 import type { Voter, VoteTok } from "../components/Terrace.tsx";
@@ -17,16 +18,6 @@ import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
-const lineText = (l: { kind: string; pts: number; n?: number }) => {
-  const pts = l.pts < 0 ? `−${-l.pts}` : `+${l.pts}`;
-  switch (l.kind) {
-    case "voto": return `voto giusto ${pts}`;
-    case "carta": return `carta caduta ${pts}`;
-    case "lui": return `Lui! azzeccato ${pts}`;
-    case "lui-mancato": return "Lui! mancato";
-    default: return `${l.kind} ${pts}`;
-  }
-};
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 const BANNERS: Record<string, [string, string]> = {
   PLAY: ["Scegliete la carta!", "quella che sta meglio sulla torre"],
@@ -41,7 +32,6 @@ function LuiTray({ view }: { view: PlayerView }) {
     </span>
   );
 }
-const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : "0");
 
 export function usePeople(room: RoomMsg) {
   return useMemo(() => {
@@ -141,45 +131,6 @@ export function HandPicker({ view, send, top, tip }: { view: PlayerView; send: G
   );
 }
 
-function useCount(from: number, to: number, delay: number, dur = 0.9): number {
-  const [v, setV] = useState(FAST ? to : from);
-  useEffect(() => {
-    if (FAST) { setV(to); return; }
-    let raf = 0; const t0 = performance.now();
-    const loop = (now: number) => { const u = Math.max(0, Math.min(1, ((now - t0) / 1000 - delay) / dur)); setV(Math.round(from + (to - from) * u)); if (u < 1) raf = requestAnimationFrame(loop); };
-    raf = requestAnimationFrame(loop); return () => cancelAnimationFrame(raf);
-  }, [from, to, delay, dur]);
-  return v;
-}
-function ScoreRow({ rank, name, color, why, delta, from, to, delay, leader, max }: { max: number; rank: number; name: string; color: string; why: string; delta: number; from: number; to: number; delay: number; leader: boolean }) {
-  const v = useCount(from, to, delay);
-  return (
-    <div className={`rw ${delta !== 0 ? "up" : ""}`} data-testid="score-row" style={{ ["--w" as string]: `${Math.max(0, Math.round((100 * Math.max(0, to)) / Math.max(1, max)))}%` }}>
-      <span className="rk">{leader ? "👑" : rank}</span><Disc color={color} />
-      <span className="nm">{name}<small>{why}</small></span>
-      <span className={`dl ${delta > 0 ? "" : delta < 0 ? "n" : "z"}`}>{signed(delta)}</span>
-      <span className="tt" data-testid="score-total">{v < 0 ? `−${Math.abs(v)}` : v}</span>
-    </div>
-  );
-}
-
-/** Classifica di fine turno: i punti del turno e il totale che si somma in tempo reale. A fine giro diventa la classifica del giro. */
-function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, final }: { H: number; res: TurnResult; view: PlayerView; people: ReturnType<typeof usePeople>; canAdvance: boolean; deadline: number | null; onAdvance: () => void; final: boolean }) {
-  const rows = view.players.map((p) => ({ p, d: res.points[p.id] ?? 0, from: p.score - (res.points[p.id] ?? 0), to: p.score }));
-  const ranked = [...rows].sort((a, b) => b.to - a.to), top = ranked[0]?.to ?? 0, compact = rows.length > 6 || H < 700;
-  const title = view.roundEnd ? `Classifica · giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : res.tieBreak ? "Pareggio: ha deciso il Megafono" : res.tie ? "Pareggio: cadono insieme" : "Classifica del turno";
-  return (
-    <div className={`score ${compact ? "c8" : ""}`} data-testid="result-panel">
-      <h3>{view.goldenGoal ? "⚡ Spareggio · classifica" : title}</h3>
-      <div>{ranked.map((r, i) => <ScoreRow key={r.p.id} rank={i + 1} name={people.get(r.p.id).name} color={people.get(r.p.id).color} leader={r.to === top && top > 0 && i === 0}
-        why={(res.lines[r.p.id] ?? []).map(lineText).join(" · ") || "—"} delta={r.d} from={r.from} to={r.to} delay={0.15 + i * 0.12} max={top} />)}</div>
-      {canAdvance
-        ? <Btn onClick={onAdvance} testId="advance" style={{ marginTop: 8, padding: 11, fontSize: 21 }}>{final ? "Vedi la classifica finale" : view.roundEnd ? "Nuovo giro" : "Prossimo turno"}</Btn>
-        : <div className="hint" style={{ marginTop: 8 }}>Prosegue il Megafono… <Countdown deadline={deadline} /></div>}
-    </div>
-  );
-}
-
 function Legend({ onClose, tokens }: { onClose: () => void; tokens: LuiSpec[] }) {
   const row = (ic: string, t: string, sub: string, pt: string, neg = false) => <div className="sr"><span className="ic" dangerouslySetInnerHTML={{ __html: ic }} /><span>{t}<small>{sub}</small></span><span className={`pt ${neg ? "neg" : ""}`}>{pt}</span></div>;
   return (
@@ -199,7 +150,7 @@ function Legend({ onClose, tokens }: { onClose: () => void; tokens: LuiSpec[] })
 
 export default function Game({ room, view, deadline, send, readOnly, sound }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
-  const [phraseB, setPhraseB] = useState(220), [skipLock, setSkipLock] = useState(false), [board, setBoard] = useState(false);
+  const [phraseB, setPhraseB] = useState(220), [board, setBoard] = useState(false), [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
@@ -232,6 +183,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   const falling = !!res && watched && !revealing && fallDone !== turn && !FAST;
   const showFallScene = !!res && watched && !revealing && !FAST;
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
+  const afterStep = after.turn === turn ? after.step : "points";
 
   const voters: Voter[] = useMemo(() => {
     // Gli altri in ordine di tavolo, il Megafono per ultimo (rullo di tamburi).
@@ -265,7 +217,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : setZoomPos(n)) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} /><span className="nm">{readOnly ? "Schermo condiviso" : people.get(me).name}</span>{!readOnly && <LuiTray view={view} />}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
@@ -305,10 +257,14 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
 
-      {animating && !readOnly && !skipLock && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">Salta ›</button>}
-      {showPanel && res && (
-        <Scoreboard H={H} res={res} view={view} people={people} canAdvance={!readOnly && (isMega || isHost || megaBot)} deadline={deadline} final={view.turn >= view.totalTurns}
-          onAdvance={() => act({ t: "act", action: { type: "advance" } })} />
+      {animating && !readOnly && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">Salta ›</button>}
+      {showPanel && res && afterStep === "points" && (
+        <PointsPanel cardIds={ids} voters={voters} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
+      )}
+      {showPanel && res && afterStep === "board" && (
+        <Standings title={view.goldenGoal ? "Spareggio" : view.roundEnd ? `Fine del giro ${Math.min(view.round, view.rounds)}/${view.rounds}` : "Classifica"} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
+          rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}
+          action={!readOnly && (isMega || isHost || megaBot) ? { label: view.turn >= view.totalTurns ? "Vedi la classifica finale" : view.roundEnd ? "Nuovo giro" : "Prossimo turno", onClick: () => act({ t: "act", action: { type: "advance" } }) } : { wait: readOnly ? "Prosegue la partita…" : "Prosegue il Megafono…" }} />
       )}
 
       {zoomPos !== null && ids[zoomPos - 1] && (

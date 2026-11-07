@@ -593,3 +593,9 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .chips .chip .nm{max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ltray{display:inline-flex;gap:2px;margin-left:3px;vertical-align:middle}
 .ltray .lt{display:inline-block;line-height:0}.ltray .lt.used{opacity:.35;filter:grayscale(1)}
+
+/* classifica che si aggiorna: le pedine salgono dal vecchio al nuovo punteggio */
+.stbd-pawn,.stbd-tag,.stbd-lead{transition:top 1.3s cubic-bezier(.45,.05,.3,1)}
+.stbd-tag b{transition:none}
+.stbd-d{position:absolute;right:-6px;top:-13px;background:#2a9d57;color:#fff;border:2px solid #13224a;border-radius:99px;padding:0 6px;font:400 13px/16px Anton;text-decoration:none;animation:popin2 .4s .3s ease-out both}
+.stbd-d.neg{background:#e8362b}
