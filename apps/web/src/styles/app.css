@@ -489,3 +489,14 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .sr2 b{font:400 24px Anton;min-width:34px;text-align:right;color:#13224a}
 
 .zoom.top{z-index:130 !important}.zoom.top .sheet{z-index:131}
+
+/* regolamento */
+.how{top:60px !important;max-height:calc(100% - 80px) !important}
+.how h3{font:400 18px/1 Anton;text-transform:uppercase;color:#13224a;margin:12px 0 7px;border-bottom:3px solid #13224a33;padding-bottom:3px}
+.how-intro{background:#fff7e0;border:2px dashed #13224a66;border-radius:12px;padding:8px 10px;font:italic 700 12.5px/1.4 Nunito;color:#13224a}
+.how-intro p{margin:0 0 6px}.how-intro p:last-child{margin:0}
+.how-pts{list-style:none;padding:0;margin:0 0 12px;display:flex;flex-direction:column;gap:5px}
+.how-pts li{display:flex;gap:10px;align-items:center;font:800 13px/1.3 Nunito;color:#13224a}
+.how-pts b{flex:none;min-width:62px;text-align:center;background:#e7f6ea;color:#1c6b3c;border:2px solid #13224a;border-radius:99px;padding:1px 6px;font:400 16px Anton}
+.how-pts b.neg{background:#fde6e4;color:#b3261e}
+.credit{left:14px;top:20px;text-align:left;max-width:150px;line-height:1.2;font:800 11.5px Nunito;color:#fff;text-shadow:0 1px 0 #13224a,0 0 6px #13224a;letter-spacing:.04em;z-index:30;pointer-events:none}
