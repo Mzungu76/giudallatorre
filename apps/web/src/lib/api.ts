@@ -4,7 +4,7 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   let res: Response;
   try { res = await fetch(path, { ...init, headers: { "content-type": "application/json" } }); } catch { throw new ApiError("NETWORK", 0, "Connessione assente"); }
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new ApiError((data as { error?: string }).error ?? "ERROR", res.status, (data as { message?: string }).message);
+  if (!res.ok) throw new ApiError((data as { error?: string }).error ?? (res.status >= 500 ? "SERVER" : "ERROR"), res.status, (data as { message?: string }).message);
   return data as T;
 }
 export type BotLevel = "easy" | "medium" | "hard";
@@ -24,5 +24,6 @@ export const ERROR_TEXT: Record<string, string> = {
   RATE_LIMIT: "Troppi tentativi ravvicinati. Aspetta un minuto e riprova.",
   NETWORK: "Sei offline o il server non risponde. Controlla la connessione e riprova.",
   TRY_AGAIN: "Il server è occupato. Riprova tra qualche secondo.",
+  SERVER: "Il server non risponde (errore del servizio o limite giornaliero raggiunto). Riprova tra qualche minuto.",
 };
 export const errText = (e: unknown) => (e instanceof ApiError ? ERROR_TEXT[e.code] ?? "Qualcosa è andato storto. Riprova." : "Qualcosa è andato storto. Riprova.");
