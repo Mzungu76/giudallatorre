@@ -462,5 +462,5 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .pb-sum>b{font:400 15px Anton;text-transform:uppercase;color:#e8362b}
 
 /* nastro: titolo più compatto, così "?" e pulsanti non lo coprono */
-.strip{font-size:17px !important;letter-spacing:.12em !important}
-.legend2{left:40px !important;right:auto !important;top:80px !important}
+.strip{font-size:15px !important;letter-spacing:.08em !important}
+.legend2{left:auto !important;right:42px !important;top:72px !important}
