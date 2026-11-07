@@ -265,7 +265,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
-            <Tip>{view.luiPosition ? `Il Lui! del Megafono (bordo giallo) è sul n. ${view.luiPosition}. ` : ""}Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2. Gregge: se il Megafono indovina la carta che cade, i +2 dei votanti sono solo suoi.</Tip>
+            <Tip>{view.luiPosition ? `Il Lui! del Megafono (bordo giallo) è sul n. ${view.luiPosition}. ` : ""}Vota chi farebbe di più questa cosa: il più votato cade giù e chi l'ha votato fa +2.{!isMega && <strong className="tip-warn" data-testid="tip-herd"> Evita il voto del Megafono! Se il suo Lui! indovina la carta che cade, chi l'ha votata fa zero punti.</strong>}</Tip>
             <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
