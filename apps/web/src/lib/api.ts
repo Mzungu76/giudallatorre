@@ -24,6 +24,7 @@ export const ERROR_TEXT: Record<string, string> = {
   RATE_LIMIT: "Troppi tentativi ravvicinati. Aspetta un minuto e riprova.",
   NETWORK: "Sei offline o il server non risponde. Controlla la connessione e riprova.",
   TRY_AGAIN: "Il server è occupato. Riprova tra qualche secondo.",
+  QUOTA: "Il servizio ha raggiunto il limite giornaliero gratuito. Si riprende dopo la mezzanotte UTC (l'una di notte in Italia).",
   SERVER: "Il server non risponde (errore del servizio o limite giornaliero raggiunto). Riprova tra qualche minuto.",
 };
 export const errText = (e: unknown) => (e instanceof ApiError ? ERROR_TEXT[e.code] ?? "Qualcosa è andato storto. Riprova." : "Qualcosa è andato storto. Riprova.");

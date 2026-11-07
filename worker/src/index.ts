@@ -23,6 +23,18 @@ async function readJson(req: Request): Promise<unknown | null> {
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    try { return await handle(request, env); }
+    catch (e) {
+      // Un'eccezione non gestita (ad esempio un limite gratuito di Cloudflare esaurito) diventa un errore leggibile e finisce nei log con il suo testo.
+      const msg = e instanceof Error ? `${e.name}: ${e.message}` : String(e);
+      console.error("errore API", new URL(request.url).pathname, msg);
+      return /exceed|limit|quota|overload/i.test(msg) ? reply({ error: "QUOTA" }, 503) : reply({ error: "SERVER" }, 500);
+    }
+  },
+};
+
+async function handle(request: Request, env: Env): Promise<Response> {
+  {
     const url = new URL(request.url), ip = request.headers.get("cf-connecting-ip") ?? "local", now = Date.now();
     const path = url.pathname;
     if (path === "/api/health") return reply({ ok: true });
@@ -64,5 +76,5 @@ export default {
       }
     }
     return reply({ error: "NOT_FOUND" }, 404);
-  },
-};
+  }
+}
