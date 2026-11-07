@@ -48,16 +48,16 @@ function terraceBase(){
   ms.sort((p,q)=>p.y-q.y).forEach(({x,y,a})=>{o+=merlonG(x-14,y,28,26)});
   return o+'</svg>'}
 /* ---- carta su piedini neri, con ombre ---- */
-function cardFace(i,w,h,state){ // state: 'up' | 'down' | numero flip 0..1
+function cardFace(i,w,h,state,lui){ // state: 'up' | 'down' | numero flip 0..1
   const back=`background:linear-gradient(135deg,#14a3a1 0 50%,#0e7d7c 50%);`;
   const face=`background-image:url(${URLS[i]});`;
-  return `<div class="cdA" style="left:0;top:0;width:${w}px;height:${h}px;${state==='down'?back:face}"><i>${i+1}</i>${state==='down'?`<span style="position:absolute;inset:0;display:grid;place-items:center;font:400 ${w*.5}px Anton;color:#fff;opacity:.9">?</span>`:''}</div>`}
+  return `<div class="cdA" style="left:0;top:0;width:${w}px;height:${h}px;${state==='down'?back:face}${lui?'border-color:#ffc72c;box-shadow:0 0 0 3px #13224a,0 0 18px 6px #ffc72c;':''}"><i>${i+1}</i>${state==='down'?`<span style="position:absolute;inset:0;display:grid;place-items:center;font:400 ${w*.5}px Anton;color:#fff;opacity:.9">?</span>`:''}</div>`}
 function standCard(i,x,feet,w,rot,z,o={}){const h=Math.round(w*1.5);
   const flip=o.flip!==undefined;const sx=flip?Math.max(.05,Math.abs(Math.cos(o.flip*Math.PI))):1,st=flip?(o.flip<.5?'down':'up'):(o.state||'up');
   return `<div style="position:absolute;left:${x-4}px;top:${feet-10}px;width:${w+30}px;height:30px;z-index:${z}">
      <svg width="${w+30}" height="30" viewBox="0 0 ${w+30} 30" overflow="visible"><polygon points="6,12 ${w+2},12 ${w+30},2 32,2" fill="#13224a" opacity=".2"/><ellipse cx="${w/2+8}" cy="16" rx="${w*.52}" ry="9" fill="#13224a" opacity=".38"/></svg></div>
    <div style="position:absolute;left:${x}px;top:${feet-h-6}px;width:${w}px;height:${h+10}px;transform:rotate(${rot}deg);transform-origin:50% 100%;z-index:${z+1}">
-    <div style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;transform:scaleX(${sx});transform-origin:50% 50%">${cardFace(i,w,h,st)}</div>
+    <div style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;transform:scaleX(${sx});transform-origin:50% 50%">${cardFace(i,w,h,st,o.lui)}</div>${o.lui?`<div class="luitag" style="position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:6">${luiTok(o.lui.kind,46,o.lui.back)}</div>`:''}
     <div style="position:absolute;left:${(w-Math.max(18,w*.3))/2}px;top:${h-5}px;width:${Math.max(18,w*.3)}px;height:13px;background:#13224a;border-radius:3px 3px 5px 5px;box-shadow:inset 0 3px 0 #3b4a6e,inset 0 -2px 0 #0a1230"></div>
    </div>`}
 const jit=(k)=>[(Math.sin(k*12.9898)*43758.5453)%1,(Math.sin(k*78.233)*12345.678)%1,(Math.sin(k*39.346)*9871.123)%1].map(v=>v-Math.floor(v)-.5);
@@ -66,12 +66,11 @@ function cardsLayout(n,opt={}){
   const wB=n<=5?88:68,wF=n<=5?100:76,spB=n<=5?100:62,spF=n<=5?102:66,yB=n<=5?466:458,yF=n<=5?566:566;
   let o='';const pos={};
   const put=(list,feet,w,sp,zb)=>{const m=(list.length-1)/2;list.forEach((i,k)=>{const [jx,jy,jr]=jit(i+1),x=CX+(k-m)*sp-w/2+jx*8,f=feet+jy*6,rot=jr*6;pos[i]={x,f,w,h:Math.round(w*1.5)};
-     if(opt.show&&!opt.show.includes(i))return;const sc=standCard(i,x,f,w,rot,zb+k*2,{state:opt.down?'down':'up',flip:(opt.flip&&opt.flip[i]!==undefined)?opt.flip[i]:undefined});o+=(opt.pop&&opt.pop===i+1)?`<div class="popin" style="position:absolute;inset:0">${sc}</div>`:sc})};
+     if(opt.show&&!opt.show.includes(i))return;const sc=standCard(i,x,f,w,rot,zb+k*2,{state:opt.down?'down':'up',flip:(opt.flip&&opt.flip[i]!==undefined)?opt.flip[i]:undefined,lui:(opt.lui===i+1)?{kind:opt.luiKind||'CADE',back:!!opt.luiBack}:undefined});o+=(opt.pop&&opt.pop===i+1)?`<div class="popin" style="position:absolute;inset:0">${sc}</div>`:sc})};
   put(back,yB,wB,spB,10);put(front,yF,wF,spF,30);
   // gettoni DIRETTAMENTE sulla carta (colore giocatore); il Megafono ha il simbolo del megafono
   (opt.votes||[]).forEach((v,idx,all)=>{const p=pos[v.p-1];if(!p)return;const same=all.filter(q=>q.p===v.p),j=same.indexOf(v),cnt=same.length;const tx=p.x+p.w/2-14+((j%2)?9:-9)*(cnt>1?1:0),ty=p.f-p.h*.55-Math.floor(j/2)*14+((j%2)?10:0);
-     o+=`<div style="position:absolute;left:${tx}px;top:${ty}px;z-index:70;transform:rotate(${(j-1)*9}deg)">${voteTok(v.c,28,v.mega)}</div>`});
-  if(opt.lui&&pos[opt.lui-1]){const p=pos[opt.lui-1];o+=`<div style="position:absolute;left:${p.x+p.w-20}px;top:${p.f-p.h-2}px;z-index:72;transform:rotate(10deg)">${luiTok(opt.luiKind||'CADE',36,opt.luiBack)}</div>`}
+     o+=`<div class="${idx===opt.lastVote?'tokdrop':''}" style="position:absolute;left:${tx}px;top:${ty}px;z-index:70;transform:rotate(${(j-1)*9}deg)">${voteTok(v.c,28,v.mega)}</div>`});
   if(opt.posOut)Object.assign(opt.posOut,pos);
   return o}
 const terrace=(n,opt={})=>shaft()+terraceBase()+cardsLayout(n,opt);

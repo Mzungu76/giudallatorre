@@ -265,7 +265,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
-            <Tip>Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2.{view.rules.herd ? " (Gregge: se il Megafono indovina la carta, i +2 sono solo suoi.)" : ""}</Tip>
+            <Tip>{view.luiPosition ? `Il Lui! del Megafono (bordo giallo) è sul n. ${view.luiPosition}. ` : ""}Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2.{view.rules.herd ? " (Gregge: se il Megafono indovina la carta, i +2 sono solo suoi.)" : ""}</Tip>
             {view.rules.justifyVotes && <div className="reason-box"><textarea className="phr-in" rows={2} maxLength={MAX_REASON_CHARS} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="Perché proprio lui? Scrivilo in una frase (resta segreto fino allo spoglio)" data-testid="vote-reason" aria-label="Perché hai votato questo personaggio" /><small>{reason.length}/{MAX_REASON_CHARS}</small></div>}
             <Btn disabled={!pick || (view.rules.justifyVotes && !reason.trim())} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick, ...(view.rules.justifyVotes ? { reason: reason.trim() } : {}) } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : view.rules.justifyVotes && !reason.trim() ? "Scrivi perché lo voti" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
