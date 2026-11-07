@@ -6,19 +6,20 @@ import { DECK, PHRASE_DECK } from "../../worker/src/content.ts";
 
 /** Segnalini numerati: il Megafono posa il numero k su una carta e scommette che prenda almeno k voti. */
 type Pay = (k: number, pos: number, v: number, others: number[], n: number) => number;
-const F: { name: string; hit: (k: number, n: number) => number; miss: number }[] = [
-  { name: "L1 10 punti fissi se azzecca, 0 se no", hit: () => 10, miss: 0 },
-  { name: "L2 2 × k se azzecca, 0 se no", hit: (k) => 2 * k, miss: 0 },
-  { name: "L3 3 × k se azzecca, 0 se no", hit: (k) => 3 * k, miss: 0 },
-  { name: "L4 k² se azzecca, 0 se no", hit: (k) => k * k, miss: 0 },
-  { name: "L5 2 × k se azzecca, −1 se no", hit: (k) => 2 * k, miss: -1 },
-  { name: "L6 k + 2 se azzecca, 0 se no", hit: (k) => k + 2, miss: 0 },
-  { name: "L7 2 × k − 1 se azzecca, −2 se no", hit: (k) => 2 * k - 1, miss: -2 },
+const F: { name: string; hit: (k: number, n: number) => number; miss: number; exact?: boolean }[] = [
+  { name: "P1 almeno k voti, k+1 punti (0 voti = 1), 0 se no", hit: (k) => k + 1, miss: 0 },
+  { name: "P2 almeno k voti, k+1 punti, −1 se no", hit: (k) => k + 1, miss: -1 },
+  { name: "P3 almeno k voti, 2×(k+1) punti, −1 se no", hit: (k) => 2 * (k + 1), miss: -1 },
+  { name: "P4 ESATTAMENTE k voti, k+1 punti, 0 se no", hit: (k) => k + 1, miss: 0, exact: true },
+  { name: "P5 ESATTAMENTE k voti, 2×(k+1) punti, 0 se no", hit: (k) => 2 * (k + 1), miss: 0, exact: true },
+  { name: "P6 ESATTAMENTE k voti, 3×(k+1) punti, 0 se no", hit: (k) => 3 * (k + 1), miss: 0, exact: true },
+  { name: "P7 almeno k voti, k+2 punti (0 voti = 2), 0 se no", hit: (k) => k + 2, miss: 0 },
 ];
 const COLLECT = process.env.COLLECT !== "0";
+const F_exact = (f: (typeof F)[number]) => !!f.exact;
 const mkPay = (f: (typeof F)[number]): Pay => (k, pos, v, others) => {
   const counts = others.map((c, i) => c + (i === v ? 1 : 0)), top = Math.max(...counts), vFell = counts[v] === top;
-  const got = counts[pos]! >= k;
+  const got = f.exact ? counts[pos]! === k : counts[pos]! >= k;
   return (vFell ? 2 : 0) + (COLLECT ? others[v]! : 0) + (got ? f.hit(k, others.length) : f.miss);
 };
 interface Turn { n: number; p: number[]; others: number[]; othersPts: number }
@@ -51,15 +52,15 @@ for (const n of [4, 6, 8]) {
     for (const t of turns) {
       const N = t.p.length, S = Array.from({ length: 100 }, () => sampleOthers(t.p, N - 1));
       const cands: { k: number; pos: number; v: number; ev: number }[] = [];
-      for (let k = 1; k <= N; k++) for (let pos = 0; pos < N; pos++) for (const v of [pos, t.p.indexOf(Math.max(...t.p))]) {
+      for (let k = 0; k <= N; k++) for (let pos = 0; pos < N; pos++) for (const v of [pos, t.p.indexOf(Math.max(...t.p))]) {
         let ev = 0; for (const o of S) ev += pay(k, pos, v, o, N); cands.push({ k, pos, v, ev: ev / S.length });
       }
       cands.sort((a, b) => b.ev - a.ev); const best = cands[0]!, second = cands.find((c) => c.k !== best.k || c.pos !== best.pos)!;
       const real = (c: { k: number; pos: number; v: number }) => pay(c.k, c.pos, c.v, t.others, N);
       const rc = cands[Math.floor(rnd() * cands.length)]!, got = real(best);
       const counts = t.others.map((c, i) => c + (i === best.v ? 1 : 0));
-      mega += got; others += t.othersPts; gain += got - real(rc); if (counts[best.pos]! >= best.k) hits++;
-      kSum += best.k; kh[best.k] = (kh[best.k] ?? 0) + 1; if (best.k === N) kMax++; if (best.k === 1) kOne++;
+      mega += got; others += t.othersPts; gain += got - real(rc); if (F_exact(f) ? counts[best.pos]! === best.k : counts[best.pos]! >= best.k) hits++;
+      kSum += best.k; kh[best.k] = (kh[best.k] ?? 0) + 1; if (best.k === N) kMax++; if (best.k === 0) kOne++;
       if (best.pos === t.p.indexOf(Math.max(...t.p))) onTop++; if (best.v === best.pos) sameCard++;
       if (best.ev - second.ev < 0.12 * Math.max(1, Math.abs(best.ev))) close++;
     }
