@@ -9,14 +9,14 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const json = (p: string) => JSON.parse(readFileSync(resolve(root, p), "utf8"));
 
 describe("contenuti originali del gioco", () => {
-  const manifest = json("public/cards/manifest.json") as { id: string; file?: string; duplicate_of?: string }[];
+  const manifest = json("public/cards/manifest.json") as { id: string; file?: string; duplicate_of?: string; overlay_of?: string }[];
   const multi = json("content/su-sulla-torre.json").carte as { id: string; tema: string; frasi: string[] }[];
   const single = json("content/su-sulla-torre-singola.json").carte as { id: string; frase: string }[];
-  const deck = manifest.map((m) => m.id);
+  const deck = manifest.filter((m) => !m.overlay_of).map((m) => m.id);
   const phraseDeck: PhraseCard[] = [...multi.map((c) => ({ id: c.id, phrases: c.frasi })), ...single.map((c) => ({ id: c.id, phrases: [c.frase] }))];
 
-  it("125 carte Personaggio con identificativi univoci (decisione: sono 125)", () => {
-    expect(deck).toHaveLength(125); expect(new Set(deck).size).toBe(125);
+  it("120 carte Personaggio (125 immagini, 5 sono livelli sovrapposti) con identificativi univoci", () => {
+    expect(deck).toHaveLength(120); expect(new Set(deck).size).toBe(120);
   });
   it("carte frasi: 50 da 5 frasi + 15 singole, nessuna duplicata, incipit corretto (sale/salgono concordato col soggetto)", () => {
     expect(multi).toHaveLength(50); expect(multi.every((c) => c.frasi.length === 5)).toBe(true);

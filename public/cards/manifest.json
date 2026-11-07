@@ -239,7 +239,8 @@
    400
   ],
   "has_smask": false,
-  "file": "p03-i04.webp"
+  "file": "p03-i04.webp",
+  "overlay_of": "p03-i03"
  },
  {
   "id": "p03-i05",
@@ -382,7 +383,8 @@
    480
   ],
   "has_smask": false,
-  "file": "p04-i07.webp"
+  "file": "p04-i07.webp",
+  "overlay_of": "p04-i06"
  },
  {
   "id": "p04-i08",
@@ -536,7 +538,8 @@
    480
   ],
   "has_smask": false,
-  "file": "p06-i02.webp"
+  "file": "p06-i02.webp",
+  "overlay_of": "p06-i01"
  },
  {
   "id": "p06-i03",
@@ -811,7 +814,8 @@
    480
   ],
   "has_smask": false,
-  "file": "p08-i08.webp"
+  "file": "p08-i08.webp",
+  "overlay_of": "p08-i07"
  },
  {
   "id": "p08-i09",
@@ -833,7 +837,8 @@
    480
   ],
   "has_smask": false,
-  "file": "p08-i10.webp"
+  "file": "p08-i10.webp",
+  "overlay_of": "p08-i09"
  },
  {
   "id": "p08-i11",
