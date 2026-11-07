@@ -1,0 +1,413 @@
+<title>Layout B telefono</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@600;700;800&display=swap">
+<style>
+/*__APPCSS__*/
+</style>
+<style>
+/*__CARDVARS__*/
+</style>
+<style>
+/* Layout: galleria a sezioni; ogni sezione è una riga di telefoni scorrevole. I telefoni usano il CSS reale dell'app. */
+:root{
+  --g-bg:#eef1f7;--g-surf:#ffffff;--g-surf2:#e3e8f2;--g-ink:#13224a;--g-mute:#4b5a82;--g-line:#c9d2e6;
+  --g-red:#e8362b;--g-mus:#ffc72c;--g-teal:#14a3a1;--g-ok:#1f8a4c;
+  --f-disp:Anton,Impact,"Arial Narrow",sans-serif;--f-body:Nunito,system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--g-bg:#0c1431;--g-surf:#141f47;--g-surf2:#1c2a5c;--g-ink:#eaeefb;--g-mute:#a5b2d9;--g-line:#2b3a73;--g-red:#ff6a5e;--g-ok:#4fd08a;color-scheme:dark}}
+:root[data-theme="dark"]{--g-bg:#0c1431;--g-surf:#141f47;--g-surf2:#1c2a5c;--g-ink:#eaeefb;--g-mute:#a5b2d9;--g-line:#2b3a73;--g-red:#ff6a5e;--g-ok:#4fd08a;color-scheme:dark}
+html,body{height:auto;overflow:visible}
+body{display:block;background:var(--g-bg) !important;color:var(--g-ink);font:600 16px/1.55 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;user-select:auto;-webkit-user-select:auto;touch-action:auto}
+#root{display:block;height:auto}
+.wrap{max-width:1180px;margin:0 auto}
+header.top{padding:40px 0 18px;display:grid;gap:10px}
+header.top h1{font:400 clamp(34px,6vw,58px)/.95 var(--f-disp);text-transform:uppercase;text-wrap:balance}
+header.top h1 em{font-style:normal;color:var(--g-red)}
+header.top p{max-width:68ch;color:var(--g-mute);font-size:17px}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 4px;position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--g-bg)}
+nav.toc a{font:800 13px var(--f-body);color:var(--g-ink);text-decoration:none;border:2px solid var(--g-ink);border-radius:99px;padding:5px 12px;background:var(--g-surf)}
+nav.toc a:hover,nav.toc a:focus-visible{background:var(--g-mus);color:#13224a;outline:none}
+section.blk{padding:34px 0 6px;display:grid;gap:14px}
+section.blk>h2{font:400 clamp(26px,4vw,36px)/1 var(--f-disp);text-transform:uppercase;text-wrap:balance}
+section.blk>h2 small{display:block;font:800 13px var(--f-body);letter-spacing:.12em;color:var(--g-red);margin-bottom:6px}
+.lead{max-width:72ch;color:var(--g-mute);font-size:16.5px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:14px}
+.kc{background:var(--g-surf);border:2px solid var(--g-ink);border-radius:14px;padding:14px 16px;display:grid;gap:6px;align-content:start;min-width:0}
+.kc h3{font:400 20px/1.05 var(--f-disp);text-transform:uppercase;letter-spacing:.02em}
+.kc p,.kc li{font-size:14.5px}
+.kc ul{padding-left:18px;display:grid;gap:4px}
+.tag{display:inline-block;font:800 11px var(--f-body);letter-spacing:.1em;text-transform:uppercase;background:var(--g-mus);color:#13224a;border-radius:6px;padding:2px 8px;width:fit-content}
+.scrollx{overflow-x:auto;border:2px solid var(--g-ink);border-radius:14px;background:var(--g-surf)}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px;min-width:520px}
+table.t th,table.t td{text-align:left;padding:8px 12px;border-bottom:2px solid var(--g-line);vertical-align:top}
+table.t th{font:400 15px var(--f-disp);text-transform:uppercase;letter-spacing:.04em}
+table.t td b{color:var(--g-red)}
+.sizer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 0;position:sticky;top:calc(env(safe-area-inset-top,0px) + 50px);z-index:25;background:var(--g-bg)}
+.sizer>span{font:800 13px var(--f-body);color:var(--g-mute);margin-right:4px}
+.sizer button{font:800 13px var(--f-body);border:2px solid var(--g-ink);background:var(--g-surf);color:var(--g-ink);border-radius:99px;padding:6px 14px;cursor:pointer}
+.sizer button[aria-pressed="true"]{background:var(--g-ink);color:var(--g-bg)}
+.sizer button:focus-visible{outline:3px solid var(--g-mus);outline-offset:2px}
+.rowph{display:flex;gap:20px;overflow-x:auto;padding:10px 4px 20px;scroll-snap-type:x proximity;align-items:flex-start}
+.pw{flex:none;scroll-snap-align:start;display:grid;gap:8px;justify-items:center}
+.pw .cap{font:800 13px/1.3 var(--f-body);color:var(--g-mute);text-align:center;max-width:250px}
+.pf{position:relative;border:5px solid #07070b;border-radius:34px;overflow:hidden;background:#07070b;box-shadow:0 14px 30px #0006}
+.pf .zbtn{position:absolute;right:8px;top:8px;z-index:200;width:30px;height:30px;border-radius:50%;border:2px solid #13224a;background:#fff7e0;color:#13224a;font:800 14px/1 var(--f-body);cursor:pointer;opacity:0;transition:opacity .15s}
+.pf:hover .zbtn,.pf .zbtn:focus-visible{opacity:1}
+@media (hover:none){.pf .zbtn{display:none}}
+.open-q ol{padding-left:22px;display:grid;gap:8px;max-width:75ch}
+.foot{margin-top:18px;font-size:13.5px;color:var(--g-mute);max-width:75ch}
+#lb{position:fixed;inset:0;z-index:300;background:#000c;display:none;overflow:auto;padding:16px;place-items:center}
+#lb.on{display:grid}
+#lb .x{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(env(safe-area-inset-top,0px) + 12px);z-index:301;font:800 14px var(--f-body);background:#fff7e0;color:#13224a;border:3px solid #13224a;border-radius:99px;padding:8px 16px;cursor:pointer}
+
+/* ===== telefono ===== */
+.dev{position:relative;overflow:hidden;display:flex;flex-direction:column;background:#4fb6e6;color:#13224a;transform-origin:0 0;font-family:Nunito,system-ui,sans-serif;-webkit-user-select:none;user-select:none}
+.dev>.vig,.dev>.grain,.dev>.sky,.dev>.skyg,.dev>.skyh,.dev>.pap,.dev>.hr,.dev>.ht{position:absolute;inset:0}
+.dev>.sky,.dev>.skyg,.dev>.skyh,.dev>.pap,.dev>.hr,.dev>.ht{pointer-events:none}
+.dev.paper{background:#f4e3bd}
+.dev>.B{flex:1 1 0;min-height:0;display:flex;flex-direction:column;position:relative;z-index:5}
+.dev>.ovl{position:absolute;inset:0;z-index:90}
+.dev .stage{position:absolute;left:0;top:0}
+.dev .meta{display:flex;justify-content:space-between;gap:8px;margin:20px 14px 0;flex:none;font:800 11px/14px Nunito;letter-spacing:.05em;text-transform:uppercase;color:#fff;text-shadow:0 1px 0 #13224a,0 0 6px #13224acc}
+.dev .phrase-card{position:relative;left:auto;right:auto;top:auto;margin:8px 14px 0;flex:none;padding:5px 34px 7px 44px;cursor:pointer;overflow:visible}
+.dev .phrase-card .ctx{font-size:11.5px;margin:0 0 2px 6px !important}
+.pk small{display:none}.pk.open small{display:block}
+.pk b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:17px !important;line-height:1.1}
+.pk.open b{-webkit-line-clamp:unset;font-size:22px !important}
+.pk .ctx{display:none}.pk.open .ctx{display:inline-block}
+.pk .chev{position:absolute;right:10px;top:50%;margin-top:-10px;font:800 16px/20px Nunito;font-style:normal;transition:transform .15s}
+.pk.open .chev{transform:rotate(180deg)}
+.pk .tbar{display:none;position:absolute;left:10px;right:10px;bottom:3px;height:4px;border-radius:2px;background:#e8362b;transform-origin:0 50%}
+.pk.open .tbar{display:block;animation:tbar var(--t,6s) linear forwards}
+.pk.open.static .tbar{animation:none;transform:scaleX(.55)}
+@keyframes tbar{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){.pk.open .tbar{animation:none;transform:scaleX(1)}}
+.dev .tip{position:relative;left:auto;right:auto;margin:0 14px;flex:none;font-size:12.5px}
+.dev .bt{flex:none}
+.ibtn{flex:none;position:relative;width:38px;height:38px;border-radius:50%;border:3px solid #13224a;background:#fff7e0;color:#13224a;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;padding:0;font:800 17px/1 Nunito,sans-serif;cursor:pointer}
+.ibtn.s{width:34px;height:34px;font-size:16px}
+.ibtn .bdg{position:absolute;right:-7px;top:-8px;min-width:18px;height:18px;border-radius:9px;background:#e8362b;color:#fff;font:800 10px/14px Nunito;text-align:center;border:2px solid #fff;font-style:normal}
+.scene{flex:1 1 0;min-height:0;position:relative;display:grid;place-items:center;overflow:hidden}
+.tz{position:relative;overflow:hidden;flex:none}
+.tzin{position:absolute;left:0;top:0;width:372px;height:826px;transform-origin:0 0}
+.tzin>div{position:absolute;left:0;top:0;width:372px;height:826px}
+.tzin .hit{position:absolute;background:transparent;border:0;padding:0;border-radius:10px;cursor:pointer;z-index:100}
+.tzin .hit.sel{outline:4px solid #ffc72c;outline-offset:2px;box-shadow:0 0 18px #ffc72c}
+.hand{position:relative}
+.hslot .card{position:absolute;padding:0;transition:top .15s,transform .15s;background-size:cover;background-position:center}
+.pdots{display:flex;gap:6px;justify-content:center}
+.pdots i{width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #13224a}
+.pdots i.on{background:#ffc72c}
+/* pannello B */
+.dev .pp.shb{margin:0 10px 12px;padding:12px 12px 12px;display:grid;gap:9px;flex:none;position:relative;z-index:8}
+.shb .hd{display:flex;align-items:center;gap:7px}
+.shb .hd>b{font:400 21px/1 Anton;text-transform:uppercase;color:#e8362b;flex:1;min-width:0}
+.shb .hd>b small{display:block;font:800 11.5px/1.25 Nunito;color:#13224a;opacity:.8;text-transform:none;margin-top:3px}
+.shb .grip{position:absolute;left:50%;top:5px;width:44px;height:5px;margin-left:-22px;border-radius:3px;background:#13224a55}
+.crow{display:flex;gap:8px;align-items:stretch}.crow>.bt{flex:1;min-width:0}
+.shb .crow>.bt{flex:1;min-width:0;padding-left:8px;padding-right:8px;white-space:nowrap}
+.shb .crow>.bt.sm{flex:none;font-size:15px;padding:0 12px}
+.ltr{flex:none;display:flex;align-items:center;gap:2px;padding:0 6px;border:3px solid #13224a;border-radius:16px;background:#fff7e0;box-shadow:0 4px 0 #13224a;cursor:pointer;position:relative}
+.ltr .lt{display:inline-block;line-height:0}
+.ltr .lt.used{opacity:.35;filter:grayscale(1)}
+.ltr .lab{position:absolute;left:50%;top:-9px;transform:translateX(-50%);background:#13224a;color:#ffc72c;font:400 10px/14px Anton;letter-spacing:.08em;border-radius:6px;padding:0 6px;white-space:nowrap}
+.dev .flags{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.dev .flags .chip{height:28px;font-size:11.5px;padding:0 9px 0 4px;border-width:2px;box-shadow:0 2px 0 #13224a}
+.dev .flags .chip .dc{width:16px;height:16px;border-width:2px}
+.dev .wcard{margin:0 18px;text-align:center;position:relative}
+.dev .wcard .pp{padding:14px}
+.dev .wcard b{font:800 17px/1.3 Nunito}
+.dev .wcard small{display:block;font:700 12.5px/1.3 Nunito;margin-top:6px;opacity:.85}
+/* scelta frase */
+.opts2{display:flex;flex-direction:column;gap:9px;padding:6px 14px 4px;width:100%;overflow-y:auto;max-height:100%}
+.dev .opt{position:relative;width:100%;text-align:left;padding:8px 40px 8px 11px;font:800 13.5px/1.28 Nunito;color:#13224a;cursor:pointer}
+.opt .tx{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.opt.open .tx{-webkit-line-clamp:unset}
+.opt .ex{position:absolute;right:6px;top:6px;width:28px;height:28px;border-radius:50%;border:2px solid #13224a;background:#fff;font:800 13px/22px Nunito;padding:0;color:#13224a;transition:transform .15s}
+.opt.open .ex{transform:rotate(180deg)}
+.opt.on{background:var(--mus,#ffc72c);box-shadow:0 0 0 3px #fff,0 0 20px 6px #ffc72caa,0 4px 0 #13224a}
+.opt .tbar{display:none;height:4px;border-radius:2px;background:#e8362b;margin-top:6px;transform-origin:0 50%}
+.opt.open .tbar{display:block;animation:tbar var(--t,6s) linear forwards}
+.opt.open.static .tbar{animation:none;transform:scaleX(.6)}
+/* overlay */
+.ovl.dim{background:rgba(19,34,74,.86)}
+.ovl .pp.pop{position:absolute;left:14px;right:14px;top:50%;transform:translateY(-50%);padding:14px 14px 14px}
+.pop h3{font:400 24px/1 Anton;text-transform:uppercase;color:#e8362b;margin-bottom:8px}
+.lrow{display:flex;gap:12px;align-items:center;padding:8px 0;border-top:2px dashed #13224a40}
+.lrow:first-of-type{border-top:0}
+.lrow .tk{flex:none;line-height:0;display:block;transform:none;width:auto;height:auto;border:0;box-shadow:none;background:none}
+.lrow b{font:400 20px/1.05 Anton;text-transform:uppercase;display:block}
+.lrow small{display:block;font:700 12px/1.3 Nunito;opacity:.85;margin-top:2px}
+.lrow .pt{margin-left:auto;font:400 26px Anton;color:#e8362b}
+.lrow.used{opacity:.45;filter:grayscale(1)}
+.dev .chat{left:8px;right:8px;bottom:10px;top:50px}
+.dev .how{top:auto;bottom:10px;left:10px;right:10px;max-height:86%}
+.dev .zoom .sheet{left:10px;right:10px;bottom:12px}
+/* moduli */
+.dev .fpage{padding:18px 16px 0;gap:10px;display:flex;flex-direction:column;flex:1;min-height:0}
+.dev .fhead{display:flex;align-items:center;gap:10px;flex:none}
+.dev .fhead .h{position:relative;left:auto;right:auto;font-size:34px;flex:1;min-width:0}
+.dev .fbody{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:2px 2px 8px}
+.dev .fbody .fld{left:auto;right:auto}
+.dev .fbody .opt-pp{left:auto;right:auto;position:relative}
+.dev .fbody .hint{margin-top:10px;font-size:11.5px}
+.dev .fbody .lb{margin-bottom:3px}
+.dev .fbody .bt{padding:10px 8px}
+.dev .fbot{flex:none;padding:0 0 14px;display:grid;gap:8px}
+.dev .codepanel{position:relative;left:auto;right:auto;top:auto;margin:8px 12px 0;flex:none}
+.dev .plist2{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:10px 12px 0;flex:1;min-height:0;align-content:start;overflow-y:auto}
+.dev .plist2 .pl{min-height:40px;padding:3px 8px;font-size:14px;gap:7px;min-width:0}
+.dev .plist2 .pl .dc{width:26px;height:26px}
+.dev .plist2 .pl span.nmx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.dev .plist2 .pl .tg{margin-left:0;font-size:10px;padding:2px 5px}
+.dev .plist2 .bot-tag{margin-left:0}
+.dev .opts-row{align-items:center}
+.dev .lnks{display:flex;justify-content:space-between;gap:10px}
+.dev .lnks .lnk{flex:1;font-size:12px;text-decoration:underline;color:#fff;text-shadow:0 1px 0 #13224a}
+.dev .pod{position:relative;left:auto;right:auto;top:auto;margin:6px 24px 0;flex:none}
+.dev .rank{position:relative;left:auto;right:auto;top:auto;margin:22px 18px 0;flex:1;min-height:0;overflow:hidden}
+.dev .final-h{margin:26px 0 0;text-align:center;flex:none;position:relative;left:auto;right:auto;font-size:46px}
+.dev .confetti{position:absolute}
+.dev .mhead{position:relative;left:auto;right:auto;top:auto;margin:8px 12px 0;height:auto;flex:none;pointer-events:auto}
+.dev .mh-card{width:54px;height:81px;border-width:3px}
+.dev .mh-bubble{padding:6px 10px 8px;cursor:pointer}
+.dev .mh-bubble b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:16px}
+.dev .mh-bubble.open b{-webkit-line-clamp:unset;font-size:19px}
+.dev .mi{position:absolute;inset:0;animation:none}
+.dev .mi *{animation:none !important}
+.dev .mi-curtain{display:none}
+.dev .mi-body{top:50px;bottom:22px}
+.dev .rv{position:relative;left:auto;right:auto;bottom:auto;margin:0 10px 12px;animation:none;flex:none;z-index:8}
+.dev .pb{position:relative;left:auto;right:auto;top:auto;bottom:auto;margin:8px 10px 10px;flex:0 1 auto;min-height:0;animation:none}.dev .pb .pb-scroll{flex:0 1 auto}
+.dev .pb-blk,.dev .pb-sum{opacity:1;animation:none}
+.dev .darkv{position:absolute;inset:0;z-index:4}
+.fall{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;z-index:1}
+.dev .stbd{z-index:30}
+.dev .stbd-ok{bottom:14px}
+.dev .zoom .zc{top:60px}
+.fc{border:6px solid #fff;border-radius:14px;box-shadow:10px 12px 0 #e8362b;background-size:cover;background-position:center}
+</style>
+<div class="wrap">
+<header class="top">
+  <h1>Giù dalla Torre<br><em>Layout B, tutte le pagine</em></h1>
+  <p>La direzione scelta, applicata a ogni schermata dell'app. Grafica, colori e componenti restano quelli di oggi (ogni telefono è disegnato con il CSS reale). Cambia come sono disposti: via la barra in alto, un pannello fisso sotto il pollice, segnalini Lui!, chat e classifica sempre a portata, frasi che si aprono e si chiudono da sole.</p>
+</header>
+<nav class="toc" aria-label="Sezioni">
+  <a href="#cosa">Cosa cambia</a><a href="#accesso">Accesso</a><a href="#lobby">Lobby</a><a href="#megafono">Megafono</a><a href="#folla">Carta</a><a href="#lui">Lui!</a><a href="#voto">Voto</a><a href="#risultati">Risultati</a><a href="#intervallo">Intervallo</a><a href="#fine">Fine</a><a href="#finestre">Finestre</a><a href="#domande">Da decidere</a>
+</nav>
+
+<section class="blk" id="cosa">
+  <h2><small>Le tue indicazioni</small>Cosa cambia con la B</h2>
+  <div class="cols">
+    <div class="kc"><span class="tag">In alto</span><h3>Via il menu, resta una riga</h3><p>La barra con pillole e il nastro del titolo spariscono. Restano una riga con turno e Megafono e la frase del turno, che chiusa occupa due righe.</p></div>
+    <div class="kc"><span class="tag">Frasi</span><h3>Si aprono, si chiudono, si chiudono da sole</h3><p>Tocca la frase per leggerla intera, tocca di nuovo per chiuderla. Se la lasci aperta si richiude dopo 6 secondi (la barra rossa lo mostra). Vale anche per le frasi tra cui il Megafono sceglie.</p></div>
+    <div class="kc"><span class="tag">Lui!</span><h3>I tuoi segnalini sempre sotto il pollice</h3><p>I due gettoni stanno a sinistra del bottone principale (quelli già usati diventano grigi). Un tocco li apre grandi in un popup, con punti e regola.</p></div>
+    <div class="kc"><span class="tag">Chat e classifica</span><h3>Sempre disponibili</h3><p>Nell'intestazione del pannello in basso: chat (con contatore dei messaggi nuovi), classifica e regole. Audio e regole stanno dentro «i».</p></div>
+  </div>
+  <div class="sizer" role="group" aria-label="Formato del telefono"><span>Formato</span>
+    <button type="button" data-size="full" aria-pressed="true">390 × 844 · app installata</button>
+    <button type="button" data-size="safari" aria-pressed="false">390 × 664 · barra Safari</button>
+    <button type="button" data-size="small" aria-pressed="false">360 × 640 · piccolo</button>
+  </div>
+  <div class="scrollx"><table class="t" id="meas"></table></div>
+  <p class="lead">I numeri della tabella sono misurati sulla schermata di voto qui sotto, nel formato scelto. «Oggi» viene dall'app attuale. Tocca qualunque telefono: frasi, carte, gettoni Lui!, chat, classifica e regole funzionano.</p>
+</section>
+
+<section class="blk" id="accesso"><h2><small>1</small>Accesso</h2><div class="rowph" data-sec="accesso"></div></section>
+<section class="blk" id="lobby"><h2><small>2</small>Lobby</h2><div class="rowph" data-sec="lobby"></div></section>
+<section class="blk" id="megafono"><h2><small>3</small>Il Megafono sceglie la frase</h2><div class="rowph" data-sec="megafono"></div></section>
+<section class="blk" id="folla"><h2><small>4</small>La Folla sceglie la carta</h2><div class="rowph" data-sec="folla"></div></section>
+<section class="blk" id="lui"><h2><small>5</small>Lui! del Megafono</h2><div class="rowph" data-sec="lui"></div></section>
+<section class="blk" id="voto"><h2><small>6</small>Voto in segreto</h2><div class="rowph" data-sec="voto"></div></section>
+<section class="blk" id="risultati"><h2><small>7</small>Spoglio, caduta e punti</h2><div class="rowph" data-sec="risultati"></div></section>
+<section class="blk" id="intervallo"><h2><small>8</small>Intervallo (mini-gioco)</h2><div class="rowph" data-sec="intervallo"></div></section>
+<section class="blk" id="fine"><h2><small>9</small>Fine partita</h2><div class="rowph" data-sec="fine"></div></section>
+<section class="blk" id="finestre"><h2><small>10</small>Finestre che si aprono dal pannello</h2><div class="rowph" data-sec="finestre"></div></section>
+
+<section class="blk" id="domande">
+  <h2><small>Prossimi passi</small>Da decidere</h2>
+  <div class="open-q"><ol>
+    <li><b>Apertura automatica della frase.</b> Oggi il mockup la mostra chiusa. Si può farla aprire da sola per 6 secondi a ogni inizio fase e poi richiudere. Vuoi questo comportamento?</li>
+    <li><b>Scelta della frase del Megafono.</b> Qui il tocco su una frase la seleziona e «Proclama» la conferma (un tocco in più, ma niente errori). Oggi il tocco proclama subito. Va bene il nuovo passaggio?</li>
+    <li><b>Schermo condiviso.</b> Riusa gli stessi componenti: eredita questo layout, senza pannello comandi (sola visione). Se vuoi lo ridisegno in orizzontale a parte.</li>
+    <li><b>Prossimo passo.</b> Se i mockup vanno bene, posso implementare la B nell'app (<code>Game.tsx</code>, <code>ui.tsx</code>, <code>app.css</code>, <code>Room.tsx</code>) senza toccare motore, protocollo e worker, e rifare i test end-to-end.</li>
+  </ol><p class="foot">Sono mockup statici ma interattivi: l'app non è stata modificata.</p></div>
+</section>
+</div>
+<div id="lb" role="dialog" aria-label="Telefono a dimensione reale"><button class="x" type="button" id="lbx">Chiudi</button><div id="lbc"></div></div>
+
+<script>
+const D = /*__DATA__*/;
+const SIZES = { full:[390,844], safari:[390,664], small:[360,640] };
+const TODAY = { full:{top:251,scene:389,bot:204}, safari:{top:256,scene:206,bot:202}, small:{top:230,scene:222,bot:188} };
+let size = 'full';
+const ME='#e5384b', COLS=['#e5384b','#2f7be0','#f4c20d','#3aa655','#8a5a3b','#8e44c8','#ee7bb0','#222222'];
+const NAMES=['Io','Bot Gino','Bot Mara','Bot Pino','Bot Lella','Bot Tito'];
+const P1={tag:'NEI SOGNI',pre:'Oggi sale sulla torre…',body:'CHI HA SOGNATO DI VOLARE E SI È SVEGLIATO CON IL NASO SULLA PARETE.'};
+const P2={tag:'SUI MEZZI E IN ASCENSORE',pre:'Oggi sale sulla torre…',body:'CHI HA SCOREGGIATO IN ASCENSORE E HA GUARDATO L’ALTRO CON ARIA OFFESA.'};
+const OPTS=[['NEI SOGNI','Oggi sale sulla torre chi ha sognato di volare e si è svegliato con il naso sulla parete.'],['POLITICA DA BAR','Oggi sale sulla torre chi ha urlato “vergogna!” al telegiornale e ha rovesciato il caffè sul cane.'],['IN VIAGGIO','Oggi sale sulla torre chi ha caricato un prosciutto nel bagaglio a mano e ha urlato “è per le emergenze!”.'],['ALLE CERIMONIE','Oggi sale sulla torre chi ha ricevuto una chiamata al funerale con la suoneria da discoteca.'],['IN HOTEL','Oggi sale sulla torre chi ha prenotato la stanza con vista mare, vista dal bagno del vicino.']];
+const sky='<div class="sky"></div><div class="skyg"></div><div class="skyh"></div>';
+const paper='<div class="pap"></div><div class="hr"></div><div class="ht"></div>';
+const fin='<div class="vig"></div><div class="grain"></div>';
+const lt=(used=[])=>D.luiMini.map((s,i)=>'<span class="lt'+(used.includes(i)?' used':'')+'">'+s+'</span>').join('');
+/* ---- componenti ---- */
+const meta=(mega,turn)=>'<div class="meta"><span>Turno '+turn+'</span><span>📣 '+mega+'</span></div>';
+const phraseK=(p,open,stat)=>'<div class="phrase-card pk'+(open?' open':'')+(stat?' static':'')+'" data-toggle="open" role="button" tabindex="0" aria-expanded="'+(open?'true':'false')+'"><span class="mega-ic" aria-hidden="true">📣</span><span class="ctx">'+p.tag+'</span><small>'+p.pre+'</small><b>'+p.body+'</b><em class="chev">▾</em><i class="tbar"></i></div>';
+const ics=(unread=2)=>'<button type="button" class="ibtn s" data-open="chat" aria-label="Chat, '+unread+' messaggi nuovi">💬'+(unread?'<i class="bdg">'+unread+'</i>':'')+'</button><button type="button" class="ibtn s" data-open="rank" aria-label="Classifica">🏆</button><button type="button" class="ibtn s" data-open="rules" aria-label="Regole e audio">i</button>';
+const tray=(used)=>'<button type="button" class="ltr" data-open="lui" aria-label="I tuoi segnalini Lui!"><span class="lab">LUI!</span>'+D.luiMid.map((s,i)=>'<span class="lt'+((used||[]).includes(i)?' used':'')+'">'+s+'</span>').join('')+'</button>';
+const cta=(txt,kind='',extra='')=>'<button type="button" class="bt '+kind+'" '+extra+'>'+txt+'</button>';
+const sheet=(t,s,body,o={})=>'<div class="pp shb"><span class="grip"></span><div class="hd"><b>'+t+(s?'<small>'+s+'</small>':'')+'</b>'+(o.noics?'':ics(o.unread===undefined?2:o.unread))+'</div>'+body+'</div>';
+const crow=(...x)=>'<div class="crow">'+x.join('')+'</div>';
+const flags=(arr)=>'<div class="flags">'+arr.map(([n,c,d])=>'<span class="chip"><i class="dc" style="background:'+c+'"></i>'+n+(d?' ✓':' …')+'</span>').join('')+'</div>';
+const FL=(k)=>NAMES.map((n,i)=>[n.replace('Bot ',''),COLS[i],i<k]);
+const slotT=(n,o={})=>'<div class="scene"><div class="tslot" data-n="'+n+'" data-kind="'+(o.kind||'vote')+'" data-sel="'+(o.sel||0)+'" data-max="'+(o.max||1.3)+'"></div></div>';
+const slotH=(o={})=>'<div class="scene"><div class="hslot" data-mode="'+(o.mode||'car')+'"></div></div>';
+const wait=(text,sub)=>'<div class="scene"><div class="wcard"><div class="pp"><b>'+text+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</div></div></div>';
+const luiRow=()=>'<div class="lui-opts"><button type="button" class="lk lui-zero"><span>'+D.luiToks[0]+'</span><b>Nessun voto</b><small>+5 punti</small></button><button type="button" class="lk lui-k3 red"><span>'+D.luiToks[1]+'</span><b>Almeno 3 voti</b><small>+14 punti</small></button></div>';
+const TIPV='Il più votato cade e chi l’ha votato fa +2.';
+/* ---- overlay ---- */
+function ovLui(){return '<div class="ovl dim zoom on" data-close="1"><div class="pp pop" data-keep="1"><h3>I tuoi segnalini Lui!</h3><div class="lrow"><span class="tk">'+D.luiBig[0]+'</span><div><b>Nessun voto</b><small>Gli altri non votano la carta del gettone. Si contano solo i loro voti, il tuo no.</small></div><span class="pt">+5</span></div><div class="lrow"><span class="tk">'+D.luiBig[1]+'</span><div><b>Almeno 3 voti</b><small>Almeno tre degli altri votano la carta del gettone.</small></div><span class="pt">+14</span></div><div class="hint" style="margin:6px 0 10px">Ogni gettone si usa una volta sola, uguale per tutti. Se sbagli non perdi punti. Gli altri non vedono i tuoi.</div>'+cta('Chiudi','pap','data-close="1" style="font-size:18px;padding:10px;width:100%"')+'</div></div>'}
+function ovChat(){const m=(n,c,t,mine)=>'<div class="msg'+(mine?' mine':'')+'"><small><i class="dc" style="background:'+c+';width:14px;height:14px;border-width:2px"></i>'+n+'</small><span>'+t+'</span></div>';
+ return '<div class="ovl dim" data-close="1"><div class="chat" data-keep="1"><div class="chat-h"><b>Messaggi</b><button type="button" data-close="1" aria-label="Chiudi">×</button></div><div class="chat-l">'+m('Bot Gino',COLS[1],'La voto di sicuro 😂')+m('Tu',ME,'Troppo facile 🐑',1)+m('Bot Mara',COLS[2],'🔥🔥')+m('Bot Pino',COLS[3],'Il numero 2 non scappa')+'</div><div class="chat-q">'+['😂','👏','😱','🤔','🔥','🐑'].map(q=>'<button type="button">'+q+'</button>').join('')+'</div><div class="chat-f"><input placeholder="Scrivi un messaggio…" aria-label="Il tuo messaggio"><button type="button">Invia</button></div></div></div>'}
+function ovRules(){const r=(ic,t,s,p)=>'<div class="sr"><span class="ic">'+ic+'</span><span>'+t+'<small>'+s+'</small></span><span class="pt">'+p+'</span></div>';
+ return '<div class="ovl zoom on" data-close="1"><div class="sheet" data-keep="1" style="position:absolute"><h3>Come si fanno punti</h3>'+r(D.vote30,'Hai votato il personaggio caduto','il tuo gettone è sulla sua carta','+2')+r('<div style="width:24px;height:34px;border-radius:4px;border:3px solid #fff;background:#14a3a1;box-shadow:1px 2px 0 #13224a"></div>','La carta che hai giocato è quella caduta','la carta del mazzo non è di nessuno','+2')+r(D.luiMid[0],'Megafono · Lui!: nessun voto','si contano solo i voti degli altri','+5')+r(D.luiMid[1],'Megafono · Lui!: almeno 3 voti','voti degli altri sulla carta del gettone','+14')+'<div class="lrow" style="border-top:2px dashed #13224a40"><span class="tk" style="font-size:22px">🔊</span><div><b style="font-size:17px">Suoni</b><small>Effetti e musiche della partita</small></div><button type="button" class="ibtn s" aria-label="Disattiva i suoni" style="margin-left:auto">🔊</button></div><div class="hint" style="text-align:center;margin-top:6px">tocca fuori per chiudere</div></div></div>'}
+function standings(H,rows,title,sub,action){
+  const best=Math.max(0,...rows.map(r=>r.s)),top=Math.max(30,Math.ceil((best+1)/10)*10),step=top>60?10:5,yTop=186,yBot=Math.max(yTop+260,H-142),span=yBot-yTop;
+  const y=s=>yBot-(Math.max(0,Math.min(top,s))/top)*span;
+  const ticks=[];for(let s=0;s<=top;s+=step)ticks.push(s);
+  const groups={};const sorted=[...rows].sort((a,b)=>a.s-b.s);const lastY={L:99999,R:99999};let out='';
+  const cnt={};rows.forEach(r=>cnt[r.s]=(cnt[r.s]||0)+1);
+  sorted.forEach((r,i)=>{const k=groups[r.s]||0;groups[r.s]=k+1;const n=cnt[r.s],dx=n>1?(k-(n-1)/2)*34:0,py=y(r.s),side=i%2===0?'R':'L';let ly=py-10;if(lastY[side]-ly<34)ly=lastY[side]-34;lastY[side]=ly;
+   out+='<div class="stbd-lead '+side+'" style="top:'+(py-2)+'px;--dx:'+dx+'px"></div><div class="stbd-tag '+side+'" style="top:'+(ly-12)+'px"><i class="dc" style="background:'+r.c+'"></i><span>'+r.n+'</span><b>'+r.s+'</b>'+(r.d?'<u class="stbd-d">+'+r.d+'</u>':'')+'</div><div class="stbd-pawn" style="animation:none;left:calc(50% + '+dx+'px);top:'+(py-36)+'px">'+(r.s===best?'<em class="stbd-crown">👑</em>':'')+D.pawns[r.c]+'</div>';});
+  return '<div class="ovl zoom on stbd" style="height:'+H+'px"><div class="stbd-sky"></div><div class="stbd-rays"></div><div class="stbd-title"><b>'+title+'</b><small>'+sub+'</small></div>'+(action?'':'<button type="button" class="stbd-x" data-close="1" aria-label="Chiudi">×</button>')+'<div class="stbd-tower" style="top:'+(yTop-34)+'px;height:'+(span+78)+'px"><div class="stbd-merl">'+'<i></i>'.repeat(5)+'</div><div class="stbd-body"></div><div class="stbd-door"></div></div><div class="stbd-flag" style="top:'+(yTop-84)+'px"><i></i><b>'+top+'</b></div>'+ticks.map(s=>'<div class="stbd-tick'+(s===top?' top':'')+'" style="top:'+y(s)+'px"><span>'+(s===0?'VIA':s)+'</span></div>').join('')+out+(action?'<button type="button" class="stbd-ok">'+action+'</button>':'<button type="button" class="stbd-ok" data-close="1">Chiudi</button>')+'</div>'}
+const ROWS=[{n:'Io',c:COLS[0],s:14,d:2},{n:'Gino',c:COLS[1],s:11,d:2},{n:'Mara',c:COLS[2],s:9,d:2},{n:'Pino',c:COLS[3],s:9,d:2},{n:'Lella',c:COLS[4],s:6},{n:'Tito',c:COLS[5],s:4}];
+/* ---- punti ---- */
+const nm=(n,c,t='')=>'<span class="pb-nm"><i class="dc" style="background:'+c+'"></i>'+n+(t?' <em>'+t+'</em>':'')+'</span>';
+const thumb=(i,n)=>'<span class="pb-c" style="background-image:var(--c'+i+')"><i>'+n+'</i></span>';
+const pblk=(t,s,pts,i,n,who,neg)=>'<div class="pb-blk'+(neg?' neg':'')+'"><div class="pb-h"><span class="pb-th">'+thumb(i,n)+'</span><span class="pb-tx"><b>'+t+'</b><small>'+s+'</small></span><span class="pb-pts">'+pts+'</span></div><div class="pb-who">'+who+'</div></div>';
+const ptsPanel=()=>'<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto giusto','Hanno votato il n. 2, che cade','+2 a testa',1,2,nm('Io',ME)+nm('Mara',COLS[2])+nm('Pino',COLS[3]))+pblk('Carta caduta','Aveva giocato la carta caduta','+2',1,2,nm('Gino',COLS[1]))+pblk('Lui! azzeccato','Almeno 3 voti sul n. 2: 3 voti degli altri','+14',1,2,nm('Tito 📣',COLS[5]))+'<div class="pb-sum"><b>In totale nel turno</b><span>'+nm('Tito 📣',COLS[5],'+14')+nm('Io',ME,'+2')+nm('Mara',COLS[2],'+2')+nm('Pino',COLS[3],'+2')+nm('Gino',COLS[1],'+2')+'</span></div></div></div>';
+/* ---- schermate ---- */
+const stg=(inner,bg,k,H)=>'<div class="stage ovl" style="width:372px;height:'+(H/k)+'px;transform:scale('+k+');background:'+(bg==='paper'?'#f4e3bd':'transparent')+'">'+(bg==='paper'?paper:sky)+inner+'<div class="vig"></div><div class="grain"></div></div>';
+const S={
+ /* ACCESSO */
+ home:(W,H)=>{const k=W/372;return {bg:'sky',raw:stg('<div class="logo"><div class="l1">GIÙ</div><div class="l2">DALLA</div><div class="l3">TORRE!</div></div><img class="cut stk" alt="" src="'+D.cut[0]+'" style="position:absolute;height:136px;left:66px;top:'+(H/k-540)+'px;z-index:5"><img class="cut stk" alt="" src="'+D.cut[1]+'" style="position:absolute;height:148px;left:134px;top:'+(H/k-561)+'px;z-index:5"><img class="cut stk" alt="" src="'+D.cut[2]+'" style="position:absolute;height:136px;left:212px;top:'+(H/k-540)+'px;z-index:5"><img alt="" src="'+D.tower+'" style="position:absolute;left:52px;top:'+(H/k-501)+'px;width:261px;z-index:6"><div class="home-tools"><button type="button" aria-label="Condividi l’app"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 10.6l6.8-4M8.6 13.4l6.8 4"/></svg></button><button type="button" aria-label="Installa l’app" class="ready"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></svg></button></div><div class="credit" style="top:'+(H/k-640)+'px">Un gioco di <b>D. Mansetti</b></div><div class="home-btns" style="bottom:26px"><button type="button" class="bt">Crea partita</button><button type="button" class="bt red">Entra con un codice</button><div class="seg"><button type="button" class="bt pap" style="font-size:16px;padding:10px 6px">Da solo, con bot</button><button type="button" class="bt pap" style="font-size:16px;padding:10px 6px">Come si gioca</button></div></div>',"sky",k,H)}},
+ crea:()=>({paper:1,html:'<div class="B fpage"><div class="fhead"><button type="button" class="ibtn" aria-label="Indietro">‹</button><div class="h r"><small>Prima di salire…</small>Crea la partita</div></div><div class="fbody"><div class="fld"><label class="lb" for="n1">Il tuo nickname</label><input id="n1" class="in" value="Io" aria-label="Nickname"></div><div class="fld"><span class="lb">Come si gioca?</span><div class="seg"><button type="button" class="bt mus on">Stesso tavolo</button><button type="button" class="bt pap">A distanza</button></div><div class="hint">Tutti insieme, ognuno col proprio telefono. Un tablet o un PC può fare da schermo condiviso.</div></div><label class="pp opt-pp"><span class="sw" aria-hidden="true"></span><span><b>Il Megafono sa</b><small>Gioca una carta dalla sua mano invece di pescarla.</small></span></label><div class="fld"><span class="lb">Giocatori virtuali (bot)</span><div class="seg"><button type="button" class="bt pap">−</button><div class="bt pap" style="flex:2;pointer-events:none">5 bot</div><button type="button" class="bt pap">+</button></div><div class="seg" style="margin-top:6px"><button type="button" class="bt pap" style="font-size:14px">Facile</button><button type="button" class="bt pap" style="font-size:14px">Medio</button><button type="button" class="bt mus on" style="font-size:14px">Difficile</button></div></div></div><div class="fbot">'+cta('Crea e invita gli amici')+'</div></div>'}),
+ entra:()=>({paper:1,html:'<div class="B fpage"><div class="fhead"><button type="button" class="ibtn" aria-label="Indietro">‹</button><div class="h r"><small>Hai il codice?</small>Entra in partita</div></div><div class="fbody"><div class="fld"><label class="lb" for="c1">Codice partita</label><input id="c1" class="in code" value="442V6" aria-label="Codice partita"></div><div class="fld"><label class="lb" for="n2">Il tuo nickname</label><input id="n2" class="in" value="Giulia" aria-label="Nickname"></div></div><div class="fbot"><a class="lnk" role="button" tabindex="0">Sono un tablet o un PC: apri lo schermo condiviso</a>'+cta('Entra')+'</div></div>'}),
+ how:()=>({html:'<div class="B"></div>',ov:'<div class="ovl zoom on"><div class="how"><h2>Benvenuti!</h2><div class="how-intro">'+D.howIntro.map(t=>'<p>'+t+'</p>').join('')+'</div><h3>Come si gioca</h3><ol class="how-steps">'+D.howSteps.map(([i,t])=>'<li><span class="how-ic">'+i+'</span><span>'+t+'</span></li>').join('')+'</ol><h3>Come si fanno punti</h3><ul class="how-pts">'+D.howPts.map(([p,t])=>'<li><b>'+p+'</b><span>'+t+'</span></li>').join('')+'</ul>'+cta('Ho capito!')+'</div></div>'}),
+ /* LOBBY */
+ lobby:()=>({html:'<div class="B"><div class="meta" style="align-items:center;margin-top:18px"><span class="chip nb" style="text-shadow:none;color:#13224a">Lobby · 6/8</span><button type="button" class="ibtn s" data-open="chat" aria-label="Chat">💬<i class="bdg">1</i></button></div><div class="pp codepanel"><img class="qr" src="'+D.qr+'" width="84" height="84" alt="QR code"><div><div class="cap2">Codice</div><div class="code-big">442V6</div><a class="lnk" role="button" tabindex="0">Condividi il link</a></div></div><div class="plist2">'+NAMES.map((n,i)=>'<div class="pl"><i class="dc" style="background:'+COLS[i]+'"></i><span class="nmx">'+(i?n.replace('Bot ',''):'Io (tu)')+'</span>'+(i?'<span class="bot-tag">BOT</span>':'<span class="tg">HOST</span>')+'</div>').join('')+'<div class="pl em" style="grid-column:1/-1">In attesa di altri giocatori…</div></div><div class="pp shb"><span class="grip"></span><div class="opts-row"><label>Timer <select aria-label="Timer"><option>nessuno</option><option>30 s</option><option>60 s</option></select></label><span style="font:800 11.5px Nunito;opacity:.75">Bot: difficile</span></div>'+cta('Avvia partita')+'<div class="lnks"><a class="lnk" role="button" tabindex="0" style="color:#13224a;text-shadow:none">Schermo condiviso</a><a class="lnk" role="button" tabindex="0" style="color:#13224a;text-shadow:none">Esci dalla stanza</a></div></div></div>'}),
+ /* MEGAFONO */
+ pick:(o={})=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+'<div class="meta" style="margin:6px 14px 0;font:400 28px/1 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;letter-spacing:0;display:block"><small style="display:block;font:400 20px/1 \'Caveat Brush\';text-shadow:2px 2px 0 #13224a;transform:rotate(-1.5deg);margin-bottom:3px;text-transform:none">Sei il Megafono!</small>Tocca la frase da urlare</div><div class="scene" style="place-items:start center"><div class="opts2">'+OPTS.map((x,i)=>'<div class="opt'+(i===(o.sel??1)?' on':'')+(o.open===i?' open static':'')+'" data-pick="1"><span class="opt-ctx">'+x[0]+'</span><span class="tx">'+x[1]+'</span><button type="button" class="ex" data-toggle-opt="1" aria-label="Leggi tutta la frase">▾</button><i class="tbar"></i></div>').join('')+'</div></div>'+sheet('SCEGLI LA FRASE','Tocca per scegliere, ▾ per leggerla tutta',crow(cta('Dico la mia','pap sm'),cta('Proclama!','red','data-cta="proc"')))+'</div>'}),
+ own:()=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+'<div class="scene" style="place-items:start center"><div class="opts2" style="gap:10px"><div class="meta" style="margin:6px 0 0;font:400 28px/1 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a;display:block"><small style="display:block;font:400 20px/1 \'Caveat Brush\';text-transform:none;text-shadow:2px 2px 0 #13224a">Una frase tutta tua</small>Inventala!</div><div class="phr-opts"><div class="phr-fixed" style="color:#fff;text-shadow:2px 2px 0 #13224a">Oggi sale sulla torre…</div><textarea class="phr-in" aria-label="La tua frase" placeholder="…chi ha la scusa più creativa">…chi ha detto “arrivo tra cinque minuti” da un’ora</textarea><div class="hint" style="text-align:right;margin:0">52/120</div><label class="hint" style="display:flex;gap:8px;align-items:center;margin:0"><input type="checkbox"> La dico solo a voce (non la scrivo)</label></div></div></div>'+sheet('UNA FRASE TUA','Scrivila o dilla a voce',crow(cta('Torna alle frasi','pap sm'),cta('Proclama!','red')))+'</div>'}),
+ wmega:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+wait('Bot Tito è il Megafono e sta scegliendo cosa urlare…','Poi sceglierai, in segreto, dalla tua mano il personaggio che quella cosa la farebbe di sicuro.')+sheet('ATTESA','Il Megafono sta scegliendo',crow(tray()))+'</div>'}),
+ /* FOLLA */
+ mano:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1)+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Chi lo farebbe di sicuro? Resta segreta.',crow(tray(),cta('Gioca questa carta','','data-cta="play"')))+'</div>'}),
+ manoOpen:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1,1,1)+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Tocca la carta per ingrandirla.',crow(tray(),cta('Gioca questa carta')))+'</div>'}),
+ zoomc:(W,H,k='gioca')=>{const ch=Math.round(Math.min(H-250,(W-70)*1.5)),cw=Math.round(ch/1.5);return {html:'<div class="B"></div>',ov:'<div class="ovl zoom on"><div class="zt">guardalo bene, poi decidi</div><div class="zc" style="top:70px;height:'+(ch+30)+'px;width:'+(cw+20)+'px"><div class="fc" style="width:'+cw+'px;height:'+ch+'px;background-image:var(--c2)"></div><div class="zn">3</div></div><button type="button" class="arr al" style="top:'+Math.round(H/2-60)+'px">‹</button><button type="button" class="arr ar" style="top:'+Math.round(H/2-60)+'px">›</button><div class="zb" style="bottom:20px">'+cta(k==='gioca'?'Gioca questa carta':k==='lui'?'Lui! va sul n. 3':'Voto il n. 3')+cta('Indietro','pap','style="font-size:17px;padding:9px"')+'</div></div>'}},
+ wplay:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1)+wait('Carta giocata! Aspettiamo gli altri…','Tra poco le carte salgono sulla torre.')+sheet('ATTESA','4 su 6 hanno scelto',flags(FL(4)))+'</div>'}),
+ /* LUI */
+ lui0:()=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+phraseK(P1)+slotT(6,{kind:'lui',sel:0})+sheet('IL MEGAFONO SCOMMETTE','Tocca la carta su cui vuoi scommettere col Lui!',crow(tray(),cta('Scegli una carta','dis')))+'</div>'}),
+ lui1:()=>({html:'<div class="B">'+meta('Io (Megafono)','1/6')+phraseK(P1)+slotT(6,{kind:'lui',sel:1})+sheet('LUI! SUL N. 1','Quanti voti prenderà dagli altri? Il tuo voto non conta.',luiRow()+'<button type="button" class="lnk" style="color:#13224a;font-size:12px" data-open-zoom="1">🔍 Guarda bene la carta · tocca un’altra per cambiare</button>')+'</div>'}),
+ lui2:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1)+slotT(6,{kind:'lui',sel:0})+sheet('IL MEGAFONO SCOMMETTE','Bot Tito sceglie il gettone Lui!',crow(tray()))+'</div>'}),
+ /* VOTO */
+ voto6:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1)+slotT(6,{sel:2})+sheet('VOTA IN SEGRETO',TIPV+' Bordo giallo: Lui! del Megafono.',crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
+ voto8:()=>({html:'<div class="B">'+meta('Bot Tito','1/8')+phraseK(P2,1,1)+slotT(8,{sel:2})+sheet('VOTA IN SEGRETO',TIPV,crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
+ votoZ:(W,H)=>S.zoomc(W,H,'voto'),
+ votoW:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+phraseK(P1)+slotT(6,{sel:2})+sheet('VOTO INVIATO 🔒','Il tuo gettone è sulla carta scelta.',flags(FL(3)))+'</div>'}),
+ /* RISULTATI */
+ spoglio:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+'<div class="scene"><div class="tslot" data-n="6" data-kind="rev" data-sel="0" data-max="1.3"></div></div><div class="darkv" style="z-index:3"></div><div class="rv" style="margin-top:auto"><div class="rv-row"><span class="rv-th" style="background-image:var(--c1)"><i>2</i></span><div class="rv-col"><span class="rv-n">Voto 3 di 6</span><span class="rv-who"><i class="dc" style="background:'+COLS[2]+'"></i>Bot Mara ha votato il n. 2</span></div></div><div class="rv-tally">'+[2,1,4].map((p,i)=>'<div class="tl'+(i===0?' cur':'')+'"><span class="th" style="background-image:var(--c'+(p-1)+')"><i>'+p+'</i></span><b>'+[2,1,1][i]+'</b></div>').join('')+'</div><div class="crow" style="margin-top:8px">'+cta('Salta','pap sm')+cta('Avanti ›','','style="font-size:19px;padding:8px"')+'</div></div></div>'}),
+ caduta:()=>({html:'<div class="B" style="z-index:5"><img class="fall" src="'+D.fall[0]+'" alt="La carta spinta giù dalla torre">'+meta('Bot Tito','1/6')+'<div style="flex:1"></div><div class="rv" style="text-align:center"><b class="rv-t">Cade il n. 2!</b><span>4 voti su 6. Giù dalla torre!</span></div></div>'}),
+ caduta2:()=>({html:'<div class="B" style="z-index:5"><img class="fall" src="'+D.fall[1]+'" alt="Materassi e folla">'+meta('Bot Tito','1/6')+'<div style="flex:1"></div></div>'}),
+ punti:()=>({html:'<div class="B">'+meta('Bot Tito','1/6')+slotT(6,{sel:2,max:.8})+ptsPanel()+sheet('CHI PRENDE PUNTI','Turno 1 di 6',crow(tray([]),cta('Continua ›')))+'</div>'}),
+ classifica:(W,H)=>({html:'<div class="B"></div>',ov:standings(H,ROWS,'Classifica','Turno 1 di 6','Prossimo turno')}),
+ /* INTERVALLO */
+ miIntro:()=>({html:'<div class="B"></div>',ov:'<div class="mi ovl" style="background:radial-gradient(circle at 50% 40%,#5a2a9a,#1c1048 70%)"><div class="mi-rays"></div><div class="mi-body"><div class="mi-badge">⭐ INTERVALLO ⭐</div><div class="mi-ic">🕵️</div><h2>L’Accusa!</h2><p class="mi-tag">Un personaggio accusa qualcuno…</p><ul>'+D.mini.map(t=>'<li>'+t+'</li>').join('')+'</ul><button type="button" class="mi-go">Si parte!</button></div></div>'}),
+ miMano:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+'<div class="mhead"><div class="mh-card" style="background-image:var(--c4)"><em>L’accusatore</em></div><div class="mh-bubble" data-toggle="open"><small>Accusa:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b></div></div>'+slotH({mode:'car'})+sheet('SCEGLI LA CARTA','Chi ha fatto questa cosa? Resta segreta.',crow(tray(),cta('Gioca questa carta','','data-cta="play"')))+'</div>'}),
+ miVoto:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+'<div class="mhead"><div class="mh-card" style="background-image:var(--c4)"><em>L’accusatore</em></div><div class="mh-bubble" data-toggle="open"><small>Accusa:</small><b>«HA SVUOTATO IL FRIGO DELL’UFFICIO E HA LASCIATO UN BIGLIETTO: “SCUSATE, ERO STANCO”.»</b></div></div>'+slotT(6,{sel:2})+sheet('CHI È IL COLPEVOLE?','Puoi votare anche la tua carta. Le più votate restano, le altre cadono.',crow(tray(),cta('Conferma il n. 2','','data-cta="vote"')))+'</div>'}),
+ miRes:()=>({html:'<div class="B">'+meta('Intervallo','3/6')+slotT(6,{sel:2,max:.8})+'<div class="pb"><b class="rv-t">Chi prende punti</b><div class="pb-scroll">'+pblk('Voto in testa','Hanno votato la carta in testa (n. 2): tanti punti quanti i voti su quella carta.','',1,2,nm('Io',ME,'+3')+nm('Mara',COLS[2],'+3')+nm('Pino',COLS[3],'+3'))+pblk('Carta in testa ×2','Chi aveva giocato una carta in testa prende il doppio dei voti.','',1,2,nm('Gino',COLS[1],'+6'))+pblk('Tetto ai punti','Nessuno guadagna più di 6 punti in un mini-gioco.','',0,0,'',1)+'</div></div>'+sheet('DOPO IL MINI-GIOCO','',crow(tray(),cta('Continua ›')))+'</div>'}),
+ /* FINE */
+ final:()=>({html:'<div class="B">'+D.conf.map(c=>'<i class="confetti" style="left:'+c[0]+'px;top:'+c[1]+'px;width:'+c[2]+'px;height:'+c[3]+'px;background:'+c[4]+';transform:rotate('+c[5]+'deg)"></i>').join('')+'<div class="h final-h"><small>Ha vinto…</small>Gran<br>Megafono!</div><div class="pod"><div class="pod-1" style="height:118px"><i class="dc xl" style="background:'+COLS[1]+'"></i>Gino<span style="font-size:24px">18</span></div><div class="pod-0" style="height:150px"><span style="font-size:30px">👑</span><i class="dc xl" style="background:'+COLS[0]+'"></i>Io<span style="font-size:30px">22</span></div><div class="pod-2" style="height:90px"><i class="dc xl" style="background:'+COLS[2]+'"></i>Mara<span style="font-size:22px">15</span></div></div><div class="rank">'+[['Pino',4,12,3],['Lella',5,9,4],['Tito',6,7,5]].map(r=>'<div class="pl"><b class="num">'+r[1]+'</b><i class="dc" style="background:'+COLS[r[3]]+'"></i>'+r[0]+'<span class="tg">'+r[2]+'</span></div>').join('')+'</div>'+sheet('FINE PARTITA','Complimenti a tutti!',crow(cta('Esci','pap sm'),cta('Nuova partita','','style="font-size:20px"')))+'</div>'}),
+};
+/* finestre: telefono con partita sotto e overlay aperto */
+const SCREENS={
+ accesso:[['home','Home'],['crea','Crea partita'],['entra','Entra con un codice'],['how','Come si gioca']],
+ lobby:[['lobby','Lobby (host)']],
+ megafono:[['pick','Scegli la frase (selezionata)'],['pick:open','Frase aperta, si richiude da sola'],['own','Frase tutta mia'],['wmega','Attesa del Megafono']],
+ folla:[['mano','Scegli la carta'],['manoOpen','Frase aperta (6 s)'],['zoomc','Carta a schermo intero'],['wplay','Carta giocata, attesa']],
+ lui:[['lui0','Tocca la carta'],['lui1','Scegli il gettone'],['lui2','Visto dalla Folla'],['zoomL','Guarda bene la carta']],
+ voto:[['voto6','Voto · 6 giocatori'],['voto8','Voto · 8 giocatori, frase lunga aperta'],['votoZ','Conferma dallo zoom'],['votoW','Voto inviato']],
+ risultati:[['spoglio','Spoglio'],['caduta','Caduta: cade il n. 2'],['caduta2','Caduta: materassi'],['punti','Chi prende punti'],['classifica','Classifica del turno']],
+ intervallo:[['miIntro','Annuncio'],['miMano','Scegli la carta'],['miVoto','Voto'],['miRes','Risultati']],
+ fine:[['final','Classifica finale']],
+ finestre:[['mano+lui','Popup dei segnalini Lui!'],['mano+chat','Chat'],['voto6+rank','Classifica rapida'],['voto6+rules','Regole e audio']]
+};
+function build(key,W,H){
+  let spec;
+  if(key==='pick:open')spec=S.pick({open:2,sel:2});
+  else if(key==='zoomL')spec=S.zoomc(W,H,'lui');
+  else if(key.includes('+')){const [b,o]=key.split('+');spec=S[b](W,H);spec.ov=o==='lui'?ovLui():o==='chat'?ovChat():o==='rules'?ovRules():standings(H,ROWS,'Classifica','Turno 1 di 6',null);}
+  else spec=S[key](W,H);
+  return spec;
+}
+function phone(key,label){
+  const [w,h]=SIZES[size], z=Math.min(.62,250/w), spec=build(key,w,h);
+  const inner=spec.raw?spec.raw:(spec.paper?paper:sky)+spec.html+(spec.ov||'')+fin;
+  return '<figure class="pw"><div class="pf" style="width:'+Math.round(w*z)+'px;height:'+Math.round(h*z)+'px"><button type="button" class="zbtn" aria-label="Apri a dimensione reale" data-zoom="1">⤢</button><div class="dev'+(spec.paper?' paper':'')+'" style="width:'+w+'px;height:'+h+'px;transform:scale('+z+')">'+inner+'</div></div><figcaption class="cap">'+label+'</figcaption></figure>';
+}
+function render(){
+  document.querySelectorAll('[data-sec]').forEach(el=>{el.innerHTML=SCREENS[el.dataset.sec].map(s=>phone(s[0],s[1])).join('')});
+  layout();measure();
+}
+function layout(){
+  document.querySelectorAll('.tslot').forEach(el=>{
+    const sc=el.parentElement,n=+el.dataset.n,W=sc.clientWidth,Hh=sc.clientHeight,cap=+el.dataset.max||1.3;
+    const s=Math.min(W/372,Hh/392,cap),ch=Math.max(392,Math.min(Hh/s,540)),kind=el.dataset.kind,sel=+el.dataset.sel;
+    const cards=kind==='lui'?D['cards'+n]:kind==='rev'?D['cardsRev'+n]:D['cardsLui'+n];
+    const hits=Object.entries(D['pos'+n]).map(([i,c])=>'<button type="button" class="hit'+((+i+1)===sel?' sel':'')+'" data-pos="'+(+i+1)+'" aria-label="Carta numero '+(+i+1)+'" style="left:'+c.x+'px;top:'+(c.f-c.h-6)+'px;width:'+c.w+'px;height:'+(c.h+10)+'px"></button>').join('');
+    el.style.cssText='width:'+Math.round(372*s)+'px;height:'+Math.round(ch*s)+'px;position:relative;overflow:hidden';el.className='tz tslot';
+    el.innerHTML='<div class="tzin" style="transform:scale('+s+') translateY(-278px)"><div>'+D.base+'</div><div>'+cards+'</div><div>'+hits+'</div></div>';
+  });
+  document.querySelectorAll('.hslot').forEach(el=>{
+    const sc=el.parentElement,W=sc.clientWidth,Hh=sc.clientHeight;
+    el.style.cssText='position:relative;width:'+W+'px;height:'+Hh+'px';
+    const cH=Math.min(Hh*0.84,330),cW=cH/1.5,off=cW*0.86;let h='';
+    [[-1,1],[1,3],[0,2]].forEach(([k,i])=>{const c=k===0,f=c?1:.78;h+='<button type="button" class="card'+(c?' sel':'')+'" data-i="'+i+'" aria-label="Carta '+(i+1)+'" style="width:'+cW*f+'px;height:'+cH*f+'px;left:'+(W/2-cW*f/2+k*off)+'px;top:'+(Hh/2-cH*f/2+(c?-6:8))+'px;background-image:var(--c'+i+');transform:rotate('+k*7+'deg);z-index:'+(c?20:10)+'"></button>';});
+    h+='<div class="pdots" style="position:absolute;left:0;right:0;bottom:2px">'+[0,1,2,3,4].map(i=>'<i class="'+(i===2?'on':'')+'"></i>').join('')+'</div>';
+    el.innerHTML=h;
+  });
+}
+function measure(){
+  const dev=document.querySelector('#voto .dev'); if(!dev)return;
+  const pill=dev.querySelector('.pk'),sh=dev.querySelector('.shb'),sc=dev.querySelector('.scene');
+  const [w,h]=SIZES[size],T=TODAY[size];
+  const top=Math.round(pill.offsetTop+pill.offsetHeight),bot=h-Math.round(sh.offsetTop),scene=sc.clientHeight;
+  const row=(l,a,b)=>'<tr><td>'+l+'</td><td>'+b+' px · '+Math.round(b/h*100)+'%</td><td>'+a+' px · '+Math.round(a/h*100)+'%</td><td><b>'+(b>a?'+':'')+Math.round((b/a-1)*100)+'%</b></td></tr>';
+  document.getElementById('meas').innerHTML='<thead><tr><th>Voto a '+w+' × '+h+'</th><th>Layout B</th><th>Oggi</th><th>Differenza</th></tr></thead><tbody>'+row('Scena (torre)',T.scene,scene)+'<tr><td>Parte alta (fino alla frase)</td><td>'+top+' px · '+Math.round(top/h*100)+'%</td><td>'+T.top+' px · '+Math.round(T.top/h*100)+'%</td><td><b>'+Math.round((top/T.top-1)*100)+'%</b></td></tr><tr><td>Parte bassa (pannello)</td><td>'+bot+' px · '+Math.round(bot/h*100)+'%</td><td>'+T.bot+' px · '+Math.round(T.bot/h*100)+'%</td><td><b>'+Math.round((bot/T.bot-1)*100)+'%</b></td></tr></tbody>';
+}
+/* ---- interazioni ---- */
+const timers=new WeakMap();
+function toggleOpen(el){
+  const open=!el.classList.contains('open');
+  clearTimeout(timers.get(el));
+  el.classList.remove('static');
+  if(open){el.classList.add('open');el.setAttribute('aria-expanded','true');el.style.setProperty('--t','6s');timers.set(el,setTimeout(()=>{el.classList.remove('open');el.setAttribute('aria-expanded','false')},6000));}
+  else{el.classList.remove('open');el.setAttribute('aria-expanded','false');}
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-toggle],[data-close],[data-pick]');if(!t)return;
+  const dev=t.closest('.dev');
+  if(t.dataset.size){size=t.dataset.size;document.querySelectorAll('.sizer button').forEach(b=>b.setAttribute('aria-pressed',b===t?'true':'false'));render();return;}
+  if(t.id==='lbx'){document.getElementById('lb').classList.remove('on');return;}
+  if(t.dataset.zoom){const d=t.closest('.pw').querySelector('.dev').cloneNode(true);const [w,h]=SIZES[size];const k=Math.min(1,(innerWidth-32)/w,(innerHeight-90)/h);d.style.transform='scale('+k+')';const box=document.createElement('div');box.style.cssText='width:'+w*k+'px;height:'+h*k+'px;border:6px solid #07070b;border-radius:34px;overflow:hidden;background:#07070b';box.appendChild(d);const c=document.getElementById('lbc');c.innerHTML='';c.appendChild(box);document.getElementById('lb').classList.add('on');return;}
+  if(!dev)return;
+  if(t.dataset.open){const k=t.dataset.open;const ov=document.createElement('div');ov.innerHTML=k==='lui'?ovLui():k==='chat'?ovChat():k==='rules'?ovRules():standings(SIZES[size][1],ROWS,'Classifica','Turno 1 di 6',null);dev.appendChild(ov.firstElementChild);return;}
+  if(t.dataset.close){const ov=t.closest('.ovl');if(e.target.closest('[data-keep]')&&!t.matches('button[data-close]'))return;if(ov&&ov.parentElement===dev)ov.remove();return;}
+  if(t.dataset.toggleOpt){e.stopPropagation();toggleOpen(t.closest('.opt'));return;}
+  if(t.dataset.toggle){toggleOpen(t);return;}
+  if(t.dataset.pick){dev.querySelectorAll('[data-pick]').forEach(o=>o.classList.toggle('on',o===t));return;}
+  if(t.classList.contains('hit')){t.closest('.tzin').querySelectorAll('.hit').forEach(h=>h.classList.toggle('sel',h===t));const c=dev.querySelector('[data-cta="vote"]');if(c)c.textContent='Conferma il n. '+t.dataset.pos;return;}
+  if(t.classList.contains('card')){const hs=t.closest('.hslot');hs.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c===t));return;}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('lb').classList.remove('on');document.querySelectorAll('.dev>.ovl[data-close]').forEach(o=>o.remove())}if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('[data-toggle][role=button]')){e.preventDefault();toggleOpen(e.target)}});
+render();document.fonts&&document.fonts.ready.then(()=>{layout();measure()});
+</script>
