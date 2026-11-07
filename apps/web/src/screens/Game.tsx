@@ -16,6 +16,7 @@ import type { LuiSpec, PlayerId } from "@gdt/game-engine";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
+import CharIntro from "../components/CharIntro.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
@@ -155,6 +156,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   const [pick, setPick] = useState<number | null>(null);
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
+  const charKey = `gdt.char.${room.code}`;
+  const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
@@ -273,6 +276,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       )}
       {legend && <Legend onClose={() => setLegend(false)} tokens={view.luiTokens} />}
       {board && <Standings turn={view.turn} total={view.totalTurns} rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }))} onClose={() => setBoard(false)} />}
+      {!intro && charIntro && <CharIntro color={people.get(me).color} onClose={() => { setCharIntro(false); try { sessionStorage.setItem(charKey, "1"); } catch { /* */ } }} />}
       {intro && <HowTo onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
     </>
   );

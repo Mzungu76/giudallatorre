@@ -599,3 +599,78 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .stbd-tag b{transition:none}
 .stbd-d{position:absolute;right:-6px;top:-13px;background:#2a9d57;color:#fff;border:2px solid #13224a;border-radius:99px;padding:0 6px;font:400 13px/16px Anton;text-decoration:none;animation:popin2 .4s .3s ease-out both}
 .stbd-d.neg{background:#e8362b}
+
+/* ===== Finale: la scalata alla torre ===== */
+.fin{position:absolute;inset:0;z-index:20;overflow:hidden}
+.fin-head{position:absolute;top:12px;left:0;right:0;text-align:center;font-size:42px;z-index:12;animation:popin3 .5s ease-out both}
+.fin-head small{display:block;font:400 19px/1.1 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 #13224a;margin-bottom:2px}
+@keyframes popin3{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.fin-ground{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(#58c06a,#2e8a47 40%,#256f3a);border-top:5px solid #13224a;z-index:1}
+.fin .stbd-tower{z-index:2}
+.fin-mats{position:absolute;width:98px;height:39px;z-index:4}
+.fin-mats.L{left:6px}.fin-mats.R{right:6px}
+.fin-mats i{position:absolute;left:0;right:0;height:14px;border:3px solid #13224a;border-radius:8px;background:repeating-linear-gradient(90deg,#ff7a5e 0 12px,#ffc2b4 12px 15px)}
+.fin-mats i:nth-child(1){bottom:-4px}
+.fin-mats i:nth-child(2){bottom:9px;left:6px;right:4px;background:repeating-linear-gradient(90deg,#2dc1be 0 12px,#a8ecea 12px 15px)}
+.fin-mats i:nth-child(3){bottom:22px;left:2px;right:8px;background:repeating-linear-gradient(90deg,#ffc72c 0 12px,#ffe9a0 12px 15px)}
+.fin-fig{position:absolute;left:0;top:0;z-index:6;will-change:transform}
+.fin-in{position:relative}
+.fin-crown{position:absolute;left:50%;top:-24px;margin-left:-13px;font-style:normal;font-size:24px;line-height:1;filter:drop-shadow(0 2px 0 #13224a);animation:popin3 .5s ease-out both}
+.fin-fig .ar,.fin-fig .lg{transition:transform .25s}
+.fin-fig.hold .ar.l{transform:rotate(150deg)}.fin-fig.hold .ar.r{transform:rotate(-150deg)}
+.fin-fig.climbing .ar.l{animation:finArL .44s ease-in-out infinite alternate}
+.fin-fig.climbing .ar.r{animation:finArR .44s ease-in-out infinite alternate}
+.fin-fig.climbing .lg.l{animation:finLgL .44s ease-in-out infinite alternate}
+.fin-fig.climbing .lg.r{animation:finLgR .44s ease-in-out infinite alternate}
+@keyframes finArL{from{transform:rotate(165deg)}to{transform:rotate(112deg)}}
+@keyframes finArR{from{transform:rotate(-112deg)}to{transform:rotate(-165deg)}}
+@keyframes finLgL{from{transform:rotate(-16deg)}to{transform:rotate(16deg)}}
+@keyframes finLgR{from{transform:rotate(16deg)}to{transform:rotate(-16deg)}}
+.fin-fig.push .ar.l{animation:finPuL .35s ease-in-out infinite alternate}
+.fin-fig.push .ar.r{animation:finPuR .35s ease-in-out infinite alternate}
+@keyframes finPuL{from{transform:rotate(60deg)}to{transform:rotate(125deg)}}
+@keyframes finPuR{from{transform:rotate(-60deg)}to{transform:rotate(-125deg)}}
+.fin-fig.push .fin-in,.fin-fig.cheer .fin-in{animation:finHop .6s ease-in-out infinite}
+.fin-fig.cheer .ar.l{animation:finChL .3s ease-in-out infinite alternate}
+.fin-fig.cheer .ar.r{animation:finChR .3s ease-in-out infinite alternate}
+@keyframes finChL{from{transform:rotate(175deg)}to{transform:rotate(135deg)}}
+@keyframes finChR{from{transform:rotate(-135deg)}to{transform:rotate(-175deg)}}
+@keyframes finHop{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.fin-fig.fall .ar.l{animation:finArL .2s var(--d) 6 alternate}
+.fin-fig.fall .ar.r{animation:finArR .2s var(--d) 6 alternate}
+@keyframes finFall{
+  0%{transform:translate(var(--x0),var(--y0)) rotate(0deg);animation-timing-function:cubic-bezier(.2,.7,.4,1)}
+  32%{transform:translate(calc(var(--x0) + (var(--x1) - var(--x0)) * .42),calc(var(--y0) - 38px)) rotate(var(--r1));animation-timing-function:cubic-bezier(.5,0,.9,.6)}
+  100%{transform:translate(var(--x1),var(--y1)) rotate(var(--r2))}}
+.fin-in.land{animation:finBounce .6s var(--d) both}
+@keyframes finBounce{0%{transform:translateY(0)}35%{transform:translateY(-15px)}65%{transform:translateY(0)}82%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.fin-bam{position:absolute;z-index:9;font-size:28px;line-height:1;opacity:0;animation:finBam .5s ease-out both}
+@keyframes finBam{0%{opacity:0;transform:scale(.3)}30%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(1.6)}}
+.fin-diz{position:absolute;z-index:9;font-size:20px;line-height:1;opacity:0;animation:finDiz .4s ease-out forwards}
+@keyframes finDiz{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fin-conf{z-index:11;animation:finConf linear infinite}
+@keyframes finConf{from{transform:translateY(0) rotate(0)}to{transform:translateY(900px) rotate(540deg)}}
+.fin-skip{position:absolute;left:0;right:0;text-align:center;font:800 12px Nunito;color:#13224a;z-index:12;opacity:.7}
+.fin-rank{position:absolute;left:14px;right:14px;z-index:12;display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;animation:popin3 .5s .1s ease-out both}
+.fin-row{display:flex;align-items:center;gap:5px;background:#fff7e0;border:3px solid #13224a;border-radius:99px;padding:1px 9px 1px 6px;box-shadow:0 2px 0 #13224a;font:800 12px/1.5 Nunito;color:#13224a;min-width:0}
+.fin-row .num{font:400 15px Anton;width:14px}.fin-row .dc{width:16px;height:16px;flex:none}
+.fin-row span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fin-row u{text-decoration:none;font:400 17px Anton}
+.fin-row.win{background:#ffd24d}
+.fin-rank:has(.fin-row:nth-child(3):last-child){grid-template-columns:1fr}
+.fin .bottom{position:absolute}
+.fin-tower{position:absolute;z-index:2;max-width:none;pointer-events:none}
+.fin-card{display:block;filter:drop-shadow(0 2px 0 #13224a)}
+.fin-fig.climbing .fin-in{animation:finSway .5s ease-in-out infinite alternate}
+@keyframes finSway{from{transform:rotate(-5deg)}to{transform:rotate(5deg) translateY(-3px)}}
+.fin-fig.cheer .fin-in{transform-origin:50% 100%;animation:finCheer .6s ease-in-out infinite}
+@keyframes finCheer{0%,100%{transform:scale(1.15) translateY(0)}50%{transform:scale(1.15) translateY(-7px)}}
+.fin-crown{top:-18px}
+.chi{position:absolute;left:0;right:0;top:0;z-index:90;overflow:hidden}
+.chi-t{position:absolute;left:0;right:0;top:20px;text-align:center}
+.chi-t small{display:block;font:400 20px/1.1 'Caveat Brush';color:#fff;text-shadow:2px 2px 0 #13224a}
+.chi-t b{display:block;font:400 40px/1 Anton;color:#fff;text-transform:uppercase;text-shadow:3px 3px 0 #e8362b,5px 5px 0 #13224a}
+.chi-card{position:absolute;left:50%;top:104px;width:min(236px,calc(100% - 100px));margin-left:calc(min(236px,calc(100% - 100px)) / -2);filter:drop-shadow(0 6px 0 #13224a);animation:chiIn .7s cubic-bezier(.3,1.4,.5,1) both;transform-origin:50% 100%}
+@keyframes chiIn{from{opacity:0;transform:rotate(-14deg) scale(.4) translateY(80px)}to{opacity:1;transform:rotate(-2deg)}}
+.chi-s{position:absolute;left:18px;right:18px;bottom:96px;display:flex;align-items:center;gap:10px;background:#fff7e0;border:3px solid #13224a;border-radius:16px;padding:8px 12px;box-shadow:0 4px 0 #13224a;font:800 13px/1.3 Nunito;color:#13224a}
+.chi-s img{flex:none;filter:drop-shadow(0 2px 0 #13224a88)}

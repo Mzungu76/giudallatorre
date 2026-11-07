@@ -1,5 +1,5 @@
 // Service worker: apre offline solo i contenuti statici. Il gioco richiede Internet (nessuna partita offline).
-const CACHE = "gdt-static-v2";
+const CACHE = "gdt-static-v3";
 const SHELL = ["/", "/manifest.webmanifest", "/icons/icon-192.png"];
 self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
