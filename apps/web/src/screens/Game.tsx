@@ -11,10 +11,11 @@ import type { Voter, VoteTok } from "../components/Terrace.tsx";
 import { voteTok, luiTok } from "../scene/draw.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
+import HowTo from "../components/HowTo.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean }
 const REASON: Record<string, string> = { voto: "voto giusto", carta: "carta giocata", "lui-cade": "Lui! cade", "lui-non-cade": "Lui! resta su", "lui-fallito": "Lui! sbagliato" };
-const TITLES: Record<string, string> = { PROCLAIM: "SU SULLA TORRE", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL LUI! DEL MEGAFONO", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
+const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 const BANNERS: Record<string, [string, string]> = {
   PLAY: ["Scegliete la carta!", "quella che sta meglio sulla torre"],
   SUSPECT: ["Salgono le carte!", "il Megafono sta per scommettere"],
@@ -29,30 +30,35 @@ export function usePeople(room: RoomMsg) {
   }, [room.players]);
 }
 
-function PhraseHead({ phrase }: { phrase: PlayerView["phrase"] }) {
+function PhraseHead({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaName: string }) {
   const { H } = useStage();
   if (!phrase) return null;
   const cmp = H < 700 ? " cmp" : "";
-  if (phrase.mode === "free") {
-    return phrase.text
-      ? <div className={`h ${phrase.text.length > 50 ? "long" : ""}${cmp}`} style={{ top: 94 }} data-testid="phrase"><small>Oggi sale sulla torre…</small>{phrase.text}</div>
-      : <div className="h" style={{ top: 98, fontSize: 34 }} data-testid="phrase"><small>Il Megafono ha urlato…</small>una frase tutta sua!</div>;
+  let label = "Il Megafono urla:", body: string;
+  if (phrase.mode === "free") { label = "Oggi sale sulla torre…"; body = phrase.text ?? "una frase tutta sua (detta a voce)!"; }
+  else {
+    const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /);
+    if (m) { label = `Oggi ${m[1]} sulla torre…`; body = phrase.text.slice(m[0].length); } else body = phrase.text;
   }
-  const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /), pre = m ? m[0] : "Oggi sale sulla torre ";
-  const t = phrase.text;
-  return m
-    ? <div className={`h ${t.length > 80 ? "long" : ""}${cmp}`} style={{ top: 94 }} data-testid="phrase"><small>{`Oggi ${m[1]} sulla torre…`}</small>{t.slice(pre.length)}</div>
-    : <div className={`h ${t.length > 90 ? "xlong" : "long"}${cmp}`} style={{ top: 94 }} data-testid="phrase"><small>Il Megafono dice…</small>{t}</div>;
+  const len = body.length, size = len > 80 ? " xl" : len > 50 ? " l" : "";
+  return (
+    <div className={`phrase-card${size}${cmp}`} style={{ top: 90 }} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
+      <span className="mega-ic" aria-hidden>📣</span><small>{label}</small><b>{body}</b>
+    </div>
+  );
 }
 
-function Waiting({ text, flags, people, bottom }: { text: string; flags: { id: string; done: boolean }[]; people: ReturnType<typeof usePeople>; bottom?: boolean }) {
+/** Cosa devo fare adesso: una riga chiara, sempre visibile. */
+function Tip({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) { return <div className="tip" style={style} data-testid="tip">{children}</div>; }
+
+function Waiting({ text, sub, flags, people, bottom }: { text: string; sub?: string; flags: { id: string; done: boolean }[]; people: ReturnType<typeof usePeople>; bottom?: boolean }) {
   const { H } = useStage();
   if (bottom) return (
-    <div className="bottom" data-testid="waiting"><div className="pp mini"><b>{text}</b></div><div className="flags">{flags.map((f) => <span key={f.id} className="chip">{<Disc color={people.get(f.id).color} />}{people.get(f.id).name}{f.done ? " ✓" : " …"}</span>)}</div></div>
+    <div className="bottom" data-testid="waiting">{sub && <Tip>{sub}</Tip>}<div className="pp mini"><b>{text}</b></div><div className="flags">{flags.map((f) => <span key={f.id} className="chip">{<Disc color={people.get(f.id).color} />}{people.get(f.id).name}{f.done ? " ✓" : " …"}</span>)}</div></div>
   );
   return (
     <div className="wait" data-testid="waiting" style={{ top: Math.round(H * 0.4) }}>
-      <div className="pp"><b>{text}</b></div>
+      <div className="pp"><b>{text}</b>{sub && <small className="sub">{sub}</small>}</div>
       <div className="flags">{flags.map((f) => <span key={f.id} className="chip">{<Disc color={people.get(f.id).color} />}{people.get(f.id).name}{f.done ? " ✓" : " …"}</span>)}</div>
     </div>
   );
@@ -65,7 +71,7 @@ function PhrasePicker({ view, send }: { view: PlayerView; send: GameProps["send"
   const go = () => send({ t: "act", action: own ? { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } : { type: "choosePhrase", mode: "card", index: i } });
   return (
     <div className="picker" data-testid="phrase-picker">
-      <div className="h" style={{ top: 98, fontSize: 34 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Scegli la frase"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
+      <div className="h" style={{ top: 98, fontSize: 34 }}><small>{own ? "Una frase tutta tua" : single ? "Carta a frase singola" : "Sei il Megafono!"}</small>{own ? "Inventala!" : single ? "Questa è obbligatoria" : "Cosa urli alla folla?"}</div>
       <div className="opts">
         {!own && card.phrases.map((t, k) => (
           <button key={k} className={`opt ${k === i ? "on" : ""}`} onClick={() => setI(k)} data-testid={`phrase-${k}`}>{single ? <b>{t}</b> : t}</button>
@@ -93,7 +99,7 @@ function HandPicker({ view, send }: { view: PlayerView; send: GameProps["send"] 
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
   return (
     <div className="picker" data-testid="hand">
-      <div className="hint-top" style={{ top: H - 466 }}>tocca una carta, poi toccala ancora per vederla bene</div>
+      <Tip style={{ top: Math.max(196, H - 480) }}>Scegli il personaggio che farebbe questa cosa. Tocca una carta, poi ancora per vederla bene. Resta segreta!</Tip>
       {hand.map((c, i) => {
         const mid = (hand.length - 1) / 2, d = i - mid, lifted = sel === i;
         return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
@@ -170,6 +176,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null), [kind, setKind] = useState<"CADE" | "NON_CADE">("CADE");
   const [zoomPos, setZoomPos] = useState<number | null>(null), [legend, setLegend] = useState(false);
+  const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
@@ -235,28 +242,29 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
       {deadline && phase !== "RESULTS" && <div className="cd"><Countdown deadline={deadline} /></div>}
-      {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} />}
+      {phase !== "PROCLAIM" && !(phase === "RESULTS" && showFallScene) && <PhraseHead phrase={view.phrase} megaName={people.get(view.megafonoId).name} />}
       {needTerrace && !animating && <button className="legend2" onClick={() => setLegend(true)} aria-label="Come si fanno punti" data-testid="legend-btn">?</button>}
       {tag && <div className="roundtag" style={{ top: 130 }}><b>{tag}</b></div>}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
-      {phase === "PROCLAIM" && (isMega && !readOnly ? <PhrasePicker view={view} send={act} /> : <Waiting text={`${people.get(view.megafonoId).name} sta scegliendo cosa urlare dal Megafono…`} flags={[]} people={people} />)}
+      {phase === "PROCLAIM" && (isMega && !readOnly ? <PhrasePicker view={view} send={act} /> : <Waiting text={`${people.get(view.megafonoId).name} è il Megafono e sta scegliendo cosa urlare…`} sub="Poi sceglierai, in segreto, dalla tua mano il personaggio che quella cosa la farebbe di sicuro." flags={[]} people={people} />)}
       {phase === "PLAY" && !readOnly && !mine?.hasPlayed && (view.megafonoSa || !isMega) && <HandPicker view={view} send={act} />}
-      {phase === "PLAY" && (readOnly || mine?.hasPlayed || (!view.megafonoSa && isMega)) && <Waiting text={!readOnly && !view.megafonoSa && isMega ? "Hai pescato la tua carta dal mazzo. Aspetta la Folla…" : "Carta giocata, in attesa degli altri…"} flags={flagsPlay} people={people} />}
+      {phase === "PLAY" && (readOnly || mine?.hasPlayed || (!view.megafonoSa && isMega)) && <Waiting text={!readOnly && !view.megafonoSa && isMega ? "Hai pescato la tua carta dal mazzo. Aspetta la Folla…" : "Carta giocata! Aspettiamo gli altri…"} sub="Tra poco le carte salgono sulla torre." flags={flagsPlay} people={people} />}
 
       {phase === "SUSPECT" && !climbing && (isMega && !readOnly ? (
         <div className="bottom">
+          <Tip>Tocca la carta su cui scommetti col gettone Lui!, poi scegli: cade o non cade.</Tip>
           <div className="lui-opts">
             <button className={`lk red ${kind === "CADE" ? "on" : ""}`} onClick={() => setKind("CADE")} data-testid="kind-cade">Cade lui!<small>+4 se cade · −1 se sbagli</small></button>
             <button className={`lk ${kind === "NON_CADE" ? "on" : ""}`} onClick={() => setKind("NON_CADE")} data-testid="kind-non">Non cade<small>+1 se resta su · −1 se cade</small></button>
           </div>
           <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "placeLui", kind, position: pick } })} testId="place-lui">{pick ? `Posa il Lui! sul n. ${pick}` : "Tocca una carta"}</Btn>
         </div>
-      ) : <div className="bottom"><div className="pp mini">{people.get(view.megafonoId).name} sta posando il “Lui!”…</div></div>)}
+      ) : <div className="bottom"><Tip>{people.get(view.megafonoId).name} scommette col gettone Lui!: “cade” o “non cade”?</Tip></div>)}
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
-        ? <div className="bottom"><div className="hint-bottom">tocca una carta per vederla bene</div><Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{pick ? `Conferma il n. ${pick}` : "Scegli chi cade"}</Btn></div>
-        : <Waiting bottom text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
+        ? <div className="bottom"><Tip>Vota chi farebbe di più questa cosa. Il più votato cade giù! Se hai votato quello che cade: +2.</Tip><Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{pick ? `Conferma il n. ${pick}` : "Scegli chi cade"}</Btn></div>
+        : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
 
       {animating && !readOnly && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">Salta ›</button>}
@@ -270,6 +278,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
           actionLabel={phase === "SUSPECT" ? `Il Lui! va sul n. ${zoomPos}` : `Voto il n. ${zoomPos}`} onAction={() => { setPick(zoomPos); setZoomPos(null); }} />
       )}
       {legend && <Legend onClose={() => setLegend(false)} />}
+      {intro && <HowTo onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
     </>
   );
 }
