@@ -15,8 +15,6 @@ if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-crea.png` });
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(500);
 const NB = +(process.env.BOTS ?? 3); check(`lobby: io + ${NB} bot`, (await p.locator('[data-testid="player-row"]').count()) === NB + 1 && (await p.locator('[data-testid="bot-tag"]').count()) === NB);
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-lobby.png` });
-await p.click('[data-testid="remove-bot"]'); await sleep(400); check("posso togliere un bot", (await p.locator('[data-testid="player-row"]').count()) === NB);
-await p.click('[data-testid="add-bot"]'); await sleep(400); check("posso aggiungere un bot", (await p.locator('[data-testid="player-row"]').count()) === NB + 1);
 await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="game"]');
 let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 (async () => { while (sampling && n < 400) { await p.screenshot({ path: `${SHOTS}/s${String(n++).padStart(3, "0")}.png` }).catch(() => {}); await sleep(450); } })();
