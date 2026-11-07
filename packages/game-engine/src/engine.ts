@@ -1,11 +1,20 @@
 import { EngineError } from "./types.ts";
-import { MINI_KINDS } from "./types.ts";
-import type { Action, CardId, GameConfig, GameEvent, GameState, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
+import { LUI_SLOTS, MINI_KINDS } from "./types.ts";
+import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
-/** Malus del segnalino Lui! quando la scommessa fallisce. */
-export const LUI_FAIL_MALUS = 1;
+/** Segnalini Lui! per numero di giocatori: soglie "almeno k voti degli altri" (2 punti per voto richiesto) e lo 0 secco. Tarati con le simulazioni (tools/analysis). */
+const LUI_TABLE: Record<number, { low: number; high: number; zero: number }> = { 3: { low: 1, high: 2, zero: 2 }, 4: { low: 1, high: 3, zero: 2 }, 5: { low: 2, high: 3, zero: 3 }, 6: { low: 2, high: 4, zero: 3 }, 7: { low: 2, high: 4, zero: 3 }, 8: { low: 2, high: 4, zero: 3 } };
+export function luiTokens(n: number): LuiSpec[] {
+  const t = LUI_TABLE[Math.max(3, Math.min(8, n))]!;
+  return [{ slot: "bassa", k: t.low, pts: 2 * t.low }, { slot: "alta", k: t.high, pts: 2 * t.high }, { slot: "zero", k: 0, pts: t.zero }];
+}
+/** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
+export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
+  const spent = s.luiSpent?.[p] ?? [], left = LUI_SLOTS.filter((x) => !spent.includes(x));
+  return left.length ? left : LUI_SLOTS.slice();
+}
 /** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
@@ -39,7 +48,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null,
+    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])),
   };
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
@@ -120,9 +129,10 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
     case "placeLui": {
       mustBe(s, "SUSPECT"); known(s, action.playerId);
       if (action.playerId !== megafonoOf(s)) throw new EngineError("NOT_ALLOWED", "solo il Megafono posa il segnalino");
-      if (action.kind !== "CADE" && action.kind !== "NON_CADE") throw new EngineError("INVALID_CHOICE", "segnalino non valido");
+      if (!LUI_SLOTS.includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido");
+      if (!luiAvailable(s, action.playerId).includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino già usato");
       checkPosition(s, action.position);
-      s.lui = { kind: action.kind, position: action.position }; s.phase = "VOTE";
+      s.lui = { slot: action.slot, position: action.position }; s.phase = "VOTE";
       events.push({ type: "luiPlaced", position: action.position });
       break;
     }
@@ -171,21 +181,21 @@ function resolve(s: GameState, events: GameEvent[]) {
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
   // Voto giusto: +2 a chi ha votato una carta caduta (Megafono compreso).
   for (const p of s.playerIds) if (fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
-  // Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su (il suo voto non conta).
   const collected = s.playerIds.filter((p) => p !== mega && s.votes[p] === megaVote).length;
-  if (collected > 0) give(mega, collected, "raccolti", megaVote, collected);
   for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
+  // Segnalino Lui!: "almeno k voti degli ALTRI" sulla sua carta (lo 0: nessun voto degli altri). Il Megafono non perde punti se sbaglia, ma il segnalino è speso.
+  let lui: TurnResult["lui"] = null;
   if (s.lui) {
-    const hit = fallen.includes(s.lui.position);
-    if (s.lui.kind === "CADE" && hit) give(mega, 4, "lui-cade", s.lui.position);
-    if (s.lui.kind === "NON_CADE" && !hit) give(mega, 1, "lui-non-cade", s.lui.position);
-    // scommessa fallita: malus
-    if (s.lui.kind === "CADE" && !hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito", s.lui.position);
-    if (s.lui.kind === "NON_CADE" && hit) give(mega, -LUI_FAIL_MALUS, "lui-fallito", s.lui.position);
+    const spec = luiTokens(s.playerIds.length).find((x) => x.slot === s.lui!.slot)!;
+    const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
+    const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
+    lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
+    if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
+    const spent = (s.luiSpent ??= {})[mega] ??= []; if (LUI_SLOTS.every((x) => spent.includes(x))) spent.length = 0; spent.push(s.lui.slot);
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,
-    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui: s.lui ? { ...s.lui } : null, points, lines, collected, megaVote };
+    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui, points, lines, collected, megaVote };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

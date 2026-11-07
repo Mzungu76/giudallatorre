@@ -4,7 +4,11 @@ export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI
 /** Mini-giochi di metà partita: Accusa, La storia d'amore, Il raccomandato. */
 export type MiniKind = "accusa" | "amore" | "raccomandato";
 export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "raccomandato"];
-export type LuiKind = "CADE" | "NON_CADE";
+/** I tre segnalini Lui! di ogni giocatore (monouso): soglia bassa, soglia alta, e lo 0 "secco". */
+export type LuiSlot = "bassa" | "alta" | "zero";
+export const LUI_SLOTS: LuiSlot[] = ["bassa", "alta", "zero"];
+/** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
+export interface LuiSpec { slot: LuiSlot; k: number; pts: number }
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
 export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string; /** Contesto di ciascuna frase (stesso ordine di `phrases`). */ themes?: string[] }
@@ -33,7 +37,9 @@ export type PhraseChoice =
   | { mode: "card"; cardId: string; index: number; text: string; theme?: string }
   | { mode: "free"; text?: string };
 
-export interface LuiToken { kind: LuiKind; position: number }
+export interface LuiToken { slot: LuiSlot; position: number }
+/** Esito della scommessa del Lui! a fine turno. */
+export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean }
 
 export interface TurnResult {
   turn: number;
@@ -51,7 +57,7 @@ export interface TurnResult {
   fallenOwnerIds: (PlayerId | null)[];
   /** Chi ha giocato la carta caduta (null = carta pescata dal mazzo). */
   fallenOwnerId: PlayerId | null;
-  lui: LuiToken | null;
+  lui: LuiOutcome | null;
   points: Record<PlayerId, number>;
   /** Le voci del punteggio di ciascuno, per mostrare l'operazione in chiaro. */
   lines: Record<PlayerId, ScoreLine[]>;
@@ -61,7 +67,7 @@ export interface TurnResult {
   megaVote: number;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "raccolti" | "lui-cade" | "lui-non-cade" | "lui-fallito" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
@@ -120,13 +126,15 @@ export interface GameState {
   miniDone?: boolean;
   mini?: Mini | null;
   miniResult?: MiniResult | null;
+  /** Segnalini Lui! già spesi da ciascun giocatore (pubblico). */
+  luiSpent?: Record<PlayerId, LuiSlot[]>;
 }
 
 export type Action =
   | { type: "choosePhrase"; playerId: PlayerId; mode: "card"; index: number }
   | { type: "choosePhrase"; playerId: PlayerId; mode: "free"; text?: string }
   | { type: "playCard"; playerId: PlayerId; cardId: CardId }
-  | { type: "placeLui"; playerId: PlayerId; kind: LuiKind; position: number }
+  | { type: "placeLui"; playerId: PlayerId; slot: LuiSlot; position: number }
   | { type: "vote"; playerId: PlayerId; position: number}
   | { type: "advance"; playerId?: PlayerId };
 

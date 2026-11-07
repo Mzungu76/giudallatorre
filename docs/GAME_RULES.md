@@ -90,3 +90,17 @@ Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca *
 **Tetto.** Nei mini-giochi con punti positivi nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la seconda metà resta aperta.
 
 Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).
+
+## Segnalini Lui! (sostituiscono "Cade lui / Non cade")
+Ogni giocatore ha **3 segnalini monouso**: *bassa*, *alta* e *zero*. Quando è Megafono ne posa uno, coperto, su una carta della torre e scommette sul **numero di voti che la carta riceve dagli ALTRI giocatori** (il voto del Megafono non conta). Il segnalino *bassa* e *alta* riescono con **almeno k voti** degli altri e valgono **2 × k** punti; lo **0** riesce solo se **nessun altro** vota la carta e vale una cifra fissa. Se sbaglia, il Megafono non perde punti ma il segnalino è speso (pubblico: tutti vedono quali ha già usato). Finiti i tre, tornano tutti (spareggio).
+
+| Giocatori | bassa | alta | zero |
+|---|---|---|---|
+| 3 | almeno 1 → 2 | almeno 2 → 4 | 2 |
+| 4 | almeno 1 → 2 | almeno 3 → 6 | 2 |
+| 5 | almeno 2 → 4 | almeno 3 → 6 | 3 |
+| 6, 7, 8 | almeno 2 → 4 | almeno 4 → 8 | 3 |
+
+Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade (e +2 se cade la carta che ha giocato nella variante "Il Megafono sa"). Spariscono "Cade lui!/Non cade", il malus −1 e il +1 per voto raccolto.
+
+**Bot.** Il Megafono bot sceglie segnalino e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero: stimano quali segnalini restano al Megafono e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).

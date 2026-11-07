@@ -20,7 +20,7 @@ export function toSuspect(s: GameState): GameState {
   return g;
 }
 /** Come toSuspect ma posa anche il Lui! e arriva alla fase VOTE. */
-export function toVote(s: GameState, lui: { kind: "CADE" | "NON_CADE"; position: number } = { kind: "CADE", position: 1 }): GameState {
+export function toVote(s: GameState, lui: { slot: "bassa" | "alta" | "zero"; position: number } = { slot: "bassa", position: 1 }): GameState {
   const g = toSuspect(s);
   return act(g, { type: "placeLui", playerId: megafonoOf(g), ...lui });
 }

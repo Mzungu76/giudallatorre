@@ -41,7 +41,7 @@ async function stepPage(p) {
   if (await vis(p, "hand")) { if (!p.s1) { await shot(p, "07-mano"); p.s1 = 1; } await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis(p, "lui-chooser")) {
     await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.click('[data-testid="look-card"]'); await p.waitForSelector('[data-testid="zoom"]'); if (!p.s2) { await shot(p, "08-zoom"); p.s2 = 1; }
-    await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="kind-cade"]'); return true; }
+    await p.click('[data-testid="zoom-action"]'); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis(p, "confirm-vote")) {
     const n = 1 + Math.floor(Math.random() * 3); await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]');
     await p.click('[data-testid="zoom-action"]'); if (!p.s3) { await shot(p, "09-voto"); p.s3 = 1; } await p.click('[data-testid="confirm-vote"]'); return true; }

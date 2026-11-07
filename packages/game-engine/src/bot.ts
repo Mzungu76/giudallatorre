@@ -1,5 +1,5 @@
 import type { Action, GameState, PlayerId } from "./types.ts";
-import { megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Azione legale scelta a caso per un giocatore (giocatori virtuali, test, giocatori inattivi). `rand` è esterno al motore. */
 export function suggestAction(s: GameState, playerId: PlayerId, rand: () => number): Action | null {
@@ -17,7 +17,7 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       return { type: "playCard", playerId, cardId: pick(s.hands[playerId]!) };
     case "SUSPECT":
       if (playerId !== mega) return null;
-      return { type: "placeLui", playerId, kind: rand() < 0.5 ? "CADE" : "NON_CADE", position: 1 + Math.floor(rand() * s.tower.length) };
+      { const av = luiAvailable(s, playerId); return { type: "placeLui", playerId, slot: av[Math.floor(rand() * av.length)]!, position: 1 + Math.floor(rand() * s.tower.length) }; }
     case "MINI_VOTE":
     case "VOTE":
       if (s.votes[playerId] !== undefined) return null;

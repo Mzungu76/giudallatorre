@@ -25,7 +25,7 @@ async function step(p, name) {
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); return true; }
   if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); return true; }
   if (await vis(p, "hand")) { await p.click('[data-testid="hand-card-0"]'); await p.click('[data-testid="play-card"]'); return true; }
-  if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.click('[data-testid="kind-cade"]'); return true; }
+  if (await vis(p, "lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis(p, "confirm-vote")) {
     await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await p.click('[data-testid="zoom-action"]');
     await p.click('[data-testid="confirm-vote"]'); return true; }

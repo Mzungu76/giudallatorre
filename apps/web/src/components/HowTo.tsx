@@ -8,7 +8,7 @@ export const HOWTO_INTRO = [
 export const HOWTO_STEPS: [string, string][] = [
   ["📣", "Il Megafono urla una frase: «Oggi sale sulla torre chi…». Ogni turno tocca a uno di voi."],
   ["🃏", "Tutti gli altri scelgono in segreto, dalla propria mano, il personaggio che quella cosa la farebbe di sicuro."],
-  ["🎯", "Le carte salgono sulla torre. Il Megafono mette il gettone Lui! su una carta: «Cade lui!» oppure «Non cade»."],
+  ["🎯", "Le carte salgono sulla torre. Il Megafono mette un gettone Lui! su una carta, scommettendo su quanti voti prenderà dagli altri (anche zero!)."],
   ["🗳", "Tutti votano in segreto il personaggio che più somiglia alla frase. Il più votato cade giù dalla torre (se è un pareggio, cadono tutti i più votati)."],
   ["⭐", "Si contano i punti e si passa il Megafono al giocatore dopo. Vince chi ha più punti quando tutti hanno fatto il Megafono."],
 ];
@@ -16,9 +16,8 @@ export const HOWTO_STEPS: [string, string][] = [
 export const HOWTO_POINTS: [string, string][] = [
   ["+2", "hai votato un personaggio che cade"],
   ["+2", "la carta che hai giocato cade"],
-  ["+1", "Megafono: per ogni voto degli altri sulla carta che ha votato (cada o no)"],
-  ["+4 / +1", "Megafono: Lui! azzeccato («Cade lui!» / «Non cade»)"],
-  ["−1", "Megafono: Lui! sbagliato"],
+  ["+2…12", "Megafono: il Lui! azzecca i voti scritti sul gettone (almeno quelli, o zero)"],
+  ["0", "Megafono: Lui! mancato, non perde punti ma il gettone è speso"],
 ];
 
 /** Come si gioca: introduzione, turno e punti. Si apre dalla Home, e da solo alla prima partita su questo dispositivo. */

@@ -10,6 +10,8 @@ import Zoom from "../components/Zoom.tsx";
 import { Climb, Reveal, Terrace } from "../components/Terrace.tsx";
 import type { Voter, VoteTok } from "../components/Terrace.tsx";
 import { voteTok, luiTok } from "../scene/draw.ts";
+import { luiLabel } from "../lib/lui.ts";
+import type { LuiSpec, PlayerId } from "@gdt/game-engine";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
@@ -20,18 +22,19 @@ const lineText = (l: { kind: string; pts: number; n?: number }) => {
   switch (l.kind) {
     case "voto": return `voto giusto ${pts}`;
     case "carta": return `carta caduta ${pts}`;
-    case "raccolti": return `${l.n} ${l.n === 1 ? "voto raccolto" : "voti raccolti"} ${pts}`;
-    case "lui-cade": return `Lui! cade ${pts}`;
-    case "lui-non-cade": return `Lui! resta su ${pts}`;
-    default: return `Lui! sbagliato ${pts}`;
+    case "lui": return `Lui! azzeccato ${pts}`;
+    case "lui-mancato": return "Lui! mancato";
+    default: return `${l.kind} ${pts}`;
   }
 };
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
 const BANNERS: Record<string, [string, string]> = {
   PLAY: ["Scegliete la carta!", "quella che sta meglio sulla torre"],
-  SUSPECT: ["Salgono le carte!", "il Megafono sta per scommettere"],
+  SUSPECT: ["Salgono le carte!", "il Megafono sta per scommettere sui voti"],
   VOTE: ["Votate!", "in segreto: chi cade?"],
 };
+/** Segnalini Lui! che restano a un giocatore (finiti tutti, tornano tutti). */
+const leftTokens = (view: PlayerView, id: PlayerId) => { const spent = view.luiSpent[id] ?? [], left = view.luiTokens.map((t) => t.slot).filter((x) => !spent.includes(x)); return left.length ? left : view.luiTokens.map((t) => t.slot); };
 const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${Math.abs(n)}` : "0");
 
 export function usePeople(room: RoomMsg) {
@@ -171,7 +174,7 @@ function Scoreboard({ H, res, view, people, canAdvance, deadline, onAdvance, fin
   );
 }
 
-function Legend({ onClose }: { onClose: () => void }) {
+function Legend({ onClose, tokens }: { onClose: () => void; tokens: LuiSpec[] }) {
   const row = (ic: string, t: string, sub: string, pt: string, neg = false) => <div className="sr"><span className="ic" dangerouslySetInnerHTML={{ __html: ic }} /><span>{t}<small>{sub}</small></span><span className={`pt ${neg ? "neg" : ""}`}>{pt}</span></div>;
   return (
     <div className="zoom on" onClick={onClose} role="dialog" aria-label="Come si fanno punti" data-testid="legend">
@@ -179,10 +182,8 @@ function Legend({ onClose }: { onClose: () => void }) {
         <h3>Come si fanno punti</h3>
         {row(voteTok("#2f7be0", 30), "Hai votato il personaggio caduto", "il tuo gettone è sulla sua carta", "+2")}
         {row(`<div style="width:24px;height:34px;border-radius:4px;border:3px solid #fff;background:#14a3a1;box-shadow:1px 2px 0 #13224a"></div>`, "La carta che hai giocato è quella caduta", "la carta del mazzo non è di nessuno", "+2")}
-        {row(voteTok("#e8362b", 30, true), "Megafono: voti raccolti", "1 punto per ogni voto degli altri sulla carta che ha votato (+2 se cade)", "+1")}
-        {row(luiTok("CADE", 32), "Megafono: “CADE LUI!” azzeccato", "il gettone è sul personaggio caduto", "+4")}
-        {row(luiTok("NON", 32), "Megafono: “NON CADE” azzeccato", "il gettone è su uno che resta su", "+1")}
-        {row(luiTok("CADE", 32, true), "Megafono: scommessa sbagliata", "il Lui! non azzecca la carta", "−1", true)}
+        {tokens.map((sp) => row(luiTok(sp, 34), `Megafono · Lui!: ${luiLabel(sp)}`, sp.slot === "zero" ? "si conta solo i voti degli altri: se nessuno vota la carta, vince" : "voti degli altri sulla carta del gettone (il suo non conta)", `+${sp.pts}`))}
+        <div className="hint" style={{ textAlign: "left", fontSize: 12, marginTop: 6 }}>Ogni gettone si usa una volta sola; se sbaglia, il Megafono non perde punti.</div>
         <div className="hint" style={{ textAlign: "center", marginTop: 8 }}>tocca per chiudere</div>
       </div>
     </div>
@@ -234,7 +235,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
 
   const canVote = phase === "VOTE" && !readOnly && view.myVote === null;
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
-  const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, kind: null } : view.luiPosition != null ? { pos: view.luiPosition, kind: view.luiKind } : null;
+  const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, spec: null } : view.luiPosition != null ? { pos: view.luiPosition, spec: view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null } : null;
   const voteToks: VoteTok[] = useMemo(() => {
     if (res) return voters.map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));
     if (phase === "VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color, mega: isMega }];
@@ -245,19 +246,19 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
-  const resLui = res?.lui ? { pos: res.lui.position, kind: res.lui.kind } : null;
+  const resLui = res?.lui ? { pos: res.lui.position, spec: { slot: res.lui.slot, k: res.lui.k, pts: res.lui.pts } } : null;
   const stripText = view.goldenGoal && phase === "PROCLAIM" ? "SPAREGGIO: GOLDEN GOAL" : isMega && phase === "PROCLAIM" ? "SEI IL MEGAFONO" : TITLES[phase];
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? `Giro ${view.round}/${view.rounds}` : null;
 
   return (
     <>
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
-      {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? "Votate!" : "Il Megafono scommette", sub: v ? "in segreto: chi cade?" : "cade o non cade?" }); } }} />}
+      {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? "Votate!" : "Il Megafono scommette", sub: v ? "in segreto: chi cade?" : "quanti voti prenderà?" }); } }} />}
       {!climbing && needTerrace && !revealing && (
         <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : setZoomPos(n)) : undefined} />
       )}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={resLui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} fallPositions={res.fallenPositions ?? [res.fallenPosition]} lines={res.lines} onLock={setSkipLock} megaName={people.get(view.megafonoId).name} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       <Chips left={<><Disc color={people.get(me).color} />{readOnly ? "Schermo condiviso" : people.get(me).name}</>} mid={<>📣 {people.get(view.megafonoId).name}</>} right={view.goldenGoal ? "⚡ Spareggio" : `Turno ${view.turn}/${view.totalTurns}`} />
       <div className="strip" data-testid="strip">★ {stripText} ★</div>
@@ -277,19 +278,22 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
           {!pick
             ? <Tip>👆 Tocca la carta su cui vuoi scommettere col gettone Lui!</Tip>
             : <>
-              <Tip>Gettone Lui! sul <b>n. {pick}</b>. Cosa scommetti?</Tip>
+              <Tip>Lui! sul <b>n. {pick}</b>: quanti voti prenderà dagli altri? <small>(il tuo voto non conta)</small></Tip>
               <div className="lui-opts">
-                <button className="lk red" onClick={() => act({ t: "act", action: { type: "placeLui", kind: "CADE", position: pick } })} data-testid="kind-cade"><span dangerouslySetInnerHTML={{ __html: luiTok("CADE", 40) }} />Cade lui!<small>+4 se cade · −1 se sbagli</small></button>
-                <button className="lk" onClick={() => act({ t: "act", action: { type: "placeLui", kind: "NON_CADE", position: pick } })} data-testid="kind-non"><span dangerouslySetInnerHTML={{ __html: luiTok("NON", 40) }} />Non cade<small>+1 se resta su · −1 se cade</small></button>
+                {view.luiTokens.map((sp) => { const left = leftTokens(view, me).includes(sp.slot);
+                  return <button key={sp.slot} className={`lk lui-${sp.slot}`} disabled={!left} onClick={() => act({ t: "act", action: { type: "placeLui", slot: sp.slot, position: pick } })} data-testid={`lui-${sp.slot}`}>
+                    <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? `+${sp.pts} punti` : "già usato"}</small></button>; })}
               </div>
               <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">🔍 Guarda bene la carta · tocca un'altra carta per cambiare</button>
             </>}
         </div>
-      ) : <div className="bottom"><Tip>{people.get(view.megafonoId).name} scommette col gettone Lui!: “cade” o “non cade”?</Tip></div>)}
+      ) : <div className="bottom"><Tip>{people.get(view.megafonoId).name} sceglie il gettone Lui!: quanti voti prenderà la carta?</Tip></div>)}
 
       {phase === "VOTE" && !readOnly && !climbing && (canVote
         ? <div className="bottom">
-            <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo). ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega ? <strong className="tip-warn" data-testid="tip-herd"> Evita di votare come il Megafono: ogni voto uguale al suo gli regala 1 punto.</strong> : <strong className="tip-warn" data-testid="tip-herd"> Ogni voto degli altri sulla carta che voti ti dà +1 (cada o no).</strong>}</Tip>
+            <Tip>{view.luiPosition ? `Lui! del Megafono sul n. ${view.luiPosition} (bordo giallo): scommette sui voti che prende. ` : ""}Vota chi farebbe di più questa cosa: il più votato cade e chi l'ha votato fa +2.{!isMega
+              ? <strong className="tip-warn" data-testid="tip-herd"> Non sai quale gettone ha usato, gli restano: <span className="tchips">{leftTokens(view, view.megafonoId).map((x) => <span key={x} className="tchip" dangerouslySetInnerHTML={{ __html: luiTok(view.luiTokens.find((t) => t.slot === x)!, 32) }} />)}</span> Votare quella carta può aiutarlo… o rovinargli lo 0!</strong>
+              : <strong className="tip-warn" data-testid="tip-herd"> Il tuo Lui! conta solo i voti degli altri.</strong>}</Tip>
             <Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></div>
         : <Waiting bottom sub="Il tuo gettone è sulla carta scelta. Lo spoglio parte quando hanno votato tutti." text="Voto inviato 🔒 Aspettiamo gli altri…" flags={flagsVote} people={people} />)}
       {phase === "VOTE" && readOnly && !climbing && <div className="bottom"><div className="pp mini">{view.players.filter((p) => p.hasVoted).length} su {view.players.length} hanno votato</div></div>}
@@ -304,7 +308,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound }: Ga
         <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={N} onClose={() => setZoomPos(null)} onNav={setZoomPos}
           actionLabel={phase === "SUSPECT" ? `Il Lui! va sul n. ${zoomPos}` : `Voto il n. ${zoomPos}`} onAction={() => { setPick(zoomPos); setZoomPos(null); }} />
       )}
-      {legend && <Legend onClose={() => setLegend(false)} />}
+      {legend && <Legend onClose={() => setLegend(false)} tokens={view.luiTokens} />}
       {board && <Standings turn={view.turn} total={view.totalTurns} rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }))} onClose={() => setBoard(false)} />}
       {intro && <HowTo onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
     </>

@@ -7,12 +7,12 @@ const phraseDeck = Array.from({ length: 10 }, (_, i) => ({ id: `f${i}`, phrases:
 const players = ["a", "b", "c", "d"].map((id) => ({ id, name: id.toUpperCase() }));
 
 /** Porta una partita fino a VOTE con il Lui! sulla posizione `luiPos`. */
-function toVote(opts: { kind?: "CADE" | "NON_CADE"; luiPos?: number }): GameState {
+function toVote(opts: { slot?: "bassa" | "alta" | "zero"; luiPos?: number }): GameState {
   let s = createGame({ players, seed: 5, deck, phraseDeck, ...opts }).state;
   const mega = megafonoOf(s);
   s = applyAction(s, { type: "choosePhrase", playerId: mega, mode: "card", index: 0 }).state;
   for (const p of s.playerIds) if (p !== mega) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
-  s = applyAction(s, { type: "placeLui", playerId: mega, kind: opts.kind ?? "CADE", position: opts.luiPos ?? 1 }).state;
+  s = applyAction(s, { type: "placeLui", playerId: mega, slot: opts.slot ?? "bassa", position: opts.luiPos ?? 1 }).state;
   return s;
 }
 const voteAll = (s: GameState, pos: Record<string, number>) => {
@@ -20,24 +20,23 @@ const voteAll = (s: GameState, pos: Record<string, number>) => {
   return s;
 };
 
-describe("voti raccolti dal Megafono (niente gregge)", () => {
+describe("il Megafono fa punti come gli altri più il Lui!", () => {
   const mega = (s: GameState) => megafonoOf(s);
-  it("se cade la carta votata dal Megafono, i votanti prendono comunque i loro +2; il Megafono prende anche 1 punto per ogni voto degli altri", () => {
-    const base = toVote({ kind: "NON_CADE", luiPos: 1 }), m = mega(base);
+  it("se vota la carta che cade prende il voto giusto +2, e nessun bonus per i voti degli altri sulla sua carta", () => {
+    const base = toVote({ slot: "zero", luiPos: 1 }), m = mega(base);
     const r = voteAll(base, Object.fromEntries(base.playerIds.map((p) => [p, 2]))).lastResult!;
-    expect(r.collected).toBe(3);
+    expect(r.fallenPosition).toBe(2);
     for (const p of base.playerIds) {
       const owner = r.fallenOwnerId === p ? 2 : 0;
-      if (p === m) expect(r.points[p]).toBe(2 + 3 + owner + 1);          // voto + 3 raccolti + (carta) + Non cade azzeccato
-      else expect(r.points[p]).toBe(2 + owner);
+      expect(r.points[p]).toBe(2 + owner + (p === m && r.lui?.hit ? r.lui.pts : 0));
     }
   });
-  it("se la carta votata dal Megafono NON cade e nessuno lo segue, non prende voti raccolti", () => {
-    const base = toVote({ kind: "CADE", luiPos: 2 }), m = mega(base);
+  it("se la carta votata dal Megafono non cade non prende nulla (senza Lui! azzeccato)", () => {
+    const base = toVote({ slot: "alta", luiPos: 3 }), m = mega(base);
     const votes = Object.fromEntries(base.playerIds.map((p) => [p, p === m ? 1 : 2]));
     const r = voteAll(base, votes).lastResult!;
-    expect(r.fallenPosition).toBe(2); expect(r.collected).toBe(0);
-    expect(r.points[m]).toBe(4 + (r.fallenOwnerId === m ? 2 : 0));           // solo il Lui! CADE
+    expect(r.fallenPosition).toBe(2);
+    expect(r.points[m]).toBe(r.fallenOwnerId === m ? 2 : 0);
   });
 });
 
