@@ -9,6 +9,6 @@ const rgb = (hex: string) => { const n = parseInt(hex.slice(1), 16); return `rgb
 /** Sostituisce il dischetto colorato ".dc" col segnalino del personaggio (riconosciuto dal colore di sfondo). */
 export function installCharDiscs() {
   if (typeof document === "undefined" || document.getElementById("char-css")) return;
-  const css = CHAR_COLORS.map((c) => `.dc[style*="${rgb(c)}"],.dc[style*="${c}"]{background-image:url("${tokenUrl(c)}");background-size:cover;background-position:center;border-width:1.5px !important;box-shadow:none !important}`).join("\n");
+  const css = CHAR_COLORS.map((c) => `.dc[style*="${rgb(c)}"],.dc[style*="${c}"]{background-image:url("${tokenUrl(c)}") !important;background-size:cover !important;background-position:center !important;background-repeat:no-repeat !important;border-width:1.5px !important;box-shadow:none !important}`).join("\n");
   const el = document.createElement("style"); el.id = "char-css"; el.textContent = css; document.head.appendChild(el);
 }
