@@ -9,7 +9,7 @@
 - Rate limit: contatore per connessione nel DO (niente servizi esterni).
 - Deploy: GitHub Actions → `wrangler deploy` con `CLOUDFLARE_API_TOKEN` come *secret* GitHub (da creare dall'utente); test prima del deploy.
 - Alternativa scartata: Pages+Functions (meno adatto ai DO), D1/KV (non necessari).
-- Contenuti: `content/su-sulla-torre.json` + `public/cards/manifest.json` (id `pNN-iNN`).
+- Contenuti: `content/frasi-megafono.json` + `content/confessioni.json` (riserva di frasi con famiglia ed età, `docs/FRASI_MEGAFONO.md`; le v4 sono in `content/storico/`) + `public/cards/manifest.json` (id `pNN-iNN`). Il mazzo di una stanza lo costruisce `buildPhraseDeck` (`packages/game-engine/src/phrases.ts`) all'avvio.
 - Playwright è gratuito (open source) e già disponibile in questo ambiente.
 
 ## Implementazione Fase 4

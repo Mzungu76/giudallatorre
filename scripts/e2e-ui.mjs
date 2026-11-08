@@ -34,7 +34,7 @@ const pages = [A, B, C]; let shots = 0, turns = 0, lastTurn = "";
 const t0 = Date.now();
 async function stepPage(p) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis(p, "mini-vote")) { for (const n of [2, 3]) { await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); if (await p.locator('[data-testid="zoom-action"]').isVisible({ timeout: 900 }).catch(() => false)) break; } await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
   if (await vis(p, "phrase-picker")) { if (shots < 1) { await shot(p, "06-frase"); shots++; } await p.click('[data-testid="phrase-0"]'); await p.click('[data-testid="phrase-go"]'); return true; }

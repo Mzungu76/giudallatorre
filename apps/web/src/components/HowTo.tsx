@@ -11,8 +11,8 @@ const Pts = ({ v, t, x, z }: { v: string; t: string; x: string; z?: boolean }) =
 const Note = ({ t, children }: { t: string; children: string }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
-export default function HowTo({ onClose, tokens, sound, setSound }: { onClose: () => void; tokens?: LuiSpec[]; sound?: boolean; setSound?: (v: boolean) => void }) {
-  const [tab, setTab] = useState(0), tk = tokens && tokens.length >= 2 ? tokens : DEMO;
+export default function HowTo({ onClose, tokens, sound, setSound, onLeave, leaveHint }: { onClose: () => void; tokens?: LuiSpec[]; sound?: boolean; setSound?: (v: boolean) => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }) {
+  const [tab, setTab] = useState(0), [askLeave, setAskLeave] = useState(false), tk = tokens && tokens.length >= 2 ? tokens : DEMO;
   return (
     <div className="brg" role="dialog" aria-label="Regolamento" data-testid="howto">
       <div className="pap" /><div className="hr" /><div className="ht" />
@@ -45,12 +45,17 @@ export default function HowTo({ onClose, tokens, sound, setSound }: { onClose: (
           <Note t="Esempio">Metti «Almeno 3 voti» sul n. 2. Tre giocatori votano il n. 2: prendi 14 punti.</Note>
         </>}
         {tab === 3 && <>
-          <Note t="Quando finisce">Si gioca finché tutti hanno fatto il Megafono: due volte con 3–5 giocatori, una volta con 6–8. Vince chi ha più punti. In caso di parità si fanno turni di spareggio.</Note>
-          <Note t="Intervallo">A metà partita c'è un mini-gioco: L'Accusa, La storia d'amore o Il raccomandato. Non c'è il Megafono e le mani vengono rinnovate. Le regole vengono spiegate prima di cominciare.</Note>
+          <Note t="Quando finisce">Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–8 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.</Note>
+          <Note t="Intervallo">Fino a 5 giocatori c'è un mini-gioco a metà partita, da 6 a 8 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.</Note>
           <Note t="Parlare è permesso">Si può chiacchierare e bluffare quanto si vuole. L'unica regola è non rivelare la propria carta prima del voto.</Note>
         </>}
       </div>
-      <div className="brg-f"><Btn onClick={onClose} testId="howto-close">Ho capito</Btn></div>
+      <div className="brg-f">
+        {onLeave && (askLeave
+          ? <div className="leave-box" data-testid="leave-confirm"><p>{leaveHint}</p><div className="leave-row"><Btn kind="pap" onClick={() => setAskLeave(false)} testId="leave-no">Resto</Btn><Btn kind="red" onClick={onLeave} testId="leave-yes">Sì, esco</Btn></div></div>
+          : <a className="lnk leave-lnk" role="button" tabIndex={0} onClick={() => setAskLeave(true)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setAskLeave(true); } }} data-testid="leave-game">Esci dalla partita</a>)}
+        <Btn onClick={onClose} testId="howto-close">Ho capito</Btn>
+      </div>
     </div>
   );
 }

@@ -3,16 +3,106 @@ import { megafonoOf } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
+import { fullPhrase, PHRASES_PER_CARD } from "@gdt/game-engine";
+import { CONFESSIONS, PHRASE_POOL } from "../src/content.ts";
 
 const types = (o: { send: { msg: { t: string } }[] }) => o.send.map((s) => s.msg.t);
 const errCode = (o: { send: { msg: { t: string; code?: string } }[] }) => o.send.find((s) => s.msg.t === "error")?.msg.code;
+
+describe("fascia d'età e confessioni", () => {
+  const deckOf = (r: ReturnType<typeof makeRoom>) => { const g = r.core.data.game!; return [g.proclaim!, ...g.phraseDraw, ...g.phraseDiscard]; };
+  it("solo l'host le cambia, solo in lobby; valori fuori elenco rifiutati dal protocollo", async () => {
+    const { clientMessageSchema } = await import("@gdt/game-protocol");
+    const r = makeRoom(3, 4);
+    expect(errCode(send(r, 1, { t: "setOptions", ageBand: 18 }))).toBe("NOT_HOST");
+    expect(types(send(r, 0, { t: "setOptions", ageBand: 18, confessions: false }))).toContain("room");
+    expect(r.core.data.options).toMatchObject({ ageBand: 18, confessions: false });
+    expect(clientMessageSchema.safeParse({ t: "setOptions", ageBand: 12 }).success).toBe(false);
+    expect(clientMessageSchema.safeParse({ t: "setOptions", ageBand: 14, confessions: true }).success).toBe(true);
+    send(r, 0, { t: "start" });
+    expect(errCode(send(r, 0, { t: "setOptions", ageBand: 6 }))).toBe("WRONG_STAGE");
+  });
+  it("all'avvio il mazzo contiene solo frasi adatte alla fascia scelta", () => {
+    for (const age of [6, 10, 14, 18] as const) {
+      const r = makeRoom(4, 20 + age); send(r, 0, { t: "setOptions", ageBand: age }); send(r, 0, { t: "start" });
+      const allowed = new Set([...PHRASE_POOL.filter((p) => p.age <= age).map((p) => fullPhrase(p)), ...CONFESSIONS.filter((c) => c.age <= age).map((c) => c.text)]);
+      const texts = deckOf(r).flatMap((c) => c.phrases);
+      expect(texts.length).toBeGreaterThan(80);
+      for (const t of texts) expect(allowed.has(t), `${age}+: ${t}`).toBe(true);
+    }
+  });
+  it("senza confessioni non ci sono carte a frase singola; con le confessioni ci sono", () => {
+    const off = makeRoom(4, 31); send(off, 0, { t: "setOptions", confessions: false }); send(off, 0, { t: "start" });
+    expect(deckOf(off).every((c) => c.phrases.length === PHRASES_PER_CARD)).toBe(true);
+    const on = makeRoom(4, 31); send(on, 0, { t: "start" });
+    expect(deckOf(on).some((c) => c.phrases.length === 1)).toBe(true);
+  });
+  it("una stanza salvata prima di questa versione riceve i valori predefiniti", () => {
+    const { core } = RoomCore.create("ZZZZZ", deps(), 0, { nickname: "Vecchia", mode: "table", megafonoSa: false });
+    const old = JSON.parse(JSON.stringify(core.data)); delete old.options.ageBand; delete old.options.confessions;
+    expect(new RoomCore(old, deps()).data.options).toMatchObject({ ageBand: 14, confessions: true });
+  });
+});
+
+describe("uscita a partita in corso", () => {
+  const started = (n: number, seed: number) => { const r = makeRoom(n, seed); send(r, 0, { t: "start" }); return r; };
+  it("con altri umani nella stanza: chi esce è sostituito da un bot, stesso posto, punti e carte; il vecchio token non entra più", () => {
+    const r = started(3, 50), before = JSON.stringify(r.core.data.game), oldToken = r.tokens[1]!;
+    const out = send(r, 1, { t: "leave" });
+    expect(out.destroy).toBe(false); expect(out.close.map((c) => c.playerId)).toEqual([r.ids[1]]);
+    expect(r.core.data.players[1]).toMatchObject({ id: r.ids[1], isBot: true, level: "medium", tokenHash: "" });
+    expect(r.core.authenticate(oldToken)).toBeNull();
+    expect(JSON.stringify(r.core.data.game)).toBe(before);   // la partita non cambia: stesso posto, mano e punteggio
+    expect((r.core.roomMsg(r.ids[0]!) as { players: { isBot?: boolean }[] }).players.map((p) => !!p.isBot)).toEqual([false, true, false]);
+    expect(out.send.some((m) => m.to === r.ids[0] && m.msg.t === "room")).toBe(true);   // chi resta lo viene a sapere
+  });
+  it("se esce l'host, il ruolo passa a un altro umano", () => {
+    const r = started(3, 51);
+    send(r, 0, { t: "leave" });
+    expect(r.core.data.players.map((p) => p.isHost)).toEqual([false, true, false]);
+    expect(r.core.data.players[0]!.isBot).toBe(true);
+  });
+  it("il bot subentrato gioca davvero: se chi esce era il Megafono, la frase viene proclamata", () => {
+    const r = started(3, 52), g = r.core.data.game!, mega = r.ids.indexOf(megafonoOf(g));
+    expect(g.phase).toBe("PROCLAIM");
+    send(r, mega, { t: "leave" });
+    expect(r.core.data.botAt).not.toBeNull();
+    r.core.tick(r.core.data.botAt! + 1);
+    expect(r.core.data.game!.phase).toBe("PLAY");
+  });
+  it("altri umani presenti ma offline: la stanza non si chiude", () => {
+    const r = started(3, 53); r.core.onDisconnect(r.ids[0]!, 10); r.core.onDisconnect(r.ids[2]!, 10);
+    const out = send(r, 1, { t: "leave" });
+    expect(out.destroy).toBe(false); expect(r.core.data.players[1]!.isBot).toBe(true);
+  });
+  it("senza altri umani la stanza si chiude subito (anche con bot in partita)", () => {
+    const { core, playerId } = RoomCore.create("SOLOX", deps(60), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 2, level: "easy" } });
+    core.onConnect(playerId, 1); core.handle(playerId, { t: "start" }, 2);
+    expect(core.data.stage).toBe("PLAYING");
+    const out = core.handle(playerId, { t: "leave" }, 3);
+    expect(out.destroy).toBe(true);
+  });
+  it("due umani: esce il primo (sostituito), esce il secondo (stanza chiusa)", () => {
+    const r = started(3, 54); send(r, 2, { t: "leave" });
+    expect(send(r, 1, { t: "leave" }).destroy).toBe(false);   // il primo umano rimasto (p0) è ancora lì
+    expect(send(r, 0, { t: "leave" }).destroy).toBe(true);
+  });
+  it("a partita conclusa non c'è sostituzione: esce l'ultimo umano e la stanza si chiude, altrimenti chi esce resta in classifica", () => {
+    const r = started(3, 55); playToEnd(r);
+    expect(r.core.data.stage).toBe("FINISHED");
+    const out = send(r, 1, { t: "leave" });
+    expect(out.destroy).toBe(false); expect(r.core.data.players[1]!.isBot).toBeFalsy();
+    send(r, 2, { t: "leave" });
+    expect(send(r, 0, { t: "leave" }).destroy).toBe(true);
+  });
+});
 
 describe("stanza: creazione, accesso e lobby", () => {
   it("la creazione dà host, id e token; il server conserva solo l'hash del token", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta", mode: "remote", megafonoSa: true });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true });
+    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true, ageBand: 14, confessions: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {
@@ -337,14 +427,14 @@ describe("sveglie della stanza (quota gratuita dei Durable Objects)", () => {
     core.onConnect(c.playerId, 200);
     expect(core.data.botAt).not.toBeNull();
   });
-  it("partita iniziata: margine lungo per le disconnessioni, breve dopo un'uscita volontaria; vita massima in ogni caso", () => {
+  it("partita iniziata: margine lungo per le disconnessioni; chi esce volontariamente non lascia la stanza in attesa; vita massima in ogni caso", () => {
     const r = makeRoom(3, 12); send(r, 0, { t: "start" });
     for (const id of r.ids) r.core.onDisconnect(id, 1000);
     expect(r.core.tick(1000 + LIMITS.lobbyIdleMs + 2000).destroy).toBe(false); // un telefono in standby ha ancora tempo
     expect(r.core.tick(1000 + LIMITS.playingIdleMs + 2000).destroy).toBe(true);
     const q = makeRoom(3, 13); send(q, 0, { t: "start" });
-    send(q, 1, { t: "leave" }); for (const id of q.ids) q.core.onDisconnect(id, 1000);
-    expect(q.core.tick(1000 + LIMITS.lobbyIdleMs + 2000).destroy).toBe(true); // uscita volontaria: margine breve
+    send(q, 1, { t: "leave" }); send(q, 2, { t: "leave" });
+    expect(send(q, 0, { t: "leave" }).destroy).toBe(true); // l'ultimo umano che esce chiude la stanza subito, senza margine
     const w = makeRoom(3, 14, 0); expect(w.core.tick(LIMITS.maxLifeMs + 2000).destroy).toBe(true); // anche con gente connessa
   });
 });

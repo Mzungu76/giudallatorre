@@ -4,7 +4,7 @@ import type { ServerMessage, SessionResponse } from "@gdt/game-protocol";
 import type { GameEvent } from "@gdt/game-engine";
 import { RoomCore, RoomError } from "./RoomCore.ts";
 import type { Outbox, RoomData } from "./RoomCore.ts";
-import { ACCUSE_DECK, DECK, PHRASE_DECK } from "./content.ts";
+import { ACCUSE_DECK, CONFESSIONS, DECK, PHRASE_DECK, PHRASE_POOL } from "./content.ts";
 import { TokenBucket, cryptoBytes } from "./security.ts";
 
 export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; ASSETS: Fetcher }
@@ -24,14 +24,14 @@ export class GameRoom extends DurableObject<Env> {
       ctx.storage.sql.exec("CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT NOT NULL)");
       const row = ctx.storage.sql.exec("SELECT v FROM kv WHERE k = 'room'").toArray()[0];
       if (row) {
-        this.core = new RoomCore(JSON.parse(row.v as string) as RoomData, { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, accuseDeck: ACCUSE_DECK });
+        this.core = new RoomCore(JSON.parse(row.v as string) as RoomData, { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, phrasePool: PHRASE_POOL, confessions: CONFESSIONS, accuseDeck: ACCUSE_DECK });
         for (const ws of ctx.getWebSockets()) { const a = ws.deserializeAttachment() as Attachment | null; if (a?.pid) this.core.connected.add(a.pid); }
       }
     });
   }
 
   private save() { if (this.core) this.ctx.storage.sql.exec("INSERT OR REPLACE INTO kv (k, v) VALUES ('room', ?)", JSON.stringify(this.core.data)); }
-  private deps() { return { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, accuseDeck: ACCUSE_DECK }; }
+  private deps() { return { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, phrasePool: PHRASE_POOL, confessions: CONFESSIONS, accuseDeck: ACCUSE_DECK }; }
   private spectators() { return this.ctx.getWebSockets().filter((w) => (w.deserializeAttachment() as Attachment | null)?.spec === true); }
   private sendSpectators(events: GameEvent[]) {
     const specs = this.spectators(); if (!specs.length || !this.core) return;

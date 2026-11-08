@@ -100,7 +100,12 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "MINI_PLAY": {
       if (s.played[me] !== undefined || !s.mini) return null;
       const hand = s.hands[me]!, mini = s.mini;
-      if (level === "easy" || mini.kind === "raccomandato") return { type: "playCard", playerId: me, cardId: pick(hand) };
+      if (level === "easy") return { type: "playCard", playerId: me, cardId: pick(hand) };
+      if (mini.kind === "peggiore") {
+        // il personaggio che più spesso è caduto (quello che il gruppo considera il peggiore) prende più voti, e ogni voto sono punti per me
+        const bad = (c: CardId) => ((mem.fell[c] ?? 0) + 0.5) / ((mem.shown[c] ?? 0) + 2) + rand() * (level === "hard" ? 0.25 : 0.7);
+        return { type: "playCard", playerId: me, cardId: hand.slice().sort((a, b) => bad(b) - bad(a))[0]! };
+      }
       // Accusa: la carta più "colpevole" è quella che il gruppo voterà (e che sale: ×2 per me); Storia d'amore: carta imprevedibile, spesso con gusti simili
       const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
       const sc = (c: CardId) => { const a = text ? affinity(c, text) : null; return (a ?? 0) + rand() * (level === "hard" ? 2.2 : 3.2); };
@@ -110,13 +115,14 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       if (s.votes[me] !== undefined || !s.mini) return null;
       const mini = s.mini, vote = (position: number): Action => ({ type: "vote", playerId: me, position });
       const sample = (w: number[]) => { const z = w.reduce((x, y) => x + y, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
-      if (level === "easy") return vote(1 + Math.floor(rand() * n));
       const own = s.tower.find((t) => t.ownerId === me)?.position ?? -1;
-      if (mini.kind === "raccomandato") {
-        // chi cade perde punti: non voto la mia carta (si butta giù qualcun altro), tra le altre scelgo in modo imprevedibile (le carte che cadono spesso un po' di più)
-        const w = s.tower.map((t) => (t.position === own ? 0.05 : 1 + 0.8 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1))) * (0.6 + rand()));
+      if (mini.kind === "peggiore") {
+        // la propria carta non si può votare; tra le altre voto il "peggiore": le carte che cadono spesso un po' di più, in modo imprevedibile
+        if (level === "easy") return vote(pick(s.tower.map((t) => t.position).filter((p) => p !== own)));
+        const w = s.tower.map((t) => (t.position === own ? 0 : 1 + 0.8 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1))) * (0.6 + rand()));
         return vote(sample(w) + 1);
       }
+      if (level === "easy") return vote(1 + Math.floor(rand() * n));
       // Accusa / amore: prendo punti se voto una carta che arriva in testa → seguo il gruppo; la mia carta vale il doppio se resta
       const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
       const aff = s.tower.map((t) => { const a = text ? affinity(t.cardId, text) : null; return a === null ? 0 : a; });

@@ -44,3 +44,15 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Terrazza di carte, salita, spoglio con suspense, caduta su torre di profilo, classifica per turno e per giro, intermezzi, legenda "?", layout adattivo (`docs/DESIGN_SYSTEM.md`)
 - [x] Prove: 116 test unit, `npm run e2e` (3 giocatori via WebSocket), `npm run e2e:ui` (3 browser + schermo condiviso), `scripts/e2e-ui8.mjs` (8 browser), `scripts/e2e-solo.mjs` (1 umano + bot, anche 7 bot a 360×640)
 - [ ] Da provare a mano su telefoni veri (Doogee Blade Ultra, Redmi Note, Samsung più vecchio) con Chrome
+
+## Fase 7 — Nuovo mazzo di frasi (bozza, in revisione)
+- [x] Frasi riscritte con le regole dei test d'indagine (`docs/FRASI_MEGAFONO.md`): 405 frasi e 69 confessioni neutre rispetto al genere, con famiglia e fascia d'età
+- [x] Opzioni di stanza **Pubblico** (6+/10+/14+/18+, predefinita 14+) e **Confessioni**; mazzo costruito all'avvio con 3 frasi di famiglie diverse e pesca pesata sulle fasce alte
+- [x] Confessione mostrata a tutti con il nome del Megafono («Marco ammette…»)
+- [x] Etichette dei bot per le nuove frasi; 165 test unit, `npm run e2e`, `npm run e2e:ui`
+- [ ] Curatela delle frasi con l'autore (togliere, riscrivere, cambiare età) e prova a tavolo
+- [x] Turni: 6 con 3 giocatori (2 giri), altrimenti un turno a testa (1 giro). Intervalli: 1 fino a 5 giocatori, 2 da 6 a 8 (mini-giochi diversi tra loro)
+- [x] Uscita dalla partita: chi esce è sostituito da un bot se restano altri umani, altrimenti la stanza si chiude subito (`scripts/e2e-leave.mjs`)
+- [x] Mini-gioco «Il raccomandato» sostituito da **«Il peggiore»**: si gioca il personaggio peggiore in assoluto, si vota la carta da buttare giù (non la propria), ognuno prende un punto per ogni voto ricevuto dalla sua carta; nessun punto si perde
+- [x] Spoglio dell'intervallo identico a quello dei turni (voti uno alla volta, «Avanti ›» / «Salta ›»)
+- [x] Mano rinnovata all'intervallo: animazione «Rinnoviamo la tua mano!» (dal vuoto, mazzetto coperto, ventaglio, carte scoperte) quando si apre la scelta della carta

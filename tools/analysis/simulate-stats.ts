@@ -3,7 +3,7 @@ import { applyAction, createGame, megafonoOf, requiredPlayers } from "../../pack
 import { nextRandom } from "../../packages/game-engine/src/rng.ts";
 import { readFileSync } from "node:fs";
 const man = JSON.parse(readFileSync("public/cards/manifest.json", "utf8")) as { id: string }[];
-const multi = JSON.parse(readFileSync("content/su-sulla-torre.json", "utf8")).carte, single = JSON.parse(readFileSync("content/su-sulla-torre-singola.json", "utf8")).carte;
+const multi = JSON.parse(readFileSync("content/storico/su-sulla-torre.json", "utf8")).carte, single = JSON.parse(readFileSync("content/storico/su-sulla-torre-singola.json", "utf8")).carte;
 const deck = man.map((m) => m.id), phraseDeck = [...multi.map((c: any) => ({ id: c.id, phrases: c.frasi })), ...single.map((c: any) => ({ id: c.id, phrases: [c.frase] }))];
 type Strat = "random" | "herd";
 function run(n: number, seed: number, strat: Strat, sa: boolean) {

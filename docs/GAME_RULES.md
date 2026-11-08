@@ -4,7 +4,7 @@
 
 ## Parametri
 - Giocatori: **3–8**. Età 10+, ~20 min.
-- Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo "Su sulla Torre" (70: 50×4 frasi + 20×1 frase, vedi B3), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
+- Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo frasi del Megafono (riserva di 405 frasi + 69 confessioni, filtrata per età: vedi `docs/FRASI_MEGAFONO.md`), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
 
 ## Setup
 1. Mescola mazzo Personaggio e mazzo Su sulla Torre.
@@ -18,7 +18,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 | Elemento | Regola |
 |---|---|
 | Condizione iniziale | Inizio turno; Megafono designato |
-| Azione Megafono | Annuncia una frase che inizia con "Oggi sale/salgono sulla torre…": inventata, oppure da carta "Su sulla Torre". Carta a 4 frasi: ne sceglie 1; carta a 1 frase: **deve** dire quella. (Online: la frase è mostrata a tutti; il Megafono non digita, "proclama" a voce/megafono o sceglie dalla carta) |
+| Azione Megafono | Annuncia una frase che inizia con "Oggi sale/salgono sulla torre…": inventata, oppure da carta "Su sulla Torre". Carta a più frasi (ora 3): ne sceglie 1; carta a 1 frase: **deve** dire quella. (Online: la frase è mostrata a tutti; il Megafono non digita, "proclama" a voce/megafono o sceglie dalla carta) |
 | Carta del Megafono | (il Megafono può votarla) Pesca casualmente dal mazzo 1 carta Personaggio e la piazza coperta sulla Torre (non gioca dalla mano) — *variante "Il Megafono sa": gioca una carta dalla propria mano* |
 | Azione Folla | Ogni giocatore della Folla sceglie in segreto 1 carta dalla mano e la gioca coperta |
 | Risposta sistema | Quando tutte le carte sono giocate: mescola, rivela scoperte e numerate 1..N (N = n. giocatori) |
@@ -46,7 +46,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 - Megafono + "Lui!" passano al giocatore alla **destra**.
 
 ## Fine partita
-Termina quando tutti hanno fatto il Megafono: **1 volta (6–8 giocatori)**, **2 volte (3–5)**. Vince chi ha più punti. **Parità in testa → Golden goal**: si giocano turni extra (tutti i giocatori, Megafono a rotazione) finché un solo giocatore ha più punti di tutti (tetto di sicurezza 30 turni, poi vittoria condivisa). (Rounds extra possibili, sempre pari per tutti.)
+Termina quando tutti hanno fatto il Megafono: **2 volte con 3 giocatori (6 turni)**, **1 volta con 4–8 giocatori (tanti turni quanti i giocatori)**. Vince chi ha più punti. **Parità in testa → Golden goal**: si giocano turni extra (tutti i giocatori, Megafono a rotazione) finché un solo giocatore ha più punti di tutti (tetto di sicurezza 30 turni, poi vittoria condivisa). (Rounds extra possibili, sempre pari per tutti.)
 
 ## Discussione libera
 Parlare è sempre consentito e non vincolante (bluff ammesso). **Vietato** rivelare la propria carta giocata prima del voto. Il Megafono "parla" solo con il megafono scenico. *(Online: regole sociali, non applicabili dal sistema; la chat testuale NON è inclusa salvo decisione.)*
@@ -59,14 +59,14 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 
 ## Scelte implementative del motore (Fase 3)
 - Il motore parte con la partita già avviata (la lobby è del backend). Stato **serializzabile in JSON** e PRNG deterministico (`seed`): una partita è riproducibile e ripristinabile dopo un'interruzione.
-- **Frase**: all'inizio del turno si pesca una carta "Su sulla Torre" visibile solo al Megafono. Può scegliere una frase della carta (carta singola: obbligatoria) oppure inventarla a voce (`free`). Mazzo frasi che si rimescola quando finisce.
+- **Frase**: all'inizio dell'avvio il server costruisce il mazzo della stanza dalla riserva, filtrato per la **fascia d'età** scelta dall'host (6+/10+/14+/18+, predefinita 14+): carte da **3 frasi di famiglie diverse** (almeno 2 delle due fasce più alte consentite) e, se attive, carte-**confessione** a frase singola (~15%). Il Megafono vede la carta e sceglie una frase (confessione: obbligatoria) oppure la inventa (`free`). Una confessione è letta in prima persona dal Megafono; a tutti l'app mostra «Nome ammette…». Mazzo che si rimescola quando finisce.
 - **Torre**: modalità base = N−1 carte giocate dalla Folla + 1 pescata dal mazzo (nessun proprietario); variante "Il Megafono sa" = N carte dalle mani. Le carte vengono mescolate e numerate 1..N solo quando tutti hanno giocato.
 - **Voto**: tutti votano una volta, Megafono incluso, anche la propria carta e quella del mazzo.
 - **Cade** la carta con più voti; in caso di **pareggio decide il Megafono**: se ha votato una delle carte pari merito cade solo la sua, le altre si salvano; se ha votato un'altra carta cadono tutte le pari merito. Il suo gettone di voto ha un simbolo "=" che lampeggia e si illumina quando usa questo bonus.
 - **Punti**: +2 a chi ha votato una carta caduta (Megafono compreso); +2 a chi ha giocato ciascuna carta caduta (nessuno se era del mazzo); **il Megafono prende inoltre 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su** (il suo voto non conta; i voti si sommano, non si moltiplicano); Lui! CADE sulla carta caduta +4; Lui! NON CADE su una carta che resta su +1; scommessa sbagliata −1. I punti si sommano.
 - **Spoglio**: i voti escono uno alla volta, il Megafono per ultimo (suo gettone più grande); poi la carta più votata, il Lui! e il pannello "Chi prende punti": una riga per giocatore con i motivi (voto giusto, sua carta caduta, voti raccolti, Lui!) e il totale. I "+N" salgono dalle carte; la classifica del turno mostra l'operazione di ognuno.
 - **Fine turno**: la Torre va nello scarto; pesca 1 carta chi ha giocato (la Folla; nella variante anche il Megafono); mazzo Personaggio rimescolato dallo scarto se finisce; il Megafono passa al giocatore successivo in ordine di ingresso.
-- **Fine partita**: tutti hanno fatto il Megafono 2 volte (3–5 giocatori) o 1 volta (6–8). Vince il punteggio più alto, parità = vittoria condivisa.
+- **Fine partita**: tutti hanno fatto il Megafono 2 volte (3 giocatori) o 1 volta (4–8). Vince il punteggio più alto, parità = vittoria condivisa.
 - **Mazzo**: 125 carte Personaggio (decisione utente; la carta p13-i01 è identica a un'altra immagine ma resta una carta distinta).
 - **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
 
@@ -76,18 +76,20 @@ Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato,
 ## Messaggi tra i giocatori
 Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.
 
-## Mini-gioco di metà partita
-Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca **un solo mini-gioco**, scelto a caso tra tre. Non c'è il Megafono né il Lui!. Prima c'è un **intervallo** (suono, schermata speciale con il nome del gioco e cosa fare, si chiude con un pulsante). Tutte le mani vengono **rinnovate** (5 carte nuove a tutti; le vecchie vanno nello scarto). Tutti i giocatori giocano una carta, le carte salgono sulla torre e si vota in segreto; **si può votare anche la propria carta**. Dopo il mini-gioco ognuno pesca una carta e si riprende con il turno successivo.
+## Mini-gioco (intervallo)
+**Fino a 5 giocatori** c'è **un intervallo** dopo il turno ⌊turni totali / 2⌋ (3 giocatori: dopo il turno 3; 4 e 5: dopo il turno 2). **Da 6 a 8 giocatori** ce ne sono **due**, dopo i turni ⌊totali / 3⌋ e ⌊2 × totali / 3⌋ (6 e 7 giocatori: dopo i turni 2 e 4; 8 giocatori: dopo i turni 2 e 5). Ogni intervallo è un mini-gioco scelto a caso tra tre, e **i due di una partita sono sempre diversi**. Non c'è il Megafono né il Lui!. Prima c'è un **intervallo** (suono, schermata speciale con il nome del gioco e cosa fare, si chiude con un pulsante). All'inizio dell'intervallo **la mano di ognuno è sostituita per intero** (5 carte nuove; le vecchie vanno nello scarto): quando il giocatore apre la scelta della carta nell'intervallo, l'app lo mostra con un'animazione (si parte dal vuoto, compare un mazzetto coperto che si scopre, scritta «Rinnoviamo la tua mano!» che scompare alla fine). Tutti giocano una carta della mano nuova, le carte salgono sulla torre e si vota in segreto; **si può votare anche la propria carta** (tranne nel Peggiore). Dopo il mini-gioco ognuno pesca una carta e si riprende con il turno successivo.
 
 - **L'Accusa** — una carta pescata a caso (l'accusatore, mostrata a parte e non votabile) accusa uno dei giocatori di una marachella (50 accuse). Ognuno gioca il colpevole.
 - **La storia d'amore** — una carta pescata a caso (il protagonista, mostrata a parte) ha una nuova storia d'amore: ognuno gioca il partner ideale.
-- **Il raccomandato** — nessuna frase né accusa: si vota chi buttare giù.
+- **Il peggiore** — nessuna frase né accusa. Ognuno gioca in segreto il personaggio che per lui è il **peggiore in assoluto**, poi tutti votano la carta che deve cadere, **tranne la propria** (non si può votare: l'app la blocca, il motore rifiuta il voto).
 
 **Punteggio di Accusa e Storia d'amore.** Restano sulla torre le carte con più voti (tutte quelle a pari merito); le altre **cadono**. Chi ha votato una carta in testa prende **tanti punti quanti sono i voti su quella carta (compreso il proprio)**; chi ha giocato una carta in testa prende il **doppio dei voti** ricevuti. Chi ha votato una carta caduta, e chi ha giocato una carta caduta, non prende nulla. Se tutte le carte hanno gli stessi voti non cade nessuna.
 
-**Punteggio del Raccomandato.** Cade la carta più votata (o tutte quelle a pari merito in testa). Chi ha giocato una carta caduta **perde tanti punti quanti sono i voti ricevuti**, senza scendere sotto zero. I votanti non prendono nulla.
+**Punteggio del Peggiore.** Cade la carta più votata (o tutte quelle a pari merito in testa), come in un turno normale. Ogni giocatore **prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato**, cada o no (al massimo N−1, perché non ci si vota). Chi vota non prende nulla: si guadagna giocando la carta che il gruppo considera il peggiore. Nessun punto si perde.
 
-**Tetto.** Nei mini-giochi con punti positivi nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la seconda metà resta aperta.
+**Spoglio dell'intervallo.** Come nei turni normali: i voti compaiono **uno alla volta** (chi ha votato cosa, l'ultimo con un po' di suspense), poi il più votato / le carte in testa, poi la caduta e il riepilogo dei punti. «Avanti ›» e «Salta ›» come nei turni.
+
+**Tetto.** In Accusa e Storia d'amore nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la parte restante resta aperta.
 
 Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).
 
@@ -105,3 +107,6 @@ I punti stampati sono **tarati sulla probabilità di riuscita** (simulazioni con
 Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade (e +2 se cade la carta che ha giocato nella variante "Il Megafono sa"). Spariscono "Cade lui!/Non cade", il malus −1 e il +1 per voto raccolto.
 
 **Bot.** Il Megafono bot sceglie gettone e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero né quali gettoni gli restano: stimano quale dei due gettoni ha usato e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).
+
+## Uscire dalla partita
+Un giocatore umano può uscire in qualsiasi momento (Regolamento «i» → «Esci dalla partita», con conferma). Se nella stanza restano **altri umani** (anche temporaneamente offline), un **giocatore virtuale di livello medio** prende il suo posto: stessa posizione, stessi punti e stessa mano, e gli altri vedono un avviso. Se chi esce era l'host, il ruolo passa a un altro umano. Se **non restano umani**, la stanza si chiude subito. Il vecchio accesso non è più valido.

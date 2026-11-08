@@ -1,5 +1,5 @@
 export * from "./types.ts";
-export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, MIN_PLAYERS, MAX_PLAYERS, luiTokens, luiPool, luiAvailable, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
+export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, miniAtsFor, MIN_PLAYERS, MAX_PLAYERS, luiTokens, luiPool, luiAvailable, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
 export { viewFor } from "./views.ts";
 export type { PlayerView } from "./views.ts";
 export { suggestAction } from "./bot.ts";
@@ -10,3 +10,5 @@ export { chooseBotAction, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from
 export type { BotLevel, BotMemory } from "./ai.ts";
 export { registerTags, affinity, phraseTagCount } from "./tags.ts";
 export type { TagSet } from "./tags.ts";
+export { buildPhraseDeck, PHRASES_PER_CARD, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
+export type { AgeBand, PhraseFamily, PoolPhrase, PoolConfession, BuildOptions } from "./phrases.ts";

@@ -109,9 +109,11 @@ export interface FallOwner { pos: number; name: string | null; color: string }
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
-export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, tieBreak, megaName, sound, skip, interactive, onDone }: {
+export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions, tieBreak, megaName, sound, skip, interactive, onDone, mini }: {
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; counts: Record<number, number>;
   lui: LuiOutcome | null; tie: boolean; tieBreak: boolean; fallPositions: number[]; megaName: string; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
+  /** Mini-giochi: testi dell'ultimo passo e carte da mettere in luce (di norma le carte che cadono). */
+  mini?: { tally: [string, string]; stamp: string; focus: number[] };
 }) {
   const { ts, ty } = useStage(), mx = (x: number) => 186 + (x - 186) * ts, my = (y: number) => 300 + ty + (y - 300) * ts, m = voters.length, fallPos = fallPositions[0]!, multi = fallPositions.length > 1;
   const megaVote = votes[voters.find((x) => x.mega)?.id ?? ""] ?? 0;
@@ -158,7 +160,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "lui" && lui ? lui.position : cur.kind === "tally" || phase !== "clock" ? -1 : 0;
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
   const v = cur.kind === "vote" ? voters[cur.i!]! : null, vp = v ? votes[v.id]! : 0;
-  const total = voters.length, focusList = focusPos === -1 ? fallPositions : focusPos > 0 ? [focusPos] : [];
+  const total = voters.length, focusList = focusPos === -1 ? (mini?.focus ?? fallPositions) : focusPos > 0 ? [focusPos] : [];
   return (
     <>
       <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.position, spec: luiOpen ? { slot: lui.slot, k: lui.k, pts: lui.pts } : null } : null} />
@@ -173,9 +175,11 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
             <div className="rv-col"><span className="rv-n">Voto {cur.i! + 1} di {total}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{v.name} ha votato il n. {vp}</b></div>
           </div>
         )}
-        {phase === "clock" && cur.kind === "tally" && <><b className="rv-t">{tie ? (tieBreak ? "Pareggio! Decide il Megafono" : "Pareggio!") : `Il più votato: n. ${fallPos}`}</b><span data-testid="tally-text">{tie ? (tieBreak ? `${megaName} ha votato il n. ${fallPos}, tra le carte pari merito: cade la sua, le altre si salvano.` : `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.`) : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
+        {phase === "clock" && cur.kind === "tally" && mini && <><b className="rv-t">{mini.tally[0]}</b><span data-testid="tally-text">{mini.tally[1]}</span></>}
+        {phase === "clock" && cur.kind === "tally" && !mini && <><b className="rv-t">{tie ? (tieBreak ? "Pareggio! Decide il Megafono" : "Pareggio!") : `Il più votato: n. ${fallPos}`}</b><span data-testid="tally-text">{tie ? (tieBreak ? `${megaName} ha votato il n. ${fallPos}, tra le carte pari merito: cade la sua, le altre si salvano.` : `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.`) : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
         {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span data-testid="lui-reveal">Scommetteva: <b>{luiLabel(lui)}</b> sul n. {lui.position} (la carta col bordo giallo, +{lui.pts} punti). Gli altri gliene hanno dati {lui.others}: <b>{lui.hit ? `azzeccato! +${lui.pts}` : "mancato"}</b>.</span></>}
-        {phase === "stamp" && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
+        {phase === "stamp" && mini && <b className="rv-t">{mini.stamp}</b>}
+        {phase === "stamp" && !mini && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
       </div>}
       {interactive && phase === "clock" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
     </>

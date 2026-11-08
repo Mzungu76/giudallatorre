@@ -1,9 +1,9 @@
 export type PlayerId = string;
 export type CardId = string;
 export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI_PLAY" | "MINI_VOTE" | "MINI_RESULTS" | "GAME_OVER";
-/** Mini-giochi di metà partita: Accusa, La storia d'amore, Il raccomandato. */
-export type MiniKind = "accusa" | "amore" | "raccomandato";
-export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "raccomandato"];
+/** Mini-giochi (intervalli): Accusa, La storia d'amore, Il peggiore. */
+export type MiniKind = "accusa" | "amore" | "peggiore";
+export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "peggiore"];
 /** Identificativo di un segnalino Lui!: "zero" (nessun voto dagli altri) oppure "k1", "k2", "k3" (almeno 1, 2, 3 voti dagli altri). */
 export type LuiSlot = string;
 /** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
@@ -70,14 +70,14 @@ export interface TurnResult {
   tieBreak: boolean;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-peggiore" | "mini-tetto"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
 export interface MiniResult {
   kind: MiniKind; cardId: CardId | null; text: string | null;
   votes: Record<PlayerId, number>; counts: Record<number, number>;
-  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Raccomandato: sono quelle che cadono). */
+  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Il peggiore: sono quelle che cadono). */
   leaders: number[];
   fallenPositions: number[]; fallenCardIds: CardId[];
   /** Chi aveva giocato ciascuna carta (posizione → giocatore). */
@@ -125,8 +125,13 @@ export interface GameState {
   /** Mini-gioco di metà partita (campi assenti nelle partite salvate prima: nessun mini-gioco). */
   miniGame?: false | "random" | MiniKind;
   accuseDeck?: string[];
+  /** Primo intervallo (turno dopo cui si gioca). Le partite salvate prima avevano solo questo. */
   miniAt?: number;
   miniDone?: boolean;
+  /** Turni dopo cui c'è un intervallo (1 fino a 5 giocatori, 2 da 6 a 8), intervalli già giocati e mini-giochi già usciti. */
+  miniAts?: number[];
+  minisDone?: number;
+  miniKinds?: MiniKind[];
   mini?: Mini | null;
   miniResult?: MiniResult | null;
   /** Segnalini Lui! già spesi da ciascun giocatore (pubblico). */

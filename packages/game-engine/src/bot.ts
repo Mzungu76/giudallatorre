@@ -19,9 +19,13 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       if (playerId !== mega) return null;
       { const av = luiAvailable(s, playerId); return { type: "placeLui", playerId, slot: av[Math.floor(rand() * av.length)]!, position: 1 + Math.floor(rand() * s.tower.length) }; }
     case "MINI_VOTE":
-    case "VOTE":
+    case "VOTE": {
       if (s.votes[playerId] !== undefined) return null;
-      return { type: "vote", playerId, position: 1 + Math.floor(rand() * s.tower.length) };
+      // Il peggiore: la propria carta non si può votare
+      const own = s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" ? s.tower.find((t) => t.ownerId === playerId)?.position : undefined;
+      const options = s.tower.map((t) => t.position).filter((p) => p !== own);
+      return { type: "vote", playerId, position: pick(options) };
+    }
     default: return null;
   }
 }

@@ -1,2117 +1,2626 @@
 {
-"Oggi sale sulla torre chi stamattina ha fatto la cacca sul bidet per sbaglio.": {
-"tipo": [
-"goffo"
-],
-"temi": [
-"corpo",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha provato a fare la messa in piega al gatto e ora ha tre cicatrici a forma di croce.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"animali",
-"natura",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha usato lo spazzolino del coniuge “per pulire il bagno una volta” e non lo ha mai detto.": {
+"Oggi sale sulla torre chi sarebbe il peggior compagno di viaggio.": {
 "tipo": [],
 "temi": [
-"corpo",
-"casa"
+"viaggio"
 ]
 },
-"Oggi sale sulla torre chi ha finito il rotolo di carta igienica per dispetto e non lo ha cambiato.": {
+"Oggi sale sulla torre chi sparlerebbe di te appena esci dalla stanza.": {
 "tipo": [
-"furbo"
+"pettegolo"
 ],
 "temi": [
-"corpo",
-"casa"
+"bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno scoperto di avere il pigiama sotto i vestiti solo davanti al capo.": {
+"Oggi sale sulla torre chi lasceresti da solo su un’isola deserta.": {
 "tipo": [],
-"temi": [
-"lavoro"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha baciato la persona sbagliata e ha continuato \"per educazione\".": {
+"Oggi sale sulla torre chi non terrebbe mai un segreto.": {
 "tipo": [
-"goffo"
+"pettegolo"
 ],
 "temi": [
-"imbarazzo",
-"amore"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi è inciampato sul marciapiede e ha fatto finta di fare yoga.": {
+"Oggi sale sulla torre chi sarebbe il primo a fregare un amico per soldi.": {
 "tipo": [
-"goffo"
+"avaro",
+"bugiardo"
 ],
 "temi": [
-"imbarazzo"
-]
-},
-"Oggi sale sulla torre chi ha urlato “cambiati le mutande!” al telefono in sala d’attesa alle poste.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"legge",
-"lavoro",
-"tecnologia",
-"corpo",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha fatto un rutto durante il minuto di silenzio.": {
-"tipo": [],
-"temi": [
-"imbarazzo",
-"corpo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno applaudito da soli alla fine del film, in una sala vuota.": {
-"tipo": [],
-"temi": [
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha ordinato il piatto più piccante per fare colpo e ha pianto in silenzio.": {
-"tipo": [
-"drammatico"
-],
-"temi": [
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha sputato un osso di pollo nel tovagliolo del vicino.": {
-"tipo": [],
-"temi": [
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha mangiato mezza decorazione del piatto, ed era di plastica.": {
-"tipo": [],
-"temi": [
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha fatto il segno della croce davanti al conto.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"cibo",
-"religione",
 "soldi"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno lasciato di mancia “siete gentilissimi” e due spiccioli.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"cibo",
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha premuto tutti i bottoni dell’ascensore “per vedere cosa succede”.": {
+"Oggi sale sulla torre chi scapperebbe per primo in caso d’incendio.": {
 "tipo": [],
-"temi": [
-"mezzi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha scoreggiato in ascensore e ha guardato l’altro con aria offesa.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"mezzi",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi si è addormentato sul treno e ha sbavato sulla spalla di uno sconosciuto.": {
-"tipo": [],
-"temi": [
-"mezzi",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha preso il posto riservato agli invalidi, e quando lo hanno fatto notare ha zoppicato.": {
-"tipo": [],
-"temi": [
-"mezzi"
-]
-},
-"Oggi sale sulla torre quello che ha gridato \"Miracolo!\" all' arrivo del treno in orario, ma aveva sbagliato treno.": {
+"Oggi sale sulla torre chi si farebbe corrompere per poco.": {
 "tipo": [
 "goffo"
 ],
-"temi": [
-"mezzi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha pianto più della sposa e non conosceva nessuno dei due.": {
-"tipo": [
-"drammatico"
-],
-"temi": [
-"feste",
-"famiglia",
-"religione",
-"amore"
-]
-},
-"Oggi sale sulla torre chi ha preso il bouquet con una scivolata da calciatore.": {
-"tipo": [
-"goffo"
-],
-"temi": [
-"feste",
-"famiglia",
-"religione"
-]
-},
-"Oggi sale sulla torre chi al compleanno del nonno ha fatto quaranta brindisi solo per bere vino.": {
-"tipo": [
-"vecchio"
-],
-"temi": [
-"feste",
-"famiglia",
-"vecchiaia",
-"alcol"
-]
-},
-"Oggi sale sulla torre chi ha ricevuto una chiamata al funerale con la suoneria da discoteca.": {
-"tipo": [],
-"temi": [
-"feste",
-"famiglia",
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno pregato per gli sposi e per il buffet, in quest’ordine.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"feste",
-"famiglia",
-"religione",
-"amore"
-]
-},
-"Oggi sale sulla torre chi ha chiamato la suocera “mamma” per sbaglio e lei ha risposto “finalmente”.": {
+"Oggi sale sulla torre chi rovinerebbe una gita in montagna.": {
 "tipo": [
 "goffo",
-"genitore"
-],
-"temi": [
-"famiglia",
-"casa",
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha fatto il segno della croce davanti alla lasagna della suocera.": {
-"tipo": [
-"religioso",
-"genitore"
-],
-"temi": [
-"famiglia",
-"casa",
-"cibo",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha detto alla zia “è buonissima” e ne ha preso un’altra porzione per punizione.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"famiglia",
-"casa",
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha detto “che bella casa!” e ha toccato tutto con le dita unte.": {
-"tipo": [],
-"temi": [
-"famiglia",
-"casa",
-"cibo"
-]
-},
-"Oggi sale sulla torre la Suocera, quella con la S maiuscola.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"famiglia",
-"casa",
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha mandato per sbaglio foto compromettenti alla zia suora.": {
-"tipo": [
-"vanitoso",
-"religioso",
-"goffo"
-],
-"temi": [
-"tecnologia",
-"social",
-"religione",
-"famiglia"
-]
-},
-"Oggi sale sulla torre chi ha fatto vedere le foto del gatto morto al primo bacio.": {
-"tipo": [
-"vanitoso"
-],
-"temi": [
-"amore",
-"animali",
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha baciato in fronte la ragazza, come un cardinale.": {
-"tipo": [],
-"temi": [
-"amore"
-]
-},
-"Oggi sale sulla torre chi ha scritto alla cugina “ti penso” e non era la cugina.": {
-"tipo": [],
-"temi": [
-"amore",
-"famiglia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno detto “sei come una sorella per me” per vent’anni e poi si sono sposati.": {
-"tipo": [],
-"temi": [
-"amore"
-]
-},
-"Oggi sale sulla torre chi si è dimenticato il microfono acceso ed è andato in bagno.": {
-"tipo": [],
-"temi": [
-"lavoro",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha dichiarato “sono un team player” e si è mangiato tutta la focaccia del team.": {
-"tipo": [],
-"temi": [
-"lavoro"
-]
-},
-"Oggi sale sulla torre chi ha mandato un cuore al capo per sbaglio, e il capo ha risposto con un altro.": {
-"tipo": [
-"goffo"
-],
-"temi": [
-"lavoro"
-]
-},
-"Oggi sale sulla torre chi ha fatto il segno della croce prima di aprire la mail del direttore.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"lavoro",
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno nascosto un panino nel cassetto per sei mesi: ora serve un esorcista.": {
-"tipo": [
-"furbo"
-],
-"temi": [
-"lavoro",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha lanciato il manubrio da 25 kg sul piede di quello grosso ed è da un po' che non lo vediamo.": {
-"tipo": [
 "sportivo"
 ],
 "temi": [
-"sport",
-"corpo"
+"viaggio"
 ]
 },
-"Oggi sale sulla torre chi ha usato l’asciugamano del vicino per sbaglio per asciugarsi la faccia e poi lo ha rimesso a posto. Lui non lo sa, ma era quello del bidet.": {
+"Oggi sale sulla torre chi sopravvivrebbe meno a una settimana senza telefono.": {
 "tipo": [
-"goffo"
+"influencer"
 ],
 "temi": [
-"sport",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha urlato come in una finale olimpica per sollevare quattro chili.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"sport",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi è stato scaraventato dal tapis roulant a tre metri di distanza gridando:\"correre fa beneeeeee!!!\"": {
-"tipo": [
-"sportivo"
-],
-"temi": [
-"sport",
-"corpo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno fatto un selfie nello spogliatoio, con alle spalle un signore nudo.": {
-"tipo": [
-"vanitoso"
-],
-"temi": [
-"sport",
-"corpo",
-"tecnologia",
 "social"
 ]
 },
-"Oggi sale sulla torre chi ha messo la crema solo sulla faccia ed è diventato una luna su gambe.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha letto “pericolo meduse” e ha chiesto dove si prenotava l’escursione.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"viaggio",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha fatto un castello di sabbia e ci ha vissuto il resto della vacanza.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"viaggio",
-"corpo",
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha steso l’asciugamano in mezzo a una famiglia di sconosciuti e ha chiesto “chi ha portato il vino?”.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"corpo",
-"alcol"
-]
-},
-"Oggi salgono sulla torre quelli che hanno fatto il bagno subito dopo pranzo e hanno salutato la famiglia dal salvagente, con l’ultimo respiro.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha messo “mi piace” a una foto del defunto e poi ha scritto “bellissima”.": {
-"tipo": [
-"vanitoso"
-],
-"temi": [
-"tecnologia",
-"social"
-]
-},
-"Oggi sale sulla torre chi ha taggato il vescovo in una foto di una festa piuttosto allegra.": {
-"tipo": [
-"vanitoso",
-"religioso"
-],
-"temi": [
-"tecnologia",
-"social",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha scritto all’ex “ti penso” alle tre di notte e poi ha cambiato numero, città e religione.": {
-"tipo": [],
-"temi": [
-"amore",
-"social",
-"notte"
-]
-},
-"Oggi sale sulla torre chi ha fatto la diretta mentre litigava con la moglie e ha perso la lite e i follower.": {
-"tipo": [
-"vanitoso"
-],
-"temi": [
-"tecnologia",
-"social"
-]
-},
-"Oggi salgono sulla torre quelli che hanno chiamato “follower” la loro famiglia di quattro persone.": {
-"tipo": [
-"vanitoso"
-],
-"temi": [
-"tecnologia",
-"social"
-]
-},
-"Oggi sale sulla torre chi ha attaccato il biglietto “vietato fare rumore” e poi ha fatto una festa con la banda.": {
-"tipo": [],
-"temi": [
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha spiato i vicini col binocolo e ha scoperto che lo spiavano anche loro.": {
-"tipo": [],
-"temi": [
-"casa",
-"pettegolo"
-]
-},
-"Oggi sale sulla torre chi ha fatto il presepe vivente sul pianerottolo, e il cane faceva il bue.": {
-"tipo": [],
-"temi": [
-"casa",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha chiesto al prete del palazzo di benedire anche la macchina del caffè.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"casa",
-"religione",
-"mezzi"
-]
-},
-"Oggi salgono sulla torre quelli che hanno acceso il camino a luglio, “per fare atmosfera”.": {
-"tipo": [],
-"temi": [
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha messo il chiodo nel muro e ha forato il tubo: ora hanno una bella fontana decorativa in casa.": {
-"tipo": [],
-"temi": [
-"faidate",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha costruito uno scaffale e ha chiamato il suo capolavoro “Il Pisa”.": {
-"tipo": [],
-"temi": [
-"faidate",
-"casa",
-"lavoro"
-]
-},
-"Oggi sale sulla torre chi ha pregato San Giuseppe prima di usare il trapano, e ha fatto bene.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"faidate",
-"casa",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha dipinto il soffitto con la vernice del pavimento e ora cammina a testa in giù, per coerenza.": {
-"tipo": [],
-"temi": [
-"faidate",
-"casa"
-]
-},
-"Oggi salgono sulla torre quelli che hanno montato il mobile senza leggere le istruzioni e ora hanno una sedia che sembra un altare.": {
-"tipo": [],
-"temi": [
-"faidate",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha dato al gatto un nome da papa e ora il gatto fa le prediche dalla mattina alla sera.": {
-"tipo": [
-"religioso",
-"saputello"
-],
-"temi": [
-"animali",
-"natura",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha portato il cane a messa e ha preteso che il cane facesse la comunione.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"religione",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha seppellito il pesce rosso in giardino con un funerale di quaranta minuti.": {
-"tipo": [],
-"temi": [
-"animali",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha annaffiato e parlato per un anno alla pianta di plastica.": {
-"tipo": [],
-"temi": [
-"animali",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha chiamato il criceto Lazzaro, perché risorge ogni volta che scappa.": {
-"tipo": [],
-"temi": [
-"animali",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha scolato la pasta nel lavandino, senza colino, e ha detto “si lava due volte”.": {
-"tipo": [],
-"temi": [
-"cibo",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha messo l’ananas sulla pizza e ha dato la colpa a un amico napoletano che non c’era.": {
-"tipo": [
-"furbo"
-],
-"temi": [
-"cibo",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha detto “questo è il mio corpo” sul panettone e nessuno ha avuto il coraggio di dire no.": {
-"tipo": [],
-"temi": [
-"cibo"
-]
-},
-"Oggi sale sulla torre chi ha aperto la pentola a pressione “per vedere se è pronta”.": {
-"tipo": [],
-"temi": [
-"cibo",
-"casa"
-]
-},
-"Oggi salgono sulla torre quelli che vivono sotto scorta da quando hanno fatto la carbonara con la panna \"per fare prima\".": {
-"tipo": [],
-"temi": [
-"cibo",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha russato così forte che il vicino ha bussato con un crocifisso.": {
-"tipo": [],
-"temi": [
-"notte",
-"casa",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha parlato nel sonno e ha confessato tutto alla moglie, compreso il peccato che non ha commesso.": {
-"tipo": [],
-"temi": [
-"notte",
-"casa",
-"religione"
-]
-},
-"Oggi sale sulla torre chi si è alzato di notte e ha mangiato mezzo frigorifero dichiarandosi innocente:\"è sonnambulismo\".": {
-"tipo": [],
-"temi": [
-"notte",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha sognato il Papa che gli chiedeva “ma ci sei o ci fai?” e si è svegliato offeso.": {
-"tipo": [
-"rabbioso",
-"religioso"
-],
-"temi": [
-"notte",
-"casa",
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno messo cinque sveglie e le hanno spente tutte senza rimorsi.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"notte",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha regalato un cero “per i tuoi peccati” e ha chiesto il resto.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"feste",
-"soldi",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha spento le candeline con una scoreggia e lo ha negato davanti al nonno.": {
-"tipo": [
-"vecchio"
-],
-"temi": [
-"feste",
-"famiglia",
-"vecchiaia",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha regalato alla suocera un cartello “torno tra un’ora”, da usare sempre.": {
+"Oggi sale sulla torre chi sarebbe il peggior genitore.": {
 "tipo": [
 "genitore"
 ],
 "temi": [
-"feste",
-"soldi",
 "famiglia"
 ]
 },
-"Oggi sale sulla torre chi ha scartato il regalo davanti a tutti e ha urlato “finalmente!\" alla decima mutanda ricevuta.": {
+"Oggi sale sulla torre chi non ti aiuterebbe mai a fare un trasloco.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi vorresti meno accanto in un ascensore bloccato.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior coinquilino.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi tradirebbe il proprio partner senza rimorsi.": {
 "tipo": [
-"rabbioso"
+"bugiardo"
 ],
 "temi": [
-"feste",
-"soldi",
-"corpo"
+"amore",
+"bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno rifatto la festa a sorpresa, perché il festeggiato è arrivato prima.": {
+"Oggi sale sulla torre chi sarebbe il peggior testimone di nozze.": {
 "tipo": [],
 "temi": [
 "feste"
 ]
 },
-"Oggi sale sulla torre chi ha copiato la verifica dal compagno e ha copiato anche il suo nome.": {
-"tipo": [],
-"temi": [
-"scuola"
-]
-},
-"Oggi sale sulla torre chi ha detto “non sono stato io” indicando un compagno assente da un anno.": {
-"tipo": [],
-"temi": [
-"scuola"
-]
-},
-"Oggi sale sulla torre chi ha vomitato sul registro di classe e ha firmato come “giustificazione”.": {
-"tipo": [],
-"temi": [
-"scuola",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha sbagliato aula e ha seguito tre ore di matematica credendo fosse catechismo.": {
-"tipo": [
-"goffo"
-],
-"temi": [
-"scuola"
-]
-},
-"Oggi salgono sulla torre quelli che hanno scritto “scusi, ho la febbre” con una calligrafia da sano.": {
-"tipo": [],
-"temi": [
-"scuola"
-]
-},
-"Oggi sale sulla torre chi è entrato dal dottore con una mano sul cuore e ne è uscito con una mano sul portafoglio.": {
-"tipo": [],
-"temi": [
-"salute",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha ingoiato la pastiglia senza acqua e ha tossito fino a lunedì.": {
-"tipo": [],
-"temi": [
-"salute",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha chiesto al medico di guardargli “solo la questione” e si è già tolto i pantaloni in sala d’attesa.": {
-"tipo": [],
-"temi": [
-"salute",
-"corpo",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi si è fatto fare il certificato per un raffreddore e ha tenuto la voce da moribondo fino a domenica.": {
-"tipo": [],
-"temi": [
-"salute",
-"corpo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno confuso il bugiardino con una profezia e aspettano la fine.": {
-"tipo": [],
-"temi": [
-"salute",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha chiesto “un taglio qualunque” e il parrucchiere ha pianto.": {
-"tipo": [
-"drammatico"
-],
-"temi": [
-"vanita",
-"moda"
-]
-},
-"Oggi sale sulla torre chi si è tinto i capelli di blu per una scommessa e ora lavora in un acquario.": {
+"Oggi sale sulla torre chi dopo un funerale chiederebbe subito cosa c’è da mangiare.": {
 "tipo": [
 "religioso"
 ],
 "temi": [
-"vanita",
-"moda",
-"religione"
+"religione",
+"cibo"
 ]
 },
-"Oggi sale sulla torre chi si è rasato un sopracciglio per sbaglio e poi anche l’altro, per equità.": {
-"tipo": [
-"goffo"
-],
-"temi": [
-"vanita",
-"moda"
-]
+"Oggi sale sulla torre chi sarebbe più inutile in caso di naufragio.": {
+"tipo": [],
+"temi": []
 },
-"Oggi sale sulla torre chi ha lasciato la tinta in testa per quattro ore e ora è ufficialmente un Puffo.": {
+"Oggi sale sulla torre chi non inviteresti mai a cena.": {
 "tipo": [],
 "temi": [
-"vanita",
-"moda"
+"feste"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno giurato “la rimetto a posto da soli” e ora si coprono con una padella.": {
+"Oggi sale sulla torre chi, in un film horror, muore per primo.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi ha più bisogno di una lezione di umiltà.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a tradire sotto interrogatorio.": {
 "tipo": [
 "bugiardo"
 ],
 "temi": [
-"vanita",
-"moda",
-"legge",
 "bugie"
 ]
 },
-"Oggi sale sulla torre chi ha messo la retromarcia in autostrada e ha detto “dovevo tornare indietro un attimo”.": {
+"Oggi sale sulla torre chi farebbe finta di non conoscerti.": {
 "tipo": [],
-"temi": [
-"mezzi",
-"legge"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha parcheggiato a spina di pesce dentro un fiume.": {
-"tipo": [],
-"temi": [
-"mezzi",
-"legge",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha insultato l’auto davanti e dentro c’era suo suocero.": {
+"Oggi sale sulla torre chi pensa solo a salvare sé stesso.": {
 "tipo": [
-"rabbioso",
-"genitore"
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi non ammette mai di aver perso.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più presuntuosi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più permalosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più tirchi.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ruffiani.": {
+"tipo": [
+"bugiardo",
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sbruffoni.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più lamentosi.": {
+"tipo": [
+"drammatico"
 ],
 "temi": [
-"mezzi",
-"legge",
-"religione",
-"famiglia"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha frenato per un gatto e ha tamponato un carro funebre.": {
-"tipo": [],
+"Oggi salgono sulla torre i più bugiardi.": {
+"tipo": [
+"bugiardo"
+],
 "temi": [
-"mezzi",
-"legge",
-"animali"
+"bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno fatto il segno della croce al passaggio a livello e hanno attraversato lo stesso.": {
+"Oggi salgono sulla torre i più falsi.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più antipatici.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ipocriti.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più paraculi.": {
+"tipo": [
+"bugiardo",
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più prepotenti.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più inaffidabili.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più scostanti.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più testardi.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ingordi.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più santarellini.": {
+"tipo": [
+"religioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più perfettini.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più generosi solo quando c’è pubblico.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più modesti, a parole.": {
+"tipo": [
+"vanitoso",
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre il più simpatico.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sinceri a sproposito.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più smielati.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che parlano solo di sé stessi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che non salutano mai per primi.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che dicono sempre “io l’avevo detto”.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che hanno sempre ragione, anche quando hanno torto.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che odiano il prossimo.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che fanno sempre finta di non aver visto il messaggio.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere il più intelligente della stanza.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che il mondo giri intorno a lui.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi in chiesa pensa solo al pranzo della domenica.": {
 "tipo": [
 "religioso"
 ],
 "temi": [
-"mezzi",
-"legge",
-"religione"
+"religione",
+"cibo"
 ]
 },
-"Oggi sale sulla torre chi ha provato una camicia di due taglie meno e c’è voluto un fabbro per toglierla.": {
+"Oggi salgono sulla torre i più pigri.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più vanitosi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più rumorosi.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ritardatari.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più disordinati.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più saccenti.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più impiccioni.": {
+"tipo": [
+"pettegolo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più pettegoli.": {
+"tipo": [
+"pettegolo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più invidiosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più gelosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più vendicativi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più avari.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più noiosi.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più chiacchieroni.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più dispettosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più furbetti.": {
+"tipo": [
+"bugiardo",
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più egoisti.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più polemici.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più nervosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più cinici.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ingenui.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più scansafatiche.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più maleducati.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più brontoloni.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più svampiti.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più teatrali.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più pedanti.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più narcisisti.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più opportunisti.": {
+"tipo": [
+"bugiardo",
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sfacciati.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più codardi.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più rancorosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più smemorati.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più distratti.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più maniaci del controllo.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più viziati.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sdolcinati.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più pignoli.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più capricciosi.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più complottisti.": {
+"tipo": [
+"complottista"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più superstiziosi.": {
+"tipo": [
+"complottista"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ansiosi.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più impulsivi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più tirannici.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più scrocconi.": {
+"tipo": [
+"avaro",
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più arroganti.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più drammatici.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sentenziosi.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più intransigenti.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più bacchettoni.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più fanfaroni.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che arrivano sempre in ritardo.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che interrompono sempre gli altri.": {
 "tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che promettono e non mantengono.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si offendono per niente.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che sparlano di chi è assente.": {
+"tipo": [
+"pettegolo"
+],
 "temi": [
-"soldi",
-"moda"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha aperto il pacco di biscotti al supermercato e ha detto “era solo un assaggio”.": {
-"tipo": [],
+"Oggi salgono sulla torre quelli che si lamentano e non fanno niente.": {
+"tipo": [
+"drammatico"
+],
 "temi": [
-"soldi",
-"moda"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha dato la colpa al carrello per aver investito una signora.": {
+"Oggi salgono sulla torre quelli che non ammettono mai di aver sbagliato.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che danno consigli che nessuno ha chiesto.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che spoilerano i film.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che raccontano sempre la stessa storia.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che sono gentili solo quando serve.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che non restituiscono mai quello che prendono in prestito.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi salgono sulla torre quelli che si credono sempre i più furbi.": {
 "tipo": [
 "furbo"
 ],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che guardano il telefono mentre gli altri parlano.": {
+"tipo": [
+"influencer"
+],
 "temi": [
-"soldi",
-"moda"
+"social",
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha chiesto il rimborso per un maglione “che non gli ha portato fortuna”.": {
+"Oggi salgono sulla torre quelli che ridono alle proprie battute.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che vogliono sempre l’ultima parola.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che criticano tutto.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si fanno pregare per tutto.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che scaricano la colpa sugli altri.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che non sanno stare zitti.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che dicono sempre “non sono stato io”.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che trattano male i camerieri.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si mettono sempre al centro dell’attenzione.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che fanno la morale agli altri.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si vantano di cose mai fatte.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che non offrono mai un caffè.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che pretendono un trattamento di favore.": {
 "tipo": [],
 "temi": [
-"soldi",
-"moda",
-"animali"
+"bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno comprato un divano di pelle e hanno chiesto scusa alla vacca.": {
+"Oggi salgono sulla torre quelli che sono servili con i capi e prepotenti con gli altri.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che portano sfortuna.": {
+"tipo": [
+"complottista"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che sanno sempre tutto prima degli altri.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che vivono per i social.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi salgono sulla torre quelli che non rispettano la fila.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si credono indispensabili.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che danno la colpa all’arbitro.": {
+"tipo": [
+"sportivo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che prendono tutto troppo sul serio.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che non prendono mai niente sul serio.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che fanno sempre le vittime.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che cambiano idea a seconda di chi hanno davanti.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si approfittano della gentilezza degli altri.": {
+"tipo": [
+"furbo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che mentono anche quando non serve.": {
+"tipo": [],
+"temi": [
+"bugie"
+]
+},
+"Oggi salgono sulla torre quelli che non chiedono mai scusa.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior compagno di banco.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior capo.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior vicino di casa.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior ospite.": {
+"tipo": [],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior fidanzato.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior socio in affari.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior compagno di squadra.": {
+"tipo": [
+"sportivo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior autista.": {
+"tipo": [],
+"temi": [
+"viaggio"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior cuoco.": {
+"tipo": [],
+"temi": [
+"cibo"
+]
+},
+"Oggi sale sulla torre chi sarebbe la peggior babysitter.": {
+"tipo": [
+"genitore"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior testimone in un processo.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior insegnante.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior consigliere sentimentale.": {
+"tipo": [],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi sarebbe il peggior compagno di tenda.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi si lamenterebbe per primo in campeggio.": {
+"tipo": [
+"bugiardo",
+"drammatico",
+"sportivo"
+],
+"temi": [
+"viaggio",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi dimenticherebbe il proprio compleanno.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"feste",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi si addormenterebbe a una cena di gala.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"feste",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a litigare per l’ultima fetta di torta.": {
+"tipo": [
+"rabbioso"
+],
+"temi": [
+"cibo"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a lamentarsi del conto.": {
+"tipo": [
+"avaro",
+"drammatico"
+],
+"temi": [
+"soldi",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a dare la colpa agli altri.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a perdere la pazienza in fila.": {
+"tipo": [
+"rabbioso",
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a perdere le chiavi.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a fare il furbo in una partita.": {
+"tipo": [
+"furbo",
+"sportivo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a rovinare una sorpresa.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo ad arrendersi in montagna.": {
+"tipo": [
+"sportivo"
+],
+"temi": [
+"viaggio"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a litigare in vacanza.": {
+"tipo": [
+"rabbioso"
+],
+"temi": [
+"viaggio"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a rompere qualcosa e far finta di niente.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi non saprebbe organizzare nemmeno una cena.": {
+"tipo": [],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi non riuscirebbe a stare un giorno senza lamentarsi.": {
+"tipo": [
+"drammatico"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi non pagherebbe mai il conto.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi non cederebbe mai il posto a un anziano.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi ti lascerebbe a piedi sotto la pioggia.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi non ti presterebbe mai un euro.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi sparirebbe quando c’è da pagare.": {
+"tipo": [],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi sparirebbe quando c’è da pulire.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi vorresti meno come vicino di ombrellone.": {
+"tipo": [],
+"temi": [
+"viaggio"
+]
+},
+"Oggi sale sulla torre chi vorresti meno in squadra a un gioco da tavolo.": {
+"tipo": [
+"sportivo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a discutere con un vigile.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a rubare il posto in fila.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi tradirebbe un amico per fare carriera.": {
+"tipo": [
+"bugiardo",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a litigare per l’eredità.": {
+"tipo": [
+"rabbioso"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi darebbe la colpa a un innocente pur di salvarsi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi lascerebbe il partner con un messaggio.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"amore",
+"social"
+]
+},
+"Oggi sale sulla torre chi si metterebbe con l’ex di un amico.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi sale sulla torre chi non andrebbe al funerale di un amico per vedere una partita.": {
+"tipo": [
+"sportivo",
+"religioso"
+],
+"temi": [
+"religione"
+]
+},
+"Oggi sale sulla torre chi riderebbe a un funerale.": {
+"tipo": [
+"religioso"
+],
+"temi": [
+"religione"
+]
+},
+"Oggi sale sulla torre chi farebbe una battuta durante il minuto di silenzio.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi si addormenterebbe durante la messa.": {
+"tipo": [
+"bugiardo",
+"religioso"
+],
+"temi": [
+"religione",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi si confesserebbe senza pentirsi di niente.": {
+"tipo": [
+"religioso"
+],
+"temi": [
+"religione"
+]
+},
+"Oggi sale sulla torre chi mentirebbe al proprio partner senza battere ciglio.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"amore",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi vorresti meno come compagno di cella.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a finire a letto con l’ex.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a sparire in camera a una festa.": {
+"tipo": [],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi tradirebbe il proprio migliore amico per una notte.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi da ubriaco si metterebbe a ballare sul tavolo.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"alcol"
+]
+},
+"Oggi sale sulla torre chi da ubriaco confesserebbe tutto.": {
+"tipo": [
+"religioso",
+"eccentrico"
+],
+"temi": [
+"religione",
+"alcol"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a finire nudo a una festa.": {
+"tipo": [],
+"temi": [
+"amore",
+"feste"
+]
+},
+"Oggi sale sulla torre chi si farebbe pagare anche per un piccolo favore.": {
+"tipo": [],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere sempre nel giusto.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere insostituibile.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere simpatico.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di guidare meglio di tutti.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di cucinare meglio di tutti.": {
+"tipo": [],
+"temi": [
+"cibo"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere irresistibile.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di non invecchiare mai.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che tutti ce l’abbiano con lui.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di meritare di più.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di avere un talento nascosto.": {
+"tipo": [
+"pigro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi è convinto di capire l’arte moderna.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere un genio incompreso.": {
+"tipo": [
+"vanitoso",
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che le regole valgano solo per gli altri.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di restare in forma senza fare niente.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di risparmiare comprando in offerta.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere un grande oratore.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere l’anima della festa.": {
+"tipo": [
+"vanitoso"
+],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi è convinto di saper fare tutto senza istruzioni.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di non avere nessun difetto.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di poter vivere senza lavorare.": {
+"tipo": [
+"pigro",
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere immune alle truffe.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di poter bere senza conseguenze.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"alcol"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere il preferito del capo.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi è convinto che il lavoro lo debbano fare gli altri.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi è convinto di dover essere sempre ringraziato.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che la sua opinione sia un fatto.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere l’unico a capire come va il mondo.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più buoni a parole.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più altruisti quando li guardano.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più bravi a fare i bravi.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più gentili solo per interesse.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più precisi con gli errori altrui.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più calmi solo quando conviene.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più generosi con i soldi degli altri.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi salgono sulla torre i più coraggiosi a distanza di sicurezza.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più bravi a dare consigli sulla vita degli altri.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più sportivi sul divano.": {
+"tipo": [
+"sportivo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più romantici solo a San Valentino.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più religiosi solo a Natale.": {
+"tipo": [
+"religioso"
+],
+"temi": [
+"religione"
+]
+},
+"Oggi salgono sulla torre i più sani a parole.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più puntuali solo quando serve a loro.": {
 "tipo": [
 "bugiardo",
 "pigro"
 ],
-"temi": [
-"soldi",
-"moda",
-"bugie"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha fatto quattro ore di coda alle poste per scoprire di essere nel palazzo sbagliato.": {
+"Oggi salgono sulla torre i più onesti quando non costa niente.": {
 "tipo": [
-"goffo"
+"bugiardo"
 ],
-"temi": [
-"legge",
-"soldi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha urlato “questo è un abuso!” a un bancomat.": {
+"Oggi salgono sulla torre i più impegnati quando c’è da aiutare.": {
 "tipo": [
-"rabbioso"
+"pigro"
 ],
-"temi": [
-"legge",
-"soldi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha firmato con un nome falso e ora è latitante dal catasto.": {
+"Oggi salgono sulla torre i più generosi con il tempo degli altri.": {
 "tipo": [],
-"temi": [
-"legge",
-"soldi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha giurato in tribunale con la mano sinistra e ha dovuto rifarlo.": {
+"Oggi salgono sulla torre i più traditori.": {
 "tipo": [
 "bugiardo"
 ],
 "temi": [
-"legge",
-"soldi",
 "bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno aspettato il numero 87 per quattro ore e quando è arrivato lo sportello era chiuso.": {
-"tipo": [],
-"temi": [
-"legge",
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha fatto la ola all’atterraggio e il pilota ha detto “ci siamo mancati”.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"mezzi"
-]
-},
-"Oggi sale sulla torre chi ha caricato un prosciutto nel bagaglio a mano e ha urlato “è per le emergenze!”.": {
+"Oggi salgono sulla torre i più viscidi.": {
 "tipo": [
-"rabbioso"
+"bugiardo"
 ],
-"temi": [
-"viaggio",
-"mezzi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha dormito sul sedile dell’aeroporto e si è svegliato in coda per un volo per Kabul.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"viaggio",
-"mezzi"
-]
-},
-"Oggi sale sulla torre chi ha fatto il segno della croce davanti allo scanner dei bagagli.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"viaggio",
-"mezzi",
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno perso la valigia e hanno vissuto una settimana con il pigiama della compagna.": {
+"Oggi salgono sulla torre i più meschini.": {
 "tipo": [],
-"temi": [
-"viaggio",
-"mezzi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha ballato sul tavolo e ha fatto crollare il buffet.": {
-"tipo": [],
-"temi": [
-"alcol",
-"notte",
-"feste"
-]
-},
-"Oggi sale sulla torre chi ha vomitato sulla pianta e l’ha chiamata “la mia amica”.": {
-"tipo": [],
-"temi": [
-"alcol",
-"notte",
-"feste",
-"animali",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha scambiato la finestra per la porta, al secondo piano.": {
-"tipo": [],
-"temi": [
-"alcol",
-"notte",
-"feste"
-]
-},
-"Oggi sale sulla torre chi ha urlato “ti amo!” a una persona e a un lampione, con la stessa passione.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"alcol",
-"notte",
-"feste",
-"amore"
-]
-},
-"Oggi salgono sulla torre quelli che hanno brindato “alla salute” e il giorno dopo sono andati all’ospedale.": {
-"tipo": [],
-"temi": [
-"alcol",
-"notte",
-"feste"
-]
-},
-"Oggi sale sulla torre chi ha usato il piede per accendere la luce e ha bruciato il tappeto.": {
-"tipo": [],
-"temi": [
-"pigrizia",
-"casa",
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha mangiato il pane secco per non alzarsi dal divano.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"pigrizia",
-"casa",
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha tenuto lo stesso calzino per tre settimane “perché è fedele”.": {
-"tipo": [],
-"temi": [
-"pigrizia",
-"casa",
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha chiamato l’ambulanza perché non trovava il telecomando.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"pigrizia",
-"casa",
-"tecnologia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno fatto la maratona di serie e hanno dato la colpa all’abbonamento.": {
+"Oggi salgono sulla torre i più approfittatori.": {
 "tipo": [
 "furbo"
 ],
-"temi": [
-"pigrizia",
-"casa",
-"tecnologia",
-"spettacolo"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha usato per la terza volta la nonna morta come scusa.": {
+"Oggi salgono sulla torre i più manipolatori.": {
 "tipo": [
 "bugiardo"
 ],
-"temi": [
-"bugie",
-"vecchiaia"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha mentito sull’età per entrare in discoteca ed è stato scambiato per un genitore.": {
+"Oggi salgono sulla torre i più subdoli.": {
 "tipo": [
 "bugiardo"
 ],
-"temi": [
-"bugie"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha scritto “sto arrivando” dal letto.": {
+"Oggi salgono sulla torre i più calcolatori.": {
 "tipo": [
-"pigro"
+"bugiardo",
+"eccentrico"
 ],
 "temi": [
-"bugie"
+"alcol"
 ]
 },
-"Oggi sale sulla torre chi ha giurato di non aver mai mangiato il tiramisù con la panna sul mento.": {
+"Oggi salgono sulla torre i più vigliacchi.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più arrivisti.": {
+"tipo": [
+"lavoratore"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più sleali.": {
 "tipo": [
 "bugiardo"
 ],
-"temi": [
-"bugie",
-"legge"
-]
+"temi": []
 },
-"Oggi salgono sulla torre quelli che hanno detto “io non c’ero” in un video in cui parlavano.": {
-"tipo": [],
-"temi": [
-"bugie"
-]
-},
-"Oggi sale sulla torre chi ha mangiato il dolce di nascosto e ha lasciato la forchetta nel tovagliolo, sul divano.": {
-"tipo": [
-"furbo",
-"pigro"
-],
-"temi": [
-"bugie",
-"imbarazzo"
-]
-},
-"Oggi sale sulla torre chi ha letto il diario della sorella e ha corretto i congiuntivi.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"bugie",
-"imbarazzo"
-]
-},
-"Oggi sale sulla torre chi ha confessato a un prete di aver rubato una caramella nel 1996.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"bugie",
-"imbarazzo",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha cancellato la cronologia e poi ha scritto “spero che nessuno la legga” sul documento.": {
-"tipo": [],
-"temi": [
-"bugie",
-"imbarazzo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno nascosto il regalo della moglie così bene che non l’hanno più trovato.": {
-"tipo": [
-"furbo"
-],
-"temi": [
-"bugie",
-"imbarazzo"
-]
-},
-"Oggi sale sulla torre chi ha spruzzato acqua santa sul frigorifero perché “fa strani rumori”.": {
-"tipo": [],
-"temi": [
-"superstizione",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha toccato ferro e si è preso la scossa dal cancello.": {
-"tipo": [],
-"temi": [
-"superstizione",
-"religione"
-]
-},
-"Oggi sale sulla torre chi non esce di casa se prima non guarda il gatto negli occhi, “per un presentimento”.": {
-"tipo": [],
-"temi": [
-"superstizione",
-"religione",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha rifatto tre volte il segno della croce per non incontrare un gatto nero, che era il suo.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"superstizione",
-"religione",
-"animali"
-]
-},
-"Oggi salgono sulla torre quelli che hanno messo un ferro di cavallo sul comodino e lo usano come manubrio.": {
-"tipo": [
-"sportivo"
-],
-"temi": [
-"superstizione",
-"religione",
-"sport"
-]
-},
-"Oggi sale sulla torre chi ha urlato “arbitro cornuto!” al televisore e ha scoperto che l’arbitro era suo cognato.": {
+"Oggi salgono sulla torre i più spietati.": {
 "tipo": [
 "rabbioso"
 ],
-"temi": [
-"sport",
-"rabbia"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha pianto per il rigore sbagliato come per un lutto.": {
-"tipo": [
-"drammatico",
-"goffo"
-],
-"temi": [
-"sport",
-"rabbia"
-]
-},
-"Oggi sale sulla torre chi si è tatuato lo stemma della squadra e poi la squadra è fallita.": {
-"tipo": [],
-"temi": [
-"sport",
-"rabbia"
-]
-},
-"Oggi sale sulla torre chi ha offeso la mamma dell’arbitro davanti alla propria.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"sport",
-"rabbia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno pregato in ginocchio davanti alla tv prima del calcio d’angolo.": {
+"Oggi salgono sulla torre i più bigotti.": {
 "tipo": [
 "religioso"
 ],
-"temi": [
-"sport",
-"rabbia",
-"religione"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha spento il computer staccando la spina dalla parete, “per sicurezza”.": {
+"Oggi salgono sulla torre i più infedeli.": {
 "tipo": [
-"nerd"
+"bugiardo"
 ],
-"temi": [
-"tecnologia"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha chiesto a Siri come si fa un miracolo.": {
-"tipo": [],
-"temi": [
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha mandato a tutta la rubrica la foto sbagliata, quella dell’ernia.": {
+"Oggi salgono sulla torre i più libertini.": {
 "tipo": [
-"vanitoso",
-"goffo"
+"eccentrico"
 ],
-"temi": [
-"tecnologia"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha scritto la password su un post-it sul monitor, in grande, con le frecce.": {
+"Oggi salgono sulla torre i più lussuriosi.": {
 "tipo": [
-"nerd"
+"eccentrico"
 ],
-"temi": [
-"tecnologia"
-]
+"temi": []
 },
-"Oggi salgono sulla torre quelli che hanno dato un nome al robot aspirapolvere e gli parlano dopo cena.": {
-"tipo": [],
-"temi": [
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi è uscito con le infradito sulla neve “per sentire meglio la natura”.": {
-"tipo": [],
-"temi": [
-"moda",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha stirato i pantaloni mentre li indossava e ora ha le gambe a buccia d’arancia.": {
-"tipo": [],
-"temi": [
-"moda",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha messo la giacca a vento al contrario e ha camminato all’indietro per coerenza.": {
-"tipo": [],
-"temi": [
-"moda",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha indossato due paia di mutande per l’inverno e un solo paio di scarpe in due.": {
-"tipo": [],
-"temi": [
-"moda",
-"natura",
-"corpo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno tolto il cappotto a dicembre e dicono “fa fresco ma sto bene”.": {
-"tipo": [],
-"temi": [
-"moda",
-"natura"
-]
-},
-"Oggi sale sulla torre chi ha incontrato l’ex al supermercato e si è nascosto nel freezer.": {
+"Oggi salgono sulla torre i più viziosi.": {
 "tipo": [
-"furbo"
+"eccentrico"
 ],
-"temi": [
-"amore",
-"social"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha scritto “ci vediamo presto” all’ex nel gruppo dei suoceri.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"amore",
-"social",
-"famiglia"
-]
-},
-"Oggi sale sulla torre chi ha bruciato le foto dell’ex e ha fatto scattare l’allarme antincendio.": {
+"Oggi salgono sulla torre i più spudorati.": {
 "tipo": [
 "vanitoso"
 ],
+"temi": []
+},
+"Oggi salgono sulla torre i più morbosi.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più dissoluti.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più ubriaconi.": {
+"tipo": [
+"eccentrico"
+],
 "temi": [
-"amore",
-"social",
-"tecnologia"
+"alcol"
 ]
 },
-"Oggi sale sulla torre chi ha cambiato nome per non farsi riconoscere dall’ex.": {
-"tipo": [],
+"Oggi salgono sulla torre quelli che stanno con qualcuno solo per i soldi.": {
+"tipo": [
+"avaro"
+],
 "temi": [
-"amore",
-"social"
+"soldi"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno spiato l’ex dalla siepe e sono stati scambiati per il giardiniere.": {
-"tipo": [],
-"temi": [
-"amore",
-"social",
+"Oggi salgono sulla torre quelli che sparlano degli amici appena escono.": {
+"tipo": [
 "pettegolo"
-]
-},
-"Oggi sale sulla torre chi ha passato un’ora allo specchio e ha scoperto di avere ancora la faccia di ieri.": {
-"tipo": [
-"vanitoso"
 ],
 "temi": [
-"vanita",
-"moda"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha messo il filtro in videochiamata con il medico.": {
+"Oggi salgono sulla torre quelli che si prendono il merito del lavoro altrui.": {
 "tipo": [
-"vanitoso"
+"lavoratore"
 ],
 "temi": [
-"vanita",
-"moda"
+"lavoro"
 ]
 },
-"Oggi sale sulla torre chi si è fatto il fisico da “uomo vissuto” a base di pizza.": {
-"tipo": [],
-"temi": [
-"vanita",
-"moda"
-]
-},
-"Oggi sale sulla torre chi ha chiesto di ritoccare la foto della carta d’identità.": {
+"Oggi salgono sulla torre quelli che tradiscono e poi si sentono vittime.": {
 "tipo": [
-"vanitoso"
-],
-"temi": [
-"vanita",
-"moda",
-"tecnologia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno comprato una crema “antietà” e ora hanno la faccia di un neonato di cinquant’anni.": {
-"tipo": [],
-"temi": [
-"vanita",
-"moda"
-]
-},
-"Oggi sale sulla torre chi ha chiesto lo sconto ai funerali sul prezzo della bara.": {
-"tipo": [
-"furbo",
-"avaro"
-],
-"temi": [
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha tenuto il resto di un caffè in tasca per otto anni “per un’emergenza”.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha contato le gocce di detersivo per risparmiare sul bucato.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha messo la mancia nel salvadanaio di un santo.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"soldi",
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno pagato il parcheggio in monetine e hanno fatto una coda con il vigile.": {
-"tipo": [
-"avaro"
-],
-"temi": [
-"soldi",
-"legge",
-"mezzi"
-]
-},
-"Oggi sale sulla torre chi ha urlato “smettila di urlare!” a un bambino che stava dormendo.": {
-"tipo": [
-"rabbioso",
-"genitore"
-],
-"temi": [
-"famiglia",
-"bambini"
-]
-},
-"Oggi sale sulla torre chi ha detto “ai miei tempi” a un bambino di quattro anni.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"famiglia",
-"bambini"
-]
-},
-"Oggi sale sulla torre chi ha mostrato la foto del figlio nudo a un invitato, “perché è così carino”.": {
-"tipo": [
-"vanitoso",
-"genitore"
-],
-"temi": [
-"famiglia",
-"bambini",
-"tecnologia"
-]
-},
-"Oggi sale sulla torre chi ha dato la colpa al cane per il compito del figlio, e il cane era sul divano.": {
-"tipo": [
-"furbo",
-"pigro",
-"genitore"
-],
-"temi": [
-"famiglia",
-"bambini",
-"animali"
-]
-},
-"Oggi salgono sulla torre quelli che hanno promesso a Babbo Natale una confessione per tutti i peccati dei figli.": {
-"tipo": [
-"politico",
-"genitore"
-],
-"temi": [
-"famiglia",
-"bambini",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha detto al nipote “ti ho cambiato io i pannolini” davanti alla fidanzata.": {
-"tipo": [],
-"temi": [
-"vecchiaia",
-"famiglia",
-"amore"
-]
-},
-"Oggi sale sulla torre chi ha urlato al medico “parli più forte!” senza l’apparecchio.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"vecchiaia",
-"famiglia"
-]
-},
-"Oggi sale sulla torre chi ha lasciato la dentiera nel bicchiere dell’ospite.": {
-"tipo": [],
-"temi": [
-"vecchiaia",
-"famiglia",
-"alcol"
-]
-},
-"Oggi sale sulla torre chi ha chiamato la figlia “Maria” per sessant’anni, e si chiamava Giovanna.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"vecchiaia",
-"famiglia",
-"bambini"
-]
-},
-"Oggi salgono sulla torre quelli che hanno regalato soldi in una busta di caramelle e ora nessuno mangia caramelle.": {
-"tipo": [],
-"temi": [
-"vecchiaia",
-"famiglia",
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha fatto la predica a un cane che aveva morso la tonaca.": {
-"tipo": [],
-"temi": [
-"religione",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha confessato i peccati degli altri pensando fossero i propri.": {
-"tipo": [],
-"temi": [
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha scambiato l’acqua santa per il vino e ha detto “che miracolo”.": {
-"tipo": [],
-"temi": [
-"religione",
-"alcol"
-]
-},
-"Oggi sale sulla torre chi ha chiesto al vescovo “ma lei crede?” con i guanti da cucina in mano.": {
-"tipo": [
-"religioso"
-],
-"temi": [
-"religione"
-]
-},
-"Oggi salgono sulla torre quelli che hanno acceso il cero e hanno bruciato il tappeto della sacrestia.": {
-"tipo": [],
-"temi": [
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha urlato “vergogna!” al telegiornale e ha rovesciato il caffè sul cane.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"politica",
-"rabbia",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha promesso di “cambiare il Paese” e non ha cambiato nemmeno il calzino.": {
-"tipo": [
-"politico"
-],
-"temi": [
-"politica",
-"rabbia"
-]
-},
-"Oggi sale sulla torre chi ha dato la colpa dell’inflazione al panettiere.": {
-"tipo": [
-"furbo"
-],
-"temi": [
-"politica",
-"rabbia"
-]
-},
-"Oggi sale sulla torre chi ha infilato la scheda nell’urna al contrario e ha votato per qualcosa che non esiste.": {
-"tipo": [],
-"temi": [
-"politica",
-"rabbia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno fatto un comizio al bar e il barista ha chiesto di pagare il discorso.": {
-"tipo": [
-"politico"
-],
-"temi": [
-"politica",
-"rabbia",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha urlato “dietro di te!” al protagonista e ha spaventato la sala.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"spettacolo",
-"cultura"
-]
-},
-"Oggi sale sulla torre chi ha confuso la sala con il salotto e si è tolto le scarpe, i calzini e il pudore.": {
-"tipo": [],
-"temi": [
-"spettacolo",
-"cultura"
-]
-},
-"Oggi sale sulla torre chi ha riso al funerale del film e pianto alla commedia.": {
-"tipo": [
+"bugiardo",
 "drammatico"
 ],
 "temi": [
-"spettacolo",
-"cultura"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha detto lo spoiler del finale perché “doveva sfogarsi”.": {
+"Oggi salgono sulla torre quelli che flirtano con tutti, anche quando sono impegnati.": {
 "tipo": [
-"saputello"
+"pigro",
+"eccentrico"
 ],
-"temi": [
-"spettacolo",
-"cultura"
-]
+"temi": []
 },
-"Oggi salgono sulla torre quelli che hanno applaudito il film più forte degli attori.": {
+"Oggi salgono sulla torre quelli che fingono di essere al verde per non pagare.": {
 "tipo": [],
 "temi": [
-"spettacolo",
-"cultura"
-]
-},
-"Oggi sale sulla torre chi ha cantato l’Ave Maria a un concerto rock e ha ottenuto il bis.": {
-"tipo": [
-"artista"
-],
-"temi": [
-"musica",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha suonato la chitarra a un funerale e ha chiesto “qualcuno ha richieste?”.": {
-"tipo": [],
-"temi": [
-"musica",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha fatto il karaoke con la voce di un frigorifero.": {
-"tipo": [
-"artista"
-],
-"temi": [
-"musica",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha dedicato una canzone alla sua ex, in camera della sua nuova ragazza.": {
-"tipo": [],
-"temi": [
-"musica",
-"spettacolo",
-"amore"
-]
-},
-"Oggi salgono sulla torre quelli che hanno ballato il lento con il parroco al matrimonio.": {
-"tipo": [],
-"temi": [
-"musica",
-"spettacolo"
-]
-},
-"Oggi sale sulla torre chi ha preso a calci una gallina per “educazione” e ora la gallina lo segue.": {
-"tipo": [],
-"temi": [
-"natura",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha fatto il bagno nel fosso del vicino e ha preso un pesce e un guaio.": {
-"tipo": [],
-"temi": [
-"natura",
-"animali",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha fatto la grigliata nel bosco e ha dato fuoco alla foresta, “ma senza malizia”.": {
-"tipo": [],
-"temi": [
-"natura",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha scambiato l’ortica per il basilico e si è fatto il pesto sulle mani.": {
-"tipo": [],
-"temi": [
-"natura",
-"animali"
-]
-},
-"Oggi salgono sulla torre quelli che hanno rincorso un maiale per ore e hanno scoperto che era il loro.": {
-"tipo": [],
-"temi": [
-"natura",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha acceso il fuoco nella tenda e ha dormito sotto le stelle.": {
-"tipo": [
-"pigro"
-],
-"temi": [
-"natura",
-"viaggio",
-"sport"
-]
-},
-"Oggi sale sulla torre chi ha lasciato il panino sulla panchina e un orso lo ha ringraziato.": {
-"tipo": [],
-"temi": [
-"natura",
-"viaggio",
-"sport",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha scambiato un fungo velenoso per un prosciutto e il giorno dopo ha visto Dio, per un attimo.": {
-"tipo": [],
-"temi": [
-"natura",
-"viaggio",
-"sport",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha urlato “aiuto!” a un orso e il cane ha attaccato lui.": {
-"tipo": [
-"rabbioso"
-],
-"temi": [
-"natura",
-"viaggio",
-"sport",
-"animali"
-]
-},
-"Oggi salgono sulla torre quelli che hanno fatto l’escursione in infradito e hanno scoperto il Purgatorio.": {
-"tipo": [],
-"temi": [
-"natura",
-"viaggio",
-"sport",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha mostrato le mutande all’ospite, “perché le ha fatte la nonna”.": {
-"tipo": [],
-"temi": [
-"bambini",
-"famiglia",
-"imbarazzo",
-"vecchiaia",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha detto al preside “sei vecchio” e poi “ma non troppo”.": {
-"tipo": [
-"vecchio"
-],
-"temi": [
-"bambini",
-"famiglia",
-"imbarazzo",
-"vecchiaia"
-]
-},
-"Oggi sale sulla torre chi ha mangiato il gelato e poi ha ripulito il naso del cane con la lingua.": {
-"tipo": [],
-"temi": [
-"bambini",
-"famiglia",
-"imbarazzo",
-"animali"
-]
-},
-"Oggi sale sulla torre chi ha chiesto alla zia “perché sei grassa?” e ha ricevuto un biscotto.": {
-"tipo": [
-"genitore"
-],
-"temi": [
-"bambini",
-"famiglia",
-"imbarazzo"
-]
-},
-"Oggi salgono sulla torre quelli che hanno confessato al prete di aver mangiato la Nutella “di nascosto, come Gesù”.": {
-"tipo": [
-"furbo",
-"religioso"
-],
-"temi": [
-"bambini",
-"famiglia",
-"imbarazzo",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha portato via le ciabatte dell’hotel “in ricordo”, e anche il bidet.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"soldi",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha prenotato la stanza con vista mare, vista dal bagno del vicino.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"soldi",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha lasciato il cartello “non disturbare” per una settimana e poi ha chiesto perché nessuno puliva.": {
-"tipo": [],
-"temi": [
-"viaggio",
 "soldi"
 ]
 },
-"Oggi sale sulla torre chi ha rubato il sapone, lo shampoo e il crocifisso.": {
+"Oggi salgono sulla torre quelli che vanno ai funerali solo per fare scena.": {
 "tipo": [],
 "temi": [
-"viaggio",
-"soldi",
-"religione"
+"feste"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno fatto colazione per quattro ore e poi hanno chiesto il pranzo.": {
-"tipo": [],
-"temi": [
-"viaggio",
-"soldi"
-]
-},
-"Oggi sale sulla torre chi ha caricato il frigo sul tetto e ha dimenticato di legarlo.": {
-"tipo": [],
-"temi": [
-"casa",
-"faidate"
-]
-},
-"Oggi sale sulla torre chi ha trasportato il divano per otto piani e poi ha scoperto che non c’era l’ascensore, né il divano.": {
+"Oggi salgono sulla torre quelli che si vantano delle proprie conquiste.": {
 "tipo": [
-"pigro"
+"vanitoso",
+"eccentrico"
 ],
-"temi": [
-"casa",
-"faidate",
-"mezzi"
-]
+"temi": []
 },
-"Oggi sale sulla torre chi ha scritto “fragile” sullo scatolone del suocero.": {
+"Oggi salgono sulla torre quelli che ti sorridono e poi ti pugnalano alle spalle.": {
 "tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si fanno belli con i soldi dei genitori.": {
+"tipo": [
+"avaro",
 "genitore"
 ],
 "temi": [
-"casa",
-"faidate",
-"religione",
+"soldi",
 "famiglia"
 ]
 },
-"Oggi sale sulla torre chi ha buttato la scatola con scritto “importante” e ha tenuto quella “varie”.": {
-"tipo": [],
+"Oggi salgono sulla torre quelli che ci provano con tutti ai matrimoni.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che tradiscono e giurano di no.": {
+"tipo": [
+"bugiardo"
+],
 "temi": [
-"casa",
-"faidate"
+"bugie"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno chiamato un prete a benedire il trasloco e il prete ha chiesto di portare il piano.": {
+"Oggi salgono sulla torre quelli che portano a casa chiunque dopo due drink.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"alcol"
+]
+},
+"Oggi salgono sulla torre quelli che scrivono all’ex a mezzanotte.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi salgono sulla torre quelli che dopo il terzo bicchiere dicono la verità.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che flirtano con l’ex del migliore amico.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"amore"
+]
+},
+"Oggi salgono sulla torre quelli che non sanno dire di no a un’avventura.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi ti pugnalerebbe alle spalle per una promozione.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi ruberebbe il partner a un amico.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"amore",
+"alcol"
+]
+},
+"Oggi sale sulla torre chi mentirebbe in tribunale per soldi.": {
+"tipo": [
+"avaro",
+"bugiardo"
+],
+"temi": [
+"soldi",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi venderebbe i segreti di un amico a un giornale.": {
+"tipo": [
+"pettegolo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi andrebbe in vacanza il giorno dopo un funerale.": {
 "tipo": [
 "religioso"
 ],
 "temi": [
-"casa",
-"faidate",
+"religione",
+"viaggio"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a litigare al funerale.": {
+"tipo": [
+"rabbioso",
+"religioso"
+],
+"temi": [
 "religione"
 ]
 },
-"Oggi sale sulla torre chi ha detto “sono in smart working” guardando la tv nudo.": {
-"tipo": [],
+"Oggi sale sulla torre chi ruberebbe dal portafoglio di un amico.": {
+"tipo": [
+"eccentrico"
+],
 "temi": [
-"lavoro",
-"tecnologia",
-"casa"
+"alcol"
 ]
 },
-"Oggi sale sulla torre chi ha fatto una videochiamata in pigiama con il gatto in primo piano.": {
-"tipo": [],
+"Oggi sale sulla torre chi sarebbe il primo a fare una scenata di gelosia in pubblico.": {
+"tipo": [
+"rabbioso",
+"drammatico"
+],
 "temi": [
-"lavoro",
-"tecnologia",
-"casa",
-"animali"
+"feste"
 ]
 },
-"Oggi sale sulla torre chi ha consegnato il lavoro in ritardo e ha dato la colpa a Mercurio retrogrado.": {
+"Oggi sale sulla torre chi non pagherebbe le tasse e ne andrebbe fiero.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi farebbe il furbo con un’eredità.": {
 "tipo": [
 "furbo"
 ],
 "temi": [
-"lavoro",
-"tecnologia",
-"casa"
+"soldi"
 ]
 },
-"Oggi sale sulla torre chi ha creato un “nuovo logo” che è l’ombra del vecchio.": {
+"Oggi sale sulla torre chi sarebbe il primo a pretendere i soldi indietro dopo una lite.": {
 "tipo": [
-"vecchio"
+"avaro"
 ],
 "temi": [
-"lavoro",
-"tecnologia",
-"casa",
-"vecchiaia"
+"soldi"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno chiamato “brainstorming” una siesta di gruppo.": {
-"tipo": [],
-"temi": [
-"lavoro",
-"tecnologia",
-"casa"
-]
-},
-"Oggi sale sulla torre chi ha soffiato sulle candeline e ha spento anche i capelli del vicino.": {
-"tipo": [],
-"temi": [
-"feste",
-"famiglia"
-]
-},
-"Oggi sale sulla torre chi ha detto “l’importante è il pensiero” per un regalo preso in chiesa.": {
-"tipo": [],
-"temi": [
-"feste",
-"famiglia",
-"religione"
-]
-},
-"Oggi sale sulla torre chi ha fatto la festa a sorpresa a una persona che non compiva gli anni.": {
-"tipo": [],
-"temi": [
-"feste",
-"famiglia"
-]
-},
-"Oggi sale sulla torre chi ha mangiato tutta la torta e ha chiesto “ma la torta?”.": {
-"tipo": [],
-"temi": [
-"feste",
-"famiglia"
-]
-},
-"Oggi salgono sulla torre quelli che hanno cantato “tanti auguri” con il coro della parrocchia e il parroco ha fatto il basso.": {
+"Oggi sale sulla torre chi si approfitterebbe per anni della generosità di un amico.": {
 "tipo": [
-"artista"
+"furbo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi lascerebbe un amico ubriaco da solo in strada.": {
+"tipo": [
+"eccentrico"
 ],
 "temi": [
-"feste",
-"famiglia",
-"musica"
+"alcol"
 ]
 },
-"Oggi sale sulla torre chi ha sognato di essere il Papa e ha benedetto il cuscino.": {
+"Oggi sale sulla torre chi cambierebbe idea politica per convenienza.": {
+"tipo": [
+"politico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi si farebbe amico qualcuno solo per un favore.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi parlerebbe male del defunto subito dopo il funerale.": {
 "tipo": [
 "religioso"
 ],
 "temi": [
-"notte",
-"curiosita",
 "religione"
 ]
 },
-"Oggi sale sulla torre chi ha sognato di volare e si è svegliato con il naso sulla parete.": {
-"tipo": [],
-"temi": [
-"notte",
-"curiosita"
-]
-},
-"Oggi sale sulla torre chi ha sognato di essere in mutande in pubblico, e al risveglio lo era.": {
-"tipo": [],
-"temi": [
-"notte",
-"curiosita",
-"corpo"
-]
-},
-"Oggi sale sulla torre chi ha sognato il suocero in versione angelo e si è svegliato offeso.": {
+"Oggi sale sulla torre chi perdonerebbe un tradimento per comodità.": {
 "tipo": [
-"rabbioso",
-"genitore"
+"bugiardo"
 ],
 "temi": [
-"notte",
-"curiosita",
-"religione",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi ignorerebbe una persona in difficoltà.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi andrebbe a letto con il capo per una promozione.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"amore",
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi tradirebbe il partner con il suo migliore amico.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"amore",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi finirebbe a letto con il testimone di nozze.": {
+"tipo": [],
+"temi": [
+"amore",
+"feste"
+]
+},
+"Oggi sale sulla torre chi accetterebbe una notte con l’ex.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a sparire in camera a metà festa.": {
+"tipo": [],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi direbbe “è solo un’amicizia” senza che lo sia.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi manderebbe una foto compromettente alla persona sbagliata.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi sale sulla torre chi si spoglierebbe per una scommessa.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi mentirebbe sul numero dei propri partner.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"amore",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi bacerebbe il cognato dopo qualche bicchiere.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
 "famiglia"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno sognato di vincere alla lotteria e hanno comprato il biglietto con i soldi del sogno.": {
+"Oggi sale sulla torre chi aspetterebbe con ansia l’eredità di un parente.": {
 "tipo": [],
 "temi": [
-"notte",
-"curiosita",
+"soldi",
+"famiglia"
+]
+},
+"Oggi sale sulla torre chi festeggerebbe di nascosto la fine del contratto del capo.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"soldi",
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a rimorchiare a un funerale.": {
+"tipo": [
+"religioso"
+],
+"temi": [
+"religione"
+]
+},
+"Oggi sale sulla torre chi è convinto di meritare un aumento senza fare niente.": {
+"tipo": [
+"pigro",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi è convinto di poter comprare tutto con i soldi.": {
+"tipo": [
+"avaro"
+],
+"temi": [
 "soldi"
 ]
 },
-"Oggi sale sulla torre chi ha cercato gli occhiali con la torcia del telefono, che aveva in mano.": {
+"Oggi sale sulla torre chi è convinto che l’onestà sia da sciocchi.": {
+"tipo": [],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di non dover mai chiedere scusa.": {
+"tipo": [
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere una vittima della società.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere il migliore a letto.": {
 "tipo": [],
 "temi": [
-"tecnologia",
-"imbarazzo",
-"casa"
+"amore"
 ]
 },
-"Oggi sale sulla torre chi ha messo il telefono in frigo “perché si rinfreschi”.": {
-"tipo": [],
+"Oggi sale sulla torre chi è convinto che un tradimento all’estero non conti.": {
+"tipo": [
+"bugiardo"
+],
 "temi": [
-"tecnologia",
-"imbarazzo",
-"casa"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha fatto il caffè con il ghiaccio e ha detto “è freddo, ma caldo dentro”.": {
-"tipo": [],
+"Oggi sale sulla torre chi è convinto di non aver mai tradito nessuno.": {
+"tipo": [
+"bugiardo"
+],
 "temi": [
-"tecnologia",
-"imbarazzo",
-"casa"
+"bugie"
 ]
 },
-"Oggi sale sulla torre chi ha cercato l’ombrello sotto la pioggia, con l’ombrello aperto in mano.": {
+"Oggi sale sulla torre chi è convinto che il sesso risolva tutto.": {
 "tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più fedeli, ma solo a parole.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più puri, finché nessuno guarda.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più devoti, fino a lunedì.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più generosi con i soldi dell’azienda.": {
+"tipo": [
+"avaro",
+"lavoratore"
+],
 "temi": [
-"tecnologia",
-"imbarazzo",
-"casa"
+"soldi"
 ]
 },
-"Oggi salgono sulla torre quelli che hanno acceso la luce per vedere se funziona, ed era già accesa.": {
+"Oggi salgono sulla torre i più sinceri quando bevono.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più casti in pubblico.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più fedeli finché il partner è nella stanza.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"amore"
+]
+},
+"Oggi salgono sulla torre i più innocenti quando non hanno testimoni.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più imbroglioni.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più fannulloni.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più spacconi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più rompiscatole.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più scontrosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più pretenziosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più moralisti.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più vanesi.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più spendaccioni.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più rissosi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più incoerenti.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più possessivi.": {
+"tipo": [
+"rabbioso"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che ti scrivono solo quando gli serve qualcosa.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che spariscono quando c’è da aiutare.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che ti chiedono soldi in prestito e poi fanno finta di niente.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi salgono sulla torre quelli che ti fanno sentire in colpa.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che sparlano del gruppo nel gruppo.": {
+"tipo": [
+"pettegolo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi salgono sulla torre quelli che si offendono se non li inviti.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si autoinvitano.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che ti correggono davanti a tutti.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che sbagliano sempre il tuo nome.": {
+"tipo": [
+"goffo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che arrivano a mani vuote.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che raccontano la tua storia come fosse la loro.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che chiedono la password del Wi-Fi appena entrano.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi salgono sulla torre quelli che spariscono dopo il primo appuntamento.": {
 "tipo": [],
 "temi": [
-"tecnologia",
-"imbarazzo",
-"casa"
+"bugie"
 ]
+},
+"Oggi salgono sulla torre quelli che tornano sempre con l’ex.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi salgono sulla torre quelli che dicono “è complicato” di ogni relazione.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che spariscono quando litighi e tornano quando serve.": {
+"tipo": [
+"rabbioso",
+"pigro"
+],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che fanno gli indifferenti per sembrare interessanti.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre quelli che si lamentano del lavoro e non si licenziano mai.": {
+"tipo": [
+"drammatico",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"bugie"
+]
+},
+"Oggi salgono sulla torre quelli che giurano di non bere e poi bevono.": {
+"tipo": [
+"eccentrico"
+],
+"temi": [
+"alcol"
+]
+},
+"Oggi salgono sulla torre quelli che comprano gli amici con le cene.": {
+"tipo": [
+"avaro"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il peggior compagno in un lavoro di gruppo.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi si prenderebbe il merito di un lavoro di gruppo.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi si dimenticherebbe di un impegno importante.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi manderebbe il messaggio sbagliato alla persona sbagliata.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi sale sulla torre chi lascerebbe il gruppo su “visualizzato”.": {
+"tipo": [
+"influencer"
+],
+"temi": [
+"social"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a dire “non è colpa mia”.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi mollerebbe tutti per una nuova fiamma.": {
+"tipo": [
+"bugiardo",
+"eccentrico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sarebbe il primo a spifferare un segreto.": {
+"tipo": [
+"pettegolo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi si dimenticherebbe di restituire un prestito.": {
+"tipo": [
+"avaro",
+"bugiardo"
+],
+"temi": [
+"soldi",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi litigherebbe per il conto in pizzeria.": {
+"tipo": [
+"avaro",
+"rabbioso"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi organizzerebbe la festa peggiore.": {
+"tipo": [],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi si autoinviterebbe a ogni festa.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"feste"
+]
+},
+"Oggi sale sulla torre chi sarebbe il primo a cadere in una truffa online.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sparirebbe per settimane dopo una lite.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi non risponderebbe mai a un invito.": {
+"tipo": [
+"pigro"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi sparirebbe senza una parola dopo un anno insieme.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi chiederebbe un prestito e poi bloccherebbe il numero.": {
+"tipo": [
+"avaro"
+],
+"temi": [
+"soldi"
+]
+},
+"Oggi sale sulla torre chi lascerebbe il partner il giorno del compleanno.": {
+"tipo": [],
+"temi": [
+"amore",
+"feste"
+]
+},
+"Oggi sale sulla torre chi tradirebbe per noia.": {
+"tipo": [
+"bugiardo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi si prenderebbe i meriti al lavoro e darebbe la colpa a un collega.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi mentirebbe nel curriculum.": {
+"tipo": [
+"bugiardo",
+"lavoratore"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi tradirebbe la squadra per un premio.": {
+"tipo": [
+"bugiardo",
+"sportivo"
+],
+"temi": [
+"bugie"
+]
+},
+"Oggi sale sulla torre chi sparlerebbe del capo senza accorgersi che lo sente.": {
+"tipo": [
+"pettegolo",
+"lavoratore"
+],
+"temi": [
+"lavoro",
+"bugie"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere più furbo di tutti.": {
+"tipo": [
+"furbo"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di piacere a tutti.": {
+"tipo": [
+"vanitoso"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che il suo problema sia il più grave.": {
+"tipo": [
+"drammatico"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di meritare sempre la prima fila.": {
+"tipo": [
+"vanitoso",
+"ribelle"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto di essere un esperto di tutto dopo un video.": {
+"tipo": [
+"saputello"
+],
+"temi": []
+},
+"Oggi sale sulla torre chi è convinto che l’amore si compri.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi sale sulla torre chi è convinto di essere l’unico a lavorare in ufficio.": {
+"tipo": [
+"lavoratore"
+],
+"temi": [
+"lavoro"
+]
+},
+"Oggi sale sulla torre chi è convinto che il partner sia di sua proprietà.": {
+"tipo": [],
+"temi": [
+"amore"
+]
+},
+"Oggi salgono sulla torre i più amici di tutti, finché serve.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più maturi a parole.": {
+"tipo": [
+"bugiardo"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più disponibili a distanza.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più generosi con le promesse.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più indipendenti, finché non serve una mano.": {
+"tipo": [],
+"temi": []
+},
+"Oggi salgono sulla torre i più romantici solo all’inizio.": {
+"tipo": [
+"eccentrico"
+],
+"temi": []
+},
+"Oggi salgono sulla torre i più bravi a dare una seconda possibilità, ma solo a sé stessi.": {
+"tipo": [],
+"temi": []
 }
 }

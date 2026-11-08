@@ -22,8 +22,15 @@ export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
-/** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
-export const roundsFor = (n: number) => (n <= 5 ? 2 : 1);
+/** 3 giocatori: 2 giri di Megafono a testa (6 turni); da 4 a 8: 1 giro, cioè tanti turni quanti sono i giocatori. */
+export const roundsFor = (n: number) => (n === 3 ? 2 : 1);
+/** Turni dopo cui c'è un intervallo (mini-gioco): 1 fino a 5 giocatori (a metà), 2 da 6 a 8 (a un terzo e a due terzi). */
+export function miniAtsFor(n: number): number[] {
+  const total = n * roundsFor(n);
+  return n <= 5 ? [Math.floor(total / 2)] : [Math.floor(total / 3), Math.floor((2 * total) / 3)];
+}
+const miniList = (s: GameState): number[] => s.miniAts ?? (s.miniAt !== undefined ? [s.miniAt] : []);
+const minisDone = (s: GameState): number => s.minisDone ?? (s.miniDone ? 1 : 0);
 
 /** Mescola le frasi di tutte le carte a più frasi (ognuna col proprio contesto) e le rimette in gruppi da 5; le carte a frase singola restano intere. */
 function mixPhrases(cards: PhraseCard[], s: GameState): PhraseCard[] {
@@ -51,7 +58,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
+    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
   };
   // i due segnalini: sempre lo 0 (senza, chi si sente minacciato non voterebbe mai la carta del Lui!) più una soglia a caso
   s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : [luiPool(n).find((x) => x.slot === "zero")!, shuffle(luiPool(n).filter((x) => x.slot !== "zero"), s)[0]!];
@@ -67,6 +74,9 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
 }
 
 export const megafonoOf = (s: GameState): PlayerId => s.playerIds[s.megafonoIndex]!;
+
+/** Testo che vedono tutti. Una confessione («Ammetto…») in app nomina chi la pronuncia: «Marco ammette…». Il Megafono la legge in prima persona dalla propria carta. */
+export const publicText = (s: GameState, megafono: PlayerId, text: string): string => /^Ammetto\b/.test(text) ? `${s.names[megafono]!} ammette${text.slice("Ammetto".length)}` : text;
 
 function draw(s: GameState): CardId {
   if (s.drawPile.length === 0) {
@@ -106,7 +116,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
         const idx = action.index;
         if (!Number.isInteger(idx) || idx < 0 || idx >= card.phrases.length) throw new EngineError("INVALID_CHOICE", "frase inesistente");
         if (card.phrases.length === 1 && idx !== 0) throw new EngineError("INVALID_CHOICE", "carta a frase singola: va pronunciata");
-        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]!, ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
+        s.phrase = { mode: "card", cardId: card.id, index: idx, text: publicText(s, action.playerId, card.phrases[idx]!), ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
         events.push({ type: "phraseChosen", mode: "card", text: s.phrase.text });
       } else {
         const raw = action.text, text = typeof raw === "string" ? raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -146,6 +156,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       known(s, action.playerId);
       if (s.votes[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "voto già espresso");
       checkPosition(s, action.position);
+      if (s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" && s.tower.find((t) => t.position === action.position)?.ownerId === action.playerId) throw new EngineError("INVALID_CHOICE", "non puoi votare la tua carta");
       s.votes[action.playerId] = action.position;
       events.push({ type: "voteCast", playerId: action.playerId });
       if (s.playerIds.every((p) => s.votes[p] !== undefined)) { if (s.phase === "MINI_VOTE") resolveMini(s, events); else resolve(s, events); }
@@ -229,7 +240,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
       return;
     }
   }
-  if (s.miniGame && !s.miniDone && s.turnNumber === s.miniAt) { startMini(s, events); return; }
+  if (s.miniGame && s.turnNumber === miniList(s)[minisDone(s)]) { startMini(s, events); return; }
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;
   startTurn(s, events);
 }
@@ -237,12 +248,15 @@ function endTurn(s: GameState, events: GameEvent[]) {
 // ---------- mini-giochi di metà partita ----------
 const GENERIC_ACCUSE = "Mi ha rubato il panino al prosciutto!";
 
-/** Tutte le mani vengono rinnovate, si pesca la carta del mini-gioco e tutti giocano una carta. */
+/** Tutte le mani vengono rinnovate (5 carte nuove a tutti), si pesca la carta del mini-gioco e tutti giocano una carta. */
 function startMini(s: GameState, events: GameEvent[]) {
-  const kind: MiniKind = s.miniGame === "random" || !s.miniGame ? MINI_KINDS[randomInt(MINI_KINDS.length, s)]! : s.miniGame;
+  // a caso fra i mini-giochi non ancora usciti in questa partita (con due intervalli non si ripete lo stesso)
+  const fresh = MINI_KINDS.filter((k) => !(s.miniKinds ?? []).includes(k)), pool = fresh.length ? fresh : MINI_KINDS;
+  const kind: MiniKind = s.miniGame === "random" || !s.miniGame ? pool[randomInt(pool.length, s)]! : s.miniGame;
+  (s.miniKinds ??= []).push(kind);
   for (const p of s.playerIds) { s.discardPile.push(...s.hands[p]!); s.hands[p] = []; }
   for (let k = 0; k < s.handSize; k++) for (const p of s.playerIds) s.hands[p]!.push(draw(s));
-  const cardId = kind === "raccomandato" ? null : draw(s);
+  const cardId = kind === "peggiore" ? null : draw(s);
   const deck = s.accuseDeck ?? [];
   const text = kind === "accusa" ? (deck.length ? deck[randomInt(deck.length, s)]! : GENERIC_ACCUSE) : null;
   s.mini = { kind, cardId, text }; s.miniResult = null;
@@ -250,22 +264,23 @@ function startMini(s: GameState, events: GameEvent[]) {
   events.push({ type: "miniStarted", kind });
 }
 
-/** Punti del mini-gioco. Accusa / Storia d'amore: restano le carte in testa; chi le ha votate prende i voti ricevuti, chi le ha giocate il doppio; le altre cadono. Raccomandato: cadono le più votate e chi le aveva giocate perde i voti ricevuti. */
+/** Punti del mini-gioco. Accusa / Storia d'amore: restano le carte in testa; chi le ha votate prende i voti ricevuti, chi le ha giocate il doppio; le altre cadono. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate e ogni giocatore prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato. */
 function resolveMini(s: GameState, events: GameEvent[]) {
   const mini = s.mini!, n = s.playerIds.length;
   const counts: Record<number, number> = {};
   for (const t of s.tower) counts[t.position] = 0;
   for (const p of s.playerIds) counts[s.votes[p]!] = (counts[s.votes[p]!] ?? 0) + 1;
   const top = Math.max(...Object.values(counts)), leaders = s.tower.map((t) => t.position).filter((k) => counts[k] === top);
-  const raccomandato = mini.kind === "raccomandato";
-  const fallen = raccomandato ? leaders : s.tower.map((t) => t.position).filter((k) => counts[k]! < top);
+  const peggiore = mini.kind === "peggiore";
+  const fallen = peggiore ? leaders : s.tower.map((t) => t.position).filter((k) => counts[k]! < top);
   const owners: Record<number, PlayerId> = {}; for (const t of s.tower) if (t.ownerId) owners[t.position] = t.ownerId;
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
-  const remaining = Math.max(1, s.totalTurns - (s.miniAt ?? 0)), cap = Math.max(n, 2 * remaining);
+  const remaining = Math.max(1, s.totalTurns - s.turnNumber), cap = Math.max(n, 2 * remaining);
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number) => { points[p]! += pts; lines[p]!.push({ kind, pts, pos }); };
-  if (raccomandato) {
-    for (const k of fallen) { const o = owners[k]; if (!o) continue; const loss = Math.min(counts[k]!, Math.max(0, s.scores[o]! + points[o]!)); if (loss > 0) give(o, -loss, "mini-perdita", k); }
+  if (peggiore) {
+    // un punto per ogni voto ricevuto dalla propria carta, cada o no (non si vota la propria: al massimo N−1)
+    for (const t of s.tower) { const o = owners[t.position]; if (o && counts[t.position]! > 0) give(o, counts[t.position]!, "mini-peggiore", t.position); }
   } else {
     for (const p of s.playerIds) { const v = s.votes[p]!; if (leaders.includes(v)) give(p, counts[v]!, "mini-voto", v); }
     for (const k of leaders) { const o = owners[k]; if (o) give(o, 2 * counts[k]!, "mini-carta", k); }
@@ -282,7 +297,7 @@ function endMini(s: GameState, events: GameEvent[]) {
   for (const t of s.tower) s.discardPile.push(t.cardId);
   if (s.mini?.cardId) s.discardPile.push(s.mini.cardId);
   for (let k = 1; k <= n; k++) s.hands[s.playerIds[(s.megafonoIndex + k) % n]!]!.push(draw(s));
-  s.miniDone = true; s.mini = null; s.miniResult = null;
+  s.miniDone = true; s.minisDone = minisDone(s) + 1; s.mini = null; s.miniResult = null;
   events.push({ type: "turnEnded", turn: s.turnNumber });
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;
   startTurn(s, events);

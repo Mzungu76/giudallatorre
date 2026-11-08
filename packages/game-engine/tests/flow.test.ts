@@ -40,7 +40,7 @@ describe("fine partita", () => {
   it.each([3, 4, 5, 6, 7, 8])("%i giocatori: i giri regolari sono completi (ognuno fa il Megafono) e la partita termina con un solo vincitore o dopo lo spareggio", (n) => {
     const { state, log, problems } = simulateGame(cfg(n, { seed: n }), 11);
     expect(problems).toEqual([]);
-    const rounds = n <= 5 ? 2 : 1;
+    const rounds = n === 3 ? 2 : 1;
     for (const p of state.playerIds) expect(state.megafonoTurns[p]).toBeGreaterThanOrEqual(rounds);
     expect(log.filter((l) => l.action.type === "advance").length).toBe(n * rounds + state.goldenTurns);
     expect(state.phase).toBe("GAME_OVER");
