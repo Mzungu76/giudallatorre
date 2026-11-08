@@ -1,5 +1,5 @@
 {
- "versione": 3,
+ "versione": 4,
  "aggiornato": "2026-11-08",
  "testi": {
   "intro.aria": {
@@ -2445,6 +2445,15 @@
    "t": "Messaggio non accettato.",
    "s": "Messaggi di errore (in partita)",
    "n": "Per ogni errore non previsto"
+  },
+  "help.esci": {
+   "t": "Esci dalla partita",
+   "s": "Menu Aiuto («i»)",
+   "n": "Voce del menu Aiuto, solo in partita"
+  },
+  "help.esci.x": {
+   "t": "Un giocatore virtuale prende il tuo posto.",
+   "s": "Menu Aiuto («i»)"
   }
  }
 }
