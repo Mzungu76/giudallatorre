@@ -4,7 +4,7 @@
 
 ## Parametri
 - Giocatori: **3–8**. Età 10+, ~20 min.
-- Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo "Su sulla Torre" (70: 50×4 frasi + 20×1 frase, vedi B3), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
+- Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo frasi del Megafono (riserva di 405 frasi + 69 confessioni, filtrata per età: vedi `docs/FRASI_MEGAFONO.md`), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
 
 ## Setup
 1. Mescola mazzo Personaggio e mazzo Su sulla Torre.
@@ -59,7 +59,7 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 
 ## Scelte implementative del motore (Fase 3)
 - Il motore parte con la partita già avviata (la lobby è del backend). Stato **serializzabile in JSON** e PRNG deterministico (`seed`): una partita è riproducibile e ripristinabile dopo un'interruzione.
-- **Frase**: all'inizio del turno si pesca una carta "Su sulla Torre" visibile solo al Megafono. Può scegliere una frase della carta (carta singola: obbligatoria) oppure inventarla a voce (`free`). Mazzo frasi che si rimescola quando finisce.
+- **Frase**: all'inizio dell'avvio il server costruisce il mazzo della stanza dalla riserva, filtrato per la **fascia d'età** scelta dall'host (6+/10+/14+/18+, predefinita 14+): carte da **4 frasi di famiglie diverse** (almeno 2 delle due fasce più alte consentite) e, se attive, carte-**confessione** a frase singola (~15%). Il Megafono vede la carta e sceglie una frase (confessione: obbligatoria) oppure la inventa (`free`). Una confessione è letta in prima persona dal Megafono; a tutti l'app mostra «Nome ammette…». Mazzo che si rimescola quando finisce.
 - **Torre**: modalità base = N−1 carte giocate dalla Folla + 1 pescata dal mazzo (nessun proprietario); variante "Il Megafono sa" = N carte dalle mani. Le carte vengono mescolate e numerate 1..N solo quando tutti hanno giocato.
 - **Voto**: tutti votano una volta, Megafono incluso, anche la propria carta e quella del mazzo.
 - **Cade** la carta con più voti; in caso di **pareggio decide il Megafono**: se ha votato una delle carte pari merito cade solo la sua, le altre si salvano; se ha votato un'altra carta cadono tutte le pari merito. Il suo gettone di voto ha un simbolo "=" che lampeggia e si illumina quando usa questo bonus.

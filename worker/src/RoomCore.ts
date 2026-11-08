@@ -1,5 +1,5 @@
-import { applyAction, chooseBotAction, createGame, EngineError, learnFromResult, megafonoOf, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
-import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard } from "@gdt/game-engine";
+import { applyAction, buildPhraseDeck, chooseBotAction, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
@@ -27,7 +27,12 @@ export interface Outbox {
   /** Eventi di gioco dell'ultima azione, per gli schermi condivisi (sola visione). */
   events?: GameEvent[];
 }
-export interface Deps { rng: RandomBytes; deck: CardId[]; phraseDeck: PhraseCard[]; accuseDeck?: string[] }
+export interface Deps {
+  rng: RandomBytes; deck: CardId[]; accuseDeck?: string[];
+  /** Mazzo già pronto (prove e strumenti). Se c'è la riserva sotto, all'avvio il mazzo si costruisce da quella, filtrato per età. */
+  phraseDeck: PhraseCard[];
+  phrasePool?: PoolPhrase[]; confessions?: PoolConfession[];
+}
 
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
 
@@ -44,14 +49,14 @@ export class RoomCore {
   readonly connected = new Set<string>();
   private lastChat = new Map<string, number>();
   constructor(public data: RoomData, private deps: Deps) {
-    data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false;
+    data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false;
   }
 
   static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0, display: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0, display: true, ageBand: DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now }],
     };
     const core = new RoomCore(data, deps);
@@ -125,6 +130,8 @@ export class RoomCore {
         if (msg.mode !== undefined) d.options.mode = msg.mode;
         if (msg.display !== undefined) d.options.display = msg.display;
         if (msg.turnTimerSec !== undefined) d.options.turnTimerSec = msg.turnTimerSec;
+        if (msg.ageBand !== undefined) d.options.ageBand = msg.ageBand;
+        if (msg.confessions !== undefined) d.options.confessions = msg.confessions;
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
       case "chat": {
@@ -176,7 +183,10 @@ export class RoomCore {
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "la partita è già avviata");
         if (d.players.length < LIMITS.minPlayers) return err("NOT_ENOUGH_PLAYERS", "servono almeno 3 giocatori");
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, mixPhrases: true, deck: this.deps.deck, phraseDeck: this.deps.phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
+        const pool = this.deps.phrasePool;
+        // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
+        const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995, confessions: d.options.confessions }) : this.deps.phraseDeck;
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);

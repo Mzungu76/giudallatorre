@@ -3,11 +3,11 @@ import type { GameState } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import { RoomCore } from "../src/RoomCore.ts";
 import type { Outbox } from "../src/RoomCore.ts";
-import { DECK, PHRASE_DECK } from "../src/content.ts";
+import { CONFESSIONS, DECK, PHRASE_DECK, PHRASE_POOL } from "../src/content.ts";
 
 /** Byte "casuali" deterministici per i test. */
 export function seqRng(seed = 1) { let s = seed >>> 0; return (n: number) => { const a = new Uint8Array(n); for (let i = 0; i < n; i++) { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; a[i] = s >>> 24; } return a; }; }
-export const deps = (seed = 1) => ({ rng: seqRng(seed), deck: DECK, phraseDeck: PHRASE_DECK });
+export const deps = (seed = 1) => ({ rng: seqRng(seed), deck: DECK, phraseDeck: PHRASE_DECK, phrasePool: PHRASE_POOL, confessions: CONFESSIONS });
 
 export interface Room { core: RoomCore; ids: string[]; tokens: string[]; names: string[] }
 /** Crea una stanza con n giocatori tutti connessi. */

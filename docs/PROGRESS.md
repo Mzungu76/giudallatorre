@@ -44,3 +44,10 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Terrazza di carte, salita, spoglio con suspense, caduta su torre di profilo, classifica per turno e per giro, intermezzi, legenda "?", layout adattivo (`docs/DESIGN_SYSTEM.md`)
 - [x] Prove: 116 test unit, `npm run e2e` (3 giocatori via WebSocket), `npm run e2e:ui` (3 browser + schermo condiviso), `scripts/e2e-ui8.mjs` (8 browser), `scripts/e2e-solo.mjs` (1 umano + bot, anche 7 bot a 360×640)
 - [ ] Da provare a mano su telefoni veri (Doogee Blade Ultra, Redmi Note, Samsung più vecchio) con Chrome
+
+## Fase 7 — Nuovo mazzo di frasi (bozza, in revisione)
+- [x] Frasi riscritte con le regole dei test d'indagine (`docs/FRASI_MEGAFONO.md`): 405 frasi e 69 confessioni neutre rispetto al genere, con famiglia e fascia d'età
+- [x] Opzioni di stanza **Pubblico** (6+/10+/14+/18+, predefinita 14+) e **Confessioni**; mazzo costruito all'avvio con 4 frasi di famiglie diverse e pesca pesata sulle fasce alte
+- [x] Confessione mostrata a tutti con il nome del Megafono («Marco ammette…»)
+- [x] Etichette dei bot per le nuove frasi; 165 test unit, `npm run e2e`, `npm run e2e:ui`
+- [ ] Curatela delle frasi con l'autore (togliere, riscrivere, cambiare età) e prova a tavolo

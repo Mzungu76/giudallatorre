@@ -10,3 +10,5 @@ export { chooseBotAction, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from
 export type { BotLevel, BotMemory } from "./ai.ts";
 export { registerTags, affinity, phraseTagCount } from "./tags.ts";
 export type { TagSet } from "./tags.ts";
+export { buildPhraseDeck, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
+export type { AgeBand, PhraseFamily, PoolPhrase, PoolConfession, BuildOptions } from "./phrases.ts";

@@ -61,15 +61,17 @@ describe("giocatori virtuali con etichette", () => {
   const cardsTags = json("content/tags-personaggi.json"), phraseTags = json("content/tags-frasi.json");
   const manifest = (json("public/cards/manifest.json") as { id: string; overlay_of?: string }[]).filter((m) => !m.overlay_of).map((m) => m.id);
   const phrases = Object.keys(phraseTags);
-  it("ogni personaggio e ogni frase ha etichette; l'affinità distingue casi chiari", () => {
+  it("ogni personaggio ha etichette, quasi tutte le frasi ne hanno; l'affinità distingue casi chiari", () => {
     registerTags(cardsTags, phraseTags);
     for (const id of manifest) expect(cardsTags[id]?.temi.length).toBeGreaterThan(0);
-    for (const f of phrases) expect(phraseTags[f].temi.length).toBeGreaterThan(0);
-    const gym = phrases.find((f) => f.includes("manubrio"))!;
-    expect(affinity("p01-i08", gym)!).toBeGreaterThan(affinity("p06-i05", gym)!);   // personal trainer batte la sposa su una frase da palestra
-    expect(phraseTagCount(gym)).toBeGreaterThan(0); expect(affinity("p01-i08", "frase sconosciuta")).toBeNull();
+    const tagged = phrases.filter((f) => phraseTags[f].tipo.length + phraseTags[f].temi.length > 0);
+    expect(tagged.length / phrases.length).toBeGreaterThan(0.85);   // le frasi di puro confronto («chi sarebbe il peggior…») possono restare senza etichetta
+    const church = phrases.find((f) => f.includes("in chiesa pensa solo al pranzo"))!;
+    expect(affinity("p02-i01", church)!).toBeGreaterThan(affinity("p01-i08", church)!);   // il religioso batte il personal trainer su una frase da chiesa
+    expect(phraseTagCount(church)).toBeGreaterThan(0); expect(affinity("p01-i08", "frase sconosciuta")).toBeNull();
   });
   const play = (levels: BotLevel[], seed: number) => {
+    const phrases = Object.keys(phraseTags).filter((f) => phraseTags[f].tipo.length > 0 && !f.includes("sarebbe"));   // solo frasi di tratto con un tipo umano chiaro
     const deck = manifest, phraseDeck = phrases.map((f, i) => ({ id: "t" + i, phrases: [f, f + " ", f + "  ", f + "   ", f + "    "] }));
     return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck } as GameConfig, levels, seed * 31);
   };

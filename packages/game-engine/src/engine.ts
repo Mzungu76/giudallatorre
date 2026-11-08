@@ -68,6 +68,9 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
 
 export const megafonoOf = (s: GameState): PlayerId => s.playerIds[s.megafonoIndex]!;
 
+/** Testo che vedono tutti. Una confessione («Ammetto…») in app nomina chi la pronuncia: «Marco ammette…». Il Megafono la legge in prima persona dalla propria carta. */
+export const publicText = (s: GameState, megafono: PlayerId, text: string): string => /^Ammetto\b/.test(text) ? `${s.names[megafono]!} ammette${text.slice("Ammetto".length)}` : text;
+
 function draw(s: GameState): CardId {
   if (s.drawPile.length === 0) {
     s.drawPile = shuffle(s.discardPile, s); s.discardPile = [];
@@ -106,7 +109,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
         const idx = action.index;
         if (!Number.isInteger(idx) || idx < 0 || idx >= card.phrases.length) throw new EngineError("INVALID_CHOICE", "frase inesistente");
         if (card.phrases.length === 1 && idx !== 0) throw new EngineError("INVALID_CHOICE", "carta a frase singola: va pronunciata");
-        s.phrase = { mode: "card", cardId: card.id, index: idx, text: card.phrases[idx]!, ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
+        s.phrase = { mode: "card", cardId: card.id, index: idx, text: publicText(s, action.playerId, card.phrases[idx]!), ...((card.themes?.[idx] ?? card.theme) ? { theme: (card.themes?.[idx] ?? card.theme)! } : {}) };
         events.push({ type: "phraseChosen", mode: "card", text: s.phrase.text });
       } else {
         const raw = action.text, text = typeof raw === "string" ? raw.replace(/[\u0000-\u001f\u007f\u2028\u2029]/g, " ").replace(/\s+/g, " ").trim() : "";

@@ -136,7 +136,7 @@ a[role=button],.lnk{cursor:pointer}
 .pl .off{margin-left:auto;font:800 11px Nunito;opacity:.6}.pl .x{margin-left:auto;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;border:2px solid var(--navy);font-weight:800}
 .pl.em{border-style:dashed;box-shadow:none;background:#fff7e0aa;opacity:.8;font-weight:700;font-size:13px}
 .lobby-bottom{left:16px;right:16px;bottom:22px;display:flex;flex-direction:column;gap:9px;z-index:30}
-.opts-row{display:flex;gap:10px;justify-content:space-between;background:#fff7e0;border:2px solid var(--navy);padding:6px 10px;font:800 13px Nunito}
+.opts-row{display:flex;flex-wrap:wrap;gap:6px 10px;justify-content:space-between;background:#fff7e0;border:2px solid var(--navy);padding:6px 10px;font:800 13px Nunito}
 .opts-row select{font:800 13px Nunito;border:2px solid var(--navy);background:#fff}
 .pp.mini{font:800 14px Nunito;text-align:center;padding:10px}
 /* partita */

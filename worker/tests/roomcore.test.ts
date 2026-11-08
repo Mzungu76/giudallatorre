@@ -3,16 +3,53 @@ import { megafonoOf } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
+import { fullPhrase } from "@gdt/game-engine";
+import { CONFESSIONS, PHRASE_POOL } from "../src/content.ts";
 
 const types = (o: { send: { msg: { t: string } }[] }) => o.send.map((s) => s.msg.t);
 const errCode = (o: { send: { msg: { t: string; code?: string } }[] }) => o.send.find((s) => s.msg.t === "error")?.msg.code;
+
+describe("fascia d'età e confessioni", () => {
+  const deckOf = (r: ReturnType<typeof makeRoom>) => { const g = r.core.data.game!; return [g.proclaim!, ...g.phraseDraw, ...g.phraseDiscard]; };
+  it("solo l'host le cambia, solo in lobby; valori fuori elenco rifiutati dal protocollo", async () => {
+    const { clientMessageSchema } = await import("@gdt/game-protocol");
+    const r = makeRoom(3, 4);
+    expect(errCode(send(r, 1, { t: "setOptions", ageBand: 18 }))).toBe("NOT_HOST");
+    expect(types(send(r, 0, { t: "setOptions", ageBand: 18, confessions: false }))).toContain("room");
+    expect(r.core.data.options).toMatchObject({ ageBand: 18, confessions: false });
+    expect(clientMessageSchema.safeParse({ t: "setOptions", ageBand: 12 }).success).toBe(false);
+    expect(clientMessageSchema.safeParse({ t: "setOptions", ageBand: 14, confessions: true }).success).toBe(true);
+    send(r, 0, { t: "start" });
+    expect(errCode(send(r, 0, { t: "setOptions", ageBand: 6 }))).toBe("WRONG_STAGE");
+  });
+  it("all'avvio il mazzo contiene solo frasi adatte alla fascia scelta", () => {
+    for (const age of [6, 10, 14, 18] as const) {
+      const r = makeRoom(4, 20 + age); send(r, 0, { t: "setOptions", ageBand: age }); send(r, 0, { t: "start" });
+      const allowed = new Set([...PHRASE_POOL.filter((p) => p.age <= age).map((p) => fullPhrase(p)), ...CONFESSIONS.filter((c) => c.age <= age).map((c) => c.text)]);
+      const texts = deckOf(r).flatMap((c) => c.phrases);
+      expect(texts.length).toBeGreaterThan(80);
+      for (const t of texts) expect(allowed.has(t), `${age}+: ${t}`).toBe(true);
+    }
+  });
+  it("senza confessioni non ci sono carte a frase singola; con le confessioni ci sono", () => {
+    const off = makeRoom(4, 31); send(off, 0, { t: "setOptions", confessions: false }); send(off, 0, { t: "start" });
+    expect(deckOf(off).every((c) => c.phrases.length === 4)).toBe(true);
+    const on = makeRoom(4, 31); send(on, 0, { t: "start" });
+    expect(deckOf(on).some((c) => c.phrases.length === 1)).toBe(true);
+  });
+  it("una stanza salvata prima di questa versione riceve i valori predefiniti", () => {
+    const { core } = RoomCore.create("ZZZZZ", deps(), 0, { nickname: "Vecchia", mode: "table", megafonoSa: false });
+    const old = JSON.parse(JSON.stringify(core.data)); delete old.options.ageBand; delete old.options.confessions;
+    expect(new RoomCore(old, deps()).data.options).toMatchObject({ ageBand: 14, confessions: true });
+  });
+});
 
 describe("stanza: creazione, accesso e lobby", () => {
   it("la creazione dà host, id e token; il server conserva solo l'hash del token", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta", mode: "remote", megafonoSa: true });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true });
+    expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true, ageBand: 14, confessions: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {

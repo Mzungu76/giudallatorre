@@ -33,9 +33,9 @@ def tag(text, ctx):
     for rx, v in KW_TIPO:
         if re.search(rx, t) and v not in tipo: tipo.append(v)
     return {"tipo": tipo[:3], "temi": temi[:5]}
-d = json.load(open(ROOT / "content/su-sulla-torre.json"))
+d = json.load(open(ROOT / "content/storico/su-sulla-torre.json"))
 out = {}
 for c in d["carte"]:
     for f, x in zip(c["frasi"], c["contesti"]): out[f] = tag(f, x)
-json.dump(out, open(ROOT / "content/tags-frasi.json", "w"), ensure_ascii=False, indent=0)
+json.dump(out, open(ROOT / "content/storico/tags-frasi-v4.json", "w"), ensure_ascii=False, indent=0)
 print(len(out), sum(1 for v in out.values() if not v["temi"]), "senza temi;", sum(1 for v in out.values() if not v["tipo"]), "senza tipo")

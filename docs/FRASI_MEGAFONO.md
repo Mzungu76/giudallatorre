@@ -36,9 +36,13 @@ Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratt
 - Funziona bene con gruppi che si conoscono, con i bot dotati di carattere e di persona al tavolo; meno online tra sconosciuti.
 - Tutte le confessioni sono in **forma neutra rispetto al genere** (niente participi al maschile o «con lui»); il controllo è nei test.
 
-## Da fare nell'app
-- Leggere i nuovi file al posto di `su-sulla-torre.json` e `su-sulla-torre-singola.json`.
-- Opzione di stanza «fascia d'età del gruppo» e filtro del mazzo.
-- Pesca della mano da 4 frasi con famiglie diverse.
-- Frase delle confessioni con il nome del Megafono.
-- Controllo automatico nei test: duplicati, lunghezza massima, concordanza verbo/soggetto, forme di genere nelle confessioni.
+## Nell'app (fatto)
+- L'app legge `content/frasi-megafono.json` e `content/confessioni.json` (le v4 sono in `content/storico/`).
+- Opzioni di stanza **Pubblico** (fascia d'età, predefinita 14+) e **Confessioni**, scelte dall'host in lobby.
+- Il server costruisce il mazzo all'avvio (`buildPhraseDeck`): 4 frasi di famiglie diverse per carta, almeno 2 dalle due fasce più alte consentite, confessioni in quota ~15%.
+- La confessione mostra a tutti il nome del Megafono («Marco ammette…»).
+- Test: duplicati, lunghezza, concordanza verbo/soggetto, forme di genere nelle confessioni, filtro per età, pesca pesata.
+
+## Ancora da fare
+- Curatela delle frasi con l'autore e prova a tavolo.
+- Le frasi inventate dal Megafono (`free`) restano non filtrate per età.
