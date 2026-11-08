@@ -1,5 +1,6 @@
 import type { LuiSpec } from "@gdt/game-engine";
+import { ts } from "./testi.ts";
 
-/** Testi dei segnalini Lui!: la scommessa è sul numero di voti che la carta riceve dagli ALTRI giocatori. */
-export const luiLabel = (s: LuiSpec) => (s.slot === "zero" ? "Nessun voto" : `Almeno ${s.k} ${s.k === 1 ? "voto" : "voti"}`);
-export const luiAsk = (s: LuiSpec) => (s.slot === "zero" ? "nessuno la vota" : `${s.k === 1 ? "1 voto" : s.k + " voti"} o più`);
+/** Testi dei segnalini Lui!: la scommessa è sul numero di voti che la carta riceve dagli ALTRI giocatori. I testi stanno in public/testi.json. */
+export const luiLabel = (s: LuiSpec) => (s.slot === "zero" ? ts("lui.zero") : s.k === 1 ? ts("lui.k1") : ts("lui.k", { k: s.k }));
+export const luiAsk = (s: LuiSpec) => (s.slot === "zero" ? ts("lui.ask.zero") : s.k === 1 ? ts("lui.ask.k1") : ts("lui.ask.k", { k: s.k }));

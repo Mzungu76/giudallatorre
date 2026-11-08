@@ -18,6 +18,11 @@ Vedi `CLAUDE.md`. Il test `apps/web/tests/testi.test.ts` fa fallire `npm test` s
 Cancellare un testo = togliere il suo uso nel codice **e** la voce nel JSON; aggiungerlo = voce nel JSON + `t("chiave")`; poi `versione + 1`.
 
 ## Copertura
-Migrati: tutorial iniziale (3 schermate), scheda «Sei il Megafono!», avviso «non giochi carte», menu Aiuto, fumetti, testi dei 3 mini-giochi, esempi dei punti.
-**Ancora nel codice** (da migrare a gruppi, stesso metodo): regolamento (`HowTo`), schermate di gioco (`Game`, `MiniGame`, `Terrace` con la narrazione, `PointsPanel`, `BUi`, `Standings`, `FinalScene`), stanza/lobby (`Room`, `Forms`, `Home`, `HomeTools`), messaggi (`api`, `useRoom`, `Chat`), nomi/descrizioni dei personaggi, `HandRenewal`, `CharIntro`.
-Le **frasi del Megafono e le confessioni** sono dati del server (`content/*.json`): non si aggiornano con questo meccanismo.
+**Migrati** (586 testi): tutto ciò che il giocatore legge nell'app: tutorial e schede del Megafono, menu Aiuto e fumetti, regolamento, schermate di gioco (frase, mano, Lui!, voto, riepilogo punti, classifica, finale), spoglio e narrazione, mini-giochi, lobby/crea/entra, chat, schermo condiviso, nomi e frasi dei personaggi, messaggi di errore, scritte buffe della scena della caduta, condivisione e installazione.
+**Non migrati** (restano nel codice):
+- le **frasi del Megafono e le confessioni** (`content/*.json`): sono dati del server, non si aggiornano con questo meccanismo;
+- i **nomi dei bot** e la parola «ammette» delle confessioni, composti dal server (`worker/`, `packages/game-engine`);
+- titolo e descrizione della pagina (`index.html`, manifest) e le schermate di prova `StandingsDemo`;
+- i testi dentro le immagini/SVG disegnati nel codice (`scene/draw.ts`).
+
+Ogni file migrato è elencato in `PULITI` nel test: lì un testo scritto a mano fa fallire `npm test`.

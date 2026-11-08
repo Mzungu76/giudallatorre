@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { tokenUrl } from "../lib/characters.ts";
 import { useStage } from "../ui.tsx";
 import { PtIcon } from "./Pt.tsx";
+import { t, ts } from "../lib/testi.ts";
 
 export interface StandRow { id: string; name: string; color: string; score: number; /** Punteggio prima del turno: se c'è, le pedine partono da lì e salgono al nuovo. */ prev?: number }
 const NV = "#13224a";
@@ -36,10 +37,10 @@ export default function Standings({ rows, turn, total, onClose, action, title }:
     });
   }, [rows, top, span, moved]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="zoom on top stbd" role="dialog" aria-label="Classifica" data-testid="standings" style={{ height: H }}>
+    <div className="zoom on top stbd" role="dialog" aria-label={ts("cl.aria")} data-testid="standings" style={{ height: H }}>
       <div className="stbd-sky" /><div className="stbd-rays" />
-      <div className="stbd-title"><b>{title ?? "Classifica"}</b><small>{turn <= total ? `Turno ${turn} di ${total}` : "Spareggio"}{top > 30 ? ` · la torre è arrivata a ${top}!` : ""}</small></div>
-      {!action && <button className="stbd-x" onClick={onClose} aria-label="Chiudi" data-testid="standings-close">×</button>}
+      <div className="stbd-title"><b>{title ?? t("cl.titolo")}</b><small>{turn <= total ? ts("cl.turno", { n: turn, tot: total }) : ts("cl.spareggio")}{top > 30 ? ts("cl.torre", { n: top }) : ""}</small></div>
+      {!action && <button className="stbd-x" onClick={onClose} aria-label={ts("cl.chiudi.aria")} data-testid="standings-close">×</button>}
       <div className="stbd-tower" style={{ top: yTop - 34, height: span + 78 }}>
         <div className="stbd-merl">{Array.from({ length: 5 }, (_, i) => <i key={i} />)}</div>
         <div className="stbd-body" />
@@ -47,7 +48,7 @@ export default function Standings({ rows, turn, total, onClose, action, title }:
       </div>
       <div className="stbd-flag" style={{ top: yTop - 84 }}><i /><b>{top}</b></div>
       {ticks.map((s) => (
-        <div className={`stbd-tick ${s === top ? "top" : ""}`} key={s} style={{ top: y(s) }}><span>{s === 0 ? "VIA" : s}</span></div>
+        <div className={`stbd-tick ${s === top ? "top" : ""}`} key={s} style={{ top: y(s) }}><span>{s === 0 ? ts("cl.via") : s}</span></div>
       ))}
       {placed.map(({ r, dx, py, side, ly }) => (
         <div key={r.id} className="stbd-grp">
@@ -60,7 +61,7 @@ export default function Standings({ rows, turn, total, onClose, action, title }:
         </div>
       ))}
       {action && "wait" in action ? <div className="stbd-wait" data-testid="standings-wait">{action.wait}</div>
-        : <button className="stbd-ok" onClick={action ? action.onClick : onClose} data-testid={action ? "standings-action" : "standings-ok"}>{action ? action.label : "Chiudi"}</button>}
+        : <button className="stbd-ok" onClick={action ? action.onClick : onClose} data-testid={action ? "standings-action" : "standings-ok"}>{action ? action.label : t("cl.chiudi")}</button>}
     </div>
   );
 }

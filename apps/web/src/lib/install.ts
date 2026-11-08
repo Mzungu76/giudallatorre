@@ -1,4 +1,5 @@
 /** Installazione come app (PWA) e condivisione del link. */
+import { ts } from "./testi.ts";
 interface BIPEvent extends Event { prompt: () => Promise<void>; userChoice: Promise<{ outcome: "accepted" | "dismissed" }> }
 let deferred: BIPEvent | null = null;
 const subs = new Set<() => void>();
@@ -19,7 +20,7 @@ export async function promptInstall(): Promise<boolean> {
 }
 /** Condivide il link dell'app: foglio di condivisione del telefono, altrimenti copia negli appunti. */
 export async function shareApp(): Promise<"shared" | "copied" | "failed"> {
-  const data = { title: "Giù dalla Torre", text: "Giochiamo a Giù dalla Torre! Chi butteresti giù dalla torre oggi?", url: location.origin + "/" };
+  const data = { title: ts("share.titolo"), text: ts("share.testo"), url: location.origin + "/" };
   try { if (navigator.share) { await navigator.share(data); return "shared"; } } catch (e) { if ((e as Error).name === "AbortError") return "failed"; }
   try { await navigator.clipboard.writeText(data.url); return "copied"; } catch { return "failed"; }
 }

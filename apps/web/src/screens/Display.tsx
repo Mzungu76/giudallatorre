@@ -5,6 +5,7 @@ import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
 import MiniGame from "../components/MiniGame.tsx";
 import Final from "./Final.tsx";
+import { t as tx, ts as txs } from "../lib/testi.ts";
 
 /** Schermo condiviso (tablet / PC / TV): sola visione, solo informazioni pubbliche. */
 export default function DisplayScreen({ code }: { code: string }) {
@@ -13,13 +14,13 @@ export default function DisplayScreen({ code }: { code: string }) {
   const [, force] = useState(0);
   useEffect(() => { const f = () => force((n) => n + 1); addEventListener("resize", f); return () => removeEventListener("resize", f); }, []);
   const link = `${location.origin}/entra?c=${code}`;
-  if (status === "closed" || status === "kicked") return <div className="display center-msg"><h2>Stanza non disponibile</h2><p>Controlla il codice o attiva lo schermo condiviso nella stanza.</p><a className="lnk" onClick={() => navigate("/")}>Torna alla home</a></div>;
+  if (status === "closed" || status === "kicked") return <div className="display center-msg"><h2>{tx("tv.nd")}</h2><p>{tx("tv.nd.x")}</p><a className="lnk" onClick={() => navigate("/")}>{tx("tv.home")}</a></div>;
   return (
     <div className="display" data-testid="display">
       <aside className="side">
-        <div className="logo-s">GIÙ DALLA TORRE!</div>
-        <div className="pp codepanel"><Qr text={link} size={96} /><div><div className="cap2">Codice</div><div className="code-big">{code}</div></div></div>
-        <div className="cap2" style={{ color: "#fff" }}>{status === "open" ? (room?.stage === "LOBBY" ? "In attesa dell'avvio…" : room?.stage === "FINISHED" ? "Partita conclusa" : "Partita in corso") : "Mi collego…"}</div>
+        <div className="logo-s">{tx("tv.logo")}</div>
+        <div className="pp codepanel"><Qr text={link} size={96} /><div><div className="cap2">{tx("tv.codice")}</div><div className="code-big">{code}</div></div></div>
+        <div className="cap2" style={{ color: "#fff" }}>{status === "open" ? (room?.stage === "LOBBY" ? txs("tv.attesa") : room?.stage === "FINISHED" ? txs("tv.conclusa") : txs("tv.corso")) : txs("tv.collego")}</div>
       </aside>
       <main className="center">
         {room && view && room.stage !== "LOBBY" ? (
@@ -30,13 +31,13 @@ export default function DisplayScreen({ code }: { code: string }) {
               <div className="vig" /><div className="grain" />
             </div>
           </div>
-        ) : <div className="big-wait"><h1>Aspettiamo i giocatori</h1><p>Entra da telefono con il codice <b>{code}</b></p></div>}
+        ) : <div className="big-wait"><h1>{tx("tv.aspettiamo")}</h1><p>{tx("tv.entra", { codice: code })}</p></div>}
       </main>
       <aside className="side">
-        <div className="cap2" style={{ color: "#fff" }}>Giocatori</div>
+        <div className="cap2" style={{ color: "#fff" }}>{tx("tv.giocatori")}</div>
         {(room?.players ?? []).map((p, i) => {
           const v = view?.view.players.find((x) => x.id === p.id);
-          return <div className="pl" key={p.id}><Disc color={PLAYER_COLORS[i % 8]!} size="l" />{p.nickname}{p.id === view?.view.megafonoId ? " 📣" : ""}<span className="tg">{v ? `${v.score < 0 ? "−" + -v.score : v.score} pt` : p.connected ? "online" : "offline"}</span></div>;
+          return <div className="pl" key={p.id}><Disc color={PLAYER_COLORS[i % 8]!} size="l" />{p.nickname}{p.id === view?.view.megafonoId ? " 📣" : ""}<span className="tg">{v ? txs("tv.pt", { n: v.score < 0 ? "−" + -v.score : v.score }) : p.connected ? txs("tv.online") : txs("tv.offline")}</span></div>;
         })}
       </aside>
     </div>

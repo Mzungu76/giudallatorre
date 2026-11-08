@@ -5,6 +5,7 @@ import { luiLabel } from "../lib/lui.ts";
 import { sfx } from "../lib/sfx.ts";
 import type { Voter } from "./Terrace.tsx";
 import { Pt } from "./Pt.tsx";
+import { t, ts } from "../lib/testi.ts";
 
 const pts = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
 
@@ -21,29 +22,29 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   const fell = (p: number) => fallPositions.includes(p);
   const say = (v: Voter) => {
     const ls = lines[v.id] ?? [], p = votes[v.id]!, out: { ok: boolean; t: string }[] = [];
-    out.push(fell(p) ? { ok: true, t: "Voto giusto: la carta votata è caduta" } : { ok: false, t: "Voto sbagliato: la carta votata è rimasta su" });
-    const c = ls.find((l) => l.kind === "carta"); if (c) out.push({ ok: false, t: "La sua carta è caduta" });
+    out.push(fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
+    const c = ls.find((l) => l.kind === "carta"); if (c) out.push({ ok: false, t: ts("pp.caduta") });
     const l = ls.find((x) => x.kind === "lui"), m = ls.find((x) => x.kind === "lui-mancato");
-    if (l && lui) out.push({ ok: true, t: `Lui! azzeccato: ${luiLabel(lui).toLowerCase()}` });
-    if (m && lui) out.push({ ok: false, t: `Lui! mancato: ${luiLabel(lui).toLowerCase()}` });
+    if (l && lui) out.push({ ok: true, t: ts("pp.lui.ok", { lui: luiLabel(lui).toLowerCase() }) });
+    if (m && lui) out.push({ ok: false, t: ts("pp.lui.ko", { lui: luiLabel(lui).toLowerCase() }) });
     return out;
   };
   return (
     <div className="pb pbp" data-testid="points-panel">
-      <b className="rv-t" data-testid="points-title">Com'è andata</b>
+      <b className="rv-t" data-testid="points-title">{t("pp.titolo")}</b>
       <div className="pb-scroll">
         {rows.map(({ v, t }) => {
           const p = votes[v.id]!, id = cardIds[p - 1];
           return (
             <div className={`prow2${v.id === meId ? " you" : ""}`} key={v.id} data-testid="points-block">
-              <div className="pr-who"><i className="dc" style={{ background: v.color }} /><span>{v.id === meId ? "Tu" : v.name}{v.mega ? " 📣" : ""}</span></div>
+              <div className="pr-who"><i className="dc" style={{ background: v.color }} /><span>{v.id === meId ? ts("pp.tu") : v.name}{v.mega ? " 📣" : ""}</span></div>
               <div className="pr-say">{say(v).map((s, i) => <span key={i} className={s.ok ? "ok" : "ko"}>{s.ok ? "✓" : "✗"} {s.t}</span>)}</div>
               <div className="pr-card">{id && <span className="pb-c" style={{ backgroundImage: `url(${cardFull(id)})` }}><i>{p}</i></span>}<b className={t > 0 ? "up" : t < 0 ? "dn" : "zz"}><Pt n={t} plus={t > 0} /></b></div>
             </div>
           );
         })}
       </div>
-      {!interactive && <span className="pb-wait">Il Megafono prosegue…</span>}
+      {!interactive && <span className="pb-wait">{t("pp.attesa")}</span>}
     </div>
   );
 }

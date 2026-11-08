@@ -4,6 +4,7 @@ import type { LuiSpec, PlayerView } from "@gdt/game-engine";
 import { luiTok } from "../scene/draw.ts";
 import { luiLabel } from "../lib/lui.ts";
 import { useNow } from "../ui.tsx";
+import { t, ts } from "../lib/testi.ts";
 
 /** Comandi delle finestre (chat, classifica, regolamento, segnalini Lui!) per il pannello in basso. */
 export interface UiCtl { unread: number; chat: () => void; rank: () => void; rules: () => void; lui: () => void }
@@ -20,21 +21,21 @@ export function useTimedOpen(ms = OPEN_MS) {
 /** Riga in alto: turno (con il timer, se c'è) e Megafono. */
 export function BMeta({ turn, mega, right, deadline, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
   const now = useNow(), s = deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : null;
-  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip">📣 Sei il Megafono</span> : right ?? `📣 ${mega}`}</span></div>;
+  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip">{t("bui.megachip")}</span> : right ?? ts("bui.mega", { nome: mega ?? "" })}</span></div>;
 }
 
 /** La frase del Megafono, sempre per intero (il corpo si riduce se è lunga). */
 export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaName: string }) {
   if (!phrase) return null;
-  let label = "Il Megafono urla:", body: string;
-  if (phrase.mode === "free") { label = "Oggi sale sulla torre…"; body = phrase.text ?? "una frase tutta sua (detta a voce)!"; }
+  let label = ts("bui.urla"), body: string;
+  if (phrase.mode === "free") { label = ts("bui.oggi.libera"); body = phrase.text ?? ts("bui.libera"); }
   else {
     const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /);
-    if (m) { label = `Oggi ${m[1]} sulla torre…`; body = phrase.text.slice(m[0].length); } else body = phrase.text;
+    if (m) { label = ts("bui.oggi", { verbo: m[1]! }); body = phrase.text.slice(m[0].length); } else body = phrase.text;
   }
   const theme = phrase.mode === "card" ? phrase.theme : undefined, len = body.length, size = len > 90 ? " xl" : len > 55 ? " l" : "";
   return (
-    <div className={`phrase-card pk${size}`} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
+    <div className={`phrase-card pk${size}`} data-testid="phrase" aria-label={ts("bui.frase.aria", { nome: megaName, label, testo: body })}>
       <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
@@ -46,11 +47,11 @@ export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; s
     <div className={`pp bsheet${gold ? " gold" : ""}`} data-testid="sheet">
       <span className="bgrip" />{gold && <i className="shb" aria-hidden>📣</i>}
       <div className="bhd">
-        <b>{gold && "Sei il Megafono · "}{title}{sub && <small>{sub}</small>}</b>
+        <b>{gold && ts("bui.sei")}{title}{sub && <small>{sub}</small>}</b>
         {ui && <>
-          <button className="bib" onClick={ui.chat} aria-label={ui.unread ? `Chat, ${ui.unread} messaggi nuovi` : "Chat"} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
-          <button className="bib" onClick={ui.rank} aria-label="Classifica" data-testid="standings-btn">🏆</button>
-          <button className="bib" onClick={ui.rules} aria-label="Aiuto" data-testid="legend-btn">i</button>
+          <button className="bib" onClick={ui.chat} aria-label={ui.unread ? ts("bui.chat.n", { n: ui.unread }) : ts("bui.chat")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
+          <button className="bib" onClick={ui.rank} aria-label={ts("bui.classifica")} data-testid="standings-btn">🏆</button>
+          <button className="bib" onClick={ui.rules} aria-label={ts("bui.aiuto")} data-testid="legend-btn">i</button>
         </>}
       </div>
       {children}
@@ -61,11 +62,11 @@ export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; s
 /** I tuoi segnalini Lui!: quelli già usati sono grigi. Un tocco li apre grandi. */
 export function LuiTray({ view, ui }: { view: PlayerView; ui?: UiCtl | null }) {
   const left = (sp: LuiSpec) => view.myLuiLeft.includes(sp.slot);
-  const label = `I tuoi segnalini Lui!: ${view.luiTokens.filter(left).map((t) => luiLabel(t)).join(", ") || "nessuno"}`;
+  const label = ts("bui.tray.aria", { elenco: view.luiTokens.filter(left).map((x) => luiLabel(x)).join(", ") || ts("bui.nessuno") });
   return (
     <button className="bltr" onClick={ui?.lui} aria-label={label} data-testid="lui-tray">
-      <span className="lab">LUI!</span>
-      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${left(sp) ? "" : " (già usato)"}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
+      <span className="lab">{t("bui.lui.lab")}</span>
+      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
     </button>
   );
 }
@@ -80,21 +81,21 @@ export function WaitCard({ text, sub }: { text: string; sub?: string }) {
 /** Popup dei segnalini Lui! in grande. */
 export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => void }) {
   return (
-    <div className="bov" onClick={onClose} role="dialog" aria-label="I tuoi segnalini Lui!" data-testid="lui-popup">
+    <div className="bov" onClick={onClose} role="dialog" aria-label={ts("bui.popup.titolo")} data-testid="lui-popup">
       <div className="pp bpop" onClick={(e) => e.stopPropagation()}>
-        <h3>I tuoi segnalini Lui!</h3>
+        <h3>{t("bui.popup.titolo")}</h3>
         {view.luiTokens.map((sp) => {
           const left = view.myLuiLeft.includes(sp.slot);
           return (
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
-              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.slot === "zero" ? "Nessun altro vota la carta del gettone." : `Almeno ${sp.k} giocatori votano la carta del gettone.`) : "Già usato in questa partita."}</small></div>
+              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.slot === "zero" ? t("bui.popup.zero") : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
               <span className="pt">+{sp.pts}</span>
             </div>
           );
         })}
-        <div className="hint" style={{ margin: "6px 0 10px" }}>Ogni gettone si usa una sola volta. Contano solo i voti degli altri, non il tuo. Gli altri non vedono quali ti restano.</div>
-        <button className="bt pap" style={{ fontSize: 18, padding: 10, width: "100%" }} onClick={onClose} data-testid="lui-popup-close">Chiudi</button>
+        <div className="hint" style={{ margin: "6px 0 10px" }}>{t("bui.popup.nota")}</div>
+        <button className="bt pap" style={{ fontSize: 18, padding: 10, width: "100%" }} onClick={onClose} data-testid="lui-popup-close">{t("bui.chiudi")}</button>
       </div>
     </div>
   );

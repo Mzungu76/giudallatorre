@@ -1,3 +1,5 @@
+import { ts } from "./testi.ts";
+import type { TestoKey } from "./testi.ts";
 export class ApiError extends Error { constructor(public code: string, public status: number, message?: string) { super(message ?? code); } }
 export interface Session { code: string; playerId: string; token: string }
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
@@ -14,17 +16,6 @@ export const joinRoom = (code: string, nickname: string) =>
   call<Session>(`/api/rooms/${encodeURIComponent(code)}/join`, { method: "POST", body: JSON.stringify({ nickname }) });
 export const roomInfo = (code: string) => call<{ exists: boolean; stage?: string; players?: number; full?: boolean; mode?: string }>(`/api/rooms/${encodeURIComponent(code)}/info`);
 
-export const ERROR_TEXT: Record<string, string> = {
-  NICKNAME_TAKEN: "Questo nickname c'è già nella stanza. Scegline un altro.",
-  ROOM_FULL: "La stanza è piena (massimo 8 giocatori).",
-  GAME_STARTED: "La partita è già iniziata: non si può più entrare.",
-  INVALID_REQUEST: "Nickname non valido: 1–16 caratteri, solo lettere, numeri e spazi.",
-  INVALID_CODE: "Il codice non è valido: sono 5 caratteri (senza I, L, O, 0, 1).",
-  NOT_FOUND: "Non esiste nessuna stanza con questo codice.",
-  RATE_LIMIT: "Troppi tentativi ravvicinati. Aspetta un minuto e riprova.",
-  NETWORK: "Sei offline o il server non risponde. Controlla la connessione e riprova.",
-  TRY_AGAIN: "Il server è occupato. Riprova tra qualche secondo.",
-  QUOTA: "Il servizio ha raggiunto il limite giornaliero gratuito. Si riprende dopo la mezzanotte UTC (l'una di notte in Italia).",
-  SERVER: "Il server non risponde (errore del servizio o limite giornaliero raggiunto). Riprova tra qualche minuto.",
-};
-export const errText = (e: unknown) => (e instanceof ApiError ? ERROR_TEXT[e.code] ?? "Qualcosa è andato storto. Riprova." : "Qualcosa è andato storto. Riprova.");
+const API_CODES = ["NICKNAME_TAKEN", "ROOM_FULL", "GAME_STARTED", "INVALID_REQUEST", "INVALID_CODE", "NOT_FOUND", "RATE_LIMIT", "NETWORK", "TRY_AGAIN", "QUOTA", "SERVER"];
+/** Testo dell'errore per il giocatore: i messaggi stanno in public/testi.json (err.CODICE). */
+export const errText = (e: unknown) => (e instanceof ApiError && API_CODES.includes(e.code) ? ts(`err.${e.code}` as TestoKey) : ts("err.altro"));

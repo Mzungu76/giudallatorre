@@ -63,3 +63,10 @@ export function ts(key: TestoKey, vars?: Record<string, string | number>): strin
   return raw(key).replace(/\*\*([^*]+)\*\*|__([^_]+)__|~([^~]+)~/g, (_m, a, b, c) => a ?? b ?? c)
     .replace(/\{([A-Za-z0-9_]+)\}/g, (m, k) => (vars && k in vars ? String(vars[k]) : m));
 }
+
+/** Testo grezzo (senza togliere i segni): per i pochi punti in cui il testo contiene HTML, es. i cartelli della scena della caduta. */
+export function rawTesto(key: TestoKey, vars?: Record<string, string | number>): string {
+  let s = raw(key);
+  if (vars) s = s.replace(/\{([A-Za-z0-9_]+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
+  return s;
+}
