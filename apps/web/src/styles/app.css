@@ -851,3 +851,26 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .stage>form.fpage>*{position:relative}
 .bsheet .linkbtn{background:none;border:0;color:#13224a;font:800 12px Nunito;text-decoration:underline;padding:2px 0;cursor:pointer}
 .zoom{background:rgba(19,34,74,.985)}
+
+/* ---- correzioni dal telefono ---- */
+.chi{z-index:260}
+.pk small{display:block}
+.pk .chev,.pk .tbar{display:none}
+.pk b{display:block;-webkit-line-clamp:unset;overflow:visible;font-size:20px;line-height:1.1}
+.phrase-card.pk{padding:6px 14px 8px 46px;cursor:default}
+.phrase-card.pk .ctx{display:inline-block}
+.phrase-card.pk.l b{font-size:18px}.phrase-card.pk.xl b{font-size:16px}
+.bopt{padding:8px 11px}
+.bopt .tx{display:block;-webkit-line-clamp:unset;overflow:visible}
+.bopts{gap:7px}
+.bhand{touch-action:pan-y}
+/* riepilogo del turno */
+.pbp .pb-scroll{gap:5px}.pbp{margin-top:6px !important}.pbp .rv-t{font-size:22px}
+.prow2{display:grid;grid-template-columns:78px 1fr auto;gap:7px;align-items:center;background:#fff;border:3px solid #13224a;border-radius:12px;padding:3px 8px;box-shadow:0 3px 0 #13224a}
+.pr-who{display:flex;align-items:center;gap:5px;font:800 12px/1.15 Nunito;min-width:0}.pr-who .dc{width:20px;height:20px;flex:none}
+.pr-who span{overflow-wrap:anywhere}
+.pr-say{display:flex;flex-direction:column;gap:1px;font:700 11px/1.2 Nunito;min-width:0}
+.pr-say .ok{color:#1c6b3c}.pr-say .ko{color:#b3261e}
+.pr-card{display:flex;flex-direction:row-reverse;align-items:center;gap:6px}
+.pr-card .pb-c{margin:0;width:28px;height:42px}
+.pr-card b{font:400 18px/1 Anton;min-width:26px;text-align:right}.pr-card b.up{color:#2a9d57}.pr-card b.dn{color:#e8362b}.pr-card b.zz{color:#13224a88}

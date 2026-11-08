@@ -8,7 +8,7 @@ import Standings from "./Standings.tsx";
 import Zoom from "./Zoom.tsx";
 import { Terrace } from "./Terrace.tsx";
 import type { VoteTok } from "./Terrace.tsx";
-import { BMeta, BSheet, LuiTray, Row, WaitCard, useTimedOpen } from "./BUi.tsx";
+import { BMeta, BSheet, LuiTray, Row, WaitCard } from "./BUi.tsx";
 import { HandPicker, usePeople } from "../screens/Game.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 
@@ -26,8 +26,8 @@ export const MINI: Record<MiniKind, KindInfo> = {
   },
   raccomandato: {
     title: "Il raccomandato", icon: "🎩", tag: "Chi butteresti giù oggi?", headCard: null,
-    steps: [["Niente frase", "Questa volta nessuno accusa nessuno."], ["Giocate una carta", "Una qualsiasi: finirà sulla torre."], ["Si vota", "Cadono le carte più votate. Chi le ha giocate perde punti."]],
-    play: "Gioca una carta qualsiasi: finirà sulla torre.", vote: "Chi butteresti giù? Chi ha giocato le carte cadute perde punti.",
+    steps: [["Niente frase", "Questa volta nessuno accusa nessuno."], ["Giocate un personaggio sicuro", "Scegliete quello che secondo voi non cadrà: se la sua carta cade, perdete punti."], ["Si vota chi buttare giù", "Ognuno vota la carta che butterebbe giù. Cadono le più votate."]],
+    play: "Gioca il personaggio che pensi NON cada dalla torre: se cade, perdi punti.", vote: "Vota la carta che butteresti giù. Chi ha giocato una carta caduta perde punti.",
   },
 };
 
@@ -55,17 +55,17 @@ function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: Play
   );
 }
 
-/** La carta pescata dell'intervallo con la sua accusa: stessa striscia della frase, si apre con un tocco e si chiude da sola. */
+/** La carta pescata dell'intervallo con la sua accusa, sempre per intero. */
 function MiniPill({ view }: { view: PlayerView }) {
-  const mini = view.mini, [open, setOpen] = useTimedOpen();
+  const mini = view.mini;
   if (!mini) return null;
   const k = MINI[mini.kind];
   const body = mini.kind === "accusa" ? `«${mini.text}»` : mini.kind === "amore" ? "Chi sarà il suo partner perfetto?" : "Chi butteresti giù oggi?";
-  const label = mini.kind === "accusa" ? "L'accusatore dice:" : k.tag;
+  const label = mini.kind === "accusa" ? "L'accusatore dice:" : k.tag, size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
-    <div className={`phrase-card pk${open ? " open" : ""}`} role="button" tabIndex={0} aria-expanded={open} data-testid="mini-head" onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(!open); } }}>
+    <div className={`phrase-card pk${size}`} data-testid="mini-head">
       {mini.cardId ? <span className="ivl-thumb" style={{ backgroundImage: `url(${cardFull(mini.cardId)})` }} /> : <span className="mega-ic" aria-hidden>{k.icon}</span>}
-      <span className="ctx ac">{mini.kind === "accusa" ? "Accusa" : k.title}</span><small>{label}</small><b>{body}</b><em className="chev" aria-hidden>▾</em>{open && <i className="tbar" />}
+      <span className="ctx ac">{mini.kind === "accusa" ? "Accusa" : k.title}</span><small>{label}</small><b>{body}</b>
     </div>
   );
 }

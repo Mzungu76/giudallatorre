@@ -6,11 +6,19 @@ export const PLAYER_COLORS = CHAR_COLORS;
 
 export function navigate(path: string) { history.pushState(null, "", path); window.dispatchEvent(new PopStateEvent("popstate")); }
 
+/** Con la tastiera aperta la finestra visibile si accorcia: la scena non deve rimpicciolirsi, quindi finché un campo di testo è attivo si ignorano i ridimensionamenti. */
+const typing = () => { const t = document.activeElement?.tagName; return t === "INPUT" || t === "TEXTAREA" || t === "SELECT"; };
+function onViewport(f: () => void) {
+  const g = () => { if (!typing()) f(); };
+  window.addEventListener("resize", g); window.visualViewport?.addEventListener("resize", g); window.addEventListener("focusout", () => setTimeout(g, 250));
+  return () => { window.removeEventListener("resize", g); window.visualViewport?.removeEventListener("resize", g); };
+}
+
 /** Fattore di scala per far stare il palco logico 372×826 nella finestra. */
 export function useFit(maxScale = 1.5, boxW = 372, boxH = 826) {
   const calc = () => Math.max(0.3, Math.min(maxScale, window.innerWidth / boxW, (window.visualViewport?.height ?? window.innerHeight) / boxH));
   const [k, setK] = useState(calc);
-  useEffect(() => { const f = () => setK(calc()); window.addEventListener("resize", f); window.visualViewport?.addEventListener("resize", f); return () => { window.removeEventListener("resize", f); window.visualViewport?.removeEventListener("resize", f); }; }, []);
+  useEffect(() => onViewport(() => setK(calc())), []);
   return k;
 }
 
@@ -34,7 +42,7 @@ function calcDims(maxScale: number): StageDims {
 }
 export function useAdaptive(maxScale = 1.5): StageDims {
   const [d, setD] = useState(() => calcDims(maxScale));
-  useEffect(() => { const f = () => setD(calcDims(maxScale)); window.addEventListener("resize", f); window.visualViewport?.addEventListener("resize", f); return () => { window.removeEventListener("resize", f); window.visualViewport?.removeEventListener("resize", f); }; }, [maxScale]);
+  useEffect(() => onViewport(() => setD(calcDims(maxScale))), [maxScale]);
   return d;
 }
 
