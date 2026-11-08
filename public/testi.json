@@ -1,5 +1,5 @@
 {
- "versione": 2,
+ "versione": 3,
  "aggiornato": "2026-11-08",
  "testi": {
   "intro.aria": {
@@ -104,7 +104,7 @@
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p2.x": {
-   "t": "Quando le carte salgono, scommetti su quanti voti prenderà una carta.",
+   "t": "Quando le carte sono sopra alla torre, scommetti su quanti voti prenderà una carta.",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p3.t": {
@@ -112,7 +112,7 @@
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p3.x": {
-   "t": "Come tutti. Il tuo voto non conta per il Lui!.",
+   "t": "Come tutti. Il tuo voto non conta per il Lui!",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.gioca": {
@@ -121,7 +121,7 @@
    "n": "Variante «Il Megafono sa»"
   },
   "mega.nongioca": {
-   "t": "**Non giochi carte**: la Torre ne ha una a caso dal mazzo.",
+   "t": "**Non giochi carte**: la tua Carta viene pescata a caso dal mazzo",
    "s": "Scheda «Sei il Megafono!»",
    "n": "Modalità base"
   },
@@ -261,11 +261,11 @@
    "n": "Voto"
   },
   "mini.accusa.titolo": {
-   "t": "L'Accusa",
+   "t": "L' Accusa",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.tag": {
-   "t": "Qualcuno ha fatto una marachella",
+   "t": "Qualcuno l'ha combinata grossa",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.capo": {
@@ -278,7 +278,7 @@
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.passo1.x": {
-   "t": "Una carta accusa un altro personaggio di una marachella.",
+   "t": "L'accusatore accusa un altro personaggio di aver combinato qualcosa",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.passo2.t": {
@@ -286,7 +286,7 @@
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.passo2.x": {
-   "t": "Ognuno gioca in segreto il personaggio che l'avrebbe fatta.",
+   "t": "Ognuno gioca in segreto il personaggio che ritiene colpevole",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.passo3.t": {
@@ -294,7 +294,7 @@
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.passo3.x": {
-   "t": "La carta più votata è il colpevole e cade dalla torre: fa punti a chi l'ha votata e a chi l'ha giocata.",
+   "t": "La carta più votata è il colpevole e cade dalla torre: ottengono punti sia chi l'ha votata, sia chi l'ha giocata.",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.pts1.v": {
@@ -312,11 +312,11 @@
    "n": "Valore mostrato nell'icona punti"
   },
   "mini.accusa.pts2.x": {
-   "t": "Se la carta del colpevole è la tua.",
+   "t": "Se la carta del colpevole è quella che hai giocato tu",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.gioca": {
-   "t": "Chi ha fatto questa cosa? La scelta è segreta.",
+   "t": "Chi ha fatto questa cosa?",
    "s": "Mini-gioco «L'Accusa» (intervalli)",
    "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
   },
