@@ -16,7 +16,7 @@ interface KindInfo { title: string; icon: string; tag: string; steps: [string, s
 export const MINI: Record<MiniKind, KindInfo> = {
   accusa: {
     title: "L'Accusa", icon: "🔍", tag: "Qualcuno ha fatto una marachella", headCard: "L'accusatore",
-    steps: [["Un personaggio accusa", "Una carta accusa uno di voi di una marachella."], ["Giocate il colpevole", "Ognuno gioca in segreto la carta che l'avrebbe fatta."], ["Si vota", "La carta più votata è il colpevole e cade dalla torre: fa punti a chi l'ha votata e a chi l'ha giocata."]],
+    steps: [["Un personaggio accusa", "Una carta accusa un altro personaggio di una marachella."], ["Giocate il colpevole", "Ognuno gioca in segreto il personaggio che l'avrebbe fatta."], ["Si vota", "La carta più votata è il colpevole e cade dalla torre: fa punti a chi l'ha votata e a chi l'ha giocata."]],
     pts: [["voti", "Se voti il colpevole (la carta più votata, che cade): tanti punti quanti sono i suoi voti."], ["×2", "Se la carta del colpevole è la tua: il doppio dei voti che ha preso."]],
     play: "Chi ha fatto questa cosa? La scelta è segreta.", vote: "Puoi votare anche la tua. La più votata cade dalla torre.",
   },
