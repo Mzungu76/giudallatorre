@@ -851,3 +851,4 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .stage>form.fpage>*{position:relative}
 .bsheet .linkbtn{background:none;border:0;color:#13224a;font:800 12px Nunito;text-decoration:underline;padding:2px 0;cursor:pointer}
 .zoom{background:rgba(19,34,74,.985)}
+.leave-lnk{margin-bottom:10px}.leave-box{background:#fff7e0;border:2px solid var(--navy);padding:8px 10px;margin-bottom:10px;text-align:center}.leave-box p{margin:0 0 8px;font:800 13px Nunito;color:var(--navy)}.leave-row{display:flex;gap:8px}.leave-row .bt{width:auto;flex:1}

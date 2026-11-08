@@ -5,7 +5,7 @@ import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStag
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
 import type { RandomBytes } from "./security.ts";
 
-export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel }
+export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
 export interface RoomData {
   code: string; createdAt: number; lastActivity: number; stage: RoomStage; finishedAt: number | null;
   options: RoomOptionsDto; seq: number; deadline: number | null; players: PlayerRec[]; game: GameState | null;
@@ -92,7 +92,7 @@ export class RoomCore {
 
   // ---------- presenza ----------
   onConnect(playerId: string, now: number): Outbox {
-    this.connected.add(playerId); this.data.lastActivity = now; this.data.emptySince = null; this.data.leftExplicit = false;
+    this.connected.add(playerId); const me0 = this.data.players.find((p) => p.id === playerId); if (me0) me0.left = false; this.data.lastActivity = now; this.data.emptySince = null; this.data.leftExplicit = false;
     if (this.data.players.some((p) => p.id === playerId && p.isHost)) this.data.hostLostAt = null;
     const out = emptyOut(); out.send.push(...this.snapshot(playerId));
     if (this.data.stage === "PLAYING" && this.data.botAt === null) { this.scheduleBots(now); out.persist = true; } // i bot riprendono quando torna un umano
@@ -171,7 +171,20 @@ export class RoomCore {
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
       case "leave": {
-        if (d.stage !== "LOBBY") { d.leftExplicit = true; out.persist = true; out.close.push({ playerId, code: 1000, reason: "leave" }); return out; }
+        if (d.stage !== "LOBBY") {
+          // Partita in corso (o conclusa). Se nella stanza restano altri umani, chi esce viene sostituito da un giocatore virtuale (stesso posto, punti e carte);
+          // se non ne restano, la stanza si chiude subito.
+          const humansLeft = d.players.filter((p) => !p.isBot && !p.left && p.id !== playerId);
+          this.connected.delete(playerId); out.close.push({ playerId, code: 1000, reason: "leave" });
+          if (humansLeft.length === 0) { out.destroy = true; return out; }
+          if (me.isHost) { me.isHost = false; (humansLeft.find((p) => this.connected.has(p.id)) ?? humansLeft[0]!).isHost = true; d.hostLostAt = null; }
+          if (d.stage !== "PLAYING") me.left = true;
+          if (d.stage === "PLAYING") {
+            me.isBot = true; me.level = "medium"; me.tokenHash = "";   // il vecchio token non entra più
+            d.botAt = null; this.scheduleBots(now);
+          }
+          d.seq++; out.persist = true; return this.broadcastRoom(out);
+        }
         d.players = d.players.filter((p) => p.id !== playerId); this.connected.delete(playerId);
         out.close.push({ playerId, code: 1000, reason: "leave" });
         if (d.players.length === 0) { out.destroy = true; return out; }

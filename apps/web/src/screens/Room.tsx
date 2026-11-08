@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS } from "../ui.tsx";
 import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
@@ -90,6 +90,18 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
 export default function RoomScreen({ code }: { code: string }) {
   const { status, room, view, error, send, chat } = useRoom(code, "player");
   const [sound, setSound] = useSound();
+  const [notice, setNotice] = useState<string | null>(null), botsSeen = useRef<Set<string> | null>(null);
+  // un giocatore esce a partita in corso e un bot prende il suo posto: lo dico a chi resta
+  useEffect(() => {
+    if (!room) return;
+    const now = new Set(room.players.filter((p) => p.isBot).map((p) => p.id)), prev = botsSeen.current;
+    botsSeen.current = now;
+    if (!prev || room.stage !== "PLAYING") return;
+    const left = room.players.filter((p) => p.isBot && !prev.has(p.id));
+    if (left.length === 0) return;
+    setNotice(`${left.map((p) => p.nickname).join(", ")} ${left.length > 1 ? "hanno lasciato" : "ha lasciato"} la partita: ${left.length > 1 ? "giocano" : "gioca"} un bot al ${left.length > 1 ? "loro" : "suo"} posto`);
+    const t = setTimeout(() => setNotice(null), 4500); return () => clearTimeout(t);
+  }, [room]);
   const cs = useChatState(chat, room?.you ?? "", sound), [ov, setOv] = useState<null | "chat" | "rank" | "rules" | "lui">(null);
   useEffect(() => { if (status === "invalid") { forgetSession(code); navigate(`/entra?c=${code}`); } }, [status, code]);
   if (status === "kicked") return <Stage bg="sky" testId="kicked"><div className="center-msg"><h2>Sei stato espulso</h2><p>L'host ti ha tolto dalla stanza.</p><Btn onClick={() => { forgetSession(code); navigate("/"); }}>Torna alla home</Btn></div></Stage>;
@@ -100,19 +112,20 @@ export default function RoomScreen({ code }: { code: string }) {
   const ui: UiCtl = { unread: cs.unread, chat: () => { setOv("chat"); cs.setOpen(true); }, rank: () => setOv("rank"), rules: () => setOv("rules"), lui: () => setOv("lui") };
   const pv = view?.view ?? null, colorOf = (id: string) => PLAYER_COLORS[Math.max(0, room.players.findIndex((p) => p.id === id)) % 8]!;
   const overlays = ov === "chat" ? <ChatPanel chat={chat} me={room.you} players={room.players} send={send} onClose={close} />
-    : ov === "rules" ? <HowTo onClose={close} tokens={pv?.luiTokens} sound={sound} setSound={setSound} />
+    : ov === "rules" ? <HowTo onClose={close} tokens={pv?.luiTokens} sound={sound} setSound={setSound}
+        {...(room.stage === "PLAYING" ? { onLeave: () => { send({ t: "leave" }); forgetSession(code); navigate("/"); }, leaveHint: room.players.some((p) => !p.isBot && p.id !== room.you) ? "Esci dalla partita? Un giocatore virtuale prenderà il tuo posto e giocherà per te." : "Sei l'ultimo giocatore umano: se esci la stanza si chiude subito." } : {})} />
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />
     : null;
-  if (room.stage === "LOBBY") return <><Plancia room={room} view={null}><Lobby room={room} send={send} ui={ui} overlays={overlays} /></Plancia>{reconnecting && <div className="banner-conn">Riconnessione…</div>}<Toast text={error} /></>;
+  if (room.stage === "LOBBY") return <><Plancia room={room} view={null}><Lobby room={room} send={send} ui={ui} overlays={overlays} /></Plancia>{reconnecting && <div className="banner-conn">Riconnessione…</div>}<Toast text={error ?? notice} /></>;
   if (!view) return <Stage bg="sky"><div className="center-msg"><h2>Carico la partita…</h2></div></Stage>;
   return (
     <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
-      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
+      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
       {overlays}
       {reconnecting && <div className="banner-conn">Riconnessione…</div>}
-      <Toast text={error} />
+      <Toast text={error ?? notice} />
     </Stage>
     </Plancia>
   );

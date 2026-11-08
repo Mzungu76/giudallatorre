@@ -52,3 +52,4 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Etichette dei bot per le nuove frasi; 165 test unit, `npm run e2e`, `npm run e2e:ui`
 - [ ] Curatela delle frasi con l'autore (togliere, riscrivere, cambiare età) e prova a tavolo
 - [x] Turni: 6 con 3 giocatori (2 giri), altrimenti un turno a testa (1 giro). Intervalli: 1 fino a 5 giocatori, 2 da 6 a 8 (mini-giochi diversi tra loro)
+- [x] Uscita dalla partita: chi esce è sostituito da un bot se restano altri umani, altrimenti la stanza si chiude subito (`scripts/e2e-leave.mjs`)

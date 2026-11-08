@@ -25,7 +25,7 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 | `addBot` | `level` (`easy`\|`medium`\|`hard`) | solo host, solo lobby, fino a 8 giocatori totali |
 | `removeBot` | `playerId` | solo host, solo lobby |
 | `watch` | — | schermo condiviso (sola visione, solo dati pubblici) |
-| `leave` | — | in lobby esce; in partita chiude soltanto la connessione |
+| `leave` | — | in lobby esce (se era l'ultimo, la stanza si chiude). **In partita**: se nella stanza restano altri umani, chi esce viene **sostituito da un bot** (livello medio, stesso posto, punti e carte; il vecchio token non entra più; se era l'host il ruolo passa a un altro umano); se non ne restano, la stanza si **chiude subito**. A partita conclusa non c'è sostituzione: chi esce resta in classifica e l'ultimo che esce chiude la stanza |
 | `act` | `reqId?`, `action` | azioni di gioco: `choosePhrase{mode:"card",index}\|{mode:"free", text?}` (testo libero opzionale, max 80 caratteri; senza testo la frase è solo a voce), `playCard{cardId}`, `placeLui{kind,position}`, `vote{position, reason?}` (con `justifyVotes` la frase è obbligatoria, max 80 caratteri), `advance` |
 
 ## WebSocket — server → client
