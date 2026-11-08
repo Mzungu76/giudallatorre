@@ -24,3 +24,9 @@ Misure (mazzo reale, `tools/analysis/bot-bench.ts`, `bot-mega.ts`): Medio e Diff
 
 ## Varietà del voto (verifica `tools/analysis/bot-votes.ts`)
 Prima della correzione i bot votavano quasi sempre la carta col Lui!, perché il Megafono bot mette il gettone sulla carta più affine alla frase e la Folla bot sceglie la stessa carta con la stessa stima (e il Medio scommetteva "Cade lui!" il 100% delle volte). Ora ogni bot **sceglie a probabilità** tra le carte in proporzione al valore atteso (non sempre la prima) e il Medio ogni tanto gioca "Non cade" su una carta poco probabile (`TUNE.voteTemp`, `voteTempMed`, `medVary`). Con 5 bot: voti della Folla sulla carta col Lui! 41% (Difficile) e 27% (Medio) invece del 51% e 42% di prima; turni con tutti gli altri sulla stessa carta 12% e 2% invece del 30% e 10%. Il Difficile resta più forte del Medio (34% di vittorie a 4 contro il 25% del caso).
+
+## Fair play (garantito da un test)
+Ogni bot decide **solo** con ciò che vedrebbe un giocatore seduto al tavolo: la propria mano, la Torre con i personaggi, la frase, la posizione del Lui!, i risultati passati. Non legge le mani, le carte giocate coperte, i voti, i proprietari delle carte o il segnalino scelto dal Megafono degli altri, né l'ordine dei mazzi. Non c'è alcuno scambio di informazioni o accordo tra bot: ognuno massimizza i propri punti.
+- La **memoria condivisa** dei bot (`BotMemory`) contiene solo informazioni pubbliche: quante volte ogni personaggio è comparso sulla Torre e quante volte è caduto.
+- Le **etichette** dei personaggi e delle frasi sono la "percezione" dei bot (cosa c'entra con cosa), non informazioni sugli altri giocatori.
+- `packages/game-engine/tests/fairplay.test.ts` altera tutte le informazioni nascoste e verifica che nessuna decisione cambi (partite da 3 a 8 giocatori, tutti i livelli, tutte le fasi, mini-giochi compresi). Un bot che barasse farebbe fallire il test (verificato inserendo di proposito un imbroglio).
