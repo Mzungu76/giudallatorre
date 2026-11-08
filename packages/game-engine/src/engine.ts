@@ -264,22 +264,25 @@ function startMini(s: GameState, events: GameEvent[]) {
   events.push({ type: "miniStarted", kind });
 }
 
-/** Punti del mini-gioco. Accusa / Storia d'amore: restano le carte in testa; chi le ha votate prende i voti ricevuti, chi le ha giocate il doppio; le altre cadono. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate e ogni giocatore prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato. */
+/** Punti del mini-gioco. Accusa / Storia d'amore: chi ha votato una carta in testa prende i voti ricevuti, chi l'ha giocata il doppio. Nell'Accusa le carte in testa cadono (il colpevole), nella Storia d'amore restano e cadono le altre. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla carta che si è giocata. */
 function resolveMini(s: GameState, events: GameEvent[]) {
   const mini = s.mini!, n = s.playerIds.length;
   const counts: Record<number, number> = {};
   for (const t of s.tower) counts[t.position] = 0;
   for (const p of s.playerIds) counts[s.votes[p]!] = (counts[s.votes[p]!] ?? 0) + 1;
   const top = Math.max(...Object.values(counts)), leaders = s.tower.map((t) => t.position).filter((k) => counts[k] === top);
-  const peggiore = mini.kind === "peggiore";
-  const fallen = peggiore ? leaders : s.tower.map((t) => t.position).filter((k) => counts[k]! < top);
+  const peggiore = mini.kind === "peggiore", accusa = mini.kind === "accusa";
+  // Accusa: cade la carta più votata (il colpevole; se tutte sono pari non cade nessuna). Peggiore: cadono le più votate. Storia d'amore: restano le più votate, cadono le altre.
+  const fallen = peggiore ? leaders : accusa ? (leaders.length === s.tower.length ? [] : leaders) : s.tower.map((t) => t.position).filter((k) => counts[k]! < top);
   const owners: Record<number, PlayerId> = {}; for (const t of s.tower) if (t.ownerId) owners[t.position] = t.ownerId;
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
   const remaining = Math.max(1, s.totalTurns - s.turnNumber), cap = Math.max(n, 2 * remaining);
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number) => { points[p]! += pts; lines[p]!.push({ kind, pts, pos }); };
   if (peggiore) {
-    // un punto per ogni voto ricevuto dalla propria carta, cada o no (non si vota la propria: al massimo N−1)
+    // +2 a chi ha votato una carta caduta (voto giusto, come nei turni normali)
+    for (const p of s.playerIds) { const v = s.votes[p]!; if (fallen.includes(v)) give(p, 2, "mini-giusto", v); }
+    // e un punto per ogni voto ricevuto dalla propria carta, cada o no (non si vota la propria: al massimo N−1)
     for (const t of s.tower) { const o = owners[t.position]; if (o && counts[t.position]! > 0) give(o, counts[t.position]!, "mini-peggiore", t.position); }
   } else {
     for (const p of s.playerIds) { const v = s.votes[p]!; if (leaders.includes(v)) give(p, counts[v]!, "mini-voto", v); }

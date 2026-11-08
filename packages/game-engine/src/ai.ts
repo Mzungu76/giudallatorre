@@ -123,7 +123,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
         return vote(sample(w) + 1);
       }
       if (level === "easy") return vote(1 + Math.floor(rand() * n));
-      // Accusa / amore: prendo punti se voto una carta che arriva in testa → seguo il gruppo; la mia carta vale il doppio se resta
+      // Accusa / amore: prendo punti se voto una carta che arriva in testa → seguo il gruppo; la mia carta in testa vale il doppio
       const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
       const aff = s.tower.map((t) => { const a = text ? affinity(t.cardId, text) : null; return a === null ? 0 : a; });
       const temp = level === "hard" ? 1.5 : 2.5;
