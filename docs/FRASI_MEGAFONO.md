@@ -19,22 +19,23 @@ Una frase **non deve contenere per forza una colpa**. Deve far guardare i person
 Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratti collettivi hanno tutti funzionato; aneddoti, abitudini di nicchia e assurdi complicati no.
 
 ## Mazzo
-- **250 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi).
+- **Tono per età**: dal 14+ in su le frasi sono più taglienti (tradimento, soldi, vizi, lutto); dal 18+ ci sono allusioni sessuali e umorismo nero, mai volgari né esplicite.
+- **335 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi): 208 per 6+, 22 per 10+, 66 per 14+, 39 per 18+.
 - **Mano del Megafono**: 4 frasi pescate dall'insieme **filtrato per età**, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
 - **Famiglie**: `etichetta`, `collettivo`, `confronto`, `convinzione`, `ribaltato`.
 - **Stato** di ogni voce: `provata` (👍 nel test), `ritoccata` (riscritta dopo il test), `nuova` (da valutare).
 - Il verbo («sale»/«salgono») è nel campo `verbo`: la frase completa è «Oggi {verbo} sulla torre {testo}».
 
 ## Confessioni («Ammetto che…»)
-- **50 voci** in `content/confessioni.json` (15 originali + 35 nuove).
+- **69 voci** in `content/confessioni.json` (15 originali riscritte in forma neutra + 54 nuove), di cui 14 per 14+ e 9 per 18+.
 - Variante che coinvolge il giocatore: il Megafono si associa a uno dei personaggi sopra la Torre.
 - **Nell'app la frase deve nominare il Megafono** (es. «Marco ammette di…»).
 - Funziona bene con gruppi che si conoscono, con i bot dotati di carattere e di persona al tavolo; meno online tra sconosciuti.
-- Le originali contengono forme al maschile («essermi infiltrato», «stato», «con lui»): da valutare una forma neutra.
+- Tutte le confessioni sono in **forma neutra rispetto al genere** (niente participi al maschile o «con lui»); il controllo è nei test.
 
 ## Da fare nell'app
 - Leggere i nuovi file al posto di `su-sulla-torre.json` e `su-sulla-torre-singola.json`.
 - Opzione di stanza «fascia d'età del gruppo» e filtro del mazzo.
 - Pesca della mano da 4 frasi con famiglie diverse.
 - Frase delle confessioni con il nome del Megafono.
-- Controllo automatico nei test: duplicati, lunghezza massima, concordanza verbo/soggetto.
+- Controllo automatico nei test: duplicati, lunghezza massima, concordanza verbo/soggetto, forme di genere nelle confessioni.

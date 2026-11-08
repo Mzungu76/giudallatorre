@@ -1,27 +1,27 @@
 {
  "versione": "v5",
- "note": "Confessioni «Ammetto che…». Le originali (stato originale) sono quelle del documento. Nell'app la frase deve nominare il Megafono.",
+ "note": "Confessioni «Ammetto che…», tutte in forma neutra rispetto al genere (le originali sono state riscritte dove serviva). Nell'app la frase deve nominare il Megafono.",
  "confessioni": [
   {
-   "testo": "Ammetto che sono stato più volte in vacanza con uno dei personaggi sopra la Torre, e siamo finiti insieme nelle foto peggiori.",
+   "testo": "Ammetto di aver fatto più volte vacanza con uno dei personaggi sopra la Torre, e di aver fatto insieme le foto peggiori.",
    "eta": "10+",
    "stato": "originale",
    "id": "C01"
   },
   {
-   "testo": "Ammetto di essermi infiltrato e abbuffato di cibo a una festa insieme a uno dei personaggi sopra la Torre.",
+   "testo": "Ammetto di aver mangiato a sbafo a una festa insieme a uno dei personaggi sopra la Torre.",
    "eta": "10+",
    "stato": "originale",
    "id": "C02"
   },
   {
-   "testo": "Ammetto di essere cugino/cugina di uno dei personaggi sopra la Torre.",
+   "testo": "Ammetto di essere parente di uno dei personaggi sopra la Torre.",
    "eta": "10+",
    "stato": "originale",
    "id": "C03"
   },
   {
-   "testo": "Ammetto di essere stato per anni nello stesso gruppo di amici di un personaggio sopra la Torre.",
+   "testo": "Ammetto di far parte, da anni, dello stesso gruppo di amici di un personaggio sopra la Torre.",
    "eta": "10+",
    "stato": "originale",
    "id": "C04"
@@ -81,7 +81,7 @@
    "id": "C13"
   },
   {
-   "testo": "Ammetto di aver accettato un favore da uno dei personaggi sopra la Torre, e di essere rimasto in debito con lui per sempre.",
+   "testo": "Ammetto di aver accettato un favore da uno dei personaggi sopra la Torre, e di avere ancora un debito da saldare.",
    "eta": "10+",
    "stato": "originale",
    "id": "C14"
@@ -135,7 +135,7 @@
    "id": "C22"
   },
   {
-   "testo": "Ammetto di essermi preso il merito di un lavoro fatto da uno dei personaggi sopra la Torre.",
+   "testo": "Ammetto di aver rubato il merito di un lavoro fatto da uno dei personaggi sopra la Torre.",
    "eta": "14+",
    "stato": "ritoccata",
    "id": "C23"
@@ -301,6 +301,120 @@
    "eta": "18+",
    "stato": "nuova",
    "id": "C50"
+  },
+  {
+   "testo": "Ammetto di aver mentito per coprire uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C51"
+  },
+  {
+   "testo": "Ammetto di aver avuto una relazione segreta con una persona vicina a uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C52"
+  },
+  {
+   "testo": "Ammetto di aver rubato qualcosa a uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C53"
+  },
+  {
+   "testo": "Ammetto di aver passato una notte in pronto soccorso per colpa di uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C54"
+  },
+  {
+   "testo": "Ammetto di aver minacciato uno dei personaggi sopra la Torre per una questione di soldi.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C55"
+  },
+  {
+   "testo": "Ammetto di aver letto i messaggi privati di uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C56"
+  },
+  {
+   "testo": "Ammetto di aver diffuso un segreto di uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C57"
+  },
+  {
+   "testo": "Ammetto di aver mandato un messaggio sbagliato a uno dei personaggi sopra la Torre, ed è andata peggio del previsto.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C58"
+  },
+  {
+   "testo": "Ammetto di aver passato una serata a ubriacarmi con uno dei personaggi sopra la Torre, e di aver detto troppo.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C59"
+  },
+  {
+   "testo": "Ammetto di aver deluso profondamente uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C60"
+  },
+  {
+   "testo": "Ammetto di aver finto una malattia per non vedere uno dei personaggi sopra la Torre.",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "C61"
+  },
+  {
+   "testo": "Ammetto di aver passato una notte con uno dei personaggi sopra la Torre, e di non volerne parlare.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C62"
+  },
+  {
+   "testo": "Ammetto di aver avuto una relazione segreta con uno dei personaggi sopra la Torre.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C63"
+  },
+  {
+   "testo": "Ammetto di aver ricevuto una proposta indecente da uno dei personaggi sopra la Torre, e di averci pensato.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C64"
+  },
+  {
+   "testo": "Ammetto di aver mandato per sbaglio una foto compromettente a uno dei personaggi sopra la Torre.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C65"
+  },
+  {
+   "testo": "Ammetto di aver tradito il partner con uno dei personaggi sopra la Torre.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C66"
+  },
+  {
+   "testo": "Ammetto di aver ballato e perso i vestiti con uno dei personaggi sopra la Torre.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C67"
+  },
+  {
+   "testo": "Ammetto di aver bevuto fino a non ricordare nulla con uno dei personaggi sopra la Torre, e di aver trovato una sorpresa il mattino dopo.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C68"
+  },
+  {
+   "testo": "Ammetto di aver ricattato uno dei personaggi sopra la Torre.",
+   "eta": "18+",
+   "stato": "nuova",
+   "id": "C69"
   }
  ]
 }
