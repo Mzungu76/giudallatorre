@@ -20,8 +20,11 @@ Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratt
 
 ## Mazzo
 - **Tono per età**: dal 14+ in su le frasi sono più taglienti (tradimento, soldi, vizi, lutto); dal 18+ ci sono allusioni sessuali e umorismo nero, mai volgari né esplicite.
-- **335 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi): 208 per 6+, 22 per 10+, 66 per 14+, 39 per 18+.
-- **Mano del Megafono**: 4 frasi pescate dall'insieme **filtrato per età**, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
+- **405 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi): 208 per 6+, 68 per 10+, 90 per 14+, 39 per 18+.
+- **Pubblico di riferimento**: adulti e adolescenti. La fascia predefinita della stanza è **14+**.
+- **Filtro cumulativo**: un gruppo con fascia N vede le frasi con età ≤ N (un gruppo 14+ pesca da 6+, 10+ e 14+; un gruppo 18+ da tutto).
+- **Mano del Megafono**: 4 frasi pescate dall'insieme filtrato, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
+- **Peso della pesca**: almeno 2 delle 4 frasi vengono dalle **due fasce più alte consentite** al gruppo, così le frasi 6+ (più miti) fanno da riempitivo e non da base.
 - **Famiglie**: `etichetta`, `collettivo`, `confronto`, `convinzione`, `ribaltato`.
 - **Stato** di ogni voce: `provata` (👍 nel test), `ritoccata` (riscritta dopo il test), `nuova` (da valutare).
 - Il verbo («sale»/«salgono») è nel campo `verbo`: la frase completa è «Oggi {verbo} sulla torre {testo}».

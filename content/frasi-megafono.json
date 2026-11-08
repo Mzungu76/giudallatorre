@@ -2681,6 +2681,566 @@
    "stato": "nuova",
    "id": "F335",
    "verbo": "salgono"
+  },
+  {
+   "testo": "i più imbroglioni.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F336",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più fannulloni.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F337",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più spacconi.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F338",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più rompiscatole.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F339",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più scontrosi.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F340",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più pretenziosi.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F341",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più moralisti.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F342",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più vanesi.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F343",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più spendaccioni.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F344",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più rissosi.",
+   "famiglia": "etichetta",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F345",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più incoerenti.",
+   "famiglia": "etichetta",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F346",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più possessivi.",
+   "famiglia": "etichetta",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F347",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che ti scrivono solo quando gli serve qualcosa.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F348",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che spariscono quando c’è da aiutare.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F349",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che ti chiedono soldi in prestito e poi fanno finta di niente.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F350",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che ti fanno sentire in colpa.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F351",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che sparlano del gruppo nel gruppo.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F352",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che si offendono se non li inviti.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F353",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che si autoinvitano.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F354",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che ti correggono davanti a tutti.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F355",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che sbagliano sempre il tuo nome.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F356",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che arrivano a mani vuote.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F357",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che raccontano la tua storia come fosse la loro.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F358",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che chiedono la password del Wi-Fi appena entrano.",
+   "famiglia": "collettivo",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F359",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che spariscono dopo il primo appuntamento.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F360",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che tornano sempre con l’ex.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F361",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che dicono “è complicato” di ogni relazione.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F362",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che spariscono quando litighi e tornano quando serve.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F363",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che fanno gli indifferenti per sembrare interessanti.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F364",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che si lamentano del lavoro e non si licenziano mai.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F365",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che giurano di non bere e poi bevono.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F366",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "quelli che comprano gli amici con le cene.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F367",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi sarebbe il peggior compagno in un lavoro di gruppo.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F368",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si prenderebbe il merito di un lavoro di gruppo.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F369",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si dimenticherebbe di un impegno importante.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F370",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi manderebbe il messaggio sbagliato alla persona sbagliata.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F371",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi lascerebbe il gruppo su “visualizzato”.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F372",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sarebbe il primo a dire “non è colpa mia”.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F373",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi mollerebbe tutti per una nuova fiamma.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F374",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sarebbe il primo a spifferare un segreto.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F375",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si dimenticherebbe di restituire un prestito.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F376",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi litigherebbe per il conto in pizzeria.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F377",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi organizzerebbe la festa peggiore.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F378",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si autoinviterebbe a ogni festa.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F379",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sarebbe il primo a cadere in una truffa online.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F380",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sparirebbe per settimane dopo una lite.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F381",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi non risponderebbe mai a un invito.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F382",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sparirebbe senza una parola dopo un anno insieme.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F383",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi chiederebbe un prestito e poi bloccherebbe il numero.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F384",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi lascerebbe il partner il giorno del compleanno.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F385",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi tradirebbe per noia.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F386",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si prenderebbe i meriti al lavoro e darebbe la colpa a un collega.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F387",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi mentirebbe nel curriculum.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F388",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi tradirebbe la squadra per un premio.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F389",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi sparlerebbe del capo senza accorgersi che lo sente.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F390",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto di essere più furbo di tutti.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F391",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto di piacere a tutti.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F392",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto che il suo problema sia il più grave.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F393",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto di meritare sempre la prima fila.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F394",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto di essere un esperto di tutto dopo un video.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F395",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto che l’amore si compri.",
+   "famiglia": "convinzione",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F396",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto di essere l’unico a lavorare in ufficio.",
+   "famiglia": "convinzione",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F397",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi è convinto che il partner sia di sua proprietà.",
+   "famiglia": "convinzione",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F398",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più amici di tutti, finché serve.",
+   "famiglia": "ribaltato",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F399",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più maturi a parole.",
+   "famiglia": "ribaltato",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F400",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più disponibili a distanza.",
+   "famiglia": "ribaltato",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F401",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più generosi con le promesse.",
+   "famiglia": "ribaltato",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F402",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più indipendenti, finché non serve una mano.",
+   "famiglia": "ribaltato",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "F403",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più romantici solo all’inizio.",
+   "famiglia": "ribaltato",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F404",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "i più bravi a dare una seconda possibilità, ma solo a sé stessi.",
+   "famiglia": "ribaltato",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "F405",
+   "verbo": "salgono"
   }
  ]
 }
