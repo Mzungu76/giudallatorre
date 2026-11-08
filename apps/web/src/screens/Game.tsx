@@ -16,7 +16,7 @@ import type { LuiSpec, PlayerId } from "@gdt/game-engine";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
 import HowTo from "../components/HowTo.tsx";
-import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard, useTimedOpen } from "../components/BUi.tsx";
+import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
 import CharIntro from "../components/CharIntro.tsx";
 
@@ -58,7 +58,7 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
           </div>
         )}
       </div>
-      <BSheet title={own ? "LA TUA FRASE" : "SCEGLI LA FRASE"} sub={own ? "Se la dici a voce, gli altri non la leggono." : single ? "Questa carta ha una sola frase." : "Tocca una frase, ▾ per leggerla tutta"} ui={ui}>
+      <BSheet title={own ? "LA TUA FRASE" : "SCEGLI LA FRASE"} sub={own ? "Se la dici a voce, gli altri non la leggono." : single ? "Questa carta ha una sola frase." : "Tocca la frase che vuoi urlare, poi Proclama."} ui={ui}>
         <Row>
           {(!single || own) && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 15, padding: "0 12px", flex: "none" }} testId="phrase-free">{own ? "Indietro" : "Ne invento una"}</Btn>}
           <Btn kind="red" disabled={!own && sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">Proclama</Btn>
@@ -69,12 +69,9 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
 }
 
 function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; theme?: string; on: boolean; onPick: () => void }) {
-  const [open, setOpen] = useTimedOpen();
   return (
-    <div className={`bopt${on ? " on" : ""}${open ? " open" : ""}`} role="button" tabIndex={0} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
+    <div className={`bopt${on ? " on" : ""}`} role="button" tabIndex={0} aria-pressed={on} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
       {theme && <span className="opt-ctx">{theme}</span>}<span className="tx">{text}</span>
-      <button className="ex" aria-label={open ? "Chiudi la frase" : "Leggi tutta la frase"} aria-expanded={open} onClick={(e) => { e.stopPropagation(); setOpen(!open); }} data-testid={`phrase-ex-${k}`}>▾</button>
-      {open && <i className="tbar" />}
     </div>
   );
 }
@@ -82,7 +79,7 @@ function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; th
 /** La mano come carosello: la carta al centro è grande, le vicine si intravedono. Tocca una carta per sceglierla, di nuovo per ingrandirla. */
 export function HandPicker({ view, send, ui, title = "SCEGLI LA CARTA", sub = "Chi lo farebbe di sicuro? La scelta è segreta." }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; title?: string; sub?: React.ReactNode }) {
   const hand = view.myHand, n = hand.length, [cur, setCur] = useState(Math.floor((n - 1) / 2)), [picked, setPicked] = useState(false), [zoom, setZoom] = useState(false);
-  const box = useRef<HTMLDivElement>(null), [dim, setDim] = useState({ w: 372, h: 380 }), x0 = useRef<number | null>(null);
+  const box = useRef<HTMLDivElement>(null), [dim, setDim] = useState({ w: 372, h: 380 }), x0 = useRef<number | null>(null), y0 = useRef(0);
   useLayoutEffect(() => {
     const el = box.current; if (!el) return undefined;
     const f = () => setDim({ w: el.clientWidth, h: el.clientHeight }); f();
@@ -94,7 +91,8 @@ export function HandPicker({ view, send, ui, title = "SCEGLI LA CARTA", sub = "C
   return (
     <>
       <div className="bscene" data-testid="hand">
-        <div className="bhand" ref={box} onPointerDown={(e) => { x0.current = e.clientX; }} onPointerUp={(e) => { if (x0.current !== null && Math.abs(e.clientX - x0.current) > 40) move(e.clientX < x0.current ? 1 : -1); x0.current = null; }}>
+        <div className="bhand" ref={box} onTouchStart={(e) => { x0.current = e.touches[0]!.clientX; y0.current = e.touches[0]!.clientY; }}
+          onTouchEnd={(e) => { const t = e.changedTouches[0]!; if (x0.current !== null && Math.abs(t.clientX - x0.current) > 35 && Math.abs(t.clientX - x0.current) > Math.abs(t.clientY - y0.current) * 1.2) move(t.clientX < x0.current ? 1 : -1); x0.current = null; }}>
           {hand.map((c, i) => {
             const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW));
             const lifted = picked && d === 0;
@@ -251,7 +249,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
               {showPanel && res && afterStep === "points" && <>
                 {phase === "RESULTS" && <div className="bsp" />}
-                <PointsPanel cardIds={ids} voters={voters} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} hideGo onContinue={() => setAfter({ turn, step: "board" })} />
+                <PointsPanel cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} hideGo onContinue={() => setAfter({ turn, step: "board" })} />
                 <BSheet title="PUNTI DEL TURNO" sub={`Turno ${view.turn} di ${view.totalTurns}`} ui={uiv}>
                   {readOnly ? <span className="pb-wait">Il Megafono prosegue…</span> : <Row>{tray}<Btn onClick={() => setAfter({ turn, step: "board" })} testId="points-continue">Continua ›</Btn></Row>}
                 </BSheet>

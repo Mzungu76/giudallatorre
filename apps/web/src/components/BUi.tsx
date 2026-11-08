@@ -23,9 +23,8 @@ export function BMeta({ turn, mega, right, deadline }: { turn: string; mega?: st
   return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{right ?? `📣 ${mega}`}</span></div>;
 }
 
-/** La frase del Megafono: chiusa su due righe, si apre e si chiude con un tocco, e si chiude da sola dopo 6 secondi. */
+/** La frase del Megafono, sempre per intero (il corpo si riduce se è lunga). */
 export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"]; megaName: string }) {
-  const [open, setOpen] = useTimedOpen();
   if (!phrase) return null;
   let label = "Il Megafono urla:", body: string;
   if (phrase.mode === "free") { label = "Oggi sale sulla torre…"; body = phrase.text ?? "una frase tutta sua (detta a voce)!"; }
@@ -33,11 +32,10 @@ export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"];
     const m = phrase.text.match(/^Oggi (sale|salgono) sulla torre /);
     if (m) { label = `Oggi ${m[1]} sulla torre…`; body = phrase.text.slice(m[0].length); } else body = phrase.text;
   }
-  const theme = phrase.mode === "card" ? phrase.theme : undefined;
+  const theme = phrase.mode === "card" ? phrase.theme : undefined, len = body.length, size = len > 90 ? " xl" : len > 55 ? " l" : "";
   return (
-    <div className={`phrase-card pk${open ? " open" : ""}`} role="button" tabIndex={0} aria-expanded={open} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}
-      onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpen(!open); } }}>
-      <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b><em className="chev" aria-hidden>▾</em>{open && <i className="tbar" />}
+    <div className={`phrase-card pk${size}`} data-testid="phrase" aria-label={`${megaName} urla: ${label} ${body}`}>
+      <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
 }
