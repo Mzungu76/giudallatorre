@@ -10,7 +10,6 @@ export default function Zoom({ cardId, pos, total, onClose, onNav, actionLabel, 
       <div className="zt">{title}</div>
       <div className="zc">
         <img src={cardFull(cardId)} alt={`Personaggio ${pos}`} className="fullcard" />
-        <div className="zn">{pos}</div>
       </div>
       <button className="arr al" aria-label="Precedente" onClick={() => onNav(((pos + total - 2) % total) + 1)}>‹</button>
       <button className="arr ar" aria-label="Successivo" onClick={() => onNav((pos % total) + 1)}>›</button>

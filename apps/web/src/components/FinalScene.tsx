@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { PtIcon } from "./Pt.tsx";
 import { cardUrl } from "../lib/characters.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
@@ -80,7 +81,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       {done && (
         <div className="fin-rank" style={{ top: gy + 14 }} data-testid="final-rank">
           {rows.map((r, i) => (
-            <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><u>{pts(r.score)}</u></div>
+            <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><u><PtIcon s={15} /> {pts(r.score)}</u></div>
           ))}
         </div>
       )}

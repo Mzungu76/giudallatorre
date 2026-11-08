@@ -15,8 +15,9 @@ import { luiLabel } from "../lib/lui.ts";
 import type { LuiSpec, PlayerId } from "@gdt/game-engine";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
-import { IntroSlides, MegaIntro, megaIntroDue, megaIntroSeen } from "../components/Intro.tsx";
-import { HintBubble, useIdleHint } from "../components/IdleHint.tsx";
+import { IntroSlides, MegaIntro, NoCardNotice, megaIntroDue, megaIntroSeen, noCardDue, noCardSeen } from "../components/Intro.tsx";
+import { HintBubble, HintPointer, useIdleHint } from "../components/IdleHint.tsx";
+import { hintFor } from "../lib/hints.tsx";
 import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
 import CharIntro from "../components/CharIntro.tsx";
@@ -106,7 +107,7 @@ export function HandPicker({ view, send, ui, sound = false, title = "SCEGLI LA C
           {!renew && hand.map((c, i) => {
             const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW));
             const lifted = picked && d === 0;
-            return <button key={c} className={`card ${lifted ? "sel" : ""}${mega ? " gold" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
+            return <button key={c} className={`card ${lifted ? "sel" : ""}${d === 0 ? " cur" : ""}${mega ? " gold" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
               style={{ width: w, height: h, left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 7}deg)`, zIndex: 20 - a }}
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
@@ -143,6 +144,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const [megaIntro, setMegaIntro] = useState(false), megaShown = useRef(-1);
+  const [noCard, setNoCard] = useState(false), noCardShown = useRef(-1);
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
   const tower = [...view.tower].sort((a, b) => a.position - b.position), ids = tower.map((t) => t.cardId), N = ids.length;
   phaseRef.current = view.phase;
@@ -203,14 +205,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   useEffect(() => {
     if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
   }, [phase, turn, isMega, readOnly, intro, charIntro]);
-  // Suggerimento a fumetto: solo se devi agire e resti fermo a lungo
-  const hintText: React.ReactNode = readOnly ? null
-    : phase === "PROCLAIM" && isMega ? <>Tocca la frase che vuoi urlare, poi premi <b>Proclama</b>. Puoi anche inventarne una.</>
-    : phase === "PLAY" && !mine?.hasPlayed && (view.megafonoSa || !isMega) ? <>Scegli il personaggio che somiglia di più alla frase e premi <b>Gioca questa carta</b>. Nessuno vede cosa giochi.</>
-    : phase === "SUSPECT" && isMega && !climbing ? <>Tocca la carta su cui scommetti, poi scegli il gettone: più voti scommetti, più punti fai se li prende.</>
-    : phase === "VOTE" && canVote && !climbing ? <>Vota la carta che somiglia di più alla frase, anche la tua. Se cade e l’hai votata: <b>+2</b>.</>
-    : null;
-  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !banner && !intro && !charIntro && !megaIntro && zoomPos === null, `${turn}-${phase}`);
+  // «Questo turno non giochi carte»: resta finché non lo tocchi (le prime 3 volte)
+  useEffect(() => {
+    if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
+  }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, megaIntro]);
+  // Suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
+  const hint = readOnly ? null : hintFor(view), hintText = hint?.text ?? null;
+  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
@@ -297,7 +298,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {!intro && charIntro && <CharIntro color={people.get(me).color} onClose={() => { setCharIntro(false); try { sessionStorage.setItem(charKey, "1"); } catch { /* */ } }} />}
       {intro && <IntroSlides onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
       {megaIntro && <MegaIntro megafonoSa={view.megafonoSa} onClose={(off) => { megaIntroSeen(off); setMegaIntro(false); }} />}
-      {hintOn && hintText && <HintBubble onClose={hintClose} onRules={uiv?.rules}>{hintText}</HintBubble>}
+      {noCard && <NoCardNotice onClose={() => { noCardSeen(); setNoCard(false); }} />}
+      {hintOn && hint && <><HintBubble onClose={hintClose} onRules={uiv?.rules}>{hint.text}</HintBubble><HintPointer targets={hint.targets} /></>}
     </>
   );
 }

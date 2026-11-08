@@ -4,6 +4,7 @@ import { cardFull } from "../lib/cards.ts";
 import { luiLabel } from "../lib/lui.ts";
 import { sfx } from "../lib/sfx.ts";
 import type { Voter } from "./Terrace.tsx";
+import { Pt } from "./Pt.tsx";
 
 const pts = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
 
@@ -37,7 +38,7 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
             <div className={`prow2${v.id === meId ? " you" : ""}`} key={v.id} data-testid="points-block">
               <div className="pr-who"><i className="dc" style={{ background: v.color }} /><span>{v.id === meId ? "Tu" : v.name}{v.mega ? " 📣" : ""}</span></div>
               <div className="pr-say">{say(v).map((s, i) => <span key={i} className={s.ok ? "ok" : "ko"}>{s.ok ? "✓" : "✗"} {s.t}</span>)}</div>
-              <div className="pr-card">{id && <span className="pb-c" style={{ backgroundImage: `url(${cardFull(id)})` }}><i>{p}</i></span>}<b className={t > 0 ? "up" : t < 0 ? "dn" : "zz"}>{t === 0 ? "0" : pts(t)}</b></div>
+              <div className="pr-card">{id && <span className="pb-c" style={{ backgroundImage: `url(${cardFull(id)})` }}><i>{p}</i></span>}<b className={t > 0 ? "up" : t < 0 ? "dn" : "zz"}><Pt n={t} plus={t > 0} /></b></div>
             </div>
           );
         })}

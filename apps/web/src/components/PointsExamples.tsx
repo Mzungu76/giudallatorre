@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { LuiSpec } from "@gdt/game-engine";
 import { CHAR_COLORS, tokenUrl } from "../lib/characters.ts";
 import { luiTok } from "../scene/draw.ts";
+import { Pt } from "./Pt.tsx";
 
 /**
  * Esempi visivi dei punti: le carte sono quelle vere, con il numero sul bordo; i segnalini sono quelli dei giocatori.
@@ -52,12 +53,12 @@ function Line({ p, lui }: { p: number; lui?: boolean }) {
       <span className="ex-who"><Tk i={w.c} s={26} /><b>{w.name}</b>{w.mega && <em title="Megafono">📣</em>}</span>
       <span className="ex-vote"><i>vota</i><Thumb i={voted} n={voted + 1} w={22} /></span>
       <span className="ex-why">
-        {right && <Pill kind="ok">✓ Voto giusto <b>+2</b></Pill>}
-        {own && <Pill kind="ok">✓ La sua carta è caduta <b>+2</b></Pill>}
-        {lui && <Pill kind="luik">✓ Lui! azzeccato <b>+7</b></Pill>}
+        {right && <Pill kind="ok">✓ Voto giusto <Pt n={2} /></Pill>}
+        {own && <Pill kind="ok">✓ La sua carta è caduta <Pt n={2} /></Pill>}
+        {lui && <Pill kind="luik">✓ Lui! azzeccato <Pt n={7} /></Pill>}
         {!right && !own && !lui && <Pill kind="no">Nessun punto</Pill>}
       </span>
-      <b className={`ex-tot ${total ? "up" : ""}`}>{total ? `+${total}` : "0"}</b>
+      <b className={`ex-tot ${total ? "up" : ""}`}><Pt n={total} plus={total > 0} /></b>
     </div>
   );
 }
@@ -70,8 +71,8 @@ export function ExampleTurn({ small }: { small?: boolean }) {
       <Board small={small} />
       <div className="ex-lines">{[0, 1, 2, 3].map((p) => <Line key={p} p={p} lui={p === 0} />)}</div>
       <div className="ex-key">
-        <span><Pill kind="ok"><b>+2</b></Pill> hai votato la carta che cade</span>
-        <span><Pill kind="ok"><b>+2</b></Pill> la carta che cade l’hai giocata tu</span>
+        <span><Pill kind="ok"><Pt n={2} /></Pill> hai votato la carta che cade</span>
+        <span><Pill kind="ok"><Pt n={2} /></Pill> la carta che cade l’hai giocata tu</span>
       </div>
     </div>
   );
@@ -96,8 +97,8 @@ export function ExampleLui() {
           ))}
         </div>
       </div>
-      <div className="ex-res ok"><b>Due voti sulla sua carta: azzeccato!</b><span>Anna prende <em>+7</em></span></div>
-      <div className="ex-res ko"><b>Se ne avesse presi solo uno: mancato</b><span><em>0</em> punti. Non perde nulla, ma il gettone è usato.</span></div>
+      <div className="ex-res ok"><b>Due voti sulla sua carta: azzeccato!</b><span>Anna prende <Pt n={7} /></span></div>
+      <div className="ex-res ko"><b>Se ne avesse presi solo uno: mancato</b><span><Pt n={0} plus={false} /> Non perde nulla, ma il gettone è usato.</span></div>
       <p className="ex-foot">Contano solo i voti degli altri, non il tuo. Ogni partita ha 2 gettoni, uguali per tutti, e ognuno si usa una volta sola.</p>
     </div>
   );
@@ -107,9 +108,9 @@ export function ExampleLui() {
 export function PointsKey() {
   return (
     <div className="ex-pk">
-      <div className="ex-pkr"><Pill kind="ok"><b>+2</b></Pill><span className="ex-pkv"><Tk i={0} s={22} /><i>→</i><Thumb i={FALLEN} w={26} ring /><em>cade</em></span><div><b>Voto giusto</b><p>Hai votato la carta che cade.</p></div></div>
-      <div className="ex-pkr"><Pill kind="ok"><b>+2</b></Pill><span className="ex-pkv"><Thumb i={FALLEN} w={26} ring /><em>cade</em><i>←</i><Tk i={1} s={22} /></span><div><b>Carta caduta</b><p>La carta che cade l’hai giocata tu.</p></div></div>
-      <div className="ex-pkr"><Pill kind="luik"><b>+5…16</b></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>Lui! azzeccato</b><p>Solo per il Megafono: la carta del gettone prende abbastanza voti.</p></div></div>
+      <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Tk i={0} s={22} /><i>→</i><Thumb i={FALLEN} w={26} ring /><em>cade</em></span><div><b>Voto giusto</b><p>Hai votato la carta che cade.</p></div></div>
+      <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Thumb i={FALLEN} w={26} ring /><em>cade</em><i>←</i><Tk i={1} s={22} /></span><div><b>Carta caduta</b><p>La carta che cade l’hai giocata tu.</p></div></div>
+      <div className="ex-pkr"><Pill kind="luik"><Pt n="+5…16" /></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>Lui! azzeccato</b><p>Solo per il Megafono: la carta del gettone prende abbastanza voti.</p></div></div>
     </div>
   );
 }

@@ -962,3 +962,37 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .bhand .card.gold{border:5px solid #ffd84a;box-shadow:0 0 0 3px #13224a,0 0 0 8px #ffc72c}
 .hstamp{position:absolute;z-index:40;width:42px;height:42px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;font-size:22px;pointer-events:none}
 .prow2.you{border-color:#e8362b;background:#fff7e0;box-shadow:0 3px 0 #e8362b}
+
+/* ---------- icona dei punti: sempre accanto al numero ---------- */
+.pt{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.pt b{font:inherit;color:inherit}
+.pt-ic{display:inline-block;flex:none;width:1.05em;height:1.05em;min-width:12px;min-height:12px;border-radius:50%;border:2px solid #13224a;background:radial-gradient(circle at 35% 30%,#fff6a8,#ffc72c 55%,#f2a900);position:relative;vertical-align:-.12em;font-style:normal}
+.pt-ic::after{content:"★";position:absolute;inset:0;display:grid;place-items:center;font:400 .62em/1 Nunito,sans-serif;color:#13224a}
+.stbd-tag b{display:inline-flex;align-items:center;gap:3px}.stbd-d{display:inline-flex;align-items:center;gap:2px}
+.fin-row u{display:inline-flex;align-items:center;gap:4px}
+.ex-pill .pt-ic{width:.95em;height:.95em}.v .pt,.ex-pill .pt{gap:4px}
+.ivl-pr .v{display:inline-flex;align-items:center;justify-content:center;gap:5px}
+/* freccia e cerchio sul prossimo gesto */
+.hint-ring{position:fixed;z-index:400;pointer-events:none;border:4px dashed #ffc72c;border-radius:20px;box-shadow:0 0 0 3px #13224a,0 0 18px #ffc72caa;animation:hintring 1.1s ease-in-out infinite}
+.hint-arrow{position:fixed;z-index:401;width:36px;height:36px;display:grid;place-items:center;font:400 30px/1 Nunito,sans-serif;color:#ffc72c;text-shadow:0 0 0 #13224a,2px 2px 0 #13224a,-2px -2px 0 #13224a,2px -2px 0 #13224a,-2px 2px 0 #13224a;pointer-events:none;animation:hintbounce .8s ease-in-out infinite}
+.hint-arrow.up{animation-name:hintbounceup}
+@keyframes hintring{50%{transform:scale(1.035);box-shadow:0 0 0 3px #13224a,0 0 26px #ffc72c}}
+@keyframes hintbounce{50%{transform:translateY(8px)}}@keyframes hintbounceup{50%{transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.hint-ring,.hint-arrow{animation:none}}
+/* menu Aiuto */
+.help .help-body{flex:1;min-height:0;overflow-y:auto;padding:14px;display:grid;gap:12px;align-content:start}
+.help-it{display:grid;grid-template-columns:54px 1fr;gap:12px;align-items:center;text-align:left;background:#fff7e0;border:4px solid #13224a;border-radius:18px;box-shadow:0 5px 0 #13224a;padding:12px;color:#13224a;cursor:pointer;font:inherit}
+.help-it i{font-style:normal;font-size:32px;width:54px;height:54px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;display:grid;place-items:center}
+.help-it b{display:block;font:400 21px/1.05 Anton;text-transform:uppercase;font-weight:400}.help-it small{display:block;font:700 13px/1.3 Nunito;margin-top:3px}
+.help-it.main{background:linear-gradient(#fff6cf,#ffe27a);box-shadow:0 0 0 4px #ffc72c,0 5px 0 4px #13224a}
+.help-it.off{opacity:.6;cursor:default}
+/* «Questo turno non giochi carte» */
+.nocard .nc-art{display:flex;align-items:center;justify-content:center;gap:14px;margin:14px 0 0;flex:none}
+.nc-deck{position:relative;width:78px;height:112px;display:block}.nc-deck i{position:absolute;inset:0;border-radius:9px;border:4px solid #fff;background:linear-gradient(135deg,#14a3a1 0 50%,#0e7d7c 50%);box-shadow:0 3px 0 #13224a,0 0 0 2px #13224a}
+.nc-deck i:nth-child(1){transform:translate(-5px,5px) rotate(-5deg)}.nc-deck i:nth-child(2){transform:translate(0,0) rotate(0)}.nc-deck i:nth-child(3){transform:translate(5px,-5px) rotate(5deg)}
+.nc-deck b{position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);font:400 12px Anton;color:#fff;text-shadow:1px 1px 0 #13224a;letter-spacing:.1em}
+.nc-ar{font-size:34px;color:#ffc72c;text-shadow:2px 2px 0 #13224a}
+.nc-tower{position:relative;display:block;width:96px}.nc-tower img{display:block;width:100%;filter:drop-shadow(0 6px 0 #13224a55)}
+.nc-card{position:absolute;left:50%;top:38%;width:34px;height:50px;margin-left:-17px;border-radius:5px;border:3px solid #fff;background:linear-gradient(135deg,#14a3a1 0 50%,#0e7d7c 50%);box-shadow:0 2px 0 #13224a,0 0 0 2px #13224a;transform:rotate(-8deg)}
+.nocard .isl-card{margin:12px 16px 0}
+.pr-card .pt b,.pb-nm .pt b,.ex-tot .pt b{min-width:0;text-align:left}

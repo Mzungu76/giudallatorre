@@ -58,3 +58,4 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Mano rinnovata all'intervallo: animazione «Rinnoviamo la tua mano!» (dal vuoto, mazzetto coperto, ventaglio, carte scoperte) quando si apre la scelta della carta
 - [x] Aiuto ai giocatori (`docs/AIUTO_GIOCATORI.md`): 3 schermate iniziali, scheda «Sei il Megafono!», ruolo sempre visibile, fumetti solo se si resta fermi, esempi dei punti con carte vere, riga «Tu» nel riepilogo
 - [x] Corretto il gettone Lui! che non si vedeva nella scheda «Il Lui!» del regolamento
+- [x] Menu «i» → Aiuto (cosa devo fare adesso con freccia, tutorial, regolamento); «Questo turno non giochi carte» che resta finché lo tocchi; icona dei punti accanto ai numeri; intervalli senza tetto e con +2 fisso al posto del ×2; tolto il numero sotto il pulsante nello zoom

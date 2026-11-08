@@ -264,9 +264,9 @@ function startMini(s: GameState, events: GameEvent[]) {
   events.push({ type: "miniStarted", kind });
 }
 
-/** Punti del mini-gioco. Accusa / Storia d'amore: chi ha votato una carta in testa prende i voti ricevuti, chi l'ha giocata il doppio. Nell'Accusa le carte in testa cadono (il colpevole), nella Storia d'amore restano e cadono le altre. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla carta che si è giocata. */
+/** Punti del mini-gioco. Accusa / Storia d'amore: chi ha votato una carta in testa prende i voti ricevuti, chi l'ha giocata +2. Nell'Accusa le carte in testa cadono (il colpevole), nella Storia d'amore restano e cadono le altre. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla carta che si è giocata. */
 function resolveMini(s: GameState, events: GameEvent[]) {
-  const mini = s.mini!, n = s.playerIds.length;
+  const mini = s.mini!;
   const counts: Record<number, number> = {};
   for (const t of s.tower) counts[t.position] = 0;
   for (const p of s.playerIds) counts[s.votes[p]!] = (counts[s.votes[p]!] ?? 0) + 1;
@@ -277,7 +277,6 @@ function resolveMini(s: GameState, events: GameEvent[]) {
   const owners: Record<number, PlayerId> = {}; for (const t of s.tower) if (t.ownerId) owners[t.position] = t.ownerId;
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
-  const remaining = Math.max(1, s.totalTurns - s.turnNumber), cap = Math.max(n, 2 * remaining);
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number) => { points[p]! += pts; lines[p]!.push({ kind, pts, pos }); };
   if (peggiore) {
     // +2 a chi ha votato una carta caduta (voto giusto, come nei turni normali)
@@ -286,12 +285,11 @@ function resolveMini(s: GameState, events: GameEvent[]) {
     for (const t of s.tower) { const o = owners[t.position]; if (o && counts[t.position]! > 0) give(o, counts[t.position]!, "mini-peggiore", t.position); }
   } else {
     for (const p of s.playerIds) { const v = s.votes[p]!; if (leaders.includes(v)) give(p, counts[v]!, "mini-voto", v); }
-    for (const k of leaders) { const o = owners[k]; if (o) give(o, 2 * counts[k]!, "mini-carta", k); }
-    for (const p of s.playerIds) if (points[p]! > cap) give(p, cap - points[p]!, "mini-tetto", 0);
+    for (const k of leaders) { const o = owners[k]; if (o) give(o, 2, "mini-carta", k); }   // +2 a chi ha giocato una carta in testa (nessun raddoppio, nessun tetto)
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: MiniResult = { kind: mini.kind, cardId: mini.cardId, text: mini.text, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, leaders, fallenPositions: fallen,
-    fallenCardIds: fallen.map((k) => s.tower.find((t) => t.position === k)!.cardId), owners, points, lines, cap };
+    fallenCardIds: fallen.map((k) => s.tower.find((t) => t.position === k)!.cardId), owners, points, lines };
   s.miniResult = result; s.phase = "MINI_RESULTS"; events.push({ type: "miniResolved", result });
 }
 

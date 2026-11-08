@@ -50,7 +50,7 @@ export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; s
         {ui && <>
           <button className="bib" onClick={ui.chat} aria-label={ui.unread ? `Chat, ${ui.unread} messaggi nuovi` : "Chat"} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
           <button className="bib" onClick={ui.rank} aria-label="Classifica" data-testid="standings-btn">🏆</button>
-          <button className="bib" onClick={ui.rules} aria-label="Regolamento e suoni" data-testid="legend-btn">i</button>
+          <button className="bib" onClick={ui.rules} aria-label="Aiuto" data-testid="legend-btn">i</button>
         </>}
       </div>
       {children}

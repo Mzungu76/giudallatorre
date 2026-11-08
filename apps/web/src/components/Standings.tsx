@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { tokenUrl } from "../lib/characters.ts";
 import { useStage } from "../ui.tsx";
+import { PtIcon } from "./Pt.tsx";
 
 export interface StandRow { id: string; name: string; color: string; score: number; /** Punteggio prima del turno: se c'è, le pedine partono da lì e salgono al nuovo. */ prev?: number }
 const NV = "#13224a";
@@ -51,7 +52,7 @@ export default function Standings({ rows, turn, total, onClose, action, title }:
       {placed.map(({ r, dx, py, side, ly }) => (
         <div key={r.id} className="stbd-grp">
           <div className={`stbd-lead ${side}`} style={{ top: py - 2, ["--dx" as string]: `${dx}px` }} />
-          <div className={`stbd-tag ${side}`} style={{ top: ly - 12 }} data-testid="standings-row"><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><b>{shown(r)}</b>{r.prev !== undefined && r.score !== r.prev && <u className={`stbd-d ${r.score < r.prev ? "neg" : ""}`}>{r.score > r.prev ? "+" : "−"}{Math.abs(r.score - r.prev)}</u>}</div>
+          <div className={`stbd-tag ${side}`} style={{ top: ly - 12 }} data-testid="standings-row"><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><b><PtIcon s={13} />{shown(r)}</b>{r.prev !== undefined && r.score !== r.prev && <u className={`stbd-d ${r.score < r.prev ? "neg" : ""}`}><PtIcon s={11} />{r.score > r.prev ? "+" : "−"}{Math.abs(r.score - r.prev)}</u>}</div>
           <div className="stbd-pawn" style={{ left: `calc(50% + ${dx}px)`, top: py - 36, animationDelay: `${0.1 + (1 - shown(r) / Math.max(1, leader)) * 0.3}s` }}>
             {shown(r) === leader && leader > 0 && <em className="stbd-crown">👑</em>}
             <Pawn color={r.color} size={40} />

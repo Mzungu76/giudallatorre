@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
 
 /** Dopo quanto tempo senza toccare nulla compare il suggerimento. Gancio per le prove: localStorage «gdt.hintms». */
 const hintDelay = () => { try { const n = Number(localStorage.getItem("gdt.hintms")); return n > 0 ? n : 14000; } catch { return 14000; } };
@@ -34,7 +35,34 @@ export function HintBubble({ children, onClose, onRules }: { children: ReactNode
     <div className="hintb" role="status" aria-live="polite" data-testid="idle-hint">
       <span className="hn">Ti serve una mano?</span>
       <p>{children}</p>
-      <div className="hr2">{onRules ? <a role="button" tabIndex={0} onClick={onRules}>Regolamento</a> : <span />}<button className="bt mus sm" onClick={onClose} data-testid="idle-hint-ok">Ho capito</button></div>
+      <div className="hr2">{onRules ? <a role="button" tabIndex={0} onClick={onRules}>Aiuto</a> : <span />}<button className="bt mus sm" onClick={onClose} data-testid="idle-hint-ok">Ho capito</button></div>
     </div>
+  );
+}
+
+/**
+ * Freccia e cerchio pulsante sull'elemento da toccare (pulsante o carte): il primo della lista che si vede.
+ * Sta fuori dalla scena scalata (portale sul body), quindi usa le coordinate reali dello schermo.
+ */
+export function HintPointer({ targets }: { targets: string[] }) {
+  const [r, setR] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const key = targets.join("|");
+  useEffect(() => {
+    const find = () => {
+      for (const sel of targets) { const el = document.querySelector(sel) as HTMLElement | null; if (!el) continue; const b = el.getBoundingClientRect(); if (b.width > 8 && b.height > 8) return b; }
+      return null;
+    };
+    const tick = () => { const b = find(); setR(b ? { x: b.left, y: b.top, w: b.width, h: b.height } : null); };
+    tick(); const id = setInterval(tick, 250); window.addEventListener("resize", tick);
+    return () => { clearInterval(id); window.removeEventListener("resize", tick); };
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  if (!r) return null;
+  const above = r.y > 150;
+  return createPortal(
+    <>
+      <div className="hint-ring" data-testid="hint-ring" style={{ left: r.x - 6, top: r.y - 6, width: r.w + 12, height: r.h + 12 }} />
+      <div className={`hint-arrow ${above ? "dn" : "up"}`} aria-hidden style={{ left: r.x + r.w / 2 - 18, top: above ? r.y - 50 : r.y + r.h + 10 }}>{above ? "▼" : "▲"}</div>
+    </>,
+    document.body,
   );
 }

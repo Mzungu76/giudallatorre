@@ -7,6 +7,10 @@ import Game from "./Game.tsx";
 import MiniGame from "../components/MiniGame.tsx";
 import ChatPanel, { useChatState } from "../components/Chat.tsx";
 import HowTo from "../components/HowTo.tsx";
+import HelpMenu from "../components/HelpMenu.tsx";
+import { IntroSlides } from "../components/Intro.tsx";
+import { HintBubble, HintPointer } from "../components/IdleHint.tsx";
+import { hintFor } from "../lib/hints.tsx";
 import Standings from "../components/Standings.tsx";
 import { LuiPopup, type UiCtl } from "../components/BUi.tsx";
 import type { ChatDto } from "@gdt/game-protocol";
@@ -102,17 +106,22 @@ export default function RoomScreen({ code }: { code: string }) {
     setNotice(`${left.map((p) => p.nickname).join(", ")} ${left.length > 1 ? "hanno lasciato" : "ha lasciato"} la partita: ${left.length > 1 ? "giocano" : "gioca"} un bot al ${left.length > 1 ? "loro" : "suo"} posto`);
     const t = setTimeout(() => setNotice(null), 4500); return () => clearTimeout(t);
   }, [room]);
-  const cs = useChatState(chat, room?.you ?? "", sound), [ov, setOv] = useState<null | "chat" | "rank" | "rules" | "lui">(null);
+  const cs = useChatState(chat, room?.you ?? "", sound), [ov, setOv] = useState<null | "chat" | "rank" | "rules" | "lui" | "help" | "tutorial">(null);
+  // «Cosa devo fare adesso?»: il suggerimento con la freccia, su richiesta; sparisce quando cambia la situazione
+  const [manual, setManual] = useState(false), vv = view?.view;
+  useEffect(() => { setManual(false); }, [vv?.phase, vv?.turn, vv?.myVote, vv?.players.find((p) => p.id === vv.viewerId)?.hasPlayed]);
   useEffect(() => { if (status === "invalid") { forgetSession(code); navigate(`/entra?c=${code}`); } }, [status, code]);
   if (status === "kicked") return <Stage bg="sky" testId="kicked"><div className="center-msg"><h2>Sei stato espulso</h2><p>L'host ti ha tolto dalla stanza.</p><Btn onClick={() => { forgetSession(code); navigate("/"); }}>Torna alla home</Btn></div></Stage>;
   if (status === "closed" && !room) return <Stage bg="sky"><div className="center-msg"><h2>Stanza chiusa</h2><p>La stanza non esiste più o è aperta su un altro dispositivo.</p><Btn onClick={() => navigate("/")}>Torna alla home</Btn></div></Stage>;
   if (!room) return <Stage bg="sky" testId="loading"><div className="center-msg"><h2>Mi collego…</h2></div></Stage>;
   const reconnecting = status === "reconnecting";
   const close = () => { setOv(null); cs.setOpen(false); };
-  const ui: UiCtl = { unread: cs.unread, chat: () => { setOv("chat"); cs.setOpen(true); }, rank: () => setOv("rank"), rules: () => setOv("rules"), lui: () => setOv("lui") };
+  const ui: UiCtl = { unread: cs.unread, chat: () => { setOv("chat"); cs.setOpen(true); }, rank: () => setOv("rank"), rules: () => setOv("help"), lui: () => setOv("lui") };
   const pv = view?.view ?? null, colorOf = (id: string) => PLAYER_COLORS[Math.max(0, room.players.findIndex((p) => p.id === id)) % 8]!;
   const overlays = ov === "chat" ? <ChatPanel chat={chat} me={room.you} players={room.players} send={send} onClose={close} />
-    : ov === "rules" ? <HowTo onClose={close} tokens={pv?.luiTokens} sound={sound} setSound={setSound}
+    : ov === "help" ? <HelpMenu canHint={!!(pv && hintFor(pv))} sound={sound} setSound={setSound} onHint={() => { setOv(null); setManual(true); }} onTutorial={() => setOv("tutorial")} onRules={() => setOv("rules")} onClose={close} />
+    : ov === "tutorial" ? <IntroSlides onClose={() => setOv("help")} />
+    : ov === "rules" ? <HowTo onClose={() => setOv("help")} tokens={pv?.luiTokens} sound={sound} setSound={setSound}
         {...(room.stage === "PLAYING" ? { onLeave: () => { send({ t: "leave" }); forgetSession(code); navigate("/"); }, leaveHint: room.players.some((p) => !p.isBot && p.id !== room.you) ? "Esci dalla partita? Un giocatore virtuale prenderà il tuo posto e giocherà per te." : "Sei l'ultimo giocatore umano: se esci la stanza si chiude subito." } : {})} />
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />
@@ -124,6 +133,7 @@ export default function RoomScreen({ code }: { code: string }) {
     <Stage bg="sky" testId="game">
       {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
       {overlays}
+      {manual && pv && ((h) => h ? <><HintBubble onClose={() => setManual(false)}>{h.text}</HintBubble><HintPointer targets={h.targets} /></> : null)(hintFor(pv))}
       {reconnecting && <div className="banner-conn">Riconnessione…</div>}
       <Toast text={error ?? notice} />
     </Stage>
