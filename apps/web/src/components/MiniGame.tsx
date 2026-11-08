@@ -12,28 +12,31 @@ import { BMeta, BSheet, LuiTray, Row, WaitCard } from "./BUi.tsx";
 import { HandPicker, usePeople } from "../screens/Game.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 
-interface KindInfo { title: string; icon: string; tag: string; steps: [string, string][]; headCard: string | null; play: string; vote: string }
+interface KindInfo { title: string; icon: string; tag: string; steps: [string, string][]; /** Come si fanno punti: [valore, a chi / quando]. */ pts: [string, string][]; headCard: string | null; play: string; vote: string }
 export const MINI: Record<MiniKind, KindInfo> = {
   accusa: {
     title: "L'Accusa", icon: "🔍", tag: "Qualcuno ha fatto una marachella", headCard: "L'accusatore",
     steps: [["Un personaggio accusa", "Una carta accusa uno di voi di una marachella."], ["Giocate il colpevole", "Ognuno gioca in segreto la carta che l'avrebbe fatta."], ["Si vota", "La carta più votata è il colpevole e cade dalla torre: fa punti a chi l'ha votata e a chi l'ha giocata."]],
+    pts: [["voti", "Se voti il colpevole (la carta più votata, che cade): tanti punti quanti sono i suoi voti."], ["×2", "Se la carta del colpevole è la tua: il doppio dei voti che ha preso."]],
     play: "Chi ha fatto questa cosa? La scelta è segreta.", vote: "Puoi votare anche la tua. La più votata cade dalla torre.",
   },
   amore: {
     title: "La storia d'amore", icon: "💘", tag: "È nata una nuova coppia", headCard: "Il protagonista",
     steps: [["Un personaggio si innamora", "Una carta ha una nuova storia d'amore."], ["Giocate il partner", "Ognuno gioca in segreto la carta che gli starebbe meglio accanto."], ["Si vota", "Le carte più votate restano e fanno punti. Le altre cadono dalla torre."]],
+    pts: [["voti", "Se voti una carta in testa (resta sulla torre): tanti punti quanti sono i suoi voti."], ["×2", "Se una carta in testa è la tua: il doppio dei voti che ha preso."]],
     play: "Chi è il partner perfetto? La scelta è segreta.", vote: "Puoi votare anche la tua. Le più votate restano, le altre cadono.",
   },
   peggiore: {
     title: "Il peggiore", icon: "👎", tag: "Chi butteresti giù oggi?", headCard: null,
     steps: [["Niente frase", "Questa volta nessuno accusa nessuno."], ["Giocate il peggiore", "Ognuno gioca in segreto il personaggio che per lui è il peggiore in assoluto."], ["Si vota chi cade", "Ognuno vota la carta da buttare giù, ma non la propria. Per ogni voto che prende la tua carta fai un punto."]],
+    pts: [["+2", "Se voti una carta che cade (la più votata)."], ["+1", "Per ogni voto che prende la carta che hai giocato, cada o no."]],
     play: "Gioca il personaggio che per te è il peggiore in assoluto: più voti prende, più punti fai.", vote: "Vota la carta che butteresti giù. La tua non si può votare.",
   },
 };
 
 /** Annuncio dell'intervallo: nastro, titolo, carta del personaggio e i tre passi. Si chiude con «Si parte». */
 function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: PlayerView; sound: boolean; ui?: GameProps["ui"] | null; onGo: () => void }) {
-  const k = MINI[kind], { H } = useStage(), short = H < 700, hh = short ? 100 : 170, mini = view.mini;
+  const k = MINI[kind], { H } = useStage(), short = H < 700, hh = short ? 100 : H < 960 ? 92 : 170, mini = view.mini;
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const hand = view.myHand.slice(0, 3);
   return (
@@ -49,6 +52,7 @@ function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: Play
         </div>
       )}
       <div className="pp ivl-steps">{k.steps.map(([t, x], i) => <div className="brg-step" key={t}><span className="how-ic">{i + 1}</span><div><b>{t}</b><p>{x}</p></div></div>)}</div>
+      <div className="pp ivl-pts" data-testid="mini-points-info"><b>Come si fanno punti</b>{k.pts.map(([v, x]) => <div key={v + x} className="ivl-pr"><span className="v">{v}</span><span>{x}</span></div>)}</div>
       <div className="bsp" />
       <BSheet title="SI GIOCA UN MINI-GIOCO" sub="Intervallo, senza Megafono" ui={ui}><Row><Btn onClick={onGo} testId="mini-go">Si parte</Btn></Row></BSheet>
     </div>
@@ -77,7 +81,7 @@ function blocksOf(res: MiniResult, name: (id: string) => { name: string; color: 
   const b: Block[] = [];
   const lead = res.leaders.map((x) => "n. " + x).join(", ");
   const push = (key: string, title: string, sub: string, thumbs: number[], neg = false) => { const entries = by(key); if (entries.length) b.push({ key, title, sub, entries, thumbs, neg }); };
-  if (res.kind === "peggiore") push("mini-peggiore", "Voti ricevuti", "Chi ha giocato una carta prende tanti punti quanti sono i voti che la sua carta ha ricevuto, cada o no.", Object.entries(res.counts).filter(([, v]) => v > 0).sort((x, y) => y[1] - x[1]).map(([k]) => Number(k)));
+  if (res.kind === "peggiore") { push("mini-giusto", "Voto giusto", "Hanno votato una carta caduta: +2 a testa.", res.fallenPositions); push("mini-peggiore", "Voti ricevuti", "Chi ha giocato una carta prende tanti punti quanti sono i voti che la sua carta ha ricevuto, cada o no.", Object.entries(res.counts).filter(([, v]) => v > 0).sort((x, y) => y[1] - x[1]).map(([k]) => Number(k))); }
   else {
     const acc = res.kind === "accusa";
     push("mini-voto", acc ? "Colpevole votato" : "Voto in testa", `Hanno votato ${acc ? (res.leaders.length > 1 ? "un colpevole" : "il colpevole") : res.leaders.length > 1 ? "una carta in testa" : "la carta in testa"} (${lead}): tanti punti quanti sono i voti su quella carta, compreso il proprio.`, res.leaders);

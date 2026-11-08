@@ -890,3 +890,8 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .rn-back::after{content:"";position:absolute;inset:14% 18%;border:3px solid #ffffffaa;border-radius:6px}
 .rn-face{transform:rotateY(180deg)}
 @media (prefers-reduced-motion:reduce){.rn-card,.rn-in,.rn-msg{transition:none}}
+/* intervallo: come si fanno punti */
+.ivl-pts{margin-top:8px;padding:8px 12px}
+.ivl-pts>b{display:block;font:400 17px/1 Anton;color:#e8362b;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
+.ivl-pr{display:flex;gap:8px;align-items:center;font:700 13px/1.25 Nunito;margin-top:4px}
+.ivl-pr .v{flex:none;min-width:42px;text-align:center;background:#13224a;color:#ffc72c;border-radius:999px;padding:2px 8px;font:400 15px/1.3 Anton}

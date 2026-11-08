@@ -103,30 +103,32 @@ describe("mini-gioco di metà partita", () => {
     expect(r.points.p1).toBe(r.cap);                        // 6 voti + 12 → tagliato al tetto
     expect(r.lines.p1!.some((l) => l.kind === "mini-tetto")).toBe(true);
   });
-  it("Il peggiore: cade la carta più votata; ognuno prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato; chi vota non prende nulla", () => {
+  it("Il peggiore: cade la più votata; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla propria carta", () => {
     let g = playAll(toMini(4, "peggiore"));
     const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
     g = vote(g, { p1: b, p2: a, p3: a, p4: a });
     const r = g.miniResult!;
     expect(r.fallenPositions).toEqual([a]); expect(g.mini?.cardId).toBeNull();
-    expect(r.points).toEqual({ p1: 3, p2: 1, p3: 0, p4: 0 });   // 3 voti sulla carta di p1, 1 su quella di p2
-    expect(r.lines.p1).toEqual([{ kind: "mini-peggiore", pts: 3, pos: a }]);
+    // p1: 3 voti ricevuti; p2: 1 voto ricevuto + 2 (ha votato la caduta); p3, p4: 2 (hanno votato la caduta)
+    expect(r.points).toEqual({ p1: 3, p2: 3, p3: 2, p4: 2 });
+    expect(r.lines.p2).toEqual([{ kind: "mini-giusto", pts: 2, pos: a }, { kind: "mini-peggiore", pts: 1, pos: b }]);
+    expect(r.lines.p1).toEqual([{ kind: "mini-peggiore", pts: 3, pos: a }]);   // ha votato una carta che non è caduta: nessun +2
   });
-  it("Il peggiore: a pari merito cadono tutte le carte in testa e ognuno prende i propri voti", () => {
+  it("Il peggiore: a pari merito cadono tutte le carte in testa; +2 a chi ne ha votata una, più i voti ricevuti", () => {
     let g = playAll(toMini(4, "peggiore"));
     const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
     g = vote(g, { p1: b, p2: a, p3: a, p4: b });
     expect(g.miniResult!.fallenPositions.sort()).toEqual([a, b].sort());
-    expect(g.miniResult!.points).toEqual({ p1: 2, p2: 2, p3: 0, p4: 0 });
+    expect(g.miniResult!.points).toEqual({ p1: 4, p2: 4, p3: 2, p4: 2 });   // tutti hanno votato una caduta (+2); p1 e p2 hanno 2 voti ciascuno
   });
-  it("Il peggiore: la propria carta non si può votare (e il massimo di una carta è N−1 voti)", () => {
+  it("Il peggiore: la propria carta non si può votare (massimo N−1 voti su una carta, N+1 punti in un intervallo)", () => {
     let g = playAll(toMini(4, "peggiore"));
     const own = posOfOwner(g, "p1"), other = posOfOwner(g, "p2");
     expect(() => applyAction(g, { type: "vote", playerId: "p1", position: own })).toThrow(/INVALID_CHOICE/);
     expect(viewFor(g, "p1").myPosition).toBe(own); expect(viewFor(g, "p2").myPosition).toBe(other);   // ognuno sa solo la propria
     g = vote(g, { p1: other, p2: posOfOwner(g, "p1"), p3: other, p4: other });
-    expect(g.miniResult!.points.p2).toBe(3);
-    expect(Math.max(...Object.values(g.miniResult!.points))).toBeLessThanOrEqual(3);
+    expect(g.miniResult!.fallenPositions).toEqual([other]);
+    expect(g.miniResult!.points).toEqual({ p1: 3, p2: 3, p3: 2, p4: 2 });   // p1: +2 (voto giusto) +1 (un voto ricevuto); p2: 3 voti ricevuti, il suo voto non era sulla caduta; p3 e p4: +2
   });
   it("Il peggiore: i giocatori inattivi e i bot non votano mai la propria carta", () => {
     for (let seed = 1; seed <= 40; seed++) {

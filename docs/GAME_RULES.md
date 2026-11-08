@@ -87,7 +87,9 @@ Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati
 
 **Punteggio di Accusa e Storia d'amore.** Uguale nei due giochi: chi ha votato una carta in testa prende **tanti punti quanti sono i voti su quella carta (compreso il proprio)**; chi ha giocato una carta in testa prende il **doppio dei voti** ricevuti. Chi ha votato una carta non in testa, e chi ha giocato una carta non in testa, non prende nulla.
 
-**Punteggio del Peggiore.** Cade la carta più votata (o tutte quelle a pari merito in testa), come in un turno normale. Ogni giocatore **prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato**, cada o no (al massimo N−1, perché non ci si vota). Chi vota non prende nulla: si guadagna giocando la carta che il gruppo considera il peggiore. Nessun punto si perde.
+**Punteggio del Peggiore.** Cade la carta più votata (o tutte quelle a pari merito in testa), come in un turno normale. **+2** a chi ha votato una carta caduta (voto giusto, come nei turni) e **+1 per ogni voto ricevuto** dalla carta che si è giocata, cada o no (al massimo N−1 voti, perché non ci si vota: in un intervallo si possono fare al massimo N+1 punti). Nessun punto si perde.
+
+**Come si fanno punti, in app.** La schermata di presentazione di ogni intervallo ha il riquadro «Come si fanno punti» con le regole di quel gioco (Accusa e Storia d'amore: voti sulla carta in testa e ×2 se è la propria; Peggiore: +2 se voti una carta che cade, +1 per ogni voto alla propria carta).
 
 **Spoglio dell'intervallo.** Come nei turni normali: i voti compaiono **uno alla volta** (chi ha votato cosa, l'ultimo con un po' di suspense), poi il più votato / le carte in testa, poi la caduta e il riepilogo dei punti. «Avanti ›» e «Salta ›» come nei turni.
 
