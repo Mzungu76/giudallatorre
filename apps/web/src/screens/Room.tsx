@@ -121,11 +121,14 @@ export default function RoomScreen({ code }: { code: string }) {
   const close = () => { setOv(null); cs.setOpen(false); };
   const ui: UiCtl = { unread: cs.unread, chat: () => { setOv("chat"); cs.setOpen(true); }, rank: () => setOv("rank"), rules: () => setOv("help"), lui: () => setOv("lui") };
   const pv = view?.view ?? null, colorOf = (id: string) => PLAYER_COLORS[Math.max(0, room.players.findIndex((p) => p.id === id)) % 8]!;
+  const leave = () => { send({ t: "leave" }); forgetSession(code); navigate("/"); };
+  const leaveHint = room.players.some((p) => !p.isBot && p.id !== room.you) ? txs("room.leave.bot") : txs("room.leave.ultimo");
   const overlays = ov === "chat" ? <ChatPanel chat={chat} me={room.you} players={room.players} send={send} onClose={close} />
-    : ov === "help" ? <HelpMenu canHint={!!(pv && hintFor(pv))} sound={sound} setSound={setSound} onHint={() => { setOv(null); setManual(true); }} onTutorial={() => setOv("tutorial")} onRules={() => setOv("rules")} onClose={close} />
+    : ov === "help" ? <HelpMenu canHint={!!(pv && hintFor(pv))} sound={sound} setSound={setSound} onHint={() => { setOv(null); setManual(true); }} onTutorial={() => setOv("tutorial")} onRules={() => setOv("rules")} onClose={close}
+        {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "tutorial" ? <IntroSlides onClose={() => setOv("help")} />
     : ov === "rules" ? <HowTo onClose={() => setOv("help")} tokens={pv?.luiTokens} sound={sound} setSound={setSound}
-        {...(room.stage === "PLAYING" ? { onLeave: () => { send({ t: "leave" }); forgetSession(code); navigate("/"); }, leaveHint: room.players.some((p) => !p.isBot && p.id !== room.you) ? txs("room.leave.bot") : txs("room.leave.ultimo") } : {})} />
+        {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />
     : null;

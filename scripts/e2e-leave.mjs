@@ -34,8 +34,10 @@ const toast = (await A.locator('[data-testid="toast"]').first().textContent().ca
 check("gli altri vedono un avviso", /Bea.*lasciato.*bot/i.test(toast), toast);
 check("la stanza esiste ancora", await exists(code));
 
-console.log("Cle esce, poi Ann (ultima umana): la stanza si chiude subito");
-await C.click('[data-testid="legend-btn"]'); await C.click('[data-testid="help-rules"]'); await C.click('[data-testid="leave-game"]'); await C.click('[data-testid="leave-yes"]');
+console.log("Cle esce dal menu Aiuto (pulsante diretto), poi Ann (ultima umana): la stanza si chiude subito");
+await C.click('[data-testid="legend-btn"]'); await C.click('[data-testid="help-leave"]');
+check("il menu Aiuto ha «Esci dalla partita» con conferma", /giocatore virtuale/i.test(await C.locator('[data-testid="help-leave-confirm"]').textContent())); await shot(C, "leave-aiuto");
+await C.click('[data-testid="help-leave-yes"]');
 await sleep(600);
 check("dopo l'uscita di Cle la stanza esiste ancora (c'è Ann)", await exists(code));
 check("Ann vede l'avviso anche per Cle", /Cle.*lasciato.*bot/i.test((await A.locator('[data-testid="toast"]').first().textContent().catch(() => "")) ?? ""));
