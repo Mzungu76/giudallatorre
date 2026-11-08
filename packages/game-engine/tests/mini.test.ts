@@ -57,13 +57,35 @@ describe("mini-gioco di metà partita", () => {
     expect(g.scores.p1! - before.p1!).toBe(4);            // 3 (voto) + 6 (proprietario ×2) = 9, tagliato al tetto di 4 (4 giocatori, 2 turni rimasti)
     expect(g.scores.p4! - before.p4!).toBe(0);            // votava una carta caduta e la sua è caduta
   });
-  it("pareggio in testa: restano tutte e fanno punti; le carte con meno voti cadono", () => {
+  it("Accusa: cade la carta più votata (il colpevole), le altre restano; i punti non cambiano", () => {
+    let g = playAll(toMini(4, "accusa"));
+    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
+    g = vote(g, { p1: b, p2: a, p3: a, p4: a });
+    const r = g.miniResult!;
+    expect(r.leaders).toEqual([a]); expect(r.fallenPositions).toEqual([a]);   // cade la più votata, non le altre
+    expect(r.fallenCardIds).toEqual([g.tower.find((t) => t.position === a)!.cardId]);
+    expect(r.points.p2).toBe(3); expect(r.points.p3).toBe(3); expect(r.points.p4).toBe(3);   // chi ha votato il colpevole prende i voti sulla carta
+    expect(r.points.p1).toBe(4);                                                              // 6 (carta ×2) tagliato al tetto di 4
+  });
+  it("Accusa: pareggio in testa, cadono insieme le carte in testa; le altre restano", () => {
     let g = playAll(toMini(4, "accusa"));
     const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2"), c = posOfOwner(g, "p3");
     g = vote(g, { p1: a, p2: b, p3: a, p4: b });
     const r = g.miniResult!;
-    expect(r.leaders.sort()).toEqual([a, b].sort()); expect(r.fallenPositions).toContain(c);
+    expect(r.leaders.sort()).toEqual([a, b].sort()); expect(r.fallenPositions.sort()).toEqual([a, b].sort()); expect(r.fallenPositions).not.toContain(c);
     expect(r.points.p1).toBe(4); expect(r.points.p2).toBe(4); expect(r.points.p3).toBe(2); expect(r.points.p4).toBe(2);   // 2 voti + 4 (×2) = 6, tagliato al tetto di 4
+  });
+  it("Accusa: se tutte le carte hanno gli stessi voti non cade nessuna", () => {
+    let g = playAll(toMini(3, "accusa"));
+    const [a, b, c] = ["p1", "p2", "p3"].map((o) => posOfOwner(g, o)) as [number, number, number];
+    g = vote(g, { p1: b, p2: c, p3: a });
+    expect(g.miniResult!.fallenPositions).toEqual([]);
+  });
+  it("Storia d'amore: restano le carte in testa e cadono le altre (invariato)", () => {
+    let g = playAll(toMini(4, "amore"));
+    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
+    g = vote(g, { p1: b, p2: a, p3: a, p4: a });
+    expect(g.miniResult!.leaders).toEqual([a]); expect(g.miniResult!.fallenPositions).not.toContain(a); expect(g.miniResult!.fallenPositions).toHaveLength(3);
   });
   it("se tutte le carte hanno gli stessi voti non cade nessuna", () => {
     let g = playAll(toMini(3, "amore"));

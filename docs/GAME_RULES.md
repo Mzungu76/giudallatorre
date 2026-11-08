@@ -83,7 +83,9 @@ Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati
 - **La storia d'amore** — una carta pescata a caso (il protagonista, mostrata a parte) ha una nuova storia d'amore: ognuno gioca il partner ideale.
 - **Il peggiore** — nessuna frase né accusa. Ognuno gioca in segreto il personaggio che per lui è il **peggiore in assoluto**, poi tutti votano la carta che deve cadere, **tranne la propria** (non si può votare: l'app la blocca, il motore rifiuta il voto).
 
-**Punteggio di Accusa e Storia d'amore.** Restano sulla torre le carte con più voti (tutte quelle a pari merito); le altre **cadono**. Chi ha votato una carta in testa prende **tanti punti quanti sono i voti su quella carta (compreso il proprio)**; chi ha giocato una carta in testa prende il **doppio dei voti** ricevuti. Chi ha votato una carta caduta, e chi ha giocato una carta caduta, non prende nulla. Se tutte le carte hanno gli stessi voti non cade nessuna.
+**Chi cade.** *Accusa*: cade la carta **più votata**, il colpevole (a pari merito cadono tutte quelle in testa; se tutte le carte hanno gli stessi voti non cade nessuna). *Storia d'amore*: restano le carte con più voti e cadono le altre (il partner perfetto non cade). *Peggiore*: cadono le più votate.
+
+**Punteggio di Accusa e Storia d'amore.** Uguale nei due giochi: chi ha votato una carta in testa prende **tanti punti quanti sono i voti su quella carta (compreso il proprio)**; chi ha giocato una carta in testa prende il **doppio dei voti** ricevuti. Chi ha votato una carta non in testa, e chi ha giocato una carta non in testa, non prende nulla.
 
 **Punteggio del Peggiore.** Cade la carta più votata (o tutte quelle a pari merito in testa), come in un turno normale. Ogni giocatore **prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato**, cada o no (al massimo N−1, perché non ci si vota). Chi vota non prende nulla: si guadagna giocando la carta che il gruppo considera il peggiore. Nessun punto si perde.
 
