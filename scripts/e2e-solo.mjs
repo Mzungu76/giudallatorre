@@ -21,6 +21,10 @@ let n = 0, sampling = SAMPLE; const t0 = Date.now(); let turns = 0;
 const clk = (sel, o) => { globalThis.__s = "click " + sel; return p.click(sel, o); }; const wfs = (sel, o) => { globalThis.__s = "wait " + sel; return p.waitForSelector(sel, o); };
 async function step() {
   if (await vis("char-ok")) { await clk('[data-testid="char-ok"]'); return true; }
+  if (await vis("intro-slides")) { await clk('[data-testid="intro-skip"]'); return true; }
+  if (await vis("nocard-notice")) { await clk('[data-testid="nocard-ok"]'); return true; }
+  if (await vis("mega-intro")) { await clk('[data-testid="mega-ok"]'); return true; }
+  if (await vis("idle-hint")) { await clk('[data-testid="idle-hint-ok"]'); return true; }
   if (await vis("howto")) { await clk('[data-testid="howto-close"]'); return true; }
   if (await vis("mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
   if (await vis("mini-vote")) { for (const n of [2, 3]) { await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); if (await p.locator('[data-testid="zoom-action"]').isVisible({ timeout: 900 }).catch(() => false)) break; } await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }

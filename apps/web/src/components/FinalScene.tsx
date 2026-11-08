@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { PtIcon } from "./Pt.tsx";
 import { cardUrl } from "../lib/characters.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import type { UiCtl } from "./BUi.tsx";
+import { t as tx, ts as txs } from "../lib/testi.ts";
 
 export interface FinalRow { id: string; name: string; color: string; score: number }
 const OFFS = [0, 1, -1, 2, -2, 3, -3, 4];
@@ -52,7 +54,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
     <div className="fin" data-testid="final" onClick={() => { if (!done) finish(); }}>
       <div className="stbd-sky" /><div className="stbd-rays" />
       {done && Array.from({ length: 30 }, (_, i) => <i key={i} className="confetti fin-conf" style={{ left: (i * 53) % 360, top: -20, width: 8 + (i % 3) * 3, height: 5 + (i % 4) * 2, background: ["#e8362b", "#ffc72c", "#14a3a1", "#fff7e0", "#ff7aa8"][i % 5], animationDelay: `${(i % 10) * 0.18}s`, animationDuration: `${3 + (i % 5) * 0.5}s` }} />)}
-      <div className="h fin-head" key={done ? "w" : "t"}><small>{done ? (shared ? "Vittoria condivisa!" : "Ha vinto…") : "Chi arriva per primo…"}</small>{done ? <>Gran Megafono!</> : <>La scalata!</>}</div>
+      <div className="h fin-head" key={done ? "w" : "t"}><small>{done ? (shared ? tx("fin.shared") : tx("fin.ha")) : tx("fin.chi")}</small>{done ? tx("fin.megafono") : tx("fin.scalata")}</div>
       <div className="fin-ground" style={{ top: gy }} />
       <img className="fin-tower" src="/giocatori/torre.webp" alt="" style={{ left: tl, top: Y0, width: 505 * k, height: 741 * k }} />
       {geo.map((g) => {
@@ -76,11 +78,11 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       })}
       {ph === 2 && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-bam" style={{ left: g.x0 + cw / 2 - 14, top: g.y0 + ch / 3, animationDelay: `${g.delay}s` }}>💥</span>)}
       {(inst || ph >= 2) && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-diz" style={{ left: g.x1 + cw / 2 - 12, top: g.y1 - 20, animationDelay: inst ? "0s" : `${g.delay + FALL_S + 0.3}s` }}>💫</span>)}
-      {!done && <div className="fin-skip" style={{ top: gy + 22 }}>Tocca per saltare</div>}
+      {!done && <div className="fin-skip" style={{ top: gy + 22 }}>{tx("fin.salta")}</div>}
       {done && (
         <div className="fin-rank" style={{ top: gy + 14 }} data-testid="final-rank">
           {rows.map((r, i) => (
-            <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><u>{pts(r.score)}</u></div>
+            <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><u><PtIcon s={15} /> {pts(r.score)}</u></div>
           ))}
         </div>
       )}
@@ -88,11 +90,11 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
         <div className="pp bsheet finsheet" onClick={(e) => e.stopPropagation()}>
           <div className="bcrow">
             {ui && <>
-              <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? `Chat, ${ui.unread} messaggi nuovi` : "Chat"} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
-              <button className="bib big" onClick={ui.rank} aria-label="Classifica" data-testid="standings-btn">🏆</button>
+              <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("fin.chat", { n: ui.unread }) : txs("fin.chat0")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
+              <button className="bib big" onClick={ui.rank} aria-label={txs("fin.classifica")} data-testid="standings-btn">🏆</button>
             </>}
-            <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">Esci</button>
-            <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>Nuova partita</button>
+            <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">{tx("fin.esci")}</button>
+            <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>{tx("fin.nuova")}</button>
           </div>
         </div>
       )}

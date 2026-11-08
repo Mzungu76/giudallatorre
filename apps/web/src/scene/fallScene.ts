@@ -2,6 +2,7 @@
 // Il corpo è volutamente "grezzo" (nessun controllo dei tipi interno): l'interfaccia pubblica è quella di SceneApi.
 // @ts-nocheck
 import { cardFull } from "../lib/cards.ts";
+import { rawTesto as ts } from "../lib/testi.ts";
 import { profileShaft, profileBack, profileFront, profLayout } from "./draw.ts";
 
 
@@ -17,10 +18,10 @@ export interface SceneApi {
   itemsText(): string;
   fitScale(): number;
 }
-const TEMPLATE = `<div class="sky"></div><div class="skyg"></div><div class="skyh"></div><div class="sky2" id="sky2"></div><div class="far" id="far"></div><div class="world" id="world"></div><div class="lines" id="lines"></div><div class="aaah" id="aaah">AAAAAH!</div><div class="boing" id="boing"><span>BOING!</span></div><div class="ops" id="ops"><span>Spinto!</span></div><div class="flash" id="flash"></div>`;
+const TEMPLATE = () => `<div class="sky"></div><div class="skyg"></div><div class="skyh"></div><div class="sky2" id="sky2"></div><div class="far" id="far"></div><div class="world" id="world"></div><div class="lines" id="lines"></div><div class="aaah" id="aaah">${ts("fall.aaah")}</div><div class="boing" id="boing"><span>${ts("fall.boing")}</span></div><div class="ops" id="ops"><span>${ts("fall.spinto")}</span></div><div class="flash" id="flash"></div>`;
 
 export function createScene(root: HTMLElement, opts: SceneOptions): SceneApi {
-  root.innerHTML = TEMPLATE;
+  root.innerHTML = TEMPLATE();
   const NS = "http://www.w3.org/2000/svg";
   const $ = (id: string) => root.querySelector("#" + id) as HTMLElement;
   const W = $("world"), F = $("far");
@@ -45,10 +46,10 @@ W.appendChild(land);
 const MT_=2034;const TX=61,TY=420,PAD=8/1.5,TWW=391/1.5,THH=2506/1.5;
 W.insertAdjacentHTML('beforeend',profileShaft(TY,{height:2160-(TY+96),svgH:2300,windows:Array.from({length:7},(_,k)=>[k%2?198:70,TY+190+k*232,[]])}));W.insertAdjacentHTML('beforeend',profileBack(TY).replace('z-index:3','z-index:4'));W.insertAdjacentHTML('beforeend',profileFront(TY).replace('z-index:30','z-index:9'));
 
-add('Torre del<br>Giudizio Spicciolo<small>vietato lanciare oggetti. Persone sì.</small>',`left:${TX+30}px;top:1010px;z-index:7;transform:rotate(-3deg)`,'gag');
+add(ts("fall.torre"),`left:${TX+30}px;top:1010px;z-index:7;transform:rotate(-3deg)`,'gag');
 add(`<svg width="64" height="56" viewBox="0 0 64 56"><path d="M8 36q4-22 26-20q16 2 18 16q-8 10-26 10z" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><circle cx="46" cy="20" r="9" fill="#9aa4b8" stroke="#13224a" stroke-width="3"/><path d="M54 21l9 3l-9 3z" fill="#ffc72c" stroke="#13224a" stroke-width="2"/><circle cx="48" cy="18" r="2" fill="#13224a"/><path d="M14 34q14-8 28 2" stroke="#13224a" stroke-width="3" fill="none"/><path d="M26 44v8M34 44v8" stroke="#13224a" stroke-width="3"/></svg>`,`left:${TX+176}px;top:1180px;z-index:7`);
 add('«tra 200 m,<br>svolta a destra»',`left:${TX+80}px;top:1150px;z-index:7;transform:rotate(-4deg);font-size:12px`,'gag');
-add('Ingresso<small>solo andata</small>',`left:${TX+78}px;top:1895px;z-index:7;transform:rotate(2deg);font-size:15px`,'gag');
+add(ts("fall.ingresso"),`left:${TX+78}px;top:1895px;z-index:7;transform:rotate(2deg);font-size:15px`,'gag');
 
   // ---- stato dell'interfaccia (selezione, segnalini, Lui!, risultato)
   let sel:number|null=null, cue:any=null, luiInfo:any=null, T0=0, raf=0, doneCb:any=null, firedEv:any={}, destroyed=false;
@@ -87,7 +88,7 @@ function mkMat(color,w,h,id,x,y){
   [.18,.38,.62,.82].forEach((f,i)=>{const x=L+(R-L)*f,u=(R-x)/(R-L);bn[i].setAttribute('cx',x);bn[i].setAttribute('cy',T+h*.46+4*dip*.5*u*(1-u))});
  }}}
 const mats=[mkMat('#e8362b',MW+14,40,'a',MX-7,2110),mkMat('#ffc72c',MW,40,'b',MX,2072),mkMat('#14a3a1',MW-14,40,'c',MX+7,2034)];
-add('Assicurazione?<small>mai sentita</small>','left:236px;top:1966px;z-index:10;font-size:13px;transform:rotate(5deg)','gag');
+add(ts("fall.assicurazione"),'left:236px;top:1966px;z-index:10;font-size:13px;transform:rotate(5deg)','gag');
 // ---- folla: solo mani alzate (come in copertina), con oggetti buffi che cambiano a ogni caduta
 const hs=document.createElementNS(NS,'svg');hs.setAttribute('viewBox','-520 2040 1400 560');hs.style.cssText='left:-520px;top:2040px;width:1400px;height:560px;z-index:12;pointer-events:none';W.appendChild(hs);
 // mani del regolamento (immagine fornita dall'utente, ritaglio con tools/cutout_hands.py): 3 file a profondità diversa

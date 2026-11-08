@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { cardFull } from "../lib/cards.ts";
 import { sfx } from "../lib/sfx.ts";
+import { t, ts } from "../lib/testi.ts";
 
 /** Posizione finale di ogni carta nella mano (la stessa del carosello), così le carte scoperte coincidono con quelle vere. */
 export interface Geo { left: number; top: number; w: number; h: number; rot: number }
@@ -34,7 +35,7 @@ export default function HandRenewal({ cards, geo, dim, cW, cH, sound, onDone }: 
   const stack = (i: number): Geo => ({ left: dim.w / 2 - cW / 2 + (i - 2) * 1.5, top: dim.h / 2 - cH / 2 - i * 2.5, w: cW, h: cH, rot: (i - 2) * 1.6 });
   return (
     <div className="rn" onClick={onDone} role="status" aria-live="polite" data-testid="hand-renewal">
-      <div className={`rn-msg ${step >= 5 ? "off" : ""}`} data-testid="renewal-text"><b>Rinnoviamo la tua mano!</b><small>{cards.length} carte nuove, tutte per te</small></div>
+      <div className={`rn-msg ${step >= 5 ? "off" : ""}`} data-testid="renewal-text"><b>{t("rn.titolo")}</b><small>{ts("rn.sotto", { n: cards.length })}</small></div>
       {cards.map((c, i) => {
         const g = step >= 2 ? geo[i]! : stack(i);
         return (

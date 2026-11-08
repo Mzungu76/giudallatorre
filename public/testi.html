@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Testi dell'app · Giù dalla Torre</title>
+<style>
+:root{--bg:#f6f1e7;--card:#fff;--ink:#2a2118;--mut:#7a6b5a;--line:#e3d8c4;--acc:#b5471f;--ok:#2f7d4f;--warn:#b8860b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+header h1{font-size:16px;margin:0;flex:1 1 auto}
+header .v{opacity:.8;font-size:13px}
+button,.btn{font:inherit;border:0;border-radius:8px;padding:8px 12px;background:var(--acc);color:#fff;cursor:pointer}
+button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:default}
+main{max-width:860px;margin:0 auto;padding:16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.bar input[type=search]{flex:1 1 220px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.help{background:#fffbe9;border:1px solid #ecdca0;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:14px}
+.help code{background:#f2ead0;padding:0 4px;border-radius:4px}
+details.sez{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:10px}
+details.sez>summary{cursor:pointer;padding:12px 14px;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details.sez>summary small{font-weight:400;color:var(--mut)}
+.it{padding:10px 14px;border-top:1px solid var(--line)}
+.it .k{font:12px ui-monospace,Menlo,monospace;color:var(--mut);word-break:break-all}
+.it .n{font-size:13px;color:var(--warn);margin:2px 0}
+.it textarea{width:100%;min-height:44px;margin-top:6px;padding:8px;border:1px solid var(--line);border-radius:8px;font:inherit;resize:vertical}
+.it.mod textarea{border-color:var(--acc);background:#fff6f1}
+.it .pv{margin-top:6px;padding:8px 10px;background:#f4efe3;border-radius:8px;font-size:14px}
+.it .pv u{background:#ffe66b;text-decoration:none;padding:0 2px;border-radius:3px}
+.it .pv .ph{background:#d9ecff;border-radius:4px;padding:0 3px;font-size:12px}
+.it .row{display:flex;gap:8px;align-items:center;margin-top:4px;font-size:12px;color:var(--mut)}
+.it .row a{color:var(--acc);cursor:pointer}
+.err{color:#b00020;font-size:13px}
+#diff{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:12px 0;display:none}
+#diff pre{white-space:pre-wrap;font:13px ui-monospace,Menlo,monospace;margin:4px 0}
+#diff del{background:#fde0dc}#diff ins{background:#d8f3dc;text-decoration:none}
+.empty{color:var(--mut);padding:18px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>Testi dell'app</h1>
+  <span class="v" id="ver">…</span>
+  <button id="save" disabled>Scarica testi.json (<span id="nmod">0</span>)</button>
+</header>
+<main>
+  <div class="help">
+    <b>Come si usa.</b> Modifica i testi qui sotto (sono quelli che i giocatori leggono nell'app), poi premi <i>Scarica testi.json</i>:
+    il file esce con il <b>codice di versione già aumentato di 1</b>. Sostituiscilo in <code>public/testi.json</code> nel repo e pubblica:
+    all'apertura successiva l'app trova la versione nuova e aggiorna i testi da sola.<br>
+    <b>Segni speciali:</b> <code>**grassetto**</code> · <code>__evidenziato__</code> · <code>~corsivo~</code> · <code>{nome}</code> = valore inserito dal gioco (lascialo com'è) · a capo = invio.
+  </div>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Cerca nel testo, nella sezione o nella chiave…">
+    <button class="sec" id="open">Apri un file…</button>
+    <button class="sec" id="copy" disabled>Copia JSON</button>
+    <button class="sec" id="show" disabled>Mostra modifiche</button>
+    <input type="file" id="file" accept=".json,application/json" hidden>
+  </div>
+  <div id="diff"></div>
+  <div id="list"><div class="empty">Carico i testi…</div></div>
+</main>
+<script>
+"use strict";
+const $ = (s) => document.querySelector(s);
+let orig = null, cur = null; // orig: file caricato; cur: testi modificati (chiave -> stringa)
+const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+function render(t) { // anteprima con gli stessi segni dell'app
+  return esc(t).replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/__([^_]+)__/g, "<u>$1</u>").replace(/~([^~]+)~/g, "<em>$1</em>")
+    .replace(/\{([A-Za-z0-9_]+)\}/g, '<span class="ph">{$1}</span>').replace(/\n/g, "<br>");
+}
+const vars = (t) => [...t.matchAll(/\{([A-Za-z0-9_]+)\}/g)].map((m) => m[1]).sort().join(",");
+const changed = () => Object.keys(cur).filter((k) => cur[k] !== orig.testi[k].t);
+function problems(k, v) {
+  const p = [];
+  if (!v.trim()) p.push("testo vuoto");
+  if ((v.match(/\*\*/g) || []).length % 2) p.push("** non chiusi");
+  if ((v.match(/__/g) || []).length % 2) p.push("__ non chiusi");
+  if ((v.match(/~/g) || []).length % 2) p.push("~ non chiusa");
+  if (vars(v) !== vars(orig.testi[k].t)) p.push("segnaposto {…} diversi dall'originale (" + (vars(orig.testi[k].t) || "nessuno") + ")");
+  return p;
+}
+function load(data) {
+  if (!data || typeof data.versione !== "number" || !data.testi) { alert("File non valido"); return; }
+  orig = data; cur = {}; for (const k in data.testi) cur[k] = data.testi[k].t;
+  build(); upd();
+}
+function build() {
+  const bySez = {}; for (const k in orig.testi) (bySez[orig.testi[k].s] ||= []).push(k);
+  const box = $("#list"); box.innerHTML = "";
+  for (const s in bySez) {
+    const d = document.createElement("details"); d.className = "sez"; d.dataset.s = s;
+    d.innerHTML = `<summary><span>${esc(s)}</span><small>${bySez[s].length} testi</small></summary>`;
+    for (const k of bySez[s]) {
+      const e = orig.testi[k], it = document.createElement("div"); it.className = "it"; it.dataset.k = k;
+      it.innerHTML = `<div class="k">${esc(k)}</div>${e.n ? `<div class="n">ℹ ${esc(e.n)}</div>` : ""}<textarea rows="1"></textarea><div class="pv"></div><div class="row"><span class="err"></span><a>ripristina</a></div>`;
+      const ta = it.querySelector("textarea"); ta.value = cur[k]; fit(ta);
+      ta.addEventListener("input", () => { cur[k] = ta.value; fit(ta); refresh(it, k); upd(); });
+      it.querySelector("a").addEventListener("click", () => { cur[k] = orig.testi[k].t; ta.value = cur[k]; fit(ta); refresh(it, k); upd(); });
+      refresh(it, k); d.appendChild(it);
+    }
+    box.appendChild(d);
+  }
+  filter();
+}
+function fit(ta) { ta.style.height = "auto"; ta.style.height = ta.scrollHeight + 2 + "px"; }
+function refresh(it, k) {
+  it.classList.toggle("mod", cur[k] !== orig.testi[k].t);
+  it.querySelector(".pv").innerHTML = render(cur[k]);
+  it.querySelector(".err").textContent = problems(k, cur[k]).join(" · ");
+}
+function upd() {
+  const n = changed().length; $("#nmod").textContent = n;
+  const bad = Object.keys(cur).some((k) => problems(k, cur[k]).length);
+  $("#save").disabled = !n || bad; $("#save").title = bad ? "Correggi prima gli errori in rosso" : "";
+  $("#copy").disabled = !n || bad; $("#show").disabled = !n;
+  $("#ver").textContent = `versione ${orig.versione} · ${n ? "con " + n + " modifiche → diventerà " + (orig.versione + 1) : "nessuna modifica"} · ${Object.keys(orig.testi).length} testi`;
+  if ($("#diff").style.display === "block") showDiff();
+}
+function out() {
+  const testi = {}; for (const k in orig.testi) { const e = { ...orig.testi[k], t: cur[k] }; testi[k] = e; }
+  const d = new Date(), pad = (x) => String(x).padStart(2, "0");
+  return JSON.stringify({ versione: orig.versione + 1, aggiornato: `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`, testi }, null, 1) + "\n";
+}
+function showDiff() {
+  const el = $("#diff"); el.style.display = "block";
+  el.innerHTML = "<b>Modifiche</b>" + changed().map((k) => `<div><div class="k" style="font:12px monospace;color:#7a6b5a">${esc(k)}</div><pre><del>${esc(orig.testi[k].t)}</del>\n<ins>${esc(cur[k])}</ins></pre></div>`).join("");
+}
+function filter() {
+  const q = $("#q").value.trim().toLowerCase();
+  document.querySelectorAll("details.sez").forEach((d) => {
+    let any = false;
+    d.querySelectorAll(".it").forEach((it) => { const k = it.dataset.k, hit = !q || (k + " " + d.dataset.s + " " + cur[k]).toLowerCase().includes(q); it.style.display = hit ? "" : "none"; any ||= hit; });
+    d.style.display = any ? "" : "none"; if (q && any) d.open = true;
+  });
+}
+$("#q").addEventListener("input", filter);
+$("#save").addEventListener("click", () => {
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([out()], { type: "application/json" })); a.download = "testi.json"; a.click();
+});
+$("#copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(out()); $("#copy").textContent = "Copiato ✓"; setTimeout(() => ($("#copy").textContent = "Copia JSON"), 1500); } catch { alert("Copia non riuscita: usa «Scarica»"); } });
+$("#show").addEventListener("click", () => { const el = $("#diff"); if (el.style.display === "block") el.style.display = "none"; else showDiff(); });
+$("#open").addEventListener("click", () => $("#file").click());
+$("#file").addEventListener("change", async (e) => { const f = e.target.files[0]; if (f) try { load(JSON.parse(await f.text())); } catch { alert("File non leggibile"); } });
+addEventListener("beforeunload", (e) => { if (orig && changed().length) { e.preventDefault(); e.returnValue = ""; } });
+fetch("/testi.json", { cache: "no-cache" }).then((r) => r.json()).then(load).catch(() => { $("#list").innerHTML = '<div class="empty">Non riesco a leggere /testi.json da qui. Premi «Apri un file…» e scegli <code>public/testi.json</code>.</div>'; });
+</script>
+</body>
+</html>

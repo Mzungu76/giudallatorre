@@ -1,7 +1,11 @@
+import { ts } from "./testi.ts";
+import type { TestoKey } from "./testi.ts";
+
 /** I otto personaggi: a ogni giocatore, a inizio partita, tocca la carta (e il segnalino) del proprio colore. */
 export const CHAR_COLORS = ["#e5382b", "#2f7be0", "#4aa63a", "#f4c20d", "#a94fd0", "#1fb2ae", "#f08a1c", "#ee6fa8"];
-export const CHAR_NAMES = ["Il Gradasso", "Il Sognatore", "Il Professore", "Il Buffone", "La Segnapunti", "Il Turista", "L'Ansioso", "La Diva"];
-export const CHAR_BLURB = ["Si sente già vincitore", "Pensa alle vacanze", "Ha sempre una nota a margine", "Ride di tutto", "Fa i conti di nascosto", "Si fa un selfie", "Sudore freddo", "Fa l'occhiolino"];
+/** Nome e frase del personaggio: vivono in public/testi.json (char.N.nome / char.N.blurb). */
+export const charName = (i: number) => ts(`char.${i}.nome` as TestoKey);
+export const charBlurb = (i: number) => ts(`char.${i}.blurb` as TestoKey);
 export const charIdx = (color: string) => Math.max(0, CHAR_COLORS.indexOf(color.toLowerCase()));
 export const tokenUrl = (color: string) => `/giocatori/tok-${charIdx(color)}.webp`;
 export const cardUrl = (color: string) => `/giocatori/card-${charIdx(color)}.webp`;

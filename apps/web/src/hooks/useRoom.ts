@@ -1,3 +1,5 @@
+import { ts } from "../lib/testi.ts";
+import type { TestoKey } from "../lib/testi.ts";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChatDto, ClientMessage, ServerMessage } from "@gdt/game-protocol";
 import { RoomSocket } from "../lib/socket.ts";
@@ -6,11 +8,8 @@ import { loadSession } from "../lib/session.ts";
 
 export type RoomMsg = Extract<ServerMessage, { t: "room" }>;
 export type ViewMsg = Extract<ServerMessage, { t: "view" }>;
-const ERR: Record<string, string> = {
-  NOT_HOST: "Solo l'host può farlo.", NOT_ENOUGH_PLAYERS: "Servono almeno 3 giocatori per iniziare.", WRONG_PHASE: "Troppo tardi: la fase è già cambiata.",
-  ALREADY_DONE: "L'hai già fatto in questo turno.", NOT_ALLOWED: "Questa azione non è tua in questo momento.", RATE_LIMIT: "Troppi tocchi ravvicinati: rallenta un attimo.",
-  CARD_NOT_IN_HAND: "Quella carta non è nella tua mano.", INVALID_POSITION: "Quel personaggio non c'è.", WRONG_STAGE: "Ora non si può.", DISPLAY_OFF: "Lo schermo condiviso è disattivato per questa stanza.", INVALID_CHOICE: "Controlla il testo: non è valido o è troppo lungo.", INVALID_MESSAGE: "Messaggio non valido.",
-};
+const WS_CODES = ["NOT_HOST", "NOT_ENOUGH_PLAYERS", "WRONG_PHASE", "ALREADY_DONE", "NOT_ALLOWED", "RATE_LIMIT", "CARD_NOT_IN_HAND", "INVALID_POSITION", "WRONG_STAGE", "DISPLAY_OFF", "INVALID_CHOICE", "INVALID_MESSAGE"];
+const errMsg = (code: string) => (WS_CODES.includes(code) ? ts(`ws.${code}` as TestoKey) : ts("ws.altro"));
 
 export function useRoom(code: string, mode: "player" | "watch") {
   const [status, setStatus] = useState<SocketStatus>("connecting");
@@ -30,7 +29,7 @@ export function useRoom(code: string, mode: "player" | "watch") {
         else if (m.t === "view") setView(m);
         else if (m.t === "chatlog") setChat(m.msgs);
         else if (m.t === "chat") setChat((c) => (c.some((x) => x.id === m.msg.id) ? c : [...c, m.msg].slice(-60)));
-        else if (m.t === "error") { setError(ERR[m.code] ?? "Messaggio non accettato."); clearTimeout(timer); timer = window.setTimeout(() => setError(null), 3200); }
+        else if (m.t === "error") { setError(errMsg(m.code)); clearTimeout(timer); timer = window.setTimeout(() => setError(null), 3200); }
       },
     });
     sock.current = s; s.start();

@@ -70,7 +70,7 @@ export interface TurnResult {
   tieBreak: boolean;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore" | "mini-tetto"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
@@ -83,8 +83,6 @@ export interface MiniResult {
   /** Chi aveva giocato ciascuna carta (posizione → giocatore). */
   owners: Record<number, PlayerId>;
   points: Record<PlayerId, number>; lines: Record<PlayerId, ScoreLine[]>;
-  /** Tetto ai punti guadagnati da un giocatore nel mini-gioco. */
-  cap: number;
 }
 
 export interface GameState {

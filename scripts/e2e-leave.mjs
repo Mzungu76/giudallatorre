@@ -22,7 +22,7 @@ for (const p of [A, B, C]) { const ok = p.locator("text=HO CAPITO").first(); if 
 await sleep(400);
 
 console.log("Bea esce: viene sostituita da un bot");
-await B.click('[data-testid="legend-btn"]'); await B.waitForSelector('[data-testid="howto"]');
+await B.click('[data-testid="legend-btn"]'); await B.click('[data-testid="help-rules"]'); await B.waitForSelector('[data-testid="howto"]');
 await B.click('[data-testid="leave-game"]');
 check("chiede conferma e spiega che subentra un bot", /giocatore virtuale/i.test(await B.locator('[data-testid="leave-confirm"]').textContent())); await shot(B, "leave-conferma");
 await B.click('[data-testid="leave-no"]'); check("«Resto» annulla", await vis(B, "leave-game"));
@@ -35,11 +35,11 @@ check("gli altri vedono un avviso", /Bea.*lasciato.*bot/i.test(toast), toast);
 check("la stanza esiste ancora", await exists(code));
 
 console.log("Cle esce, poi Ann (ultima umana): la stanza si chiude subito");
-await C.click('[data-testid="legend-btn"]'); await C.click('[data-testid="leave-game"]'); await C.click('[data-testid="leave-yes"]');
+await C.click('[data-testid="legend-btn"]'); await C.click('[data-testid="help-rules"]'); await C.click('[data-testid="leave-game"]'); await C.click('[data-testid="leave-yes"]');
 await sleep(600);
 check("dopo l'uscita di Cle la stanza esiste ancora (c'è Ann)", await exists(code));
 check("Ann vede l'avviso anche per Cle", /Cle.*lasciato.*bot/i.test((await A.locator('[data-testid="toast"]').first().textContent().catch(() => "")) ?? ""));
-await A.click('[data-testid="legend-btn"]').catch(() => {}); await A.click('[data-testid="leave-game"]');
+await A.click('[data-testid="legend-btn"]').catch(() => {}); await A.click('[data-testid="help-rules"]'); await A.click('[data-testid="leave-game"]');
 check("all'ultima umana avvisa che la stanza si chiude", /ultimo giocatore umano/i.test(await A.locator('[data-testid="leave-confirm"]').textContent())); await shot(A, "leave-ultima");
 await A.click('[data-testid="leave-yes"]'); await sleep(800);
 check("stanza chiusa subito", !(await exists(code)));

@@ -5,6 +5,7 @@ import { FAST, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import type { LuiOutcome, LuiSpec, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
+import { t as tx, ts as txs } from "../lib/testi.ts";
 
 export interface VoteTok { p: number; c: string; mega?: boolean; glow?: boolean }
 export interface TerraceProps {
@@ -27,7 +28,7 @@ export function Terrace(p: TerraceProps) {
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
       {p.onPick && Object.entries(pos).map(([i, c]) => {
         const num = Number(i) + 1;
-        return <button key={i} className={`hit ${p.selected === num ? "sel" : ""}`} data-pos={num} data-testid={`card-${num}`} aria-label={`Carta numero ${num}`}
+        return <button key={i} className={`hit ${p.selected === num ? "sel" : ""}`} data-pos={num} data-testid={`card-${num}`} aria-label={txs("rv.carta.aria", { n: num })}
           style={{ left: c.x, top: c.f - c.h - 6, width: c.w, height: c.h + 10, zIndex: 100 }} onClick={() => p.onPick!(num)} />;
       })}
     </div>
@@ -93,7 +94,7 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
   const show = placeOrder.slice(0, placed);
   const flip: Record<number, number> = {};
   flipOrder.forEach((card, r) => { flip[card] = ease(clamp01((T - (TF0 + r * DF)) / 0.3)); });
-  const cap = T < TC ? "Le carte salgono la scala…" : T < TF0 ? "Tutti hanno giocato!" : "La Torre si svela…";
+  const cap = T < TC ? txs("rv.sale") : T < TF0 ? txs("rv.giocato") : txs("rv.svela");
   return (
     <>
       {climbing && <div className="layer" style={{ opacity: T < TC ? 1 : 1 - (T - TC) / 0.2, transform: `translateY(${-cam}px)` }} dangerouslySetInnerHTML={{ __html: `<div style="position:absolute;left:0;top:0;width:372px;height:1800px">${tower}</div>` }} data-testid="climb" />}
@@ -167,21 +168,21 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
       <div className="darkv" />
       {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
       {<div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
-        {phase === "clock" && cur.kind === "intro" && <><b className="rv-t">Lo spoglio!</b><span>Ora si scopre chi ha votato chi. Un voto alla volta.</span></>}
-        {phase === "clock" && cur.kind === "suspense" && <><b className="rv-t">Manca l’ultimo voto…</b><span>{voters[m - 1]!.mega ? `Aspettiamo il Megafono, ${megaName}!` : `Aspettiamo ${voters[m - 1]!.name}.`}</span></>}
+        {phase === "clock" && cur.kind === "intro" && <><b className="rv-t">{tx("rv.spoglio")}</b><span>{tx("rv.spoglio.x")}</span></>}
+        {phase === "clock" && cur.kind === "suspense" && <><b className="rv-t">{tx("rv.manca")}</b><span>{voters[m - 1]!.mega ? txs("rv.manca.mega", { nome: megaName }) : txs("rv.manca.x", { nome: voters[m - 1]!.name })}</span></>}
         {phase === "clock" && cur.kind === "vote" && v && (
           <div className="rv-row">
             <span className="rv-th" style={thumb(cardIds[vp - 1]!)}><i>{vp}</i></span>
-            <div className="rv-col"><span className="rv-n">Voto {cur.i! + 1} di {total}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{v.name} ha votato il n. {vp}</b></div>
+            <div className="rv-col"><span className="rv-n">{txs("rv.voto.n", { i: cur.i! + 1, tot: total })}</span><b className="rv-who" data-testid="who"><i className="dc" style={{ background: v.color }} />{txs("rv.ha.votato", { nome: v.name, n: vp })}</b></div>
           </div>
         )}
         {phase === "clock" && cur.kind === "tally" && mini && <><b className="rv-t">{mini.tally[0]}</b><span data-testid="tally-text">{mini.tally[1]}</span></>}
-        {phase === "clock" && cur.kind === "tally" && !mini && <><b className="rv-t">{tie ? (tieBreak ? "Pareggio! Decide il Megafono" : "Pareggio!") : `Il più votato: n. ${fallPos}`}</b><span data-testid="tally-text">{tie ? (tieBreak ? `${megaName} ha votato il n. ${fallPos}, tra le carte pari merito: cade la sua, le altre si salvano.` : `Cadono insieme tutte le carte a pari merito: ${fallPositions.map((x) => "n. " + x).join(", ")}.`) : `${counts[fallPos] ?? 0} voti su ${total}. Cade giù dalla torre!`}</span></>}
-        {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">Il Lui! di {megaName}</b><span data-testid="lui-reveal">Scommetteva: <b>{luiLabel(lui)}</b> sul n. {lui.position} (la carta col bordo giallo, +{lui.pts} punti). Gli altri gliene hanno dati {lui.others}: <b>{lui.hit ? `azzeccato! +${lui.pts}` : "mancato"}</b>.</span></>}
+        {phase === "clock" && cur.kind === "tally" && !mini && <><b className="rv-t">{tie ? (tieBreak ? txs("rv.pareggio.decide") : txs("rv.pareggio")) : txs("rv.piu", { c: txs("rv.n", { n: fallPos }) })}</b><span data-testid="tally-text">{tie ? (tieBreak ? txs("rv.pareggio.decide.x", { nome: megaName, n: fallPos }) : txs("rv.pareggio.x", { lista: fallPositions.map((x) => txs("rv.n", { n: x })).join(", ") })) : txs("rv.cade.x", { v: counts[fallPos] ?? 0, tot: total })}</span></>}
+        {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">{txs("rv.lui.t", { nome: megaName })}</b><span data-testid="lui-reveal">{tx("rv.lui.x", { label: luiLabel(lui), n: lui.position, pt: lui.pts, altri: lui.others, esito: lui.hit ? txs("rv.lui.si", { pt: lui.pts }) : txs("rv.lui.no") })}</span></>}
         {phase === "stamp" && mini && <b className="rv-t">{mini.stamp}</b>}
-        {phase === "stamp" && !mini && <b className="rv-t">{multi ? `Cadono insieme: ${fallPositions.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${fallPos}!`}</b>}
+        {phase === "stamp" && !mini && <b className="rv-t">{multi ? txs("rv.stamp.pari", { lista: fallPositions.map((x) => txs("rv.n", { n: x })).join(txs("rv.e")) }) : txs("rv.stamp.uno", { n: fallPos })}</b>}
       </div>}
-      {interactive && phase === "clock" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">Avanti ›</button>}
+      {interactive && phase === "clock" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next">{tx("rv.avanti")}</button>}
     </>
   );
 }
