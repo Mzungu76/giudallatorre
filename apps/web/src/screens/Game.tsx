@@ -15,7 +15,8 @@ import { luiLabel } from "../lib/lui.ts";
 import type { LuiSpec, PlayerId } from "@gdt/game-engine";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { SceneApi } from "../scene/fallScene.ts";
-import HowTo from "../components/HowTo.tsx";
+import { IntroSlides, MegaIntro, megaIntroDue, megaIntroSeen } from "../components/Intro.tsx";
+import { HintBubble, useIdleHint } from "../components/IdleHint.tsx";
 import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
 import CharIntro from "../components/CharIntro.tsx";
@@ -60,7 +61,7 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
           </div>
         )}
       </div>
-      <BSheet title={own ? "LA TUA FRASE" : "SCEGLI LA FRASE"} sub={own ? "Se la dici a voce, gli altri non la leggono." : single ? "Questa carta ha una sola frase." : "Tocca la frase che vuoi urlare, poi Proclama."} ui={ui}>
+      <BSheet gold title={own ? "LA TUA FRASE" : "SCEGLI LA FRASE"} sub={own ? "Se la dici a voce, gli altri non la leggono." : single ? "Questa carta ha una sola frase." : "Tocca la frase che vuoi urlare, poi Proclama."} ui={ui}>
         <Row>
           {(!single || own) && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 15, padding: "0 12px", flex: "none" }} testId="phrase-free">{own ? "Indietro" : "Ne invento una"}</Btn>}
           <Btn kind="red" disabled={!own && sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">Proclama</Btn>
@@ -87,6 +88,7 @@ export function HandPicker({ view, send, ui, sound = false, title = "SCEGLI LA C
     const f = () => setDim({ w: el.clientWidth, h: el.clientHeight }); f();
     const ro = new ResizeObserver(f); ro.observe(el); return () => ro.disconnect();
   }, []);
+  const mega = view.phase === "PLAY" && view.viewerId === view.megafonoId;   // variante «Il Megafono sa»: la carta del Megafono è riconoscibile
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
   const cH = Math.min(dim.h * 0.84, 320), cW = cH / 1.5, SC = [1, 0.78, 0.62, 0.5], OFF = [0, 0.72, 1.05, 1.28];
   // All'intervallo la mano è tutta nuova: quando si apre la scelta della carta nell'intervallo lo si mostra con un'animazione
@@ -104,15 +106,16 @@ export function HandPicker({ view, send, ui, sound = false, title = "SCEGLI LA C
           {!renew && hand.map((c, i) => {
             const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW));
             const lifted = picked && d === 0;
-            return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
+            return <button key={c} className={`card ${lifted ? "sel" : ""}${mega ? " gold" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
               style={{ width: w, height: h, left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 7}deg)`, zIndex: 20 - a }}
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
           <div className="bdots">{!renew && hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
+          {mega && !renew && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden>📣</i>}
           {renew && <HandRenewal cards={hand} geo={hand.map((_, i) => geo(i))} dim={dim} cW={cW} cH={cH} sound={sound} onDone={endRenew} />}
         </div>
       </div>
-      <BSheet title={title} sub={sub} ui={ui}>
+      <BSheet gold={mega} title={title} sub={sub} ui={ui}>
         <Row>{ui && <LuiTray view={view} ui={ui} />}<Btn disabled={!picked || renew} onClick={() => picked && !renew && play(cur)} testId="play-card">{picked ? "Gioca questa carta" : "Scegli una carta"}</Btn></Row>
       </BSheet>
       {zoom && picked && (
@@ -129,7 +132,7 @@ const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; peop
 
 
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
-  const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me;
+  const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
   const [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
@@ -139,6 +142,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
+  const [megaIntro, setMegaIntro] = useState(false), megaShown = useRef(-1);
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
   const tower = [...view.tower].sort((a, b) => a.position - b.position), ids = tower.map((t) => t.cardId), N = ids.length;
   phaseRef.current = view.phase;
@@ -190,11 +194,23 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const resLui = res?.lui ? { pos: res.lui.position, spec: { slot: res.lui.slot, k: res.lui.k, pts: res.lui.pts } } : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? ` · Giro ${view.round}/${view.rounds}` : "";
-  const metaEl = <BMeta turn={(view.goldenGoal ? "Spareggio" : `Turno ${view.turn}/${view.totalTurns}`) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} />;
+  const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? "Spareggio" : `Turno ${view.turn}/${view.totalTurns}`) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} />;
   const uiv = readOnly ? null : ui ?? null;
   const tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
   const pill = <PhrasePill phrase={view.phrase} megaName={megaName} />;
 
+  // La scheda «Sei il Megafono!» compare le prime due volte che tocca a te
+  useEffect(() => {
+    if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
+  }, [phase, turn, isMega, readOnly, intro, charIntro]);
+  // Suggerimento a fumetto: solo se devi agire e resti fermo a lungo
+  const hintText: React.ReactNode = readOnly ? null
+    : phase === "PROCLAIM" && isMega ? <>Tocca la frase che vuoi urlare, poi premi <b>Proclama</b>. Puoi anche inventarne una.</>
+    : phase === "PLAY" && !mine?.hasPlayed && (view.megafonoSa || !isMega) ? <>Scegli il personaggio che somiglia di più alla frase e premi <b>Gioca questa carta</b>. Nessuno vede cosa giochi.</>
+    : phase === "SUSPECT" && isMega && !climbing ? <>Tocca la carta su cui scommetti, poi scegli il gettone: più voti scommetti, più punti fai se li prende.</>
+    : phase === "VOTE" && canVote && !climbing ? <>Vota la carta che somiglia di più alla frase, anche la tua. Se cade e l’hai votata: <b>+2</b>.</>
+    : null;
+  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !banner && !intro && !charIntro && !megaIntro && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
@@ -218,21 +234,21 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
               {phase === "PROCLAIM" && <>
                 <WaitCard text={`${megaName} sta scegliendo la frase.`} sub="Poi scegli dalla tua mano il personaggio che la farebbe." />
-                <BSheet title="ATTENDI" sub="Il Megafono sceglie la frase" ui={uiv}>{tray && <Row>{tray}</Row>}</BSheet>
+                <BSheet gold={gold} title="ATTENDI" sub="Il Megafono sceglie la frase" ui={uiv}>{tray && <Row>{tray}</Row>}</BSheet>
               </>}
 
               {phase === "PLAY" && !readOnly && !mine?.hasPlayed && (view.megafonoSa || !isMega) && <HandPicker view={view} send={act} ui={uiv ?? undefined} />}
               {phase === "PLAY" && (readOnly || mine?.hasPlayed || (!view.megafonoSa && isMega)) && <>
-                <WaitCard text={!readOnly && !view.megafonoSa && isMega ? "Hai pescato la tua carta dal mazzo." : "Carta giocata."} sub="Aspettiamo gli altri, poi le carte salgono sulla torre." />
-                <BSheet title="ATTENDI" sub={`${flagsPlay.filter((f) => f.done).length} su ${flagsPlay.length} hanno giocato`} ui={uiv}><Flags flags={flagsPlay} people={people} /></BSheet>
+                <WaitCard text={!readOnly && !view.megafonoSa && isMega ? "Questo turno non giochi carte." : "Carta giocata."} sub={!readOnly && !view.megafonoSa && isMega ? "La Torre ha una carta a caso dal mazzo. Aspettiamo gli altri, poi metti il Lui!." : "Aspettiamo gli altri, poi le carte salgono sulla torre."} />
+                <BSheet gold={gold} title="ATTENDI" sub={`${flagsPlay.filter((f) => f.done).length} su ${flagsPlay.length} hanno giocato`} ui={uiv}><Flags flags={flagsPlay} people={people} /></BSheet>
               </>}
 
               {phase === "SUSPECT" && !climbing && <>
                 <div className="bsp" />
                 {isMega && !readOnly ? (
                   !pick
-                    ? <BSheet title="METTI IL LUI!" sub="Tocca la carta su cui scommetti." ui={uiv}><div data-testid="lui-chooser"><Row>{tray}<Btn disabled>Scegli una carta</Btn></Row></div></BSheet>
-                    : <BSheet title={`LUI! SUL N. ${pick}`} sub="Quanti voti prenderà dagli altri? Il tuo non conta." ui={uiv}>
+                    ? <BSheet gold={gold} title="METTI IL LUI!" sub="Tocca la carta su cui scommetti." ui={uiv}><div data-testid="lui-chooser"><Row>{tray}<Btn disabled>Scegli una carta</Btn></Row></div></BSheet>
+                    : <BSheet gold={gold} title={`LUI! SUL N. ${pick}`} sub="Quanti voti prenderà dagli altri? Il tuo non conta." ui={uiv}>
                       <div data-testid="lui-chooser" style={{ display: "grid", gap: 8 }}>
                         <div className="lui-opts">
                           {view.luiTokens.map((sp) => { const left = view.myLuiLeft.includes(sp.slot);
@@ -242,24 +258,24 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
                         <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">Guarda la carta · tocca un’altra per cambiare</button>
                       </div>
                     </BSheet>
-                ) : <BSheet title="ATTENDI" sub={`${megaName} sta mettendo il Lui!`} ui={uiv}>{tray && <Row>{tray}</Row>}</BSheet>}
+                ) : <BSheet gold={gold} title="ATTENDI" sub={`${megaName} sta mettendo il Lui!`} ui={uiv}>{tray && <Row>{tray}</Row>}</BSheet>}
               </>}
 
               {phase === "VOTE" && !climbing && <>
                 <div className="bsp" />
                 {readOnly
-                  ? <BSheet title="VOTA IN SEGRETO" sub={`${view.players.filter((p) => p.hasVoted).length} su ${view.players.length} hanno votato`} />
+                  ? <BSheet gold={gold} title="VOTA IN SEGRETO" sub={`${view.players.filter((p) => p.hasVoted).length} su ${view.players.length} hanno votato`} />
                   : canVote
-                    ? <BSheet title="VOTA IN SEGRETO" sub="Il più votato cade: chi lo ha votato prende 2 punti." ui={uiv}>
+                    ? <BSheet gold={gold} title="VOTA IN SEGRETO" sub="Il più votato cade: chi lo ha votato prende 2 punti." ui={uiv}>
                       <Row>{tray}<Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? "Scegli chi cade" : `Conferma il n. ${pick}`}</Btn></Row>
                     </BSheet>
-                    : <BSheet title="VOTO INVIATO" sub="Aspettiamo gli altri." ui={uiv}><Flags flags={flagsVote} people={people} /></BSheet>}
+                    : <BSheet gold={gold} title="VOTO INVIATO" sub="Aspettiamo gli altri." ui={uiv}><Flags flags={flagsVote} people={people} /></BSheet>}
               </>}
 
               {showPanel && res && afterStep === "points" && <>
                 {phase === "RESULTS" && <div className="bsp" />}
-                <PointsPanel cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} hideGo onContinue={() => setAfter({ turn, step: "board" })} />
-                <BSheet title="PUNTI DEL TURNO" sub={`Turno ${view.turn} di ${view.totalTurns}`} ui={uiv}>
+                <PointsPanel meId={readOnly ? undefined : me} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} hideGo onContinue={() => setAfter({ turn, step: "board" })} />
+                <BSheet gold={gold} title="PUNTI DEL TURNO" sub={`Turno ${view.turn} di ${view.totalTurns}`} ui={uiv}>
                   {readOnly ? <span className="pb-wait">Il Megafono prosegue…</span> : <Row>{tray}<Btn onClick={() => setAfter({ turn, step: "board" })} testId="points-continue">Continua ›</Btn></Row>}
                 </BSheet>
               </>}
@@ -279,7 +295,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
           actionLabel={phase === "SUSPECT" ? `Lui! sul n. ${zoomPos}` : `Vota il n. ${zoomPos}`} onAction={() => { setPick(zoomPos); setZoomPos(null); }} />
       )}
       {!intro && charIntro && <CharIntro color={people.get(me).color} onClose={() => { setCharIntro(false); try { sessionStorage.setItem(charKey, "1"); } catch { /* */ } }} />}
-      {intro && <HowTo onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
+      {intro && <IntroSlides onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
+      {megaIntro && <MegaIntro megafonoSa={view.megafonoSa} onClose={(off) => { megaIntroSeen(off); setMegaIntro(false); }} />}
+      {hintOn && hintText && <HintBubble onClose={hintClose} onRules={uiv?.rules}>{hintText}</HintBubble>}
     </>
   );
 }

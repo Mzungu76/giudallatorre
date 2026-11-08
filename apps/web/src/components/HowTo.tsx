@@ -2,12 +2,12 @@ import { useState } from "react";
 import type { LuiSpec } from "@gdt/game-engine";
 import { Btn } from "../ui.tsx";
 import { luiTok } from "../scene/draw.ts";
+import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 
 const TABS = ["Il turno", "I punti", "Il Lui!", "Fine"];
 const DEMO: LuiSpec[] = [{ slot: "zero", k: 0, pts: 5 }, { slot: "k3", k: 3, pts: 14 }] as LuiSpec[];
 
 const Step = ({ ic, t, x }: { ic: string; t: string; x: string }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
-const Pts = ({ v, t, x, z }: { v: string; t: string; x: string; z?: boolean }) => <div className="brg-row"><span className={`v ${z ? "z" : ""}`}>{v}</span><div><b>{t}</b><p>{x}</p></div></div>;
 const Note = ({ t, children }: { t: string; children: string }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
@@ -33,16 +33,14 @@ export default function HowTo({ onClose, tokens, sound, setSound, onLeave, leave
           <Note t="Pareggio">Se più carte hanno gli stessi voti decide il Megafono. Se ha votato una di quelle, cade solo la sua. Altrimenti cadono tutte.</Note>
         </>}
         {tab === 1 && <>
-          <Pts v="+2" t="Voto giusto" x="Hai votato la carta che cade." />
-          <Pts v="+2" t="Carta caduta" x="Hai giocato la carta che cade. La carta pescata dal mazzo non è di nessuno." />
-          <Pts v="+5/14" t="Lui! azzeccato" x="Solo per il Megafono: la carta del gettone prende i voti indicati sul gettone." />
-          <Pts v="0" t="Lui! mancato" x="Il Megafono non perde punti, ma il gettone è usato." z />
-          <Note t="Si sommano">Nello stesso turno puoi prendere punti per più motivi.</Note>
+          <PointsKey />
+          <Note t="Si sommano">Nello stesso turno puoi prendere punti per più motivi. Ecco un turno vero:</Note>
+          <ExampleTurn />
         </>}
         {tab === 2 && <>
           {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.slot === "zero" ? "Nessun voto" : `Almeno ${sp.k} voti`} · +{sp.pts}</b><p>{sp.slot === "zero" ? "Scommetti che nessuno degli altri vota la carta del gettone." : `Scommetti che almeno ${sp.k} giocatori votano la carta del gettone. La soglia cambia a ogni partita.`}</p></div></div>)}
           <Note t="Come funziona">Ogni partita ha 2 gettoni, uguali per tutti, e ognuno si usa una sola volta. Contano solo i voti degli altri, non il tuo. I tuoi li vedi in basso a sinistra: toccali per ingrandirli. Quelli degli altri vanno ricordati.</Note>
-          <Note t="Esempio">Metti «Almeno 3 voti» sul n. 2. Tre giocatori votano il n. 2: prendi 14 punti.</Note>
+          <ExampleLui />
         </>}
         {tab === 3 && <>
           <Note t="Quando finisce">Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–8 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.</Note>

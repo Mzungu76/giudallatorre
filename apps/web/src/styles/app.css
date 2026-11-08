@@ -776,7 +776,7 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .brg-row b{display:block;font:400 17px/1.1 Anton;text-transform:uppercase}
 .brg-row p{font:700 12.5px/1.35 Nunito;margin-top:2px}
 .brg-lui{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;background:#fff;border:3px solid #13224a;border-radius:14px;box-shadow:0 3px 0 #13224a;padding:10px 12px}
-.brg-lui .tk{line-height:0}
+.brg-lui .tk{line-height:0;display:block;transform:none;width:auto;height:auto;border:0;box-shadow:none;background:none}
 .brg-lui b{display:block;font:400 19px/1.1 Anton;text-transform:uppercase}
 .brg-lui p{font:700 13px/1.4 Nunito;margin-top:3px}
 .zoom{z-index:200}
@@ -895,3 +895,70 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .ivl-pts>b{display:block;font:400 17px/1 Anton;color:#e8362b;text-transform:uppercase;letter-spacing:.03em;margin-bottom:4px}
 .ivl-pr{display:flex;gap:8px;align-items:center;font:700 13px/1.25 Nunito;margin-top:4px}
 .ivl-pr .v{flex:none;min-width:42px;text-align:center;background:#13224a;color:#ffc72c;border-radius:999px;padding:2px 8px;font:400 15px/1.3 Anton}
+
+/* ---------- esempi visivi dei punti (carte vere, numeri sul bordo, segnalini dei giocatori) ---------- */
+.ex{display:grid;gap:10px;color:#13224a}
+.ex-tk{display:inline-block;flex:none;border-radius:50%;border:3px solid #13224a;background-size:cover;background-position:center;box-shadow:0 2px 0 #13224a}
+.ex-th{position:relative;display:inline-block;flex:none;background-size:cover;background-position:center;border:3px solid #fff;border-radius:7px;box-shadow:0 0 0 2px #13224a,0 3px 0 2px #13224a}
+.ex-th.ring{box-shadow:0 0 0 2px #13224a,0 0 0 6px #ffc72c,0 3px 0 6px #13224a}.ex-th.dim{filter:grayscale(.6) brightness(.9)}
+.ex-th i{position:absolute;left:-7px;top:-8px;min-width:20px;height:20px;border-radius:10px;background:#ffc72c;border:2px solid #13224a;display:grid;place-items:center;font:400 12px/1 Anton;font-style:normal;padding:0 3px}
+.ex-phrase{text-align:center;background:#fff7e0;border:3px solid #13224a;border-radius:12px;box-shadow:0 3px 0 #e8362b;padding:5px 8px}
+.ex-phrase span{display:block;font:400 14px/1 'Caveat Brush';color:#e8362b}.ex-phrase b{display:block;font:400 19px/1.05 Anton;text-transform:uppercase;font-weight:400}
+.ex-board{display:flex;justify-content:space-around;align-items:flex-start;background:linear-gradient(#f6d58a,#e9b95a);border:3px solid #13224a;border-radius:14px;box-shadow:0 4px 0 #13224a;padding:12px 6px 8px}
+.ex-col{display:grid;justify-items:center;gap:6px}.ex-cw{position:relative}
+.ex-fall{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%) rotate(-6deg);background:#e8362b;color:#fff;border:2px solid #13224a;border-radius:6px;padding:0 6px;font:400 13px/1.4 Anton;letter-spacing:.06em;z-index:3}
+.ex-own{position:absolute;right:-12px;top:-10px;z-index:3}
+.ex-votes{display:flex;min-height:22px;gap:2px}.ex-votes .ex-tk{margin-left:-6px}.ex-votes .ex-tk:first-child{margin-left:0}
+.ex-lines{display:grid;gap:5px}
+.ex-line{display:grid;grid-template-columns:auto auto 1fr auto;gap:6px;align-items:center;background:#fff;border:3px solid #13224a;border-radius:12px;padding:3px 7px;box-shadow:0 3px 0 #13224a}
+.ex-who{display:flex;align-items:center;gap:4px;font:800 12px/1 Nunito}.ex-who em{font-style:normal}
+.ex-vote{display:flex;align-items:center;gap:4px;font:700 10px Nunito;text-transform:uppercase;letter-spacing:.04em;opacity:.8}.ex-vote i{font-style:normal}
+.ex-why{display:flex;flex-wrap:wrap;gap:3px}
+.ex-pill{display:inline-flex;gap:4px;align-items:center;border-radius:99px;border:2px solid #13224a;background:#13224a;color:#ffc72c;padding:0 7px;font:700 10.5px/1.6 Nunito;white-space:nowrap}
+.ex-pill b{font:400 13px/1.3 Anton;color:inherit}
+.ex-pill.ok{background:#e1f4e2;border-color:#1c6b3c;color:#1c6b3c}.ex-pill.luik{background:#efe3f8;border-color:#7b3fb0;color:#5b2a8a}.ex-pill.no{background:#eee;border-color:#999;color:#666}
+.ex-tot{font:400 20px/1 Anton;min-width:26px;text-align:right;color:#13224a88}.ex-tot.up{color:#2a9d57}
+.ex-key{display:grid;gap:4px;font:700 11.5px/1.3 Nunito;border-top:2px dashed #13224a55;padding-top:7px}.ex-key span{display:flex;gap:6px;align-items:center}
+.ex-lh{display:flex;gap:10px;align-items:center}.ex-lh b{display:block;font:400 19px/1.05 Anton;text-transform:uppercase}.ex-lh p{font:700 12.5px/1.3 Nunito;margin-top:2px}.ex-ltk{flex:none;display:block;line-height:0}
+.ex-lboard{display:flex;gap:14px;align-items:center;background:linear-gradient(#f6d58a,#e9b95a);border:3px solid #13224a;border-radius:14px;box-shadow:0 4px 0 #13224a;padding:12px 12px 12px 18px}
+.ex-lc{position:relative;flex:none}.ex-lbadge{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);line-height:0;z-index:2}
+.ex-vs{display:grid;gap:5px;flex:1;min-width:0}.ex-vh{font:800 11px Nunito;text-transform:uppercase;letter-spacing:.05em}
+.ex-vr{display:flex;align-items:center;gap:6px;background:#fff;border:3px solid #13224a;border-radius:10px;padding:2px 7px;font:800 12px Nunito}.ex-vr.y{background:#e1f4e2;border-color:#1c6b3c}.ex-vr .ar{opacity:.6}.ex-vr .ck{font-style:normal;color:#1c6b3c;margin-left:auto}
+.ex-res{border-radius:12px;padding:7px 10px;border:3px solid}.ex-res b{display:block;font:400 16px/1.1 Anton;text-transform:uppercase}.ex-res span{font:700 12.5px/1.3 Nunito}.ex-res em{font-style:normal;font-weight:800}
+.ex-res.ok{background:#e1f4e2;border-color:#1c6b3c}.ex-res.ok b{color:#1c6b3c}.ex-res.ko{background:#fbe5e2;border-color:#b3261e}.ex-res.ko b{color:#b3261e}
+.ex-foot{font:700 11.5px/1.35 Nunito;opacity:.85;margin:0}
+.ex-pk{display:grid;gap:10px}.ex-pkr{display:grid;grid-template-columns:62px 112px 1fr;gap:8px;align-items:center}.ex-pkr b{display:block;font:400 17px/1.05 Anton;text-transform:uppercase}.ex-pkr p{font:700 12px/1.3 Nunito;margin:0}
+.ex-pkv{display:flex;align-items:center;gap:4px;line-height:0}.ex-pkv i{font-style:normal;font:800 14px Nunito;line-height:1}.ex-pkv em{font:400 12px Anton;font-style:normal;color:#e8362b;line-height:1;margin:0 2px}
+
+/* ---------- prima partita (3 schermate), scheda del Megafono, suggerimenti a fumetto ---------- */
+.isl{position:absolute;inset:0;z-index:320;display:flex;flex-direction:column;overflow:hidden;color:#13224a}
+.isl>*:not(.sky):not(.skyg):not(.skyh){position:relative;z-index:2}
+.isl-top{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 0;flex:none}
+.isl .dts{display:flex;gap:6px}.isl .dts i{width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid #13224a;display:block}.isl .dts i.on{background:#ffc72c}
+.isl .skp{font:800 13px Nunito;color:#fff;text-decoration:underline;text-shadow:0 1px 0 #13224a;cursor:pointer}
+.isl-h{margin:10px 0 0;text-align:center;font:400 38px/1.02 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 #13224a,-1px -1px 0 #13224a;flex:none}.isl-h.sm{font-size:33px}.isl-h.gold{color:#ffd84a}
+.isl-tower{display:block;margin:6px auto 0;width:min(190px,44%);flex:none;filter:drop-shadow(0 8px 0 #13224a55)}
+.isl-card{margin:auto 16px 0;flex:none}.isl-card b{display:block;font:400 20px/1.1 Anton;text-transform:uppercase;color:#e8362b;margin-bottom:4px}.isl-card p{font:700 14px/1.35 Nunito;margin:0}.isl-card u{text-decoration:none;background:#ffe27a;padding:0 3px;border-radius:3px}
+.isl-steps{margin:14px 16px 0;display:grid;gap:11px;flex:none}.isl-steps.tight{gap:8px;margin-top:10px}
+.isl-steps .st{display:flex;gap:10px;align-items:flex-start}.isl-steps .st b{display:block;font:400 17px/1.05 Anton;text-transform:uppercase}.isl-steps .st p{font:700 12.5px/1.3 Nunito;margin:2px 0 0}.isl-steps .st em{font-style:normal;color:#e8362b;font-weight:800}
+.isl-steps .ic{flex:none;width:34px;height:34px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;display:grid;place-items:center;font:400 16px Anton;font-style:normal}
+.isl-note,.isl-n{font:700 12.5px/1.3 Nunito;background:#fff7e0;border:3px dashed #13224a;border-radius:12px;padding:6px 9px}.isl-n b{color:#e8362b}.isl-n em{font-style:normal;font-weight:800;color:#1c6b3c}.isl-n.g{background:#e8f6e7}
+.isl-ba{margin-top:auto;padding:12px 18px 26px;display:grid;gap:10px;flex:none}.isl-ba .bt{width:100%}
+.isl-chk{display:flex;gap:8px;align-items:center;justify-content:center;font:800 13px Nunito;color:#fff;text-shadow:0 1px 0 #13224a}.isl-chk input{width:18px;height:18px;accent-color:#e8362b}
+.isl-cur{margin:0;text-align:center;font:400 22px 'Caveat Brush';color:#fff;text-shadow:0 2px 0 #13224a}
+.isl .mbig{margin:14px auto 0;width:118px;height:118px;border-radius:50%;background:radial-gradient(circle,#fff6cf,#ffc72c 60%,#f2a900);border:6px solid #13224a;box-shadow:0 0 0 9px #ffffff66,0 9px 0 #13224a;display:grid;place-items:center;font-size:62px;flex:none}.isl .mbig i{font-style:normal;transform:rotate(-12deg)}
+.hintb{position:absolute;left:14px;right:14px;bottom:208px;z-index:300;background:#fff;color:#13224a;border:4px solid #13224a;border-radius:18px;padding:9px 14px 11px;box-shadow:0 6px 0 #13224a;animation:hintin .35s ease-out}
+.hintb::after{content:"";position:absolute;left:50%;bottom:-20px;margin-left:-10px;border:10px solid transparent;border-top-color:#13224a;border-bottom:0}
+.hintb .hn{font:400 13px Anton;color:#e8362b;letter-spacing:.12em;text-transform:uppercase}.hintb p{font:800 14px/1.35 Nunito;margin:3px 0 8px}.hintb p b{color:#e8362b}
+.hintb .hr2{display:flex;justify-content:space-between;align-items:center}.hintb .hr2 a{font:800 12.5px Nunito;text-decoration:underline;cursor:pointer}
+.hintb .bt.sm{font-size:16px;padding:7px 14px;width:auto;border-radius:14px;box-shadow:0 4px 0 #13224a}
+@keyframes hintin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.hintb{animation:none}}
+/* ruolo del Megafono sempre riconoscibile */
+.rolechip{background:linear-gradient(#ffe27a,#ffc72c);color:#13224a;text-shadow:none;border:3px solid #13224a;border-radius:999px;padding:1px 10px;box-shadow:0 3px 0 #13224a;font-weight:800}
+.bsheet.gold{background:linear-gradient(#fff6cf,#ffe27a) !important;box-shadow:0 0 0 4px #ffc72c,0 7px 0 4px #13224a,0 14px 18px #0003 !important}
+.bsheet.gold .bhd>b{padding-left:30px}
+.shb{position:absolute;left:-6px;top:-18px;z-index:2;width:44px;height:44px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;box-shadow:2px 2px 0 #13224a;display:grid;place-items:center;font-size:23px;font-style:normal}
+.bhand .card.gold{border:5px solid #ffd84a;box-shadow:0 0 0 3px #13224a,0 0 0 8px #ffc72c}
+.hstamp{position:absolute;z-index:40;width:42px;height:42px;border-radius:50%;background:#ffc72c;border:3px solid #13224a;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;font-size:22px;pointer-events:none}
+.prow2.you{border-color:#e8362b;background:#fff7e0;box-shadow:0 3px 0 #e8362b}

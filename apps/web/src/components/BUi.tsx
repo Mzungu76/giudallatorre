@@ -18,9 +18,9 @@ export function useTimedOpen(ms = OPEN_MS) {
 }
 
 /** Riga in alto: turno (con il timer, se c'è) e Megafono. */
-export function BMeta({ turn, mega, right, deadline }: { turn: string; mega?: string; right?: string; deadline?: number | null }) {
+export function BMeta({ turn, mega, right, deadline, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
   const now = useNow(), s = deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : null;
-  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{right ?? `📣 ${mega}`}</span></div>;
+  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip">📣 Sei il Megafono</span> : right ?? `📣 ${mega}`}</span></div>;
 }
 
 /** La frase del Megafono, sempre per intero (il corpo si riduce se è lunga). */
@@ -41,12 +41,12 @@ export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"];
 }
 
 /** Pannello fisso sotto il pollice: titolo, istruzione breve, scorciatoie (chat, classifica, regolamento) e il contenuto della fase. */
-export function BSheet({ title, sub, ui, children }: { title: ReactNode; sub?: ReactNode; ui?: UiCtl | null; children?: ReactNode }) {
+export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; sub?: ReactNode; ui?: UiCtl | null; children?: ReactNode; /** Turno del Megafono: pannello dorato col badge 📣. */ gold?: boolean }) {
   return (
-    <div className="pp bsheet" data-testid="sheet">
-      <span className="bgrip" />
+    <div className={`pp bsheet${gold ? " gold" : ""}`} data-testid="sheet">
+      <span className="bgrip" />{gold && <i className="shb" aria-hidden>📣</i>}
       <div className="bhd">
-        <b>{title}{sub && <small>{sub}</small>}</b>
+        <b>{gold && "Sei il Megafono · "}{title}{sub && <small>{sub}</small>}</b>
         {ui && <>
           <button className="bib" onClick={ui.chat} aria-label={ui.unread ? `Chat, ${ui.unread} messaggi nuovi` : "Chat"} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
           <button className="bib" onClick={ui.rank} aria-label="Classifica" data-testid="standings-btn">🏆</button>

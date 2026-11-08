@@ -10,6 +10,7 @@ import { Reveal, Terrace } from "./Terrace.tsx";
 import type { VoteTok, Voter } from "./Terrace.tsx";
 import { BMeta, BSheet, LuiTray, Row, WaitCard } from "./BUi.tsx";
 import { HandPicker, usePeople } from "../screens/Game.tsx";
+import { HintBubble, useIdleHint } from "./IdleHint.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 
 interface KindInfo { title: string; icon: string; tag: string; steps: [string, string][]; /** Come si fanno punti: [valore, a chi / quando]. */ pts: [string, string][]; headCard: string | null; play: string; vote: string }
@@ -137,6 +138,10 @@ export default function MiniGame({ room, view, deadline, send, readOnly, sound, 
     ? { tally: [res.fallenPositions.length ? (res.leaders.length > 1 ? "Pareggio in testa!" : `Il colpevole: n. ${res.leaders[0]}`) : "Tutte a pari merito!", res.fallenPositions.length ? `${res.leaders.length > 1 ? "Cadono insieme le carte in testa" : `${counts[res.leaders[0]!] ?? 0} voti su ${voters.length}. Il colpevole cade giù dalla torre`} (${leadersTxt}) e fa punti.` : "Nessuna carta cade: nessun colpevole."] as [string, string], stamp: res.fallenPositions.length ? (res.leaders.length > 1 ? `Cadono insieme: ${res.leaders.map((x) => "n. " + x).join(" e ")}!` : `Cade il n. ${res.leaders[0]}!`) : "Nessun colpevole!", focus: res.leaders }
     : { tally: [res.fallenPositions.length ? (res.leaders.length > 1 ? "Pareggio in testa!" : `In testa: n. ${res.leaders[0]}`) : "Tutte a pari merito!", res.fallenPositions.length ? `Restano le carte in testa (${leadersTxt}) e fanno punti. Le altre cadono.` : "Nessuna carta cade: restano tutte e fanno punti."] as [string, string], stamp: res.fallenPositions.length ? `Restano: ${res.leaders.map((x) => "n. " + x).join(" e ")}!` : "Restano tutte!", focus: res.leaders }) : undefined;
 
+  // suggerimento a fumetto: solo se devi agire e resti fermo a lungo
+  const myPlayed = view.players.find((p) => p.id === me)?.hasPlayed;
+  const hintText = readOnly ? null : phase === "MINI_PLAY" && seen && !myPlayed ? info.play : phase === "MINI_VOTE" && canVote ? info.vote : null;
+  const [hintOn, hintClose] = useIdleHint(!!hintText && zoomPos === null, `${view.turn}-${phase}`);
   if (phase === "MINI_PLAY" && !seen && !readOnly) return <MiniIntro kind={kind} view={view} sound={sound} ui={uiv} onGo={() => setSeen(true)} />;
 
   return (
@@ -207,6 +212,7 @@ export default function MiniGame({ room, view, deadline, send, readOnly, sound, 
           action={readOnly ? { wait: "Prosegue l'host…" } : isHost ? { label: "Riprendiamo la partita", onClick: () => act({ type: "advance" }) } : { wait: "Aspettiamo che l'host riprenda la partita…" }} />
       )}
 
+      {hintOn && hintText && <HintBubble onClose={hintClose} onRules={uiv?.rules}>{hintText}</HintBubble>}
       {zoomPos !== null && ids[zoomPos - 1] && (
         <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={ids.length} onClose={() => setZoomPos(null)} onNav={setZoomPos}
           actionLabel={`Vota il n. ${zoomPos}`} onAction={() => { if (isOwn(zoomPos)) setOwnNote(true); else setVpick(zoomPos); setZoomPos(null); }} />
