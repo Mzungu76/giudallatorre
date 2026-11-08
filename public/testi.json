@@ -1,5 +1,5 @@
 {
- "versione": 1,
+ "versione": 2,
  "aggiornato": "2026-11-08",
  "testi": {
   "intro.aria": {
@@ -29,7 +29,7 @@
    "s": "Prima partita · 3 schermate"
   },
   "intro.1.card.testo": {
-   "t": "A ogni turno c’è una __frase__. Voi scegliete i personaggi che la meritano, poi __votate__: il più votato cade giù dalla torre. Sotto ci sono i materassi.",
+   "t": "A ogni turno uno di voi impersonerà __Il Megafono__ e gli altri La folla. __Il Megafono__ pronuncerà la frase \"d'accusa\" e tutti sceglieranno un personaggio da far salire sopra alla torre. Voterete quindi il personaggio da lanciare giù dalla torre!",
    "s": "Prima partita · 3 schermate",
    "n": "__testo__ = evidenziato in giallo"
   },
@@ -38,7 +38,7 @@
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p1.t": {
-   "t": "Il Megafono urla",
+   "t": "Il Megafono",
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p1.x": {
@@ -47,11 +47,11 @@
    "n": "~testo~ = corsivo"
   },
   "intro.2.p2.t": {
-   "t": "Tu scegli il personaggio",
+   "t": "Su sulla torre",
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p2.x": {
-   "t": "Quello che somiglia di più alla frase. È segreto.",
+   "t": "Scegli tra le tue carte il personaggio che vuoi far salire sulla torre. Scegli con attenzione, se cade dalla torre ti frutterà punti.",
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p3.t": {
@@ -59,15 +59,15 @@
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p3.x": {
-   "t": "Ognuno vota la carta che pensa debba cadere.",
+   "t": "Ognuno vota il personaggio che pensa meriti di più di essere lanciato dalla torre.",
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p4.t": {
-   "t": "Cade il più votato",
+   "t": "Giù dalla torre!",
    "s": "Prima partita · 3 schermate"
   },
   "intro.2.p4.x": {
-   "t": "Chi aveva indovinato prende i punti.",
+   "t": "Il personaggio più votato viene la ciato dalla torre! Tranquilli, sotto abbiamo messo dei materassi. Nessuna carta è stata maltrattata in questo gioco, fino ad ora.",
    "s": "Prima partita · 3 schermate"
   },
   "intro.3.titolo": {
