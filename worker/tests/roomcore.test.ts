@@ -3,7 +3,7 @@ import { megafonoOf } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
-import { fullPhrase } from "@gdt/game-engine";
+import { fullPhrase, PHRASES_PER_CARD } from "@gdt/game-engine";
 import { CONFESSIONS, PHRASE_POOL } from "../src/content.ts";
 
 const types = (o: { send: { msg: { t: string } }[] }) => o.send.map((s) => s.msg.t);
@@ -33,7 +33,7 @@ describe("fascia d'età e confessioni", () => {
   });
   it("senza confessioni non ci sono carte a frase singola; con le confessioni ci sono", () => {
     const off = makeRoom(4, 31); send(off, 0, { t: "setOptions", confessions: false }); send(off, 0, { t: "start" });
-    expect(deckOf(off).every((c) => c.phrases.length === 4)).toBe(true);
+    expect(deckOf(off).every((c) => c.phrases.length === PHRASES_PER_CARD)).toBe(true);
     const on = makeRoom(4, 31); send(on, 0, { t: "start" });
     expect(deckOf(on).some((c) => c.phrases.length === 1)).toBe(true);
   });

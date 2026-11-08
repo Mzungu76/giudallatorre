@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { AGE_BANDS, applyAction, buildPhraseDeck, createGame, fullPhrase, megafonoOf, parseAge, PHRASE_FAMILIES, simulateGame } from "../src/index.ts";
+import { AGE_BANDS, applyAction, buildPhraseDeck, createGame, fullPhrase, megafonoOf, parseAge, PHRASE_FAMILIES, PHRASES_PER_CARD, simulateGame } from "../src/index.ts";
 import type { AgeBand, PoolConfession, PoolPhrase } from "../src/index.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -67,13 +67,13 @@ describe("costruzione del mazzo frasi", () => {
       expect(age, t).toBeDefined(); expect(age!, `${a}+: «${t}»`).toBeLessThanOrEqual(a);
     }
   });
-  it("ogni carta ha 4 frasi di famiglie diverse, senza ripetizioni nel mazzo", () => {
+  it("ogni carta ha 3 frasi di famiglie diverse, senza ripetizioni nel mazzo", () => {
     const d = build(14).filter((c) => c.phrases.length > 1), all = d.flatMap((c) => c.phrases);
     expect(d.length).toBeGreaterThanOrEqual(40);
     expect(new Set(all).size).toBe(all.length);
-    for (const c of d) { expect(c.phrases).toHaveLength(4); expect(new Set(c.phrases.map((t) => poolBySentence.get(t)!.family)).size).toBe(4); }
+    for (const c of d) { expect(c.phrases).toHaveLength(PHRASES_PER_CARD); expect(new Set(c.phrases.map((t) => poolBySentence.get(t)!.family)).size).toBe(PHRASES_PER_CARD); }
   });
-  it("pesca pesata: almeno 2 frasi su 4 vengono dalle due fasce più alte consentite", () => {
+  it("pesca pesata: almeno 2 frasi su 3 vengono dalle due fasce più alte consentite", () => {
     for (const [a, lo] of [[14, 10], [18, 14], [10, 6]] as [AgeBand, AgeBand][]) {
       for (const c of build(a).filter((x) => x.phrases.length > 1)) {
         const hi = c.phrases.filter((t) => poolBySentence.get(t)!.age >= lo).length;
@@ -85,7 +85,7 @@ describe("costruzione del mazzo frasi", () => {
     const d = build(14), singles = d.filter((c) => c.phrases.length === 1);
     expect(singles.length / d.length).toBeGreaterThan(0.1); expect(singles.length / d.length).toBeLessThan(0.2);
     expect(singles.every((c) => c.phrases[0]!.startsWith("Ammetto"))).toBe(true);
-    expect(build(14, 7, { confessions: false }).every((c) => c.phrases.length === 4)).toBe(true);
+    expect(build(14, 7, { confessions: false }).every((c) => c.phrases.length === PHRASES_PER_CARD)).toBe(true);
   });
   it("il mazzo è abbastanza grande per ogni fascia (più dei turni possibili senza spareggio)", () => {
     for (const a of AGE_BANDS) expect(build(a).length, `${a}+`).toBeGreaterThanOrEqual(a === 6 ? 25 : 30);

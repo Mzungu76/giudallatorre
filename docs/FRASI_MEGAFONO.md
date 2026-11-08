@@ -20,11 +20,11 @@ Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratt
 
 ## Mazzo
 - **Tono per età**: dal 14+ in su le frasi sono più taglienti (tradimento, soldi, vizi, lutto); dal 18+ ci sono allusioni sessuali e umorismo nero, mai volgari né esplicite.
-- **405 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi): 208 per 6+, 68 per 10+, 90 per 14+, 39 per 18+.
+- **405 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4-5 frasi): 208 per 6+, 68 per 10+, 90 per 14+, 39 per 18+.
 - **Pubblico di riferimento**: adulti e adolescenti. La fascia predefinita della stanza è **14+**.
 - **Filtro cumulativo**: un gruppo con fascia N vede le frasi con età ≤ N (un gruppo 14+ pesca da 6+, 10+ e 14+; un gruppo 18+ da tutto).
-- **Mano del Megafono**: 4 frasi pescate dall'insieme filtrato, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
-- **Peso della pesca**: almeno 2 delle 4 frasi vengono dalle **due fasce più alte consentite** al gruppo, così le frasi 6+ (più miti) fanno da riempitivo e non da base.
+- **Mano del Megafono**: 3 frasi pescate dall'insieme filtrato, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
+- **Peso della pesca**: almeno 2 delle 3 frasi vengono dalle **due fasce più alte consentite** al gruppo, così le frasi 6+ (più miti) fanno da riempitivo e non da base.
 - **Famiglie**: `etichetta`, `collettivo`, `confronto`, `convinzione`, `ribaltato`.
 - **Stato** di ogni voce: `provata` (👍 nel test), `ritoccata` (riscritta dopo il test), `nuova` (da valutare).
 - Il verbo («sale»/«salgono») è nel campo `verbo`: la frase completa è «Oggi {verbo} sulla torre {testo}».
@@ -39,7 +39,7 @@ Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratt
 ## Nell'app (fatto)
 - L'app legge `content/frasi-megafono.json` e `content/confessioni.json` (le v4 sono in `content/storico/`).
 - Opzioni di stanza **Pubblico** (fascia d'età, predefinita 14+) e **Confessioni**, scelte dall'host in lobby.
-- Il server costruisce il mazzo all'avvio (`buildPhraseDeck`): 4 frasi di famiglie diverse per carta, almeno 2 dalle due fasce più alte consentite, confessioni in quota ~15%.
+- Il server costruisce il mazzo all'avvio (`buildPhraseDeck`): 3 frasi di famiglie diverse per carta (`PHRASES_PER_CARD`), almeno 2 dalle due fasce più alte consentite, confessioni in quota ~15%.
 - La confessione mostra a tutti il nome del Megafono («Marco ammette…»).
 - Test: duplicati, lunghezza, concordanza verbo/soggetto, forme di genere nelle confessioni, filtro per età, pesca pesata.
 

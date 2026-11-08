@@ -17,13 +17,16 @@ export interface PoolPhrase { id: string; text: string; verb: "sale" | "salgono"
 /** Confessione «Ammetto che…» (content/confessioni.json): carta a frase singola. */
 export interface PoolConfession { id: string; text: string; age: AgeBand }
 
+/** Frasi tra cui sceglie il Megafono su ogni carta (3: scelta rapida e leggibile su telefono). */
+export const PHRASES_PER_CARD = 3;
+
 export const fullPhrase = (p: Pick<PoolPhrase, "verb" | "text">): string => `Oggi ${p.verb} sulla torre ${p.text}`;
 
 export interface BuildOptions {
   /** Fascia d'età del gruppo. */
   age: AgeBand;
   seed: number;
-  /** Frasi per carta (default 4). */
+  /** Frasi per carta (default PHRASES_PER_CARD). */
   perCard?: number;
   /** Numero massimo di carte a più frasi (default 48: più dei turni possibili, tiene piccolo lo stato salvato). */
   maxCards?: number;
@@ -41,7 +44,7 @@ export interface BuildOptions {
  * Deterministico per `seed`.
  */
 export function buildPhraseDeck(pool: readonly PoolPhrase[], confessions: readonly PoolConfession[], opts: BuildOptions): PhraseCard[] {
-  const per = opts.perCard ?? 4, maxCards = opts.maxCards ?? 48, share = opts.confessionShare ?? 0.15, h = { rng: opts.seed | 0 };
+  const per = opts.perCard ?? PHRASES_PER_CARD, maxCards = opts.maxCards ?? 48, share = opts.confessionShare ?? 0.15, h = { rng: opts.seed | 0 };
   const eligible = pool.filter((p) => p.age <= opts.age);
   const allowed = AGE_BANDS.filter((a) => a <= opts.age), highMin = allowed[Math.max(0, allowed.length - 2)]!;
   type Bucket = { hi: PoolPhrase[]; lo: PoolPhrase[] };

@@ -47,7 +47,7 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 
 ## Fase 7 — Nuovo mazzo di frasi (bozza, in revisione)
 - [x] Frasi riscritte con le regole dei test d'indagine (`docs/FRASI_MEGAFONO.md`): 405 frasi e 69 confessioni neutre rispetto al genere, con famiglia e fascia d'età
-- [x] Opzioni di stanza **Pubblico** (6+/10+/14+/18+, predefinita 14+) e **Confessioni**; mazzo costruito all'avvio con 4 frasi di famiglie diverse e pesca pesata sulle fasce alte
+- [x] Opzioni di stanza **Pubblico** (6+/10+/14+/18+, predefinita 14+) e **Confessioni**; mazzo costruito all'avvio con 3 frasi di famiglie diverse e pesca pesata sulle fasce alte
 - [x] Confessione mostrata a tutti con il nome del Megafono («Marco ammette…»)
 - [x] Etichette dei bot per le nuove frasi; 165 test unit, `npm run e2e`, `npm run e2e:ui`
 - [ ] Curatela delle frasi con l'autore (togliere, riscrivere, cambiare età) e prova a tavolo
