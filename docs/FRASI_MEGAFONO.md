@@ -1,0 +1,40 @@
+# Frasi del Megafono — regole (v5)
+
+Sostituisce `REVISIONE_FRASI.md` (v2) e le frasi v4 di `content/su-sulla-torre.json`, che restano nello storico ma non sono più il mazzo di riferimento.
+
+## Ruolo della frase
+Il gioco nasce dal quesito «chi butteresti giù dalla torre tra questi?» e funziona anche senza frase. La frase dà **mordente**: rende la scelta più interessante, più divisiva e più discutibile. Il Megafono la usa anche come strumento di persuasione (guadagna punti per i voti che attira).
+
+Una frase **non deve contenere per forza una colpa**. Deve far guardare i personaggi in modo diverso rispetto al voto senza frase.
+
+## Regole (ricavate da tre giri di test con l'autore)
+1. **Forma**: plurale o superlativo («i più…», «quelli che…») oppure un confronto semplice («chi sarebbe il peggior…»).
+2. **Contenuto**: un tratto di carattere o una situazione ipotetica semplice, non un aneddoto.
+3. **Chiarezza**: una clausola sola, comprensibile alla prima lettura ad alta voce.
+4. **Universalità**: niente gergo o nicchie (social, fantacalcio, «k»).
+5. **Positivo ribaltato**: ammesso, se il lato negativo è chiaro («i più generosi solo quando c'è pubblico»).
+6. **Assurdo**: solo se si capisce al volo.
+7. **Età**: ogni frase ha un campo `eta` (6+/10+/14+/18+). La stanza imposta la fascia d'età del gruppo e il mazzo si filtra.
+
+Risultati dei test: confronti semplici, etichette al plurale/superlativo e tratti collettivi hanno tutti funzionato; aneddoti, abitudini di nicchia e assurdi complicati no.
+
+## Mazzo
+- **250 frasi** in `content/frasi-megafono.json`, come insieme (non più 50 carte da 4 frasi).
+- **Mano del Megafono**: 4 frasi pescate dall'insieme **filtrato per età**, di **famiglie diverse** (etichetta, collettivo, confronto, convinzione, ribaltato) per dare una vera scelta strategica.
+- **Famiglie**: `etichetta`, `collettivo`, `confronto`, `convinzione`, `ribaltato`.
+- **Stato** di ogni voce: `provata` (👍 nel test), `ritoccata` (riscritta dopo il test), `nuova` (da valutare).
+- Il verbo («sale»/«salgono») è nel campo `verbo`: la frase completa è «Oggi {verbo} sulla torre {testo}».
+
+## Confessioni («Ammetto che…»)
+- **50 voci** in `content/confessioni.json` (15 originali + 35 nuove).
+- Variante che coinvolge il giocatore: il Megafono si associa a uno dei personaggi sopra la Torre.
+- **Nell'app la frase deve nominare il Megafono** (es. «Marco ammette di…»).
+- Funziona bene con gruppi che si conoscono, con i bot dotati di carattere e di persona al tavolo; meno online tra sconosciuti.
+- Le originali contengono forme al maschile («essermi infiltrato», «stato», «con lui»): da valutare una forma neutra.
+
+## Da fare nell'app
+- Leggere i nuovi file al posto di `su-sulla-torre.json` e `su-sulla-torre-singola.json`.
+- Opzione di stanza «fascia d'età del gruppo» e filtro del mazzo.
+- Pesca della mano da 4 frasi con famiglie diverse.
+- Frase delle confessioni con il nome del Megafono.
+- Controllo automatico nei test: duplicati, lunghezza massima, concordanza verbo/soggetto.
