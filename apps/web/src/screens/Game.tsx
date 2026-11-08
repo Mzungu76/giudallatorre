@@ -19,6 +19,8 @@ import HowTo from "../components/HowTo.tsx";
 import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
 import CharIntro from "../components/CharIntro.tsx";
+import HandRenewal from "../components/HandRenewal.tsx";
+import type { Geo } from "../components/HandRenewal.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean; ui?: UiCtl }
 const TITLES: Record<string, string> = { PROCLAIM: "TOCCA AL MEGAFONO", PLAY: "SCEGLI LA CARTA", SUSPECT: "IL MEGAFONO SCOMMETTE", VOTE: "VOTA IN SEGRETO", RESULTS: "GIÙ DALLA TORRE!", GAME_OVER: "FINE PARTITA" };
@@ -77,7 +79,7 @@ function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; th
 }
 
 /** La mano come carosello: la carta al centro è grande, le vicine si intravedono. Tocca una carta per sceglierla, di nuovo per ingrandirla. */
-export function HandPicker({ view, send, ui, title = "SCEGLI LA CARTA", sub = "Chi lo farebbe di sicuro? La scelta è segreta." }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; title?: string; sub?: React.ReactNode }) {
+export function HandPicker({ view, send, ui, sound = false, title = "SCEGLI LA CARTA", sub = "Chi lo farebbe di sicuro? La scelta è segreta." }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; sound?: boolean; title?: string; sub?: React.ReactNode }) {
   const hand = view.myHand, n = hand.length, [cur, setCur] = useState(Math.floor((n - 1) / 2)), [picked, setPicked] = useState(false), [zoom, setZoom] = useState(false);
   const box = useRef<HTMLDivElement>(null), [dim, setDim] = useState({ w: 372, h: 380 }), x0 = useRef<number | null>(null), y0 = useRef(0);
   useLayoutEffect(() => {
@@ -87,24 +89,31 @@ export function HandPicker({ view, send, ui, title = "SCEGLI LA CARTA", sub = "C
   }, []);
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
   const cH = Math.min(dim.h * 0.84, 320), cW = cH / 1.5, SC = [1, 0.78, 0.62, 0.5], OFF = [0, 0.72, 1.05, 1.28];
+  // All'intervallo la mano è tutta nuova: quando si apre la scelta della carta nell'intervallo lo si mostra con un'animazione
+  const renewKey = `gdt.hand.${location.pathname}`;
+  const [renew, setRenew] = useState(() => { try { return !FAST && view.phase === "MINI_PLAY" && view.handRenewals > Number(sessionStorage.getItem(renewKey) ?? 0) && !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } });
+  useEffect(() => { if (view.phase === "MINI_PLAY") { try { if (view.handRenewals > Number(sessionStorage.getItem(renewKey) ?? 0) && !renew) sessionStorage.setItem(renewKey, String(view.handRenewals)); } catch { /* */ } } }, [renew, view.phase, view.handRenewals, renewKey]);
+  const endRenew = () => { try { sessionStorage.setItem(renewKey, String(view.handRenewals)); } catch { /* */ } setRenew(false); };
+  const geo = (i: number): Geo => { const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW)); return { left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), w, h, rot: d * 7 }; };
   const move = (d: number) => { setCur((c) => Math.max(0, Math.min(n - 1, c + d))); setPicked(true); };
   return (
     <>
       <div className="bscene" data-testid="hand">
         <div className="bhand" ref={box} onTouchStart={(e) => { x0.current = e.touches[0]!.clientX; y0.current = e.touches[0]!.clientY; }}
           onTouchEnd={(e) => { const t = e.changedTouches[0]!; if (x0.current !== null && Math.abs(t.clientX - x0.current) > 35 && Math.abs(t.clientX - x0.current) > Math.abs(t.clientY - y0.current) * 1.2) move(t.clientX < x0.current ? 1 : -1); x0.current = null; }}>
-          {hand.map((c, i) => {
+          {!renew && hand.map((c, i) => {
             const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW));
             const lifted = picked && d === 0;
             return <button key={c} className={`card ${lifted ? "sel" : ""}`} data-testid={`hand-card-${i}`} aria-label={`Carta ${i + 1}`}
               style={{ width: w, height: h, left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 7}deg)`, zIndex: 20 - a }}
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
-          <div className="bdots">{hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
+          <div className="bdots">{!renew && hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
+          {renew && <HandRenewal cards={hand} geo={hand.map((_, i) => geo(i))} dim={dim} cW={cW} cH={cH} sound={sound} onDone={endRenew} />}
         </div>
       </div>
       <BSheet title={title} sub={sub} ui={ui}>
-        <Row>{ui && <LuiTray view={view} ui={ui} />}<Btn disabled={!picked} onClick={() => picked && play(cur)} testId="play-card">{picked ? "Gioca questa carta" : "Scegli una carta"}</Btn></Row>
+        <Row>{ui && <LuiTray view={view} ui={ui} />}<Btn disabled={!picked || renew} onClick={() => picked && !renew && play(cur)} testId="play-card">{picked ? "Gioca questa carta" : "Scegli una carta"}</Btn></Row>
       </BSheet>
       {zoom && picked && (
         <div className="zoom on" role="dialog" data-testid="hand-zoom"><div className="zc"><img className="fullcard" src={cardFull(hand[cur]!)} alt="La tua carta" /></div>

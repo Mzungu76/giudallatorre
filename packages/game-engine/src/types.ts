@@ -1,9 +1,9 @@
 export type PlayerId = string;
 export type CardId = string;
 export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI_PLAY" | "MINI_VOTE" | "MINI_RESULTS" | "GAME_OVER";
-/** Mini-giochi di metà partita: Accusa, La storia d'amore, Il raccomandato. */
-export type MiniKind = "accusa" | "amore" | "raccomandato";
-export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "raccomandato"];
+/** Mini-giochi (intervalli): Accusa, La storia d'amore, Il peggiore. */
+export type MiniKind = "accusa" | "amore" | "peggiore";
+export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "peggiore"];
 /** Identificativo di un segnalino Lui!: "zero" (nessun voto dagli altri) oppure "k1", "k2", "k3" (almeno 1, 2, 3 voti dagli altri). */
 export type LuiSlot = string;
 /** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
@@ -70,14 +70,14 @@ export interface TurnResult {
   tieBreak: boolean;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-perdita" | "mini-tetto"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "mini-voto" | "mini-carta" | "mini-peggiore" | "mini-tetto"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
 export interface MiniResult {
   kind: MiniKind; cardId: CardId | null; text: string | null;
   votes: Record<PlayerId, number>; counts: Record<number, number>;
-  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Raccomandato: sono quelle che cadono). */
+  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Il peggiore: sono quelle che cadono). */
   leaders: number[];
   fallenPositions: number[]; fallenCardIds: CardId[];
   /** Chi aveva giocato ciascuna carta (posizione → giocatore). */

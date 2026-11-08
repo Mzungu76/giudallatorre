@@ -30,16 +30,18 @@ describe("mini-gioco di metà partita", () => {
       expect(v.mini?.kind).toBe("amore"); expect(v.mini?.cardId).toBeTruthy();
     }
   });
-  it("le mani sono davvero nuove (nessuna carta di prima)", () => {
-    const g0 = start(4, { miniGame: "accusa", accuseDeck: ["x"] });
-    let s = g0, r = 3; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+  it("all'inizio dell'intervallo le mani sono davvero nuove (nessuna carta di prima) e la vista lo segnala", () => {
+    let s = start(4, { miniGame: "accusa", accuseDeck: ["x"] }), r = 3; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
     const seen = new Set<string>(); let prevHands: string[] = [];
+    expect(viewFor(s, "p1").handRenewals).toBe(0);
     while (s.phase !== "MINI_PLAY") {
       if (s.phase === "RESULTS") { prevHands = Object.values(s.hands).flat(); s = act(s, { type: "advance" }); continue; }
       for (const p of s.playerIds) { const a = suggestAction(s, p, rand); if (a) { s = act(s, a); break; } }
     }
     for (const c of prevHands) seen.add(c);
+    for (const p of s.playerIds) expect(s.hands[p]).toHaveLength(5);
     for (const c of Object.values(s.hands).flat()) expect(seen.has(c)).toBe(false);
+    expect(viewFor(s, "p1").handRenewals).toBe(1);
   });
   it("Storia d'amore: votanti della carta in testa prendono i voti ricevuti (anche il proprio), chi l'ha giocata il doppio, le altre cadono", () => {
     let g = playAll(toMini(4, "amore"));
@@ -79,22 +81,38 @@ describe("mini-gioco di metà partita", () => {
     expect(r.points.p1).toBe(r.cap);                        // 6 voti + 12 → tagliato al tetto
     expect(r.lines.p1!.some((l) => l.kind === "mini-tetto")).toBe(true);
   });
-  it("Raccomandato: cade la carta più votata e chi l'ha giocata perde i voti ricevuti (mai sotto zero); i votanti non prendono nulla", () => {
-    let g = playAll(toMini(4, "raccomandato"));
-    g = { ...g, scores: { p1: 5, p2: 1, p3: 0, p4: 4 } };
+  it("Il peggiore: cade la carta più votata; ognuno prende tanti punti quanti sono i voti ricevuti dalla carta che ha giocato; chi vota non prende nulla", () => {
+    let g = playAll(toMini(4, "peggiore"));
     const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
     g = vote(g, { p1: b, p2: a, p3: a, p4: a });
     const r = g.miniResult!;
     expect(r.fallenPositions).toEqual([a]); expect(g.mini?.cardId).toBeNull();
-    expect(g.scores.p1).toBe(2); expect(g.scores.p2).toBe(1); expect(g.scores.p3).toBe(0); expect(g.scores.p4).toBe(4);
+    expect(r.points).toEqual({ p1: 3, p2: 1, p3: 0, p4: 0 });   // 3 voti sulla carta di p1, 1 su quella di p2
+    expect(r.lines.p1).toEqual([{ kind: "mini-peggiore", pts: 3, pos: a }]);
   });
-  it("Raccomandato: a pari merito cadono tutte; il punteggio non scende sotto zero", () => {
-    let g = playAll(toMini(4, "raccomandato"));
-    g = { ...g, scores: { p1: 0, p2: 1, p3: 9, p4: 9 } };
+  it("Il peggiore: a pari merito cadono tutte le carte in testa e ognuno prende i propri voti", () => {
+    let g = playAll(toMini(4, "peggiore"));
     const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
-    g = vote(g, { p1: a, p2: b, p3: a, p4: b });
+    g = vote(g, { p1: b, p2: a, p3: a, p4: b });
     expect(g.miniResult!.fallenPositions.sort()).toEqual([a, b].sort());
-    expect(g.scores.p1).toBe(0); expect(g.scores.p2).toBe(0);
+    expect(g.miniResult!.points).toEqual({ p1: 2, p2: 2, p3: 0, p4: 0 });
+  });
+  it("Il peggiore: la propria carta non si può votare (e il massimo di una carta è N−1 voti)", () => {
+    let g = playAll(toMini(4, "peggiore"));
+    const own = posOfOwner(g, "p1"), other = posOfOwner(g, "p2");
+    expect(() => applyAction(g, { type: "vote", playerId: "p1", position: own })).toThrow(/INVALID_CHOICE/);
+    expect(viewFor(g, "p1").myPosition).toBe(own); expect(viewFor(g, "p2").myPosition).toBe(other);   // ognuno sa solo la propria
+    g = vote(g, { p1: other, p2: posOfOwner(g, "p1"), p3: other, p4: other });
+    expect(g.miniResult!.points.p2).toBe(3);
+    expect(Math.max(...Object.values(g.miniResult!.points))).toBeLessThanOrEqual(3);
+  });
+  it("Il peggiore: i giocatori inattivi e i bot non votano mai la propria carta", () => {
+    for (let seed = 1; seed <= 40; seed++) {
+      let g = playAll(toMini(5, "peggiore")), r = seed;
+      const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+      for (const p of g.playerIds) { const a = suggestAction(g, p, rand)!; expect(a.type === "vote" && a.position !== posOfOwner(g, p)).toBe(true); g = act(g, a); }
+      expect(g.phase).toBe("MINI_RESULTS");
+    }
   });
   it("si può votare la propria carta", () => {
     let g = playAll(toMini(3, "accusa"));
@@ -110,7 +128,7 @@ describe("mini-gioco di metà partita", () => {
     expect(checkInvariants(g, deck)).toEqual([]);
   });
   it("partite complete con ogni mini-gioco: invarianti, un intervallo fino a 5 giocatori e due da 6 a 8, nessun errore", () => {
-    for (const kind of ["accusa", "amore", "raccomandato", "random"] as const) for (const n of [3, 5, 6, 8]) {
+    for (const kind of ["accusa", "amore", "peggiore", "random"] as const) for (const n of [3, 5, 6, 8]) {
       const { state, problems, log } = simulateGame(cfg(n, { miniGame: kind, accuseDeck: ["Mi ha rubato il panino!"], seed: 11 + n }), 5, { checkEveryStep: true });
       expect(problems).toEqual([]); expect(state.phase).toBe("GAME_OVER");
       expect(log.flatMap((l) => l.events).filter((e) => e.type === "miniStarted")).toHaveLength(n <= 5 ? 1 : 2);

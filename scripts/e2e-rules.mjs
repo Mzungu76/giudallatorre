@@ -21,7 +21,7 @@ await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.wa
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
 async function step(p, name) {
   if (await vis(p, "mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis(p, "mini-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis(p, "mini-vote")) { for (const n of [2, 3]) { await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); if (await p.locator('[data-testid="zoom-action"]').isVisible({ timeout: 900 }).catch(() => false)) break; } await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }
   if (await vis(p, "phrase-picker")) { await p.click('[data-testid="phrase-0"]'); await p.click('[data-testid="phrase-go"]'); return true; }
   if (await vis(p, "hand")) { await p.locator('[data-testid="hand-card-0"]').dispatchEvent("click"); await p.click('[data-testid="play-card"]'); return true; }

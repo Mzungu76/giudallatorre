@@ -46,7 +46,7 @@ export default function HowTo({ onClose, tokens, sound, setSound, onLeave, leave
         </>}
         {tab === 3 && <>
           <Note t="Quando finisce">Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–8 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.</Note>
-          <Note t="Intervallo">Fino a 5 giocatori c'è un mini-gioco a metà partita, da 6 a 8 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il raccomandato. Non c'è il Megafono e le mani vengono rinnovate. Le regole vengono spiegate prima di cominciare.</Note>
+          <Note t="Intervallo">Fino a 5 giocatori c'è un mini-gioco a metà partita, da 6 a 8 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.</Note>
           <Note t="Parlare è permesso">Si può chiacchierare e bluffare quanto si vuole. L'unica regola è non rivelare la propria carta prima del voto.</Note>
         </>}
       </div>
