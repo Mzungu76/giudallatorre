@@ -188,7 +188,12 @@ describe("timer e pulizia", () => {
     expect(f.core.tick(f.core.data.finishedAt! + LIMITS.finishedMs + 10).destroy).toBe(true);
   });
   it("la scadenza successiva è sempre pianificata (allarme)", () => {
-    const r = makeRoom(3, 10, 0); expect(r.core.nextAlarm()).toBe(LIMITS.lobbyIdleMs + 1000);
+    const r = makeRoom(3, 10, 0);
+    expect(r.core.nextAlarm()).toBe(LIMITS.maxLifeMs + 1000); // con umani connessi non scade nulla tranne la vita massima
+    for (const id of r.ids) r.core.onDisconnect(id, 5000);
+    expect(r.core.nextAlarm()).toBe(5000 + LIMITS.hostGraceMs); // prima scade la tolleranza dell'host
+    r.core.tick(5000 + LIMITS.hostGraceMs);
+    expect(r.core.nextAlarm()).toBe(5000 + LIMITS.lobbyIdleMs + 1000); // poi, a stanza vuota, il conto parte dall'ultima disconnessione
   });
 });
 
@@ -316,5 +321,30 @@ describe("sveglie della stanza (quota gratuita dei Durable Objects)", () => {
     expect(destroyed).toBe(true);
     expect(alarms).toBeLessThan(10); // prima del correttivo erano ~22.800 (una ogni 50 ms per 20 minuti)
   });
+  it("umano connesso e fermo in lobby: nessun giro a vuoto (prima ~24.000 sveglie in 40 minuti)", () => {
+    const c = RoomCore.create("TESTX", deps(3), 0, { nickname: "Solo", mode: "table", megafonoSa: false });
+    const core = c.core; core.onConnect(c.playerId, 0);
+    let now = 0, alarms = 0;
+    for (let i = 0; i < 5000; i++) { const at = core.nextAlarm(); if (at === null) break; now = Math.max(now + 50, at); if (now > 3 * 3600_000) break; alarms++; core.tick(now); }
+    expect(alarms).toBe(0);
+  });
+  it("senza umani connessi i bot si fermano, e riprendono quando torna qualcuno", () => {
+    const c = RoomCore.create("TESTX", deps(5), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
+    const core = c.core; core.onConnect(c.playerId, 0); core.handle(c.playerId, { t: "start" }, 0);
+    expect(core.data.botAt).not.toBeNull();
+    core.onDisconnect(c.playerId, 100);
+    expect(core.data.botAt).toBeNull(); expect(core.nextAlarm()).toBe(100 + LIMITS.playingIdleMs + 1000);
+    core.onConnect(c.playerId, 200);
+    expect(core.data.botAt).not.toBeNull();
+  });
+  it("partita iniziata: margine lungo per le disconnessioni, breve dopo un'uscita volontaria; vita massima in ogni caso", () => {
+    const r = makeRoom(3, 12); send(r, 0, { t: "start" });
+    for (const id of r.ids) r.core.onDisconnect(id, 1000);
+    expect(r.core.tick(1000 + LIMITS.lobbyIdleMs + 2000).destroy).toBe(false); // un telefono in standby ha ancora tempo
+    expect(r.core.tick(1000 + LIMITS.playingIdleMs + 2000).destroy).toBe(true);
+    const q = makeRoom(3, 13); send(q, 0, { t: "start" });
+    send(q, 1, { t: "leave" }); for (const id of q.ids) q.core.onDisconnect(id, 1000);
+    expect(q.core.tick(1000 + LIMITS.lobbyIdleMs + 2000).destroy).toBe(true); // uscita volontaria: margine breve
+    const w = makeRoom(3, 14, 0); expect(w.core.tick(LIMITS.maxLifeMs + 2000).destroy).toBe(true); // anche con gente connessa
+  });
 });
-
