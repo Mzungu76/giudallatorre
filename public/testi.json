@@ -1,0 +1,590 @@
+{
+ "versione": 1,
+ "aggiornato": "2026-11-08",
+ "testi": {
+  "intro.aria": {
+   "t": "Come si gioca",
+   "s": "Prima partita · 3 schermate",
+   "n": "Nome accessibile della finestra (lettori di schermo)"
+  },
+  "intro.salta": {
+   "t": "Salta",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.avanti": {
+   "t": "Avanti ›",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.fine": {
+   "t": "Ho capito, giochiamo",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.1.titolo": {
+   "t": "Chi butteresti\ngiù dalla torre?",
+   "s": "Prima partita · 3 schermate",
+   "n": "«\\n» = a capo"
+  },
+  "intro.1.card.titolo": {
+   "t": "Un gioco di accuse e di voti",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.1.card.testo": {
+   "t": "A ogni turno c’è una __frase__. Voi scegliete i personaggi che la meritano, poi __votate__: il più votato cade giù dalla torre. Sotto ci sono i materassi.",
+   "s": "Prima partita · 3 schermate",
+   "n": "__testo__ = evidenziato in giallo"
+  },
+  "intro.2.titolo": {
+   "t": "Ogni turno,\n4 passi",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p1.t": {
+   "t": "Il Megafono urla",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p1.x": {
+   "t": "Sceglie una frase: «Oggi sale sulla torre… ~i più ipocriti~».",
+   "s": "Prima partita · 3 schermate",
+   "n": "~testo~ = corsivo"
+  },
+  "intro.2.p2.t": {
+   "t": "Tu scegli il personaggio",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p2.x": {
+   "t": "Quello che somiglia di più alla frase. È segreto.",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p3.t": {
+   "t": "Si vota",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p3.x": {
+   "t": "Ognuno vota la carta che pensa debba cadere.",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p4.t": {
+   "t": "Cade il più votato",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.2.p4.x": {
+   "t": "Chi aveva indovinato prende i punti.",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.3.titolo": {
+   "t": "Come si fanno\ni punti",
+   "s": "Prima partita · 3 schermate"
+  },
+  "intro.3.nota": {
+   "t": "Si sommano: nello stesso turno puoi fare più punti. Gli esempi con le carte li trovi in «i».",
+   "s": "Prima partita · 3 schermate"
+  },
+  "mega.aria": {
+   "t": "Sei il Megafono",
+   "s": "Scheda «Sei il Megafono!»",
+   "n": "Nome accessibile della finestra"
+  },
+  "mega.titolo": {
+   "t": "Sei il Megafono!",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.sotto": {
+   "t": "Questo turno comandi tu",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p1.t": {
+   "t": "Scegli la frase",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p1.x": {
+   "t": "Una delle proposte, oppure inventane una.",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p2.t": {
+   "t": "Metti il Lui!",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p2.x": {
+   "t": "Quando le carte salgono, scommetti su quanti voti prenderà una carta.",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p3.t": {
+   "t": "Vota anche tu",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.p3.x": {
+   "t": "Come tutti. Il tuo voto non conta per il Lui!.",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.gioca": {
+   "t": "**Giochi una carta come gli altri.**",
+   "s": "Scheda «Sei il Megafono!»",
+   "n": "Variante «Il Megafono sa»"
+  },
+  "mega.nongioca": {
+   "t": "**Non giochi carte**: la Torre ne ha una a caso dal mazzo.",
+   "s": "Scheda «Sei il Megafono!»",
+   "n": "Modalità base"
+  },
+  "mega.punti": {
+   "t": "**Come fai punti:** {p2} se voti la carta che cade · Lui! azzeccato {pl} (mancato: {p0})",
+   "s": "Scheda «Sei il Megafono!»",
+   "n": "{p2}, {pl}, {p0} sono i numeri di punti con la stella: non cancellarli"
+  },
+  "mega.ok": {
+   "t": "Ho capito",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "mega.nomore": {
+   "t": "Non mostrare più questa scheda",
+   "s": "Scheda «Sei il Megafono!»"
+  },
+  "nocard.aria": {
+   "t": "Questo turno non giochi carte",
+   "s": "Avviso «Questo turno non giochi carte»",
+   "n": "Nome accessibile della finestra"
+  },
+  "nocard.titolo": {
+   "t": "Questo turno\nnon giochi carte",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.mazzo": {
+   "t": "MAZZO",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.perche.t": {
+   "t": "Perché?",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.perche.x": {
+   "t": "Il Megafono sceglie la frase e scommette con il Lui!: non gioca un personaggio. La Torre prende __una carta a caso dal mazzo__ al tuo posto, così le carte sono tante quanti i giocatori.",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.adesso.t": {
+   "t": "E adesso?",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.adesso.x": {
+   "t": "Aspetta che gli altri scelgano il loro personaggio. Poi le carte salgono e tocca a te mettere il __Lui!__.",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "nocard.ok": {
+   "t": "Ho capito",
+   "s": "Avviso «Questo turno non giochi carte»"
+  },
+  "help.aria": {
+   "t": "Aiuto",
+   "s": "Menu Aiuto («i»)",
+   "n": "Nome accessibile della finestra"
+  },
+  "help.titolo": {
+   "t": "Aiuto",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.suoni.off": {
+   "t": "Disattiva i suoni",
+   "s": "Menu Aiuto («i»)",
+   "n": "Tasto 🔊"
+  },
+  "help.suoni.on": {
+   "t": "Attiva i suoni",
+   "s": "Menu Aiuto («i»)",
+   "n": "Tasto 🔇"
+  },
+  "help.chiudi": {
+   "t": "Chiudi",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.hint.t": {
+   "t": "Cosa devo fare adesso?",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.hint.si": {
+   "t": "Ti mostro la prossima mossa, con una freccia.",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.hint.no": {
+   "t": "Adesso tocca agli altri: aspetta il tuo turno.",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.tutorial.t": {
+   "t": "Rivedi il tutorial",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.tutorial.x": {
+   "t": "Tre schermate veloci: scopo, passi del turno, punti.",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.regole.t": {
+   "t": "Regolamento completo",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.regole.x": {
+   "t": "Il turno, i punti con esempi, il Lui!, la fine. Qui puoi anche uscire dalla partita.",
+   "s": "Menu Aiuto («i»)"
+  },
+  "help.torna": {
+   "t": "Torna al gioco",
+   "s": "Menu Aiuto («i»)"
+  },
+  "hint.titolo": {
+   "t": "Ti serve una mano?",
+   "s": "Suggerimenti a fumetto",
+   "n": "Compare da solo solo se si deve agire e si resta fermi"
+  },
+  "hint.ok": {
+   "t": "Ho capito",
+   "s": "Suggerimenti a fumetto"
+  },
+  "hint.aiuto": {
+   "t": "Aiuto",
+   "s": "Suggerimenti a fumetto",
+   "n": "Link che apre il menu Aiuto"
+  },
+  "hint.proclama": {
+   "t": "Tocca la frase che vuoi urlare, poi premi **Proclama**. Puoi anche inventarne una.",
+   "s": "Suggerimenti a fumetto",
+   "n": "Megafono, scelta della frase"
+  },
+  "hint.gioca": {
+   "t": "Scegli il personaggio che somiglia di più alla frase e premi **Gioca questa carta**. Nessuno vede cosa giochi.",
+   "s": "Suggerimenti a fumetto",
+   "n": "Scelta della carta"
+  },
+  "hint.lui": {
+   "t": "Tocca la carta su cui scommetti, poi scegli il gettone: più voti scommetti, più punti fai se li prende.",
+   "s": "Suggerimenti a fumetto",
+   "n": "Megafono, Lui!"
+  },
+  "hint.vota": {
+   "t": "Vota la carta che somiglia di più alla frase, anche la tua. Se cade e l’hai votata: **+2 punti**.",
+   "s": "Suggerimenti a fumetto",
+   "n": "Voto"
+  },
+  "mini.accusa.titolo": {
+   "t": "L'Accusa",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.tag": {
+   "t": "Qualcuno ha fatto una marachella",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.capo": {
+   "t": "L'accusatore",
+   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "n": "Nome della carta in testa"
+  },
+  "mini.accusa.passo1.t": {
+   "t": "Un personaggio accusa",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.passo1.x": {
+   "t": "Una carta accusa un altro personaggio di una marachella.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.passo2.t": {
+   "t": "Giocate il colpevole",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.passo2.x": {
+   "t": "Ognuno gioca in segreto il personaggio che l'avrebbe fatta.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.passo3.t": {
+   "t": "Si vota",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.passo3.x": {
+   "t": "La carta più votata è il colpevole e cade dalla torre: fa punti a chi l'ha votata e a chi l'ha giocata.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.pts1.v": {
+   "t": "voti",
+   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.accusa.pts1.x": {
+   "t": "Se voti il colpevole (la carta più votata, che cade): tanti punti quanti sono i suoi voti.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.pts2.v": {
+   "t": "+2",
+   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.accusa.pts2.x": {
+   "t": "Se la carta del colpevole è la tua.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.accusa.gioca": {
+   "t": "Chi ha fatto questa cosa? La scelta è segreta.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
+  },
+  "mini.accusa.vota": {
+   "t": "Puoi votare anche la tua. La più votata cade dalla torre.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "n": "Istruzione mentre si vota (anche nel fumetto)"
+  },
+  "mini.amore.titolo": {
+   "t": "La storia d'amore",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.tag": {
+   "t": "È nata una nuova coppia",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.capo": {
+   "t": "Il protagonista",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "n": "Nome della carta in testa"
+  },
+  "mini.amore.passo1.t": {
+   "t": "Un personaggio si innamora",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.passo1.x": {
+   "t": "Una carta ha una nuova storia d'amore.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.passo2.t": {
+   "t": "Giocate il partner",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.passo2.x": {
+   "t": "Ognuno gioca in segreto la carta che gli starebbe meglio accanto.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.passo3.t": {
+   "t": "Si vota",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.passo3.x": {
+   "t": "Le carte più votate restano e fanno punti. Le altre cadono dalla torre.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.pts1.v": {
+   "t": "voti",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.amore.pts1.x": {
+   "t": "Se voti una carta in testa (resta sulla torre): tanti punti quanti sono i suoi voti.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.pts2.v": {
+   "t": "+2",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.amore.pts2.x": {
+   "t": "Se una carta in testa è la tua.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.amore.gioca": {
+   "t": "Chi è il partner perfetto? La scelta è segreta.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
+  },
+  "mini.amore.vota": {
+   "t": "Puoi votare anche la tua. Le più votate restano, le altre cadono.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "n": "Istruzione mentre si vota (anche nel fumetto)"
+  },
+  "mini.peggiore.titolo": {
+   "t": "Il peggiore",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.tag": {
+   "t": "Chi butteresti giù oggi?",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo1.t": {
+   "t": "Niente frase",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo1.x": {
+   "t": "Questa volta nessuno accusa nessuno.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo2.t": {
+   "t": "Giocate il peggiore",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo2.x": {
+   "t": "Ognuno gioca in segreto il personaggio che per lui è il peggiore in assoluto.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo3.t": {
+   "t": "Si vota chi cade",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.passo3.x": {
+   "t": "Ognuno vota la carta da buttare giù, ma non la propria. Per ogni voto che prende la tua carta fai un punto.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.pts1.v": {
+   "t": "+2",
+   "s": "Mini-gioco «Il peggiore» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.peggiore.pts1.x": {
+   "t": "Se voti una carta che cade (la più votata).",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.pts2.v": {
+   "t": "+1",
+   "s": "Mini-gioco «Il peggiore» (intervalli)",
+   "n": "Valore mostrato nell'icona punti"
+  },
+  "mini.peggiore.pts2.x": {
+   "t": "Per ogni voto che prende la carta che hai giocato, cada o no.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mini.peggiore.gioca": {
+   "t": "Gioca il personaggio che per te è il peggiore in assoluto: più voti prende, più punti fai.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)",
+   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
+  },
+  "mini.peggiore.vota": {
+   "t": "Vota la carta che butteresti giù. La tua non si può votare.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)",
+   "n": "Istruzione mentre si vota (anche nel fumetto)"
+  },
+  "ex.board.aria": {
+   "t": "Quattro carte sulla torre con i voti ricevuti",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Lettori di schermo"
+  },
+  "ex.cade": {
+   "t": "CADE",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Stampo sulla carta più votata"
+  },
+  "ex.own.tip": {
+   "t": "Chi ha giocato questa carta",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Suggerimento sul segnalino"
+  },
+  "ex.vota": {
+   "t": "vota",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Piccola etichetta prima della carta votata"
+  },
+  "ex.mega.tip": {
+   "t": "Megafono",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.pill.giusto": {
+   "t": "✓ Voto giusto {pt}",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "{pt} = icona dei punti: non cancellarla"
+  },
+  "ex.pill.caduta": {
+   "t": "✓ La sua carta è caduta {pt}",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.pill.lui": {
+   "t": "✓ Lui! azzeccato {pt}",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.pill.nessuno": {
+   "t": "Nessun punto",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.frase": {
+   "t": "Oggi salgono sulla torre…",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.frase.c": {
+   "t": "i più ipocriti",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Il tipo di personaggio della frase d'esempio"
+  },
+  "ex.key.voto": {
+   "t": "hai votato la carta che cade",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.key.caduta": {
+   "t": "la carta che cade l’hai giocata tu",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.nome.0": {
+   "t": "Anna",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Nomi dei 4 giocatori dell'esempio"
+  },
+  "ex.nome.1": {
+   "t": "Bea",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.nome.2": {
+   "t": "Carlo",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "ex.nome.3": {
+   "t": "Dario",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "exl.titolo": {
+   "t": "«Almeno 2 voti»",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.testo": {
+   "t": "Anna ha messo questo gettone sulla carta col bordo giallo.",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.altri": {
+   "t": "Gli altri votano",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.ok.t": {
+   "t": "Due voti sulla sua carta: azzeccato!",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.ok.x": {
+   "t": "Anna prende {pt}",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.ko.t": {
+   "t": "Se ne avesse presi solo uno: mancato",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.ko.x": {
+   "t": "{pt} Non perde nulla, ma il gettone è usato.",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "exl.piede": {
+   "t": "Contano solo i voti degli altri, non il tuo. Ogni partita ha 2 gettoni, uguali per tutti, e ognuno si usa una volta sola.",
+   "s": "Esempio del Lui! (regolamento)"
+  },
+  "pk.giusto.t": {
+   "t": "Voto giusto",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "pk.giusto.x": {
+   "t": "Hai votato la carta che cade.",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "pk.cade": {
+   "t": "cade",
+   "s": "Esempi dei punti (regolamento e tutorial)",
+   "n": "Accanto alla carta in miniatura"
+  },
+  "pk.caduta.t": {
+   "t": "Carta caduta",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "pk.caduta.x": {
+   "t": "La carta che cade l’hai giocata tu.",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "pk.lui.t": {
+   "t": "Lui! azzeccato",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  },
+  "pk.lui.x": {
+   "t": "Solo per il Megafono: la carta del gettone prende abbastanza voti.",
+   "s": "Esempi dei punti (regolamento e tutorial)"
+  }
+ }
+}

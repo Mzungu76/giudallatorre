@@ -11,14 +11,14 @@ import type { VoteTok, Voter } from "./Terrace.tsx";
 import { BMeta, BSheet, LuiTray, Row, WaitCard } from "./BUi.tsx";
 import { HandPicker, usePeople } from "../screens/Game.tsx";
 import { HintBubble, HintPointer, useIdleHint } from "./IdleHint.tsx";
-import { MINI } from "../lib/minis.ts";
+import { miniInfo } from "../lib/minis.ts";
 import { hintFor } from "../lib/hints.tsx";
 import { Pt, PtIcon } from "./Pt.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 
 /** Annuncio dell'intervallo: nastro, titolo, carta del personaggio e i tre passi. Si chiude con «Si parte». */
 function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: PlayerView; sound: boolean; ui?: GameProps["ui"] | null; onGo: () => void }) {
-  const k = MINI[kind], { H } = useStage(), short = H < 700, hh = short ? 100 : H < 960 ? 92 : 170, mini = view.mini;
+  const k = miniInfo(kind), { H } = useStage(), short = H < 700, hh = short ? 100 : H < 960 ? 92 : 170, mini = view.mini;
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const hand = view.myHand.slice(0, 3);
   return (
@@ -45,7 +45,7 @@ function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: Play
 function MiniPill({ view }: { view: PlayerView }) {
   const mini = view.mini;
   if (!mini) return null;
-  const k = MINI[mini.kind];
+  const k = miniInfo(mini.kind);
   const body = mini.kind === "accusa" ? `«${mini.text}»` : mini.kind === "amore" ? "Chi sarà il suo partner perfetto?" : "Chi è il peggiore di tutti?";
   const label = mini.kind === "accusa" ? "L'accusatore dice:" : k.tag, size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
@@ -81,7 +81,7 @@ export default function MiniGame({ room, view, deadline, send, readOnly, sound, 
   const [seen, setSeen] = useState(false), [zoomPos, setZoomPos] = useState<number | null>(null);
   const [step, setStep] = useState<"reveal" | "fall" | "points" | "board">(FAST ? "points" : "reveal"), [skipN, setSkipN] = useState(0), [ownNote, setOwnNote] = useState(false);
   const ids = useMemo(() => [...view.tower].sort((a, b) => a.position - b.position).map((t) => t.cardId), [view.tower]);
-  const kind = mini?.kind ?? res?.kind ?? "amore", info = MINI[kind];
+  const kind = mini?.kind ?? res?.kind ?? "amore", info = miniInfo(kind);
   const isHost = room.hostId === me;
   const act = (a: { type: "vote"; position: number } | { type: "advance" }) => send({ t: "act", action: a });
   const seed = useMemo(() => { let h = 11; for (const c of room.code) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) + view.turn; }, [room.code, view.turn]);

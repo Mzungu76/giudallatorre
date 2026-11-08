@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { t } from "../lib/testi.ts";
 
 /** Dopo quanto tempo senza toccare nulla compare il suggerimento. Gancio per le prove: localStorage «gdt.hintms». */
 const hintDelay = () => { try { const n = Number(localStorage.getItem("gdt.hintms")); return n > 0 ? n : 14000; } catch { return 14000; } };
@@ -33,9 +34,9 @@ export function useIdleHint(active: boolean, stepKey: string): [boolean, () => v
 export function HintBubble({ children, onClose, onRules }: { children: ReactNode; onClose: () => void; onRules?: () => void }) {
   return (
     <div className="hintb" role="status" aria-live="polite" data-testid="idle-hint">
-      <span className="hn">Ti serve una mano?</span>
+      <span className="hn">{t("hint.titolo")}</span>
       <p>{children}</p>
-      <div className="hr2">{onRules ? <a role="button" tabIndex={0} onClick={onRules}>Aiuto</a> : <span />}<button className="bt mus sm" onClick={onClose} data-testid="idle-hint-ok">Ho capito</button></div>
+      <div className="hr2">{onRules ? <a role="button" tabIndex={0} onClick={onRules}>{t("hint.aiuto")}</a> : <span />}<button className="bt mus sm" onClick={onClose} data-testid="idle-hint-ok">{t("hint.ok")}</button></div>
     </div>
   );
 }
