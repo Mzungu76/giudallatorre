@@ -125,8 +125,13 @@ export interface GameState {
   /** Mini-gioco di metà partita (campi assenti nelle partite salvate prima: nessun mini-gioco). */
   miniGame?: false | "random" | MiniKind;
   accuseDeck?: string[];
+  /** Primo intervallo (turno dopo cui si gioca). Le partite salvate prima avevano solo questo. */
   miniAt?: number;
   miniDone?: boolean;
+  /** Turni dopo cui c'è un intervallo (1 fino a 5 giocatori, 2 da 6 a 8), intervalli già giocati e mini-giochi già usciti. */
+  miniAts?: number[];
+  minisDone?: number;
+  miniKinds?: MiniKind[];
   mini?: Mini | null;
   miniResult?: MiniResult | null;
   /** Segnalini Lui! già spesi da ciascun giocatore (pubblico). */

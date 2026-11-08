@@ -12,7 +12,7 @@ stateDiagram-v2
   VOTE --> VOTE: vote (tutti, Megafono incluso, una volta)
   VOTE --> RESULTS: tutti hanno votato -> esito e punti
   RESULTS --> PROCLAIM: advance (scarto, pescate, Megafono successivo)
-  RESULTS --> GAME_OVER: advance, se tutti hanno fatto il Megafono 1 (6-8) / 2 (3-5) volte
+  RESULTS --> GAME_OVER: advance, se tutti hanno fatto il Megafono 1 (4-8) / 2 (3) volte
   GAME_OVER --> [*]
 ```
 

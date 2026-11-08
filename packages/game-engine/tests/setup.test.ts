@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createGame, EngineError, roundsFor, megafonoOf } from "../src/index.ts";
+import { createGame, EngineError, roundsFor, miniAtsFor, megafonoOf } from "../src/index.ts";
 import { cfg, makeDeck, start } from "./helpers.ts";
 
 describe("preparazione della partita", () => {
@@ -22,11 +22,12 @@ describe("preparazione della partita", () => {
     expect(() => createGame(cfg(8, { deck: makeDeck(40) }))).toThrow(/INVALID_DECK/);
     expect(() => createGame(cfg(3, { deck: ["a", "a", ...makeDeck(40)] }))).toThrow(/INVALID_DECK/);
   });
-  it("giri di Megafono: 2 a testa fino a 5 giocatori, 1 a 6–8", () => {
-    expect([3, 4, 5].map(roundsFor)).toEqual([2, 2, 2]);
-    expect([6, 7, 8].map(roundsFor)).toEqual([1, 1, 1]);
-    expect(start(3).totalTurns).toBe(6); expect(start(5).totalTurns).toBe(10);
-    expect(start(6).totalTurns).toBe(6); expect(start(8).totalTurns).toBe(8);
+  it("turni: 6 in 3 giocatori (2 giri), altrimenti tanti turni quanti i giocatori (1 giro)", () => {
+    expect([3, 4, 5, 6, 7, 8].map(roundsFor)).toEqual([2, 1, 1, 1, 1, 1]);
+    expect([3, 4, 5, 6, 7, 8].map((n) => start(n).totalTurns)).toEqual([6, 4, 5, 6, 7, 8]);
+  });
+  it("intervalli: 1 fino a 5 giocatori (a metà), 2 da 6 a 8 (a un terzo e a due terzi)", () => {
+    expect([3, 4, 5, 6, 7, 8].map(miniAtsFor)).toEqual([[3], [2], [2], [2, 4], [2, 4], [2, 5]]);
   });
   it("è deterministico a parità di seed e diverso con seed diversi", () => {
     const a = start(5), b = start(5), c = start(5, { seed: 7 });

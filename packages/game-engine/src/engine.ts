@@ -22,8 +22,15 @@ export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
-/** 3–5 giocatori: 2 giri di Megafono a testa; 6–8: 1 giro (regolamento). */
-export const roundsFor = (n: number) => (n <= 5 ? 2 : 1);
+/** 3 giocatori: 2 giri di Megafono a testa (6 turni); da 4 a 8: 1 giro, cioè tanti turni quanti sono i giocatori. */
+export const roundsFor = (n: number) => (n === 3 ? 2 : 1);
+/** Turni dopo cui c'è un intervallo (mini-gioco): 1 fino a 5 giocatori (a metà), 2 da 6 a 8 (a un terzo e a due terzi). */
+export function miniAtsFor(n: number): number[] {
+  const total = n * roundsFor(n);
+  return n <= 5 ? [Math.floor(total / 2)] : [Math.floor(total / 3), Math.floor((2 * total) / 3)];
+}
+const miniList = (s: GameState): number[] => s.miniAts ?? (s.miniAt !== undefined ? [s.miniAt] : []);
+const minisDone = (s: GameState): number => s.minisDone ?? (s.miniDone ? 1 : 0);
 
 /** Mescola le frasi di tutte le carte a più frasi (ognuna col proprio contesto) e le rimette in gruppi da 5; le carte a frase singola restano intere. */
 function mixPhrases(cards: PhraseCard[], s: GameState): PhraseCard[] {
@@ -51,7 +58,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: Math.floor((n * roundsFor(n)) / 2), miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
+    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null, luiSpent: Object.fromEntries(ids.map((i) => [i, [] as LuiSlot[]])), luiSet: [],
   };
   // i due segnalini: sempre lo 0 (senza, chi si sente minacciato non voterebbe mai la carta del Lui!) più una soglia a caso
   s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : [luiPool(n).find((x) => x.slot === "zero")!, shuffle(luiPool(n).filter((x) => x.slot !== "zero"), s)[0]!];
@@ -232,7 +239,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
       return;
     }
   }
-  if (s.miniGame && !s.miniDone && s.turnNumber === s.miniAt) { startMini(s, events); return; }
+  if (s.miniGame && s.turnNumber === miniList(s)[minisDone(s)]) { startMini(s, events); return; }
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;
   startTurn(s, events);
 }
@@ -242,7 +249,10 @@ const GENERIC_ACCUSE = "Mi ha rubato il panino al prosciutto!";
 
 /** Tutte le mani vengono rinnovate, si pesca la carta del mini-gioco e tutti giocano una carta. */
 function startMini(s: GameState, events: GameEvent[]) {
-  const kind: MiniKind = s.miniGame === "random" || !s.miniGame ? MINI_KINDS[randomInt(MINI_KINDS.length, s)]! : s.miniGame;
+  // a caso fra i mini-giochi non ancora usciti in questa partita (con due intervalli non si ripete lo stesso)
+  const fresh = MINI_KINDS.filter((k) => !(s.miniKinds ?? []).includes(k)), pool = fresh.length ? fresh : MINI_KINDS;
+  const kind: MiniKind = s.miniGame === "random" || !s.miniGame ? pool[randomInt(pool.length, s)]! : s.miniGame;
+  (s.miniKinds ??= []).push(kind);
   for (const p of s.playerIds) { s.discardPile.push(...s.hands[p]!); s.hands[p] = []; }
   for (let k = 0; k < s.handSize; k++) for (const p of s.playerIds) s.hands[p]!.push(draw(s));
   const cardId = kind === "raccomandato" ? null : draw(s);
@@ -265,7 +275,7 @@ function resolveMini(s: GameState, events: GameEvent[]) {
   const owners: Record<number, PlayerId> = {}; for (const t of s.tower) if (t.ownerId) owners[t.position] = t.ownerId;
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
-  const remaining = Math.max(1, s.totalTurns - (s.miniAt ?? 0)), cap = Math.max(n, 2 * remaining);
+  const remaining = Math.max(1, s.totalTurns - s.turnNumber), cap = Math.max(n, 2 * remaining);
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number) => { points[p]! += pts; lines[p]!.push({ kind, pts, pos }); };
   if (raccomandato) {
     for (const k of fallen) { const o = owners[k]; if (!o) continue; const loss = Math.min(counts[k]!, Math.max(0, s.scores[o]! + points[o]!)); if (loss > 0) give(o, -loss, "mini-perdita", k); }
@@ -285,7 +295,7 @@ function endMini(s: GameState, events: GameEvent[]) {
   for (const t of s.tower) s.discardPile.push(t.cardId);
   if (s.mini?.cardId) s.discardPile.push(s.mini.cardId);
   for (let k = 1; k <= n; k++) s.hands[s.playerIds[(s.megafonoIndex + k) % n]!]!.push(draw(s));
-  s.miniDone = true; s.mini = null; s.miniResult = null;
+  s.miniDone = true; s.minisDone = minisDone(s) + 1; s.mini = null; s.miniResult = null;
   events.push({ type: "turnEnded", turn: s.turnNumber });
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;
   startTurn(s, events);

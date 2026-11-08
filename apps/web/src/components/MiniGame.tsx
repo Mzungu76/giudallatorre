@@ -50,7 +50,7 @@ function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: Play
       )}
       <div className="pp ivl-steps">{k.steps.map(([t, x], i) => <div className="brg-step" key={t}><span className="how-ic">{i + 1}</span><div><b>{t}</b><p>{x}</p></div></div>)}</div>
       <div className="bsp" />
-      <BSheet title="SI GIOCA UN MINI-GIOCO" sub="A metà partita, senza Megafono" ui={ui}><Row><Btn onClick={onGo} testId="mini-go">Si parte</Btn></Row></BSheet>
+      <BSheet title="SI GIOCA UN MINI-GIOCO" sub="Intervallo, senza Megafono" ui={ui}><Row><Btn onClick={onGo} testId="mini-go">Si parte</Btn></Row></BSheet>
     </div>
   );
 }

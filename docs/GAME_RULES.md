@@ -46,7 +46,7 @@ Ruoli per turno: **Megafono** (1) e **Folla** (tutti gli altri). Fasi: 1 Su sull
 - Megafono + "Lui!" passano al giocatore alla **destra**.
 
 ## Fine partita
-Termina quando tutti hanno fatto il Megafono: **1 volta (6–8 giocatori)**, **2 volte (3–5)**. Vince chi ha più punti. **Parità in testa → Golden goal**: si giocano turni extra (tutti i giocatori, Megafono a rotazione) finché un solo giocatore ha più punti di tutti (tetto di sicurezza 30 turni, poi vittoria condivisa). (Rounds extra possibili, sempre pari per tutti.)
+Termina quando tutti hanno fatto il Megafono: **2 volte con 3 giocatori (6 turni)**, **1 volta con 4–8 giocatori (tanti turni quanti i giocatori)**. Vince chi ha più punti. **Parità in testa → Golden goal**: si giocano turni extra (tutti i giocatori, Megafono a rotazione) finché un solo giocatore ha più punti di tutti (tetto di sicurezza 30 turni, poi vittoria condivisa). (Rounds extra possibili, sempre pari per tutti.)
 
 ## Discussione libera
 Parlare è sempre consentito e non vincolante (bluff ammesso). **Vietato** rivelare la propria carta giocata prima del voto. Il Megafono "parla" solo con il megafono scenico. *(Online: regole sociali, non applicabili dal sistema; la chat testuale NON è inclusa salvo decisione.)*
@@ -66,7 +66,7 @@ Si può votare la propria carta e quella del mazzo. Variante "Il Megafono sa" = 
 - **Punti**: +2 a chi ha votato una carta caduta (Megafono compreso); +2 a chi ha giocato ciascuna carta caduta (nessuno se era del mazzo); **il Megafono prende inoltre 1 punto per ogni voto degli altri sulla carta che ha votato, sia che cada sia che resti su** (il suo voto non conta; i voti si sommano, non si moltiplicano); Lui! CADE sulla carta caduta +4; Lui! NON CADE su una carta che resta su +1; scommessa sbagliata −1. I punti si sommano.
 - **Spoglio**: i voti escono uno alla volta, il Megafono per ultimo (suo gettone più grande); poi la carta più votata, il Lui! e il pannello "Chi prende punti": una riga per giocatore con i motivi (voto giusto, sua carta caduta, voti raccolti, Lui!) e il totale. I "+N" salgono dalle carte; la classifica del turno mostra l'operazione di ognuno.
 - **Fine turno**: la Torre va nello scarto; pesca 1 carta chi ha giocato (la Folla; nella variante anche il Megafono); mazzo Personaggio rimescolato dallo scarto se finisce; il Megafono passa al giocatore successivo in ordine di ingresso.
-- **Fine partita**: tutti hanno fatto il Megafono 2 volte (3–5 giocatori) o 1 volta (6–8). Vince il punteggio più alto, parità = vittoria condivisa.
+- **Fine partita**: tutti hanno fatto il Megafono 2 volte (3 giocatori) o 1 volta (4–8). Vince il punteggio più alto, parità = vittoria condivisa.
 - **Mazzo**: 125 carte Personaggio (decisione utente; la carta p13-i01 è identica a un'altra immagine ma resta una carta distinta).
 - **Viste**: `viewFor(stato, giocatore)` è l'unico output verso i client: mano propria, proprietari della Torre e voti nascosti fino ai risultati, tipo di Lui! noto solo al Megafono.
 
@@ -76,8 +76,8 @@ Il Megafono incassa 1 punto per ogni voto degli altri sulla carta che ha votato,
 ## Messaggi tra i giocatori
 Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati, limite di un messaggio ogni 0,7 s. Non c'è filtro sui contenuti. Gli schermi condivisi non vedono la chat.
 
-## Mini-gioco di metà partita
-Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca **un solo mini-gioco**, scelto a caso tra tre. Non c'è il Megafono né il Lui!. Prima c'è un **intervallo** (suono, schermata speciale con il nome del gioco e cosa fare, si chiude con un pulsante). Tutte le mani vengono **rinnovate** (5 carte nuove a tutti; le vecchie vanno nello scarto). Tutti i giocatori giocano una carta, le carte salgono sulla torre e si vota in segreto; **si può votare anche la propria carta**. Dopo il mini-gioco ognuno pesca una carta e si riprende con il turno successivo.
+## Mini-gioco (intervallo)
+**Fino a 5 giocatori** c'è **un intervallo** dopo il turno ⌊turni totali / 2⌋ (3 giocatori: dopo il turno 3; 4 e 5: dopo il turno 2). **Da 6 a 8 giocatori** ce ne sono **due**, dopo i turni ⌊totali / 3⌋ e ⌊2 × totali / 3⌋ (6 e 7 giocatori: dopo i turni 2 e 4; 8 giocatori: dopo i turni 2 e 5). Ogni intervallo è un mini-gioco scelto a caso tra tre, e **i due di una partita sono sempre diversi**. Non c'è il Megafono né il Lui!. Prima c'è un **intervallo** (suono, schermata speciale con il nome del gioco e cosa fare, si chiude con un pulsante). Tutte le mani vengono **rinnovate** (5 carte nuove a tutti; le vecchie vanno nello scarto). Tutti i giocatori giocano una carta, le carte salgono sulla torre e si vota in segreto; **si può votare anche la propria carta**. Dopo il mini-gioco ognuno pesca una carta e si riprende con il turno successivo.
 
 - **L'Accusa** — una carta pescata a caso (l'accusatore, mostrata a parte e non votabile) accusa uno dei giocatori di una marachella (50 accuse). Ognuno gioca il colpevole.
 - **La storia d'amore** — una carta pescata a caso (il protagonista, mostrata a parte) ha una nuova storia d'amore: ognuno gioca il partner ideale.
@@ -87,7 +87,7 @@ Dopo il turno numero ⌊turni totali / 2⌋ (arrotondato per difetto) si gioca *
 
 **Punteggio del Raccomandato.** Cade la carta più votata (o tutte quelle a pari merito in testa). Chi ha giocato una carta caduta **perde tanti punti quanti sono i voti ricevuti**, senza scendere sotto zero. I votanti non prendono nulla.
 
-**Tetto.** Nei mini-giochi con punti positivi nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la seconda metà resta aperta.
+**Tetto.** Nei mini-giochi con punti positivi nessun giocatore guadagna più di `max(N, 2 × turni ancora da giocare)` punti (N = giocatori): il bonus si autoregola sulla lunghezza della partita e la parte restante resta aperta.
 
 Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).
 
