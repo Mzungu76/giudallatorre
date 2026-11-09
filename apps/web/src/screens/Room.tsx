@@ -76,13 +76,14 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
               <label>{tx("room.pubblico")} <select value={o.ageBand} onChange={(e) => send({ t: "setOptions", ageBand: Number(e.target.value) as 14 })} data-testid="opt-age">
                 {AGES.map((v) => <option key={v} value={v}>{ageLabel(v)}</option>)}</select></label>
               <label className="chk"><input type="checkbox" checked={o.confessions} onChange={(e) => send({ t: "setOptions", confessions: e.target.checked })} data-testid="opt-confessions" /> {tx("room.confessioni")}</label>
+              <label className="chk" title={txs("room.gregge.info")}><input type="checkbox" checked={!!o.gregge} onChange={(e) => send({ t: "setOptions", gregge: e.target.checked })} data-testid="opt-gregge" /> {tx("room.gregge")}</label>
               <label>{tx("room.timer")} <select value={o.turnTimerSec} onChange={(e) => send({ t: "setOptions", turnTimerSec: Number(e.target.value) as 0 })} data-testid="opt-timer">
                 <option value={0}>{tx("room.timer.0")}</option><option value={30}>30 s</option><option value={60}>60 s</option><option value={90}>90 s</option><option value={120}>120 s</option></select></label>
             </div>
           )}
           {host
             ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? tx("room.servono") : tx("room.avvia")}</Btn>
-            : <div className="pp mini">{tx("room.aspetta.host")}<br /><span data-testid="age-info">{txs("room.pubblico.info", { eta: ageLabel(o.ageBand) })}{o.confessions ? txs("room.con.conf") : txs("room.senza.conf")}</span></div>}
+            : <div className="pp mini">{tx("room.aspetta.host")}<br /><span data-testid="age-info">{txs("room.pubblico.info", { eta: ageLabel(o.ageBand) })}{o.confessions ? txs("room.con.conf") : txs("room.senza.conf")}{o.gregge ? txs("room.con.gregge") : ""}</span></div>}
           <div className="blnks">
             <a className="lnk" onClick={() => window.open(`/schermo/${room.code}`, "_blank")} role="button" tabIndex={0}>{tx("room.schermo")}</a>
             <a className="lnk" onClick={() => { send({ t: "leave" }); forgetSession(room.code); navigate("/"); }} role="button" tabIndex={0}>{tx("room.esci")}</a>
@@ -127,7 +128,7 @@ export default function RoomScreen({ code }: { code: string }) {
     : ov === "help" ? <HelpMenu canHint={!!(pv && hintFor(pv))} sound={sound} setSound={setSound} onHint={() => { setOv(null); setManual(true); }} onTutorial={() => setOv("tutorial")} onRules={() => setOv("rules")} onClose={close}
         {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "tutorial" ? <IntroSlides onClose={() => setOv("help")} />
-    : ov === "rules" ? <HowTo onClose={() => setOv("help")} tokens={pv?.luiTokens} sound={sound} setSound={setSound}
+    : ov === "rules" ? <HowTo onClose={() => setOv("help")} tokens={pv?.luiTokens} gregge={pv?.gregge} sound={sound} setSound={setSound}
         {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />

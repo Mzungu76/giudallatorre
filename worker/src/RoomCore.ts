@@ -132,6 +132,7 @@ export class RoomCore {
         if (msg.turnTimerSec !== undefined) d.options.turnTimerSec = msg.turnTimerSec;
         if (msg.ageBand !== undefined) d.options.ageBand = msg.ageBand;
         if (msg.confessions !== undefined) d.options.confessions = msg.confessions;
+        if (msg.gregge !== undefined) d.options.gregge = msg.gregge;
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
       case "chat": {
@@ -199,7 +200,7 @@ export class RoomCore {
         const pool = this.deps.phrasePool;
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
         const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995, confessions: d.options.confessions }) : this.deps.phraseDeck;
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, gregge: !!d.options.gregge, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);

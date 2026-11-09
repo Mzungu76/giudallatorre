@@ -78,6 +78,28 @@ export function WaitCard({ text, sub }: { text: string; sub?: string }) {
   return <div className="bwait" data-testid="waiting"><div className="pp"><b>{text}</b>{sub && <small>{sub}</small>}</div></div>;
 }
 
+/** Popup informativo sul Lui! posato sulla Torre (tocco sul gettone durante il voto): cosa può essere e come funziona. Agli altri non dice quale gettone è. */
+export function LuiInfo({ view, onClose }: { view: PlayerView; onClose: () => void }) {
+  const placed = view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null, list = placed ? [placed] : view.luiTokens;
+  const how = (sp: LuiSpec) => sp.trap ? t("bui.info.trap", { pt: sp.pts }) : sp.herd ? t("bui.info.herd", { k: sp.k, pt: sp.pts }) : sp.slot === "zero" ? t("bui.info.zero", { pt: sp.pts }) : t("bui.info.k", { k: sp.k, pt: sp.pts });
+  return (
+    <div className="bov" onClick={onClose} role="dialog" aria-label={ts("bui.info.titolo")} data-testid="lui-info">
+      <div className="pp bpop" onClick={(e) => e.stopPropagation()}>
+        <h3>{t("bui.info.titolo")}</h3>
+        <div className="hint" style={{ margin: "0 0 6px" }}>{placed ? t("bui.info.mio", { n: view.luiPosition ?? 0 }) : t("bui.info.altri", { n: view.luiPosition ?? 0 })}</div>
+        {list.map((sp) => (
+          <div key={sp.slot} className="blrow">
+            <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 64) }} />
+            <div><b>{luiLabel(sp)}</b><small>{how(sp)}</small></div>
+          </div>
+        ))}
+        <div className="hint" style={{ margin: "6px 0 10px" }}>{t("bui.info.nota")}</div>
+        <button className="bt pap" style={{ fontSize: 18, padding: 10, width: "100%" }} onClick={onClose} data-testid="lui-info-close">{t("bui.chiudi")}</button>
+      </div>
+    </div>
+  );
+}
+
 /** Popup dei segnalini Lui! in grande. */
 export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => void }) {
   return (
@@ -89,7 +111,7 @@ export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => v
           return (
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
-              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.slot === "zero" ? t("bui.popup.zero") : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
+              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge", { pt: sp.pts }) : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
               <span className="pt">+{sp.pts}</span>
             </div>
           );

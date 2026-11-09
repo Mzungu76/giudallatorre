@@ -216,6 +216,16 @@ describe("partita via messaggi", () => {
       expect(r.core.data.stage).toBe("FINISHED"); expect((r.core.data.game as GameState).winners!.length).toBeGreaterThan(0);
     }
   });
+  it("variante «Il gregge»: opzione dell'host in lobby, passa alla partita (lo 0 diventa l'Imbroglio!) e si gioca fino alla fine", () => {
+    const r = makeRoom(4, 77);
+    expect(errCode(send(r, 1, { t: "setOptions", gregge: true }))).toBe("NOT_HOST");
+    send(r, 0, { t: "setOptions", gregge: true }); expect(r.core.data.options.gregge).toBe(true);
+    send(r, 0, { t: "start" });
+    const g = r.core.data.game as GameState;
+    expect(g.gregge).toBe(true); expect(g.luiSet!.find((x) => x.slot === "zero")).toMatchObject({ pts: 3, trap: true });
+    playToEnd(r); expect(r.core.data.stage).toBe("FINISHED");
+    const plain = makeRoom(4, 78); send(plain, 0, { t: "start" }); expect((plain.core.data.game as GameState).gregge).toBe(false);
+  });
   it("riconnessione: lo snapshot restituisce stanza e vista aggiornata, senza perdere lo stato", () => {
     const r = makeRoom(4); send(r, 0, { t: "start" });
     const mega = r.ids.indexOf(megafonoOf(r.core.data.game as GameState));

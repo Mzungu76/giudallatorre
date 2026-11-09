@@ -7,6 +7,8 @@ export interface PlayerView {
   phase: GameState["phase"];
   turn: number; totalTurns: number;
   megafonoId: PlayerId; megafonoSa: boolean;
+  /** Variante «Il gregge»: il segnalino 0 è una trappola per chi vota la sua carta. */
+  gregge: boolean;
   players: { id: PlayerId; name: string; score: number; megafonoTurns: number; handCount: number; hasPlayed: boolean; hasVoted: boolean }[];
   myHand: CardId[];
   /** Intervalli iniziati: a ognuno la mano di tutti è stata sostituita per intero (l'app lo mostra con un'animazione quando si apre la scelta della carta). */
@@ -42,7 +44,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
   const isMega = viewer === megafonoOf(s);
   return {
     viewerId: viewer, phase: s.phase, turn: s.turnNumber, totalTurns: s.totalTurns,
-    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa,
+    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa, gregge: !!s.gregge,
     players: s.playerIds.map((id) => ({ id, name: s.names[id]!, score: s.scores[id]!, megafonoTurns: s.megafonoTurns[id]!,
       handCount: s.hands[id]!.length, hasPlayed: s.played[id] !== undefined || (s.tower.length > 0 && requiredPlayers(s).includes(id)),
       hasVoted: s.votes[id] !== undefined })),

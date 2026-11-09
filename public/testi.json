@@ -1,6 +1,6 @@
 {
- "versione": 4,
- "aggiornato": "2026-11-08",
+ "versione": 12,
+ "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -693,9 +693,24 @@
    "t": "Scommetti che nessuno degli altri vota la carta del gettone.",
    "s": "Regolamento completo"
   },
+  "how.3.gregge.t": {
+   "t": "Imbroglio! · +{pt}",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
+  },
+  "how.3.gregge.x": {
+   "t": "I voti di chi vota la carta del gettone **non valgono**: è come se non ci fossero, e il conteggio si fa senza. Se annulla almeno un voto, il Megafono prende +{pt}.",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
+  },
   "how.3.k.x": {
    "t": "Scommetti che almeno {k} giocatori votano la carta del gettone. La soglia cambia a ogni partita.",
    "s": "Regolamento completo"
+  },
+  "how.3.k.x.gregge": {
+   "t": "Se almeno {k} degli altri votano la carta del gettone, i punti vanno a te **e a tutti quelli che l'hanno votata**, che cada o no (simbolo 🗳 sul gettone). Il Megafono non può votare la carta del suo Lui!.",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
   },
   "how.3.come.t": {
    "t": "Come funziona",
@@ -749,6 +764,11 @@
    "t": "Nessun voto",
    "s": "Gettoni Lui! (etichette)"
   },
+  "lui.gregge": {
+   "t": "Imbroglio!",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Variante «Il gregge»: lo 0 annulla i voti sulla sua carta"
+  },
   "lui.k1": {
    "t": "Almeno 1 voto",
    "s": "Gettoni Lui! (etichette)"
@@ -761,6 +781,11 @@
   "lui.ask.zero": {
    "t": "nessuno la vota",
    "s": "Gettoni Lui! (etichette)"
+  },
+  "lui.ask.gregge": {
+   "t": "i voti sulla carta non valgono",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Variante «Il gregge»"
   },
   "lui.ask.k1": {
    "t": "1 voto o più",
@@ -799,6 +824,16 @@
   "pp.lui.ko": {
    "t": "Lui! mancato: {lui}",
    "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.gregge": {
+   "t": "Voto annullato dall'Imbroglio!",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Variante «Il gregge»"
+  },
+  "pp.lui.gregge": {
+   "t": "Ha votato la carta del Lui! ({lui}): +{pt}",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Variante «Il gregge»: soglia riuscita, punti a chi ha votato la carta"
   },
   "pp.attesa": {
    "t": "Il Megafono prosegue…",
@@ -879,9 +914,19 @@
    "t": "Nessun altro vota la carta del gettone.",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
+  "bui.popup.gregge": {
+   "t": "Imbroglio!: i voti di chi vota la carta del gettone non valgono, come se non ci fossero. Se ne annulla almeno uno, prendi +{pt}.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»"
+  },
   "bui.popup.k": {
    "t": "Almeno {k} giocatori votano la carta del gettone.",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
+  },
+  "bui.popup.k.gregge": {
+   "t": "Se almeno {k} degli altri votano la carta del gettone, prendi i punti tu e anche chi l'ha votata. Tu non puoi votarla.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»"
   },
   "bui.popup.usato": {
    "t": "Già usato in questa partita.",
@@ -890,6 +935,46 @@
   "bui.popup.nota": {
    "t": "Ogni gettone si usa una sola volta. Contano solo i voti degli altri, non il tuo. Gli altri non vedono quali ti restano.",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
+  },
+  "bui.info.titolo": {
+   "t": "Il segnalino Lui!",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Popup che si apre toccando il Lui! sulla Torre durante il voto"
+  },
+  "bui.info.altri": {
+   "t": "Il Megafono ha posato coperto uno dei suoi gettoni sulla carta n. {n}. Si scopre dopo il voto. Può essere uno di questi:",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "{n} = carta del Lui!"
+  },
+  "bui.info.mio": {
+   "t": "Hai posato questo gettone sulla carta n. {n}. Gli altri non sanno quale sia:",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Per il Megafono"
+  },
+  "bui.info.zero": {
+   "t": "Il Megafono prende +{pt} se nessuno degli altri vota questa carta.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gettone 0"
+  },
+  "bui.info.k": {
+   "t": "Il Megafono prende +{pt} se almeno {k} degli altri votano questa carta, che cada o no.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gettone soglia"
+  },
+  "bui.info.trap": {
+   "t": "I voti su questa carta non valgono, come se non ci fossero, e il conteggio si fa senza. Se ne annulla almeno uno, il Megafono prende +{pt}.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»: gettone 0"
+  },
+  "bui.info.herd": {
+   "t": "Se almeno {k} degli altri votano questa carta, prendono +{pt} il Megafono e chi l'ha votata, che cada o no. Il Megafono non può votarla.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»: gettone soglia"
+  },
+  "bui.info.nota": {
+   "t": "Per contare i voti del Lui! non vale il voto del Megafono.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Nota in fondo al popup"
   },
   "bui.chiudi": {
    "t": "Chiudi",
@@ -1288,6 +1373,11 @@
    "t": "Il Lui! di {nome}",
    "s": "Salita e spoglio dei voti (turno normale)"
   },
+  "rv.lui.aria": {
+   "t": "Che cos'è il segnalino Lui!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Nome accessibile del gettone sulla Torre"
+  },
   "rv.lui.x": {
    "t": "Scommetteva: **{label}** sul n. {n} (la carta col bordo giallo, +{pt} punti). Gli altri gliene hanno dati {altri}: **{esito}**.",
    "s": "Salita e spoglio dei voti (turno normale)"
@@ -1299,6 +1389,26 @@
   "rv.lui.no": {
    "t": "mancato",
    "s": "Salita e spoglio dei voti (turno normale)"
+  },
+  "rv.gregge.x": {
+   "t": "Ha posato l'**Imbroglio!** sul n. {n} (la carta col bordo giallo): i voti su quella carta non valgono. **{esito}**.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»"
+  },
+  "rv.gregge.si": {
+   "t": "Voti annullati: {k}. +{pt} al Megafono",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "{k} = quanti voti sono stati annullati, {pt} = punti del Megafono"
+  },
+  "rv.gregge.no": {
+   "t": "Nessuno ci è cascato",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»"
+  },
+  "rv.lui.gregge": {
+   "t": "Il gregge: **+{pt}** anche a chi l'ha votata ({k}).",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»: {k} = quanti l'hanno votata"
   },
   "rv.stamp.pari": {
    "t": "Cadono insieme: {lista}!",
@@ -1506,6 +1616,21 @@
   "g.lui.pt": {
    "t": "+{pt} punti",
    "s": "Partita: turno normale"
+  },
+  "g.lui.gregge": {
+   "t": "+{pt} se annulla almeno un voto",
+   "s": "Partita: turno normale",
+   "n": "Variante «Il gregge»: scelta del gettone"
+  },
+  "g.lui.gregge.k": {
+   "t": "+{pt} a te e a chi la vota (tu non puoi votarla)",
+   "s": "Partita: turno normale",
+   "n": "Variante «Il gregge»: soglia"
+  },
+  "g.lui.novoto": {
+   "t": "Non puoi votare la carta dove hai posato il Lui!: scegline un'altra.",
+   "s": "Partita: turno normale",
+   "n": "Variante «Il gregge»: il Megafono tocca la carta del suo Lui! durante il voto"
   },
   "g.lui.usato": {
    "t": "già usato",
@@ -1750,6 +1875,46 @@
    "t": "Ci sono!",
    "s": "Il tuo personaggio"
   },
+  "ld.aria": {
+   "t": "Estrazione del segnalino Lui!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Nome accessibile della schermata"
+  },
+  "ld.titolo": {
+   "t": "Estrazione!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Titolo durante la carrellata dei segnalini"
+  },
+  "ld.sotto": {
+   "t": "Quale soglia del Lui! toccherà a questa partita?",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Sopra il titolo durante la carrellata"
+  },
+  "ld.scelto": {
+   "t": "Esce: {label}!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "{label} = nome del segnalino estratto"
+  },
+  "ld.set": {
+   "t": "Il Lui! della partita",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Titolo finale con i due segnalini"
+  },
+  "ld.set.s": {
+   "t": "Ogni Megafono avrà questi due segnalini:",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Sopra il titolo finale"
+  },
+  "ld.ok": {
+   "t": "Si gioca!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Pulsante finale"
+  },
+  "ld.salta": {
+   "t": "Salta",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Pulsante durante l'estrazione"
+  },
   "chat.aria": {
    "t": "Chat",
    "s": "Chat"
@@ -1961,6 +2126,16 @@
    "t": "Confessioni",
    "s": "Stanza e lobby"
   },
+  "room.gregge": {
+   "t": "Il gregge (prova)",
+   "s": "Stanza e lobby",
+   "n": "Casella della variante «Il gregge»"
+  },
+  "room.gregge.info": {
+   "t": "Variante: il gettone 0 del Lui! diventa l'Imbroglio! (i voti sulla sua carta non valgono; +3 al Megafono se ne annulla almeno uno); la soglia, se riesce, dà i punti al Megafono e anche a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
+   "s": "Stanza e lobby",
+   "n": "Suggerimento sulla casella"
+  },
   "room.timer": {
    "t": "Timer",
    "s": "Stanza e lobby"
@@ -1991,6 +2166,10 @@
   },
   "room.senza.conf": {
    "t": " · senza confessioni",
+   "s": "Stanza e lobby"
+  },
+  "room.con.gregge": {
+   "t": " · variante Il gregge",
    "s": "Stanza e lobby"
   },
   "room.schermo": {

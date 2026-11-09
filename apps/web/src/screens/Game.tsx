@@ -18,8 +18,9 @@ import type { SceneApi } from "../scene/fallScene.ts";
 import { IntroSlides, MegaIntro, NoCardNotice, megaIntroDue, megaIntroSeen, noCardDue, noCardSeen } from "../components/Intro.tsx";
 import { HintBubble, HintPointer, useIdleHint } from "../components/IdleHint.tsx";
 import { hintFor } from "../lib/hints.tsx";
-import { BMeta, BSheet, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
+import { BMeta, BSheet, LuiInfo, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
+import LuiDraw from "../components/LuiDraw.tsx";
 import CharIntro from "../components/CharIntro.tsx";
 import HandRenewal from "../components/HandRenewal.tsx";
 import type { Geo } from "../components/HandRenewal.tsx";
@@ -134,10 +135,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
-  const [zoomPos, setZoomPos] = useState<number | null>(null);
+  const [zoomPos, setZoomPos] = useState<number | null>(null), [luiInfo, setLuiInfo] = useState(false), [luiNo, setLuiNo] = useState<number | null>(null);
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const charKey = `gdt.char.${room.code}`;
   const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
+  // «Il gregge»: a inizio partita, dopo il personaggio, l'estrazione della soglia del Lui! (una volta per stanza)
+  const drawKey = `gdt.luidraw.${room.code}`;
+  const [luiDraw, setLuiDraw] = useState(() => { try { return !FAST && !readOnly && view.gregge && view.turn === 1 && sessionStorage.getItem(drawKey) !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const [megaIntro, setMegaIntro] = useState(false), megaShown = useRef(-1);
@@ -178,10 +182,12 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const seed = useMemo(() => { let h = 7; for (const c of room.code) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) + turn; }, [room.code, turn]);
 
   const canVote = phase === "VOTE" && !readOnly && view.myVote === null;
+  // «Il gregge»: il Megafono non può votare la carta su cui ha posato il Lui! (se ci prova, glielo diciamo)
+  const banned = (n: number) => phase === "VOTE" && isMega && view.gregge && view.luiPosition === n;
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
   const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, spec: null } : view.luiPosition != null ? { pos: view.luiPosition, spec: view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null } : null;
   const voteToks: VoteTok[] = useMemo(() => {
-    if (res) return voters.map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));
+    if (res) return voters.filter((v) => !(res.lui?.trap && res.lui.caught?.includes(v.id))).map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));   // voti annullati dall'Imbroglio!: spariscono
     if (phase === "VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color, mega: isMega }];
     return [];
   }, [res, voters, phase, view.myVote, me, isMega, people]);
@@ -190,7 +196,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
-  const resLui = res?.lui ? { pos: res.lui.position, spec: { slot: res.lui.slot, k: res.lui.k, pts: res.lui.pts } } : null;
+  const resLui = res?.lui ? { pos: res.lui.position, spec: { slot: res.lui.slot, k: res.lui.k, pts: res.lui.pts, ...(res.lui.trap ? { trap: true } : {}), ...(res.lui.herd ? { herd: true } : {}) } } : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? txs("g.meta.giro", { n: view.round, tot: view.rounds }) : "";
   const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? txs("g.meta.sparegg") : txs("mg.turno", { n: view.turn, tot: view.totalTurns })) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} />;
@@ -200,22 +206,22 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
   // La scheda «Sei il Megafono!» compare le prime due volte che tocca a te
   useEffect(() => {
-    if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
-  }, [phase, turn, isMega, readOnly, intro, charIntro]);
+    if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && !luiDraw && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
+  }, [phase, turn, isMega, readOnly, intro, charIntro, luiDraw]);
   // «Questo turno non giochi carte»: resta finché non lo tocchi (le prime 3 volte)
   useEffect(() => {
-    if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
-  }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, megaIntro]);
+    if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !luiDraw && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
+  }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, luiDraw, megaIntro]);
   // Suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
   const hint = readOnly ? null : hintFor(view), hintText = hint?.text ?? null;
-  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
+  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !luiDraw && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? txs("g.ban.vote.t") : txs("g.ban.dopo.mega"), sub: v ? txs("g.ban.vote.s") : txs("g.ban.dopo.mega.s") }); } }} />}
       {!climbing && needTerrace && !revealing && (
-        <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : setZoomPos(n)) : undefined} />
+        <Terrace cardIds={ids} votes={voteToks} lui={res ? resLui : luiShown} selected={phase === "RESULTS" ? null : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? setPick(n) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && view.luiPosition != null ? () => setLuiInfo(true) : undefined} />
       )}
       {revealing && res && (
         <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} megaName={megaName} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
@@ -251,7 +257,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
                         <div className="lui-opts">
                           {view.luiTokens.map((sp) => { const left = view.myLuiLeft.includes(sp.slot);
                             return <button key={sp.slot} className={`lk lui-${sp.slot}`} disabled={!left} onClick={() => act({ t: "act", action: { type: "placeLui", slot: sp.slot, position: pick } })} data-testid={`lui-${sp.slot}`}>
-                              <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? txs("g.lui.pt", { pt: sp.pts }) : txs("g.lui.usato")}</small></button>; })}
+                              <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? txs("g.lui.gregge", { pt: sp.pts }) : sp.herd ? txs("g.lui.gregge.k", { pt: sp.pts }) : txs("g.lui.pt", { pt: sp.pts })) : txs("g.lui.usato")}</small></button>; })}
                         </div>
                         <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">{tx("g.lui.guarda")}</button>
                       </div>
@@ -264,7 +270,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
                 {readOnly
                   ? <BSheet gold={gold} title={tx("g.vota.t")} sub={txs("g.hanno.votato", { n: view.players.filter((p) => p.hasVoted).length, tot: view.players.length })} />
                   : canVote
-                    ? <BSheet gold={gold} title={tx("g.vota.t")} sub={tx("g.vota.s")} ui={uiv}>
+                    ? <BSheet gold={gold} title={tx("g.vota.t")} sub={luiNo === turn ? <span className="lui-no" data-testid="lui-no-vote">{tx("g.lui.novoto")}</span> : tx("g.vota.s")} ui={uiv}>
                       <Row>{tray}<Btn disabled={!pick} onClick={() => pick && act({ t: "act", action: { type: "vote", position: pick } })} testId="confirm-vote">{!pick ? txs("g.vota.cade") : txs("g.conferma", { n: pick })}</Btn></Row>
                     </BSheet>
                     : <BSheet gold={gold} title={tx("g.inviato")} sub={tx("g.aspettiamo")} ui={uiv}><Flags flags={flagsVote} people={people} /></BSheet>}
@@ -288,10 +294,12 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
           action={!readOnly && (isMega || isHost || megaBot) ? { label: view.turn >= view.totalTurns ? txs("g.az.finale") : view.roundEnd ? txs("g.az.giro") : txs("g.az.turno"), onClick: () => act({ t: "act", action: { type: "advance" } }) } : { wait: readOnly ? txs("g.az.wait.ro") : txs("g.az.wait") }} />
       )}
 
+      {luiInfo && phase === "VOTE" && <LuiInfo view={view} onClose={() => setLuiInfo(false)} />}
       {zoomPos !== null && ids[zoomPos - 1] && (
         <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={N} onClose={() => setZoomPos(null)} onNav={setZoomPos}
-          actionLabel={phase === "SUSPECT" ? txs("g.zoom.lui", { n: zoomPos }) : txs("g.zoom.vota", { n: zoomPos })} onAction={() => { setPick(zoomPos); setZoomPos(null); }} />
+          actionLabel={phase === "SUSPECT" ? txs("g.zoom.lui", { n: zoomPos }) : txs("g.zoom.vota", { n: zoomPos })} onAction={() => { if (banned(zoomPos)) { setLuiNo(turn); setPick(null); } else setPick(zoomPos); setZoomPos(null); }} />
       )}
+      {!intro && !charIntro && luiDraw && <LuiDraw tokens={view.luiTokens} players={view.players.length} sound={sound} onClose={() => { setLuiDraw(false); try { sessionStorage.setItem(drawKey, "1"); } catch { /* */ } }} />}
       {!intro && charIntro && <CharIntro color={people.get(me).color} onClose={() => { setCharIntro(false); try { sessionStorage.setItem(charKey, "1"); } catch { /* */ } }} />}
       {intro && <IntroSlides onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
       {megaIntro && <MegaIntro megafonoSa={view.megafonoSa} onClose={(off) => { megaIntroSeen(off); setMegaIntro(false); }} />}
