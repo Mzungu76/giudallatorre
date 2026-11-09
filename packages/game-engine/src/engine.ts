@@ -13,6 +13,8 @@ export function luiPool(n: number): LuiSpec[] {
 }
 /** I segnalini della partita (2: lo 0 e una soglia a caso). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
 export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
+/** Variante «Il gregge»: lo 0 diventa la trappola (nessun punto al Megafono, 0 punti nel turno a chi vota la sua carta); le soglie restano uguali. */
+const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 0, pts: 0, trap: true } : sp);
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
   const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
@@ -53,7 +55,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    megafonoSa: !!config.megafonoSa, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    megafonoSa: !!config.megafonoSa, gregge: !!config.gregge, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
@@ -62,6 +64,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   };
   // i due segnalini: sempre lo 0 (senza, chi si sente minacciato non voterebbe mai la carta del Lui!) più una soglia a caso
   s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : [luiPool(n).find((x) => x.slot === "zero")!, shuffle(luiPool(n).filter((x) => x.slot !== "zero"), s)[0]!];
+  if (s.gregge) s.luiSet = s.luiSet.map(greggeSpec);
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
@@ -205,9 +208,16 @@ function resolve(s: GameState, events: GameEvent[]) {
   if (s.lui) {
     const spec = luiTokens(s).find((x) => x.slot === s.lui!.slot)!;
     const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
-    const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
-    lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
-    if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
+    if (spec.trap) {
+      // «Il gregge»: chi ha votato la carta dello 0 (Megafono compreso) fa 0 punti nel turno, che la carta cada o no; il Megafono non incassa nulla
+      const caught = s.playerIds.filter((p) => s.votes[p] === s.lui!.position);
+      for (const p of caught) { lines[p]!.push({ kind: "gregge", pts: 0 - points[p]!, pos: s.lui.position }); points[p] = 0; }
+      lui = { slot: spec.slot, position: s.lui.position, k: 0, pts: 0, others, hit: caught.length > 0, trap: true, caught };
+    } else {
+      const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
+      lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
+      if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
+    }
     const spent = (s.luiSpent ??= {})[mega] ??= []; if (luiTokens(s).every((x) => spent.includes(x.slot))) spent.length = 0; spent.push(s.lui.slot);
   }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;

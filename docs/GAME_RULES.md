@@ -110,5 +110,14 @@ Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade 
 
 **Bot.** Il Megafono bot sceglie gettone e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero né quali gettoni gli restano: stimano quale dei due gettoni ha usato e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).
 
+## Variante «Il gregge» (in prova, opzione di stanza)
+L'host la attiva nella lobby (casella «Il gregge (prova)»; di serie è spenta). Cambia **solo il segnalino 0**:
+- I segnalini restano 2 per partita: **sempre lo 0** più **una soglia a caso** dal pool per numero di giocatori (come sopra).
+- **Lo 0 è una trappola**: tutti quelli che votano la sua carta (Megafono compreso) fanno **0 punti in quel turno**, che la carta cada o no — si azzerano anche il +2 del voto giusto e il +2 della propria carta caduta. Il Megafono **non incassa nulla** dallo 0.
+- **La soglia** funziona come nella partita normale: il Megafono incassa i punti stampati se la carta riceve almeno k voti dagli altri, che cada o no.
+- In app il gettone dello 0 è grigio scuro con la pecora («0 PUNTI»); nel riepilogo chi ci è cascato ha la riga «Ha votato la carta del gregge».
+- Motore: `GameConfig.gregge`; il segnalino ha `trap: true` e `pts: 0`; l'esito (`LuiOutcome`) riporta `trap` e `caught` (chi l'ha votata); ogni giocatore preso ha una riga `gregge` con i punti tolti.
+- Bot: il Megafono valuta lo 0 per i punti che toglie agli avversari (metà di un punto proprio per ogni +2 negato) e non vota la propria trappola; gli altri stimano quanto è probabile che il Lui! sia lo 0 e votano meno quella carta.
+
 ## Uscire dalla partita
 Un giocatore umano può uscire in qualsiasi momento (Regolamento «i» → «Esci dalla partita», con conferma). Se nella stanza restano **altri umani** (anche temporaneamente offline), un **giocatore virtuale di livello medio** prende il suo posto: stessa posizione, stessi punti e stessa mano, e gli altri vedono un avviso. Se chi esce era l'host, il ruolo passa a un altro umano. Se **non restano umani**, la stanza si chiude subito. Il vecchio accesso non è più valido.

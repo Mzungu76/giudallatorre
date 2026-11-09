@@ -1,6 +1,6 @@
 {
- "versione": 4,
- "aggiornato": "2026-11-08",
+ "versione": 5,
+ "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -693,6 +693,16 @@
    "t": "Scommetti che nessuno degli altri vota la carta del gettone.",
    "s": "Regolamento completo"
   },
+  "how.3.gregge.t": {
+   "t": "Il gregge · 0 punti",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
+  },
+  "how.3.gregge.x": {
+   "t": "Trappola: chi vota la carta del gettone (anche tu) fa **0 punti** in questo turno, che cada o no. Non dà punti al Megafono.",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
+  },
   "how.3.k.x": {
    "t": "Scommetti che almeno {k} giocatori votano la carta del gettone. La soglia cambia a ogni partita.",
    "s": "Regolamento completo"
@@ -749,6 +759,11 @@
    "t": "Nessun voto",
    "s": "Gettoni Lui! (etichette)"
   },
+  "lui.gregge": {
+   "t": "Il gregge",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Variante «Il gregge»: lo 0 è una trappola"
+  },
   "lui.k1": {
    "t": "Almeno 1 voto",
    "s": "Gettoni Lui! (etichette)"
@@ -761,6 +776,11 @@
   "lui.ask.zero": {
    "t": "nessuno la vota",
    "s": "Gettoni Lui! (etichette)"
+  },
+  "lui.ask.gregge": {
+   "t": "chi la vota fa 0 punti",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Variante «Il gregge»"
   },
   "lui.ask.k1": {
    "t": "1 voto o più",
@@ -799,6 +819,11 @@
   "pp.lui.ko": {
    "t": "Lui! mancato: {lui}",
    "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.gregge": {
+   "t": "Ha votato la carta del gregge: 0 punti nel turno",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Variante «Il gregge»"
   },
   "pp.attesa": {
    "t": "Il Megafono prosegue…",
@@ -878,6 +903,16 @@
   "bui.popup.zero": {
    "t": "Nessun altro vota la carta del gettone.",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
+  },
+  "bui.popup.gregge": {
+   "t": "Trappola: chi vota la carta del gettone fa **0 punti** in questo turno, che cada o no. A te non dà punti.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»"
+  },
+  "bui.gregge.pt": {
+   "t": "0 punti a chi la vota",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»: suggerimento sul gettone"
   },
   "bui.popup.k": {
    "t": "Almeno {k} giocatori votano la carta del gettone.",
@@ -1300,6 +1335,21 @@
    "t": "mancato",
    "s": "Salita e spoglio dei voti (turno normale)"
   },
+  "rv.gregge.x": {
+   "t": "Ha posato **il gregge** sul n. {n} (la carta col bordo giallo): chi l'ha votata fa 0 punti in questo turno, che cada o no. **{esito}**.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»"
+  },
+  "rv.gregge.si": {
+   "t": "Ci sono cascati in {k}",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "{k} = quanti giocatori l'hanno votata"
+  },
+  "rv.gregge.no": {
+   "t": "Nessuno ci è cascato",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»"
+  },
   "rv.stamp.pari": {
    "t": "Cadono insieme: {lista}!",
    "s": "Salita e spoglio dei voti (turno normale)"
@@ -1506,6 +1556,11 @@
   "g.lui.pt": {
    "t": "+{pt} punti",
    "s": "Partita: turno normale"
+  },
+  "g.lui.gregge": {
+   "t": "0 punti a chi la vota",
+   "s": "Partita: turno normale",
+   "n": "Variante «Il gregge»: scelta del gettone"
   },
   "g.lui.usato": {
    "t": "già usato",
@@ -1961,6 +2016,16 @@
    "t": "Confessioni",
    "s": "Stanza e lobby"
   },
+  "room.gregge": {
+   "t": "Il gregge (prova)",
+   "s": "Stanza e lobby",
+   "n": "Casella della variante «Il gregge»"
+  },
+  "room.gregge.info": {
+   "t": "Variante: il gettone 0 del Lui! non premia il Megafono ma dà 0 punti nel turno a chi vota la sua carta.",
+   "s": "Stanza e lobby",
+   "n": "Suggerimento sulla casella"
+  },
   "room.timer": {
    "t": "Timer",
    "s": "Stanza e lobby"
@@ -1991,6 +2056,10 @@
   },
   "room.senza.conf": {
    "t": " · senza confessioni",
+   "s": "Stanza e lobby"
+  },
+  "room.con.gregge": {
+   "t": " · variante Il gregge",
    "s": "Stanza e lobby"
   },
   "room.schermo": {

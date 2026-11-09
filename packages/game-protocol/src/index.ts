@@ -41,7 +41,7 @@ export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("hello"), token: tokenSchema }).strict(),
   z.object({ t: z.literal("watch") }).strict(),
   z.object({ t: z.literal("ping") }).strict(),
-  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), confessions: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
+  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), gregge: z.boolean().optional(), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), confessions: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("addBot"), level: botLevelSchema.default("medium") }).strict(),
   z.object({ t: z.literal("removeBot"), playerId: playerIdSchema }).strict(),
@@ -55,7 +55,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
-export interface RoomOptionsDto { megafonoSa: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
+export interface RoomOptionsDto { megafonoSa: boolean; /** Variante «Il gregge» (in prova): il segnalino 0 azzera il turno di chi vota la sua carta. */ gregge?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
 export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; isBot?: boolean; level?: "easy" | "medium" | "hard" }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;

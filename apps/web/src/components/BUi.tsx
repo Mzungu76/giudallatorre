@@ -66,7 +66,7 @@ export function LuiTray({ view, ui }: { view: PlayerView; ui?: UiCtl | null }) {
   return (
     <button className="bltr" onClick={ui?.lui} aria-label={label} data-testid="lui-tray">
       <span className="lab">{t("bui.lui.lab")}</span>
-      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
+      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: ${sp.trap ? ts("bui.gregge.pt") : `+${sp.pts}`}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
     </button>
   );
 }
@@ -89,8 +89,8 @@ export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => v
           return (
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
-              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.slot === "zero" ? t("bui.popup.zero") : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
-              <span className="pt">+{sp.pts}</span>
+              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge") : sp.slot === "zero" ? t("bui.popup.zero") : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
+              <span className="pt">{sp.trap ? "🐑" : `+${sp.pts}`}</span>
             </div>
           );
         })}
