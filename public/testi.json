@@ -1,5 +1,5 @@
 {
- "versione": 11,
+ "versione": 12,
  "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
@@ -962,7 +962,7 @@
    "n": "Gettone soglia"
   },
   "bui.info.trap": {
-   "t": "Imbroglio!: i voti su questa carta non valgono, come se non ci fossero, e il conteggio si fa senza. Se ne annulla almeno uno, il Megafono prende +{pt}.",
+   "t": "I voti su questa carta non valgono, come se non ci fossero, e il conteggio si fa senza. Se ne annulla almeno uno, il Megafono prende +{pt}.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Variante «Il gregge»: gettone 0"
   },
@@ -1874,6 +1874,46 @@
   "chi.ok": {
    "t": "Ci sono!",
    "s": "Il tuo personaggio"
+  },
+  "ld.aria": {
+   "t": "Estrazione del segnalino Lui!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Nome accessibile della schermata"
+  },
+  "ld.titolo": {
+   "t": "Estrazione!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Titolo durante la carrellata dei segnalini"
+  },
+  "ld.sotto": {
+   "t": "Quale soglia del Lui! toccherà a questa partita?",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Sopra il titolo durante la carrellata"
+  },
+  "ld.scelto": {
+   "t": "Esce: {label}!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "{label} = nome del segnalino estratto"
+  },
+  "ld.set": {
+   "t": "Il Lui! della partita",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Titolo finale con i due segnalini"
+  },
+  "ld.set.s": {
+   "t": "Ogni Megafono avrà questi due segnalini:",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Sopra il titolo finale"
+  },
+  "ld.ok": {
+   "t": "Si gioca!",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Pulsante finale"
+  },
+  "ld.salta": {
+   "t": "Salta",
+   "s": "Estrazione del Lui! (variante «Il gregge»)",
+   "n": "Pulsante durante l'estrazione"
   },
   "chat.aria": {
    "t": "Chat",

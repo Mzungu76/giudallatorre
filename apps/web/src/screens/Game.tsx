@@ -20,6 +20,7 @@ import { HintBubble, HintPointer, useIdleHint } from "../components/IdleHint.tsx
 import { hintFor } from "../lib/hints.tsx";
 import { BMeta, BSheet, LuiInfo, LuiTray, PhrasePill, Row, WaitCard } from "../components/BUi.tsx";
 import type { UiCtl } from "../components/BUi.tsx";
+import LuiDraw from "../components/LuiDraw.tsx";
 import CharIntro from "../components/CharIntro.tsx";
 import HandRenewal from "../components/HandRenewal.tsx";
 import type { Geo } from "../components/HandRenewal.tsx";
@@ -138,6 +139,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const charKey = `gdt.char.${room.code}`;
   const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
+  // «Il gregge»: a inizio partita, dopo il personaggio, l'estrazione della soglia del Lui! (una volta per stanza)
+  const drawKey = `gdt.luidraw.${room.code}`;
+  const [luiDraw, setLuiDraw] = useState(() => { try { return !FAST && !readOnly && view.gregge && view.turn === 1 && sessionStorage.getItem(drawKey) !== "1"; } catch { return false; } });
   const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const [megaIntro, setMegaIntro] = useState(false), megaShown = useRef(-1);
@@ -202,15 +206,15 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
   // La scheda «Sei il Megafono!» compare le prime due volte che tocca a te
   useEffect(() => {
-    if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
-  }, [phase, turn, isMega, readOnly, intro, charIntro]);
+    if (phase === "PROCLAIM" && isMega && !readOnly && !FAST && megaShown.current !== turn && !intro && !charIntro && !luiDraw && megaIntroDue()) { megaShown.current = turn; setMegaIntro(true); }
+  }, [phase, turn, isMega, readOnly, intro, charIntro, luiDraw]);
   // «Questo turno non giochi carte»: resta finché non lo tocchi (le prime 3 volte)
   useEffect(() => {
-    if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
-  }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, megaIntro]);
+    if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !luiDraw && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
+  }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, luiDraw, megaIntro]);
   // Suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
   const hint = readOnly ? null : hintFor(view), hintText = hint?.text ?? null;
-  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
+  const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !luiDraw && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
@@ -295,6 +299,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
         <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={N} onClose={() => setZoomPos(null)} onNav={setZoomPos}
           actionLabel={phase === "SUSPECT" ? txs("g.zoom.lui", { n: zoomPos }) : txs("g.zoom.vota", { n: zoomPos })} onAction={() => { if (banned(zoomPos)) { setLuiNo(turn); setPick(null); } else setPick(zoomPos); setZoomPos(null); }} />
       )}
+      {!intro && !charIntro && luiDraw && <LuiDraw tokens={view.luiTokens} players={view.players.length} sound={sound} onClose={() => { setLuiDraw(false); try { sessionStorage.setItem(drawKey, "1"); } catch { /* */ } }} />}
       {!intro && charIntro && <CharIntro color={people.get(me).color} onClose={() => { setCharIntro(false); try { sessionStorage.setItem(charKey, "1"); } catch { /* */ } }} />}
       {intro && <IntroSlides onClose={() => { setIntro(false); try { localStorage.setItem("gdt.intro", "1"); } catch { /* */ } }} />}
       {megaIntro && <MegaIntro megafonoSa={view.megafonoSa} onClose={(off) => { megaIntroSeen(off); setMegaIntro(false); }} />}
