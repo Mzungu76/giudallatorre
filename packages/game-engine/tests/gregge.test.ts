@@ -63,21 +63,21 @@ describe("variante «Il gregge»", () => {
     expect(act(g, { type: "vote", playerId: "p1", position: 1 }).votes.p1).toBe(1);
   });
 
-  it("soglia riuscita (almeno k voti degli altri, che cada o no): i punti stampati vanno solo a chi ha votato la carta, mai al Megafono", () => {
+  it("soglia riuscita (almeno k voti degli altri, che cada o no): i punti stampati vanno al Megafono (che non può votarla) e a chi ha votato la carta", () => {
     const g = setup(4, "k2", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), f = posOf(g, "p3");
     const r = castVotes(g, { p1: f, p2: x, p3: f, p4: x }).lastResult!;
     expect(r.fallenPositions).toEqual([f]);
     expect(r.lui).toMatchObject({ slot: "k2", hit: true, others: 2, shared: ["p2", "p4"] });
-    expect(r.points).toEqual({ p1: 2, p2: 7, p3: 2 + 2, p4: 7 });
+    expect(r.points).toEqual({ p1: 2 + 7, p2: 7, p3: 2 + 2, p4: 7 });
     expect(r.lines.p2!.map((l) => l.kind)).toEqual(["lui-gregge"]);
-    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto"]);
+    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto", "lui"]);
   });
   it("soglia mancata: niente a nessuno", () => {
     const g = setup(4, "k2", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), f = posOf(g, "p3");
     const r = castVotes(g, { p1: f, p2: x, p3: f, p4: f }).lastResult!;
-    expect(r.lui).toMatchObject({ hit: false, shared: [] }); expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto"]);
+    expect(r.lui).toMatchObject({ hit: false, shared: [] }); expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto", "lui-mancato"]);
     expect(r.points.p2).toBe(0);
   });
   it("nella partita normale la soglia premia solo il Megafono", () => {

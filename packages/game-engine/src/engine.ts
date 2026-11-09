@@ -220,8 +220,9 @@ function resolve(s: GameState, events: GameEvent[]) {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
       if (spec.herd) {
-        // «Il gregge»: se la soglia riesce (almeno k voti degli altri, che cada o no) i punti vanno a chi ha votato la carta; il Megafono non può votarla, quindi non li prende mai
+        // «Il gregge»: se la soglia riesce (almeno k voti degli altri, che cada o no) i punti vanno al Megafono (che non può votarla) e a tutti quelli che l'hanno votata
         const shared = hit ? s.playerIds.filter((p) => s.votes[p] === s.lui!.position) : [];
+        if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
         for (const p of shared) give(p, spec.pts, "lui-gregge", s.lui.position, others);
         lui.herd = true; lui.shared = shared;
       } else if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
