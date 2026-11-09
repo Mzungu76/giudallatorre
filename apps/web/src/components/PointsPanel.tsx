@@ -22,13 +22,13 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   const fell = (p: number) => fallPositions.includes(p);
   const say = (v: Voter) => {
     const ls = lines[v.id] ?? [], p = votes[v.id]!, out: { ok: boolean; t: string }[] = [];
-    out.push(fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
+    const annullato = !!lui?.trap && !!lui.caught?.includes(v.id);
+    out.push(annullato ? { ok: false, t: ts("pp.gregge") } : fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
     const c = ls.find((l) => l.kind === "carta"); if (c) out.push({ ok: true, t: ts("pp.caduta") });
     const l = ls.find((x) => x.kind === "lui"), m = ls.find((x) => x.kind === "lui-mancato");
     if (l && lui) out.push({ ok: true, t: ts("pp.lui.ok", { lui: luiLabel(lui).toLowerCase() }) });
     if (m && lui) out.push({ ok: false, t: ts("pp.lui.ko", { lui: luiLabel(lui).toLowerCase() }) });
     if (lui && ls.some((x) => x.kind === "lui-gregge")) out.push({ ok: true, t: ts("pp.lui.gregge", { lui: luiLabel(lui).toLowerCase(), pt: lui.pts }) });
-    if (ls.some((x) => x.kind === "gregge")) out.push({ ok: false, t: ts("pp.gregge") });
     return out;
   };
   return (

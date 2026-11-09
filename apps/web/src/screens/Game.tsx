@@ -183,7 +183,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
   const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, spec: null } : view.luiPosition != null ? { pos: view.luiPosition, spec: view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null } : null;
   const voteToks: VoteTok[] = useMemo(() => {
-    if (res) return voters.map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));
+    if (res) return voters.filter((v) => !(res.lui?.trap && res.lui.caught?.includes(v.id))).map((v) => ({ p: res.votes[v.id]!, c: v.color, mega: v.mega }));   // voti annullati dall'Imbroglio!: spariscono
     if (phase === "VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color, mega: isMega }];
     return [];
   }, [res, voters, phase, view.myVote, me, isMega, people]);

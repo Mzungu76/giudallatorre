@@ -112,7 +112,7 @@ export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => v
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
               <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge") : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
-              <span className="pt">{sp.trap ? "🐑" : `+${sp.pts}`}</span>
+              <span className="pt">{sp.trap ? "🚫" : `+${sp.pts}`}</span>
             </div>
           );
         })}

@@ -89,7 +89,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
       if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
-      // trap: probabilità stimata che sia lo 0 del gregge (votare quella carta azzera il mio turno)
+      // trap: probabilità stimata che sia l'Imbroglio! del gregge (votare quella carta annulla il mio voto)
       // gain: «Il gregge», punti della soglia che prendo anch'io se voto la carta e la soglia riesce
       let harm = 0, X = -1, trap = 0, gain = 0;
       if (lui && me !== mega) {

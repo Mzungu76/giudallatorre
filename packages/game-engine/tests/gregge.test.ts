@@ -3,14 +3,14 @@ import { act, castVotes, cfg, posOf, start, toSuspect } from "./helpers.ts";
 import { chooseBotAction, createGame, luiForbidden, luiTokens, newBotMemory, viewFor } from "../src/index.ts";
 import type { GameState, LuiSlot } from "../src/index.ts";
 
-/** Variante «Il gregge»: lo 0 è una trappola (0 punti nel turno a chi vota la sua carta, che cada o no); le soglie restano come sempre. */
+/** Variante «Il gregge»: lo 0 è l'Imbroglio! (i voti sulla sua carta non valgono); la soglia premia il Megafono e chi vota la carta. */
 function setup(n: number, slot: LuiSlot, at: (g: GameState) => number) {
   const g = toSuspect(start(n, { gregge: true }));
   return act(g, { type: "placeLui", playerId: "p1", slot, position: at(g) });
 }
 
 describe("variante «Il gregge»", () => {
-  it("2 segnalini: sempre lo 0 (trappola, nessun punto stampato) più una soglia a caso, come nella partita normale", () => {
+  it("2 segnalini: sempre lo 0 (Imbroglio!, nessun punto stampato) più una soglia a caso, come nella partita normale", () => {
     for (let seed = 1; seed <= 20; seed++) {
       const g = createGame({ ...cfg(5, { seed, gregge: true }), luiSlots: undefined }).state, set = luiTokens(g);
       expect(set).toHaveLength(2);
@@ -22,29 +22,31 @@ describe("variante «Il gregge»", () => {
     expect(luiTokens(start(4)).some((x) => x.trap)).toBe(false);
   });
 
-  it("lo 0 sulla carta che cade: chi l'ha votata fa 0 punti nel turno (anche il +2 della carta), gli altri prendono i loro punti, il Megafono non incassa nulla", () => {
+  it("Imbroglio! (lo 0): i voti sulla sua carta non contano, la maggioranza si calcola senza; chi l'ha votata non prende il +2 del voto ma tiene gli altri punti", () => {
     const g = setup(4, "zero", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), y = posOf(g, "p3");
+    // 3 voti su x (annullati) contro 1 su y: senza l'Imbroglio cadrebbe x, invece cade y
     const r = castVotes(g, { p1: y, p2: x, p3: x, p4: x }).lastResult!;
-    expect(r.fallenPositions).toEqual([x]);
-    expect(r.points).toEqual({ p1: 0, p2: 0, p3: 0, p4: 0 });          // p2 aveva voto giusto +2 e carta caduta +2: tutto azzerato
-    expect(r.lines.p2!.map((l) => l.kind)).toEqual(["voto", "carta", "gregge"]);
-    expect(r.lines.p2!.reduce((a, l) => a + l.pts, 0)).toBe(0);
-    expect(r.lines.p1).toEqual([]);                                     // il Megafono non prende nulla dal gettone
+    expect(r.counts).toEqual({ [y]: 1 });
+    expect(r.fallenPositions).toEqual([y]);
+    expect(r.points).toEqual({ p1: 2, p2: 0, p3: 2, p4: 0 });          // p1 voto giusto; p3 carta caduta; i voti annullati non danno nulla
+    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto"]);         // il Megafono non prende nulla dal gettone
     expect(r.lui).toMatchObject({ slot: "zero", trap: true, hit: true, caught: ["p2", "p3", "p4"], others: 3 });
   });
 
-  it("lo 0 sulla carta che resta su: chi l'ha votata fa 0 anche se la sua carta è caduta", () => {
-    const g = setup(4, "zero", (s) => posOf(s, "p3"));
-    const x = posOf(g, "p3"), f = posOf(g, "p2");
-    const r = castVotes(g, { p1: f, p2: x, p3: f, p4: f }).lastResult!;
-    expect(r.fallenPositions).toEqual([f]);
-    expect(r.points.p2).toBe(0);                                        // la sua carta è caduta (+2) ma ha votato la trappola
-    expect(r.points.p1).toBe(2); expect(r.points.p3).toBe(2); expect(r.points.p4).toBe(2);
-    expect(r.lui).toMatchObject({ hit: true, caught: ["p2"] });
+  it("Imbroglio!: cambiano anche i pareggi", () => {
+    const g = setup(4, "zero", (s) => posOf(s, "p2"));
+    const x = posOf(g, "p2"), y = posOf(g, "p3"), z = posOf(g, "p4");
+    // y 2 voti, x 1 (annullato), z 1: cade y da sola
+    let r = castVotes(g, { p1: y, p2: y, p3: x, p4: z }).lastResult!;
+    expect(r.fallenPositions).toEqual([y]); expect(r.tie).toBe(false);
+    // y 1, z 1, x 2 annullati: pareggio fra y e z, il Megafono ha votato y → cade y
+    r = castVotes(g, { p1: y, p2: x, p3: x, p4: z }).lastResult!;
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(true); expect(r.fallenPositions).toEqual([y]);
+    expect(r.points.p4).toBe(0);                                         // il suo voto valeva ma la sua carta-voto non è caduta
   });
 
-  it("il Megafono non può votare la carta del suo Lui! (trappola o soglia); le altre sì. Nessuno nella trappola = nessun effetto", () => {
+  it("il Megafono non può votare la carta del suo Lui! (Imbroglio! o soglia); le altre sì. Nessuno sull'Imbroglio! = nessun effetto", () => {
     for (const slot of ["zero", "k2"]) {
       const g = setup(4, slot, (s) => posOf(s, "p2")), x = posOf(g, "p2"), y = posOf(g, "p3");
       expect(() => act(g, { type: "vote", playerId: "p1", position: x })).toThrow(/carta del tuo Lui/);

@@ -13,7 +13,7 @@ export function luiPool(n: number): LuiSpec[] {
 }
 /** I segnalini della partita (2: lo 0 e una soglia a caso). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
 export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
-/** Variante «Il gregge»: lo 0 diventa la trappola (nessun punto al Megafono, 0 punti nel turno a chi vota la sua carta); le soglie restano uguali. */
+/** Variante «Il gregge»: lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta, nessun punto al Megafono); la soglia premia anche chi vota la carta. */
 const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 0, pts: 0, trap: true } : { ...sp, herd: true });
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
@@ -191,7 +191,10 @@ function revealTower(s: GameState, events: GameEvent[]) {
 
 function resolve(s: GameState, events: GameEvent[]) {
   const counts: Record<number, number> = {};
-  for (const p of s.playerIds) { const v = s.votes[p]!; counts[v] = (counts[v] ?? 0) + 1; }
+  // «Il gregge», Imbroglio! (lo 0): i voti sulla sua carta sono annullati, come se non esistessero (cambiano le maggioranze). Il Megafono non può votarla, quindi resta sempre almeno un voto valido.
+  const trapSpec = s.lui ? luiTokens(s).find((x) => x.slot === s.lui!.slot && x.trap) : undefined;
+  const annulled = trapSpec ? s.playerIds.filter((p) => s.votes[p] === s.lui!.position) : [];
+  for (const p of s.playerIds) { if (annulled.includes(p)) continue; const v = s.votes[p]!; counts[v] = (counts[v] ?? 0) + 1; }
   const top = Math.max(...Object.values(counts));
   const leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top);
   const mega = megafonoOf(s), tie = leaders.length > 1, megaVote = s.votes[mega]!;
@@ -203,7 +206,7 @@ function resolve(s: GameState, events: GameEvent[]) {
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
   // Voto giusto: +2 a chi ha votato una carta caduta (Megafono compreso).
-  for (const p of s.playerIds) if (fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
+  for (const p of s.playerIds) if (!annulled.includes(p) && fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
   const collected = s.playerIds.filter((p) => p !== mega && s.votes[p] === megaVote).length;
   for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
   // Segnalino Lui!: "almeno k voti degli ALTRI" sulla sua carta (lo 0: nessun voto degli altri). Il Megafono non perde punti se sbaglia, ma il segnalino è speso.
@@ -212,10 +215,8 @@ function resolve(s: GameState, events: GameEvent[]) {
     const spec = luiTokens(s).find((x) => x.slot === s.lui!.slot)!;
     const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
     if (spec.trap) {
-      // «Il gregge»: chi ha votato la carta dello 0 (Megafono compreso) fa 0 punti nel turno, che la carta cada o no; il Megafono non incassa nulla
-      const caught = s.playerIds.filter((p) => s.votes[p] === s.lui!.position);
-      for (const p of caught) { lines[p]!.push({ kind: "gregge", pts: 0 - points[p]!, pos: s.lui.position }); points[p] = 0; }
-      lui = { slot: spec.slot, position: s.lui.position, k: 0, pts: 0, others, hit: caught.length > 0, trap: true, caught };
+      // Imbroglio!: i voti sulla carta sono già stati annullati nel conteggio; il Megafono non incassa nulla
+      lui = { slot: spec.slot, position: s.lui.position, k: 0, pts: 0, others, hit: annulled.length > 0, trap: true, caught: annulled };
     } else {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };

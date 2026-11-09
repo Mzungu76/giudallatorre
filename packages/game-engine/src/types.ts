@@ -7,7 +7,7 @@ export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "peggiore"];
 /** Identificativo di un segnalino Lui!: "zero" (nessun voto dagli altri) oppure "k1", "k2", "k3" (almeno 1, 2, 3 voti dagli altri). */
 export type LuiSlot = string;
 /** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
-export interface LuiSpec { slot: LuiSlot; k: number; pts: number; /** Variante «Il gregge»: lo 0 è una trappola. Chi vota la sua carta fa 0 punti nel turno (che cada o no) e il Megafono non incassa nulla. */ trap?: boolean; /** Variante «Il gregge», soglia: i punti vanno al Megafono (che non può votarla) e a chi vota la carta. */ herd?: boolean }
+export interface LuiSpec { slot: LuiSlot; k: number; pts: number; /** Variante «Il gregge»: lo 0 è l'Imbroglio!: i voti sulla sua carta sono annullati (non contano per la maggioranza né per i punti) e il Megafono non incassa nulla. */ trap?: boolean; /** Variante «Il gregge», soglia: i punti vanno al Megafono (che non può votarla) e a chi vota la carta. */ herd?: boolean }
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
 export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string; /** Contesto di ciascuna frase (stesso ordine di `phrases`). */ themes?: string[] }
@@ -28,7 +28,7 @@ export interface GameConfig {
   miniGame?: false | "random" | MiniKind;
   /** Elenco delle accuse (testi) per il mini-gioco Accusa. */
   accuseDeck?: string[];
-  /** Variante «Il gregge» (in prova): il segnalino 0 non premia il Megafono ma azzera i punti del turno di chi vota la sua carta. */
+  /** Variante «Il gregge» (in prova): lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi vota la carta. */
   gregge?: boolean;
   /** Solo test: forza i segnalini Lui! della partita (id dal pool, es. ["k1","zero"]); di norma sono 2 a caso. */
   luiSlots?: string[];
@@ -42,7 +42,7 @@ export type PhraseChoice =
 
 export interface LuiToken { slot: LuiSlot; position: number }
 /** Esito della scommessa del Lui! a fine turno. */
-export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», segnalino 0: chi ha votato la carta (Megafono compreso) e fa 0 punti nel turno. */ trap?: boolean; caught?: PlayerId[]; /** Variante «Il gregge», soglia: segnalino del gregge e, se riesce, gli altri giocatori che hanno votato la carta e prendono i punti insieme al Megafono. */ herd?: boolean; shared?: PlayerId[] }
+export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», Imbroglio! (lo 0): chi ha votato la carta, con il voto annullato. */ trap?: boolean; caught?: PlayerId[]; /** Variante «Il gregge», soglia: segnalino del gregge e, se riesce, gli altri giocatori che hanno votato la carta e prendono i punti insieme al Megafono. */ herd?: boolean; shared?: PlayerId[] }
 
 export interface TurnResult {
   turn: number;
@@ -72,7 +72,7 @@ export interface TurnResult {
   tieBreak: boolean;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "gregge" | "lui-gregge" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-gregge" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
