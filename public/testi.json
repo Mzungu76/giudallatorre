@@ -1,5 +1,5 @@
 {
- "versione": 7,
+ "versione": 8,
  "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
@@ -708,7 +708,7 @@
    "s": "Regolamento completo"
   },
   "how.3.k.x.gregge": {
-   "t": "Se almeno {k} degli altri votano la carta del gettone, i punti vanno a **tutti quelli che l'hanno votata**, che cada o no. Il Megafono li prende solo se la vota anche lui (simbolo 🗳 sul gettone).",
+   "t": "Se almeno {k} degli altri votano la carta del gettone, i punti vanno a **tutti quelli che l'hanno votata**, che cada o no (simbolo 🗳 sul gettone). Il Megafono non può votare la carta del suo Lui!.",
    "s": "Regolamento completo",
    "n": "Variante «Il gregge»"
   },
@@ -825,11 +825,6 @@
    "t": "Lui! mancato: {lui}",
    "s": "Riepilogo del turno («Com'è andata»)"
   },
-  "pp.lui.nonvotato": {
-   "t": "Lui! {lui} riuscito, ma non ha votato la carta",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Variante «Il gregge»: il Megafono non prende i punti della soglia se non vota la carta"
-  },
   "pp.gregge": {
    "t": "Ha votato la carta del gregge: 0 punti nel turno",
    "s": "Riepilogo del turno («Com'è andata»)",
@@ -934,7 +929,7 @@
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.popup.k.gregge": {
-   "t": "Se almeno {k} degli altri votano la carta del gettone, prende i punti chi l'ha votata: tu solo se la voti anche tu.",
+   "t": "Se almeno {k} degli altri votano la carta del gettone, prende i punti chi l'ha votata. Tu non puoi votarla.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Variante «Il gregge»"
   },
@@ -977,7 +972,7 @@
    "n": "Variante «Il gregge»: gettone 0"
   },
   "bui.info.herd": {
-   "t": "Se almeno {k} degli altri votano questa carta, chi l'ha votata prende +{pt}, che cada o no. Il Megafono solo se la vota anche lui.",
+   "t": "Se almeno {k} degli altri votano questa carta, chi l'ha votata prende +{pt}, che cada o no. Il Megafono non può votarla.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Variante «Il gregge»: gettone soglia"
   },
@@ -1633,9 +1628,14 @@
    "n": "Variante «Il gregge»: scelta del gettone"
   },
   "g.lui.gregge.k": {
-   "t": "+{pt} a chi la vota (a te se la voti)",
+   "t": "+{pt} a chi la vota (tu non puoi votarla)",
    "s": "Partita: turno normale",
    "n": "Variante «Il gregge»: soglia"
+  },
+  "g.lui.novoto": {
+   "t": "Non puoi votare la carta dove hai posato il Lui!: scegline un'altra.",
+   "s": "Partita: turno normale",
+   "n": "Variante «Il gregge»: il Megafono tocca la carta del suo Lui! durante il voto"
   },
   "g.lui.usato": {
    "t": "già usato",
@@ -2097,7 +2097,7 @@
    "n": "Casella della variante «Il gregge»"
   },
   "room.gregge.info": {
-   "t": "Variante: il gettone 0 del Lui! dà 0 punti nel turno a chi vota la sua carta; la soglia, se riesce, dà i punti a chi ha votato la carta (al Megafono solo se l'ha votata).",
+   "t": "Variante: il gettone 0 del Lui! dà 0 punti nel turno a chi vota la sua carta; la soglia, se riesce, dà i punti a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
    "s": "Stanza e lobby",
    "n": "Suggerimento sulla casella"
   },

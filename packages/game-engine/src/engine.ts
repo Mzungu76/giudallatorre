@@ -20,6 +20,8 @@ export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
   const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
   return left.length ? left : all;
 }
+/** Variante «Il gregge»: il Megafono non può votare la carta su cui ha posato il Lui!. Restituisce quella posizione (o null). */
+export const luiForbidden = (s: GameState, p: PlayerId): number | null => (s.gregge && s.lui && p === megafonoOf(s) ? s.lui.position : null);
 /** Lunghezza massima della frase inventata dal Megafono (limite tecnico, nessun filtro sui contenuti). */
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
@@ -160,6 +162,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       if (s.votes[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "voto già espresso");
       checkPosition(s, action.position);
       if (s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" && s.tower.find((t) => t.position === action.position)?.ownerId === action.playerId) throw new EngineError("INVALID_CHOICE", "non puoi votare la tua carta");
+      if (s.phase === "VOTE" && luiForbidden(s, action.playerId) === action.position) throw new EngineError("INVALID_CHOICE", "non puoi votare la carta del tuo Lui!");
       s.votes[action.playerId] = action.position;
       events.push({ type: "voteCast", playerId: action.playerId });
       if (s.playerIds.every((p) => s.votes[p] !== undefined)) { if (s.phase === "MINI_VOTE") resolveMini(s, events); else resolve(s, events); }
@@ -217,11 +220,9 @@ function resolve(s: GameState, events: GameEvent[]) {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
       if (spec.herd) {
-        // «Il gregge»: se la soglia riesce (almeno k voti degli altri, che cada o no) i punti vanno a chi ha votato la carta; il Megafono solo se l'ha votata anche lui
+        // «Il gregge»: se la soglia riesce (almeno k voti degli altri, che cada o no) i punti vanno a chi ha votato la carta; il Megafono non può votarla, quindi non li prende mai
         const shared = hit ? s.playerIds.filter((p) => s.votes[p] === s.lui!.position) : [];
-        for (const p of shared) give(p, spec.pts, p === mega ? "lui" : "lui-gregge", s.lui.position, others);
-        if (!hit) lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
-        else if (!shared.includes(mega)) lines[mega]!.push({ kind: "lui-nonvotato", pts: 0, pos: s.lui.position, n: others });
+        for (const p of shared) give(p, spec.pts, "lui-gregge", s.lui.position, others);
         lui.herd = true; lui.shared = shared;
       } else if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
     }

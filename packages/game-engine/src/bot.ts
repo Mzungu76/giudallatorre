@@ -1,5 +1,5 @@
 import type { Action, GameState, PlayerId } from "./types.ts";
-import { luiAvailable, megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, luiForbidden, megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Azione legale scelta a caso per un giocatore (giocatori virtuali, test, giocatori inattivi). `rand` è esterno al motore. */
 export function suggestAction(s: GameState, playerId: PlayerId, rand: () => number): Action | null {
@@ -23,7 +23,8 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       if (s.votes[playerId] !== undefined) return null;
       // Il peggiore: la propria carta non si può votare
       const own = s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" ? s.tower.find((t) => t.ownerId === playerId)?.position : undefined;
-      const options = s.tower.map((t) => t.position).filter((p) => p !== own);
+      const banned = s.phase === "VOTE" ? luiForbidden(s, playerId) : null;   // «Il gregge»: il Megafono non vota la carta del suo Lui!
+      const options = s.tower.map((t) => t.position).filter((p) => p !== own && p !== banned);
       return { type: "vote", playerId, position: pick(options) };
     }
     default: return null;

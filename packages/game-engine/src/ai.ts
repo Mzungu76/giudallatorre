@@ -1,4 +1,4 @@
-import { luiAvailable, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, luiForbidden, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
 import type { Action, CardId, GameState, LuiSpec, PlayerId, TurnResult } from "./types.ts";
 
@@ -41,9 +41,10 @@ function sampleVotes(p: number[], n: number, rand: () => number): number[] {
 }
 const luiHit = (zero: boolean, k: number, others: number) => (zero ? others === 0 : others >= k);
 /** Valore per il Megafono di un segnalino sulla carta `pos` con i voti degli altri `c`. «Il gregge»: lo 0 non dà punti ma toglie agli avversari i +2 del voto giusto;
- *  la soglia riuscita dà i punti anche a chi ha votato la carta. Un punto tolto o regalato a un avversario vale la metà di un punto mio. */
-const luiValue = (sp: LuiSpec, c: number[], pos: number, gregge = false) => {
-  if (!sp.trap) return luiHit(sp.slot === "zero", sp.k, c[pos]!) ? sp.pts * (gregge ? 1 - c[pos]! * TUNE.greggeDeny / Math.max(1, c.reduce((a, b) => a + b, 0)) : 1) : 0;
+ *  la soglia riuscita dà i punti solo a chi ha votato la carta (il Megafono non può votarla): per lui sono punti regalati. Un punto tolto o regalato a un avversario vale la metà di un punto mio. */
+const luiValue = (sp: LuiSpec, c: number[], pos: number) => {
+  if (sp.herd) return luiHit(false, sp.k, c[pos]!) ? -c[pos]! * sp.pts * TUNE.greggeDeny : 0;
+  if (!sp.trap) return luiHit(sp.slot === "zero", sp.k, c[pos]!) ? sp.pts : 0;
   return c[pos]! === Math.max(...c) ? c[pos]! * 2 * TUNE.greggeDeny : 0;
 };
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
@@ -77,7 +78,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       // scommessa sul numero di voti degli ALTRI sulla carta: valore atteso di ogni (segnalino, carta) con voti simulati dalla stima del gruppo; scelgo in modo imprevedibile tra le migliori
       const p = crowdProbs(s, mem, level), voters = s.playerIds.length - 1, samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, voters, rand));
       const cands: { slot: string; pos: number; ev: number }[] = [];
-      for (const sp of specs) for (let pos = 0; pos < n; pos++) { let ev = 0; for (const c of samples) ev += luiValue(sp, c, pos, !!s.gregge); cands.push({ slot: sp.slot, pos, ev: ev / samples.length - (sp.herd ? 2 * (Math.max(...p) - p[pos]!) : 0) }); }   // gregge: per incassare la soglia dovrò votare quella carta e rinunciare forse al +2
+      for (const sp of specs) for (let pos = 0; pos < n; pos++) { let ev = 0; for (const c of samples) ev += luiValue(sp, c, pos); cands.push({ slot: sp.slot, pos, ev: ev / samples.length - (s.gregge ? 2 * p[pos]! : 0) }); }   // gregge: la carta del Lui! non potrò votarla (forse perdo il +2)
       const tau = level === "hard" ? TUNE.luiTempHard : TUNE.luiTempMed, best = Math.max(...cands.map((c) => c.ev));
       const w = softmax(cands.map((c) => (c.ev - best) / tau)), ch = cands[pickProb(w, rand)]!;
       return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos + 1 };
@@ -85,7 +86,8 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "VOTE": {
       if (s.votes[me] !== undefined) return null;
       const vote = (position: number): Action => ({ type: "vote", playerId: me, position });
-      if (level === "easy") return vote(1 + Math.floor(rand() * n));
+      const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
+      if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       // trap: probabilità stimata che sia lo 0 del gregge (votare quella carta azzera il mio turno)
       // gain: «Il gregge», punti della soglia che prendo anch'io se voto la carta e la soglia riesce
@@ -95,20 +97,15 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
         X = lui.position - 1;
         const specs = luiTokens(s), others = s.playerIds.length - 2;
         const samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, others, rand));
-        const ev = specs.map((sp) => samples.reduce((a, c) => a + luiValue(sp, c, X, !!s.gregge), 0) / samples.length), top = Math.max(...ev);
+        const ev = specs.map((sp) => samples.reduce((a, c) => a + luiValue(sp, c, X), 0) / samples.length), top = Math.max(...ev);
         const wt = softmax(ev.map((e) => (e - top) / 1.0));
-        specs.forEach((sp, i) => { if (sp.trap) { trap += wt[i]!; return; } const d = samples.reduce((a, c) => a + ((luiHit(sp.slot === "zero", sp.k, c[X]! + 1) ? 1 : 0) - (luiHit(sp.slot === "zero", sp.k, c[X]!) ? 1 : 0)) * sp.pts, 0) / samples.length; harm += wt[i]! * d; if (s.gregge) gain += wt[i]! * sp.pts * samples.reduce((a, c) => a + (luiHit(false, sp.k, c[X]! + 1) ? 1 : 0), 0) / samples.length; });
+        specs.forEach((sp, i) => { if (sp.trap) { trap += wt[i]!; return; } if (sp.herd) { gain += wt[i]! * sp.pts * samples.reduce((a, c) => a + (luiHit(false, sp.k, c[X]! + 1) ? 1 : 0), 0) / samples.length; return; } const d = samples.reduce((a, c) => a + ((luiHit(sp.slot === "zero", sp.k, c[X]! + 1) ? 1 : 0) - (luiHit(sp.slot === "zero", sp.k, c[X]!) ? 1 : 0)) * sp.pts, 0) / samples.length; harm += wt[i]! * d; });
       }
-      // il Megafono sa quale segnalino ha posato: non vota la propria trappola; la soglia del gregge la incassa solo se vota la carta
-      const mine = lui && me === mega ? luiTokens(s).find((x) => x.slot === lui.slot) : undefined;
-      if (lui && mine?.trap) { X = lui.position - 1; trap = 1; }
-      let megaGain = 0;
-      if (lui && mine?.herd) { X = lui.position - 1; const smp = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, s.playerIds.length - 1, rand)); megaGain = mine.pts * smp.filter((c) => c[X]! >= mine.k).length / smp.length; }
       const w = hard ? TUNE.reactHard : TUNE.reactMed;
       // Il Megafono vota la carta che pensa più probabile (+2); gli altri: probabilità di caduta, bonus per la mia carta, e correzione per il Lui!
-      const val = p.map((x, k) => x * (2 + (k + 1 === ownPos ? 2 : 0)) * (k === X ? 1 - trap * (hard ? 1 : 0.7) : 1) - (k === X ? w * harm - gain : 0) * (me === mega ? 0 : 1) + (k === X ? megaGain : 0));
+      const val = p.map((x, k) => x * (2 + (k + 1 === ownPos ? 2 : 0)) * (k === X ? 1 - trap * (hard ? 1 : 0.7) : 1) - (k === X ? w * harm - gain : 0) * (me === mega ? 0 : 1));
       const ww = softmax(val.map((x) => x / (hard ? TUNE.voteTemp : TUNE.voteTempMed)));
-      return vote(pickProb(ww.map((x) => x + 0.04), rand) + 1);
+      return vote(pickProb(ww.map((x, k) => (k + 1 === banned ? 0 : x + 0.04)), rand) + 1);
     }
     case "MINI_PLAY": {
       if (s.played[me] !== undefined || !s.mini) return null;
