@@ -12,6 +12,7 @@ export interface TerraceProps {
   cardIds: string[]; down?: boolean; show?: number[]; pop?: number; flip?: Record<number, number>;
   votes?: VoteTok[]; lastVote?: number; lui?: { pos: number; spec?: LuiSpec | null } | null;
   selected?: number | null; onPick?: (pos: number) => void;
+  /** Tocco sul gettone Lui! posato sulla carta (apre la spiegazione). */ onLui?: () => void;
 }
 
 /** La terrazza vista dall'alto: carte intere su piedini neri, gettoni sopra. Disegno dal mockup approvato. */
@@ -31,6 +32,9 @@ export function Terrace(p: TerraceProps) {
         return <button key={i} className={`hit ${p.selected === num ? "sel" : ""}`} data-pos={num} data-testid={`card-${num}`} aria-label={txs("rv.carta.aria", { n: num })}
           style={{ left: c.x, top: c.f - c.h - 6, width: c.w, height: c.h + 10, zIndex: 100 }} onClick={() => p.onPick!(num)} />;
       })}
+      {p.onLui && p.lui && pos[p.lui.pos - 1] && (() => { const c = pos[p.lui.pos - 1]!; return (
+        <button className="hit luihit" aria-label={txs("rv.lui.aria")} data-testid="lui-token" onClick={p.onLui}
+          style={{ left: c.x + c.w / 2 - 28, top: c.f - c.h - 42, width: 56, height: 54, zIndex: 120, background: "none", border: 0 }} />); })()}
     </div>
   );
 }

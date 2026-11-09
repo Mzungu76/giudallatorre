@@ -14,7 +14,7 @@ export function luiPool(n: number): LuiSpec[] {
 /** I segnalini della partita (2: lo 0 e una soglia a caso). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
 export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
 /** Variante «Il gregge»: lo 0 diventa la trappola (nessun punto al Megafono, 0 punti nel turno a chi vota la sua carta); le soglie restano uguali. */
-const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 0, pts: 0, trap: true } : sp);
+const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 0, pts: 0, trap: true } : { ...sp, herd: true });
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
   const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
@@ -216,13 +216,14 @@ function resolve(s: GameState, events: GameEvent[]) {
     } else {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
-      if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
-      // «Il gregge»: se la soglia riesce, i punti del segnalino vanno anche a tutti gli altri che hanno votato la carta (che cada o no)
-      if (s.gregge && hit) {
-        const shared = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position);
-        for (const p of shared) give(p, spec.pts, "lui-gregge", s.lui.position, others);
-        lui.shared = shared;
-      }
+      if (spec.herd) {
+        // «Il gregge»: se la soglia riesce (almeno k voti degli altri, che cada o no) i punti vanno a chi ha votato la carta; il Megafono solo se l'ha votata anche lui
+        const shared = hit ? s.playerIds.filter((p) => s.votes[p] === s.lui!.position) : [];
+        for (const p of shared) give(p, spec.pts, p === mega ? "lui" : "lui-gregge", s.lui.position, others);
+        if (!hit) lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
+        else if (!shared.includes(mega)) lines[mega]!.push({ kind: "lui-nonvotato", pts: 0, pos: s.lui.position, n: others });
+        lui.herd = true; lui.shared = shared;
+      } else if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
     }
     const spent = (s.luiSpent ??= {})[mega] ??= []; if (luiTokens(s).every((x) => spent.includes(x.slot))) spent.length = 0; spent.push(s.lui.slot);
   }

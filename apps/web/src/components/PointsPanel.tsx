@@ -27,6 +27,7 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
     const l = ls.find((x) => x.kind === "lui"), m = ls.find((x) => x.kind === "lui-mancato");
     if (l && lui) out.push({ ok: true, t: ts("pp.lui.ok", { lui: luiLabel(lui).toLowerCase() }) });
     if (m && lui) out.push({ ok: false, t: ts("pp.lui.ko", { lui: luiLabel(lui).toLowerCase() }) });
+    if (lui && ls.some((x) => x.kind === "lui-nonvotato")) out.push({ ok: false, t: ts("pp.lui.nonvotato", { lui: luiLabel(lui).toLowerCase() }) });
     if (lui && ls.some((x) => x.kind === "lui-gregge")) out.push({ ok: true, t: ts("pp.lui.gregge", { lui: luiLabel(lui).toLowerCase(), pt: lui.pts }) });
     if (ls.some((x) => x.kind === "gregge")) out.push({ ok: false, t: ts("pp.gregge") });
     return out;

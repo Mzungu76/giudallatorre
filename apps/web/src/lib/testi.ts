@@ -44,13 +44,15 @@ export function t(key: TestoKey, vars?: Vars): ReactNode {
   const s = raw(key);
   if (!/[*_~{\n]/.test(s)) return s;
   const out: ReactNode[] = []; let n = 0;
+  // anche dentro grassetto/evidenziato/corsivo le {variabili} vanno sostituite
+  const inner = (x: string): ReactNode[] => x.split(/(\{[A-Za-z0-9_]+\})/).filter(Boolean).map((q, i) => (q.startsWith("{") && vars && q.slice(1, -1) in vars ? createElement(Fragment, { key: i }, vars[q.slice(1, -1)]) : q));
   s.split("\n").forEach((line, li) => {
     if (li > 0) out.push(createElement("br", { key: `br${n++}` }));
     line.split(TOKEN).forEach((part) => {
       if (!part) return;
-      if (part.startsWith("**")) out.push(createElement("b", { key: n++ }, part.slice(2, -2)));
-      else if (part.startsWith("__")) out.push(createElement("u", { key: n++ }, part.slice(2, -2)));
-      else if (part.startsWith("~")) out.push(createElement("em", { key: n++ }, part.slice(1, -1)));
+      if (part.startsWith("**")) out.push(createElement("b", { key: n++ }, ...inner(part.slice(2, -2))));
+      else if (part.startsWith("__")) out.push(createElement("u", { key: n++ }, ...inner(part.slice(2, -2))));
+      else if (part.startsWith("~")) out.push(createElement("em", { key: n++ }, ...inner(part.slice(1, -1))));
       else if (part.startsWith("{") && vars && part.slice(1, -1) in vars) out.push(createElement(Fragment, { key: n++ }, vars[part.slice(1, -1)]));
       else out.push(part);
     });

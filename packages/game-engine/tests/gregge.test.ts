@@ -15,7 +15,7 @@ describe("variante «Il gregge»", () => {
       const g = createGame({ ...cfg(5, { seed, gregge: true }), luiSlots: undefined }).state, set = luiTokens(g);
       expect(set).toHaveLength(2);
       expect(set.find((x) => x.slot === "zero")).toEqual({ slot: "zero", k: 0, pts: 0, trap: true });
-      expect(set.find((x) => x.slot !== "zero")!.trap).toBeUndefined();
+      expect(set.find((x) => x.slot !== "zero")!.trap).toBeUndefined(); expect(set.find((x) => x.slot !== "zero")!.herd).toBe(true);
       expect(viewFor(g, "p2").gregge).toBe(true);
     }
     expect(viewFor(start(4), "p2").gregge).toBe(false);
@@ -55,24 +55,27 @@ describe("variante «Il gregge»", () => {
     expect(r.points).toEqual({ p1: 2, p2: 2, p3: 4, p4: 2 });
   });
 
-  it("soglia riuscita (almeno k voti degli altri, che cada o no): i punti stampati vanno al Megafono e a tutti quelli che hanno votato la carta", () => {
+  it("soglia riuscita (almeno k voti degli altri, che cada o no): i punti stampati vanno solo a chi ha votato la carta; il Megafono che non l'ha votata resta a secco", () => {
     const g = setup(4, "k2", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), f = posOf(g, "p3");
     const r = castVotes(g, { p1: f, p2: x, p3: f, p4: x }).lastResult!;
     expect(r.fallenPositions).toEqual([f]);
     expect(r.lui).toMatchObject({ slot: "k2", hit: true, others: 2, shared: ["p2", "p4"] });
-    expect(r.points).toEqual({ p1: 2 + 7, p2: 7, p3: 2 + 2, p4: 7 });
+    expect(r.points).toEqual({ p1: 2, p2: 7, p3: 2 + 2, p4: 7 });
     expect(r.lines.p2!.map((l) => l.kind)).toEqual(["lui-gregge"]);
+    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto", "lui-nonvotato"]);
   });
-  it("il Megafono che vota la carta della soglia prende i punti una volta sola; soglia mancata = niente a nessuno", () => {
+  it("il Megafono che vota la carta della soglia prende i punti come gli altri (il suo voto non conta per la soglia); soglia mancata = niente a nessuno", () => {
     let g = setup(4, "k1", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), f = posOf(g, "p3");
     let r = castVotes(g, { p1: x, p2: x, p3: f, p4: f }).lastResult!;
-    expect(r.lui!.shared).toEqual(["p2"]);
+    expect(r.lui).toMatchObject({ hit: true, others: 1, shared: ["p1", "p2"] });
+    expect(r.fallenPositions).toEqual([x]);                             // pareggio 2-2: decide il Megafono
+    expect(r.points.p1).toBe(2 + 4); expect(r.points.p2).toBe(2 + 2 + 4);
     expect(r.lines.p1!.filter((l) => l.kind === "lui" || l.kind === "lui-gregge")).toHaveLength(1);
     g = setup(4, "k2", (s) => posOf(s, "p2"));
     r = castVotes(g, { p1: f, p2: x, p3: f, p4: f }).lastResult!;
-    expect(r.lui).toMatchObject({ hit: false }); expect(r.lui!.shared).toBeUndefined();
+    expect(r.lui).toMatchObject({ hit: false, shared: [] }); expect(r.lines.p1!.map((l) => l.kind)).toContain("lui-mancato");
     expect(r.points.p2).toBe(0);
   });
   it("nella partita normale la soglia premia solo il Megafono", () => {
