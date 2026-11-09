@@ -13,8 +13,10 @@ export function luiPool(n: number): LuiSpec[] {
 }
 /** I segnalini della partita (2: lo 0 e una soglia a caso). Le partite salvate prima di questa versione non li hanno: si usano i primi due del pool. */
 export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.length ? s.luiSet : luiPool(s.playerIds.length).slice(0, 2);
-/** Variante «Il gregge»: lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta, nessun punto al Megafono); la soglia premia anche chi vota la carta. */
-const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 0, pts: 0, trap: true } : { ...sp, herd: true });
+/** Variante «Il gregge»: lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta; +3 al Megafono se ne annulla almeno uno); la soglia premia anche chi vota la carta. */
+const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 1, pts: IMBROGLIO_PTS, trap: true } : { ...sp, herd: true });
+/** Punti del Megafono quando l'Imbroglio! annulla almeno un voto (tarati con le simulazioni dei bot: tools/analysis/imbroglio.ts). */
+export const IMBROGLIO_PTS = 3;
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
   const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
@@ -215,8 +217,10 @@ function resolve(s: GameState, events: GameEvent[]) {
     const spec = luiTokens(s).find((x) => x.slot === s.lui!.slot)!;
     const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
     if (spec.trap) {
-      // Imbroglio!: i voti sulla carta sono già stati annullati nel conteggio; il Megafono non incassa nulla
-      lui = { slot: spec.slot, position: s.lui.position, k: 0, pts: 0, others, hit: annulled.length > 0, trap: true, caught: annulled };
+      // Imbroglio!: i voti sulla carta sono già stati annullati nel conteggio; se ne ha annullato almeno uno, il Megafono incassa i punti del gettone
+      const hit = annulled.length > 0;
+      lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit, trap: true, caught: annulled };
+      if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
     } else {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };

@@ -10,11 +10,11 @@ function setup(n: number, slot: LuiSlot, at: (g: GameState) => number) {
 }
 
 describe("variante «Il gregge»", () => {
-  it("2 segnalini: sempre lo 0 (Imbroglio!, nessun punto stampato) più una soglia a caso, come nella partita normale", () => {
+  it("2 segnalini: sempre lo 0 (Imbroglio!, +3 se annulla almeno un voto) più una soglia a caso, come nella partita normale", () => {
     for (let seed = 1; seed <= 20; seed++) {
       const g = createGame({ ...cfg(5, { seed, gregge: true }), luiSlots: undefined }).state, set = luiTokens(g);
       expect(set).toHaveLength(2);
-      expect(set.find((x) => x.slot === "zero")).toEqual({ slot: "zero", k: 0, pts: 0, trap: true });
+      expect(set.find((x) => x.slot === "zero")).toEqual({ slot: "zero", k: 1, pts: 3, trap: true });
       expect(set.find((x) => x.slot !== "zero")!.trap).toBeUndefined(); expect(set.find((x) => x.slot !== "zero")!.herd).toBe(true);
       expect(viewFor(g, "p2").gregge).toBe(true);
     }
@@ -22,15 +22,15 @@ describe("variante «Il gregge»", () => {
     expect(luiTokens(start(4)).some((x) => x.trap)).toBe(false);
   });
 
-  it("Imbroglio! (lo 0): i voti sulla sua carta non contano, la maggioranza si calcola senza; chi l'ha votata non prende il +2 del voto ma tiene gli altri punti", () => {
+  it("Imbroglio! (lo 0): i voti sulla sua carta non contano, la maggioranza si calcola senza; chi l'ha votata non prende il +2 del voto ma tiene gli altri punti; il Megafono prende +3", () => {
     const g = setup(4, "zero", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), y = posOf(g, "p3");
     // 3 voti su x (annullati) contro 1 su y: senza l'Imbroglio cadrebbe x, invece cade y
     const r = castVotes(g, { p1: y, p2: x, p3: x, p4: x }).lastResult!;
     expect(r.counts).toEqual({ [y]: 1 });
     expect(r.fallenPositions).toEqual([y]);
-    expect(r.points).toEqual({ p1: 2, p2: 0, p3: 2, p4: 0 });          // p1 voto giusto; p3 carta caduta; i voti annullati non danno nulla
-    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto"]);         // il Megafono non prende nulla dal gettone
+    expect(r.points).toEqual({ p1: 2 + 3, p2: 0, p3: 2, p4: 0 });      // p1 voto giusto + Imbroglio! riuscito; p3 carta caduta; i voti annullati non danno nulla
+    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto", "lui"]);
     expect(r.lui).toMatchObject({ slot: "zero", trap: true, hit: true, caught: ["p2", "p3", "p4"], others: 3 });
   });
 
@@ -57,7 +57,8 @@ describe("variante «Il gregge»", () => {
     const g = setup(4, "zero", (s) => posOf(s, "p2")), y = posOf(g, "p3");
     const r = castVotes(g, { p1: y, p2: y, p3: y, p4: y }).lastResult!;
     expect(r.lui).toMatchObject({ hit: false, caught: [] });
-    expect(r.points).toEqual({ p1: 2, p2: 2, p3: 4, p4: 2 });
+    expect(r.points).toEqual({ p1: 2, p2: 2, p3: 4, p4: 2 });           // nessun voto annullato: niente +3
+    expect(r.lines.p1!.map((l) => l.kind)).toEqual(["voto", "lui-mancato"]);
   });
   it("nella partita normale il Megafono può votare la carta del suo Lui!", () => {
     const g = act(toSuspect(start(4)), { type: "placeLui", playerId: "p1", slot: "k2", position: 1 });

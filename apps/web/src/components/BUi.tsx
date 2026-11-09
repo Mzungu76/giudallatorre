@@ -66,7 +66,7 @@ export function LuiTray({ view, ui }: { view: PlayerView; ui?: UiCtl | null }) {
   return (
     <button className="bltr" onClick={ui?.lui} aria-label={label} data-testid="lui-tray">
       <span className="lab">{t("bui.lui.lab")}</span>
-      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: ${sp.trap ? ts("bui.gregge.pt") : `+${sp.pts}`}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
+      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
     </button>
   );
 }
@@ -81,7 +81,7 @@ export function WaitCard({ text, sub }: { text: string; sub?: string }) {
 /** Popup informativo sul Lui! posato sulla Torre (tocco sul gettone durante il voto): cosa può essere e come funziona. Agli altri non dice quale gettone è. */
 export function LuiInfo({ view, onClose }: { view: PlayerView; onClose: () => void }) {
   const placed = view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null, list = placed ? [placed] : view.luiTokens;
-  const how = (sp: LuiSpec) => sp.trap ? t("bui.info.trap") : sp.herd ? t("bui.info.herd", { k: sp.k, pt: sp.pts }) : sp.slot === "zero" ? t("bui.info.zero", { pt: sp.pts }) : t("bui.info.k", { k: sp.k, pt: sp.pts });
+  const how = (sp: LuiSpec) => sp.trap ? t("bui.info.trap", { pt: sp.pts }) : sp.herd ? t("bui.info.herd", { k: sp.k, pt: sp.pts }) : sp.slot === "zero" ? t("bui.info.zero", { pt: sp.pts }) : t("bui.info.k", { k: sp.k, pt: sp.pts });
   return (
     <div className="bov" onClick={onClose} role="dialog" aria-label={ts("bui.info.titolo")} data-testid="lui-info">
       <div className="pp bpop" onClick={(e) => e.stopPropagation()}>
@@ -111,8 +111,8 @@ export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => v
           return (
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
-              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge") : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
-              <span className="pt">{sp.trap ? "🚫" : `+${sp.pts}`}</span>
+              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge", { pt: sp.pts }) : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
+              <span className="pt">+{sp.pts}</span>
             </div>
           );
         })}

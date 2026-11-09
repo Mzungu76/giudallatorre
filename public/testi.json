@@ -1,5 +1,5 @@
 {
- "versione": 10,
+ "versione": 11,
  "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
@@ -694,12 +694,12 @@
    "s": "Regolamento completo"
   },
   "how.3.gregge.t": {
-   "t": "Imbroglio!",
+   "t": "Imbroglio! · +{pt}",
    "s": "Regolamento completo",
    "n": "Variante «Il gregge»"
   },
   "how.3.gregge.x": {
-   "t": "I voti di chi vota la carta del gettone **non valgono**: è come se non ci fossero, e il conteggio si fa senza. Non dà punti al Megafono.",
+   "t": "I voti di chi vota la carta del gettone **non valgono**: è come se non ci fossero, e il conteggio si fa senza. Se annulla almeno un voto, il Megafono prende +{pt}.",
    "s": "Regolamento completo",
    "n": "Variante «Il gregge»"
   },
@@ -915,14 +915,9 @@
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.popup.gregge": {
-   "t": "Imbroglio!: i voti di chi vota la carta del gettone non valgono, come se non ci fossero. A te non dà punti.",
+   "t": "Imbroglio!: i voti di chi vota la carta del gettone non valgono, come se non ci fossero. Se ne annulla almeno uno, prendi +{pt}.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Variante «Il gregge»"
-  },
-  "bui.gregge.pt": {
-   "t": "annulla i voti sulla carta",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante «Il gregge»: suggerimento sul gettone"
   },
   "bui.popup.k": {
    "t": "Almeno {k} giocatori votano la carta del gettone.",
@@ -967,7 +962,7 @@
    "n": "Gettone soglia"
   },
   "bui.info.trap": {
-   "t": "Imbroglio!: i voti su questa carta non valgono, come se non ci fossero. Il conteggio si fa senza.",
+   "t": "Imbroglio!: i voti su questa carta non valgono, come se non ci fossero, e il conteggio si fa senza. Se ne annulla almeno uno, il Megafono prende +{pt}.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Variante «Il gregge»: gettone 0"
   },
@@ -1401,9 +1396,9 @@
    "n": "Variante «Il gregge»"
   },
   "rv.gregge.si": {
-   "t": "Voti annullati: {k}",
+   "t": "Voti annullati: {k}. +{pt} al Megafono",
    "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "{k} = quanti voti sono stati annullati"
+   "n": "{k} = quanti voti sono stati annullati, {pt} = punti del Megafono"
   },
   "rv.gregge.no": {
    "t": "Nessuno ci è cascato",
@@ -1623,7 +1618,7 @@
    "s": "Partita: turno normale"
   },
   "g.lui.gregge": {
-   "t": "annulla i voti sulla carta",
+   "t": "+{pt} se annulla almeno un voto",
    "s": "Partita: turno normale",
    "n": "Variante «Il gregge»: scelta del gettone"
   },
@@ -2097,7 +2092,7 @@
    "n": "Casella della variante «Il gregge»"
   },
   "room.gregge.info": {
-   "t": "Variante: il gettone 0 del Lui! diventa l'Imbroglio! (i voti sulla sua carta non valgono); la soglia, se riesce, dà i punti al Megafono e anche a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
+   "t": "Variante: il gettone 0 del Lui! diventa l'Imbroglio! (i voti sulla sua carta non valgono; +3 al Megafono se ne annulla almeno uno); la soglia, se riesce, dà i punti al Megafono e anche a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
    "s": "Stanza e lobby",
    "n": "Suggerimento sulla casella"
   },

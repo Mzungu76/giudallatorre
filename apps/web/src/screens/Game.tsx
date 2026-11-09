@@ -253,7 +253,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
                         <div className="lui-opts">
                           {view.luiTokens.map((sp) => { const left = view.myLuiLeft.includes(sp.slot);
                             return <button key={sp.slot} className={`lk lui-${sp.slot}`} disabled={!left} onClick={() => act({ t: "act", action: { type: "placeLui", slot: sp.slot, position: pick } })} data-testid={`lui-${sp.slot}`}>
-                              <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? txs("g.lui.gregge") : sp.herd ? txs("g.lui.gregge.k", { pt: sp.pts }) : txs("g.lui.pt", { pt: sp.pts })) : txs("g.lui.usato")}</small></button>; })}
+                              <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? txs("g.lui.gregge", { pt: sp.pts }) : sp.herd ? txs("g.lui.gregge.k", { pt: sp.pts }) : txs("g.lui.pt", { pt: sp.pts })) : txs("g.lui.usato")}</small></button>; })}
                         </div>
                         <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">{tx("g.lui.guarda")}</button>
                       </div>
