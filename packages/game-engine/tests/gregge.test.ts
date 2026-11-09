@@ -55,13 +55,31 @@ describe("variante «Il gregge»", () => {
     expect(r.points).toEqual({ p1: 2, p2: 2, p3: 4, p4: 2 });
   });
 
-  it("le soglie funzionano come sempre: il Megafono incassa se la carta ha almeno k voti degli altri, che cada o no", () => {
+  it("soglia riuscita (almeno k voti degli altri, che cada o no): i punti stampati vanno al Megafono e a tutti quelli che hanno votato la carta", () => {
     const g = setup(4, "k2", (s) => posOf(s, "p2"));
     const x = posOf(g, "p2"), f = posOf(g, "p3");
     const r = castVotes(g, { p1: f, p2: x, p3: f, p4: x }).lastResult!;
-    expect(r.lui).toMatchObject({ slot: "k2", hit: true, others: 2 });
-    expect(r.lines.p1!.map((l) => l.kind)).toContain("lui");
-    expect(r.points.p2).toBe(0); expect(r.points.p4).toBe(0);           // nessuna trappola: semplicemente non hanno indovinato
+    expect(r.fallenPositions).toEqual([f]);
+    expect(r.lui).toMatchObject({ slot: "k2", hit: true, others: 2, shared: ["p2", "p4"] });
+    expect(r.points).toEqual({ p1: 2 + 7, p2: 7, p3: 2 + 2, p4: 7 });
+    expect(r.lines.p2!.map((l) => l.kind)).toEqual(["lui-gregge"]);
+  });
+  it("il Megafono che vota la carta della soglia prende i punti una volta sola; soglia mancata = niente a nessuno", () => {
+    let g = setup(4, "k1", (s) => posOf(s, "p2"));
+    const x = posOf(g, "p2"), f = posOf(g, "p3");
+    let r = castVotes(g, { p1: x, p2: x, p3: f, p4: f }).lastResult!;
+    expect(r.lui!.shared).toEqual(["p2"]);
+    expect(r.lines.p1!.filter((l) => l.kind === "lui" || l.kind === "lui-gregge")).toHaveLength(1);
+    g = setup(4, "k2", (s) => posOf(s, "p2"));
+    r = castVotes(g, { p1: f, p2: x, p3: f, p4: f }).lastResult!;
+    expect(r.lui).toMatchObject({ hit: false }); expect(r.lui!.shared).toBeUndefined();
+    expect(r.points.p2).toBe(0);
+  });
+  it("nella partita normale la soglia premia solo il Megafono", () => {
+    const g = act(toSuspect(start(4)), { type: "placeLui", playerId: "p1", slot: "k2", position: 1 });
+    const r = castVotes(g, { p1: 2, p2: 1, p3: 1, p4: 1 }).lastResult!;
+    expect(r.lui!.hit).toBe(true); expect(r.lui!.shared).toBeUndefined();
+    expect(Object.values(r.lines).flat().some((l) => l.kind === "lui-gregge")).toBe(false);
   });
 
   it("i bot giocano la variante fino in fondo senza errori", () => {

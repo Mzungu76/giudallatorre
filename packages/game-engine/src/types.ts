@@ -42,7 +42,7 @@ export type PhraseChoice =
 
 export interface LuiToken { slot: LuiSlot; position: number }
 /** Esito della scommessa del Lui! a fine turno. */
-export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», segnalino 0: chi ha votato la carta (Megafono compreso) e fa 0 punti nel turno. */ trap?: boolean; caught?: PlayerId[] }
+export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», segnalino 0: chi ha votato la carta (Megafono compreso) e fa 0 punti nel turno. */ trap?: boolean; caught?: PlayerId[]; /** Variante «Il gregge», soglia riuscita: gli altri giocatori che hanno votato la carta e prendono anche loro i punti del segnalino. */ shared?: PlayerId[] }
 
 export interface TurnResult {
   turn: number;
@@ -72,7 +72,7 @@ export interface TurnResult {
   tieBreak: boolean;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "gregge" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "gregge" | "lui-gregge" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }

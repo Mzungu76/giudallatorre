@@ -1,5 +1,5 @@
 {
- "versione": 5,
+ "versione": 6,
  "aggiornato": "2026-11-09",
  "testi": {
   "intro.aria": {
@@ -707,6 +707,11 @@
    "t": "Scommetti che almeno {k} giocatori votano la carta del gettone. La soglia cambia a ogni partita.",
    "s": "Regolamento completo"
   },
+  "how.3.k.x.gregge": {
+   "t": "Scommetti che almeno {k} giocatori votano la carta del gettone. Se riesce, i punti vanno a te **e a tutti quelli che l'hanno votata**, che cada o no.",
+   "s": "Regolamento completo",
+   "n": "Variante «Il gregge»"
+  },
   "how.3.come.t": {
    "t": "Come funziona",
    "s": "Regolamento completo"
@@ -825,6 +830,11 @@
    "s": "Riepilogo del turno («Com'è andata»)",
    "n": "Variante «Il gregge»"
   },
+  "pp.lui.gregge": {
+   "t": "Lui! {lui} riuscito: +{pt} anche a te",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Variante «Il gregge»: soglia riuscita, punti a chi ha votato la carta"
+  },
   "pp.attesa": {
    "t": "Il Megafono prosegue…",
    "s": "Riepilogo del turno («Com'è andata»)"
@@ -917,6 +927,11 @@
   "bui.popup.k": {
    "t": "Almeno {k} giocatori votano la carta del gettone.",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
+  },
+  "bui.popup.k.gregge": {
+   "t": "Almeno {k} giocatori votano la carta del gettone. Se riesce, i punti vanno anche a chi l'ha votata.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante «Il gregge»"
   },
   "bui.popup.usato": {
    "t": "Già usato in questa partita.",
@@ -1349,6 +1364,11 @@
    "t": "Nessuno ci è cascato",
    "s": "Salita e spoglio dei voti (turno normale)",
    "n": "Variante «Il gregge»"
+  },
+  "rv.lui.gregge": {
+   "t": "Il gregge: **+{pt}** anche a chi l'ha votata ({k}).",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Variante «Il gregge»: {k} = quanti altri l'hanno votata"
   },
   "rv.stamp.pari": {
    "t": "Cadono insieme: {lista}!",
@@ -2022,7 +2042,7 @@
    "n": "Casella della variante «Il gregge»"
   },
   "room.gregge.info": {
-   "t": "Variante: il gettone 0 del Lui! non premia il Megafono ma dà 0 punti nel turno a chi vota la sua carta.",
+   "t": "Variante: il gettone 0 del Lui! dà 0 punti nel turno a chi vota la sua carta; la soglia, se riesce, dà i punti anche a chi ha votato la carta.",
    "s": "Stanza e lobby",
    "n": "Suggerimento sulla casella"
   },

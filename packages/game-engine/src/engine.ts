@@ -217,6 +217,12 @@ function resolve(s: GameState, events: GameEvent[]) {
       const hit = spec.slot === "zero" ? others === 0 : others >= spec.k;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit };
       if (hit) give(mega, spec.pts, "lui", s.lui.position, others); else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: s.lui.position, n: others });
+      // «Il gregge»: se la soglia riesce, i punti del segnalino vanno anche a tutti gli altri che hanno votato la carta (che cada o no)
+      if (s.gregge && hit) {
+        const shared = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position);
+        for (const p of shared) give(p, spec.pts, "lui-gregge", s.lui.position, others);
+        lui.shared = shared;
+      }
     }
     const spent = (s.luiSpent ??= {})[mega] ??= []; if (luiTokens(s).every((x) => spent.includes(x.slot))) spent.length = 0; spent.push(s.lui.slot);
   }

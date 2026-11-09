@@ -13,7 +13,7 @@ const Step = ({ ic, t, x }: { ic: string; t: ReactNode; x: ReactNode }) => <div 
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
-export default function HowTo({ onClose, tokens, sound, setSound, onLeave, leaveHint }: { onClose: () => void; tokens?: LuiSpec[]; sound?: boolean; setSound?: (v: boolean) => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }) {
+export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeave, leaveHint }: { onClose: () => void; tokens?: LuiSpec[]; /** Variante «Il gregge»: la soglia premia anche chi vota la carta. */ gregge?: boolean; sound?: boolean; setSound?: (v: boolean) => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }) {
   const [tab, setTab] = useState(0), [askLeave, setAskLeave] = useState(false), tk = tokens && tokens.length >= 2 ? tokens : DEMO;
   return (
     <div className="brg" role="dialog" aria-label={ts("how.aria")} data-testid="howto">
@@ -40,7 +40,7 @@ export default function HowTo({ onClose, tokens, sound, setSound, onLeave, leave
           <ExampleTurn />
         </>}
         {tab === 2 && <>
-          {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.trap ? t("how.3.gregge.t") : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.trap ? t("how.3.gregge.x") : sp.slot === "zero" ? t("how.3.zero.x") : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
+          {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.trap ? t("how.3.gregge.t") : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.trap ? t("how.3.gregge.x") : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
           <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}

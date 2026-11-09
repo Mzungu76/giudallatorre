@@ -114,10 +114,10 @@ Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade 
 L'host la attiva nella lobby (casella «Il gregge (prova)»; di serie è spenta). Cambia **solo il segnalino 0**:
 - I segnalini restano 2 per partita: **sempre lo 0** più **una soglia a caso** dal pool per numero di giocatori (come sopra).
 - **Lo 0 è una trappola**: tutti quelli che votano la sua carta (Megafono compreso) fanno **0 punti in quel turno**, che la carta cada o no — si azzerano anche il +2 del voto giusto e il +2 della propria carta caduta. Il Megafono **non incassa nulla** dallo 0.
-- **La soglia** funziona come nella partita normale: il Megafono incassa i punti stampati se la carta riceve almeno k voti dagli altri, che cada o no.
+- **La soglia** riesce come nella partita normale (la carta riceve almeno k voti dagli altri, che cada o no), ma i punti stampati vanno al Megafono **e a tutti gli altri che hanno votato quella carta**. Il Megafono che la vota li prende una volta sola. Soglia mancata: niente a nessuno.
 - In app il gettone dello 0 è grigio scuro con la pecora («0 PUNTI»); nel riepilogo chi ci è cascato ha la riga «Ha votato la carta del gregge».
-- Motore: `GameConfig.gregge`; il segnalino ha `trap: true` e `pts: 0`; l'esito (`LuiOutcome`) riporta `trap` e `caught` (chi l'ha votata); ogni giocatore preso ha una riga `gregge` con i punti tolti.
-- Bot: il Megafono valuta lo 0 per i punti che toglie agli avversari (metà di un punto proprio per ogni +2 negato) e non vota la propria trappola; gli altri stimano quanto è probabile che il Lui! sia lo 0 e votano meno quella carta.
+- Motore: `GameConfig.gregge`; il segnalino ha `trap: true` e `pts: 0`; l'esito (`LuiOutcome`) riporta `trap` e `caught` (chi l'ha votata); ogni giocatore preso ha una riga `gregge` con i punti tolti. Soglia riuscita: `shared` elenca chi ha votato la carta e prende i punti (riga `lui-gregge`).
+- Bot: il Megafono valuta lo 0 per i punti che toglie agli avversari e la soglia al netto dei punti che regala a chi vota la carta (un punto tolto o regalato a un avversario vale metà di uno proprio); non vota la propria trappola. Gli altri stimano se il Lui! è lo 0 (votano meno quella carta) o la soglia (la votano di più, per prendere anche loro i punti).
 
 ## Uscire dalla partita
 Un giocatore umano può uscire in qualsiasi momento (Regolamento «i» → «Esci dalla partita», con conferma). Se nella stanza restano **altri umani** (anche temporaneamente offline), un **giocatore virtuale di livello medio** prende il suo posto: stessa posizione, stessi punti e stessa mano, e gli altri vedono un avviso. Se chi esce era l'host, il ruolo passa a un altro umano. Se **non restano umani**, la stanza si chiude subito. Il vecchio accesso non è più valido.
