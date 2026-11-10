@@ -7,8 +7,8 @@
 // Uso: npx tsx tools/analysis/tre-giocatori.ts
 
 type Tok = [card: number, type: number];            // type: 0 CADE, 1 NON CADE, 2 VOTI NULLI
-interface Variant { name: string; types: number[]; malus: number; noCoup: boolean; deckTie: boolean; max: number; /** pareggio a tre (1-1-1): nessuna carta cade */ noneTie?: boolean; /** il voto del Megafono non conta sulla carta del suo CADE */ megaNoCade?: boolean; /** CADE vale solo con almeno un voto della Folla sulla carta */ cadeNeedsFolla?: boolean; /** «Il Megafono sa»: la terza carta è del Megafono (niente carta del mazzo) */ megaSa?: boolean }
-const TN = ["CADE", "NON CADE", "NULLI"], CN = ["carta A", "carta B", process.argv[2] === "sa" ? "carta del Megafono" : "mazzo"];
+interface Variant { name: string; types: number[]; malus: number; noCoup: boolean; deckTie: boolean; max: number; /** pareggio a tre (1-1-1): nessuna carta cade */ noneTie?: boolean; /** il voto del Megafono non conta sulla carta del suo CADE */ megaNoCade?: boolean; /** CADE vale solo con almeno un voto della Folla sulla carta */ cadeNeedsFolla?: boolean; /** «Il Megafono sa»: la terza carta è del Megafono (niente carta del mazzo) */ megaSa?: boolean; /** spareggio: vince la carta con CADE se è tra quelle in parità, altrimenti cadono tutte (il voto del Megafono non decide) */ cadeTie?: boolean }
+const TN = ["CADE", "NON CADE", "NULLI"], CN = ["carta A", "carta B", "terza carta (mazzo o del Megafono)"];
 
 function placements(v: Variant): Tok[][] {
   const out: Tok[][] = [[]];
@@ -30,6 +30,7 @@ function score(v: Variant, P: Tok[], vm: number, va: number, vb: number): [numbe
   let fallen: number[];
   if (v.noneTie && lead.length === 3 && top === 1) fallen = [];
   else if (v.deckTie && lead.length === 3 && top === 1) fallen = [2];
+  else if (v.cadeTie) fallen = lead.length > 1 && lead.includes(cade) ? [cade] : lead;
   else fallen = lead.length > 1 && lead.includes(vm) ? [vm] : lead;
   const pts: [number, number, number] = [0, 0, 0];
   votes.forEach((x, i) => { if (valid[i] && fallen.includes(x)) pts[i] += 2; });
@@ -72,7 +73,7 @@ function solve(v: Variant) {
       const nul = m.P.find((t) => t[1] === 2)?.[0] ?? -1, cd = m.P.find((t) => t[1] === 0)?.[0] ?? -1, valid = [m.vm, a, b].filter((x, i) => x !== nul && !(v.megaNoCade && i === 0 && x === cd));
       const cnt = [0, 0, 0]; valid.forEach((x) => cnt[x]++);
       for (const [c, t] of m.P) {
-        const fell = (() => { const top = Math.max(...cnt), lead = [0, 1, 2].filter((k) => cnt[k] === top); const f = v.noneTie && lead.length === 3 && top === 1 ? [] : v.deckTie && lead.length === 3 && top === 1 ? [2] : lead.length > 1 && lead.includes(m.vm) ? [m.vm] : lead; return f.includes(c); })();
+        const fell = (() => { const top = Math.max(...cnt), lead = [0, 1, 2].filter((k) => cnt[k] === top); const f = v.noneTie && lead.length === 3 && top === 1 ? [] : v.deckTie && lead.length === 3 && top === 1 ? [2] : v.cadeTie ? (lead.length > 1 && lead.includes(cd) ? [cd] : lead) : lead.length > 1 && lead.includes(m.vm) ? [m.vm] : lead; return f.includes(c); })();
         if (t === 0) { cadeP += q; if (fell && (!v.cadeNeedsFolla || a === c || b === c)) cadeOk += q; } if (t === 1) { nonP += q; if (!fell) nonOk += q; } if (t === 2) { nulP += q; nulAnn += q * [a, b].filter((x) => x === c).length; }
       }
     }
@@ -105,5 +106,15 @@ V.push(
   { name: "«IL MEGAFONO SA» · + VOTI NULLI!, opzione A, malus −1", types: ALL, malus: 1, noCoup: true, deckTie: false, max: 2, megaSa: true },
   { name: "«IL MEGAFONO SA» · + VOTI NULLI!, pareggio a tre: non cade nessuna", types: ALL, malus: 1, noCoup: false, deckTie: false, max: 2, megaSa: true, noneTie: true },
 );
+if (process.argv[2] === "cade") {
+  V.splice(0, V.length,
+    { name: "SPAREGGIO AL CADE · CADE / NON CADE, fino a 2, malus −1 (carta del mazzo)", types: CN2, malus: 1, noCoup: false, deckTie: false, max: 2, cadeTie: true },
+    { name: "SPAREGGIO AL CADE · CADE / NON CADE, fino a 2, senza malus (carta del mazzo)", types: CN2, malus: 0, noCoup: false, deckTie: false, max: 2, cadeTie: true },
+    { name: "SPAREGGIO AL CADE · + VOTI NULLI!, tutto libero, malus −1 (carta del mazzo)", types: ALL, malus: 1, noCoup: false, deckTie: false, max: 2, cadeTie: true },
+    { name: "SPAREGGIO AL CADE · + VOTI NULLI!, niente CADE + NULLI insieme, malus −1 (carta del mazzo)", types: ALL, malus: 1, noCoup: true, deckTie: false, max: 2, cadeTie: true },
+    { name: "SPAREGGIO AL CADE · CADE / NON CADE, malus −1, «Il Megafono sa»", types: CN2, malus: 1, noCoup: false, deckTie: false, max: 2, cadeTie: true, megaSa: true },
+    { name: "SPAREGGIO AL CADE · + VOTI NULLI!, malus −1, «Il Megafono sa»", types: ALL, malus: 1, noCoup: false, deckTie: false, max: 2, cadeTie: true, megaSa: true },
+  );
+}
 if (process.argv[2] === "sa") V.splice(0, V.length - 4);
 for (const v of V) solve(v);
