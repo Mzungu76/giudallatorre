@@ -1,5 +1,5 @@
 {
- "versione": 14,
+ "versione": 15,
  "aggiornato": "2026-11-10",
  "testi": {
   "intro.aria": {
@@ -100,11 +100,11 @@
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p2.t": {
-   "t": "Metti 2 segnalini",
+   "t": "Metti il Lui!",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p2.x": {
-   "t": "Quando le carte sono sopra la torre, posa 2 segnalini coperti su due carte diverse: CADE, NON CADE o VOTI NULLI!.",
+   "t": "Quando le carte sono sopra la torre, posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p3.t": {
@@ -251,7 +251,7 @@
    "n": "Scelta della carta"
   },
   "hint.lui": {
-   "t": "Tocca una carta e scegli il segnalino, poi fai lo stesso su un'altra: CADE +4, NON CADE +1, VOTI NULLI! annulla i voti.",
+   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +1 se resta su, VOTI NULLI! annulla i voti.",
    "s": "Suggerimenti a fumetto",
    "n": "Megafono, Lui!"
   },
@@ -554,7 +554,7 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.piede": {
-   "t": "A ogni turno il Megafono posa 2 segnalini coperti su due carte diverse, scegliendo tra CADE, NON CADE e VOTI NULLI!.",
+   "t": "A ogni turno il Megafono posa un segnalino coperto su una carta, scegliendo tra CADE, NON CADE e VOTI NULLI!.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "pk.giusto.t": {
@@ -606,7 +606,7 @@
    "n": "Nome della scheda (non cambiarlo senza aggiornare le prove e2e)"
   },
   "how.tab.2": {
-   "t": "I segnalini",
+   "t": "Il Lui!",
    "s": "Regolamento completo",
    "n": "Nome della scheda (non cambiarlo senza aggiornare le prove e2e)"
   },
@@ -640,11 +640,11 @@
    "s": "Regolamento completo"
   },
   "how.1.p3.t": {
-   "t": "I segnalini",
+   "t": "Il Lui!",
    "s": "Regolamento completo"
   },
   "how.1.p3.x": {
-   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono posa 2 segnalini coperti su due carte diverse: CADE, NON CADE o VOTI NULLI!.",
+   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
    "s": "Regolamento completo"
   },
   "how.1.p4.t": {
@@ -717,7 +717,7 @@
    "s": "Regolamento completo"
   },
   "how.3.come.x": {
-   "t": "A ogni turno il Megafono ha tutti e 3 i segnalini e ne posa 2, coperti, su due carte diverse: si scoprono alla fine. I premi di CADE e NON CADE vanno al Megafono e a chiunque abbia votato quella carta. Il Megafono non può votare la carta con VOTI NULLI!.",
+   "t": "A ogni turno il Megafono ha tutti e 3 i segnalini e ne posa uno, coperto, su una carta: si scopre alla fine. I premi di CADE e NON CADE vanno al Megafono e a chiunque abbia votato quella carta. Il Megafono non può votare la carta con VOTI NULLI!.",
    "s": "Regolamento completo"
   },
   "how.4.fine.t": {
@@ -1436,7 +1436,7 @@
    "s": "Partita: turno normale"
   },
   "g.ban.susp.s": {
-   "t": "il Megafono sta per posare i segnalini",
+   "t": "il Megafono sta per mettere il Lui!",
    "s": "Partita: turno normale"
   },
   "g.ban.vote.t": {
@@ -1456,12 +1456,12 @@
    "s": "Partita: turno normale"
   },
   "g.ban.dopo.mega": {
-   "t": "Il Megafono posa i segnalini",
+   "t": "Il Megafono mette il Lui!",
    "s": "Partita: turno normale",
    "n": "Dopo la salita delle carte"
   },
   "g.ban.dopo.mega.s": {
-   "t": "dove li metterà?",
+   "t": "dove lo metterà?",
    "s": "Partita: turno normale"
   },
   "g.fr.tua": {
@@ -1641,7 +1641,7 @@
    "s": "Partita: turno normale"
   },
   "g.lui.attesa": {
-   "t": "{nome} sta posando i segnalini",
+   "t": "{nome} sta mettendo il Lui!",
    "s": "Partita: turno normale"
   },
   "g.vota.t": {
@@ -2974,12 +2974,12 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.cnc.altri": {
-   "t": "Il Megafono ha posato 2 segnalini coperti, sui n. {a} e {b}: sono due di questi tre. Si scoprono dopo il voto.",
+   "t": "Il Megafono ha posato un segnalino coperto sulla carta n. {a}: è uno di questi tre. Si scopre dopo il voto.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.cnc.mio": {
-   "t": "Hai posato questi segnalini sui n. {a} e {b}. Gli altri non sanno quali siano:",
+   "t": "Hai posato questo segnalino sulla carta n. {a}. Gli altri non sanno quale sia:",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -2989,12 +2989,12 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.popup.nota.cnc": {
-   "t": "A ogni turno hai tutti e 3 i segnalini e ne posi 2, coperti, su due carte diverse.",
+   "t": "A ogni turno hai tutti e 3 i segnalini e ne posi uno, coperto, su una carta.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "rv.m.t": {
-   "t": "I segnalini di {nome}",
+   "t": "Il Lui! di {nome}",
    "s": "Salita e spoglio dei voti (turno normale)",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -3034,7 +3034,7 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "rv.pareggio.seg.x": {
-   "t": "Pari merito: {lista}. Lo scioglie un segnalino del Megafono…",
+   "t": "Pari merito: {lista}. Lo scioglie il segnalino del Megafono…",
    "s": "Salita e spoglio dei voti (turno normale)",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -3044,52 +3044,22 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.cnc.t1": {
-   "t": "POSA 2 SEGNALINI",
+   "t": "METTI IL LUI!",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.cnc.s1": {
-   "t": "Tocca la carta su cui mettere il primo segnalino.",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.t2": {
-   "t": "ORA IL SECONDO",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.s2": {
-   "t": "Tocca un'altra carta (non il n. {n}).",
+   "t": "Tocca la carta su cui mettere il segnalino.",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.cnc.su": {
-   "t": "SEGNALINO SUL N. {n}",
+   "t": "LUI! SUL N. {n}",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.cnc.su.s": {
    "t": "Quale segnalino metti qui? Gli altri vedranno solo che c'è.",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.conf.t": {
-   "t": "CONFERMI?",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.conf.s": {
-   "t": "n. {a}: {la} · n. {b}: {lb}",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.ricomincia": {
-   "t": "Ricomincia",
-   "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "g.cnc.conferma": {
-   "t": "Conferma",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },

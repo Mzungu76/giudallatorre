@@ -6,13 +6,13 @@
 È la partita normale dell'app (motore: `GameConfig.cnc`; il server la usa quando non sono attive «Il gregge» o PROPAGANDA). Le sezioni più sotto su «Segnalini Lui!» 0 / soglia descrivono le regole precedenti, ancora nel motore senza `cnc`.
 
 1. **«Il Megafono sa» sempre attivo**: il Megafono sceglie la frase e poi gioca una carta dalla mano come gli altri (poi ripesca). Sulla Torre ci sono N carte, ognuna di un giocatore; ognuno conosce solo la propria.
-2. **Segnalini**: il Megafono ha a ogni turno tutti e tre i segnalini (tornano disponibili) e quando le carte sono salite ne posa **esattamente 2**, coperti, su **due carte diverse** (anche la sua): **CADE**, **NON CADE**, **VOTI NULLI!** (CADE + VOTI NULLI! è permesso). Gli altri vedono dove, non quali; si scoprono a fine turno. Nessun malus.
+2. **Segnalino**: il Megafono ha a ogni turno tutti e tre i segnalini (tornano disponibili) e quando le carte sono salite ne posa **uno solo**, coperto, su una carta (anche la sua): **CADE**, **NON CADE** o **VOTI NULLI!**. Gli altri vedono dove, non quale; si scopre a fine turno. Nessun malus. (Dal 2026-11-10 al primo test erano 2 per turno: troppo carico da gestire.)
 3. **Voto**: tutti votano in segreto, anche la propria carta o una segnata; **il Megafono non può votare la carta con VOTI NULLI!** (così resta sempre almeno un voto valido).
 4. **Conteggio**: i voti sulla carta con VOTI NULLI! non valgono. Cade la più votata. **Pareggio**: se tra le pari c'è la carta con CADE cade solo lei, altrimenti cadono tutte; il voto del Megafono non ha ruolo speciale.
 5. **Punti**: +2 a chi vota una carta che cade (voto valido); +2 a chi l'ha giocata (Megafono compreso). **CADE**: se la carta cade, +4 al Megafono (ovunque abbia votato, una volta sola) e +4 a ognuno della Folla che l'ha votata. **NON CADE**: se la carta resta su, +1 al Megafono e +1 a ognuno della Folla che l'ha votata. **VOTI NULLI!**: nessun punto; chi l'ha votata perde il +2.
 6. Le stesse regole valgono con 3 giocatori. Analisi: `tools/analysis/tre-giocatori*.ts`.
 
-In app: il Megafono tocca una carta, sceglie il segnalino, poi un'altra carta e il secondo, e conferma; se tocca la carta con VOTI NULLI! al voto, il pannello lo avvisa. Allo spoglio (invariato) i due segnalini si scoprono insieme con una frase ciascuno e i voti annullati spariscono dalla Torre; nel pareggio deciso dal CADE il conteggio dice solo che «lo scioglie un segnalino».
+In app: il Megafono tocca una carta e sceglie il segnalino; se al voto tocca la carta con VOTI NULLI!, il pannello lo avvisa. Allo spoglio (invariato) il segnalino si scopre con una frase e i voti annullati spariscono dalla Torre; nel pareggio deciso dal CADE il conteggio dice solo che «lo scioglie il segnalino del Megafono».
 
 ## Parametri
 - Giocatori: **3–8**. Età 10+, ~20 min.

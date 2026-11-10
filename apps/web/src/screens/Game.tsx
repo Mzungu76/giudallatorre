@@ -138,8 +138,6 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const [zoomPos, setZoomPos] = useState<number | null>(null), [luiInfo, setLuiInfo] = useState(false), [luiNo, setLuiNo] = useState<number | null>(null);
   // PROPAGANDA, Dirottamento!: il Megafono ha scelto la carta da cui togliere il voto e ora sceglie quella che lo riceve
   const [dir, setDir] = useState<{ turn: number; slot: string; from: number; to: number | null } | null>(null);
-  // gioco base «Cade / Non cade»: i due segnalini che il Megafono sta scegliendo (carta e segnalino), prima di confermare
-  const [mk, setMk] = useState<{ turn: number; list: { position: number; slot: string }[] } | null>(null);
   const [intro, setIntro] = useState(() => { try { return !FAST && !readOnly && localStorage.getItem("gdt.intro") !== "1"; } catch { return false; } });
   const charKey = `gdt.char.${room.code}`;
   const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
@@ -189,9 +187,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   // «Il gregge»: il Megafono non può votare la carta su cui ha posato il Lui! (se ci prova, glielo diciamo)
   const dirOn = !!dir && dir.turn === turn && phase === "SUSPECT";
   const banned = (n: number) => phase === "VOTE" && isMega && (view.cnc ? view.myForbidden === n : view.gregge && view.luiPosition === n);
-  const draft = mk && mk.turn === turn ? mk.list : [], specOf = (slot: string | null) => (slot ? view.luiTokens.find((x) => x.slot === slot) ?? null : null);
-  // i segnalini del gioco base sulla Torre: in scelta (Megafono), posati (coperti per gli altri), scoperti nei risultati
-  const marksShown = !view.cnc ? null : phase === "SUSPECT" && isMega ? [...draft.map((d) => ({ pos: d.position, spec: specOf(d.slot) })), ...(pick && !draft.some((d) => d.position === pick) ? [{ pos: pick, spec: null }] : [])] : view.marks.map((m) => ({ pos: m.position, spec: specOf(m.slot) }));
+  const specOf = (slot: string | null) => (slot ? view.luiTokens.find((x) => x.slot === slot) ?? null : null);
+  // il segnalino del gioco base sulla Torre: in scelta (Megafono), posato (coperto per gli altri), scoperto nei risultati
+  const marksShown = !view.cnc ? null : phase === "SUSPECT" && isMega ? (pick ? [{ pos: pick, spec: null }] : []) : view.marks.map((m) => ({ pos: m.position, spec: specOf(m.slot) }));
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
   const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, spec: null } : view.luiPosition != null ? { pos: view.luiPosition, spec: view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null } : null;
   const voteToks: VoteTok[] = useMemo(() => {
@@ -259,20 +257,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
               {phase === "SUSPECT" && !climbing && <>
                 <div className="bsp" />
                 {isMega && !readOnly && view.cnc ? (
-                  draft.length === 2
-                    ? <BSheet gold={gold} title={tx("g.cnc.conf.t")} sub={txs("g.cnc.conf.s", { a: draft[0]!.position, la: luiLabel(specOf(draft[0]!.slot)!), b: draft[1]!.position, lb: luiLabel(specOf(draft[1]!.slot)!) })} ui={uiv}>
-                      <div data-testid="lui-chooser"><Row>
-                        <Btn kind="pap" onClick={() => { setMk(null); setPick(null); }} testId="marks-reset">{tx("g.cnc.ricomincia")}</Btn>
-                        <Btn onClick={() => act({ t: "act", action: { type: "placeMarks", marks: draft.map((d) => ({ slot: d.slot as "cade", position: d.position })) } })} testId="marks-confirm">{tx("g.cnc.conferma")}</Btn>
-                      </Row></div>
-                    </BSheet>
-                  : !pick || draft.some((d) => d.position === pick)
-                    ? <BSheet gold={gold} title={draft.length ? tx("g.cnc.t2") : tx("g.cnc.t1")} sub={draft.length ? txs("g.cnc.s2", { n: draft[0]!.position }) : tx("g.cnc.s1")} ui={uiv}><div data-testid="lui-chooser"><Row>{tray}<Btn disabled>{tx("g.scegli")}</Btn></Row></div></BSheet>
+                  !pick
+                    ? <BSheet gold={gold} title={tx("g.cnc.t1")} sub={tx("g.cnc.s1")} ui={uiv}><div data-testid="lui-chooser"><Row>{tray}<Btn disabled>{tx("g.scegli")}</Btn></Row></div></BSheet>
                     : <BSheet gold={gold} title={txs("g.cnc.su", { n: pick })} sub={tx("g.cnc.su.s")} ui={uiv}>
                       <div data-testid="lui-chooser" style={{ display: "grid", gap: 8 }}>
                         <div className="lui-opts">
-                          {view.luiTokens.filter((sp) => !draft.some((d) => d.slot === sp.slot)).map((sp) => (
-                            <button key={sp.slot} className={`lk lui-${sp.slot}`} onClick={() => { setMk({ turn, list: [...draft, { position: pick, slot: sp.slot }] }); setPick(null); }} data-testid={`lui-${sp.slot}`}>
+                          {view.luiTokens.map((sp) => (
+                            <button key={sp.slot} className={`lk lui-${sp.slot}`} onClick={() => act({ t: "act", action: { type: "placeMarks", marks: [{ slot: sp.slot as "cade", position: pick }] } })} data-testid={`lui-${sp.slot}`}>
                               <span dangerouslySetInnerHTML={{ __html: luiTok(sp, 50) }} /><b>{luiLabel(sp)}</b><small>{luiEffectShort(sp)}</small></button>))}
                         </div>
                         <button className="linkbtn" onClick={() => setZoomPos(pick)} data-testid="look-card">{tx("g.lui.guarda")}</button>

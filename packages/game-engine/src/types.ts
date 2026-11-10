@@ -32,8 +32,8 @@ export interface GameConfig {
   accuseDeck?: string[];
   /** Variante «Il gregge» (in prova): lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi vota la carta. */
   gregge?: boolean;
-  /** Gioco base «Cade / Non cade»: il Megafono gioca una carta dalla mano («Il Megafono sa» sempre attivo) e a ogni turno posa 2 segnalini coperti
-   *  su due carte diverse, scelti tra CADE (+4), NON CADE (+1) e VOTI NULLI! (annulla i voti); i premi vanno anche a chi vota la carta. Senza: regole precedenti. */
+  /** Gioco base «Cade / Non cade»: il Megafono gioca una carta dalla mano («Il Megafono sa» sempre attivo) e a ogni turno posa 1 segnalino coperto,
+   *  scelto tra CADE (+4), NON CADE (+1) e VOTI NULLI! (annulla i voti); i premi vanno anche a chi vota la carta. Senza: regole precedenti. */
   cnc?: boolean;
   /** Variante PROPAGANDA (in prova): 2 segnalini di manipolazione del voto (1 positivo e 1 negativo, estratti a caso). */
   propaganda?: boolean;

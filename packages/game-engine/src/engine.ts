@@ -17,7 +17,7 @@ export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.lengt
 const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 1, pts: IMBROGLIO_PTS, trap: true } : { ...sp, herd: true });
 /** Punti del Megafono quando l'Imbroglio! annulla almeno un voto (tarati con le simulazioni dei bot: tools/analysis/imbroglio.ts). */
 export const IMBROGLIO_PTS = 3;
-/** Gioco base «Cade / Non cade»: i tre segnalini, sempre tutti a disposizione del Megafono, che ne posa 2 per turno. */
+/** Gioco base «Cade / Non cade»: i tre segnalini, sempre tutti a disposizione del Megafono, che ne posa uno per turno. */
 export function cncPool(): LuiSpec[] {
   return [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 1, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 }
@@ -211,14 +211,12 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       break;
     }
     case "placeMarks": {
-      // «Cade / Non cade»: esattamente 2 segnalini diversi, su due carte diverse
+      // «Cade / Non cade»: un solo segnalino, scelto tra i tre
       mustBe(s, "SUSPECT"); known(s, action.playerId);
       if (!s.cnc) throw new EngineError("INVALID_CHOICE", "in questa modalità si posa un solo segnalino");
       if (action.playerId !== megafonoOf(s)) throw new EngineError("NOT_ALLOWED", "solo il Megafono posa i segnalini");
       const ms = Array.isArray(action.marks) ? action.marks : [];
-      if (ms.length !== 2) throw new EngineError("INVALID_CHOICE", "vanno posati 2 segnalini");
-      if (ms[0]!.slot === ms[1]!.slot) throw new EngineError("INVALID_CHOICE", "i due segnalini devono essere diversi");
-      if (ms[0]!.position === ms[1]!.position) throw new EngineError("INVALID_CHOICE", "i due segnalini vanno su due carte diverse");
+      if (ms.length !== 1) throw new EngineError("INVALID_CHOICE", "va posato un solo segnalino");
       for (const m of ms) { if (!luiTokens(s).some((x) => x.slot === m.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido"); checkPosition(s, m.position); }
       s.marks = ms.map((m) => ({ slot: m.slot, position: m.position })); s.phase = "VOTE";
       events.push({ type: "marksPlaced", positions: ms.map((m) => m.position) });
@@ -226,7 +224,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
     }
     case "placeLui": {
       mustBe(s, "SUSPECT"); known(s, action.playerId);
-      if (s.cnc) throw new EngineError("INVALID_CHOICE", "qui si posano 2 segnalini");
+      if (s.cnc) throw new EngineError("INVALID_CHOICE", "nel gioco base si usa placeMarks");
       if (action.playerId !== megafonoOf(s)) throw new EngineError("NOT_ALLOWED", "solo il Megafono posa il segnalino");
       if (!luiTokens(s).some((x) => x.slot === action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido");
       if (!luiAvailable(s, action.playerId).includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino già usato");

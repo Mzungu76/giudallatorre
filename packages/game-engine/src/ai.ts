@@ -178,12 +178,11 @@ function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>
   for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
   return { m, f: f / Math.max(1, folla.length), T };
 }
-/** «Cade / Non cade», il Megafono: per ogni coppia di carte e di segnalini, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
+/** «Cade / Non cade», il Megafono: per ogni carta e segnalino, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
 function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
   const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, p, [me], rand), cands: { marks: Mark[]; ev: number }[] = [];
-  for (let a = 1; a <= n; a++) for (let b = a + 1; b <= n; b++) for (const ta of CNC_TYPES) for (const tb of CNC_TYPES) {
-    if (ta === tb) continue;
-    const marks = [{ effect: ta, position: a }, { effect: tb, position: b }], nul = marks.find((x) => x.effect === "nulli")?.position;
+  for (let a = 1; a <= n; a++) for (const ta of CNC_TYPES) {
+    const marks = [{ effect: ta, position: a }], nul = marks.find((x) => x.effect === "nulli")?.position;
     let best = -Infinity;
     for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of smp) { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); ev += r.m - r.f; } best = Math.max(best, ev / smp.length); }
     cands.push({ marks, ev: best });
@@ -191,7 +190,7 @@ function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, r
   const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
   return { type: "placeMarks", playerId: me, marks: ch.marks.map((m) => ({ slot: m.effect, position: m.position })) };
 }
-/** «Cade / Non cade», voto. Il Megafono conosce i suoi segnalini (e non può votare VOTI NULLI!); gli altri vedono solo dove sono: pesano tutte le combinazioni possibili. */
+/** «Cade / Non cade», voto. Il Megafono conosce il suo segnalino (e non può votare VOTI NULLI!); gli altri vedono solo dov'è: pesano i tre possibili. */
 function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
   const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard", vals: number[] = [];
   if (me === mega) {
@@ -199,8 +198,8 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
     for (let mv = 1; mv <= n; mv++) vals.push(mv === nul ? -1e9 : smp.reduce((a, v) => { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); return a + r.m - r.f; }, 0) / smp.length);
   } else {
     const pos = (s.marks ?? []).map((m) => m.position), own = s.tower.find((t) => t.ownerId === me)?.position, smp = propSample(s, p, [me, mega], rand);
-    // le combinazioni di segnalini possibili sulle due carte segnate (il carattere del bot pesa un po' di più o di meno lo spauracchio di VOTI NULLI!)
-    const combos: Mark[][] = []; for (const ta of CNC_TYPES) for (const tb of CNC_TYPES) if (ta !== tb && pos.length === 2) combos.push([{ effect: ta, position: pos[0]! }, { effect: tb, position: pos[1]! }]);
+    // i segnalini possibili sulla carta segnata (il carattere del bot pesa un po' di più o di meno lo spauracchio di VOTI NULLI!)
+    const combos: Mark[][] = pos.length ? CNC_TYPES.map((t) => [{ effect: t, position: pos[0]! }]) : [];
     const fear = 1 + TUNE.greggeTrait * -trait(me), wc = combos.map((c) => (c.some((m) => m.effect === "nulli") ? fear : 1));
     for (let k = 1; k <= n; k++) {
       let ev = 0, wz = 0;
@@ -249,7 +248,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       if (me !== mega) return null;
       const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
       if (s.cnc) {
-        if (level === "easy") { const a = 1 + Math.floor(rand() * n), b = (a + Math.floor(rand() * (n - 1))) % n + 1, ts = CNC_TYPES.slice().sort(() => rand() - 0.5); return { type: "placeMarks", playerId: me, marks: [{ slot: ts[0]!, position: a }, { slot: ts[1]!, position: b }] }; }
+        if (level === "easy") return { type: "placeMarks", playerId: me, marks: [{ slot: CNC_TYPES[Math.floor(rand() * 3)]!, position: 1 + Math.floor(rand() * n) }] };
         return cncPlace(s, me, level, mem, rand);
       }
       if (level === "easy") { const sp = pick(specs), position = 1 + Math.floor(rand() * n); return { type: "placeLui", playerId: me, slot: sp.slot, position, ...(sp.effect === "dirottamento" ? { to: (position % n) + 1 } : {}) }; }

@@ -101,7 +101,7 @@ export function LuiInfo({ view, onClose }: { view: PlayerView; onClose: () => vo
     <div className="bov" onClick={onClose} role="dialog" aria-label={ts("bui.info.titolo")} data-testid="lui-info">
       <div className="pp bpop" onClick={(e) => e.stopPropagation()}>
         <h3>{t("bui.info.titolo")}</h3>
-        <div className="hint" style={{ margin: "0 0 6px" }}>{view.cnc ? (mine.length ? t("bui.info.cnc.mio", { a: view.marks[0]?.position ?? 0, b: view.marks[1]?.position ?? 0 }) : t("bui.info.cnc.altri", { a: view.marks[0]?.position ?? 0, b: view.marks[1]?.position ?? 0 })) : placed ? t("bui.info.mio", { n: view.luiPosition ?? 0 }) : t("bui.info.altri", { n: view.luiPosition ?? 0 })}</div>
+        <div className="hint" style={{ margin: "0 0 6px" }}>{view.cnc ? (mine.length ? t("bui.info.cnc.mio", { a: view.marks[0]?.position ?? 0 }) : t("bui.info.cnc.altri", { a: view.marks[0]?.position ?? 0 })) : placed ? t("bui.info.mio", { n: view.luiPosition ?? 0 }) : t("bui.info.altri", { n: view.luiPosition ?? 0 })}</div>
         {list.map((sp) => (
           <div key={sp.slot} className="blrow">
             <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 64) }} />
