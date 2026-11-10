@@ -81,7 +81,7 @@ export function ExampleTurn({ small }: { small?: boolean }) {
   );
 }
 
-const SPEC2: LuiSpec = { slot: "k2", k: 2, pts: 7 };
+const SPEC2: LuiSpec = { slot: "cade", k: 0, pts: 4, effect: "cade" };
 /** Esempio del Lui!: il gettone sulla carta, chi la vota e cosa succede se i voti bastano o no. */
 export function ExampleLui() {
   const arrows = [{ p: 2, on: true }, { p: 3, on: true }, { p: 1, on: false }];
@@ -100,7 +100,7 @@ export function ExampleLui() {
           ))}
         </div>
       </div>
-      <div className="ex-res ok"><b>{t("exl.ok.t")}</b><span>{t("exl.ok.x", { pt: <Pt n={7} /> })}</span></div>
+      <div className="ex-res ok"><b>{t("exl.ok.t")}</b><span>{t("exl.ok.x", { pt: <Pt n={4} /> })}</span></div>
       <div className="ex-res ko"><b>{t("exl.ko.t")}</b><span>{t("exl.ko.x", { pt: <Pt n={0} plus={false} /> })}</span></div>
       <p className="ex-foot">{t("exl.piede")}</p>
     </div>
@@ -113,7 +113,7 @@ export function PointsKey() {
     <div className="ex-pk">
       <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Tk i={0} s={22} /><i>→</i><Thumb i={FALLEN} w={26} ring /><em>{t("pk.cade")}</em></span><div><b>{t("pk.giusto.t")}</b><p>{t("pk.giusto.x")}</p></div></div>
       <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Thumb i={FALLEN} w={26} ring /><em>{t("pk.cade")}</em><i>←</i><Tk i={1} s={22} /></span><div><b>{t("pk.caduta.t")}</b><p>{t("pk.caduta.x")}</p></div></div>
-      <div className="ex-pkr"><Pill kind="luik"><Pt n="+5…16" /></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>{t("pk.lui.t")}</b><p>{t("pk.lui.x")}</p></div></div>
+      <div className="ex-pkr"><Pill kind="luik"><Pt n="+1 / +4" /></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>{t("pk.lui.t")}</b><p>{t("pk.lui.x")}</p></div></div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { luiAvailable, luiForbidden, luiTokens, megafonoOf, objectiveHit, requiredPlayers, tallyVotes } from "./engine.ts";
+import { luiAvailable, luiForbidden, luiTokens, megafonoOf, objectiveHit, requiredPlayers, tallyMarks, tallyVotes } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
 import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "./types.ts";
 
@@ -166,6 +166,61 @@ function propVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, r
   const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
   return { type: "vote", playerId: me, position: pickProb(ww.map((x) => x + 0.03), rand) + 1 };
 }
+// ---------- gioco base «Cade / Non cade» ----------
+const CNC_TYPES = ["cade", "noncade", "nulli"] as const;
+type Mark = { effect: string; position: number };
+/** Punti di un turno «Cade / Non cade» per il Megafono e media della Folla (senza le carte degli altri, che il Megafono non conosce). */
+function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, marks: Mark[]) {
+  const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), own = s.tower.find((t) => t.ownerId === mega)?.position;
+  let m = T.fallen.includes(votes[mega]!) ? 2 : 0; if (own && T.fallen.includes(own)) m += 2;
+  let f = 0; const folla = s.playerIds.filter((p) => p !== mega);
+  for (const mk of marks) { if (mk.effect === "nulli") continue; const ok = mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position), pts = mk.effect === "cade" ? 4 : 1; if (ok) { m += pts; f += pts * folla.filter((p) => votes[p] === mk.position).length; } }
+  for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
+  return { m, f: f / Math.max(1, folla.length), T };
+}
+/** «Cade / Non cade», il Megafono: per ogni coppia di carte e di segnalini, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
+function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, p, [me], rand), cands: { marks: Mark[]; ev: number }[] = [];
+  for (let a = 1; a <= n; a++) for (let b = a + 1; b <= n; b++) for (const ta of CNC_TYPES) for (const tb of CNC_TYPES) {
+    if (ta === tb) continue;
+    const marks = [{ effect: ta, position: a }, { effect: tb, position: b }], nul = marks.find((x) => x.effect === "nulli")?.position;
+    let best = -Infinity;
+    for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of smp) { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); ev += r.m - r.f; } best = Math.max(best, ev / smp.length); }
+    cands.push({ marks, ev: best });
+  }
+  const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
+  return { type: "placeMarks", playerId: me, marks: ch.marks.map((m) => ({ slot: m.effect, position: m.position })) };
+}
+/** «Cade / Non cade», voto. Il Megafono conosce i suoi segnalini (e non può votare VOTI NULLI!); gli altri vedono solo dove sono: pesano tutte le combinazioni possibili. */
+function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard", vals: number[] = [];
+  if (me === mega) {
+    const marks = (s.marks ?? []).map((m) => ({ effect: m.slot, position: m.position })), nul = luiForbidden(s, me), smp = propSample(s, p, [me], rand);
+    for (let mv = 1; mv <= n; mv++) vals.push(mv === nul ? -1e9 : smp.reduce((a, v) => { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); return a + r.m - r.f; }, 0) / smp.length);
+  } else {
+    const pos = (s.marks ?? []).map((m) => m.position), own = s.tower.find((t) => t.ownerId === me)?.position, smp = propSample(s, p, [me, mega], rand);
+    // le combinazioni di segnalini possibili sulle due carte segnate (il carattere del bot pesa un po' di più o di meno lo spauracchio di VOTI NULLI!)
+    const combos: Mark[][] = []; for (const ta of CNC_TYPES) for (const tb of CNC_TYPES) if (ta !== tb && pos.length === 2) combos.push([{ effect: ta, position: pos[0]! }, { effect: tb, position: pos[1]! }]);
+    const fear = 1 + TUNE.greggeTrait * -trait(me), wc = combos.map((c) => (c.some((m) => m.effect === "nulli") ? fear : 1));
+    for (let k = 1; k <= n; k++) {
+      let ev = 0, wz = 0;
+      combos.forEach((marks, ci) => {
+        const nul = marks.find((m) => m.effect === "nulli")?.position; let e = 0;
+        for (const v of smp) {
+          let mv = sampleOne(p, rand); if (mv === nul) mv = (mv % n) + 1;
+          const votes = { ...v, [mega]: mv, [me]: k }, T = tallyMarks(s.tower.map((t) => t.position), votes, marks), valid = k !== nul;
+          if (valid && T.fallen.includes(k)) e += 2; if (own && T.fallen.includes(own)) e += 2;
+          const mk = marks.find((m) => m.position === k);
+          if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 1;
+        }
+        ev += wc[ci]! * e / smp.length; wz += wc[ci]!;
+      });
+      vals.push(combos.length ? ev / wz : p[k - 1]! * 2);
+    }
+  }
+  const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
+  return { type: "vote", playerId: me, position: pickProb(ww.map((x, k) => (vals[k]! <= -1e8 ? 0 : x + 0.03)), rand) + 1 };
+}
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
 export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45, propSamples: 36, propTempHard: 0.6, propTempMed: 1.2, propVoteTempHard: 0.35, propVoteTempMed: 0.6 };
@@ -193,6 +248,10 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "SUSPECT": {
       if (me !== mega) return null;
       const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
+      if (s.cnc) {
+        if (level === "easy") { const a = 1 + Math.floor(rand() * n), b = (a + Math.floor(rand() * (n - 1))) % n + 1, ts = CNC_TYPES.slice().sort(() => rand() - 0.5); return { type: "placeMarks", playerId: me, marks: [{ slot: ts[0]!, position: a }, { slot: ts[1]!, position: b }] }; }
+        return cncPlace(s, me, level, mem, rand);
+      }
       if (level === "easy") { const sp = pick(specs), position = 1 + Math.floor(rand() * n); return { type: "placeLui", playerId: me, slot: sp.slot, position, ...(sp.effect === "dirottamento" ? { to: (position % n) + 1 } : {}) }; }
       if (s.propaganda) return propMegaPlace(s, me, level, mem, rand);
       // scommessa sul numero di voti degli ALTRI sulla carta: valore atteso di ogni (segnalino, carta) con voti simulati dalla stima del gruppo; scelgo in modo imprevedibile tra le migliori
@@ -214,6 +273,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
       if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
       if (s.propaganda) return propVote(s, me, level, mem, rand);
+      if (s.cnc) return cncVote(s, me, level, mem, rand);
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       let harm = 0, X = lui ? lui.position - 1 : -1;
       if (lui && me !== mega && !s.gregge) {

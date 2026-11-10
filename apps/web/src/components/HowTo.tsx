@@ -8,7 +8,7 @@ import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
-const DEMO: LuiSpec[] = [{ slot: "zero", k: 0, pts: 5 }, { slot: "k3", k: 3, pts: 14 }] as LuiSpec[];
+const DEMO: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 1, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 
 const Step = ({ ic, t, x }: { ic: string; t: ReactNode; x: ReactNode }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;
@@ -41,7 +41,7 @@ export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeav
           <ExampleTurn />
         </>}
         {tab === 2 && <>
-          {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.effect ? luiLabel(sp) : sp.trap ? t("how.3.gregge.t", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.effect ? luiEffectHow(sp) : sp.trap ? t("how.3.gregge.x", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
+          {tk.map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.effect ? luiLabel(sp) : sp.trap ? t("how.3.gregge.t", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.effect ? luiEffectHow(sp) : sp.trap ? t("how.3.gregge.x", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
           <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}

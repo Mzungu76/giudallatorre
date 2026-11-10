@@ -202,7 +202,7 @@ export class RoomCore {
         const pool = this.deps.phrasePool;
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
         const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995, confessions: d.options.confessions }) : this.deps.phraseDeck;
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, gregge: !!d.options.gregge && !d.options.propaganda, propaganda: !!d.options.propaganda, objectives: !!d.options.propaganda && !!d.options.objectives, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, cnc: !d.options.gregge && !d.options.propaganda, gregge: !!d.options.gregge && !d.options.propaganda, propaganda: !!d.options.propaganda, objectives: !!d.options.propaganda && !!d.options.objectives, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);

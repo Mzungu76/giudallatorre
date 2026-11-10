@@ -9,10 +9,10 @@ Principio: **si impara giocando, non leggendo**. Meno testo all'inizio, aiuto ne
 | **«Sei il Megafono!»** (cosa fai, come fai punti, se giochi o no una carta) | Le prime 2 volte che tocca a te, con «Non mostrare più» (`localStorage gdt.mega`) | `Intro.tsx` (`MegaIntro`) |
 | **Ruolo sempre visibile**: chip dorato «📣 Sei il Megafono» in alto, pannello in basso dorato col badge 📣 e titolo «Sei il Megafono · …», messaggio «Questo turno non giochi carte» in attesa; nella variante «Il Megafono sa» cornice dorata e timbro 📣 sulla carta | Tutto il turno del Megafono | `BUi.tsx` (`BMeta`, `BSheet gold`), `Game.tsx` |
 | **Menu «i» → Aiuto**: 1) «Cosa devo fare adesso?» (suggerimento con cerchio e freccia sul prossimo gesto: carta, pulsante, frase…), 2) «Rivedi il tutorial», 3) «Regolamento completo» | Sempre, dal tasto «i» in basso | `components/HelpMenu.tsx`, `lib/hints.tsx`, `IdleHint.tsx` (`HintPointer`) |
-| **«Questo turno non giochi carte»**: schermata che resta finché la tocchi (carte del mazzo → torre) | Le prime 3 volte che sei Megafono in modalità base (`localStorage gdt.nocard`) | `Intro.tsx` (`NoCardNotice`) |
+| **«Questo turno non giochi carte»**: schermata che resta finché la tocchi (carte del mazzo → torre) | Le prime 3 volte che sei Megafono quando il Megafono non gioca carte (solo nelle varianti «Il gregge» e PROPAGANDA senza «Il Megafono sa»; nel gioco base il Megafono gioca sempre una carta) (`localStorage gdt.nocard`) | `Intro.tsx` (`NoCardNotice`) |
 | **Icona dei punti** (stella dorata) sempre accanto ai numeri dei punti | Riepilogo, intervalli, classifica, finale, gettoni Lui!, esempi | `components/Pt.tsx` |
 | **Fumetto «Ti serve una mano?»** (anche con freccia) | **Solo** se devi agire (scegliere la frase, la carta, il Lui!, votare, o nell'intervallo) e resti fermo ~14 s. Qualsiasi tocco lo fa sparire e riparte il conto; al massimo 2 volte per fase. | `components/IdleHint.tsx`, `Game.tsx`, `MiniGame.tsx` |
-| **Esempi dei punti con carte vere** (un turno completo; il Lui! con voti e gettone) | Regolamento «i» → schede «I punti» e «Il Lui!» | `components/PointsExamples.tsx` |
+| **Esempi dei punti con carte vere** (un turno completo; il Lui! con voti e gettone) | Regolamento «i» → schede «I punti» e «I segnalini» | `components/PointsExamples.tsx` |
 | **«Com'è andata»: la tua riga per prima** («Tu»), con i motivi in parole e la carta votata come immagine | Fine di ogni turno | `components/PointsPanel.tsx` |
 
 ## Per le prove

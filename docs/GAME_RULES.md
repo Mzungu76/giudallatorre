@@ -2,6 +2,18 @@
 
 > Fonte: `Giù dalla Torre! rev. 5.2l.pdf` (confermato definitivo dall'utente) + decisioni in `RULES_AMBIGUITIES.md`.
 
+## Gioco base attuale: «Cade / Non cade» (dal 2026-11-10)
+È la partita normale dell'app (motore: `GameConfig.cnc`; il server la usa quando non sono attive «Il gregge» o PROPAGANDA). Le sezioni più sotto su «Segnalini Lui!» 0 / soglia descrivono le regole precedenti, ancora nel motore senza `cnc`.
+
+1. **«Il Megafono sa» sempre attivo**: il Megafono sceglie la frase e poi gioca una carta dalla mano come gli altri (poi ripesca). Sulla Torre ci sono N carte, ognuna di un giocatore; ognuno conosce solo la propria.
+2. **Segnalini**: il Megafono ha a ogni turno tutti e tre i segnalini (tornano disponibili) e quando le carte sono salite ne posa **esattamente 2**, coperti, su **due carte diverse** (anche la sua): **CADE**, **NON CADE**, **VOTI NULLI!** (CADE + VOTI NULLI! è permesso). Gli altri vedono dove, non quali; si scoprono a fine turno. Nessun malus.
+3. **Voto**: tutti votano in segreto, anche la propria carta o una segnata; **il Megafono non può votare la carta con VOTI NULLI!** (così resta sempre almeno un voto valido).
+4. **Conteggio**: i voti sulla carta con VOTI NULLI! non valgono. Cade la più votata. **Pareggio**: se tra le pari c'è la carta con CADE cade solo lei, altrimenti cadono tutte; il voto del Megafono non ha ruolo speciale.
+5. **Punti**: +2 a chi vota una carta che cade (voto valido); +2 a chi l'ha giocata (Megafono compreso). **CADE**: se la carta cade, +4 al Megafono (ovunque abbia votato, una volta sola) e +4 a ognuno della Folla che l'ha votata. **NON CADE**: se la carta resta su, +1 al Megafono e +1 a ognuno della Folla che l'ha votata. **VOTI NULLI!**: nessun punto; chi l'ha votata perde il +2.
+6. Le stesse regole valgono con 3 giocatori. Analisi: `tools/analysis/tre-giocatori*.ts`.
+
+In app: il Megafono tocca una carta, sceglie il segnalino, poi un'altra carta e il secondo, e conferma; se tocca la carta con VOTI NULLI! al voto, il pannello lo avvisa. Allo spoglio (invariato) i due segnalini si scoprono insieme con una frase ciascuno e i voti annullati spariscono dalla Torre; nel pareggio deciso dal CADE il conteggio dice solo che «lo scioglie un segnalino».
+
 ## Parametri
 - Giocatori: **3–8**. Età 10+, ~20 min.
 - Componenti: mazzo Personaggio (**125** carte, decisione utente), mazzo frasi del Megafono (riserva di 405 frasi + 69 confessioni, filtrata per età: vedi `docs/FRASI_MEGAFONO.md`), Torre, Megafono, 8 segnalini Voto, 8 dischetti giocatore, 2 segnalini "Lui!" (CADE / NON CADE).
@@ -95,7 +107,7 @@ Chat di stanza (tasto 💬): messaggi fino a 140 caratteri, ultimi 60 conservati
 
 Bot: sono un po' imprevedibili (voto e scelta della carta a probabilità).
 
-## Segnalini Lui! (sostituiscono "Cade lui / Non cade")
+## Segnalini Lui! 0 / soglia (regole precedenti, motore senza `cnc`)
 Ogni partita ha **2 segnalini Lui!**, uguali per tutti i giocatori: **sempre lo 0** (altrimenti, con una soglia, nessuno voterebbe mai la carta del Lui!) più **una soglia a caso** dal pool adatto al numero di giocatori. Ognuno si usa **una volta sola**. Ogni giocatore vede sempre i **propri** segnalini (accanto al suo nome, quelli spesi sono grigi); **quelli degli altri non si vedono** e vanno ricordati. Quando è Megafono, il giocatore posa uno dei suoi gettoni, coperto, su una carta e scommette sul **numero di voti che la carta riceve dagli ALTRI** (il voto del Megafono non conta). "k voti" riesce con **almeno k** voti degli altri; lo **0** riesce solo se **nessun altro** vota la carta. Se riesce, il Megafono incassa i punti stampati; se no, niente (nessun malus, ma il gettone è speso). Finiti i gettoni (spareggio) tornano tutti.
 
 I punti stampati sono **tarati sulla probabilità di riuscita** (simulazioni con i bot, `tools/analysis/lui-pool.ts`): più il segnalino è difficile, più paga.

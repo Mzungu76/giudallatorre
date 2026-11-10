@@ -1,5 +1,5 @@
 export * from "./types.ts";
-export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, miniAtsFor, MIN_PLAYERS, MAX_PLAYERS, luiTokens, luiPool, luiAvailable, luiForbidden, IMBROGLIO_PTS, propagandaPool, objectivePool, objectiveHit, tallyVotes, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
+export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, miniAtsFor, MIN_PLAYERS, MAX_PLAYERS, luiTokens, luiPool, luiAvailable, luiForbidden, IMBROGLIO_PTS, propagandaPool, objectivePool, objectiveHit, tallyVotes, cncPool, tallyMarks, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
 export { viewFor } from "./views.ts";
 export type { PlayerView } from "./views.ts";
 export { suggestAction } from "./bot.ts";

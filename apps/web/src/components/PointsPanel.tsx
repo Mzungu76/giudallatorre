@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import type { LuiOutcome, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
+import type { LuiOutcome, MarkOutcome, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
+import { markSpec } from "./Terrace.tsx";
 import { cardFull } from "../lib/cards.ts";
 import { luiLabel, objCond } from "../lib/lui.ts";
 import { sfx } from "../lib/sfx.ts";
@@ -10,7 +11,8 @@ import { t, ts } from "../lib/testi.ts";
 const pts = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
 
 /** Riepilogo del turno dai giocatori: a sinistra chi è, al centro cosa ha fatto di giusto o sbagliato, a destra la carta votata. */
-export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId, objective }: {
+export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId, objective, marks }: {
+  /** Gioco base «Cade / Non cade»: i due segnalini. */ marks?: MarkOutcome[] | null;
   /** PROPAGANDA con obiettivi: com'è andato l'obiettivo del turno. */ objective?: ObjectiveOutcome | null;
   /** Chi guarda: la sua riga va in cima e si chiama «Tu». */ meId?: string;
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; lines: Record<string, ScoreLine[]>; lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; interactive: boolean; hideGo?: boolean; onContinue: () => void;
@@ -23,12 +25,19 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   const fell = (p: number) => fallPositions.includes(p);
   const say = (v: Voter) => {
     const ls = lines[v.id] ?? [], p = votes[v.id]!, out: { ok: boolean; t: string }[] = [];
-    const annullato = !!(lui?.trap || lui?.effect === "imbroglio") && !!lui?.caught?.includes(v.id);
-    out.push(annullato ? { ok: false, t: ts("pp.gregge") } : fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
+    const annullato = (!!(lui?.trap || lui?.effect === "imbroglio") && !!lui?.caught?.includes(v.id)) || !!marks?.find((x) => x.effect === "nulli")?.caught?.includes(v.id);
+    // gioco base: il nome del segnalino della carta di una riga
+    const mkLabel = (pos: number) => { const mk = marks?.find((x) => x.position === pos); return mk ? luiLabel(markSpec(mk)).toLowerCase() : ""; };
+    out.push(annullato ? { ok: false, t: marks?.length ? ts("pp.m.nulli") : ts("pp.gregge") } : fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
     const c = ls.find((l) => l.kind === "carta"); if (c) out.push({ ok: true, t: ts("pp.caduta") });
     const l = ls.find((x) => x.kind === "lui"), m = ls.find((x) => x.kind === "lui-mancato");
     if (l && lui) out.push({ ok: true, t: ts("pp.lui.ok", { lui: luiLabel(lui).toLowerCase() }) });
     if (m && lui) out.push({ ok: false, t: ts("pp.lui.ko", { lui: luiLabel(lui).toLowerCase() }) });
+    if (marks?.length) {
+      for (const x of ls.filter((y) => y.kind === "lui")) out.push({ ok: true, t: ts("pp.lui.ok", { lui: mkLabel(x.pos) }) });
+      for (const x of ls.filter((y) => y.kind === "lui-mancato")) out.push({ ok: false, t: ts("pp.lui.ko", { lui: mkLabel(x.pos) }) });
+      for (const x of ls.filter((y) => y.kind === "lui-folla")) out.push({ ok: true, t: ts("pp.m.folla", { lui: mkLabel(x.pos), pt: x.pts }) });
+    }
     if (lui && ls.some((x) => x.kind === "lui-gregge")) out.push({ ok: true, t: ts("pp.lui.gregge", { lui: luiLabel(lui).toLowerCase(), pt: lui.pts }) });
     if (ls.some((x) => x.kind === "obiettivo")) out.push({ ok: true, t: ts("pp.obj.ok") });
     if (ls.some((x) => x.kind === "obiettivo-mancato")) out.push({ ok: false, t: ts("pp.obj.ko") });

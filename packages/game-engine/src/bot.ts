@@ -17,6 +17,8 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       return { type: "playCard", playerId, cardId: pick(s.hands[playerId]!) };
     case "SUSPECT":
       if (playerId !== mega) return null;
+      if (s.cnc) { const n = s.tower.length, a = 1 + Math.floor(rand() * n), b = (a + Math.floor(rand() * (n - 1))) % n + 1, ts = ["cade", "noncade", "nulli"].sort(() => rand() - 0.5);
+        return { type: "placeMarks", playerId, marks: [{ slot: ts[0]!, position: a }, { slot: ts[1]!, position: b }] }; }
       { const av = luiAvailable(s, playerId), slot = av[Math.floor(rand() * av.length)]!, n = s.tower.length, position = 1 + Math.floor(rand() * n);
         // Dirottamento! (PROPAGANDA): serve anche la carta che riceve il voto
         const dir = luiTokens(s).find((x) => x.slot === slot)?.effect === "dirottamento";
