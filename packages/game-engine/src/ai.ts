@@ -1,6 +1,6 @@
-import { luiAvailable, luiForbidden, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, luiForbidden, luiTokens, megafonoOf, objectiveHit, requiredPlayers, tallyVotes } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
-import type { Action, CardId, GameState, LuiSpec, PlayerId, TurnResult } from "./types.ts";
+import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "./types.ts";
 
 /**
  * Giocatori virtuali. Usano le etichette nascoste (personaggio ↔ frase, vedi tags.ts) per stimare chi cadrà, il punteggio atteso,
@@ -109,9 +109,66 @@ function greggePosterior(s: GameState, p: number[], level: BotLevel, mem: BotMem
   const a = level === "hard" ? TUNE.greggeDoubtHard : TUNE.greggeDoubtMed;
   return like.map((l, i) => (1 - a) * (l / t) + a * prior[i]!);
 }
+// ---------- variante PROPAGANDA ----------
+const sampleOne = (p: number[], rand: () => number) => { let u = rand(), k = 0; for (; k < p.length - 1; k++) { u -= p[k]!; if (u <= 0) break; } return k + 1; };
+/** PROPAGANDA: voti simulati di tutti tranne `skip` (posizioni 1..N), dalla stima del gruppo. */
+function propSample(s: GameState, p: number[], skip: PlayerId[], rand: () => number): Record<PlayerId, number>[] {
+  return Array.from({ length: TUNE.propSamples }, () => Object.fromEntries(s.playerIds.filter((x) => !skip.includes(x)).map((x) => [x, sampleOne(p, rand)])));
+}
+/** PROPAGANDA: quanto vale per il Megafono un esito (vantaggio sugli altri): +2 se cade la carta che vota, +2 se cade la sua (variante «Il Megafono sa»),
+ *  obiettivo centrato (+punti) o mancato (i punti vanno a chi ha votato il personaggio: per lui sono punti regalati). */
+function propMegaValue(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, spec: LuiSpec | undefined, lui: LuiToken | null): number {
+  const pos = s.tower.map((t) => t.position), T = tallyVotes(pos, votes, mega, spec, lui), opp = s.playerIds.length - 1;
+  let v = T.fallen.includes(votes[mega]!) ? 2 : 0;
+  const own = s.tower.find((t) => t.ownerId === mega)?.position; if (own && T.fallen.includes(own)) v += 2;
+  const o = s.objective;
+  if (o) { const n = T.counts[o.position] ?? 0; if (objectiveHit(o, n)) v += o.pts; else v -= (o.pts * s.playerIds.filter((x) => x !== mega && !T.annulled.includes(x) && votes[x] === o.position).length) / opp; }
+  return v;
+}
+/** PROPAGANDA, il Megafono: per ogni gettone, carta (e, con Dirottamento!, carta di arrivo) e proprio voto, il valore medio sui voti simulati. Sceglie in modo un po' imprevedibile. */
+function propMegaPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot)), smp = propSample(s, p, [me], rand);
+  const cands: { slot: string; pos: number; to?: number; ev: number }[] = [];
+  for (const sp of specs) for (let pos = 1; pos <= n; pos++) for (const to of sp.effect === "dirottamento" ? Array.from({ length: n }, (_, i) => i + 1).filter((x) => x !== pos) : [undefined]) {
+    const lui: LuiToken = to ? { slot: sp.slot, position: pos, to } : { slot: sp.slot, position: pos };
+    // il mio voto lo sceglierò dopo: qui conto il migliore
+    let best = -Infinity; for (let mv = 1; mv <= n; mv++) { let ev = 0; for (const v of smp) ev += propMegaValue(s, me, { ...v, [me]: mv }, sp, lui); best = Math.max(best, ev / smp.length); }
+    cands.push({ slot: sp.slot, pos, ...(to ? { to } : {}), ev: best });
+  }
+  const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
+  return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos, ...(ch.to ? { to: ch.to } : {}) };
+}
+/** PROPAGANDA, voto. Il Megafono sa quale gettone ha posato e il suo obiettivo; gli altri vedono il Lui! ma non il gettone (pesano i due che può avere)
+ *  e non sanno su quale personaggio è l'obiettivo pubblico (se si avvera, prende i punti chi l'ha votato). */
+function propVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard";
+  const vals: number[] = [];
+  if (me === mega) {
+    const spec = s.lui ? luiTokens(s).find((x) => x.slot === s.lui!.slot) : undefined, smp = propSample(s, p, [me], rand);
+    for (let mv = 1; mv <= n; mv++) vals.push(smp.reduce((a, v) => a + propMegaValue(s, me, { ...v, [me]: mv }, spec, s.lui), 0) / smp.length);
+  } else {
+    const av = luiAvailable(s, mega), specs = luiTokens(s).filter((x) => av.includes(x.slot)), own = s.tower.find((t) => t.ownerId === me)?.position;
+    const o = s.objective, smp = propSample(s, p, [me, mega], rand), pos = s.tower.map((t) => t.position);
+    for (let k = 1; k <= n; k++) {
+      let ev = 0;
+      for (const v of smp) {
+        // il gettone non lo vedo: uno dei due che gli restano, a caso; il voto del Megafono: dalla stima del gruppo; il personaggio dell'obiettivo: uno qualsiasi
+        const sp = s.lui ? specs[Math.floor(rand() * specs.length)] : undefined, lui: LuiToken | null = s.lui ? { slot: sp!.slot, position: s.lui.position, ...(sp!.effect === "dirottamento" ? { to: sampleOne(p, rand) } : {}) } : null;
+        if (lui?.to === lui?.position) delete lui!.to;
+        const votes = { ...v, [mega]: sampleOne(p, rand), [me]: k }, T = tallyVotes(pos, votes, mega, sp, lui), valid = !T.annulled.includes(me);
+        if (valid && T.fallen.includes(k)) ev += 2;
+        if (own && T.fallen.includes(own)) ev += 2;
+        if (o && valid) { const t = 1 + Math.floor(rand() * n); if (t === k && !objectiveHit(o, T.counts[t] ?? 0)) ev += o.pts; }
+      }
+      vals.push(ev / smp.length);
+    }
+  }
+  const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
+  return { type: "vote", playerId: me, position: pickProb(ww.map((x) => x + 0.03), rand) + 1 };
+}
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45 };
+export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45, propSamples: 36, propTempHard: 0.6, propTempMed: 1.2, propVoteTempHard: 0.35, propVoteTempMed: 0.6 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
@@ -136,7 +193,8 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "SUSPECT": {
       if (me !== mega) return null;
       const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
-      if (level === "easy") return { type: "placeLui", playerId: me, slot: pick(specs).slot, position: 1 + Math.floor(rand() * n) };
+      if (level === "easy") { const sp = pick(specs), position = 1 + Math.floor(rand() * n); return { type: "placeLui", playerId: me, slot: sp.slot, position, ...(sp.effect === "dirottamento" ? { to: (position % n) + 1 } : {}) }; }
+      if (s.propaganda) return propMegaPlace(s, me, level, mem, rand);
       // scommessa sul numero di voti degli ALTRI sulla carta: valore atteso di ogni (segnalino, carta) con voti simulati dalla stima del gruppo; scelgo in modo imprevedibile tra le migliori
       const p = crowdProbs(s, mem, level), voters = s.playerIds.length - 1, samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, voters, rand));
       const cands: { slot: string; pos: number; ev: number }[] = [];
@@ -155,6 +213,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const vote = (position: number): Action => ({ type: "vote", playerId: me, position });
       const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
       if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
+      if (s.propaganda) return propVote(s, me, level, mem, rand);
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       let harm = 0, X = lui ? lui.position - 1 : -1;
       if (lui && me !== mega && !s.gregge) {

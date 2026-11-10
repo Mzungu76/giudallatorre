@@ -6,6 +6,7 @@ import { sfx } from "../lib/sfx.ts";
 import type { LuiOutcome, LuiSpec, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
 import { t as tx, ts as txs } from "../lib/testi.ts";
+import type { TestoKey } from "../lib/testi.ts";
 
 export interface VoteTok { p: number; c: string; mega?: boolean; glow?: boolean }
 export interface TerraceProps {
@@ -109,8 +110,34 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 }
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
+
+/** Gettone dei voti «finti» aggiunti da Propaganda! (grigio). */
+const GHOST = "#c9ccd6";
+/**
+ * Dopo che il Lui! è scoperto, i gettoni sulla Torre mostrano il conteggio ufficiale: spariscono i voti annullati (Imbroglio!) o tolti (Censura!),
+ * si sposta quello dirottato (Dirottamento!), compaiono quelli aggiunti (Propaganda!) e il voto doppio del Megafono (Influenza!).
+ */
+export function luiToks(list: { v: Voter; tok: VoteTok }[], lui: LuiOutcome | null): VoteTok[] {
+  if (!lui) return list.map((x) => x.tok);
+  const annul = (lui.trap || lui.effect === "imbroglio") && lui.caught ? lui.caught : [];
+  let out = list.filter((x) => !annul.includes(x.v.id));
+  const lastOn = (p: number) => { for (let i = out.length - 1; i >= 0; i--) if (out[i]!.tok.p === p && !out[i]!.v.mega) return i; for (let i = out.length - 1; i >= 0; i--) if (out[i]!.tok.p === p) return i; return -1; };
+  if (lui.effect === "censura" && lui.hit) { const i = lastOn(lui.position); if (i >= 0) out = out.filter((_, k) => k !== i); }
+  if (lui.effect === "dirottamento" && lui.hit && lui.to) { const i = lastOn(lui.position); if (i >= 0) out = out.map((x, k) => (k === i ? { ...x, tok: { ...x.tok, p: lui.to! } } : x)); }
+  const toks = out.map((x) => x.tok);
+  if (lui.effect === "propaganda") for (let i = 0; i < lui.k; i++) toks.push({ p: lui.position, c: GHOST });
+  if (lui.effect === "influenza") { const m = out.find((x) => x.v.mega); if (m) toks.push({ ...m.tok, glow: true }); }
+  return toks;
+}
 type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui"; i?: number };
 export interface FallOwner { pos: number; name: string | null; color: string }
+/** Il segnalino com'era, dall'esito (per disegnarlo scoperto). */
+export const luiSpecOf = (lui: LuiOutcome): LuiSpec => ({ slot: lui.slot, k: lui.k, pts: lui.pts, ...(lui.trap ? { trap: true } : {}), ...(lui.herd ? { herd: true } : {}), ...(lui.effect ? { effect: lui.effect, positive: ["propaganda", "spareggio", "influenza"].includes(lui.effect) } : {}) });
+/** PROPAGANDA: cosa ha fatto il segnalino, nello spoglio. */
+function luiRevealText(lui: LuiOutcome, megaVote: number) {
+  const e = lui.effect!, key = (lui.hit || e === "propaganda" || e === "influenza" ? `rv.e.${e}` : `rv.e.${e}.no`) as TestoKey;
+  return tx(key, { n: lui.position, k: lui.effect === "imbroglio" ? lui.caught?.length ?? 0 : lui.k, to: lui.to ?? 0, prima: lui.before ?? 0, dopo: lui.after ?? 0, v: megaVote });
+}
 const thumb = (id: string) => ({ backgroundImage: `url(${cardFull(id)})` });
 
 /** Lo spoglio, un passo alla volta e con calma: ogni voto con chi l'ha dato (e la sua spiegazione), il tabellone dei voti (il Megafono per ultimo), chi ha giocato le carte cadute, i voti giusti, i voti raccolti dal Megafono, la sua scommessa e il timbro. */
@@ -160,8 +187,10 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const luiStart = steps.find((s) => s.kind === "lui")?.t0 ?? 0;
   const luiOpen = !!lui && (cur.kind === "lui" || phase !== "clock") && T >= luiStart + 0.9;
   // dopo che l'Imbroglio! è scoperto, i voti annullati spariscono dalla Torre
-  const gone = (id: string) => !!lui?.trap && luiOpen && T >= luiStart + 1.8 && !!lui.caught?.includes(id);
-  const toks: VoteTok[] = shown.filter(({ v }) => !gone(v.id)).map(({ v }) => ({ p: votes[v.id]!, c: v.color, mega: v.mega, glow: v.mega && showTb }));
+  // quando il Lui! è scoperto, i gettoni passano al conteggio ufficiale (voti annullati, tolti, spostati, aggiunti)
+  const manip = !!lui && luiOpen && T >= luiStart + 1.8, gone = (id: string) => manip && !!(lui!.trap || lui!.effect === "imbroglio") && !!lui!.caught?.includes(id);
+  const base = shown.map(({ v }) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega, glow: v.mega && showTb } as VoteTok }));
+  const toks: VoteTok[] = manip ? luiToks(base, lui) : base.map((x) => x.tok);
   const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
   const byCard: Record<number, Voter[]> = {}; shown.forEach(({ v }) => { if (!gone(v.id)) (byCard[votes[v.id]!] ??= []).push(v); });
   const focusPos = cur.kind === "vote" ? votes[voters[cur.i!]!.id]! : cur.kind === "lui" && lui ? lui.position : cur.kind === "tally" || phase !== "clock" ? -1 : 0;
@@ -170,7 +199,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
   const total = voters.length, focusList = focusPos === -1 ? (mini?.focus ?? fallPositions) : focusPos > 0 ? [focusPos] : [];
   return (
     <>
-      <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.position, spec: luiOpen ? { slot: lui.slot, k: lui.k, pts: lui.pts, ...(lui.trap ? { trap: true } : {}), ...(lui.herd ? { herd: true } : {}) } : null } : null} />
+      <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} />
       <div className="darkv" />
       {focusList.map((fq) => { const fp = pos[fq - 1]; return fp ? <div key={fq} className="focus" style={{ left: mx(fp.x - 5), top: my(fp.f - fp.h - 11), width: (fp.w + 10) * ts, height: (fp.h + 16) * ts }} /> : null; })}
       {<div className="rv" data-testid="reveal-panel" key={`${cur.kind}${cur.i ?? ""}`}>
@@ -184,7 +213,7 @@ export function Reveal({ cardIds, voters, votes, counts, lui, tie, fallPositions
         )}
         {phase === "clock" && cur.kind === "tally" && mini && <><b className="rv-t">{mini.tally[0]}</b><span data-testid="tally-text">{mini.tally[1]}</span></>}
         {phase === "clock" && cur.kind === "tally" && !mini && <><b className="rv-t">{tie ? (tieBreak ? txs("rv.pareggio.decide") : txs("rv.pareggio")) : txs("rv.piu", { c: txs("rv.n", { n: fallPos }) })}</b><span data-testid="tally-text">{tie ? (tieBreak ? txs("rv.pareggio.decide.x", { nome: megaName, n: fallPos }) : txs("rv.pareggio.x", { lista: fallPositions.map((x) => txs("rv.n", { n: x })).join(", ") })) : txs("rv.cade.x", { v: counts[fallPos] ?? 0, tot: total })}</span></>}
-        {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">{txs("rv.lui.t", { nome: megaName })}</b><span data-testid="lui-reveal">{lui.trap ? tx("rv.gregge.x", { n: lui.position, esito: lui.caught?.length ? txs("rv.gregge.si", { k: lui.caught.length, pt: lui.pts }) : txs("rv.gregge.no") }) : tx("rv.lui.x", { label: luiLabel(lui), n: lui.position, pt: lui.pts, altri: lui.others, esito: lui.hit ? txs("rv.lui.si", { pt: lui.pts }) : txs("rv.lui.no") })}{lui.shared?.length ? <> {tx("rv.lui.gregge", { k: lui.shared.length, pt: lui.pts })}</> : null}</span></>}
+        {phase === "clock" && cur.kind === "lui" && lui && <><b className="rv-t">{txs("rv.lui.t", { nome: megaName })}</b><span data-testid="lui-reveal">{lui.effect ? luiRevealText(lui, megaVote) : lui.trap ? tx("rv.gregge.x", { n: lui.position, esito: lui.caught?.length ? txs("rv.gregge.si", { k: lui.caught.length, pt: lui.pts }) : txs("rv.gregge.no") }) : tx("rv.lui.x", { label: luiLabel(lui), n: lui.position, pt: lui.pts, altri: lui.others, esito: lui.hit ? txs("rv.lui.si", { pt: lui.pts }) : txs("rv.lui.no") })}{lui.shared?.length ? <> {tx("rv.lui.gregge", { k: lui.shared.length, pt: lui.pts })}</> : null}</span></>}
         {phase === "stamp" && mini && <b className="rv-t">{mini.stamp}</b>}
         {phase === "stamp" && !mini && <b className="rv-t">{multi ? txs("rv.stamp.pari", { lista: fallPositions.map((x) => txs("rv.n", { n: x })).join(txs("rv.e")) }) : txs("rv.stamp.uno", { n: fallPos })}</b>}
       </div>}

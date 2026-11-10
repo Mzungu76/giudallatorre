@@ -1,6 +1,6 @@
 import { EngineError } from "./types.ts";
 import { MINI_KINDS } from "./types.ts";
-import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
+import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, LuiToken, MiniKind, MiniResult, Objective, ObjectiveOutcome, ObjectiveSpec, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
@@ -17,6 +17,43 @@ export const luiTokens = (s: GameState): LuiSpec[] => s.luiSet && s.luiSet.lengt
 const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero", k: 1, pts: IMBROGLIO_PTS, trap: true } : { ...sp, herd: true });
 /** Punti del Megafono quando l'Imbroglio! annulla almeno un voto (tarati con le simulazioni dei bot: tools/analysis/imbroglio.ts). */
 export const IMBROGLIO_PTS = 3;
+/** Variante PROPAGANDA: i 6 segnalini di manipolazione, 3 positivi e 3 negativi. Non danno punti da soli: cambiano il conteggio dei voti. */
+export function propagandaPool(n: number): { positive: LuiSpec[]; negative: LuiSpec[] } {
+  return {
+    positive: [{ slot: "pr", k: n <= 4 ? 1 : 2, pts: 0, effect: "propaganda", positive: true }, { slot: "sp", k: 0, pts: 0, effect: "spareggio", positive: true }, { slot: "in", k: 0, pts: 0, effect: "influenza", positive: true }],
+    negative: [{ slot: "im", k: 0, pts: 0, effect: "imbroglio", positive: false }, { slot: "di", k: 1, pts: 0, effect: "dirottamento", positive: false }, { slot: "ce", k: 1, pts: 0, effect: "censura", positive: false }],
+  };
+}
+/** PROPAGANDA, obiettivi contrapposti: quelli possibili con `n` giocatori (sui voti ufficiali di un personaggio). */
+export function objectivePool(n: number): ObjectiveSpec[] {
+  const out: ObjectiveSpec[] = [{ kind: "almeno", k: 2, pts: 4 }, { kind: "nessuno", k: 0, pts: 4 }, { kind: "esattamente", k: 2, pts: 4 }];
+  if (n >= 4) out.push({ kind: "almeno", k: 3, pts: 5 });
+  if (n >= 6) out.push({ kind: "almeno", k: 4, pts: 6 });
+  return out;
+}
+/** L'obiettivo del Megafono è centrato con `v` voti ufficiali? (Se no, vale quello pubblico, il contrario.) */
+export const objectiveHit = (o: ObjectiveSpec, v: number) => (o.kind === "almeno" ? v >= o.k : o.kind === "nessuno" ? v === 0 : v === o.k);
+
+/**
+ * Il conteggio dei voti con i segnalini: voti normali (Influenza!: quello del Megafono vale 2), voti annullati (Imbroglio!, anche quello del gregge),
+ * voti aggiunti (Propaganda!), tolti (Censura!) o spostati (Dirottamento!). Poi chi cade: la più votata; pareggio: Spareggio! sulla carta in testa la fa cadere da sola,
+ * altrimenti se il Megafono ha votato una delle pari merito cade solo la sua, se no cadono tutte. Funzione pura: la usano il motore e i bot.
+ */
+export function tallyVotes(positions: number[], votes: Record<PlayerId, number>, mega: PlayerId, spec?: LuiSpec, lui?: LuiToken | null) {
+  const counts: Record<number, number> = Object.fromEntries(positions.map((p) => [p, 0])), eff = lui ? spec?.effect : undefined, pos = lui?.position ?? -1;
+  const annulled = lui && (spec?.trap || eff === "imbroglio") ? Object.keys(votes).filter((p) => votes[p] === pos) : [];
+  for (const [p, v] of Object.entries(votes)) if (!annulled.includes(p)) counts[v] = (counts[v] ?? 0) + (eff === "influenza" && p === mega ? 2 : 1);
+  const before = eff === "influenza" ? counts[votes[mega]!]! - 1 : eff === "imbroglio" ? Object.values(votes).filter((v) => v === pos).length : counts[pos] ?? 0;
+  if (eff === "propaganda") counts[pos]! += spec!.k;
+  else if ((eff === "censura" || eff === "dirottamento") && counts[pos]! > 0) { counts[pos]! -= 1; if (eff === "dirottamento" && lui!.to) counts[lui!.to] = (counts[lui!.to] ?? 0) + 1; }
+  const after = eff === "influenza" ? counts[votes[mega]!]! : counts[pos] ?? 0;
+  const top = Math.max(...Object.values(counts)), leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top).sort((x, y) => x - y);
+  const tie = leaders.length > 1, megaVote = votes[mega]!, spareggio = tie && eff === "spareggio" && leaders.includes(pos);
+  const tieBreak = tie && !spareggio && leaders.includes(megaVote);
+  const fallen = spareggio ? [pos] : tieBreak ? [megaVote] : leaders;
+  return { counts, annulled, before, after, top, tie, tieBreak, spareggio, fallen };
+}
+
 /** Segnalini ancora disponibili per un giocatore (se li ha spesi tutti, tornano tutti: spareggio). */
 export function luiAvailable(s: GameState, p: PlayerId): LuiSlot[] {
   const all = luiTokens(s).map((x) => x.slot), spent = s.luiSpent?.[p] ?? [], left = all.filter((x) => !spent.includes(x));
@@ -59,7 +96,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    megafonoSa: !!config.megafonoSa, gregge: !!config.gregge, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    megafonoSa: !!config.megafonoSa, gregge: !!config.gregge && !config.propaganda, propaganda: !!config.propaganda, objectives: !!config.propaganda && !!config.objectives, objective: null, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, deckCard: null, tower: [], lui: null, votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
@@ -69,6 +106,8 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   // i due segnalini: sempre lo 0 (senza, chi si sente minacciato non voterebbe mai la carta del Lui!) più una soglia a caso
   s.luiSet = config.luiSlots ? luiPool(n).filter((x) => config.luiSlots!.includes(x.slot)) : [luiPool(n).find((x) => x.slot === "zero")!, shuffle(luiPool(n).filter((x) => x.slot !== "zero"), s)[0]!];
   if (s.gregge) s.luiSet = s.luiSet.map(greggeSpec);
+  // PROPAGANDA: un segnalino positivo e uno negativo a caso, uguali per tutti i Megafoni della partita
+  if (s.propaganda) { const pp = propagandaPool(n); s.luiSet = config.luiSlots ? [...pp.positive, ...pp.negative].filter((x) => config.luiSlots!.includes(x.slot)) : [shuffle(pp.positive, s)[0]!, shuffle(pp.negative, s)[0]!]; }
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
   for (const id of ids) s.hands[id] = [];
@@ -98,7 +137,7 @@ function drawPhrase(s: GameState) {
 }
 
 function startTurn(s: GameState, events: GameEvent[]) {
-  s.phase = "PROCLAIM"; s.proclaim = drawPhrase(s); s.phrase = null; s.played = {}; s.deckCard = null;
+  s.phase = "PROCLAIM"; s.proclaim = drawPhrase(s); s.phrase = null; s.played = {}; s.deckCard = null; if (s.propaganda) s.objective = null;
   s.tower = []; s.lui = null; s.votes = {};
   events.push({ type: "turnStarted", turn: s.turnNumber, megafonoId: megafonoOf(s) });
 }
@@ -154,7 +193,14 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       if (!luiTokens(s).some((x) => x.slot === action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino non valido");
       if (!luiAvailable(s, action.playerId).includes(action.slot)) throw new EngineError("INVALID_CHOICE", "segnalino già usato");
       checkPosition(s, action.position);
-      s.lui = { slot: action.slot, position: action.position }; s.phase = "VOTE";
+      const spec = luiTokens(s).find((x) => x.slot === action.slot)!;
+      if (spec.effect === "dirottamento") {
+        // Dirottamento!: il Megafono sceglie subito anche la carta che riceve il voto spostato (un'altra)
+        if (action.to === undefined) throw new EngineError("INVALID_CHOICE", "scegli la carta che riceve il voto");
+        checkPosition(s, action.to);
+        if (action.to === action.position) throw new EngineError("INVALID_CHOICE", "il voto va spostato su un'altra carta");
+      }
+      s.lui = spec.effect === "dirottamento" ? { slot: action.slot, position: action.position, to: action.to! } : { slot: action.slot, position: action.position }; s.phase = "VOTE";
       events.push({ type: "luiPlaced", position: action.position });
       break;
     }
@@ -189,20 +235,15 @@ function revealTower(s: GameState, events: GameEvent[]) {
   s.tower = shuffle(raw, s).map((r, i): TowerSlot => ({ position: i + 1, ...r }));
   s.played = {}; s.deckCard = null;
   s.phase = s.phase === "MINI_PLAY" ? "MINI_VOTE" : "SUSPECT"; events.push({ type: "towerRevealed", positions: s.tower.length });
+  // PROPAGANDA con obiettivi: il Megafono riceve il suo obiettivo segreto (un personaggio a caso della Torre) prima di posare il Lui!
+  if (s.phase === "SUSPECT" && s.propaganda && s.objectives) { const pool = objectivePool(s.playerIds.length), o = pool[randomInt(pool.length, s)]!; s.objective = { ...o, position: 1 + randomInt(s.tower.length, s) }; }
 }
 
 function resolve(s: GameState, events: GameEvent[]) {
-  const counts: Record<number, number> = {};
-  // «Il gregge», Imbroglio! (lo 0): i voti sulla sua carta sono annullati, come se non esistessero (cambiano le maggioranze). Il Megafono non può votarla, quindi resta sempre almeno un voto valido.
-  const trapSpec = s.lui ? luiTokens(s).find((x) => x.slot === s.lui!.slot && x.trap) : undefined;
-  const annulled = trapSpec ? s.playerIds.filter((p) => s.votes[p] === s.lui!.position) : [];
-  for (const p of s.playerIds) { if (annulled.includes(p)) continue; const v = s.votes[p]!; counts[v] = (counts[v] ?? 0) + 1; }
-  const top = Math.max(...Object.values(counts));
-  const leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top);
-  const mega = megafonoOf(s), tie = leaders.length > 1, megaVote = s.votes[mega]!;
-  // Cade la carta col maggior numero di voti. Pareggio: se il Megafono ha votato una delle carte pari merito, cade solo la sua (le altre si salvano); altrimenti cadono insieme tutte le pari merito.
-  const tieBreak = tie && leaders.includes(megaVote);
-  const fallen = tieBreak ? [megaVote] : leaders.sort((x, y) => x - y);
+  // Conteggio con i segnalini («Il gregge»: l'Imbroglio! annulla i voti sulla sua carta; PROPAGANDA: i 6 segnalini). Vedi tallyVotes.
+  const mega = megafonoOf(s), megaVote = s.votes[mega]!, spec = s.lui ? luiTokens(s).find((x) => x.slot === s.lui!.slot) : undefined;
+  const T = tallyVotes(s.tower.map((t) => t.position), Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), mega, spec, s.lui);
+  const { annulled, tie, tieBreak, fallen } = T, counts: Record<number, number> = Object.fromEntries(Object.entries(T.counts).filter(([, v]) => v > 0));
   const slots = fallen.map((f) => s.tower.find((t) => t.position === f)!);
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
@@ -216,7 +257,11 @@ function resolve(s: GameState, events: GameEvent[]) {
   if (s.lui) {
     const spec = luiTokens(s).find((x) => x.slot === s.lui!.slot)!;
     const others = s.playerIds.filter((p) => p !== mega && s.votes[p] === s.lui!.position).length;
-    if (spec.trap) {
+    if (spec.effect) {
+      // PROPAGANDA: il segnalino non dà punti da solo; l'esito dice se ha cambiato qualcosa
+      const e = spec.effect, hit = e === "propaganda" || e === "influenza" ? true : e === "spareggio" ? T.spareggio : e === "imbroglio" ? annulled.length > 0 : T.before > 0;
+      lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: 0, others, hit, effect: e, before: T.before, after: T.after, ...(s.lui.to ? { to: s.lui.to } : {}), ...(e === "imbroglio" ? { caught: annulled } : {}) };
+    } else if (spec.trap) {
       // Imbroglio!: i voti sulla carta sono già stati annullati nel conteggio; se ne ha annullato almeno uno, il Megafono incassa i punti del gettone
       const hit = annulled.length > 0;
       lui = { slot: spec.slot, position: s.lui.position, k: spec.k, pts: spec.pts, others, hit, trap: true, caught: annulled };
@@ -234,9 +279,18 @@ function resolve(s: GameState, events: GameEvent[]) {
     }
     const spent = (s.luiSpent ??= {})[mega] ??= []; if (luiTokens(s).every((x) => spent.includes(x.slot))) spent.length = 0; spent.push(s.lui.slot);
   }
+  // Obiettivi contrapposti: sui voti ufficiali del personaggio. Se il Megafono non lo centra, vale quello pubblico: punti a chi ha votato il personaggio (voto valido).
+  let objective: ObjectiveOutcome | null = null;
+  if (s.objective) {
+    const o = s.objective, v = T.counts[o.position] ?? 0, megaHit = objectiveHit(o, v);
+    const winners = megaHit ? [] : s.playerIds.filter((p) => p !== mega && !annulled.includes(p) && s.votes[p] === o.position);
+    if (megaHit) give(mega, o.pts, "obiettivo", o.position, v); else lines[mega]!.push({ kind: "obiettivo-mancato", pts: 0, pos: o.position, n: v });
+    for (const p of winners) give(p, o.pts, "obiettivo-folla", o.position, v);
+    objective = { ...o, votes: v, megaHit, winners };
+  }
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, tie, fallenPosition: fallen[0]!,
-    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui, points, lines, collected, megaVote, tieBreak };
+    fallenCardId: slots[0]!.cardId, fallenOwnerId: slots[0]!.ownerId, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId), lui, points, lines, collected, megaVote, tieBreak, ...(s.propaganda ? { spareggio: T.spareggio, objective } : {}) };
   s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
 }
 

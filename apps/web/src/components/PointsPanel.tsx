@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import type { LuiOutcome, ScoreLine } from "@gdt/game-engine";
+import type { LuiOutcome, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
 import { cardFull } from "../lib/cards.ts";
-import { luiLabel } from "../lib/lui.ts";
+import { luiLabel, objCond } from "../lib/lui.ts";
 import { sfx } from "../lib/sfx.ts";
 import type { Voter } from "./Terrace.tsx";
 import { Pt } from "./Pt.tsx";
@@ -10,7 +10,8 @@ import { t, ts } from "../lib/testi.ts";
 const pts = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
 
 /** Riepilogo del turno dai giocatori: a sinistra chi è, al centro cosa ha fatto di giusto o sbagliato, a destra la carta votata. */
-export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId }: {
+export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId, objective }: {
+  /** PROPAGANDA con obiettivi: com'è andato l'obiettivo del turno. */ objective?: ObjectiveOutcome | null;
   /** Chi guarda: la sua riga va in cima e si chiama «Tu». */ meId?: string;
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; lines: Record<string, ScoreLine[]>; lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; interactive: boolean; hideGo?: boolean; onContinue: () => void;
 }) {
@@ -22,18 +23,22 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   const fell = (p: number) => fallPositions.includes(p);
   const say = (v: Voter) => {
     const ls = lines[v.id] ?? [], p = votes[v.id]!, out: { ok: boolean; t: string }[] = [];
-    const annullato = !!lui?.trap && !!lui.caught?.includes(v.id);
+    const annullato = !!(lui?.trap || lui?.effect === "imbroglio") && !!lui?.caught?.includes(v.id);
     out.push(annullato ? { ok: false, t: ts("pp.gregge") } : fell(p) ? { ok: true, t: ts("pp.giusto") } : { ok: false, t: ts("pp.sbagliato") });
     const c = ls.find((l) => l.kind === "carta"); if (c) out.push({ ok: true, t: ts("pp.caduta") });
     const l = ls.find((x) => x.kind === "lui"), m = ls.find((x) => x.kind === "lui-mancato");
     if (l && lui) out.push({ ok: true, t: ts("pp.lui.ok", { lui: luiLabel(lui).toLowerCase() }) });
     if (m && lui) out.push({ ok: false, t: ts("pp.lui.ko", { lui: luiLabel(lui).toLowerCase() }) });
     if (lui && ls.some((x) => x.kind === "lui-gregge")) out.push({ ok: true, t: ts("pp.lui.gregge", { lui: luiLabel(lui).toLowerCase(), pt: lui.pts }) });
+    if (ls.some((x) => x.kind === "obiettivo")) out.push({ ok: true, t: ts("pp.obj.ok") });
+    if (ls.some((x) => x.kind === "obiettivo-mancato")) out.push({ ok: false, t: ts("pp.obj.ko") });
+    const of = ls.find((x) => x.kind === "obiettivo-folla"); if (of) out.push({ ok: true, t: ts("pp.obj.folla", { pt: of.pts }) });
     return out;
   };
   return (
     <div className="pb pbp" data-testid="points-panel">
       <b className="rv-t" data-testid="points-title">{t("pp.titolo")}</b>
+      {objective && <span className="pp-obj" data-testid="objective-result">{objective.megaHit ? t("obj.esito.mega", { n: objective.position, cond: objCond(objective), v: objective.votes, pt: objective.pts }) : objective.winners.length ? t("obj.esito.folla", { n: objective.position, v: objective.votes, pt: objective.pts, k: objective.winners.length }) : t("obj.esito.nessuno", { n: objective.position, v: objective.votes })}</span>}
       <div className="pb-scroll">
         {rows.map(({ v, t }) => {
           const p = votes[v.id]!, id = cardIds[p - 1];

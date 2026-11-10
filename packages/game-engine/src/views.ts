@@ -1,4 +1,4 @@
-import type { CardId, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
+import type { CardId, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, ObjectiveSpec, PhraseChoice, PlayerId, TurnResult } from "./types.ts";
 import { luiAvailable, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
 
 /** Vista di un singolo giocatore: è l'UNICA cosa che il server invia al client. Nessun dato privato altrui. */
@@ -9,6 +9,12 @@ export interface PlayerView {
   megafonoId: PlayerId; megafonoSa: boolean;
   /** Variante «Il gregge»: il segnalino 0 è una trappola per chi vota la sua carta. */
   gregge: boolean;
+  /** Variante PROPAGANDA e, dentro, obiettivi contrapposti. */
+  propaganda: boolean; objectives: boolean;
+  /** Obiettivo del turno (da SUSPECT a VOTE): il Megafono vede anche il personaggio (`position`), gli altri solo la condizione (`position` null). */
+  objective: (ObjectiveSpec & { position: number | null }) | null;
+  /** Dirottamento!: carta che riceve il voto spostato (solo il Megafono, fino ai risultati). */
+  luiTo: number | null;
   players: { id: PlayerId; name: string; score: number; megafonoTurns: number; handCount: number; hasPlayed: boolean; hasVoted: boolean }[];
   myHand: CardId[];
   /** Intervalli iniziati: a ognuno la mano di tutti è stata sostituita per intero (l'app lo mostra con un'animazione quando si apre la scelta della carta). */
@@ -44,7 +50,9 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
   const isMega = viewer === megafonoOf(s);
   return {
     viewerId: viewer, phase: s.phase, turn: s.turnNumber, totalTurns: s.totalTurns,
-    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa, gregge: !!s.gregge,
+    megafonoId: megafonoOf(s), megafonoSa: s.megafonoSa, gregge: !!s.gregge, propaganda: !!s.propaganda, objectives: !!s.objectives,
+    objective: s.objective && (s.phase === "SUSPECT" || s.phase === "VOTE") ? { kind: s.objective.kind, k: s.objective.k, pts: s.objective.pts, position: isMega ? s.objective.position : null } : null,
+    luiTo: s.lui?.to && (isMega || revealed) ? s.lui.to : null,
     players: s.playerIds.map((id) => ({ id, name: s.names[id]!, score: s.scores[id]!, megafonoTurns: s.megafonoTurns[id]!,
       handCount: s.hands[id]!.length, hasPlayed: s.played[id] !== undefined || (s.tower.length > 0 && requiredPlayers(s).includes(id)),
       hasVoted: s.votes[id] !== undefined })),

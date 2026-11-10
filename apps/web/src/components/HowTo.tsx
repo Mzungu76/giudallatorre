@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import type { LuiSpec } from "@gdt/game-engine";
 import { Btn } from "../ui.tsx";
 import { luiTok } from "../scene/draw.ts";
+import { luiEffectHow, luiLabel } from "../lib/lui.ts";
 import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
@@ -40,7 +41,7 @@ export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeav
           <ExampleTurn />
         </>}
         {tab === 2 && <>
-          {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.trap ? t("how.3.gregge.t", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.trap ? t("how.3.gregge.x", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
+          {tk.slice(0, 2).map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.effect ? luiLabel(sp) : sp.trap ? t("how.3.gregge.t", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.effect ? luiEffectHow(sp) : sp.trap ? t("how.3.gregge.x", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
           <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}

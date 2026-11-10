@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { LuiSpec, PlayerView } from "@gdt/game-engine";
 import { luiTok } from "../scene/draw.ts";
-import { luiLabel } from "../lib/lui.ts";
+import { luiEffectHow, luiLabel, objCond, objCondPublic } from "../lib/lui.ts";
 import { useNow } from "../ui.tsx";
 import { t, ts } from "../lib/testi.ts";
 
@@ -41,6 +41,18 @@ export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"];
   );
 }
 
+/** PROPAGANDA, obiettivi contrapposti: al Megafono il suo obiettivo segreto (con il personaggio), agli altri la condizione opposta (senza). */
+export function ObjPill({ view }: { view: PlayerView }) {
+  const o = view.objective; if (!o) return null;
+  const mine = o.position !== null;
+  return (
+    <div className={`objp${mine ? " mine" : ""}`} data-testid="objective">
+      <small>{mine ? t("obj.t.mega") : t("obj.t.folla")}</small>
+      <b>{mine ? t("obj.mega", { n: o.position!, cond: objCond(o), pt: o.pts }) : t("obj.folla", { cond: objCondPublic(o), pt: o.pts })}</b>
+    </div>
+  );
+}
+
 /** Pannello fisso sotto il pollice: titolo, istruzione breve, scorciatoie (chat, classifica, regolamento) e il contenuto della fase. */
 export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; sub?: ReactNode; ui?: UiCtl | null; children?: ReactNode; /** Turno del Megafono: pannello dorato col badge 📣. */ gold?: boolean }) {
   return (
@@ -66,7 +78,7 @@ export function LuiTray({ view, ui }: { view: PlayerView; ui?: UiCtl | null }) {
   return (
     <button className="bltr" onClick={ui?.lui} aria-label={label} data-testid="lui-tray">
       <span className="lab">{t("bui.lui.lab")}</span>
-      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}: +${sp.pts}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
+      {view.luiTokens.map((sp) => <span key={sp.slot} className={`lt ${left(sp) ? "" : "used"}`} title={`${luiLabel(sp)}${sp.effect ? "" : `: +${sp.pts}`}${left(sp) ? "" : ts("bui.usato")}`} dangerouslySetInnerHTML={{ __html: luiTok(sp, 34) }} />)}
     </button>
   );
 }
@@ -81,7 +93,7 @@ export function WaitCard({ text, sub }: { text: string; sub?: string }) {
 /** Popup informativo sul Lui! posato sulla Torre (tocco sul gettone durante il voto): cosa può essere e come funziona. Agli altri non dice quale gettone è. */
 export function LuiInfo({ view, onClose }: { view: PlayerView; onClose: () => void }) {
   const placed = view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null, list = placed ? [placed] : view.luiTokens;
-  const how = (sp: LuiSpec) => sp.trap ? t("bui.info.trap", { pt: sp.pts }) : sp.herd ? t("bui.info.herd", { k: sp.k, pt: sp.pts }) : sp.slot === "zero" ? t("bui.info.zero", { pt: sp.pts }) : t("bui.info.k", { k: sp.k, pt: sp.pts });
+  const how = (sp: LuiSpec) => sp.effect ? luiEffectHow(sp) : sp.trap ? t("bui.info.trap", { pt: sp.pts }) : sp.herd ? t("bui.info.herd", { k: sp.k, pt: sp.pts }) : sp.slot === "zero" ? t("bui.info.zero", { pt: sp.pts }) : t("bui.info.k", { k: sp.k, pt: sp.pts });
   return (
     <div className="bov" onClick={onClose} role="dialog" aria-label={ts("bui.info.titolo")} data-testid="lui-info">
       <div className="pp bpop" onClick={(e) => e.stopPropagation()}>
@@ -93,7 +105,7 @@ export function LuiInfo({ view, onClose }: { view: PlayerView; onClose: () => vo
             <div><b>{luiLabel(sp)}</b><small>{how(sp)}</small></div>
           </div>
         ))}
-        <div className="hint" style={{ margin: "6px 0 10px" }}>{t("bui.info.nota")}</div>
+        <div className="hint" style={{ margin: "6px 0 10px" }}>{view.propaganda ? t("bui.info.nota.prop") : t("bui.info.nota")}</div>
         <button className="bt pap" style={{ fontSize: 18, padding: 10, width: "100%" }} onClick={onClose} data-testid="lui-info-close">{t("bui.chiudi")}</button>
       </div>
     </div>
@@ -111,8 +123,8 @@ export function LuiPopup({ view, onClose }: { view: PlayerView; onClose: () => v
           return (
             <div key={sp.slot} className={`blrow ${left ? "" : "used"}`}>
               <span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} />
-              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.trap ? t("bui.popup.gregge", { pt: sp.pts }) : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
-              <span className="pt">+{sp.pts}</span>
+              <div><b>{luiLabel(sp)}</b><small>{left ? (sp.effect ? luiEffectHow(sp) : sp.trap ? t("bui.popup.gregge", { pt: sp.pts }) : sp.slot === "zero" ? t("bui.popup.zero") : sp.herd ? t("bui.popup.k.gregge", { k: sp.k }) : t("bui.popup.k", { k: sp.k })) : t("bui.popup.usato")}</small></div>
+              <span className="pt">{sp.effect ? (sp.positive ? "+" : "−") : `+${sp.pts}`}</span>
             </div>
           );
         })}

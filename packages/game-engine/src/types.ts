@@ -7,7 +7,9 @@ export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "peggiore"];
 /** Identificativo di un segnalino Lui!: "zero" (nessun voto dagli altri) oppure "k1", "k2", "k3" (almeno 1, 2, 3 voti dagli altri). */
 export type LuiSlot = string;
 /** Un segnalino: la scommessa è "almeno k voti dagli altri giocatori" (zero: nessun voto dagli altri) e vale `pts` punti. */
-export interface LuiSpec { slot: LuiSlot; k: number; pts: number; /** Variante «Il gregge»: lo 0 è l'Imbroglio!: i voti sulla sua carta sono annullati (non contano per la maggioranza né per i punti); se ne annulla almeno uno (k = 1), il Megafono prende `pts`. */ trap?: boolean; /** Variante «Il gregge», soglia: i punti vanno al Megafono (che non può votarla) e a chi vota la carta. */ herd?: boolean }
+/** Variante PROPAGANDA: effetto del segnalino (3 positivi, 3 negativi). */
+export type LuiEffect = "propaganda" | "spareggio" | "influenza" | "imbroglio" | "dirottamento" | "censura";
+export interface LuiSpec { slot: LuiSlot; k: number; pts: number; /** Variante PROPAGANDA: cosa fa il segnalino (k = voti aggiunti per Propaganda!) e se è positivo. */ effect?: LuiEffect; positive?: boolean; /** Variante «Il gregge»: lo 0 è l'Imbroglio!: i voti sulla sua carta sono annullati (non contano per la maggioranza né per i punti); se ne annulla almeno uno (k = 1), il Megafono prende `pts`. */ trap?: boolean; /** Variante «Il gregge», soglia: i punti vanno al Megafono (che non può votarla) e a chi vota la carta. */ herd?: boolean }
 
 /** Carta "Su sulla Torre": 1 frase = carta singola (obbligatoria), più frasi = il Megafono ne sceglie una. */
 export interface PhraseCard { id: string; phrases: string[]; /** Contesto della carta (es. “In palestra”), mostrato come titoletto. */ theme?: string; /** Contesto di ciascuna frase (stesso ordine di `phrases`). */ themes?: string[] }
@@ -30,6 +32,10 @@ export interface GameConfig {
   accuseDeck?: string[];
   /** Variante «Il gregge» (in prova): lo 0 diventa l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi vota la carta. */
   gregge?: boolean;
+  /** Variante PROPAGANDA (in prova): 2 segnalini di manipolazione del voto (1 positivo e 1 negativo, estratti a caso). */
+  propaganda?: boolean;
+  /** Dentro PROPAGANDA: obiettivi contrapposti (un obiettivo segreto per il Megafono a ogni turno). */
+  objectives?: boolean;
   /** Solo test: forza i segnalini Lui! della partita (id dal pool, es. ["k1","zero"]); di norma sono 2 a caso. */
   luiSlots?: string[];
 }
@@ -40,9 +46,17 @@ export type PhraseChoice =
   | { mode: "card"; cardId: string; index: number; text: string; theme?: string }
   | { mode: "free"; text?: string };
 
-export interface LuiToken { slot: LuiSlot; position: number }
+export interface LuiToken { slot: LuiSlot; position: number; /** Dirottamento!: carta che riceve il voto spostato. */ to?: number }
+/** PROPAGANDA, obiettivi contrapposti: condizione sui voti ufficiali (dopo i segnalini) di un personaggio. */
+export type ObjectiveKind = "almeno" | "nessuno" | "esattamente";
+export interface ObjectiveSpec { kind: ObjectiveKind; k: number; pts: number }
+export interface Objective extends ObjectiveSpec { position: number }
+/** Esito dell'obiettivo: voti ufficiali del personaggio, se l'ha centrato il Megafono, e chi della Folla ha preso i punti (chi ha votato il personaggio). */
+export interface ObjectiveOutcome extends Objective { votes: number; megaHit: boolean; winners: PlayerId[] }
 /** Esito della scommessa del Lui! a fine turno. */
-export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», Imbroglio! (lo 0): chi ha votato la carta, con il voto annullato. */ trap?: boolean; caught?: PlayerId[]; /** Variante «Il gregge», soglia: segnalino del gregge e, se riesce, gli altri giocatori che hanno votato la carta e prendono i punti insieme al Megafono. */ herd?: boolean; shared?: PlayerId[] }
+export interface LuiOutcome { slot: LuiSlot; position: number; k: number; pts: number; /** Voti degli altri giocatori sulla carta del Lui!. */ others: number; hit: boolean; /** Variante «Il gregge», Imbroglio! (lo 0): chi ha votato la carta, con il voto annullato. */ trap?: boolean; caught?: PlayerId[]; /** Variante «Il gregge», soglia: segnalino del gregge e, se riesce, gli altri giocatori che hanno votato la carta e prendono i punti insieme al Megafono. */ herd?: boolean; shared?: PlayerId[];
+  /** Variante PROPAGANDA: effetto del segnalino, carta che riceve il voto (Dirottamento!) e voti ufficiali di quella carta prima e dopo l'effetto. */
+  effect?: LuiEffect; to?: number; before?: number; after?: number }
 
 export interface TurnResult {
   turn: number;
@@ -70,9 +84,13 @@ export interface TurnResult {
   megaVote: number;
   /** True se c'era un pareggio in testa e ha deciso il voto del Megafono (cade solo la sua carta). */
   tieBreak: boolean;
+  /** PROPAGANDA: il pareggio è stato deciso da Spareggio!. */
+  spareggio?: boolean;
+  /** PROPAGANDA con obiettivi: obiettivo del Megafono e com'è andato. */
+  objective?: ObjectiveOutcome | null;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-gregge" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-gregge" | "obiettivo" | "obiettivo-mancato" | "obiettivo-folla" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
@@ -138,6 +156,11 @@ export interface GameState {
   luiSpent?: Record<PlayerId, LuiSlot[]>;
   /** Variante «Il gregge» attiva. */
   gregge?: boolean;
+  /** Variante PROPAGANDA e obiettivi contrapposti. */
+  propaganda?: boolean;
+  objectives?: boolean;
+  /** Obiettivo segreto del Megafono nel turno in corso (dall'apertura della Torre). */
+  objective?: Objective | null;
   /** I 2 segnalini Lui! di questa partita (estratti a caso da un pool adatto al numero di giocatori, uguali per tutti). */
   luiSet?: LuiSpec[];
 }
@@ -146,7 +169,7 @@ export type Action =
   | { type: "choosePhrase"; playerId: PlayerId; mode: "card"; index: number }
   | { type: "choosePhrase"; playerId: PlayerId; mode: "free"; text?: string }
   | { type: "playCard"; playerId: PlayerId; cardId: CardId }
-  | { type: "placeLui"; playerId: PlayerId; slot: LuiSlot; position: number }
+  | { type: "placeLui"; playerId: PlayerId; slot: LuiSlot; position: number; to?: number }
   | { type: "vote"; playerId: PlayerId; position: number}
   | { type: "advance"; playerId?: PlayerId };
 
