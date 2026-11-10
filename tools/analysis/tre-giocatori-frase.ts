@@ -16,7 +16,7 @@ import { nextRandom } from "../../packages/game-engine/src/rng.ts";
 import { DECK, PHRASE_DECK } from "../../worker/src/content.ts";
 
 type Tok = [card: number, type: number];
-interface V { name: string; types: number[]; megaTie: boolean; beta: number; /** chi della Folla vota la carta del Megafono, se cade, non prende il +2 */ noFollaOnMega?: boolean }
+interface V { name: string; types: number[]; megaTie: boolean; beta: number; /** chi della Folla vota la carta del Megafono, se cade, non prende il +2 */ noFollaOnMega?: boolean; /** premi condivisi: chi vota la carta del CADE prende +4 se cade, chi vota quella del NON CADE +1 se non cade */ shared?: boolean }
 const SITS = Number(process.argv[2] ?? 24), GAMMA = 1;
 const PERMS: number[][] = [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]]; // perm[k] = proprietario della carta k (0 M, 1 A, 2 B)
 
@@ -48,6 +48,7 @@ function score(v: V, perm: number[], P: Tok[], votes: number[]) {
   votes.forEach((x, i) => { if (valid[i] && fallen.includes(x) && !(v.noFollaOnMega && i > 0 && x === mc)) pts[i] += 2; });
   for (const c of fallen) pts[perm[c]!] += 2;
   for (const [c, t] of P) { if (t === 0 && fallen.includes(c)) pts[0] += 4; if (t === 1 && !fallen.includes(c)) pts[0] += 1; }
+  if (v.shared) for (const [c, t] of P) votes.forEach((x, i) => { if (i > 0 && valid[i] && x === c) { if (t === 0 && fallen.includes(c)) pts[i] += 4; if (t === 1 && !fallen.includes(c)) pts[i] += 1; } });
   return { pts, fallen };
 }
 const rel = (p: number[], i: number) => p[i]! - (p[0]! + p[1]! + p[2]! - p[i]!) / 2;
@@ -80,7 +81,7 @@ function solveSit(v: V, aff: number[]) {
     sM = sM.map((row, w) => row.map((x, i) => 0.8 * x + 0.2 * nM[w]![i]!)); sA = nA; sB = nB;
   }
   // risultati, mediati sui proprietari possibili (come il Megafono sceglie la carta) e sulle mosse
-  const R = { pm: 0, pf: 0, cadeP: 0, cadeOk: 0, cadeOwn: 0, nonP: 0, nonOk: 0, nulP: 0, ann: 0, megaFell: 0, follaOnMega: 0, strongFell: 0, two: 0, tok0: 0 };
+  const R = { onCade: 0, pm: 0, pf: 0, cadeP: 0, cadeOk: 0, cadeOwn: 0, nonP: 0, nonOk: 0, nulP: 0, ann: 0, megaFell: 0, follaOnMega: 0, strongFell: 0, two: 0, tok0: 0 };
   const strong = aff.indexOf(Math.max(...aff));
   PERMS.forEach((pm, w) => MA.forEach((m, i) => {
     const pr = prior[w]! * sM[w]![i]!; if (pr < 1e-7) return; const o = markOf(m.P), oa = own(pm, 1), ob = own(pm, 2), mc = own(pm, 0);
@@ -89,7 +90,7 @@ function solveSit(v: V, aff: number[]) {
       const q = pr * sA[oa]![o]![a]! * sB[ob]![o]![b]!, { pts, fallen } = score(v, pm, m.P, [m.vm, a, b]);
       R.pm += q * pts[0]!; R.pf += q * (pts[1]! + pts[2]!) / 2;
       if (fallen.includes(mc)) R.megaFell += q; R.follaOnMega += q * ((a === mc ? 1 : 0) + (b === mc ? 1 : 0)) / 2; if (fallen.includes(strong)) R.strongFell += q;
-      for (const [c, t] of m.P) { if (t === 0) { R.cadeP += q; if (fallen.includes(c)) R.cadeOk += q; if (c === mc) R.cadeOwn += q; } if (t === 1) { R.nonP += q; if (!fallen.includes(c)) R.nonOk += q; } if (t === 2) { R.nulP += q; R.ann += q * ((a === c ? 1 : 0) + (b === c ? 1 : 0)); } }
+      for (const [c, t] of m.P) { if (t === 0) { R.onCade += q * ((a === c ? 1 : 0) + (b === c ? 1 : 0)) / 2; R.cadeP += q; if (fallen.includes(c)) R.cadeOk += q; if (c === mc) R.cadeOwn += q; } if (t === 1) { R.nonP += q; if (!fallen.includes(c)) R.nonOk += q; } if (t === 2) { R.nulP += q; R.ann += q * ((a === c ? 1 : 0) + (b === c ? 1 : 0)); } }
     }
   }));
   return R;
@@ -99,13 +100,19 @@ const sits = situations();
 const pc = (x: number) => `${Math.round(100 * x)}%`.padStart(4);
 console.log(`${sits.length} situazioni reali a 3 giocatori («Il Megafono sa»). Affinità media della carta più affine: ${pc(sits.reduce((a, p) => a + Math.max(...p), 0) / sits.length)}\n`);
 const variants: V[] = [];
+if (process.argv[3] === "condivisi") {
+  for (const beta of [0, 1, 2]) for (const types of [[0, 1], [0, 1, 2]]) variants.push({ name: `PREMI CONDIVISI · frase ${beta === 0 ? "senza peso" : beta === 1 ? "peso medio" : "peso forte"} · ${types.length === 3 ? "CADE / NON CADE / VOTI NULLI!" : "CADE / NON CADE"}`, types, megaTie: false, beta, shared: true });
+  variants.push({ name: "riferimento senza premi condivisi · frase peso medio · CADE / NON CADE", types: [0, 1], megaTie: false, beta: 1 });
+} else {
+
 for (const beta of [0, 1, 2]) for (const types of [[0, 1], [0, 1, 2]]) variants.push({ name: `frase ${beta === 0 ? "senza peso" : beta === 1 ? "peso medio" : "peso forte"} · ${types.length === 3 ? "CADE / NON CADE / VOTI NULLI!" : "CADE / NON CADE"}`, types, megaTie: false, beta });
 for (const types of [[0, 1], [0, 1, 2]]) variants.push({ name: `PROVA · chi vota la carta del Megafono non prende il +2 · frase peso medio · ${types.length === 3 ? "CADE / NON CADE / VOTI NULLI!" : "CADE / NON CADE"}`, types, megaTie: false, beta: 1, noFollaOnMega: true });
 variants.push({ name: "CONFRONTO pareggio al voto del Megafono · frase peso medio · CADE / NON CADE / VOTI NULLI!", types: [0, 1, 2], megaTie: true, beta: 1 });
+}
 for (const v of variants) {
   const T: Record<string, number> = {};
   for (const aff of sits) { const r = solveSit(v, aff) as unknown as Record<string, number>; for (const k in r) T[k] = (T[k] ?? 0) + r[k]! / sits.length; }
   console.log(`== ${v.name}`);
   console.log(`   punti nel turno: Megafono ${T.pm!.toFixed(2)} · Folla ${T.pf!.toFixed(2)} (vantaggio ${(T.pm! - T.pf!).toFixed(2)}) · cade la carta del Megafono ${pc(T.megaFell!)} · la Folla la vota ${pc(T.follaOnMega!)} · cade la carta più affine ${pc(T.strongFell!)}`);
-  console.log(`   segnalini: nessuno ${pc(T.tok0!)} · due ${pc(T.two!)} · CADE giocato ${pc(T.cadeP!)}${T.cadeP ? `, riesce ${pc(T.cadeOk! / T.cadeP!)}, sulla propria carta ${pc(T.cadeOwn! / T.cadeP!)}` : ""} · NON CADE ${pc(T.nonP!)}${T.nonP ? `, riesce ${pc(T.nonOk! / T.nonP!)}` : ""}${v.types.length === 3 ? ` · VOTI NULLI! ${pc(T.nulP!)}${T.nulP ? `, voti della Folla annullati ${(T.ann! / T.nulP!).toFixed(2)}` : ""}` : ""}`);
+  console.log(`   segnalini: nessuno ${pc(T.tok0!)} · due ${pc(T.two!)} · CADE giocato ${pc(T.cadeP!)}${T.cadeP ? `, riesce ${pc(T.cadeOk! / T.cadeP!)}, sulla propria carta ${pc(T.cadeOwn! / T.cadeP!)}, la Folla lo vota ${pc(T.onCade! / T.cadeP!)}` : ""} · NON CADE ${pc(T.nonP!)}${T.nonP ? `, riesce ${pc(T.nonOk! / T.nonP!)}` : ""}${v.types.length === 3 ? ` · VOTI NULLI! ${pc(T.nulP!)}${T.nulP ? `, voti della Folla annullati ${(T.ann! / T.nulP!).toFixed(2)}` : ""}` : ""}`);
 }
