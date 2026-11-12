@@ -22,7 +22,7 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 | `kick` | `playerId` | solo host, solo lobby |
 | `chat` | `text` (≤ 140 caratteri dopo la pulizia) | messaggio a tutta la stanza; errori `INVALID_MESSAGE`, `RATE_LIMIT` |
 | `start` | — | solo host, da 3 giocatori (i bot contano) |
-| `addBot` | `level` (`easy`\|`medium`\|`hard`) | solo host, solo lobby, fino a 8 giocatori totali |
+| `addBot` | `level` (`easy`\|`medium`\|`hard`) | solo host, solo lobby, fino a 6 giocatori totali |
 | `removeBot` | `playerId` | solo host, solo lobby |
 | `watch` | — | schermo condiviso (sola visione, solo dati pubblici) |
 | `leave` | — | in lobby esce (se era l'ultimo, la stanza si chiude). **In partita**: se nella stanza restano altri umani, chi esce viene **sostituito da un bot** (livello medio, stesso posto, punti e carte; il vecchio token non entra più; se era l'host il ruolo passa a un altro umano); se non ne restano, la stanza si **chiude subito**. A partita conclusa non c'è sostituzione: chi esce resta in classifica e l'ultimo che esce chiude la stanza |

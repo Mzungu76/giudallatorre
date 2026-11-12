@@ -3,6 +3,8 @@ import type { ReactNode, CSSProperties } from "react";
 
 import { CHAR_COLORS } from "./lib/characters.ts";
 export const PLAYER_COLORS = CHAR_COLORS;
+/** Colore (personaggio) di un giocatore: quello assegnato dal server, altrimenti l'ordine di ingresso. */
+export const colorFor = (players: { id: string; char?: number }[], id: string) => { const i = Math.max(0, players.findIndex((p) => p.id === id)); return PLAYER_COLORS[(players[i]?.char ?? i) % 8]!; };
 
 export function navigate(path: string) { history.pushState(null, "", path); window.dispatchEvent(new PopStateEvent("popstate")); }
 

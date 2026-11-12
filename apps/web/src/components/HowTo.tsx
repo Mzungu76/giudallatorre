@@ -8,7 +8,7 @@ import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
-const DEMO: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 1, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
+const DEMO: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 2, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 
 const Step = ({ ic, t, x }: { ic: string; t: ReactNode; x: ReactNode }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;

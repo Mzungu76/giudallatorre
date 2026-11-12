@@ -1,6 +1,6 @@
 {
- "versione": 15,
- "aggiornato": "2026-11-10",
+ "versione": 17,
+ "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -251,7 +251,7 @@
    "n": "Scelta della carta"
   },
   "hint.lui": {
-   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +1 se resta su, VOTI NULLI! annulla i voti.",
+   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +2 se resta su, VOTI NULLI! annulla i voti.",
    "s": "Suggerimenti a fumetto",
    "n": "Megafono, Lui!"
   },
@@ -583,7 +583,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.x": {
-   "t": "CADE +4 se la carta cade, NON CADE +1 se resta su: al Megafono e a chi ha votato quella carta.",
+   "t": "CADE +4 se la carta cade, NON CADE +2 se resta su: al Megafono e a chi ha votato quella carta.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "how.aria": {
@@ -725,7 +725,7 @@
    "s": "Regolamento completo"
   },
   "how.4.fine.x": {
-   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–8 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
+   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–6 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
    "s": "Regolamento completo"
   },
   "how.4.int.t": {
@@ -733,7 +733,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, da 6 a 8 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.",
+   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -2075,7 +2075,7 @@
    "s": "Stanza e lobby"
   },
   "room.lobby": {
-   "t": "Lobby · {n}/8",
+   "t": "Lobby · {n}/6",
    "s": "Stanza e lobby"
   },
   "room.codice": {
@@ -2528,7 +2528,7 @@
    "s": "Messaggi di errore (entrare/creare)"
   },
   "err.ROOM_FULL": {
-   "t": "La stanza è piena (massimo 8 giocatori).",
+   "t": "La stanza è piena (massimo 6 giocatori).",
    "s": "Messaggi di errore (entrare/creare)"
   },
   "err.GAME_STARTED": {
@@ -2949,7 +2949,7 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.lui.e.noncade": {
-   "t": "+1 se resta su, anche a chi la vota",
+   "t": "+2 se resta su, anche a chi la vota",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -2964,7 +2964,7 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.noncade": {
-   "t": "Se questa carta resta su: +1 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se questa carta resta su: +2 al Megafono e a ognuno che l'ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
