@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { megafonoOf, requiredPlayers } from "@gdt/game-engine";
+import { megafonoOf, requiredPlayers, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
@@ -299,7 +299,7 @@ describe("timer e pulizia", () => {
   });
   it("una partita lasciata sola dai timer arriva comunque a FINISHED", () => {
     const r = makeRoom(3, 7); send(r, 0, { t: "setOptions", turnTimerSec: 30 }); send(r, 0, { t: "start" });
-    let guard = 0; while (r.core.data.stage === "PLAYING" && guard++ < 500) r.core.tick(r.core.data.deadline! + 1);
+    let guard = 0; while (r.core.data.stage === "PLAYING" && guard++ < 500) r.core.tick(r.core.nextAlarm()! + 1);
     expect(r.core.data.stage).toBe("FINISHED");
   });
   it("stanze abbandonate o concluse vengono distrutte (nessun dato personale oltre il necessario)", () => {
@@ -471,5 +471,74 @@ describe("sveglie della stanza (quota gratuita dei Durable Objects)", () => {
     send(q, 1, { t: "leave" }); send(q, 2, { t: "leave" });
     expect(send(q, 0, { t: "leave" }).destroy).toBe(true); // l'ultimo umano che esce chiude la stanza subito, senza margine
     const w = makeRoom(3, 14, 0); expect(w.core.tick(LIMITS.maxLifeMs + 2000).destroy).toBe(true); // anche con gente connessa
+  });
+});
+
+describe("intervallo a tempo nella stanza", () => {
+  /** Porta una stanza di soli umani fino all'inizio dell'intervallo (voti validi, ognuno quando il suo personaggio è in scena). */
+  function toRun(n: number, seed: number, bots = 0) {
+    const r = makeRoom(n - bots, seed);
+    for (let i = 0; i < bots; i++) send(r, 0, { t: "addBot", level: "medium" });
+    send(r, 0, { t: "start" }); let guard = 0;
+    while (r.core.data.game!.phase !== "MINI_RUN" && guard++ < 2000) {
+      const g = r.core.data.game as GameState;
+      if (g.phase === "RESULTS") { send(r, 0, { t: "act", action: { type: "advance" } }); continue; }   // l'host può sempre proseguire
+      // un turno normale: con i bot li facciamo muovere dai timer, con gli umani con messaggi
+      if (r.core.data.botAt !== null && r.core.data.players.some((p) => p.isBot)) { r.core.tick(r.core.data.botAt + 1); continue; }
+      for (const id of r.ids) { const a = suggestAction(g, id, Math.random); if (!a) continue; const { playerId: _p, ...action } = a as Record<string, unknown>; r.core.handle(id, { t: "act", action } as never, 1_000_100); break; }
+    }
+    return r;
+  }
+  it("si apre con «via!» dopo presentazione e 3-2-1; il server lo comunica a tutti, schermo condiviso compreso", () => {
+    const r = toRun(3, 61), run = r.core.data.run!;
+    expect(r.core.data.game!.phase).toBe("MINI_RUN");
+    expect(run.goAt).toBeGreaterThan(1_000_100 + 7000); expect(run.endAt).toBeGreaterThan(run.goAt + 12_000);
+    expect(r.core.data.deadline).toBeNull();
+    const snap = r.core.snapshot(r.ids[0]!).find((m) => m.msg.t === "view")!.msg as { goAt?: number | null; now?: number };
+    expect(snap.goAt).toBe(run.goAt); expect(typeof snap.now).toBe("number");
+    const spec = r.core.spectatorMessages().find((m) => m.t === "view") as { goAt?: number | null };
+    expect(spec.goAt).toBe(run.goAt);
+  });
+  it("un voto vale solo se il personaggio è in scena (con margine); prima del «via» o fuori turno è rifiutato", () => {
+    const r = toRun(3, 62), g = r.core.data.game!, run = r.core.data.run!, order = g.mini!.order, pos = order[2]!;
+    const vote = (who: number, position: number, at: number) => send(r, who, { t: "act", action: { type: "vote", position } }, at);
+    expect(errCode(vote(0, pos, run.goAt - 2000))).toBe("NOT_ON_STAGE");          // durante il conto alla rovescia
+    expect(errCode(vote(0, pos, run.goAt + 500))).toBe("NOT_ON_STAGE");           // quel personaggio esce più tardi
+    const other = order.findIndex((p, i) => p === pos && i !== 2);
+    expect(errCode(vote(0, pos, run.goAt + 2 * 1000 + 300))).toBeUndefined();     // è in scena
+    expect(r.core.data.game!.votes[r.ids[0]!]).toBe(pos);
+    void other;
+    expect(errCode(vote(1, pos, run.goAt + 2 * 1000 + 1000 + 500))).toBeUndefined();   // appena rientrato: margine per la rete e i riflessi
+    expect(errCode(vote(2, pos, run.goAt + 2 * 1000 + 1000 + 1500))).toBe("NOT_ON_STAGE");
+  });
+  it("a fine corsa si contano i voti arrivati: chi non ha votato non prende nulla; poi 'advance' riprende", () => {
+    const r = toRun(3, 63), g = r.core.data.game!, run = r.core.data.run!, pos = g.mini!.order[0]!;
+    send(r, 0, { t: "act", action: { type: "vote", position: pos } }, run.goAt + 100);
+    expect(r.core.data.game!.phase).toBe("MINI_RUN");
+    expect(r.core.nextAlarm()).toBeLessThanOrEqual(run.endAt);
+    r.core.tick(run.endAt + 1);
+    const g2 = r.core.data.game!;
+    expect(g2.phase).toBe("MINI_RESULTS"); expect(g2.miniResult!.votes).toEqual({ [r.ids[0]!]: pos }); expect(r.core.data.run).toBeNull();
+    expect(g2.miniResult!.points[r.ids[0]!]).toBe(6); expect(g2.miniResult!.points[r.ids[1]!]).toBe(0);
+    send(r, 0, { t: "act", action: { type: "advance" } });
+    expect(r.core.data.game!.phase).toBe("PROCLAIM");
+  });
+  it("i bot votano da soli, ognuno quando il suo personaggio è in scena; con tutti i voti l'intervallo si chiude prima della fine", () => {
+    const r = toRun(3, 64, 2), run = r.core.data.run!, g = r.core.data.game!;
+    const bots = r.core.data.players.filter((p) => p.isBot);
+    expect(Object.keys(run.bots).sort()).toEqual(bots.map((b) => b.id).sort());
+    for (const b of bots) { const v = run.bots[b.id]!, i = g.mini!.order.map((p, k) => (p === v.position ? k : -1)).filter((k) => k >= 0); expect(i.some((k) => v.at >= run.goAt + k * 1000 && v.at < run.goAt + (k + 1) * 1000)).toBe(true); }
+    r.core.tick(run.goAt - 1000);
+    expect(r.core.data.game!.votes[bots[0]!.id]).toBeUndefined();
+    send(r, 0, { t: "act", action: { type: "vote", position: g.mini!.order[1]! } }, run.goAt + 1000 + 200);
+    r.core.tick(Math.max(...Object.values(run.bots).map((v) => v.at)) + 1);
+    expect(r.core.data.game!.phase).toBe("MINI_RESULTS");
+  });
+  it("lo stato dell'intervallo è JSON puro: ricostruita la stanza, la corsa prosegue", () => {
+    const r = toRun(3, 65), run = r.core.data.run!;
+    const copy = new RoomCore(JSON.parse(JSON.stringify(r.core.data)), deps());
+    expect(copy.data.run).toEqual(run);
+    copy.tick(run.endAt + 1);
+    expect(copy.data.game!.phase).toBe("MINI_RESULTS");
   });
 });

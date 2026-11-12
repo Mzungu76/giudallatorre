@@ -1,0 +1,55 @@
+import { describe, expect, it } from "vitest";
+import { buildFinale, compress, EDGE_Y, SLOT } from "../src/lib/miniScenes.ts";
+import type { Finale, WP } from "../src/lib/miniScenes.ts";
+
+const rand = () => 0.5;
+const track = (f: Finale, who: number | "side") => f.figs.find((x) => x.who === who)!.wps;
+const last = (w: WP[]) => w.slice().sort((a, b) => a.t - b.t)[w.length - 1]!;
+
+describe("scenette finali degli intervalli", () => {
+  it("tutte le scenette hanno una durata ragionevole (né troppo veloci né lente) e tempi mai oltre la durata", () => {
+    for (const [kind, leaders, fallen] of [["accusa", [3], [3]], ["peggiore", [2], [2]], ["amore", [1, 5], []], ["accusa", [1, 4], [1, 4]], ["peggiore", [1, 2, 3], [1, 2, 3]]] as const) {
+      const f = buildFinale(kind, [...leaders], [...fallen], rand);
+      expect(f.duration, kind).toBeGreaterThanOrEqual(5000); expect(f.duration, kind).toBeLessThanOrEqual(16_000);
+      for (const fig of f.figs) for (const w of fig.wps) { expect(w.t, `${kind} ${fig.key}`).toBeGreaterThanOrEqual(0); expect(w.t, `${kind} ${fig.key}`).toBeLessThanOrEqual(f.duration + 1); expect(Number.isFinite(w.x + w.y)).toBe(true); }
+    }
+  });
+  it("Accusa: l'accusato fugge per la terrazza, viene buttato giù e sparisce; l'accusatore c'è, gli altri restano", () => {
+    const f = buildFinale("accusa", [3], [3], rand), a = track(f, 3), end = last(a);
+    expect(end.o).toBe(0); expect(end.y).toBeGreaterThan(EDGE_Y + 300);   // cade oltre il bordo davanti
+    const xs = a.map((w) => w.x); expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(150);   // ha attraversato la terrazza
+    expect(f.figs.some((x) => x.who === "side")).toBe(true);
+    for (const p of [1, 2, 4, 5, 6]) expect(last(track(f, p)).o ?? 1).toBe(1);
+    expect(f.bursts.some((b) => b.kind === "bam")).toBe(true);
+    // l'accusatore insegue: parte dopo l'accusato ma lo raggiunge prima della caduta
+    const side = track(f, "side").filter((w) => w.t > 0);
+    expect(side.some((w) => w.y > EDGE_Y - 40 && w.x > 90 && w.x < 200)).toBe(true);
+  });
+  it("Il peggiore: le altre carte si raccolgono, lo sollevano e lo lanciano; poi lui è fuori", () => {
+    const f = buildFinale("peggiore", [2], [2], rand), a = track(f, 2), top = Math.min(...a.map((w) => w.y));
+    expect(top).toBeLessThan(SLOT[2]!.y - 100);   // sollevato in alto
+    expect(last(a).o).toBe(0); expect(last(a).y).toBeGreaterThan(EDGE_Y + 300);
+    expect(f.figs.some((x) => x.who === "side")).toBe(false);   // nel Peggiore non c'è un personaggio di lato
+    for (const p of [1, 3, 4, 5, 6]) { const t = track(f, p); expect(t.some((w) => Math.abs(w.x - SLOT[2]!.x) < 120 && Math.abs(w.y - SLOT[2]!.y) < 90)).toBe(true); }
+    expect(f.bursts.length).toBe(1);
+  });
+  it("Storia d'amore: partner e vincitori si avvicinano, nessuno cade, e sgorgano cuori che poi cadono giù dalla torre", () => {
+    const f = buildFinale("amore", [1, 5], [], rand);
+    for (const fig of f.figs) expect(last(fig.wps).o ?? 1, fig.key).toBe(1);
+    const p = last(track(f, "side")), w = last(track(f, 1)), w5 = last(track(f, 5));
+    for (const q of [w, w5]) expect(Math.hypot(q.x - p.x, q.y - p.y)).toBeLessThan(130);   // vicini al partner
+    expect(f.hearts.length).toBeGreaterThanOrEqual(40);
+    for (const h of f.hearts) { expect(h.rise).toBeGreaterThan(0); expect(h.fall).toBeGreaterThan(h.rise); expect(h.t + h.dur).toBeLessThanOrEqual(f.duration + 1500); }
+    expect(Math.max(...f.hearts.map((h) => h.t))).toBeGreaterThan(2500);   // una vera fontana: i cuori continuano a sgorgare
+  });
+  it("più carte in parità: si fanno una dopo l'altra, sempre più rapide, tutte fuori alla fine", () => {
+    expect(compress(1)).toBe(1); expect(compress(2)).toBeLessThan(1); expect(compress(3)).toBeLessThan(compress(2));
+    const f = buildFinale("accusa", [1, 4], [1, 4], rand), a = last(track(f, 1)), b = last(track(f, 4));
+    expect(a.o).toBe(0); expect(b.o).toBe(0);
+    const tFall = (w: WP[]) => w.find((x) => x.y > EDGE_Y + 300)!.t;
+    expect(tFall(track(f, 4))).toBeGreaterThan(tFall(track(f, 1)));
+  });
+  it("nessun voto arrivato: una breve pausa, nessuno cade", () => {
+    for (const kind of ["accusa", "amore", "peggiore"] as const) { const f = buildFinale(kind, [], [], rand); expect(f.duration).toBeLessThan(3000); expect(f.hearts).toHaveLength(0); for (const fig of f.figs) expect(last(fig.wps).o ?? 1).toBe(1); }
+  });
+});

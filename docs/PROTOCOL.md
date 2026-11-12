@@ -29,7 +29,7 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 | `act` | `reqId?`, `action` | azioni di gioco: `choosePhrase{mode:"card",index}\|{mode:"free", text?}` (testo libero opzionale, max 80 caratteri; senza testo la frase è solo a voce), `playCard{cardId}`, `placeLui{kind,position}`, `vote{position, reason?}` (con `justifyVotes` la frase è obbligatoria, max 80 caratteri), `advance` |
 
 ## WebSocket — server → client
-`room` (stanza, giocatori e presenza, opzioni, `seq`), `view` (vista privata del giocatore + eventi per le animazioni + `deadline` del timer), `chat{msg}` e `chatlog{msgs}` (cronologia alla connessione), `error{code,message,reqId?}`, `kicked`, `closed{reason}`, `pong`.
+`room` (stanza, giocatori e presenza, opzioni, `seq`), `view` (vista privata del giocatore + eventi per le animazioni + `deadline` del timer + `now`, orologio del server in ms, e `goAt`, il «via!» dell'intervallo a tempo; l'app li usa per allineare conto alla rovescia e personaggi), `chat{msg}` e `chatlog{msgs}` (cronologia alla connessione), `error{code,message,reqId?}` (tra i codici: `NOT_ON_STAGE` = voto dell'intervallo a tempo per un personaggio non in scena), `kicked`, `closed{reason}`, `pong`.
 
 Dopo **ogni** cambiamento ogni giocatore connesso riceve `room` e `view` con `seq` crescente. Alla (ri)connessione riceve subito uno snapshot completo: nessun ricaricamento della pagina e nessuna perdita di stato.
 

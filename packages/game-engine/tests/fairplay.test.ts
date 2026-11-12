@@ -19,7 +19,7 @@ function hideFrom(s: GameState, me: PlayerId): GameState {
   for (const p of others) t.hands[p] = t.hands[p]!.map((_, k) => `carta-finta-${p}-${k}`);                  // mani degli altri
   for (const p of others) if (t.played[p] !== undefined) t.played[p] = "carta-finta-giocata";               // carte giocate coperte
   if (t.deckCard !== null) t.deckCard = "carta-finta-mazzo";                                               // carta pescata dal mazzo, coperta
-  for (const p of others) if (t.votes[p] !== undefined && t.phase.endsWith("VOTE")) t.votes[p] = (t.votes[p]! % Math.max(1, t.tower.length)) + 1; // voti degli altri, segreti
+  for (const p of others) if (t.votes[p] !== undefined && (t.phase.endsWith("VOTE") || t.phase === "MINI_RUN")) t.votes[p] = (t.votes[p]! % Math.max(1, t.tower.length)) + 1; // voti degli altri, segreti
   let k = 0;                                                                                                // proprietari delle carte sulla Torre (tranne la propria)
   for (const sl of t.tower) if (sl.ownerId !== null && sl.ownerId !== me) { sl.ownerId = others[(++k) % others.length]!; }
   if (t.lui && me !== mega) t.lui.slot = t.lui.slot === "zero" ? "k1" : "zero";                            // quale segnalino ha giocato il Megafono
@@ -58,7 +58,7 @@ describe("fair play dei giocatori virtuali", () => {
       expect(s.phase).toBe("GAME_OVER");
     }
     // la prova ha davvero toccato tutte le fasi in cui un bot decide
-    for (const ph of ["PROCLAIM", "PLAY", "SUSPECT", "VOTE", "MINI_PLAY", "MINI_VOTE"]) expect(seen[ph] ?? 0, ph).toBeGreaterThan(20);
+    for (const ph of ["PROCLAIM", "PLAY", "SUSPECT", "VOTE", "MINI_RUN"]) expect(seen[ph] ?? 0, ph).toBeGreaterThan(20);
     expect(compared).toBeGreaterThan(300);
   });
 

@@ -1,5 +1,5 @@
 {
- "versione": 17,
+ "versione": 18,
  "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
@@ -265,7 +265,7 @@
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.tag": {
-   "t": "Qualcuno l'ha combinata grossa",
+   "t": "Chi l'avrebbe fatto?",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.accusa.capo": {
@@ -273,64 +273,12 @@
    "s": "Mini-gioco «L'Accusa» (intervalli)",
    "n": "Nome della carta in testa"
   },
-  "mini.accusa.passo1.t": {
-   "t": "Un personaggio accusa",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.passo1.x": {
-   "t": "L'accusatore accusa un altro personaggio di aver combinato qualcosa",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.passo2.t": {
-   "t": "Giocate il colpevole",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.passo2.x": {
-   "t": "Ognuno gioca in segreto il personaggio che ritiene colpevole",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.passo3.t": {
-   "t": "Si vota",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.passo3.x": {
-   "t": "La carta più votata è il colpevole e cade dalla torre: ottengono punti sia chi l'ha votata, sia chi l'ha giocata.",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.pts1.v": {
-   "t": "voti",
-   "s": "Mini-gioco «L'Accusa» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.accusa.pts1.x": {
-   "t": "Se voti il colpevole (la carta più votata, che cade): tanti punti quanti sono i suoi voti.",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.pts2.v": {
-   "t": "+2",
-   "s": "Mini-gioco «L'Accusa» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.accusa.pts2.x": {
-   "t": "Se la carta del colpevole è quella che hai giocato tu",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
-  },
-  "mini.accusa.gioca": {
-   "t": "Chi ha fatto questa cosa?",
-   "s": "Mini-gioco «L'Accusa» (intervalli)",
-   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
-  },
-  "mini.accusa.vota": {
-   "t": "Puoi votare anche la tua. La più votata cade dalla torre.",
-   "s": "Mini-gioco «L'Accusa» (intervalli)",
-   "n": "Istruzione mentre si vota (anche nel fumetto)"
-  },
   "mini.amore.titolo": {
    "t": "La storia d'amore",
    "s": "Mini-gioco «La storia d'amore» (intervalli)"
   },
   "mini.amore.tag": {
-   "t": "È nata una nuova coppia",
+   "t": "Chi è il partner perfetto?",
    "s": "Mini-gioco «La storia d'amore» (intervalli)"
   },
   "mini.amore.capo": {
@@ -338,117 +286,13 @@
    "s": "Mini-gioco «La storia d'amore» (intervalli)",
    "n": "Nome della carta in testa"
   },
-  "mini.amore.passo1.t": {
-   "t": "Un personaggio si innamora",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.passo1.x": {
-   "t": "Una carta ha una nuova storia d'amore.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.passo2.t": {
-   "t": "Giocate il partner",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.passo2.x": {
-   "t": "Ognuno gioca in segreto la carta che gli starebbe meglio accanto.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.passo3.t": {
-   "t": "Si vota",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.passo3.x": {
-   "t": "Le carte più votate restano e fanno punti. Le altre cadono dalla torre.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.pts1.v": {
-   "t": "voti",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.amore.pts1.x": {
-   "t": "Se voti una carta in testa (resta sulla torre): tanti punti quanti sono i suoi voti.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.pts2.v": {
-   "t": "+2",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.amore.pts2.x": {
-   "t": "Se una carta in testa è la tua.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
-  },
-  "mini.amore.gioca": {
-   "t": "Chi è il partner perfetto? La scelta è segreta.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)",
-   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
-  },
-  "mini.amore.vota": {
-   "t": "Puoi votare anche la tua. Le più votate restano, le altre cadono.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)",
-   "n": "Istruzione mentre si vota (anche nel fumetto)"
-  },
   "mini.peggiore.titolo": {
    "t": "Il peggiore",
    "s": "Mini-gioco «Il peggiore» (intervalli)"
   },
   "mini.peggiore.tag": {
-   "t": "Chi butteresti giù oggi?",
+   "t": "Chi butteresti giù?",
    "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo1.t": {
-   "t": "Niente frase",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo1.x": {
-   "t": "Questa volta nessuno accusa nessuno.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo2.t": {
-   "t": "Giocate il peggiore",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo2.x": {
-   "t": "Ognuno gioca in segreto il personaggio che per lui è il peggiore in assoluto.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo3.t": {
-   "t": "Si vota chi cade",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.passo3.x": {
-   "t": "Ognuno vota la carta da buttare giù, ma non la propria. Per ogni voto che prende la tua carta fai un punto.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.pts1.v": {
-   "t": "+2",
-   "s": "Mini-gioco «Il peggiore» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.peggiore.pts1.x": {
-   "t": "Se voti una carta che cade (la più votata).",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.pts2.v": {
-   "t": "+1",
-   "s": "Mini-gioco «Il peggiore» (intervalli)",
-   "n": "Valore mostrato nell'icona punti"
-  },
-  "mini.peggiore.pts2.x": {
-   "t": "Per ogni voto che prende la carta che hai giocato, cada o no.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
-  },
-  "mini.peggiore.gioca": {
-   "t": "Gioca il personaggio che per te è il peggiore in assoluto: più voti prende, più punti fai.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)",
-   "n": "Istruzione mentre si sceglie la carta (anche nel fumetto)"
-  },
-  "mini.peggiore.vota": {
-   "t": "Vota la carta che butteresti giù. La tua non si può votare.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)",
-   "n": "Istruzione mentre si vota (anche nel fumetto)"
   },
   "ex.board.aria": {
    "t": "Quattro carte sulla torre con i voti ricevuti",
@@ -733,7 +577,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.",
+   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono: dopo il 3-2-1, 6 personaggi escono uno alla volta da dietro un separé e tu premi **QUESTO!** quando esce quello giusto. Chi sceglie la carta più votata fa +2 punti, il più veloce di loro +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -985,10 +829,6 @@
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Barra in alto, anche nelle partite normali"
   },
-  "mg.interv": {
-   "t": "🎭 Intervallo",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.interv.aria": {
    "t": "Intervallo",
    "s": "Intervallo / mini-gioco (schermate)"
@@ -996,32 +836,6 @@
   "mg.strip": {
    "t": "★ INTERVALLO ★",
    "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.come": {
-   "t": "Come si fanno punti",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.sheet.t": {
-   "t": "SI GIOCA UN MINI-GIOCO",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.sheet.s": {
-   "t": "Intervallo, senza Megafono",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.parti": {
-   "t": "Si parte",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.n": {
-   "t": "n. {n}",
-   "s": "Intervallo / mini-gioco (schermate)",
-   "n": "Riferimento a una carta della torre"
-  },
-  "mg.e": {
-   "t": " e ",
-   "s": "Intervallo / mini-gioco (schermate)",
-   "n": "Congiunzione tra due carte (n. 2 e n. 3)"
   },
   "mg.body.amore": {
    "t": "Chi sarà il suo partner perfetto?",
@@ -1035,137 +849,8 @@
    "t": "L'accusatore dice:",
    "s": "Intervallo / mini-gioco (schermate)"
   },
-  "mg.ctx.accusa": {
-   "t": "Accusa",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.blk.giusto.t": {
    "t": "Voto giusto",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.giusto.x": {
-   "t": "Hanno votato una carta caduta: +2 a testa.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.ricevuti.t": {
-   "t": "Voti ricevuti",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.ricevuti.x": {
-   "t": "Chi ha giocato una carta prende tanti punti quanti sono i voti che la sua carta ha ricevuto, cada o no.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.t.accusa": {
-   "t": "Colpevole votato",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.t.amore": {
-   "t": "Voto in testa",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.x.accusa1": {
-   "t": "Hanno votato il colpevole: tanti punti quanti sono i voti su quella carta, compreso il proprio.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.x.accusaN": {
-   "t": "Hanno votato un colpevole: tanti punti quanti sono i voti su quella carta, compreso il proprio.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.x.amore1": {
-   "t": "Hanno votato la carta in testa: tanti punti quanti sono i voti su quella carta, compreso il proprio.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.voto.x.amoreN": {
-   "t": "Hanno votato una carta in testa: tanti punti quanti sono i voti su quella carta, compreso il proprio.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.carta.t.accusa": {
-   "t": "Carta del colpevole +2",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.carta.t.amore": {
-   "t": "Carta in testa +2",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.carta.x.accusa": {
-   "t": "Chi aveva giocato la carta del colpevole prende 2 punti.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.carta.x.amore": {
-   "t": "Chi aveva giocato una carta in testa prende 2 punti.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pareggio": {
-   "t": "Pareggio!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pareggio.testa": {
-   "t": "Pareggio in testa!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.tutte": {
-   "t": "Tutte a pari merito!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pegg.piu": {
-   "t": "Il più votato: {c}",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pegg.pari": {
-   "t": "Cadono insieme tutte le carte a pari merito: {lista}.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pegg.uno": {
-   "t": "{v} voti su {tot}. Cade giù dalla torre!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pegg.stamp.pari": {
-   "t": "Cadono insieme: {lista}!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.pegg.stamp.uno": {
-   "t": "Cade il {c}!",
-   "s": "Intervallo / mini-gioco (schermate)",
-   "n": "{c} = «n. 2»"
-  },
-  "mg.acc.colp": {
-   "t": "Il colpevole: {c}",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.acc.pari": {
-   "t": "Cadono insieme le carte in testa ({lista}) e fa punti.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.acc.uno": {
-   "t": "{v} voti su {tot}. Il colpevole cade giù dalla torre ({lista}) e fa punti.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.acc.nessuna": {
-   "t": "Nessuna carta cade: nessun colpevole.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.acc.nessuno": {
-   "t": "Nessun colpevole!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.am.testa": {
-   "t": "In testa: {c}",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.am.restano": {
-   "t": "Restano le carte in testa ({lista}) e fanno punti. Le altre cadono.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.am.nessuna": {
-   "t": "Nessuna carta cade: restano tutte e fanno punti.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.am.stamp": {
-   "t": "Restano: {lista}!",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.am.stamp.tutte": {
-   "t": "Restano tutte!",
    "s": "Intervallo / mini-gioco (schermate)"
   },
   "mg.salta": {
@@ -1173,65 +858,8 @@
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Anche nelle altre schermate di spoglio"
   },
-  "mg.scegli.t": {
-   "t": "SCEGLI LA CARTA",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.giocata": {
-   "t": "Carta giocata.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.giocata.x": {
-   "t": "Aspettiamo gli altri, poi le carte salgono sulla torre.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.attendi": {
-   "t": "ATTENDI",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.hanno.giocato": {
-   "t": "{n} su {tot} hanno giocato",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.vota.t": {
-   "t": "VOTA",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.hanno.votato": {
    "t": "{n} su {tot} hanno votato",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.chi.accusa": {
-   "t": "CHI È IL COLPEVOLE?",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.chi.amore": {
-   "t": "CHI È IL PARTNER?",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.chi.peggiore": {
-   "t": "CHI BUTTI GIÙ?",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.propria": {
-   "t": "La tua carta non si può votare: scegline un'altra.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.scegli.carta": {
-   "t": "Scegli una carta",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.conferma": {
-   "t": "Conferma il {c}",
-   "s": "Intervallo / mini-gioco (schermate)",
-   "n": "{c} = «n. 2»"
-  },
-  "mg.inviato": {
-   "t": "VOTO INVIATO",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.aspettiamo": {
-   "t": "Aspettiamo gli altri.",
    "s": "Intervallo / mini-gioco (schermate)"
   },
   "mg.resta.t": {
@@ -1285,10 +913,6 @@
   },
   "mg.host.aspetta": {
    "t": "Aspettiamo che l'host riprenda la partita…",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.vota.il": {
-   "t": "Vota il {c}",
    "s": "Intervallo / mini-gioco (schermate)"
   },
   "rv.carta.aria": {
@@ -1770,14 +1394,6 @@
   "cl.chiudi": {
    "t": "Chiudi",
    "s": "Classifica"
-  },
-  "rn.titolo": {
-   "t": "Rinnoviamo la tua mano!",
-   "s": "Rinnovo della mano (intervallo)"
-  },
-  "rn.sotto": {
-   "t": "{n} carte nuove, tutte per te",
-   "s": "Rinnovo della mano (intervallo)"
   },
   "char.0.nome": {
    "t": "Il Gradasso",
@@ -2576,6 +2192,11 @@
    "t": "Solo l'host può farlo.",
    "s": "Messaggi di errore (in partita)"
   },
+  "ws.NOT_ON_STAGE": {
+   "t": "Troppo tardi: quel personaggio è già rientrato.",
+   "s": "Messaggi di errore (in partita)",
+   "n": "Intervallo a tempo: il voto arriva quando il personaggio non è più in scena"
+  },
   "ws.NOT_ENOUGH_PLAYERS": {
    "t": "Servono almeno 3 giocatori per iniziare.",
    "s": "Messaggi di errore (in partita)"
@@ -3072,6 +2693,107 @@
    "t": "Voto annullato da VOTI NULLI!",
    "s": "Riepilogo del turno («Com'è andata»)",
    "n": "Gioco base «Cade / Non cade»"
+  },
+  "mini.accusa.regola": {
+   "t": "Il colpevole esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "s": "Mini-gioco «L'Accusa» (intervalli)"
+  },
+  "mini.amore.regola": {
+   "t": "Il partner perfetto esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+  },
+  "mini.peggiore.regola": {
+   "t": "Il peggiore esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "s": "Mini-gioco «Il peggiore» (intervalli)"
+  },
+  "mr.btn": {
+   "t": "QUESTO!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Pulsante grande in basso durante la corsa a tempo"
+  },
+  "mr.btn.pronti": {
+   "t": "PRONTI…",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Pulsante prima del «via!»"
+  },
+  "mr.btn.votato": {
+   "t": "VOTATO",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Pulsante dopo aver votato"
+  },
+  "mr.btn.fuori": {
+   "t": "TEMPO SCADUTO",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Pulsante a corsa finita"
+  },
+  "mr.btn.aria": {
+   "t": "Vota il personaggio che è in scena adesso",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Etichetta per i lettori di schermo (solo testo semplice)"
+  },
+  "mr.via": {
+   "t": "VIA!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Dopo il 3-2-1"
+  },
+  "mr.hint": {
+   "t": "Premi il pulsante quando esce il personaggio giusto: conta anche la velocità!",
+   "s": "Suggerimenti (fumetti)"
+  },
+  "mr.fx.bam": {
+   "t": "BAM!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta nella scenetta dell'Accusa"
+  },
+  "mr.fx.via": {
+   "t": "VIA!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta nella scenetta del Peggiore"
+  },
+  "mr.fin.accusa": {
+   "t": "Il colpevole cade giù dalla torre!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta in alto nella scenetta finale"
+  },
+  "mr.fin.amore": {
+   "t": "Che coppia! Pioggia di cuori.",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta in alto nella scenetta finale"
+  },
+  "mr.fin.peggiore": {
+   "t": "Fuori dalla torre, il peggiore!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta in alto nella scenetta finale"
+  },
+  "mr.fin.nessuno": {
+   "t": "Nessuno ha votato in tempo.",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta in alto quando nessun voto è arrivato"
+  },
+  "mg.vince": {
+   "t": "VINCE",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Etichetta sotto la carta in testa nella Storia d'amore"
+  },
+  "mg.blk.giusto.x.accusa": {
+   "t": "Hanno scelto il colpevole: +2 a testa.",
+   "s": "Intervallo / mini-gioco (schermate)"
+  },
+  "mg.blk.giusto.x.amore": {
+   "t": "Hanno scelto il partner perfetto: +2 a testa.",
+   "s": "Intervallo / mini-gioco (schermate)"
+  },
+  "mg.blk.giusto.x.peggiore": {
+   "t": "Hanno scelto il peggiore: +2 a testa.",
+   "s": "Intervallo / mini-gioco (schermate)"
+  },
+  "mg.blk.veloce.t": {
+   "t": "Il più veloce",
+   "s": "Intervallo / mini-gioco (schermate)"
+  },
+  "mg.blk.veloce.x": {
+   "t": "Ha votato per primo una carta in testa: +4.",
+   "s": "Intervallo / mini-gioco (schermate)"
   }
  }
 }

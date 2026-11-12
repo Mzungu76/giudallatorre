@@ -11,7 +11,6 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
       const c = s.proclaim!;
       return rand() < 0.15 ? { type: "choosePhrase", playerId, mode: "free" } : { type: "choosePhrase", playerId, mode: "card", index: Math.floor(rand() * c.phrases.length) };
     }
-    case "MINI_PLAY":
     case "PLAY":
       if (!requiredPlayers(s).includes(playerId) || s.played[playerId] !== undefined) return null;
       return { type: "playCard", playerId, cardId: pick(s.hands[playerId]!) };
@@ -22,13 +21,11 @@ export function suggestAction(s: GameState, playerId: PlayerId, rand: () => numb
         // Dirottamento! (PROPAGANDA): serve anche la carta che riceve il voto
         const dir = luiTokens(s).find((x) => x.slot === slot)?.effect === "dirottamento";
         return { type: "placeLui", playerId, slot, position, ...(dir ? { to: (position % n) + 1 } : {}) }; }
-    case "MINI_VOTE":
+    case "MINI_RUN":
     case "VOTE": {
       if (s.votes[playerId] !== undefined) return null;
-      // Il peggiore: la propria carta non si può votare
-      const own = s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" ? s.tower.find((t) => t.ownerId === playerId)?.position : undefined;
       const banned = s.phase === "VOTE" ? luiForbidden(s, playerId) : null;   // «Il gregge»: il Megafono non vota la carta del suo Lui!
-      const options = s.tower.map((t) => t.position).filter((p) => p !== own && p !== banned);
+      const options = s.tower.map((t) => t.position).filter((p) => p !== banned);
       return { type: "vote", playerId, position: pick(options) };
     }
     default: return null;

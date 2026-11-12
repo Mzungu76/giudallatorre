@@ -301,37 +301,23 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const ww = softmax(val.map((x) => x / (hard ? TUNE.voteTemp : TUNE.voteTempMed)));
       return vote(pickProb(ww.map((x, k) => (k + 1 === banned ? 0 : x + 0.04)), rand) + 1);
     }
-    case "MINI_PLAY": {
-      if (s.played[me] !== undefined || !s.mini) return null;
-      const hand = s.hands[me]!, mini = s.mini;
-      if (level === "easy") return { type: "playCard", playerId: me, cardId: pick(hand) };
-      if (mini.kind === "peggiore") {
-        // il personaggio che più spesso è caduto (quello che il gruppo considera il peggiore) prende più voti, e ogni voto sono punti per me
-        const bad = (c: CardId) => ((mem.fell[c] ?? 0) + 0.5) / ((mem.shown[c] ?? 0) + 2) + rand() * (level === "hard" ? 0.25 : 0.7);
-        return { type: "playCard", playerId: me, cardId: hand.slice().sort((a, b) => bad(b) - bad(a))[0]! };
-      }
-      // Accusa: la carta più "colpevole" è quella che il gruppo voterà (e che sale: ×2 per me); Storia d'amore: carta imprevedibile, spesso con gusti simili
-      const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
-      const sc = (c: CardId) => { const a = text ? affinity(c, text) : null; return (a ?? 0) + rand() * (level === "hard" ? 2.2 : 3.2); };
-      return { type: "playCard", playerId: me, cardId: hand.slice().sort((x, y) => sc(y) - sc(x))[0]! };
-    }
-    case "MINI_VOTE": {
+    case "MINI_RUN": {
+      // Intervallo a tempo: la posizione è quella che il bot sceglie di votare (il server decide quando, vedi RoomCore). Prendo punti se voto una carta che arriva in testa → seguo il gruppo.
       if (s.votes[me] !== undefined || !s.mini) return null;
       const mini = s.mini, vote = (position: number): Action => ({ type: "vote", playerId: me, position });
       const sample = (w: number[]) => { const z = w.reduce((x, y) => x + y, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
-      const own = s.tower.find((t) => t.ownerId === me)?.position ?? -1;
+      const len = s.tower.length;
+      if (level === "easy") return vote(1 + Math.floor(rand() * len));
       if (mini.kind === "peggiore") {
-        // la propria carta non si può votare; tra le altre voto il "peggiore": le carte che cadono spesso un po' di più, in modo imprevedibile
-        if (level === "easy") return vote(pick(s.tower.map((t) => t.position).filter((p) => p !== own)));
-        const w = s.tower.map((t) => (t.position === own ? 0 : 1 + 0.8 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1))) * (0.6 + rand()));
+        // il "peggiore": i personaggi che cadono spesso un po' di più, in modo imprevedibile
+        const w = s.tower.map((t) => (1 + 0.8 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1))) * (0.6 + rand()));
         return vote(sample(w) + 1);
       }
-      if (level === "easy") return vote(1 + Math.floor(rand() * n));
-      // Accusa / amore: prendo punti se voto una carta che arriva in testa → seguo il gruppo; la mia carta in testa vale il doppio
+      // Accusa: il più "colpevole" per affinità con l'accusa; Storia d'amore: nessuna accusa, i gusti si somigliano poco e la scelta è quasi libera
       const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
       const aff = s.tower.map((t) => { const a = text ? affinity(t.cardId, text) : null; return a === null ? 0 : a; });
       const temp = level === "hard" ? 1.5 : 2.5;
-      const w = softmax(aff.map((a, k) => a / temp + (k + 1 === own ? (level === "hard" ? 0.5 : 0.2) : 0)));
+      const w = softmax(aff.map((a) => a / temp));
       return vote(sample(w.map((x) => x + 0.04)) + 1);
     }
     default: return null;

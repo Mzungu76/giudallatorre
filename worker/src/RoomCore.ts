@@ -1,4 +1,4 @@
-import { applyAction, buildPhraseDeck, chooseBotAction, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, buildPhraseDeck, chooseBotAction, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -19,6 +19,8 @@ export interface RoomData {
   emptySince?: number | null;
   /** Un giocatore è uscito di sua volontà a partita iniziata: se la stanza si svuota si chiude con il margine breve. */
   leftExplicit?: boolean;
+  /** Intervallo a tempo in corso: istante del «via!», fine della corsa e voti pianificati dei bot (posizione e istante). */
+  run?: { goAt: number; endAt: number; bots: Record<string, { at: number; position: number }> } | null;
 }
 export interface Outbox {
   send: { to: string; msg: ServerMessage }[];
@@ -39,6 +41,8 @@ export class RoomError extends Error { constructor(public code: string, message:
 export const LIMITS = {
   maxPlayers: 6, minPlayers: 3,
   hostGraceMs: 60_000, lobbyIdleMs: 5 * 60_000, playingIdleMs: 45 * 60_000, maxLifeMs: 4 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
+  /** Intervallo a tempo: un voto vale se arriva mentre il personaggio è in scena, con un po' di margine per la rete e i riflessi. */
+  runEarlyMs: 300, runLateMs: 700, runEndGraceMs: 900,
 };
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
 const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
@@ -47,9 +51,11 @@ export const BOT_NAMES = ["Bot Gino", "Bot Mara", "Bot Pino", "Bot Lella", "Bot 
 
 export class RoomCore {
   readonly connected = new Set<string>();
+  /** Ultimo istante passato dall'esterno (orologio del server): finisce nei messaggi per allineare i timer dell'app. */
+  private clock = 0;
   private lastChat = new Map<string, number>();
   constructor(public data: RoomData, private deps: Deps) {
-    data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false;
+    data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false; data.run ??= null;
     data.players.forEach((p, i) => { p.char ??= data.players.some((q) => q.char === i % 8) ? this.freeChar() : i % 8; }); // stanze salvate prima di questa versione: personaggi in ordine di ingresso
   }
   /** Un personaggio a caso tra gli otto che nessuno in stanza ha già. */
@@ -99,6 +105,7 @@ export class RoomCore {
 
   // ---------- presenza ----------
   onConnect(playerId: string, now: number): Outbox {
+    this.clock = now;
     this.connected.add(playerId); const me0 = this.data.players.find((p) => p.id === playerId); if (me0) me0.left = false; this.data.lastActivity = now; this.data.emptySince = null; this.data.leftExplicit = false;
     if (this.data.players.some((p) => p.id === playerId && p.isHost)) this.data.hostLostAt = null;
     const out = emptyOut(); out.send.push(...this.snapshot(playerId));
@@ -123,7 +130,7 @@ export class RoomCore {
 
   // ---------- messaggi ----------
   handle(playerId: string, msg: ClientMessage, now: number): Outbox {
-    const d = this.data, out = emptyOut();
+    const d = this.data, out = emptyOut(); this.clock = now;
     if (!d.players.some((p) => p.id === playerId)) { out.send.push({ to: playerId, msg: { t: "error", code: "NOT_IN_ROOM", message: "non fai parte della stanza" } }); return out; }
     d.lastActivity = now;
     const err = (code: string, message: string, reqId?: string) => { out.send.push({ to: playerId, msg: { t: "error", code, message, ...(reqId ? { reqId } : {}) } }); return out; };
@@ -191,7 +198,7 @@ export class RoomCore {
           if (d.stage !== "PLAYING") me.left = true;
           if (d.stage === "PLAYING") {
             me.isBot = true; me.level = "medium"; me.tokenHash = "";   // il vecchio token non entra più
-            d.botAt = null; this.scheduleBots(now);
+            d.botAt = null; this.scheduleBots(now); this.planBots();
           }
           d.seq++; out.persist = true; return this.broadcastRoom(out);
         }
@@ -217,6 +224,8 @@ export class RoomCore {
       case "act": {
         if (d.stage !== "PLAYING" || !d.game) return err("WRONG_STAGE", "la partita non è in corso", msg.reqId);
         const a = msg.action;
+        // intervallo a tempo: il voto vale solo per il personaggio che è in scena (o appena uscito) in questo momento
+        if (a.type === "vote" && d.game.phase === "MINI_RUN" && !this.onStage(a.position, now)) return err("NOT_ON_STAGE", "quel personaggio non è in scena", msg.reqId);
         if (a.type === "advance" && playerId !== megafonoOf(d.game) && !me.isHost && !d.players.find((p) => p.id === megafonoOf(d.game!))?.isBot) return err("NOT_ALLOWED", "solo il Megafono o l'host proseguono", msg.reqId);
         try { return this.applyGame(out, { ...a, playerId } as Action, now); }
         catch (e) { if (e instanceof EngineError) return err(e.code, e.message, msg.reqId); throw e; }
@@ -228,21 +237,47 @@ export class RoomCore {
     const d = this.data, before = d.game!.phase;
     const { state, events } = applyAction(d.game!, action);
     d.game = state; d.seq++; out.persist = true;
+    if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
+    else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
     if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) learnFromResult(d.botMem, state.tower, state.lastResult);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);
     return this.broadcastGame(out, events);
   }
+  /** Il personaggio `position` è in scena adesso? (finestra di uscita con un po' di margine per la rete e i riflessi) */
+  private onStage(position: number, now: number): boolean {
+    const d = this.data, run = d.run, order = d.game?.mini?.order; if (!run || !order) return false;
+    return order.some((p, i) => { if (p !== position) return false; const t = run.goAt + i * MINI_SLOT_MS; return now >= t - LIMITS.runEarlyMs && now <= t + MINI_SLOT_MS + LIMITS.runLateMs; });
+  }
+  /** Inizia l'intervallo a tempo: presentazione, 3-2-1, «via!»; pianifica quando e chi votano i bot. */
+  private startRun(now: number) {
+    const d = this.data, order = d.game!.mini!.order, goAt = now + MINI_INTRO_MS + MINI_COUNTDOWN_MS;
+    d.run = { goAt, endAt: goAt + order.length * MINI_SLOT_MS + LIMITS.runEndGraceMs, bots: {} };
+    this.planBots();
+  }
+  /** Ogni bot che non ha ancora votato sceglie un personaggio e un istante in cui è in scena. */
+  private planBots() {
+    const d = this.data, g = d.game, run = d.run; if (!g || !run || g.phase !== "MINI_RUN") return;
+    const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296, order = g.mini!.order;
+    for (const b of d.players.filter((p) => p.isBot)) {
+      if (g.votes[b.id] !== undefined || run.bots[b.id]) continue;
+      const a = chooseBotAction(g, b.id, b.level ?? "medium", d.botMem, rand);
+      if (!a || a.type !== "vote") continue;
+      const slots = order.map((p, i) => (p === a.position ? i : -1)).filter((i) => i >= 0), i = slots[Math.floor(rand() * slots.length)]!;
+      run.bots[b.id] = { position: a.position, at: run.goAt + i * MINI_SLOT_MS + 200 + Math.floor(rand() * 600) };
+    }
+  }
   private armDeadline(now: number) {
     const d = this.data, g = d.game; if (!g || g.phase === "GAME_OVER") { d.deadline = null; return; }
-    if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
+    if (g.phase === "MINI_RUN") d.deadline = null;   // l'intervallo a tempo ha il suo orologio (d.run)
+    else if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
     else d.deadline = d.options.turnTimerSec > 0 ? now + d.options.turnTimerSec * 1000 : null;
   }
 
   // ---------- timer e pulizia ----------
   tick(now: number): Outbox & { alarmAt: number | null } {
-    const d = this.data; let out: Outbox = emptyOut();
+    const d = this.data; let out: Outbox = emptyOut(); this.clock = now;
     // pulizia stanze abbandonate / concluse / troppo vecchie
     const emptyAt = this.emptyAt(), grace = this.graceMs();
     if ((emptyAt !== null && (d.stage === "LOBBY" || d.stage === "PLAYING") && now - emptyAt > grace) ||
@@ -252,6 +287,16 @@ export class RoomCore {
     if (d.stage === "LOBBY" && d.hostLostAt !== null && now - d.hostLostAt >= LIMITS.hostGraceMs) {
       // Se non c'è nessun altro umano connesso non si può passare il ruolo: si smette di aspettare, altrimenti la scadenza resta nel passato e la stanza si risveglia ogni 50 ms.
       if (this.promoteHost(out)) this.broadcastRoom(out); else d.hostLostAt = null;
+    }
+    // intervallo a tempo: voti dei bot all'istante pianificato e, a fine corsa, il conteggio dei voti arrivati
+    if (d.stage === "PLAYING" && d.game && d.game.phase === "MINI_RUN" && d.run) {
+      const due = Object.entries(d.run.bots).filter(([, v]) => now >= v.at).sort((a, b) => a[1].at - b[1].at);
+      for (const [id, v] of due) {
+        if (d.game.phase !== "MINI_RUN") break;
+        delete d.run!.bots[id];
+        try { out = this.applyGame(out, { type: "vote", playerId: id, position: v.position }, now); } catch (e) { if (!(e instanceof EngineError)) throw e; }
+      }
+      if (d.game.phase === "MINI_RUN" && d.run && now >= d.run.endAt) out = this.applyGame(out, { type: "endRun" }, now);
     }
     // giocatori virtuali: un'azione a testa quando scade il loro ritardo
     if (d.stage === "PLAYING" && d.game && d.botAt !== null && now >= d.botAt) {
@@ -281,7 +326,7 @@ export class RoomCore {
   /** Programma la prossima azione dei bot se ce n'è almeno una disponibile (ritardo umano: 0,9–2 s). */
   private scheduleBots(now: number) {
     const d = this.data;
-    if (d.stage !== "PLAYING" || !d.game || !d.players.some((p) => p.isBot) || this.connected.size === 0) { d.botAt = null; return; }
+    if (d.stage !== "PLAYING" || !d.game || d.game.phase === "MINI_RUN" || !d.players.some((p) => p.isBot) || this.connected.size === 0) { d.botAt = null; return; }
     const g = d.game, any = d.players.some((p) => p.isBot && chooseBotAction(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null);
     if (!any) { d.botAt = null; return; }
     if (d.botAt === null) d.botAt = now + LIMITS.botMinMs + (new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296) * LIMITS.botJitterMs;
@@ -294,6 +339,7 @@ export class RoomCore {
     const d = this.data; const c: number[] = [];
     if (d.botAt !== null) c.push(d.botAt);
     if (d.deadline !== null) c.push(d.deadline);
+    if (d.run && d.game?.phase === "MINI_RUN") { c.push(d.run.endAt); for (const v of Object.values(d.run.bots)) c.push(v.at); }
     const emptyAt = this.emptyAt();
     if (d.stage === "LOBBY") { if (emptyAt !== null) c.push(emptyAt + this.graceMs() + 1000); if (d.hostLostAt !== null) c.push(d.hostLostAt + LIMITS.hostGraceMs); }
     if (d.stage === "PLAYING" && emptyAt !== null) c.push(emptyAt + this.graceMs() + 1000);
@@ -311,16 +357,17 @@ export class RoomCore {
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
     const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];
     if (this.data.chat.length) res.push({ to: playerId, msg: { t: "chatlog", msgs: this.data.chat.slice() } });
-    if (this.data.game) res.push({ to: playerId, msg: { t: "view", seq: this.data.seq, view: viewFor(this.data.game, playerId), events: [], deadline: this.data.deadline } });
+    if (this.data.game) res.push({ to: playerId, msg: { t: "view", seq: this.data.seq, view: viewFor(this.data.game, playerId), events: [], deadline: this.data.deadline, now: this.clock, goAt: this.runGoAt() } });
     return res;
   }
   /** Messaggi per uno schermo condiviso: stanza e vista senza alcun dato privato (nessuna mano, voti e proprietari nascosti). */
   spectatorMessages(events: GameEvent[] = []): ServerMessage[] {
     const d = this.data; if (!d.options.display) return [];
     const room = this.roomMsg(""); const res: ServerMessage[] = [room];
-    if (d.game) res.push({ t: "view", seq: d.seq, view: viewFor(d.game, ""), events, deadline: d.deadline });
+    if (d.game) res.push({ t: "view", seq: d.seq, view: viewFor(d.game, ""), events, deadline: d.deadline, now: this.clock, goAt: this.runGoAt() });
     return res;
   }
+  private runGoAt(): number | null { const d = this.data; return d.game?.phase === "MINI_RUN" && d.run ? d.run.goAt : null; }
   private broadcastRoom(out: Outbox): Outbox {
     for (const p of this.data.players) if (this.connected.has(p.id)) out.send.push({ to: p.id, msg: this.roomMsg(p.id) });
     return out;
@@ -329,7 +376,7 @@ export class RoomCore {
     const d = this.data; out.events = events;
     for (const p of d.players) if (this.connected.has(p.id)) {
       out.send.push({ to: p.id, msg: this.roomMsg(p.id) });
-      out.send.push({ to: p.id, msg: { t: "view", seq: d.seq, view: viewFor(d.game!, p.id), events, deadline: d.deadline } });
+      out.send.push({ to: p.id, msg: { t: "view", seq: d.seq, view: viewFor(d.game!, p.id), events, deadline: d.deadline, now: this.clock, goAt: this.runGoAt() } });
     }
     return out;
   }

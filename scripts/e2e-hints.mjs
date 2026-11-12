@@ -66,8 +66,7 @@ async function step() {
   }
   if (mustAct && !hintChecked) { hintChecked = true; await p.waitForSelector('[data-testid="idle-hint"]', { timeout: 8000 }).catch(() => {}); return true; }
   if (await vis("howto")) { await p.click('[data-testid="howto-close"]'); return true; }
-  if (await vis("mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis("mini-vote")) { for (const n of [2, 3]) { await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); if (await p.locator('[data-testid="zoom-action"]').isVisible({ timeout: 900 }).catch(() => false)) break; } await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis("run-vote")) { const b = p.locator('[data-testid="run-vote"]'); if (await b.isEnabled()) { await b.click(); return true; } return false; }   // intervallo a tempo: il pulsante si attiva al «via!»
   if (await vis("phrase-picker")) { await p.click('[data-testid="phrase-0"]'); await p.click('[data-testid="phrase-go"]'); return true; }
   if (await vis("hand")) { await p.locator('[data-testid="hand-card-0"]').dispatchEvent("click"); await p.click('[data-testid="play-card"]'); return true; }
   if (await vis("lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }

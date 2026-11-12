@@ -1,6 +1,6 @@
 export type PlayerId = string;
 export type CardId = string;
-export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI_PLAY" | "MINI_VOTE" | "MINI_RESULTS" | "GAME_OVER";
+export type Phase = "PROCLAIM" | "PLAY" | "SUSPECT" | "VOTE" | "RESULTS" | "MINI_RUN" | "MINI_RESULTS" | "GAME_OVER";
 /** Mini-giochi (intervalli): Accusa, La storia d'amore, Il peggiore. */
 export type MiniKind = "accusa" | "amore" | "peggiore";
 export const MINI_KINDS: MiniKind[] = ["accusa", "amore", "peggiore"];
@@ -98,18 +98,23 @@ export interface TurnResult {
   objective?: ObjectiveOutcome | null;
 }
 
-export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-gregge" | "lui-folla" | "obiettivo" | "obiettivo-mancato" | "obiettivo-folla" | "mini-voto" | "mini-carta" | "mini-giusto" | "mini-peggiore"; pts: number; pos: number; n?: number }
+export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-gregge" | "lui-folla" | "obiettivo" | "obiettivo-mancato" | "obiettivo-folla" | "mini-giusto" | "mini-veloce"; pts: number; pos: number; n?: number }
 
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
-export interface Mini { kind: MiniKind; cardId: CardId | null; text: string | null }
+export interface Mini {
+  kind: MiniKind; cardId: CardId | null; text: string | null;
+  /** Intervallo a tempo: le posizioni (1..6) dei personaggi nell'ordine in cui escono dal separé, due cicli completi (12 uscite). */
+  order: number[];
+}
 export interface MiniResult {
   kind: MiniKind; cardId: CardId | null; text: string | null;
+  /** Chi ha votato (solo chi ha premuto in tempo) e cosa. */
   votes: Record<PlayerId, number>; counts: Record<number, number>;
-  /** Carte in testa (Accusa e Storia d'amore: restano e fanno punti; Il peggiore: sono quelle che cadono). */
+  /** Carte in testa (a parità tutte): nell'Accusa e nel Peggiore cadono, nella Storia d'amore vincono e restano. Vuoto se nessuno ha votato. */
   leaders: number[];
   fallenPositions: number[]; fallenCardIds: CardId[];
-  /** Chi aveva giocato ciascuna carta (posizione → giocatore). */
-  owners: Record<number, PlayerId>;
+  /** Il più veloce tra chi ha votato una carta in testa (+4), se c'è. */
+  fastest: PlayerId | null;
   points: Record<PlayerId, number>; lines: Record<PlayerId, ScoreLine[]>;
 }
 
@@ -159,6 +164,8 @@ export interface GameState {
   minisDone?: number;
   miniKinds?: MiniKind[];
   mini?: Mini | null;
+  /** Intervallo a tempo: chi ha votato, nell'ordine in cui i voti sono arrivati (il primo tra i vincitori prende +4). */
+  voteOrder?: PlayerId[];
   miniResult?: MiniResult | null;
   /** Segnalini Lui! già spesi da ciascun giocatore (pubblico). */
   luiSpent?: Record<PlayerId, LuiSlot[]>;
@@ -183,7 +190,9 @@ export type Action =
   | { type: "placeLui"; playerId: PlayerId; slot: LuiSlot; position: number; to?: number }
   | { type: "placeMarks"; playerId: PlayerId; marks: { slot: LuiSlot; position: number }[] }
   | { type: "vote"; playerId: PlayerId; position: number}
-  | { type: "advance"; playerId?: PlayerId };
+  | { type: "advance"; playerId?: PlayerId }
+  /** Solo il server: scade il tempo dell'intervallo, si contano i voti arrivati. */
+  | { type: "endRun" };
 
 export type GameEvent =
   | { type: "turnStarted"; turn: number; megafonoId: PlayerId }

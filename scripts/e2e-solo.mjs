@@ -26,8 +26,7 @@ async function step() {
   if (await vis("mega-intro")) { await clk('[data-testid="mega-ok"]'); return true; }
   if (await vis("idle-hint")) { await clk('[data-testid="idle-hint-ok"]'); return true; }
   if (await vis("howto")) { await clk('[data-testid="howto-close"]'); return true; }
-  if (await vis("mini-intro")) { await p.click('[data-testid="mini-go"]', { force: true }); return true; }
-  if (await vis("mini-vote")) { for (const n of [2, 3]) { await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); if (await p.locator('[data-testid="zoom-action"]').isVisible({ timeout: 900 }).catch(() => false)) break; } await p.click('[data-testid="zoom-action"]'); await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis("run-vote")) { const b = p.locator('[data-testid="run-vote"]'); if (await b.isEnabled()) { await b.click(); return true; } return false; }   // intervallo a tempo: il pulsante si attiva al «via!»
   if (await vis("points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }
   if (await vis("standings-action")) { if (SAMPLE && turns === 0) await sleep(2500); await p.click('[data-testid="standings-action"]'); turns++; if (turns >= 1) sampling = false; return true; }
   if (await vis("phrase-picker")) {

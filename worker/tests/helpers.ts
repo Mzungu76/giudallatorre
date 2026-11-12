@@ -32,7 +32,10 @@ export function playToEnd(r: Room, now = 1_000_100, rand: () => number = Math.ra
     for (const id of r.ids.slice().sort(() => rand() - 0.5)) {
       const a = suggestAction(g, id, rand); if (!a) continue;
       const { playerId: _p, ...action } = a as Record<string, unknown>;
-      const out = r.core.handle(id, { t: "act", action } as ClientMessage, now);
+      // intervallo a tempo: si vota quando quel personaggio è in scena
+      let at = now;
+      if (g.phase === "MINI_RUN" && r.core.data.run) { const i = g.mini!.order.indexOf((a as { position: number }).position); at = r.core.data.run.goAt + i * 1000 + 100; }
+      const out = r.core.handle(id, { t: "act", action } as ClientMessage, at);
       if (out.send.some((s) => s.msg.t === "error")) throw new Error("azione legittima rifiutata: " + JSON.stringify(out.send.find((s) => s.msg.t === "error")));
       done = true; break;
     }
