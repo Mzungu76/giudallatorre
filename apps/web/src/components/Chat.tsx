@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { ChatDto, ClientMessage } from "@gdt/game-protocol";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
-import { Disc, PLAYER_COLORS } from "../ui.tsx";
+import { Disc, colorFor } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
 
@@ -19,10 +19,10 @@ export function useChatState(chat: ChatDto[], me: string, sound: boolean) {
 }
 
 /** Chat a tutto schermo: si apre dal pannello in basso (o dalla lobby) e si chiude con la X. */
-export default function ChatPanel({ chat, me, players, send, onClose }: { chat: ChatDto[]; me: string; players: { id: string }[]; send: (m: ClientMessage) => void; onClose: () => void }) {
+export default function ChatPanel({ chat, me, players, send, onClose }: { chat: ChatDto[]; me: string; players: { id: string; char?: number }[]; send: (m: ClientMessage) => void; onClose: () => void }) {
   const [text, setText] = useState(""), list = useRef<HTMLDivElement>(null);
   useEffect(() => { list.current?.scrollTo({ top: list.current.scrollHeight }); }, [chat.length]);
-  const colorOf = (id: string) => PLAYER_COLORS[Math.max(0, players.findIndex((p) => p.id === id)) % 8]!;
+  const colorOf = (id: string) => colorFor(players, id);
   function submit(e?: FormEvent) { e?.preventDefault(); const t = text.trim(); if (!t) return; send({ t: "chat", text: t }); setText(""); }
   return (
     <div className="bov" role="dialog" aria-label={ts("chat.aria")} data-testid="chat-wrap">

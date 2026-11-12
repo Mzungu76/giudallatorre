@@ -31,8 +31,8 @@ export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number |
 const bannerFor = (phase: string): [string, string] | undefined => phase === "PLAY" ? [txs("g.ban.play.t"), txs("g.ban.play.s")] : phase === "SUSPECT" ? [txs("g.ban.susp.t"), txs("g.ban.susp.s")] : phase === "VOTE" ? [txs("g.ban.vote.t"), txs("g.ban.vote.s")] : undefined;
 export function usePeople(room: RoomMsg) {
   return useMemo(() => {
-    const m = new Map(room.players.map((p, i) => [p.id, { name: p.nickname, color: PLAYER_COLORS[i % 8]!, index: i, bot: !!p.isBot }]));
-    return { get: (id: string) => m.get(id) ?? { name: "?", color: "#999", index: 0, bot: false }, all: room.players.map((p, i) => ({ ...p, color: PLAYER_COLORS[i % 8]! })) };
+    const m = new Map(room.players.map((p, i) => [p.id, { name: p.nickname, color: PLAYER_COLORS[(p.char ?? i) % 8]!, index: i, bot: !!p.isBot }]));
+    return { get: (id: string) => m.get(id) ?? { name: "?", color: "#999", index: 0, bot: false }, all: room.players.map((p, i) => ({ ...p, color: PLAYER_COLORS[(p.char ?? i) % 8]! })) };
   }, [room.players]);
 }
 

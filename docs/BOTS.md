@@ -1,6 +1,6 @@
 # Giocatori virtuali (bot)
 
-**Cosa sono.** Giocatori controllati dal server che riempiono la stanza (da 3 a 8 giocatori in totale, bot compresi). Si possono aggiungere alla creazione ("Gioca da solo (con bot)" o il selettore "Giocatori virtuali") e nella lobby (`+ Giocatore virtuale`, con livello). Si tolgono con la ×. Il bot ha il tag **BOT · livello** nella lista.
+**Cosa sono.** Giocatori controllati dal server che riempiono la stanza (da 3 a 6 giocatori in totale, bot compresi). Si possono aggiungere alla creazione ("Gioca da solo (con bot)" o il selettore "Giocatori virtuali") e nella lobby (`+ Giocatore virtuale`, con livello). Si tolgono con la ×. Il bot ha il tag **BOT · livello** nella lista.
 
 **Livelli** (`packages/game-engine/src/ai.ts`, funzione pura `chooseBotAction`):
 | Livello | Comportamento |

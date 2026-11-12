@@ -105,13 +105,24 @@ describe("stanza: creazione, accesso e lobby", () => {
     expect(core.data.options).toEqual({ megafonoSa: true, mode: "remote", turnTimerSec: 0, display: true, ageBand: 14, confessions: true });
     expect(core.authenticate(token)).toBe(playerId);
   });
-  it("nickname non duplicati (anche con maiuscole e accenti diversi), max 8 giocatori", () => {
+  it("nickname non duplicati (anche con maiuscole e accenti diversi), max 6 giocatori", () => {
     const r = makeRoom(1);
     expect(() => r.core.join("giocatore1", 1)).toThrow(RoomError);
     expect(() => r.core.join("GIOCATORE1", 1)).toThrow(/NICKNAME|nickname/i);
-    for (let i = 2; i <= 8; i++) r.core.join("Altro" + i, 1);
-    expect(r.core.data.players).toHaveLength(8);
-    try { r.core.join("Nono", 1); throw new Error("no"); } catch (e) { expect((e as RoomError).code).toBe("ROOM_FULL"); }
+    for (let i = 2; i <= 6; i++) r.core.join("Altro" + i, 1);
+    expect(r.core.data.players).toHaveLength(6);
+    try { r.core.join("Settimo", 1); throw new Error("no"); } catch (e) { expect((e as RoomError).code).toBe("ROOM_FULL"); }
+  });
+  it("ogni giocatore ha un personaggio diverso, scelto a caso tra gli otto (non in ordine di ingresso)", () => {
+    const seen = new Set<string>();
+    for (let k = 0; k < 12; k++) {
+      const r = makeRoom(1, 100 + k); for (let i = 2; i <= 6; i++) r.core.join("Altro" + i, 1);
+      const chars = r.core.data.players.map((p) => p.char!);
+      expect(chars.every((c) => Number.isInteger(c) && c >= 0 && c <= 7)).toBe(true);
+      expect(new Set(chars).size).toBe(6);
+      seen.add(chars.join());
+    }
+    expect(seen.size).toBeGreaterThan(1);
   });
   it("il codice stanza da solo non basta: token sbagliato, vuoto o di un'altra stanza → nessuna identità", () => {
     const a = makeRoom(3, 1), b = makeRoom(3, 2);
@@ -209,7 +220,7 @@ describe("partita via messaggi", () => {
     expect(errCode(send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "advance" } }))).toBeUndefined();
     expect(g0.turnNumber).toBe(1);
   });
-  it.each([3, 4, 5, 6, 7, 8])("partita completa a %i giocatori via messaggi, entrambe le varianti, fino a FINISHED", (n) => {
+  it.each([3, 4, 5, 6])("partita completa a %i giocatori via messaggi, entrambe le varianti, fino a FINISHED", (n) => {
     for (const sa of [false, true]) {
       const r = makeRoom(n, n * 10 + (sa ? 1 : 0)); send(r, 0, { t: "setOptions", megafonoSa: sa }); send(r, 0, { t: "start" });
       playToEnd(r);
@@ -350,16 +361,16 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
 }
 
 describe("giocatori virtuali nella stanza", () => {
-  it("l'host aggiunge e toglie bot in lobby (max 8, nomi unici, solo host)", () => {
+  it("l'host aggiunge e toglie bot in lobby (max 6, nomi unici, solo host)", () => {
     const r = makeRoom(1, 20);
     expect(errCode(send(r, 0, { t: "addBot", level: "hard" }))).toBeUndefined();
     send(r, 0, { t: "addBot", level: "easy" }); send(r, 0, { t: "addBot", level: "medium" });
     const bots = r.core.data.players.filter((p) => p.isBot); expect(bots).toHaveLength(3);
     expect(new Set(r.core.data.players.map((p) => p.nickname)).size).toBe(4);
-    for (let i = 0; i < 6; i++) send(r, 0, { t: "addBot", level: "medium" });
-    expect(r.core.data.players).toHaveLength(8);
+    for (let i = 0; i < 2; i++) send(r, 0, { t: "addBot", level: "medium" });
+    expect(r.core.data.players).toHaveLength(6);
     expect(errCode(send(r, 0, { t: "addBot", level: "medium" }))).toBe("ROOM_FULL");
-    send(r, 0, { t: "removeBot", playerId: bots[0]!.id }); expect(r.core.data.players).toHaveLength(7);
+    send(r, 0, { t: "removeBot", playerId: bots[0]!.id }); expect(r.core.data.players).toHaveLength(5);
     expect(errCode(send(r, 0, { t: "removeBot", playerId: r.ids[0]! }))).toBe("INVALID_TARGET");
   });
   it("un giocatore non-host non può aggiungere bot; i bot non hanno token e non si autenticano", () => {
@@ -443,7 +454,7 @@ describe("sveglie della stanza (quota gratuita dei Durable Objects)", () => {
     expect(alarms).toBe(0);
   });
   it("senza umani connessi i bot si fermano, e riprendono quando torna qualcuno", () => {
-    const c = RoomCore.create("TESTX", deps(5), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
+    const c = RoomCore.create("TESTX", deps(6), 0, { nickname: "Solo", mode: "table", megafonoSa: false, bots: { count: 3, level: "hard" } });
     const core = c.core; core.onConnect(c.playerId, 0); core.handle(c.playerId, { t: "start" }, 0);
     expect(core.data.botAt).not.toBeNull();
     core.onDisconnect(c.playerId, 100);
