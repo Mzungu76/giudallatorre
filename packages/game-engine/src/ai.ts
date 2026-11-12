@@ -1,6 +1,6 @@
-import { luiAvailable, luiForbidden, luiTokens, megafonoOf, requiredPlayers } from "./engine.ts";
+import { luiAvailable, luiForbidden, luiTokens, megafonoOf, objectiveHit, requiredPlayers, tallyMarks, tallyVotes } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
-import type { Action, CardId, GameState, LuiSpec, PlayerId, TurnResult } from "./types.ts";
+import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "./types.ts";
 
 /**
  * Giocatori virtuali. Usano le etichette nascoste (personaggio ↔ frase, vedi tags.ts) per stimare chi cadrà, il punteggio atteso,
@@ -41,40 +41,188 @@ function sampleVotes(p: number[], n: number, rand: () => number): number[] {
   return c;
 }
 const luiHit = (zero: boolean, k: number, others: number) => (zero ? others === 0 : others >= k);
-/** Valore per il Megafono di un segnalino sulla carta `pos` con i voti degli altri `c`. «Il gregge»: l'Imbroglio! dà i suoi punti se annulla almeno un voto e toglie agli avversari i +2 del voto giusto;
- *  la soglia riuscita dà i punti al Megafono (che non può votarla) e anche a chi ha votato la carta: quelli sono punti regalati. Un punto tolto o regalato a un avversario vale la metà di un punto mio. */
-const luiValue = (sp: LuiSpec, c: number[], pos: number) => {
-  if (sp.herd) return luiHit(false, sp.k, c[pos]!) ? sp.pts * (1 - c[pos]! * TUNE.greggeDeny) : 0;
+/** Valore per il Megafono di un segnalino sulla carta `pos` con i voti degli altri `c`.
+ *  «Il gregge»: conta il vantaggio sugli avversari (i miei punti meno la media dei loro, su `opp` avversari). L'Imbroglio! dà i suoi punti se annulla almeno un voto
+ *  e toglie i +2 del voto giusto a chi ci casca; la soglia riuscita dà i punti a me ma anche a chi ha votato la carta. */
+const luiValue = (sp: LuiSpec, c: number[], pos: number, opp = 1) => {
+  if (sp.herd) return luiHit(false, sp.k, c[pos]!) ? sp.pts * (1 - c[pos]! / opp) : 0;
   if (!sp.trap) return luiHit(sp.slot === "zero", sp.k, c[pos]!) ? sp.pts : 0;
-  return (c[pos]! >= sp.k ? sp.pts : 0) + (c[pos]! === Math.max(...c) ? c[pos]! * 2 * TUNE.greggeDeny : 0);
+  return (c[pos]! >= sp.k ? sp.pts : 0) + (c[pos]! === Math.max(...c) ? (c[pos]! * 2) / opp : 0);
 };
-/** «Il gregge»: chi vota vede il Lui! ma non il gettone. Stima la probabilità di ciascun gettone della partita con il ragionamento del Megafono:
- *  quali gettoni gli restano (si ricorda quelli già scoperti) e quanto gli converrebbe posare ognuno proprio su quella carta rispetto alle altre. */
-function greggePosterior(s: GameState, p: number[], level: BotLevel, mem: BotMemory, rand: () => number): number[] {
-  const mega = megafonoOf(s), X = s.lui!.position - 1, specs = luiTokens(s), av = luiAvailable(s, mega);
-  // a priori: se gli restano tutti e due, quanto spesso finora è uscito l'Imbroglio! negli spogli (all'inizio 50 e 50)
-  const im = mem.imb ?? { t: 0, n: 0 }, pt = (im.t + 1) / (im.n + 2);
-  const prior = specs.map((sp) => (!av.includes(sp.slot) ? 0 : av.length === 1 ? 1 : sp.trap ? pt : 1 - pt)), tau = TUNE.luiTempHard;
-  const ev = greggeEv(s, p, specs, rand).map((row, i) => (prior[i]! > 0 ? row : row.map(() => -Infinity)));
-  const top = Math.max(...ev.flat()), like = ev.map((row, i) => prior[i]! * Math.exp((row[X]! - top) / tau)), t = like.reduce((a, b) => a + b, 0);
-  if (!(t > 0)) return prior;
-  // nessuno legge nel pensiero del Megafono (e può bluffare): la stima resta in parte quella "a priori"
-  const a = level === "hard" ? TUNE.greggeDoubtHard : TUNE.greggeDoubtMed;
-  return like.map((l, i) => (1 - a) * (l / t) + a * prior[i]!);
+/** Carattere di un bot (da -1 diffidente a +1 fiducioso), fisso per tutta la partita: rende i bot diversi tra loro, così non vanno tutti nella stessa direzione. */
+const trait = (id: PlayerId) => { let h = 7; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) | 0; return ((Math.abs(h) % 1000) / 1000) * 2 - 1; };
+/** «Il gregge»: per chi vota, quanto vale (vantaggio sugli avversari) votare la carta X del Lui!, dati i pesi dei due gettoni `post`.
+ *  `so`: voti simulati degli altri (né io né il Megafono). */
+function luiVoteValue(s: GameState, p: number[], X: number, post: number[], own2: number, so: number[][]): number {
+  const opp = s.playerIds.length - 1, specs = luiTokens(s); let vX = 0;
+  specs.forEach((sp, i) => {
+    if (!(post[i]! > 0)) return;
+    // Imbroglio!: il mio voto non vale e, se sono il primo, regalo i punti al Megafono
+    if (sp.trap) { vX += post[i]! * -(sp.pts / opp) * (so.filter((c) => c[X]! === 0).length / so.length); return; }
+    // soglia: se ci si arriva prendo i punti anch'io, ma li prendono anche il Megafono e gli altri che l'hanno votata
+    let d = 0; for (const c of so) { const x = c[X]!, withMe = x + 1 >= sp.k, without = x >= sp.k; d += (withMe ? sp.pts : 0) - ((withMe ? sp.pts * (1 + x) : 0) - (without ? sp.pts * (1 + x) : 0)) / opp; }
+    vX += post[i]! * (p[X]! * (2 + own2) + d / so.length);
+  });
+  return vX;
 }
-/** «Il gregge»: valore per il Megafono di ogni (gettone, carta). Mette in conto che chi vota diffida della carta del Lui! se teme l'Imbroglio! e ci si butta se spera nella soglia,
- *  e che la carta del Lui! lui non potrà votarla (forse perde il +2). */
-function greggeEv(s: GameState, p: number[], specs: LuiSpec[], rand: () => number): number[][] {
-  const n = s.tower.length, voters = s.playerIds.length - 1;
+/** «Il gregge»: quanto la carta del Lui! attira (>1) o respinge (<1) i voti. Chi vota non vede il gettone, quindi la reazione è la stessa per i due:
+ *  dipende da quanto conviene votarla senza sapere quale sia (con le stime a priori). */
+function luiPull(s: GameState, p: number[], pos: number, prior: number[], rand: () => number): number {
+  const so = Array.from({ length: Math.ceil(TUNE.luiSamples / 2) }, () => sampleVotes(p, s.playerIds.length - 2, rand));
+  const v = luiVoteValue(s, p, pos, prior, 0, so), base = p[pos]! * 2;
+  return Math.max(0.2, Math.min(4, Math.exp((v - base) / TUNE.greggeReact)));
+}
+/** «Il gregge»: valore per il Megafono di ogni (gettone, carta), con la reazione di chi vota alla carta del Lui! (uguale per i due gettoni)
+ *  e sapendo che la carta del Lui! lui non potrà votarla (forse perde il +2). */
+function greggeEv(s: GameState, p: number[], specs: LuiSpec[], prior: number[], rand: () => number): number[][] {
+  const n = s.tower.length, voters = s.playerIds.length - 1, pull = Array.from({ length: n }, (_, pos) => luiPull(s, p, pos, prior, rand));
   return specs.map((sp) => Array.from({ length: n }, (_, pos) => {
-    const f = sp.trap ? TUNE.greggeAvoid : sp.herd ? TUNE.greggePull : 1, q = p.map((x, k) => (k === pos ? x * f : x)), z = q.reduce((a, b) => a + b, 0), pq = q.map((x) => x / z);
-    let ev = 0; for (let i = 0; i < TUNE.luiSamples; i++) ev += luiValue(sp, sampleVotes(pq, voters, rand), pos);
+    const q = p.map((x, k) => (k === pos ? x * pull[pos]! : x)), z = q.reduce((a, b) => a + b, 0), pq = q.map((x) => x / z);
+    let ev = 0; for (let i = 0; i < TUNE.luiSamples; i++) ev += luiValue(sp, sampleVotes(pq, voters, rand), pos, voters);
     return ev / TUNE.luiSamples - 2 * p[pos]!;
   }));
 }
+/** Stima a priori dei due gettoni del Megafono: quali gli restano e quanto spesso finora è uscito l'Imbroglio! negli spogli (informazione pubblica). */
+function greggePrior(s: GameState, mem: BotMemory): number[] {
+  const av = luiAvailable(s, megafonoOf(s)), im = mem.imb ?? { t: 0, n: 0 }, pt = (im.t + 1) / (im.n + 2);
+  return luiTokens(s).map((sp) => (!av.includes(sp.slot) ? 0 : av.length === 1 ? 1 : sp.trap ? pt : 1 - pt));
+}
+/**
+ * «Il gregge»: come il Megafono sceglie gettone e carta, come probabilità di ogni (gettone, carta). Prima il gettone, poi la carta, tutti e due in modo
+ * imprevedibile: non sempre il gettone che rende di più, non sempre la carta più votata (bluff). Lo stesso modello lo usano gli altri per indovinare il gettone.
+ */
+function greggePlan(s: GameState, p: number[], level: BotLevel, mem: BotMemory, rand: () => number, blur = 1): number[][] {
+  const mega = megafonoOf(s), specs = luiTokens(s), av = luiAvailable(s, mega), ev = greggeEv(s, p, specs, greggePrior(s, mem), rand), hard = level === "hard";
+  // il carattere del Megafono: chi è più bluffone azzarda di più (carte meno ovvie, gettone meno scontato). `blur`: chi lo immagina da fuori lo vede più sfocato
+  const bl = (1 + TUNE.greggeBluff * trait(mega)) * blur;
+  const tTok = (hard ? TUNE.greggeTokTempHard : TUNE.greggeTokTempMed) * bl, tPos = (hard ? TUNE.greggePosTempHard : TUNE.greggePosTempMed) * bl;
+  const best = ev.map((row, i) => (av.includes(specs[i]!.slot) ? Math.max(...row) : -Infinity)), pTok = softmax(best.map((b) => (b === -Infinity ? -1e9 : b / tTok)));
+  return ev.map((row, i) => { const pp = softmax(row.map((e) => e / tPos)); return pp.map((x) => x * pTok[i]!); });
+}
+/** «Il gregge»: chi vota vede il Lui! ma non il gettone. Lo stima con il modello del Megafono (quale gli conveniva posare proprio lì),
+ *  con quanto spesso finora è uscito l'Imbroglio! negli spogli (informazione pubblica) e con un po' di dubbio. */
+function greggePosterior(s: GameState, p: number[], level: BotLevel, mem: BotMemory, rand: () => number): number[] {
+  const X = s.lui!.position - 1, prior = greggePrior(s, mem);
+  // non conosco il carattere del Megafono né come ragiona di preciso: me lo immagino un po' sfocato (il Medio di più)
+  const plan = greggePlan(s, p, "hard", mem, rand, level === "hard" ? TUNE.greggeBlurHard : TUNE.greggeBlurMed), like = plan.map((row, i) => (prior[i]! > 0 ? row[X]! : 0)), t = like.reduce((a, b) => a + b, 0);
+  if (!(t > 0)) return prior;
+  const a = level === "hard" ? TUNE.greggeDoubtHard : TUNE.greggeDoubtMed;
+  return like.map((l, i) => (1 - a) * (l / t) + a * prior[i]!);
+}
+// ---------- variante PROPAGANDA ----------
+const sampleOne = (p: number[], rand: () => number) => { let u = rand(), k = 0; for (; k < p.length - 1; k++) { u -= p[k]!; if (u <= 0) break; } return k + 1; };
+/** PROPAGANDA: voti simulati di tutti tranne `skip` (posizioni 1..N), dalla stima del gruppo. */
+function propSample(s: GameState, p: number[], skip: PlayerId[], rand: () => number): Record<PlayerId, number>[] {
+  return Array.from({ length: TUNE.propSamples }, () => Object.fromEntries(s.playerIds.filter((x) => !skip.includes(x)).map((x) => [x, sampleOne(p, rand)])));
+}
+/** PROPAGANDA: quanto vale per il Megafono un esito (vantaggio sugli altri): +2 se cade la carta che vota, +2 se cade la sua (variante «Il Megafono sa»),
+ *  obiettivo centrato (+punti) o mancato (i punti vanno a chi ha votato il personaggio: per lui sono punti regalati). */
+function propMegaValue(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, spec: LuiSpec | undefined, lui: LuiToken | null): number {
+  const pos = s.tower.map((t) => t.position), T = tallyVotes(pos, votes, mega, spec, lui), opp = s.playerIds.length - 1;
+  let v = T.fallen.includes(votes[mega]!) ? 2 : 0;
+  const own = s.tower.find((t) => t.ownerId === mega)?.position; if (own && T.fallen.includes(own)) v += 2;
+  const o = s.objective;
+  if (o) { const n = T.counts[o.position] ?? 0; if (objectiveHit(o, n)) v += o.pts; else v -= (o.pts * s.playerIds.filter((x) => x !== mega && !T.annulled.includes(x) && votes[x] === o.position).length) / opp; }
+  return v;
+}
+/** PROPAGANDA, il Megafono: per ogni gettone, carta (e, con Dirottamento!, carta di arrivo) e proprio voto, il valore medio sui voti simulati. Sceglie in modo un po' imprevedibile. */
+function propMegaPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot)), smp = propSample(s, p, [me], rand);
+  const cands: { slot: string; pos: number; to?: number; ev: number }[] = [];
+  for (const sp of specs) for (let pos = 1; pos <= n; pos++) for (const to of sp.effect === "dirottamento" ? Array.from({ length: n }, (_, i) => i + 1).filter((x) => x !== pos) : [undefined]) {
+    const lui: LuiToken = to ? { slot: sp.slot, position: pos, to } : { slot: sp.slot, position: pos };
+    // il mio voto lo sceglierò dopo: qui conto il migliore
+    let best = -Infinity; for (let mv = 1; mv <= n; mv++) { let ev = 0; for (const v of smp) ev += propMegaValue(s, me, { ...v, [me]: mv }, sp, lui); best = Math.max(best, ev / smp.length); }
+    cands.push({ slot: sp.slot, pos, ...(to ? { to } : {}), ev: best });
+  }
+  const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
+  return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos, ...(ch.to ? { to: ch.to } : {}) };
+}
+/** PROPAGANDA, voto. Il Megafono sa quale gettone ha posato e il suo obiettivo; gli altri vedono il Lui! ma non il gettone (pesano i due che può avere)
+ *  e non sanno su quale personaggio è l'obiettivo pubblico (se si avvera, prende i punti chi l'ha votato). */
+function propVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard";
+  const vals: number[] = [];
+  if (me === mega) {
+    const spec = s.lui ? luiTokens(s).find((x) => x.slot === s.lui!.slot) : undefined, smp = propSample(s, p, [me], rand);
+    for (let mv = 1; mv <= n; mv++) vals.push(smp.reduce((a, v) => a + propMegaValue(s, me, { ...v, [me]: mv }, spec, s.lui), 0) / smp.length);
+  } else {
+    const av = luiAvailable(s, mega), specs = luiTokens(s).filter((x) => av.includes(x.slot)), own = s.tower.find((t) => t.ownerId === me)?.position;
+    const o = s.objective, smp = propSample(s, p, [me, mega], rand), pos = s.tower.map((t) => t.position);
+    for (let k = 1; k <= n; k++) {
+      let ev = 0;
+      for (const v of smp) {
+        // il gettone non lo vedo: uno dei due che gli restano, a caso; il voto del Megafono: dalla stima del gruppo; il personaggio dell'obiettivo: uno qualsiasi
+        const sp = s.lui ? specs[Math.floor(rand() * specs.length)] : undefined, lui: LuiToken | null = s.lui ? { slot: sp!.slot, position: s.lui.position, ...(sp!.effect === "dirottamento" ? { to: sampleOne(p, rand) } : {}) } : null;
+        if (lui?.to === lui?.position) delete lui!.to;
+        const votes = { ...v, [mega]: sampleOne(p, rand), [me]: k }, T = tallyVotes(pos, votes, mega, sp, lui), valid = !T.annulled.includes(me);
+        if (valid && T.fallen.includes(k)) ev += 2;
+        if (own && T.fallen.includes(own)) ev += 2;
+        if (o && valid) { const t = 1 + Math.floor(rand() * n); if (t === k && !objectiveHit(o, T.counts[t] ?? 0)) ev += o.pts; }
+      }
+      vals.push(ev / smp.length);
+    }
+  }
+  const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
+  return { type: "vote", playerId: me, position: pickProb(ww.map((x) => x + 0.03), rand) + 1 };
+}
+// ---------- gioco base «Cade / Non cade» ----------
+const CNC_TYPES = ["cade", "noncade", "nulli"] as const;
+type Mark = { effect: string; position: number };
+/** Punti di un turno «Cade / Non cade» per il Megafono e media della Folla (senza le carte degli altri, che il Megafono non conosce). */
+function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, marks: Mark[]) {
+  const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), own = s.tower.find((t) => t.ownerId === mega)?.position;
+  let m = T.fallen.includes(votes[mega]!) ? 2 : 0; if (own && T.fallen.includes(own)) m += 2;
+  let f = 0; const folla = s.playerIds.filter((p) => p !== mega);
+  for (const mk of marks) { if (mk.effect === "nulli") continue; const ok = mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position), pts = mk.effect === "cade" ? 4 : 1; if (ok) { m += pts; f += pts * folla.filter((p) => votes[p] === mk.position).length; } }
+  for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
+  return { m, f: f / Math.max(1, folla.length), T };
+}
+/** «Cade / Non cade», il Megafono: per ogni carta e segnalino, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
+function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, p, [me], rand), cands: { marks: Mark[]; ev: number }[] = [];
+  for (let a = 1; a <= n; a++) for (const ta of CNC_TYPES) {
+    const marks = [{ effect: ta, position: a }], nul = marks.find((x) => x.effect === "nulli")?.position;
+    let best = -Infinity;
+    for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of smp) { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); ev += r.m - r.f; } best = Math.max(best, ev / smp.length); }
+    cands.push({ marks, ev: best });
+  }
+  const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
+  return { type: "placeMarks", playerId: me, marks: ch.marks.map((m) => ({ slot: m.effect, position: m.position })) };
+}
+/** «Cade / Non cade», voto. Il Megafono conosce il suo segnalino (e non può votare VOTI NULLI!); gli altri vedono solo dov'è: pesano i tre possibili. */
+function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard", vals: number[] = [];
+  if (me === mega) {
+    const marks = (s.marks ?? []).map((m) => ({ effect: m.slot, position: m.position })), nul = luiForbidden(s, me), smp = propSample(s, p, [me], rand);
+    for (let mv = 1; mv <= n; mv++) vals.push(mv === nul ? -1e9 : smp.reduce((a, v) => { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); return a + r.m - r.f; }, 0) / smp.length);
+  } else {
+    const pos = (s.marks ?? []).map((m) => m.position), own = s.tower.find((t) => t.ownerId === me)?.position, smp = propSample(s, p, [me, mega], rand);
+    // i segnalini possibili sulla carta segnata (il carattere del bot pesa un po' di più o di meno lo spauracchio di VOTI NULLI!)
+    const combos: Mark[][] = pos.length ? CNC_TYPES.map((t) => [{ effect: t, position: pos[0]! }]) : [];
+    const fear = 1 + TUNE.greggeTrait * -trait(me), wc = combos.map((c) => (c.some((m) => m.effect === "nulli") ? fear : 1));
+    for (let k = 1; k <= n; k++) {
+      let ev = 0, wz = 0;
+      combos.forEach((marks, ci) => {
+        const nul = marks.find((m) => m.effect === "nulli")?.position; let e = 0;
+        for (const v of smp) {
+          let mv = sampleOne(p, rand); if (mv === nul) mv = (mv % n) + 1;
+          const votes = { ...v, [mega]: mv, [me]: k }, T = tallyMarks(s.tower.map((t) => t.position), votes, marks), valid = k !== nul;
+          if (valid && T.fallen.includes(k)) e += 2; if (own && T.fallen.includes(own)) e += 2;
+          const mk = marks.find((m) => m.position === k);
+          if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 1;
+        }
+        ev += wc[ci]! * e / smp.length; wz += wc[ci]!;
+      });
+      vals.push(combos.length ? ev / wz : p[k - 1]! * 2);
+    }
+  }
+  const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
+  return { type: "vote", playerId: me, position: pickProb(ww.map((x, k) => (vals[k]! <= -1e8 ? 0 : x + 0.03)), rand) + 1 };
+}
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeDeny: 0.5, greggeAvoid: 0.5, greggePull: 1.5, greggeDoubtHard: 0.35, greggeDoubtMed: 0.3 };
+export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45, propSamples: 36, propTempHard: 0.6, propTempMed: 1.2, propVoteTempHard: 0.35, propVoteTempMed: 0.6 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
 export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
@@ -99,12 +247,21 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     case "SUSPECT": {
       if (me !== mega) return null;
       const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
-      if (level === "easy") return { type: "placeLui", playerId: me, slot: pick(specs).slot, position: 1 + Math.floor(rand() * n) };
+      if (s.cnc) {
+        if (level === "easy") return { type: "placeMarks", playerId: me, marks: [{ slot: CNC_TYPES[Math.floor(rand() * 3)]!, position: 1 + Math.floor(rand() * n) }] };
+        return cncPlace(s, me, level, mem, rand);
+      }
+      if (level === "easy") { const sp = pick(specs), position = 1 + Math.floor(rand() * n); return { type: "placeLui", playerId: me, slot: sp.slot, position, ...(sp.effect === "dirottamento" ? { to: (position % n) + 1 } : {}) }; }
+      if (s.propaganda) return propMegaPlace(s, me, level, mem, rand);
       // scommessa sul numero di voti degli ALTRI sulla carta: valore atteso di ogni (segnalino, carta) con voti simulati dalla stima del gruppo; scelgo in modo imprevedibile tra le migliori
       const p = crowdProbs(s, mem, level), voters = s.playerIds.length - 1, samples = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, voters, rand));
       const cands: { slot: string; pos: number; ev: number }[] = [];
-      if (s.gregge) { const g = greggeEv(s, p, specs, rand); specs.forEach((sp, i) => g[i]!.forEach((ev, pos) => cands.push({ slot: sp.slot, pos, ev }))); }
-      else for (const sp of specs) for (let pos = 0; pos < n; pos++) { let ev = 0; for (const c of samples) ev += luiValue(sp, c, pos); cands.push({ slot: sp.slot, pos, ev: ev / samples.length }); }
+      if (s.gregge) {
+        const all = luiTokens(s), plan = greggePlan(s, p, level, mem, rand), flat = plan.flatMap((row, i) => row.map((w, pos) => ({ slot: all[i]!.slot, pos, w })));
+        const ch = flat[pickProb(flat.map((x) => x.w), rand)]!;
+        return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos + 1 };
+      }
+      for (const sp of specs) for (let pos = 0; pos < n; pos++) { let ev = 0; for (const c of samples) ev += luiValue(sp, c, pos); cands.push({ slot: sp.slot, pos, ev: ev / samples.length }); }
       const tau = level === "hard" ? TUNE.luiTempHard : TUNE.luiTempMed, best = Math.max(...cands.map((c) => c.ev));
       const w = softmax(cands.map((c) => (c.ev - best) / tau)), ch = cands[pickProb(w, rand)]!;
       return { type: "placeLui", playerId: me, slot: ch.slot, position: ch.pos + 1 };
@@ -114,6 +271,8 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const vote = (position: number): Action => ({ type: "vote", playerId: me, position });
       const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
       if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
+      if (s.propaganda) return propVote(s, me, level, mem, rand);
+      if (s.cnc) return cncVote(s, me, level, mem, rand);
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       let harm = 0, X = lui ? lui.position - 1 : -1;
       if (lui && me !== mega && !s.gregge) {
@@ -127,14 +286,12 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const w = hard ? TUNE.reactHard : TUNE.reactMed;
       if (lui && me !== mega && s.gregge) {
         // «Il gregge»: il valore del voto sulla carta del Lui! si ricalcola da capo, pesando i due gettoni con quanto è probabile che il Megafono li abbia posati proprio lì
-        const post = greggePosterior(s, p, level, mem, rand), so = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, s.playerIds.length - 2, rand)), P = (f: (c: number[]) => boolean) => so.filter(f).length / so.length;
-        let vX = 0;
-        luiTokens(s).forEach((sp, i) => {
-          if (!post[i]) return;
-          if (sp.trap) vX += post[i]! * -w * sp.pts * P((c) => c[X]! === 0);     // Imbroglio!: il mio voto non vale e, se sono il primo, regalo i punti al Megafono
-          else { const reach = P((c) => c[X]! + 1 >= sp.k), already = P((c) => c[X]! >= sp.k);   // soglia: prendo i punti anch'io se si arriva alla soglia; aiuto anche il Megafono
-            vX += post[i]! * (p[X]! * (2 + (X + 1 === ownPos ? 2 : 0)) + sp.pts * reach - w * sp.pts * (reach - already)); }
-        });
+        const post = greggePosterior(s, p, level, mem, rand), so = Array.from({ length: TUNE.luiSamples }, () => sampleVotes(p, s.playerIds.length - 2, rand));
+        const tr = trait(me), own2 = (X + 1 === ownPos ? 2 : 0);
+        // il mio carattere: chi è diffidente teme di più l'Imbroglio! e si fida meno della soglia
+        const qT = post.map((q, i) => (luiTokens(s)[i]!.trap ? q : 0)).reduce((a, b) => a + b, 0), shift = Math.max(0, Math.min(1, qT - tr * TUNE.greggeTrait)) - qT;
+        const wpost = luiTokens(s).map((sp, i) => { const t0 = post[i]!; if (!t0) return 0; return sp.trap ? t0 + shift : t0 - shift * (t0 / Math.max(1e-9, 1 - qT)); });
+        const vX = luiVoteValue(s, p, X, wpost, own2, so);
         const val = p.map((x, k) => (k === X ? vX : x * (2 + (k + 1 === ownPos ? 2 : 0))));
         const ww = softmax(val.map((x) => x / (hard ? TUNE.voteTemp : TUNE.voteTempMed)));
         return vote(pickProb(ww.map((x) => x + 0.04), rand) + 1);

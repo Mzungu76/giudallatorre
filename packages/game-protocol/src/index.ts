@@ -33,7 +33,8 @@ const act = z.union([
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("card"), index: z.number().int().min(0).max(9) }).strict(),
   z.object({ type: z.literal("choosePhrase"), mode: z.literal("free"), text: z.string().max(200).optional() }).strict(),
   z.object({ type: z.literal("playCard"), cardId: z.string().regex(/^p\d{2}-i\d{2}$|^c\d{1,4}$/).max(16) }).strict(),
-  z.object({ type: z.literal("placeLui"), slot: z.string().regex(/^(zero|k[1-7])$/), position: z.number().int().min(1).max(8) }).strict(),
+  z.object({ type: z.literal("placeMarks"), marks: z.array(z.object({ slot: z.enum(["cade", "noncade", "nulli"]), position: z.number().int().min(1).max(8) }).strict()).length(1) }).strict(),
+  z.object({ type: z.literal("placeLui"), slot: z.string().regex(/^(zero|k[1-7]|pr|sp|in|im|di|ce)$/), position: z.number().int().min(1).max(8), to: z.number().int().min(1).max(8).optional() }).strict(),
   z.object({ type: z.literal("vote"), position: z.number().int().min(1).max(8) }).strict(),
   z.object({ type: z.literal("advance") }).strict(),
 ]);
@@ -41,7 +42,7 @@ export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("hello"), token: tokenSchema }).strict(),
   z.object({ t: z.literal("watch") }).strict(),
   z.object({ t: z.literal("ping") }).strict(),
-  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), gregge: z.boolean().optional(), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), confessions: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
+  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), gregge: z.boolean().optional(), propaganda: z.boolean().optional(), objectives: z.boolean().optional(), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), confessions: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("addBot"), level: botLevelSchema.default("medium") }).strict(),
   z.object({ t: z.literal("removeBot"), playerId: playerIdSchema }).strict(),
@@ -55,7 +56,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
-export interface RoomOptionsDto { megafonoSa: boolean; /** Variante «Il gregge» (in prova): lo 0 è l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi la vota. */ gregge?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
+export interface RoomOptionsDto { megafonoSa: boolean; /** Variante «Il gregge» (in prova): lo 0 è l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi la vota. */ gregge?: boolean; /** Variante PROPAGANDA (in prova) e, dentro, obiettivi contrapposti. PROPAGANDA e «Il gregge» si escludono. */ propaganda?: boolean; objectives?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
 export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; isBot?: boolean; level?: "easy" | "medium" | "hard" }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;

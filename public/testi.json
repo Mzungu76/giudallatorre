@@ -1,6 +1,6 @@
 {
- "versione": 12,
- "aggiornato": "2026-11-09",
+ "versione": 15,
+ "aggiornato": "2026-11-10",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -104,7 +104,7 @@
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p2.x": {
-   "t": "Quando le carte sono sopra alla torre, scommetti su quanti voti prenderà una carta.",
+   "t": "Quando le carte sono sopra la torre, posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p3.t": {
@@ -112,11 +112,11 @@
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.p3.x": {
-   "t": "Come tutti. Il tuo voto non conta per il Lui!",
+   "t": "Come tutti, ma non la carta con VOTI NULLI!.",
    "s": "Scheda «Sei il Megafono!»"
   },
   "mega.gioca": {
-   "t": "**Giochi una carta come gli altri.**",
+   "t": "**Giochi una carta come gli altri**: nessuno sa qual è la tua.",
    "s": "Scheda «Sei il Megafono!»",
    "n": "Variante «Il Megafono sa»"
   },
@@ -126,7 +126,7 @@
    "n": "Modalità base"
   },
   "mega.punti": {
-   "t": "**Come fai punti:** {p2} se voti la carta che cade · Lui! azzeccato {pl} (mancato: {p0})",
+   "t": "**Come fai punti:** {p2} se voti la carta che cade e {p2} se cade la tua · segnalini azzeccati {pl} (sbagliati: {p0})",
    "s": "Scheda «Sei il Megafono!»",
    "n": "{p2}, {pl}, {p0} sono i numeri di punti con la stella: non cancellarli"
   },
@@ -251,7 +251,7 @@
    "n": "Scelta della carta"
   },
   "hint.lui": {
-   "t": "Tocca la carta su cui scommetti, poi scegli il gettone: più voti scommetti, più punti fai se li prende.",
+   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +1 se resta su, VOTI NULLI! annulla i voti.",
    "s": "Suggerimenti a fumetto",
    "n": "Megafono, Lui!"
   },
@@ -484,7 +484,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "ex.pill.lui": {
-   "t": "✓ Lui! azzeccato {pt}",
+   "t": "✓ Segnalino azzeccato {pt}",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "ex.pill.nessuno": {
@@ -526,11 +526,11 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "exl.titolo": {
-   "t": "«Almeno 2 voti»",
+   "t": "CADE",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.testo": {
-   "t": "Anna ha messo questo gettone sulla carta col bordo giallo.",
+   "t": "Anna, il Megafono, ha messo il CADE (coperto) sulla carta col bordo giallo.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.altri": {
@@ -538,23 +538,23 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.t": {
-   "t": "Due voti sulla sua carta: azzeccato!",
+   "t": "La carta cade: CADE azzeccato!",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.x": {
-   "t": "Anna prende {pt}",
+   "t": "{pt} ad Anna e a ognuno che l'ha votata",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ko.t": {
-   "t": "Se ne avesse presi solo uno: mancato",
+   "t": "Se fosse rimasta su",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ko.x": {
-   "t": "{pt} Non perde nulla, ma il gettone è usato.",
+   "t": "{pt} Nessuno perde nulla.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.piede": {
-   "t": "Contano solo i voti degli altri, non il tuo. Ogni partita ha 2 gettoni, uguali per tutti, e ognuno si usa una volta sola.",
+   "t": "A ogni turno il Megafono posa un segnalino coperto su una carta, scegliendo tra CADE, NON CADE e VOTI NULLI!.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "pk.giusto.t": {
@@ -579,11 +579,11 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.t": {
-   "t": "Lui! azzeccato",
+   "t": "Segnalino azzeccato",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.x": {
-   "t": "Solo per il Megafono: la carta del gettone prende abbastanza voti.",
+   "t": "CADE +4 se la carta cade, NON CADE +1 se resta su: al Megafono e a chi ha votato quella carta.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "how.aria": {
@@ -632,11 +632,11 @@
    "s": "Regolamento completo"
   },
   "how.1.p2.t": {
-   "t": "La Folla gioca",
+   "t": "Tutti giocano",
    "s": "Regolamento completo"
   },
   "how.1.p2.x": {
-   "t": "Tutti gli altri scelgono in segreto, dalla propria mano, il personaggio che farebbe di sicuro quella cosa.",
+   "t": "Tutti, Megafono compreso, scelgono in segreto dalla propria mano il personaggio che farebbe di sicuro quella cosa. Nessuno sa di chi è ogni carta.",
    "s": "Regolamento completo"
   },
   "how.1.p3.t": {
@@ -644,7 +644,7 @@
    "s": "Regolamento completo"
   },
   "how.1.p3.x": {
-   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono mette un gettone Lui! su una carta e scommette su quanti voti prenderà.",
+   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
    "s": "Regolamento completo"
   },
   "how.1.p4.t": {
@@ -652,7 +652,7 @@
    "s": "Regolamento completo"
   },
   "how.1.p4.x": {
-   "t": "Tutti votano in segreto la carta che somiglia di più alla frase, anche la propria. La più votata cade.",
+   "t": "Tutti votano in segreto la carta che somiglia di più alla frase, anche la propria. La più votata cade. I voti sulla carta con VOTI NULLI! non valgono.",
    "s": "Regolamento completo"
   },
   "how.1.p5.t": {
@@ -668,7 +668,7 @@
    "s": "Regolamento completo"
   },
   "how.1.pari.x": {
-   "t": "Se più carte hanno gli stessi voti decide il Megafono. Se ha votato una di quelle, cade solo la sua. Altrimenti cadono tutte.",
+   "t": "Se più carte hanno gli stessi voti e una ha il segnalino CADE, cade solo quella. Altrimenti cadono tutte.",
    "s": "Regolamento completo"
   },
   "how.2.somm.t": {
@@ -717,7 +717,7 @@
    "s": "Regolamento completo"
   },
   "how.3.come.x": {
-   "t": "Ogni partita ha 2 gettoni, uguali per tutti, e ognuno si usa una sola volta. Contano solo i voti degli altri, non il tuo. I tuoi li vedi in basso a sinistra: toccali per ingrandirli. Quelli degli altri vanno ricordati.",
+   "t": "A ogni turno il Megafono ha tutti e 3 i segnalini e ne posa uno, coperto, su una carta: si scopre alla fine. I premi di CADE e NON CADE vanno al Megafono e a chiunque abbia votato quella carta. Il Megafono non può votare la carta con VOTI NULLI!.",
    "s": "Regolamento completo"
   },
   "how.4.fine.t": {
@@ -1436,7 +1436,7 @@
    "s": "Partita: turno normale"
   },
   "g.ban.susp.s": {
-   "t": "il Megafono sta per scommettere sui voti",
+   "t": "il Megafono sta per mettere il Lui!",
    "s": "Partita: turno normale"
   },
   "g.ban.vote.t": {
@@ -1456,12 +1456,12 @@
    "s": "Partita: turno normale"
   },
   "g.ban.dopo.mega": {
-   "t": "Il Megafono scommette",
+   "t": "Il Megafono mette il Lui!",
    "s": "Partita: turno normale",
    "n": "Dopo la salita delle carte"
   },
   "g.ban.dopo.mega.s": {
-   "t": "quanti voti prenderà?",
+   "t": "dove lo metterà?",
    "s": "Partita: turno normale"
   },
   "g.fr.tua": {
@@ -2633,6 +2633,445 @@
   "help.esci.x": {
    "t": "Un giocatore virtuale prende il tuo posto.",
    "s": "Menu Aiuto («i»)"
+  },
+  "lui.e.propaganda": {
+   "t": "Propaganda!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "lui.e.spareggio": {
+   "t": "Spareggio!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "lui.e.influenza": {
+   "t": "Influenza!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "lui.e.imbroglio": {
+   "t": "Imbroglio!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "lui.e.dirottamento": {
+   "t": "Dirottamento!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "lui.e.censura": {
+   "t": "Censura!",
+   "s": "Variante PROPAGANDA",
+   "n": "Nome del segnalino"
+  },
+  "g.lui.e.propaganda": {
+   "t": "+{k} voti a questa carta",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "g.lui.e.spareggio": {
+   "t": "vince il pareggio in testa",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "g.lui.e.influenza": {
+   "t": "il tuo voto vale doppio",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "g.lui.e.imbroglio": {
+   "t": "annulla i voti della carta",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "g.lui.e.dirottamento": {
+   "t": "sposta un voto su un'altra carta",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "g.lui.e.censura": {
+   "t": "toglie un voto alla carta",
+   "s": "Variante PROPAGANDA",
+   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
+  },
+  "bui.info.e.propaganda": {
+   "t": "Aggiunge {k} voti a questa carta.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "bui.info.e.spareggio": {
+   "t": "Se questa carta è in pareggio in testa, cade lei da sola: vince su ogni altra regola di spareggio.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "bui.info.e.influenza": {
+   "t": "Il voto del Megafono vale doppio, qualunque carta voti.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "bui.info.e.imbroglio": {
+   "t": "Annulla tutti i voti di questa carta: chi l'ha votata non prende il +2.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "bui.info.e.dirottamento": {
+   "t": "Sposta un voto da questa carta a un'altra, scelta dal Megafono.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "bui.info.e.censura": {
+   "t": "Toglie un voto a questa carta.",
+   "s": "Variante PROPAGANDA",
+   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
+  },
+  "rv.e.propaganda": {
+   "t": "Ha posato **Propaganda!** sul n. {n}: +{k} voti, da {prima} a {dopo}.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.spareggio": {
+   "t": "Ha posato **Spareggio!** sul n. {n}: era in pareggio in testa e cade da sola.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.spareggio.no": {
+   "t": "Ha posato **Spareggio!** sul n. {n}: nessun pareggio in testa, nessun effetto.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.influenza": {
+   "t": "Ha posato **Influenza!**: il suo voto sul n. {v} è valso doppio.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.imbroglio": {
+   "t": "Ha posato **Imbroglio!** sul n. {n}: {k} voti annullati.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.imbroglio.no": {
+   "t": "Ha posato **Imbroglio!** sul n. {n}: nessuno l'ha votata, nessun voto annullato.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.dirottamento": {
+   "t": "Ha posato **Dirottamento!** sul n. {n}: un voto è passato al n. {to}.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.dirottamento.no": {
+   "t": "Ha posato **Dirottamento!** sul n. {n}: non c'erano voti da spostare.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.censura": {
+   "t": "Ha posato **Censura!** sul n. {n}: un voto in meno ({prima} → {dopo}).",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "rv.e.censura.no": {
+   "t": "Ha posato **Censura!** sul n. {n}: non c'erano voti da togliere.",
+   "s": "Spoglio",
+   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
+  },
+  "obj.c.almeno": {
+   "t": "riceve almeno {k} voti",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione del Megafono"
+  },
+  "obj.c.nessuno": {
+   "t": "non riceve nessun voto",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione del Megafono"
+  },
+  "obj.c.esattamente": {
+   "t": "riceve esattamente {k} voti",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione del Megafono"
+  },
+  "obj.p.almeno": {
+   "t": "riceve meno di {k} voti",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione pubblica (il contrario)"
+  },
+  "obj.p.nessuno": {
+   "t": "riceve almeno 1 voto",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione pubblica (il contrario)"
+  },
+  "obj.p.esattamente": {
+   "t": "riceve meno o più di {k} voti",
+   "s": "Variante PROPAGANDA",
+   "n": "Condizione pubblica (il contrario)"
+  },
+  "obj.t.mega": {
+   "t": "Il tuo obiettivo segreto",
+   "s": "Variante PROPAGANDA",
+   "n": "Titoletto dell'obiettivo, solo per il Megafono"
+  },
+  "obj.t.folla": {
+   "t": "Obiettivo della Folla",
+   "s": "Variante PROPAGANDA",
+   "n": "Titoletto dell'obiettivo pubblico"
+  },
+  "obj.mega": {
+   "t": "Se il personaggio {n} {cond}, prendi {pt} punti!",
+   "s": "Variante PROPAGANDA",
+   "n": "Obiettivo del Megafono. {cond} = condizione"
+  },
+  "obj.folla": {
+   "t": "Se il personaggio … {cond}, chi l'ha votato prende {pt} punti!",
+   "s": "Variante PROPAGANDA",
+   "n": "Obiettivo pubblico: il personaggio resta segreto"
+  },
+  "obj.esito.mega": {
+   "t": "Obiettivo del Megafono: il n. {n} {cond} (voti: {v}). Riuscito: +{pt}!",
+   "s": "Variante PROPAGANDA",
+   "n": "Riepilogo dei punti"
+  },
+  "obj.esito.folla": {
+   "t": "Obiettivo mancato dal Megafono (voti del n. {n}: {v}): +{pt} a chi della Folla l'ha votato ({k}).",
+   "s": "Variante PROPAGANDA",
+   "n": "Riepilogo dei punti"
+  },
+  "obj.esito.nessuno": {
+   "t": "Obiettivo mancato dal Megafono (voti del n. {n}: {v}), ma nessuno della Folla l'aveva votato.",
+   "s": "Variante PROPAGANDA",
+   "n": "Riepilogo dei punti"
+  },
+  "pp.obj.ok": {
+   "t": "Obiettivo riuscito",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.obj.ko": {
+   "t": "Obiettivo mancato",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.obj.folla": {
+   "t": "Ha votato il personaggio dell'obiettivo: +{pt}",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "room.propaganda": {
+   "t": "Propaganda (prova)",
+   "s": "Stanza e lobby",
+   "n": "Casella della variante PROPAGANDA"
+  },
+  "room.propaganda.info": {
+   "t": "Variante: ogni Megafono ha un segnalino positivo e uno negativo che cambiano il conteggio dei voti. Esclude «Il gregge».",
+   "s": "Stanza e lobby"
+  },
+  "room.obiettivi": {
+   "t": "Obiettivi contrapposti",
+   "s": "Stanza e lobby",
+   "n": "Casella dentro PROPAGANDA"
+  },
+  "room.obiettivi.info": {
+   "t": "A ogni turno il Megafono riceve un obiettivo segreto sui voti di un personaggio; se fallisce, prende i punti chi ha votato quel personaggio.",
+   "s": "Stanza e lobby"
+  },
+  "room.con.propaganda": {
+   "t": " · variante Propaganda",
+   "s": "Stanza e lobby"
+  },
+  "room.con.propaganda.obj": {
+   "t": " · variante Propaganda con obiettivi",
+   "s": "Stanza e lobby"
+  },
+  "g.dir.t": {
+   "t": "Dirottamento! Dove sposti il voto?",
+   "s": "Partita: turno normale"
+  },
+  "g.dir.s": {
+   "t": "Tocca la carta che riceve il voto (non il n. {n}).",
+   "s": "Partita: turno normale"
+  },
+  "g.dir.s.ok": {
+   "t": "Un voto passerà dal n. {da} al n. {a}.",
+   "s": "Partita: turno normale"
+  },
+  "g.dir.annulla": {
+   "t": "Annulla",
+   "s": "Partita: turno normale"
+  },
+  "g.dir.ok": {
+   "t": "Sul n. {n} ›",
+   "s": "Partita: turno normale"
+  },
+  "g.dir.scegli": {
+   "t": "Scegli la carta",
+   "s": "Partita: turno normale"
+  },
+  "ld.sotto.pos": {
+   "t": "Quale segnalino positivo toccherà a questa partita?",
+   "s": "Estrazione del Lui! (variante «Il gregge»)"
+  },
+  "ld.sotto.neg": {
+   "t": "E quale segnalino negativo?",
+   "s": "Estrazione del Lui! (variante «Il gregge»)"
+  },
+  "ld.set.s.prop": {
+   "t": "Ogni Megafono avrà questi due segnalini, uno positivo e uno negativo:",
+   "s": "Estrazione del Lui! (variante «Il gregge»)"
+  },
+  "g.lui.s.prop": {
+   "t": "Tocca la carta su cui posare il Lui!.",
+   "s": "Partita: turno normale",
+   "n": "Variante PROPAGANDA"
+  },
+  "g.lui.s.n.prop": {
+   "t": "Scegli il segnalino: cambierà il conteggio dei voti. Gli altri non sapranno quale.",
+   "s": "Partita: turno normale",
+   "n": "Variante PROPAGANDA"
+  },
+  "bui.info.nota.prop": {
+   "t": "Il segnalino si scopre dopo il voto: il conteggio annunciato ne tiene già conto.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Variante PROPAGANDA"
+  },
+  "lui.e.cade": {
+   "t": "CADE",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "lui.e.noncade": {
+   "t": "NON CADE",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "lui.e.nulli": {
+   "t": "VOTI NULLI!",
+   "s": "Gettoni Lui! (etichette)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.lui.e.cade": {
+   "t": "+4 se cade, anche a chi la vota",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.lui.e.noncade": {
+   "t": "+1 se resta su, anche a chi la vota",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.lui.e.nulli": {
+   "t": "i voti su questa carta non valgono",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.e.cade": {
+   "t": "Se questa carta cade: +4 al Megafono e a ognuno che l'ha votata.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.e.noncade": {
+   "t": "Se questa carta resta su: +1 al Megafono e a ognuno che l'ha votata.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.e.nulli": {
+   "t": "I voti su questa carta non valgono: chi la vota non prende il +2. Il Megafono non può votarla.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.cnc.altri": {
+   "t": "Il Megafono ha posato un segnalino coperto sulla carta n. {a}: è uno di questi tre. Si scopre dopo il voto.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.cnc.mio": {
+   "t": "Hai posato questo segnalino sulla carta n. {a}. Gli altri non sanno quale sia:",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.info.nota.cnc": {
+   "t": "Il Megafono non può votare la carta con VOTI NULLI!. I premi di CADE e NON CADE vanno anche a chi vota quella carta.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "bui.popup.nota.cnc": {
+   "t": "A ogni turno hai tutti e 3 i segnalini e ne posi uno, coperto, su una carta.",
+   "s": "Pannelli in basso (frase, gettoni, chat…)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.t": {
+   "t": "Il Lui! di {nome}",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.cade": {
+   "t": "**CADE** sul n. {n}: è caduta! +{pt} al Megafono e a chi l'ha votata ({k}).",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.cade.no": {
+   "t": "**CADE** sul n. {n}: è rimasta su, niente.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.noncade": {
+   "t": "**NON CADE** sul n. {n}: è rimasta su! +{pt} al Megafono e a chi l'ha votata ({k}).",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.noncade.no": {
+   "t": "**NON CADE** sul n. {n}: è caduta, niente.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.nulli": {
+   "t": "**VOTI NULLI!** sul n. {n}: {k} voti annullati.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.m.nulli.no": {
+   "t": "**VOTI NULLI!** sul n. {n}: nessuno l'ha votata.",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.pareggio.seg": {
+   "t": "Pareggio!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "rv.pareggio.seg.x": {
+   "t": "Pari merito: {lista}. Lo scioglie il segnalino del Megafono…",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "pp.m.folla": {
+   "t": "Ha votato la carta del {lui}: +{pt}",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.cnc.t1": {
+   "t": "METTI IL LUI!",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.cnc.s1": {
+   "t": "Tocca la carta su cui mettere il segnalino.",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.cnc.su": {
+   "t": "LUI! SUL N. {n}",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.cnc.su.s": {
+   "t": "Quale segnalino metti qui? Gli altri vedranno solo che c'è.",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "g.cnc.novoto": {
+   "t": "Non puoi votare la carta con VOTI NULLI!: scegline un'altra.",
+   "s": "Partita: turno normale",
+   "n": "Gioco base «Cade / Non cade»"
+  },
+  "pp.m.nulli": {
+   "t": "Voto annullato da VOTI NULLI!",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Gioco base «Cade / Non cade»"
   }
  }
 }

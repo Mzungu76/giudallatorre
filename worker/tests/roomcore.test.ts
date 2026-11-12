@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { megafonoOf } from "@gdt/game-engine";
+import { megafonoOf, requiredPlayers } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
@@ -226,6 +226,18 @@ describe("partita via messaggi", () => {
     playToEnd(r); expect(r.core.data.stage).toBe("FINISHED");
     const plain = makeRoom(4, 78); send(plain, 0, { t: "start" }); expect((plain.core.data.game as GameState).gregge).toBe(false);
   });
+  it("variante PROPAGANDA: esclude «Il gregge», obiettivi solo dentro PROPAGANDA, le tre configurazioni si giocano fino alla fine", () => {
+    const r = makeRoom(4, 91);
+    send(r, 0, { t: "setOptions", gregge: true }); send(r, 0, { t: "setOptions", propaganda: true, objectives: true });
+    expect(r.core.data.options).toMatchObject({ propaganda: true, objectives: true, gregge: false });
+    send(r, 0, { t: "setOptions", gregge: true }); expect(r.core.data.options).toMatchObject({ propaganda: false, gregge: true });
+    for (const [prop, obj] of [[false, false], [true, false], [true, true]] as const) {
+      const q = makeRoom(5, 120 + (prop ? 1 : 0) + (obj ? 2 : 0)); send(q, 0, { t: "setOptions", propaganda: prop, objectives: obj }); send(q, 0, { t: "start" });
+      const g = q.core.data.game as GameState;
+      expect(!!g.propaganda).toBe(prop); expect(!!g.objectives).toBe(prop && obj); expect(g.luiSet!.some((x) => x.positive !== undefined)).toBe(prop); expect(!!g.cnc).toBe(!prop);
+      playToEnd(q); expect(q.core.data.stage).toBe("FINISHED");
+    }
+  });
   it("riconnessione: lo snapshot restituisce stanza e vista aggiornata, senza perdere lo stato", () => {
     const r = makeRoom(4); send(r, 0, { t: "start" });
     const mega = r.ids.indexOf(megafonoOf(r.core.data.game as GameState));
@@ -252,8 +264,9 @@ function playOneTurn(r: ReturnType<typeof makeRoom>) {
   let g = r.core.data.game as GameState;
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
-  for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
+  for (const id of r.ids) if (requiredPlayers(g).includes(id)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
+  // gioco base «Cade / Non cade»: un segnalino (CADE sulla 1)
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } });
   for (const id of r.ids) send(r, r.ids.indexOf(id), { t: "act", action: { type: "vote", position: 1 } });
 }
 
@@ -330,8 +343,9 @@ function playOneTurnTo(r: ReturnType<typeof makeRoom>, upTo: "VOTE") {
   let g = r.core.data.game as GameState;
   send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "choosePhrase", mode: "free" } });
   g = r.core.data.game as GameState;
-  for (const id of r.ids) if (id !== megafonoOf(g)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
-  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeLui", slot: (r.core.data.game as GameState).luiSet![0]!.slot, position: 1 } });
+  for (const id of r.ids) if (requiredPlayers(g).includes(id)) send(r, r.ids.indexOf(id), { t: "act", action: { type: "playCard", cardId: g.hands[id]![0]! } });
+  // gioco base «Cade / Non cade»: un segnalino (CADE sulla 1)
+  send(r, r.ids.indexOf(megafonoOf(g)), { t: "act", action: { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } });
   expect(upTo).toBe("VOTE");
 }
 

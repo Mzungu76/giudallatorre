@@ -54,7 +54,7 @@ export function MegaIntro({ megafonoSa, onClose }: { megafonoSa: boolean; onClos
         <div className="st"><i className="ic">2</i><div><b>{t("mega.p2.t")}</b><p>{t("mega.p2.x")}</p></div></div>
         <div className="st"><i className="ic">3</i><div><b>{t("mega.p3.t")}</b><p>{t("mega.p3.x")}</p></div></div>
         <div className="isl-n">{megafonoSa ? t("mega.gioca") : t("mega.nongioca")}</div>
-        <div className="isl-n g">{t("mega.punti", { p2: <Pt n={2} />, pl: <Pt n="+5…16" />, p0: <Pt n={0} plus={false} /> })}</div>
+        <div className="isl-n g">{t("mega.punti", { p2: <Pt n={2} />, pl: <Pt n="+1 / +4" />, p0: <Pt n={0} plus={false} /> })}</div>
       </div>
       <div className="isl-ba">
         <Btn onClick={() => onClose(off)} testId="mega-ok">{t("mega.ok")}</Btn>
