@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type { LuiOutcome, MarkOutcome, MiniResult, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
 import { markSpec } from "./Terrace.tsx";
 import { cardFull } from "../lib/cards.ts";
@@ -6,6 +6,8 @@ import { luiLabel, objCond } from "../lib/lui.ts";
 import { sfx } from "../lib/sfx.ts";
 import type { Voter } from "./Terrace.tsx";
 import { Pt } from "./Pt.tsx";
+import { terracePos } from "../scene/draw.ts";
+import { useStage } from "../ui.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
@@ -19,6 +21,9 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   /** Chi guarda: la sua riga va in cima e si chiama «Tu». */ meId?: string;
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>; lines: Record<string, ScoreLine[]>; lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; interactive: boolean; hideGo?: boolean; onContinue: () => void;
 }) {
+  // sui telefoni corti il pannello non deve nascondere la torre: si ferma sotto le carte e il resto scorre
+  const { H, ts: sc, ty } = useStage(), feet = useMemo(() => Math.max(...Object.values(terracePos(Math.max(3, cardIds.length))).map((c) => c.f)), [cardIds.length]);
+  const maxH = Math.max(150, H - (300 + (feet + 18 - 300) * sc + ty) - 162);
   useEffect(() => { sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!interactive) { const t = setTimeout(onContinue, 6000); return () => clearTimeout(t); } return undefined; }, [interactive]); // eslint-disable-line react-hooks/exhaustive-deps
   const total = (id: string) => (lines[id] ?? []).reduce((a, l) => a + l.pts, 0);
@@ -53,7 +58,7 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
     return out;
   };
   return (
-    <div className="pb pbp" data-testid="points-panel">
+    <div className="pb pbp" data-testid="points-panel" style={{ maxHeight: maxH }}>
       <b className="rv-t" data-testid="points-title">{t("pp.titolo")}</b>
       {objective && <span className="pp-obj" data-testid="objective-result">{objective.megaHit ? t("obj.esito.mega", { n: objective.position, cond: objCond(objective), v: objective.votes, pt: objective.pts }) : objective.winners.length ? t("obj.esito.folla", { n: objective.position, v: objective.votes, pt: objective.pts, k: objective.winners.length }) : t("obj.esito.nessuno", { n: objective.position, v: objective.votes })}</span>}
       <div className="pb-scroll">

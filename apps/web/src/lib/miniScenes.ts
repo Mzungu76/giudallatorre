@@ -59,6 +59,8 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
   const positions = [1, 2, 3, 4, 5, 6];
   const stand = (p: number) => SLOT[p]!;
   const idleFig = (p: number, end: number): FigSpec => ({ key: `c${p}`, who: p, wps: idle(stand(p).x, stand(p).y, 0, end, p) });
+  // chi non c'entra con la scena sparisce subito, così si capisce chi sono i protagonisti
+  const leave = (p: number, end: number): FigSpec => { const q = stand(p); return { key: `c${p}`, who: p, wps: [{ t: 0, x: q.x, y: q.y, s: FIG_SCALE, o: 1 }, { t: 500, x: q.x, y: q.y - 10, s: FIG_SCALE * 0.85, o: 0 }, { t: end, x: q.x, y: q.y - 10, s: FIG_SCALE * 0.85, o: 0 }] }; };
   const cam = (end: number, mid: Cam[]): Cam[] => [{ t: 0, x: 0, y: 0, s: 1 }, ...mid, { t: end, x: 0, y: 0, s: 1 }];
 
   if (kind === "accusa" && fallen.length) {
@@ -89,14 +91,14 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
     const as = sort(acc), lastT = as[as.length - 1]!.t;
     as.push(...idle(accAt.x, accAt.y, lastT + 300, end, 1));
     figs.push({ key: "side", who: "side", wps: sort(as) });
-    for (const p of positions) if (!fallen.includes(p)) figs.push(idleFig(p, end));
+    for (const p of positions) if (!fallen.includes(p)) figs.push(leave(p, end));   // restano solo gli accusati e l'accusatore
     return { duration: end, figs, hearts, bursts, cam: cam(end, camMid), sounds };
   }
 
   if (kind === "peggiore" && fallen.length) {
     // «crowd surfing»: le carte non cadute si mettono in fila, sollevano sopra di sé una carta caduta per volta, distesa in orizzontale,
     // la portano di mano in mano da un lato all'altro e infine la lanciano giù dalla torre
-    const K = fallen.length, sc = compress(K), D = 6200 * sc, start = 600, end = start + K * D + 800;
+    const K = fallen.length, sc = compress(K), D = 4700 * sc, start = 600, end = start + K * D + 800;
     const crowd = positions.filter((q) => !fallen.includes(q)), N = crowd.length, YC = 596, XL = 52, XR = 322;
     const cx = (i: number) => (N === 1 ? 186 : 78 + (i * (296 - 78)) / (N - 1));   // posto di ognuno nella fila
     const camMid: Cam[] = [];
@@ -114,23 +116,23 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
       if (k > 0) tracks[p]!.push({ t: start, x: F.x, y: F.y, s: FIG_SCALE }, { t: start + 700 * sc, x: wait.x, y: wait.y, s: FIG_SCALE });   // chi aspetta il suo turno si ritira sul fondo
       else tracks[p]!.push({ t: T(0), x: F.x, y: F.y, s: FIG_SCALE });
       tracks[p]!.push({ t: T(900), x: XL - 4, y: YC - 4, s: FIG_SCALE, r: 0 },
-        lie(T(1500), XL + 8, YC - 128, 0, 1.0));
+        lie(T(1300), XL + 8, YC - 128, 0, 1.0));
       // 3) viene portato da sinistra a destra, sopra le mani, ondeggiando
-      const carry = 3300, bobs = 6;
-      for (let j = 1; j <= bobs; j++) { const u = j / bobs, c = XL + 8 + (XR - XL - 8) * u; tracks[p]!.push(lie(T(1500 + carry * u), c, YC - 128 - (j % 2 ? 12 : -4), j % 2 ? 7 : -7, 1.0)); }
+      const carry = 1800, bobs = 5;
+      for (let j = 1; j <= bobs; j++) { const u = j / bobs, c = XL + 8 + (XR - XL - 8) * u; tracks[p]!.push(lie(T(1300 + carry * u), c, YC - 128 - (j % 2 ? 12 : -4), j % 2 ? 7 : -7, 1.0)); }
       // 4) lanciato in aria e giù dalla torre
-      tracks[p]!.push(lie(T(5000), XR + 20, YC - 190, 20, 1.05),
-        { t: T(5400), x: XR + 70, y: EDGE_Y - 40, s: 1.15, r: 200 }, { t: T(5900), x: XR + 120, y: EDGE_Y + 760, s: 1.5, r: 560, o: 1 }, { t: T(5960), x: XR + 120, y: EDGE_Y + 780, s: 1.5, r: 560, o: 0 });
+      tracks[p]!.push(lie(T(3250), XR + 20, YC - 190, 20, 1.05),
+        { t: T(3600), x: XR + 70, y: EDGE_Y - 40, s: 1.15, r: 200 }, { t: T(4000), x: XR + 120, y: EDGE_Y + 760, s: 1.5, r: 560, o: 1 }, { t: T(4060), x: XR + 120, y: EDGE_Y + 780, s: 1.5, r: 560, o: 0 });
       // le carte della folla alzano le mani quando il peggiore passa sopra di loro e festeggiano al lancio
       crowd.forEach((q, i) => {
-        const tp = T(1500 + (carry * (cx(i) - XL)) / (XR - XL));
+        const tp = T(1300 + (carry * (cx(i) - XL)) / (XR - XL));
         tracks[q]!.push({ t: tp - 260 * sc, x: cx(i), y: YC, s: FIG_SCALE }, { t: tp, x: cx(i), y: YC - 16, s: FIG_SCALE, r: i % 2 ? 4 : -4 }, { t: tp + 260 * sc, x: cx(i), y: YC, s: FIG_SCALE },
-          ...hop(cx(i), YC, T(5100), 2, 20, 260 * sc).slice(1));
+          ...hop(cx(i), YC, T(3300), 2, 20, 260 * sc).slice(1));
       });
-      bursts.push({ t: T(5000), x: XR - 30, y: YC - 300, kind: "via" });
-      sounds.push({ t: T(900), kind: "drum" }, { t: T(1500), kind: "whoosh" }, { t: T(5000), kind: "whoosh" }, { t: T(5800), kind: "stamp" });
+      bursts.push({ t: T(3250), x: XR - 30, y: YC - 300, kind: "via" });
+      sounds.push({ t: T(900), kind: "drum" }, { t: T(1300), kind: "whoosh" }, { t: T(3250), kind: "whoosh" }, { t: T(3950), kind: "stamp" });
       // la macchina da presa segue la carta da sinistra a destra, poi trema al lancio
-      camMid.push({ t: T(900), x: 22, y: 14, s: 1.08 }, { t: T(1500 + carry * 0.5), x: 0, y: 18, s: 1.1 }, { t: T(5000), x: -22, y: 14, s: 1.1 }, ...shake(T(5800), -10, 10, 1.08), { t: T(6200), x: 0, y: 0, s: 1.02 });
+      camMid.push({ t: T(900), x: 22, y: 14, s: 1.08 }, { t: T(1300 + carry * 0.5), x: 0, y: 18, s: 1.1 }, { t: T(3250), x: -22, y: 14, s: 1.1 }, ...shake(T(3950), -10, 10, 1.08), { t: T(4500), x: 0, y: 0, s: 1.02 });
     });
     for (const p of positions) {
       const t = sort(tracks[p]!), last = t[t.length - 1]!;
@@ -151,7 +153,7 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
       const s = stand(p), sp = spots[j]!, tx = P.x + sp.x, ty = P.y + sp.y;
       figs.push({ key: `c${p}`, who: p, wps: sort([...idle(s.x, s.y, 0, 300, p), { t: 300, x: s.x, y: s.y, s: FIG_SCALE }, { t: meet, x: tx, y: ty, s: FIG_SCALE }, ...hop(tx, ty, meet + 100 + j * 70, 9, 18, 300).slice(1)]) });
     });
-    for (const p of positions) if (!W.includes(p)) figs.push(idleFig(p, end));
+    for (const p of positions) if (!W.includes(p)) figs.push(leave(p, end));   // restano solo gli innamorati
     const n = 56;
     for (let i = 0; i < n; i++) {
       const dx = (rand() - 0.5) * 300;
