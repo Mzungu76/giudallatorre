@@ -24,7 +24,7 @@ function useTick(ms = 50) { const [n, setN] = useState(Date.now()); useEffect(()
 const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600, LAST_VOTE_MS = 3000;
 type Post = null | "verdict" | "finale" | "outro" | "points" | "board";
 
-export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }: GameProps) {
+export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, startAt }: GameProps & { /** Solo simulatore: apri direttamente il riepilogo dei punti. */ startAt?: "points" }) {
   const people = usePeople(room), me = view.viewerId, res = view.miniResult, mini = view.mini;
   const kind = (mini?.kind ?? res?.kind)!, info = miniInfo(kind), inRun = view.phase === "MINI_RUN", isHost = room.hostId === me;
   const now = useTick();
@@ -37,7 +37,7 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }
   const t0 = now - go, end = order.length * MINI_SLOT_MS, start = go - (MINI_INTRO_MS + MINI_COUNTDOWN_MS);
 
   // dopo la corsa: sipario (verdetto) → scenetta finale → sipario (fine) → punti → classifica
-  const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST ? "points" : "verdict") : null));
+  const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST || startAt === "points" ? "points" : "verdict") : null));
   const marks = useRef({ shut: Date.now(), outro: 0, res: 0 });
   useEffect(() => {
     const at = Date.now();

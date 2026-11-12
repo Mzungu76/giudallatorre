@@ -1125,3 +1125,23 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .mr-heart svg{width:100%;height:100%;display:block;overflow:visible}
 .mr-burst{position:absolute;z-index:950;width:120px;text-align:center;font:400 38px/1 Anton;color:#ffc72c;-webkit-text-stroke:3px #13224a;paint-order:stroke fill;text-shadow:0 4px 0 #13224a;opacity:0;animation:mrBurst .9s ease-out both}
 @keyframes mrBurst{0%{opacity:0;transform:scale(.3) rotate(-14deg)}20%{opacity:1;transform:scale(1.3) rotate(-8deg)}75%{opacity:1;transform:scale(1) rotate(-8deg)}100%{opacity:0;transform:scale(.9) rotate(-8deg)}}
+
+/* ===== Simulatore degli intervalli (/intervalli) ===== */
+.sim{position:fixed;inset:0;overflow:auto;background:radial-gradient(circle at 30% 20%,#243a73,#0b1430);display:flex;gap:18px;align-items:flex-start;justify-content:center;padding:12px;flex-wrap:wrap;color:#e8eefc;font:600 13px/1.35 Nunito,system-ui,sans-serif;user-select:text;touch-action:auto}
+.sim-phone{position:relative;flex:none;border-radius:18px;box-shadow:0 0 0 5px #13224a,0 14px 40px #0009;overflow:hidden;background:#1d3166}
+.sim-start{position:absolute;inset:0;display:flex;flex-direction:column;gap:10px;align-items:center;justify-content:center;text-align:center;padding:24px;color:#fff}
+.sim-start b{font:400 30px/1 Anton;text-transform:uppercase;color:#ffc72c}
+.sim-ctl{flex:1 1 320px;max-width:460px;min-width:300px;background:#0f1b3d;border:2px solid #2a4180;border-radius:14px;padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.sim-ctl h1{font:400 22px/1 Anton;text-transform:uppercase;color:#ffc72c;letter-spacing:.04em}
+.sim-row{display:flex;gap:8px;flex-wrap:wrap}
+.sim-f{display:flex;flex-direction:column;gap:4px}.sim-f>span{font:800 11px Nunito;letter-spacing:.06em;text-transform:uppercase;color:#9fb4ee}
+.sim-seg{display:flex;flex-wrap:wrap;gap:6px}
+.sim-seg button,.sim-btn{background:#1b2b5c;color:#e8eefc;border:2px solid #3652a3;border-radius:9px;padding:6px 10px;font:800 12.5px Nunito;cursor:pointer}
+.sim-seg button.on{background:#ffc72c;color:#13224a;border-color:#ffe27a}
+.sim-go{background:linear-gradient(#ffd24d,#f4a900);color:#13224a;border:3px solid #13224a;border-radius:12px;box-shadow:0 4px 0 #13224a;font:400 18px Anton;text-transform:uppercase;padding:8px 18px;cursor:pointer}
+.sim-go:disabled{opacity:.5}
+.sim-live{background:#0a132c;border:1px solid #2a4180;border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:5px;font:600 12px/1.4 Nunito}
+.sim-live b{color:#ffc72c;font:400 14px Anton;letter-spacing:.06em;text-transform:uppercase}.sim-live u{text-decoration:none;color:#7fe0ff}
+.sim-live .cur{color:#ffc72c;font-weight:900}
+.sim-err{color:#ff9a9a}.sim-note{color:#9fb4ee;font-size:11.5px}.sim-note code{background:#1b2b5c;padding:0 4px;border-radius:4px}
+.sim-toast{position:absolute;left:12px;right:12px;bottom:130px;z-index:500;background:#13224a;color:#fff;border:2px solid #ffc72c;border-radius:12px;padding:8px 12px;text-align:center;font:800 13px Nunito}
