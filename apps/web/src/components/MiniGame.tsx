@@ -2,11 +2,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { MiniResult } from "@gdt/game-engine";
 import { MINI_COUNTDOWN_MS, MINI_CYCLES, MINI_INTRO_MS, MINI_SLOT_MS } from "@gdt/game-engine";
 import { Disc, FAST } from "../ui.tsx";
-import { cardFull } from "../lib/cards.ts";
 import { sfx } from "../lib/sfx.ts";
 import Standings from "./Standings.tsx";
 import { Terrace } from "./Terrace.tsx";
-import type { VoteTok } from "./Terrace.tsx";
+import type { VoteTok, Voter } from "./Terrace.tsx";
 import { BMeta, BSheet, LuiTray, Row } from "./BUi.tsx";
 import { usePeople } from "../screens/Game.tsx";
 import { HintBubble, HintPointer, useIdleHint } from "./IdleHint.tsx";
@@ -14,26 +13,15 @@ import { miniInfo } from "../lib/minis.ts";
 import { hintFor } from "../lib/hints.tsx";
 import { buildFinale } from "../lib/miniScenes.ts";
 import { Curtain, FinaleScene, Letterbox, RunScene, useCast } from "./MiniStage.tsx";
-import { Pt } from "./Pt.tsx";
+import PointsPanel from "./PointsPanel.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 import { t, ts } from "../lib/testi.ts";
-import type { TestoKey } from "../lib/testi.ts";
-
-type Entry = { name: string; color: string; pts: number };
-interface Block { key: string; title: string; sub: string; entries: Entry[]; thumbs: number[] }
-function blocksOf(res: MiniResult, name: (id: string) => { name: string; color: string }): Block[] {
-  const by = (kind: string): Entry[] => Object.entries(res.lines).flatMap(([id, ls]) => ls.filter((l) => l.kind === kind).map((l) => ({ ...name(id), pts: l.pts })));
-  const b: Block[] = [], giusto = by("mini-giusto"), veloce = by("mini-veloce");
-  if (giusto.length) b.push({ key: "mini-giusto", title: ts("mg.blk.giusto.t"), sub: ts(`mg.blk.giusto.x.${res.kind}` as TestoKey), entries: giusto, thumbs: res.leaders });
-  if (veloce.length) b.push({ key: "mini-veloce", title: ts("mg.blk.veloce.t"), sub: ts("mg.blk.veloce.x"), entries: veloce, thumbs: res.leaders });
-  return b;
-}
 
 /** Orologio locale a 50 ms: fa scorrere sipario, presentazione, 3-2-1 e carte. */
 function useTick(ms = 50) { const [n, setN] = useState(Date.now()); useEffect(() => { const i = setInterval(() => setN(Date.now()), ms); return () => clearInterval(i); }, [ms]); return n; }
 
 /** Il sipario resta chiuso per la scritta (poi si apre sul palco); dopo la corsa si richiude per il verdetto e dopo la scenetta per la fine. */
-const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600;
+const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600, LAST_VOTE_MS = 3000;
 type Post = null | "verdict" | "finale" | "outro" | "points" | "board";
 
 export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }: GameProps) {
@@ -50,11 +38,16 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }
 
   // dopo la corsa: sipario (verdetto) → scenetta finale → sipario (fine) → punti → classifica
   const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST ? "points" : "verdict") : null));
-  const marks = useRef({ shut: Date.now(), outro: 0 });
+  const marks = useRef({ shut: Date.now(), outro: 0, res: 0 });
   useEffect(() => {
-    if (post === null && (view.phase === "MINI_RESULTS" || (inRun && order.length > 0 && t0 >= end))) { marks.current.shut = Date.now(); setPost(FAST && view.phase === "MINI_RESULTS" ? "points" : "verdict"); }
-    else if (post === "verdict" && view.phase === "MINI_RESULTS" && Date.now() - marks.current.shut >= (FAST ? 0 : VERDICT_MS)) setPost(FAST ? "points" : "finale");
-    else if (post === "outro" && Date.now() - marks.current.outro >= OUTRO_MS) setPost("points");
+    const at = Date.now();
+    if (post === null) {
+      // hanno votato tutti: si aspettano ancora 3 secondi (l'ultima carta resta in scena), poi il sipario; altrimenti si chiude a fine giri
+      if (view.phase === "MINI_RESULTS" && !marks.current.res) marks.current.res = at;
+      const allVoted = view.phase === "MINI_RESULTS" && at - marks.current.res >= (FAST ? 0 : LAST_VOTE_MS), timeUp = inRun && order.length > 0 && t0 >= end;
+      if (allVoted || timeUp) { marks.current.shut = at; setPost(FAST && view.phase === "MINI_RESULTS" ? "points" : "verdict"); }
+    } else if (post === "verdict" && view.phase === "MINI_RESULTS" && at - marks.current.shut >= (FAST ? 0 : VERDICT_MS)) setPost(FAST ? "points" : "finale");
+    else if (post === "outro" && at - marks.current.outro >= OUTRO_MS) setPost("points");
   }, [now]); // eslint-disable-line react-hooks/exhaustive-deps
   const endFinale = () => { marks.current.outro = Date.now(); setPost("outro"); };
 
@@ -76,7 +69,7 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }
     <>
       {showStage && <Run {...{ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }} />}
       {showFinale && res && <Finale res={res} view={view} readOnly={!!readOnly} sound={sound} onDone={endFinale} done={post === "outro"} />}
-      {(post === "points" || post === "board") && res && <End {...{ room, view, send, readOnly, sound, ui, people, res, isHost }} step={post} onStep={setPost} />}
+      {(post === "points" || post === "board") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post} onStep={setPost} />}
       <Curtain closed={shut} valance={post === "points" || post === "board" ? null : <span>{ts("mg.turno", { n: view.turn, tot: view.totalTurns })} · {info.icon} {info.title}</span>}>{curtainText}</Curtain>
     </>
   );
@@ -160,47 +153,33 @@ function Finale({ res, view, readOnly, sound, onDone, done }: { res: MiniResult;
   );
 }
 
-/** Dopo il sipario di chiusura: chi prende punti, poi la classifica. */
-function End({ room, view, send, readOnly, sound, ui, people, res, isHost, step, onStep }: Pick<GameProps, "room" | "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void }) {
-  const kind = res.kind, info = miniInfo(kind);
+/** Dopo il sipario di chiusura: lo stesso riepilogo dei turni normali («Com'è andata» + «Punti del turno»), poi la classifica. */
+function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onStep }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void }) {
+  const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
   const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
-  useEffect(() => { sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const act = () => send({ t: "act", action: { type: "advance" } });
   const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false })), [res, people]);
-  const blocks = blocksOf(res, (id) => ({ name: people.get(id).name, color: people.get(id).color }));
+  // come nei turni normali: chi ha votato per ultimo per primo… qui in ordine di tavolo; chi non ha votato in tempo compare con 0 punti
+  const voters: Voter[] = useMemo(() => people.all.map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: false })), [people]);
   const rows = view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }));
-  const uiv = readOnly ? null : ui ?? null, tray = uiv ? <LuiTray view={view} ui={uiv} /> : null, counts = res.counts;
-  void room;
+  const uiv = readOnly ? null : ui ?? null, tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
+  const body = kind === "accusa" ? `«${res.text}»` : info.body ?? "", size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
     <>
       {step === "points" && <Terrace cardIds={ids} votes={toks} />}
-      <div className="bl">
-        {step === "points" && <>
+      {step === "points" && (
+        <div className="bl">
           <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} />
-          <div className="pp ivl-res" data-testid="mini-tally"><b>{t("mg.resta.t")}</b>
-            <div className="ivl-row">{ids.map((id, i) => { const pos = i + 1, out = res.fallenPositions.includes(pos), win = kind === "amore" && res.leaders.includes(pos); return (
-              <div key={id} className={`ivl-t ${out ? "out" : "in"}`}><span className="th" style={{ backgroundImage: `url(${cardFull(id)})` }}><i>{pos}</i></span><b>{counts[pos] ?? 0}</b><u>{out ? t("mg.cade") : win ? t("mg.vince") : t("mg.resta")}</u></div>); })}</div>
-          </div>
-          <div className="pb" data-testid="points-panel">
-            <b className="rv-t" data-testid="points-title">{t("mg.chi.punti")}</b>
-            <div className="pb-scroll">
-              {blocks.length === 0 && <span className="pb-none">{t("mg.nessuno")}</span>}
-              {blocks.map((b, bi) => (
-                <div className="pb-blk" key={b.key} data-testid="points-block" style={{ animationDelay: `${0.4 + bi * 1.4}s` }}>
-                  <div className="pb-h">
-                    <span className="pb-th">{b.thumbs.slice(0, 3).map((p) => <span key={p} className="pb-c" style={{ backgroundImage: `url(${cardFull(ids[p - 1]!)})` }}><i>{p}</i></span>)}</span>
-                    <span className="pb-tx"><b>{b.title}</b><small>{b.sub}</small></span>
-                  </div>
-                  <div className="pb-who">{b.entries.map((e, k) => <span className="pb-nm" key={k}><i className="dc" style={{ background: e.color }} />{e.name} <em><Pt n={e.pts} /></em></span>)}</div>
-                </div>))}
-            </div>
+          <div className={`phrase-card pk${size}`} data-testid="mini-head">
+            <span className="mega-ic" aria-hidden>{info.icon}</span><small>{kind === "accusa" ? t("mg.accusatore") : info.tag}</small><b>{body || info.tag}</b>
           </div>
           <div className="bsp" />
-          <BSheet title={t("mg.fine.t")} sub={t("mg.fine.s")} ui={uiv}>
-            {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<button type="button" className="bt mus" onClick={() => onStep("board")} data-testid="points-continue">{t("mg.continua")}</button></Row>}
+          <PointsPanel meId={readOnly ? undefined : me} mini={res} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={null} fallPositions={res.fallenPositions} sound={sound} interactive={!readOnly} hideGo onContinue={() => onStep("board")} />
+          <BSheet title={t("g.punti.t")} sub={ts("g.punti.s", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
+            {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<button type="button" className="bt mus" onClick={() => onStep("board")} data-testid="points-continue">{t("g.continua")}</button></Row>}
           </BSheet>
-        </>}
-      </div>
+        </div>
+      )}
       {step === "board" && (
         <Standings rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
           action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: act } : { wait: ts("mg.host.aspetta") }} />

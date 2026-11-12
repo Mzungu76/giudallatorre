@@ -45,14 +45,15 @@ export function Separe() {
   );
 }
 
-export const FIG_W = 84, FIG_H = 126, LEG = 16;
-/** Una carta con le gambette (che camminano quando si muove). */
+export const FIG_W = 84, FIG_H = 126, LEG = 8;
+/** Una carta sul suo piedino nero (lo stesso, fermo, dei turni normali), con l'ombra. */
 export function Figure({ item, style, className = "", testId }: { item: CastItem | null; style?: React.CSSProperties; className?: string; testId?: string }) {
   if (!item) return null;
   return (
     <div className={`mr-f ${className}`} style={{ width: FIG_W, height: FIG_H + LEG, ...style }} data-testid={testId}>
-      <i className="mr-leg l" /><i className="mr-leg r" />
+      <i className="mr-sh" />
       <img className="mr-card" src={item.src} alt="" draggable={false} />
+      <i className="mr-foot" />
     </div>
   );
 }

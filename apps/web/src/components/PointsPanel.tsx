@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { LuiOutcome, MarkOutcome, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
+import type { LuiOutcome, MarkOutcome, MiniResult, ObjectiveOutcome, ScoreLine } from "@gdt/game-engine";
 import { markSpec } from "./Terrace.tsx";
 import { cardFull } from "../lib/cards.ts";
 import { luiLabel, objCond } from "../lib/lui.ts";
@@ -7,11 +7,13 @@ import { sfx } from "../lib/sfx.ts";
 import type { Voter } from "./Terrace.tsx";
 import { Pt } from "./Pt.tsx";
 import { t, ts } from "../lib/testi.ts";
+import type { TestoKey } from "../lib/testi.ts";
 
 const pts = (n: number) => (n < 0 ? `−${-n}` : `+${n}`);
 
 /** Riepilogo del turno dai giocatori: a sinistra chi è, al centro cosa ha fatto di giusto o sbagliato, a destra la carta votata. */
-export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId, objective, marks }: {
+export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPositions, sound, interactive, onContinue, meId, objective, marks, mini }: {
+  /** Intervallo a tempo: stesso riepilogo, con le righe del mini-gioco (voto giusto, più veloce, nessun voto). */ mini?: MiniResult | null;
   /** Gioco base «Cade / Non cade»: i due segnalini. */ marks?: MarkOutcome[] | null;
   /** PROPAGANDA con obiettivi: com'è andato l'obiettivo del turno. */ objective?: ObjectiveOutcome | null;
   /** Chi guarda: la sua riga va in cima e si chiama «Tu». */ meId?: string;
@@ -25,6 +27,12 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
   const fell = (p: number) => fallPositions.includes(p);
   const say = (v: Voter) => {
     const ls = lines[v.id] ?? [], p = votes[v.id]!, out: { ok: boolean; t: string }[] = [];
+    if (mini) {
+      if (p === undefined) out.push({ ok: false, t: ts("pp.mini.nessuno") });
+      else out.push(mini.leaders.includes(p) ? { ok: true, t: ts(`pp.mini.giusto.${mini.kind}` as TestoKey) } : { ok: false, t: ts("pp.mini.sbagliato") });
+      if (ls.some((x) => x.kind === "mini-veloce")) out.push({ ok: true, t: ts("pp.mini.veloce") });
+      return out;
+    }
     const annullato = (!!(lui?.trap || lui?.effect === "imbroglio") && !!lui?.caught?.includes(v.id)) || !!marks?.find((x) => x.effect === "nulli")?.caught?.includes(v.id);
     // gioco base: il nome del segnalino della carta di una riga
     const mkLabel = (pos: number) => { const mk = marks?.find((x) => x.position === pos); return mk ? luiLabel(markSpec(mk)).toLowerCase() : ""; };
@@ -50,7 +58,7 @@ export default function PointsPanel({ cardIds, voters, votes, lines, lui, fallPo
       {objective && <span className="pp-obj" data-testid="objective-result">{objective.megaHit ? t("obj.esito.mega", { n: objective.position, cond: objCond(objective), v: objective.votes, pt: objective.pts }) : objective.winners.length ? t("obj.esito.folla", { n: objective.position, v: objective.votes, pt: objective.pts, k: objective.winners.length }) : t("obj.esito.nessuno", { n: objective.position, v: objective.votes })}</span>}
       <div className="pb-scroll">
         {rows.map(({ v, t }) => {
-          const p = votes[v.id]!, id = cardIds[p - 1];
+          const p = votes[v.id], id = p === undefined ? undefined : cardIds[p - 1];
           return (
             <div className={`prow2${v.id === meId ? " you" : ""}`} key={v.id} data-testid="points-block">
               <div className="pr-who"><i className="dc" style={{ background: v.color }} /><span>{v.id === meId ? ts("pp.tu") : v.name}{v.mega ? " 📣" : ""}</span></div>

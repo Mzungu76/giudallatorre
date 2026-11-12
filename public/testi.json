@@ -1,5 +1,5 @@
 {
- "versione": 19,
+ "versione": 20,
  "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
@@ -849,10 +849,6 @@
    "t": "L'accusatore dice:",
    "s": "Intervallo / mini-gioco (schermate)"
   },
-  "mg.blk.giusto.t": {
-   "t": "Voto giusto",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.salta": {
    "t": "Salta ›",
    "s": "Intervallo / mini-gioco (schermate)",
@@ -862,40 +858,12 @@
    "t": "{n} su {tot} hanno votato",
    "s": "Intervallo / mini-gioco (schermate)"
   },
-  "mg.resta.t": {
-   "t": "Cosa resta sulla torre",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.cade": {
-   "t": "CADE",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.resta": {
-   "t": "RESTA",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.chi.punti": {
-   "t": "Chi prende punti",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.nessuno": {
-   "t": "Questa volta nessuno cambia punteggio.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.fine.t": {
    "t": "FINE INTERVALLO",
    "s": "Intervallo / mini-gioco (schermate)"
   },
-  "mg.fine.s": {
-   "t": "Poi si riprende la partita",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mg.finisce": {
    "t": "Il mini-gioco finisce a breve…",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.continua": {
-   "t": "Continua ›",
    "s": "Intervallo / mini-gioco (schermate)"
   },
   "mg.dopo": {
@@ -2770,31 +2738,6 @@
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Scritta in alto quando nessun voto è arrivato"
   },
-  "mg.vince": {
-   "t": "VINCE",
-   "s": "Intervallo / mini-gioco (schermate)",
-   "n": "Etichetta sotto la carta in testa nella Storia d'amore"
-  },
-  "mg.blk.giusto.x.accusa": {
-   "t": "Hanno scelto il colpevole: +2 a testa.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.giusto.x.amore": {
-   "t": "Hanno scelto il partner perfetto: +2 a testa.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.giusto.x.peggiore": {
-   "t": "Hanno scelto il peggiore: +2 a testa.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.veloce.t": {
-   "t": "Il più veloce",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.blk.veloce.x": {
-   "t": "Ha votato per primo una carta in testa: +4.",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
   "mr.giro": {
    "t": "Giro {n} di {tot}",
    "s": "Intervallo / mini-gioco (schermate)",
@@ -2829,6 +2772,31 @@
    "t": "E ORA… IL VERDETTO!",
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Scritta sul sipario chiuso dopo la corsa"
+  },
+  "pp.mini.giusto.accusa": {
+   "t": "Ha scelto il colpevole: la carta più votata",
+   "s": "Riepilogo del turno («Com'è andata»)",
+   "n": "Intervallo a tempo"
+  },
+  "pp.mini.giusto.amore": {
+   "t": "Ha scelto il partner perfetto: la carta più votata",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.mini.giusto.peggiore": {
+   "t": "Ha scelto il peggiore: la carta più votata",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.mini.sbagliato": {
+   "t": "Ha scelto una carta meno votata",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.mini.nessuno": {
+   "t": "Non ha votato in tempo",
+   "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "pp.mini.veloce": {
+   "t": "Il più veloce di chi ha scelto bene: +4",
+   "s": "Riepilogo del turno («Com'è andata»)"
   }
  }
 }
