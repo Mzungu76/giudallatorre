@@ -8,7 +8,7 @@ import { luiLabel } from "../lib/lui.ts";
 import { t as tx, ts as txs } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
-export interface VoteTok { p: number; c: string; mega?: boolean; glow?: boolean }
+export interface VoteTok { p: number; c: string; /** Giocatore del gettone (serve al riepilogo dei punti). */ id?: string; mega?: boolean; glow?: boolean }
 export interface TerraceProps {
   cardIds: string[]; down?: boolean; show?: number[]; pop?: number; flip?: Record<number, number>;
   votes?: VoteTok[]; lastVote?: number; lui?: { pos: number; spec?: LuiSpec | null } | null;

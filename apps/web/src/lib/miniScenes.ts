@@ -32,9 +32,9 @@ function idle(x: number, y: number, t0: number, t1: number, ph = 0): WP[] {
   return out;
 }
 /** Salto di gioia (n rimbalzi) da t0. */
-function hop(x: number, y: number, t0: number, n: number, h = 22, step = 260): WP[] {
-  const out: WP[] = [{ t: t0, x, y, s: FIG_SCALE }];
-  for (let i = 0; i < n; i++) { out.push({ t: t0 + i * step + step / 2, x, y: y - h, s: FIG_SCALE, r: i % 2 ? 6 : -6 }); out.push({ t: t0 + (i + 1) * step, x, y, s: FIG_SCALE }); }
+function hop(x: number, y: number, t0: number, n: number, h = 22, step = 260, s = FIG_SCALE, r0 = 0): WP[] {
+  const out: WP[] = [{ t: t0, x, y, s, r: r0 }];
+  for (let i = 0; i < n; i++) { out.push({ t: t0 + i * step + step / 2, x, y: y - h, s, r: r0 + (i % 2 ? 6 : -6) * (r0 ? 0.4 : 1) }); out.push({ t: t0 + (i + 1) * step, x, y, s, r: r0 }); }
   return out;
 }
 const sort = (w: WP[]) => w.slice().sort((a, b) => a.t - b.t);
@@ -146,12 +146,13 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
   if (kind === "amore" && leaders.length) {
     // il partner e i vincitori si avvicinano e dal loro abbraccio sgorgano cuori, che cadono giù dalla torre come fontane
     const W = leaders.slice(0, 6), end = 8200, meet = 1800;
-    const P = { x: 150, y: 548 };
-    const spots = [{ x: 82, y: 0 }, { x: 62, y: 62 }, { x: -62, y: 62 }, { x: 0, y: 70 }, { x: 88, y: -62 }, { x: -70, y: -50 }];
-    figs.push({ key: "side", who: "side", wps: sort([{ t: 0, x: SIDE.x, y: SIDE.y, s: FIG_SCALE }, { t: meet, x: P.x, y: P.y, s: FIG_SCALE }, ...hop(P.x, P.y, meet + 100, 9, 20, 300).slice(1)]) });
+    const P = { x: 168, y: 556 };
+    // gli innamorati si stringono: carte quasi a contatto, inclinate l'una verso l'altra
+    const spots = [{ x: 50, y: 2, r: -7 }, { x: -50, y: 2, r: 7 }, { x: 24, y: 52, r: -4 }, { x: -24, y: 52, r: 4 }, { x: 74, y: 40, r: -9 }, { x: -74, y: 40, r: 9 }];
+    figs.push({ key: "side", who: "side", wps: sort([{ t: 0, x: SIDE.x, y: SIDE.y, s: FIG_SCALE }, { t: meet, x: P.x, y: P.y, s: FIG_SCALE * 1.08, r: 0 }, ...hop(P.x, P.y, meet + 100, 9, 20, 300, FIG_SCALE * 1.08, 0).slice(1)]) });
     W.forEach((p, j) => {
       const s = stand(p), sp = spots[j]!, tx = P.x + sp.x, ty = P.y + sp.y;
-      figs.push({ key: `c${p}`, who: p, wps: sort([...idle(s.x, s.y, 0, 300, p), { t: 300, x: s.x, y: s.y, s: FIG_SCALE }, { t: meet, x: tx, y: ty, s: FIG_SCALE }, ...hop(tx, ty, meet + 100 + j * 70, 9, 18, 300).slice(1)]) });
+      figs.push({ key: `c${p}`, who: p, wps: sort([...idle(s.x, s.y, 0, 300, p), { t: 300, x: s.x, y: s.y, s: FIG_SCALE }, { t: meet, x: tx, y: ty, s: FIG_SCALE * 1.08, r: sp.r }, ...hop(tx, ty, meet + 100 + j * 70, 9, 18, 300, FIG_SCALE * 1.08, sp.r).slice(1)]) });
     });
     for (const p of positions) if (!W.includes(p)) figs.push(leave(p, end));   // restano solo gli innamorati
     const n = 56;
