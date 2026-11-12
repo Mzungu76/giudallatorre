@@ -3,7 +3,7 @@ import type { ScoreLine } from "@gdt/game-engine";
 import { terracePos, voteTok } from "../scene/draw.ts";
 import { Disc, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
-import { chipsFor, totals } from "../lib/results.ts";
+import { chipsFor, iconsOf, totals } from "../lib/results.ts";
 import { FallArrow } from "./Terrace.tsx";
 import type { Tok } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
@@ -29,8 +29,8 @@ export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId }: { n
       {chips.map((c) => (
         <div key={c.key} className={`rs-pt ${cls(c.gain)}${c.id === meId ? " me" : ""}`} data-testid="result-chip" style={{ left: c.x, top: c.y, width: c.w, height: c.h, fontSize: Math.round(c.h * 0.7), animationDelay: `${0.35 + order.indexOf(c) * 0.12}s` }}>
           <span className="rs-face" dangerouslySetInnerHTML={{ __html: voteTok(c.color, Math.max(12, c.h - 3), false, false) }} />
-          {c.fast && <span className="rs-fast" aria-hidden>⚡</span>}
           <b>{sign(c.gain)}</b>
+          {c.icons.length > 0 && <span className="rs-ics" aria-hidden>{c.icons.map((ic, i) => <i key={i} className={ic === "⚡" ? "rs-fast" : ""} style={{ width: Math.round(c.h * 0.78), height: Math.round(c.h * 0.78), fontSize: Math.round(c.h * 0.5) }}>{ic}</i>)}</span>}
         </div>
       ))}
     </div>
@@ -43,7 +43,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
 }) {
   useEffect(() => { sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!interactive) { const t = setTimeout(onContinue, 7000); return () => clearTimeout(t); } return undefined; }, [interactive]); // eslint-disable-line react-hooks/exhaustive-deps
-  const rows = totals(lines, ids);
+  const rows = totals(lines, ids), icons = Object.fromEntries(ids.map((id) => [id, iconsOf(lines[id] ?? [])]));
   return (
     <div className="rs-strip" data-testid="points-panel">
       {rows.map(({ id, gain }, i) => (
@@ -51,6 +51,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
           <Disc color={colorOf(id)} size="l" />
           {annullati?.includes(id) ? <u className="rs-no" aria-hidden>🚫</u> : null}
           <b>{gain > 0 && <PtIcon s={19} />}{sign(gain)}</b>
+          {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic, i) => <i key={i} className={ic === "⚡" ? "rs-fast" : ""}>{ic}</i>)}</span>}
         </div>
       ))}
     </div>

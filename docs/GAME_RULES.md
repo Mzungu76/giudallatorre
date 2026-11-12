@@ -157,3 +157,7 @@ Durante il voto, toccando il gettone Lui! posato su una carta si apre un popup c
 
 ## Uscire dalla partita
 Un giocatore umano può uscire in qualsiasi momento (Regolamento «i» → «Esci dalla partita», con conferma). Se nella stanza restano **altri umani** (anche temporaneamente offline), un **giocatore virtuale di livello medio** prende il suo posto: stessa posizione, stessi punti e stessa mano, e gli altri vedono un avviso. Se chi esce era l'host, il ruolo passa a un altro umano. Se **non restano umani**, la stanza si chiude subito. Il vecchio accesso non è più valido.
+
+
+### Riepilogo punti: icone dei motivi
+Sulla torre i riquadri dei punti stanno in basso sulla carta (una o due colonne, al più metà carta) e portano sull'angolo l'icona del motivo; la stessa icona compare accanto ai punti di ogni giocatore nella striscia sotto la torre. 🎯 voto giusto · ⚡ il più veloce · 🃏 carta propria · 👈 Lui! · 🏁 obiettivo. I punti a 0 non hanno icona. Alla fine del turno (anche base) si prosegue solo toccando «Continua».
