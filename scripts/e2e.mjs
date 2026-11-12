@@ -27,7 +27,7 @@ function botStep(c) {
   const v = c.view?.view; if (!v) return false; const me = v.viewerId, mega = v.megafonoId, mine = v.players.find((p) => p.id === me);
   if (v.phase === "PROCLAIM" && me === mega) { c.send({ t: "act", action: v.proclaimCard.phrases.length > 1 ? { type: "choosePhrase", mode: "card", index: 1 } : { type: "choosePhrase", mode: "card", index: 0 } }); return true; }
   if (v.phase === "PLAY" && !mine.hasPlayed && (v.megafonoSa || me !== mega)) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
-  if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: { type: "placeLui", slot: v.myLuiLeft[0] ?? v.luiTokens[0].slot, position: 1 } }); return true; }
+  if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: v.cnc ? { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } : { type: "placeLui", slot: v.myLuiLeft[0] ?? v.luiTokens[0].slot, position: 1 } }); return true; }
   if (v.phase === "VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
   if (v.phase === "MINI_PLAY" && !mine.hasPlayed) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
   if (v.phase === "MINI_VOTE" && v.myVote === null) { const opts = v.tower.map((t) => t.position).filter((x) => x !== v.myPosition); /* nel Peggiore la propria carta non si vota */ c.send({ t: "act", action: { type: "vote", position: opts[Math.floor(Math.random() * opts.length)] } }); return true; }
