@@ -49,7 +49,7 @@ export function CreateScreen() {
             <div className="seg cnt">
               <button type="button" className="bt pap" onClick={() => setBots(Math.max(0, bots - 1))} aria-label={ts("fm.bot.meno")} data-testid="bots-minus">−</button>
               <div className="bt pap" style={{ pointerEvents: "none" }} data-testid="bots-count">{bots === 0 ? t("fm.bot.nessuno") : ts("fm.bot.n", { n: bots })}</div>
-              <button type="button" className="bt pap" onClick={() => setBots(Math.min(7, bots + 1))} aria-label={ts("fm.bot.piu")} data-testid="bots-plus">+</button>
+              <button type="button" className="bt pap" onClick={() => setBots(Math.min(5, bots + 1))} aria-label={ts("fm.bot.piu")} data-testid="bots-plus">+</button>
             </div>
             {bots > 0 && <div className="seg">
               {(["easy", "medium", "hard"] as const).map((k) => <button key={k} type="button" className={`bt ${level === k ? "mus on" : "pap"}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`} style={{ fontSize: 15 }}>{t(`fm.lv.${k}` as TestoKey)}</button>)}

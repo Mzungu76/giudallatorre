@@ -22,7 +22,7 @@ export const botLevelSchema = z.enum(["easy", "medium", "hard"]);
 export const MAX_PHRASE_CHARS = 80;
 
 // ---------- API HTTP ----------
-export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), bots: z.object({ count: z.number().int().min(0).max(7), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
+export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
 export const joinRoomBody = z.object({ nickname: nicknameSchema }).strict();
 export type CreateRoomBody = z.infer<typeof createRoomBody>;
 export interface SessionResponse { code: string; playerId: string; token: string }
@@ -56,7 +56,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
 export interface RoomOptionsDto { megafonoSa: boolean; /** Variante «Il gregge» (in prova): lo 0 è l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi la vota. */ gregge?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
-export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; isBot?: boolean; level?: "easy" | "medium" | "hard" }
+export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; /** Personaggio 0–7 (colore e segnalino). */ char?: number; isBot?: boolean; level?: "easy" | "medium" | "hard" }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;
 export type ServerMessage =

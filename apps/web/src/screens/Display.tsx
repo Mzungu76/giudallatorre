@@ -37,7 +37,7 @@ export default function DisplayScreen({ code }: { code: string }) {
         <div className="cap2" style={{ color: "#fff" }}>{tx("tv.giocatori")}</div>
         {(room?.players ?? []).map((p, i) => {
           const v = view?.view.players.find((x) => x.id === p.id);
-          return <div className="pl" key={p.id}><Disc color={PLAYER_COLORS[i % 8]!} size="l" />{p.nickname}{p.id === view?.view.megafonoId ? " 📣" : ""}<span className="tg">{v ? txs("tv.pt", { n: v.score < 0 ? "−" + -v.score : v.score }) : p.connected ? txs("tv.online") : txs("tv.offline")}</span></div>;
+          return <div className="pl" key={p.id}><Disc color={PLAYER_COLORS[(p.char ?? i) % 8]!} size="l" />{p.nickname}{p.id === view?.view.megafonoId ? " 📣" : ""}<span className="tg">{v ? txs("tv.pt", { n: v.score < 0 ? "−" + -v.score : v.score }) : p.connected ? txs("tv.online") : txs("tv.offline")}</span></div>;
         })}
       </aside>
     </div>

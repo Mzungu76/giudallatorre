@@ -1,6 +1,6 @@
 {
- "versione": 12,
- "aggiornato": "2026-11-09",
+ "versione": 13,
+ "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -725,7 +725,7 @@
    "s": "Regolamento completo"
   },
   "how.4.fine.x": {
-   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–8 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
+   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–6 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
    "s": "Regolamento completo"
   },
   "how.4.int.t": {
@@ -733,7 +733,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, da 6 a 8 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.",
+   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono e la tua mano viene sostituita da 5 carte nuove. Le regole vengono spiegate prima di cominciare.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -2075,7 +2075,7 @@
    "s": "Stanza e lobby"
   },
   "room.lobby": {
-   "t": "Lobby · {n}/8",
+   "t": "Lobby · {n}/6",
    "s": "Stanza e lobby"
   },
   "room.codice": {
@@ -2528,7 +2528,7 @@
    "s": "Messaggi di errore (entrare/creare)"
   },
   "err.ROOM_FULL": {
-   "t": "La stanza è piena (massimo 8 giocatori).",
+   "t": "La stanza è piena (massimo 6 giocatori).",
    "s": "Messaggi di errore (entrare/creare)"
   },
   "err.GAME_STARTED": {

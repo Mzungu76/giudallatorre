@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS } from "../ui.tsx";
+import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS, colorFor } from "../ui.tsx";
 import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Qr from "../components/Qr.tsx";
@@ -29,7 +29,7 @@ function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | n
     <div className="plancia">
       <aside className="pside l" aria-hidden><div className="plogo">{tx("room.logo1")}<b>{tx("room.logo2")}</b></div><div className="pp pcode"><small>{tx("room.codice.lab")}</small><strong>{room.code}</strong></div></aside>
       {children}
-      <aside className="pside r"><div className="pp pplayers"><h4>{tx("room.giocatori")}</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={PLAYER_COLORS[i % 8]!} />{p.name}{p.id === view?.megafonoId ? " 📣" : ""}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
+      <aside className="pside r"><div className="pp pplayers"><h4>{tx("room.giocatori")}</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={colorFor(room.players, p.id)} />{p.name}{p.id === view?.megafonoId ? " 📣" : ""}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
     </div>
   );
 }
@@ -62,11 +62,11 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
         </div>
         <div className="plist2">
           {room.players.map((p, i) => (
-            <div className="pl" key={p.id} data-testid="player-row"><Disc color={PLAYER_COLORS[i % 8]!} size="l" /><span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
+            <div className="pl" key={p.id} data-testid="player-row"><Disc color={PLAYER_COLORS[(p.char ?? i) % 8]!} size="l" /><span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
               {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}
               {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={() => send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id })} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}</div>
           ))}
-          {room.players.length < 8 && <div className="pl em" style={{ gridColumn: "1 / -1" }}>{tx("room.attesa.altri")}</div>}
+          {room.players.length < 6 && <div className="pl em" style={{ gridColumn: "1 / -1" }}>{tx("room.attesa.altri")}</div>}
         </div>
         <div className="bsp" />
         <div className="pp bsheet lob">
@@ -121,7 +121,7 @@ export default function RoomScreen({ code }: { code: string }) {
   const reconnecting = status === "reconnecting";
   const close = () => { setOv(null); cs.setOpen(false); };
   const ui: UiCtl = { unread: cs.unread, chat: () => { setOv("chat"); cs.setOpen(true); }, rank: () => setOv("rank"), rules: () => setOv("help"), lui: () => setOv("lui") };
-  const pv = view?.view ?? null, colorOf = (id: string) => PLAYER_COLORS[Math.max(0, room.players.findIndex((p) => p.id === id)) % 8]!;
+  const pv = view?.view ?? null, colorOf = (id: string) => colorFor(room.players, id);
   const leave = () => { send({ t: "leave" }); forgetSession(code); navigate("/"); };
   const leaveHint = room.players.some((p) => !p.isBot && p.id !== room.you) ? txs("room.leave.bot") : txs("room.leave.ultimo");
   const overlays = ov === "chat" ? <ChatPanel chat={chat} me={room.you} players={room.players} send={send} onClose={close} />

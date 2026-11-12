@@ -5,7 +5,7 @@ import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStag
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
 import type { RandomBytes } from "./security.ts";
 
-export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
+export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Personaggio (0–7: colore e segnalino), assegnato a caso tra gli otto quando entra in stanza. */ char?: number; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
 export interface RoomData {
   code: string; createdAt: number; lastActivity: number; stage: RoomStage; finishedAt: number | null;
   options: RoomOptionsDto; seq: number; deadline: number | null; players: PlayerRec[]; game: GameState | null;
@@ -37,7 +37,7 @@ export interface Deps {
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
 
 export const LIMITS = {
-  maxPlayers: 8, minPlayers: 3,
+  maxPlayers: 6, minPlayers: 3,
   hostGraceMs: 60_000, lobbyIdleMs: 5 * 60_000, playingIdleMs: 45 * 60_000, maxLifeMs: 4 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
 };
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
@@ -50,6 +50,13 @@ export class RoomCore {
   private lastChat = new Map<string, number>();
   constructor(public data: RoomData, private deps: Deps) {
     data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false;
+    data.players.forEach((p, i) => { p.char ??= data.players.some((q) => q.char === i % 8) ? this.freeChar() : i % 8; }); // stanze salvate prima di questa versione: personaggi in ordine di ingresso
+  }
+  /** Un personaggio a caso tra gli otto che nessuno in stanza ha già. */
+  private freeChar(): number {
+    const used = new Set(this.data.players.map((q) => q.char)), free = [0, 1, 2, 3, 4, 5, 6, 7].filter((c) => !used.has(c));
+    if (!free.length) return 0;
+    return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
   static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; bots?: { count: number; level: BotLevel } }) {
@@ -66,7 +73,7 @@ export class RoomCore {
   private insertBot(level: BotLevel, now: number) {
     const d = this.data, used = new Set(d.players.map((q) => norm(q.nickname)));
     const name = BOT_NAMES.find((n) => !used.has(norm(n))) ?? `Bot ${d.players.length + 1}`;
-    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level });
+    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level, char: this.freeChar() });
   }
 
   // ---------- accesso ----------
@@ -76,7 +83,7 @@ export class RoomCore {
     if (d.players.length >= LIMITS.maxPlayers) throw new RoomError("ROOM_FULL", "la stanza è piena");
     if (d.players.some((p) => norm(p.nickname) === norm(nickname))) throw new RoomError("NICKNAME_TAKEN", "nickname già in uso in questa stanza");
     const playerId = newPlayerId(this.deps.rng), token = newToken(this.deps.rng);
-    d.players.push({ id: playerId, nickname, tokenHash: hashToken(token), isHost: false, joinedAt: now });
+    d.players.push({ id: playerId, nickname, tokenHash: hashToken(token), isHost: false, joinedAt: now, char: this.freeChar() });
     d.lastActivity = now; d.seq++;
     return { playerId, token, out: this.broadcastRoom({ ...emptyOut(), persist: true }) };
   }
@@ -297,7 +304,7 @@ export class RoomCore {
   roomMsg(forPlayer: string): ServerMessage {
     const d = this.data, host = d.players.find((p) => p.isHost);
     return { t: "room", seq: d.seq, code: d.code, stage: d.stage, you: forPlayer, hostId: host?.id ?? "", options: { ...d.options },
-      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
+      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
   }
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
     const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];
