@@ -1,203 +1,188 @@
-import { useEffect, useMemo, useState } from "react";
-import type { MiniKind, MiniResult, PlayerView } from "@gdt/game-engine";
-import { Btn, Disc, FAST, useStage } from "../ui.tsx";
-import { cardFull } from "../lib/cards.ts";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { MiniResult } from "@gdt/game-engine";
+import { MINI_COUNTDOWN_MS, MINI_CYCLES, MINI_INTRO_MS, MINI_SLOT_MS } from "@gdt/game-engine";
+import { Disc, FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
-import SceneHost from "./SceneHost.tsx";
 import Standings from "./Standings.tsx";
-import Zoom from "./Zoom.tsx";
-import { Reveal, Terrace } from "./Terrace.tsx";
+import { Terrace } from "./Terrace.tsx";
 import type { VoteTok, Voter } from "./Terrace.tsx";
-import { BMeta, BSheet, LuiTray, Row, WaitCard } from "./BUi.tsx";
-import { HandPicker, usePeople } from "../screens/Game.tsx";
+import { BMeta, BSheet, LuiTray, Row } from "./BUi.tsx";
+import { usePeople } from "../screens/Game.tsx";
 import { HintBubble, HintPointer, useIdleHint } from "./IdleHint.tsx";
 import { miniInfo } from "../lib/minis.ts";
 import { hintFor } from "../lib/hints.tsx";
-import { Pt, PtIcon } from "./Pt.tsx";
+import { buildFinale } from "../lib/miniScenes.ts";
+import { Curtain, FinaleScene, Letterbox, RunScene, useCast } from "./MiniStage.tsx";
+import PointsPanel from "./PointsPanel.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 import { t, ts } from "../lib/testi.ts";
-import type { TestoKey } from "../lib/testi.ts";
 
-/** Annuncio dell'intervallo: nastro, titolo, carta del personaggio e i tre passi. Si chiude con «Si parte». */
-function MiniIntro({ kind, view, sound, ui, onGo }: { kind: MiniKind; view: PlayerView; sound: boolean; ui?: GameProps["ui"] | null; onGo: () => void }) {
-  const k = miniInfo(kind), { H } = useStage(), short = H < 700, hh = short ? 100 : H < 960 ? 92 : 170, mini = view.mini;
+/** Orologio locale a 50 ms: fa scorrere sipario, presentazione, 3-2-1 e carte. */
+function useTick(ms = 50) { const [n, setN] = useState(Date.now()); useEffect(() => { const i = setInterval(() => setN(Date.now()), ms); return () => clearInterval(i); }, [ms]); return n; }
+
+/** Il sipario resta chiuso per la scritta (poi si apre sul palco); dopo la corsa si richiude per il verdetto e dopo la scenetta per la fine. */
+const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600, LAST_VOTE_MS = 3000;
+type Post = null | "verdict" | "finale" | "outro" | "points" | "board";
+
+export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }: GameProps) {
+  const people = usePeople(room), me = view.viewerId, res = view.miniResult, mini = view.mini;
+  const kind = (mini?.kind ?? res?.kind)!, info = miniInfo(kind), inRun = view.phase === "MINI_RUN", isHost = room.hostId === me;
+  const now = useTick();
+  const orderRef = useRef<number[]>(mini?.order ?? []); if (mini) orderRef.current = mini.order;
+  const order = orderRef.current;
+  const goRef = useRef<number | null>(goAt ?? null);
+  const first = useRef<number | null>(null);
+  if (goAt != null) goRef.current = goAt;
+  const go = goRef.current ?? (first.current ??= Date.now() + MINI_INTRO_MS + MINI_COUNTDOWN_MS);
+  const t0 = now - go, end = order.length * MINI_SLOT_MS, start = go - (MINI_INTRO_MS + MINI_COUNTDOWN_MS);
+
+  // dopo la corsa: sipario (verdetto) → scenetta finale → sipario (fine) → punti → classifica
+  const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST ? "points" : "verdict") : null));
+  const marks = useRef({ shut: Date.now(), outro: 0, res: 0 });
+  useEffect(() => {
+    const at = Date.now();
+    if (post === null) {
+      // hanno votato tutti: si aspettano ancora 3 secondi (l'ultima carta resta in scena), poi il sipario; altrimenti si chiude a fine giri
+      if (view.phase === "MINI_RESULTS" && !marks.current.res) marks.current.res = at;
+      const allVoted = view.phase === "MINI_RESULTS" && at - marks.current.res >= (FAST ? 0 : LAST_VOTE_MS), timeUp = inRun && order.length > 0 && t0 >= end;
+      if (allVoted || timeUp) { marks.current.shut = at; setPost(FAST && view.phase === "MINI_RESULTS" ? "points" : "verdict"); }
+    } else if (post === "verdict" && view.phase === "MINI_RESULTS" && at - marks.current.shut >= (FAST ? 0 : VERDICT_MS)) setPost(FAST ? "points" : "finale");
+    else if (post === "outro" && at - marks.current.outro >= OUTRO_MS) setPost("points");
+  }, [now]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endFinale = () => { marks.current.outro = Date.now(); setPost("outro"); };
+
+  const introShut = inRun && post === null && !FAST && now < start + CURTAIN_INTRO_MS;
+  const shut = introShut || post === "verdict" || post === "outro";
+  const curtainText = post === "verdict" || post === "finale" ? <b>{t("mr.sip.verdetto")}</b> : post !== null ? <b>{t("mg.fine.t")}</b> : <><small>{t("mg.strip")}</small><b>{info.icon} {info.title}</b></>;
+  const showStage = post === null || post === "verdict", showFinale = post === "finale" || post === "outro";
+
+  // suoni: apertura, ogni carta che esce, ultimo giro, verdetto, fine della scenetta
+  const slot = Math.floor(t0 / MINI_SLOT_MS), running = inRun && post === null && t0 >= 0 && t0 < end;
+  const lastSlot = useRef(-1);
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const hand = view.myHand.slice(0, 3);
-  return (
-    <div className="bl" data-testid="mini-intro" role="dialog" aria-label={ts("mg.interv.aria")} style={{ ["--hh" as string]: `${hh}px` }}>
-      <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={ts("mg.interv")} />
-      <div className="strip">{t("mg.strip")}</div>
-      <div className="ivl-title" data-testid="mini-title">{k.title}<small>{k.tag}</small></div>
-      {!short && (
-        <div className="ivl-hero">
-          {mini?.cardId
-            ? <div className="ivl-card" style={{ backgroundImage: `url(${cardFull(mini.cardId)})` }}><span className="ivl-badge">{k.icon}</span><em>{k.headCard}</em></div>
-            : <div className="ivl-fan">{hand.map((c, i) => <div key={c} className="ivl-card" style={{ transform: i === 1 ? undefined : `translateX(${i === 0 ? -62 : 62}%) rotate(${i === 0 ? -10 : 10}deg)`, zIndex: i === 1 ? 2 : 1 }}><span className="rn-back" />{i === 1 && <span className="ivl-badge">{k.icon}</span>}</div>)}</div>}
-        </div>
-      )}
-      <div className="pp ivl-steps">{k.steps.map(([t, x], i) => <div className="brg-step" key={t}><span className="how-ic">{i + 1}</span><div><b>{t}</b><p>{x}</p></div></div>)}</div>
-      <div className="pp ivl-pts" data-testid="mini-points-info"><b>{t("mg.come")}</b>{k.pts.map(([v, x]) => <div key={v + x} className="ivl-pr"><span className="v">{/^[+−]\d+$/.test(v) ? <Pt n={Number(v.replace("−", "-"))} /> : <><PtIcon />{v}</>}</span><span>{x}</span></div>)}</div>
-      <div className="bsp" />
-      <BSheet title={t("mg.sheet.t")} sub={t("mg.sheet.s")} ui={ui}><Row><Btn onClick={onGo} testId="mini-go">{t("mg.parti")}</Btn></Row></BSheet>
-    </div>
-  );
-}
-
-/** La carta pescata dell'intervallo con la sua accusa, sempre per intero. */
-function MiniPill({ view }: { view: PlayerView }) {
-  const mini = view.mini;
-  if (!mini) return null;
-  const k = miniInfo(mini.kind);
-  const body = mini.kind === "accusa" ? `«${mini.text}»` : mini.kind === "amore" ? ts("mg.body.amore") : ts("mg.body.peggiore");
-  const label = mini.kind === "accusa" ? ts("mg.accusatore") : k.tag, size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
-  return (
-    <div className={`phrase-card pk${size}`} data-testid="mini-head">
-      {mini.cardId ? <span className="ivl-thumb" style={{ backgroundImage: `url(${cardFull(mini.cardId)})` }} /> : <span className="mega-ic" aria-hidden>{k.icon}</span>}
-      <span className="ctx ac">{mini.kind === "accusa" ? t("mg.ctx.accusa") : k.title}</span><small>{label}</small><b>{body}</b>
-    </div>
-  );
-}
-
-type Entry = { name: string; color: string; pts: number };
-interface Block { key: string; title: string; sub: string; entries: Entry[]; thumbs: number[]; neg?: boolean }
-function blocksOf(res: MiniResult, name: (id: string) => { name: string; color: string }): Block[] {
-  const by = (kind: string): Entry[] => Object.entries(res.lines).flatMap(([id, ls]) => ls.filter((l) => l.kind === kind).map((l) => ({ ...name(id), pts: l.pts })));
-  const b: Block[] = [];
-    const push = (key: string, title: string, sub: string, thumbs: number[], neg = false) => { const entries = by(key); if (entries.length) b.push({ key, title, sub, entries, thumbs, neg }); };
-  if (res.kind === "peggiore") { push("mini-giusto", ts("mg.blk.giusto.t"), ts("mg.blk.giusto.x"), res.fallenPositions); push("mini-peggiore", ts("mg.blk.ricevuti.t"), ts("mg.blk.ricevuti.x"), Object.entries(res.counts).filter(([, v]) => v > 0).sort((x, y) => y[1] - x[1]).map(([k]) => Number(k))); }
-  else {
-    const acc = res.kind === "accusa";
-    push("mini-voto", acc ? ts("mg.blk.voto.t.accusa") : ts("mg.blk.voto.t.amore"), ts(`mg.blk.voto.x.${acc ? "accusa" : "amore"}${res.leaders.length > 1 ? "N" : "1"}` as TestoKey), res.leaders);
-    push("mini-carta", acc ? ts("mg.blk.carta.t.accusa") : ts("mg.blk.carta.t.amore"), acc ? ts("mg.blk.carta.x.accusa") : ts("mg.blk.carta.x.amore"), res.leaders);
-  }
-  return b;
-}
-
-const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; people: ReturnType<typeof usePeople> }) => (
-  <div className="bflags">{flags.map((f) => <span key={f.id} className="chip">{<Disc color={people.get(f.id).color} />}{people.get(f.id).name}{f.done ? " ✓" : " …"}</span>)}</div>
-);
-
-export default function MiniGame({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
-  const people = usePeople(room), me = view.viewerId, phase = view.phase, mini = view.mini, res = view.miniResult;
-  const [seen, setSeen] = useState(false), [zoomPos, setZoomPos] = useState<number | null>(null);
-  const [step, setStep] = useState<"reveal" | "fall" | "points" | "board">(FAST ? "points" : "reveal"), [skipN, setSkipN] = useState(0), [ownNote, setOwnNote] = useState(false);
-  const ids = useMemo(() => [...view.tower].sort((a, b) => a.position - b.position).map((t) => t.cardId), [view.tower]);
-  const kind = mini?.kind ?? res?.kind ?? "amore", info = miniInfo(kind);
-  const isHost = room.hostId === me;
-  const act = (a: { type: "vote"; position: number } | { type: "advance" }) => send({ t: "act", action: a });
-  const seed = useMemo(() => { let h = 11; for (const c of room.code) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h) + view.turn; }, [room.code, view.turn]);
-  const uiv = readOnly ? null : ui ?? null;
-  const tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
-
-  // risultati: spoglio (un voto alla volta, come nei turni normali) → caduta → punti → classifica
-  useEffect(() => { if (phase === "MINI_RESULTS" && step === "points") sfx.tada(sound); }, [phase, step]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const toks: VoteTok[] = useMemo(() => {
-    if (res) return Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false }));
-    if (phase === "MINI_VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color }];
-    return [];
-  }, [res, phase, view.myVote, me, people]);
-  const flagsPlay = view.players.map((p) => ({ id: p.id, done: p.hasPlayed }));
-  const flagsVote = view.players.map((p) => ({ id: p.id, done: p.hasVoted }));
-  const canVote = phase === "MINI_VOTE" && !readOnly && view.myVote === null;
-  const [vpick, setVpick] = useState<number | null>(null);
-  const isOwn = (n: number) => mini?.kind === "peggiore" && view.myPosition === n;
-  const rows = view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }));
-  const blocks = res ? blocksOf(res, (id) => ({ name: people.get(id).name, color: people.get(id).color })) : [];
-  const meta = <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} deadline={phase !== "MINI_RESULTS" ? deadline : null} />;
-  const counts = useMemo(() => { const c: Record<number, number> = {}; if (res) Object.values(res.votes).forEach((p) => { c[p] = (c[p] ?? 0) + 1; }); return c; }, [res]);
-  // Chi vota per primo: il giocatore dopo l'ultimo Megafono, e così via a giro (l'ultimo voto è quello del Megafono uscente, come nei turni normali). Nessun Megafono in questo turno.
-  const voters: Voter[] = useMemo(() => {
-    const order = people.all, i0 = Math.max(0, order.findIndex((p) => p.id === view.megafonoId));
-    return [...order.slice(i0 + 1), ...order.slice(0, i0), order[i0]!].filter((p) => res?.votes[p.id] !== undefined).map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: false }));
-  }, [people, res, view.megafonoId]);
-  const afterReveal = () => setStep(res && res.fallenPositions.length ? "fall" : "points");
-  const nn = (x: number) => ts("mg.n", { n: x });
-  const leadersTxt = res ? res.leaders.map(nn).join(", ") : "", leadersE = res ? res.leaders.map(nn).join(ts("mg.e")) : "", lead1 = res ? nn(res.leaders[0]!) : "";
-  const vt = res ? { v: counts[res.leaders[0]!] ?? 0, tot: voters.length } : { v: 0, tot: 0 };
-  const miniText = res ? (res.kind === "peggiore"
-    ? { tally: [res.leaders.length > 1 ? ts("mg.pareggio") : ts("mg.pegg.piu", { c: lead1 }), res.leaders.length > 1 ? ts("mg.pegg.pari", { lista: leadersTxt }) : ts("mg.pegg.uno", vt)] as [string, string], stamp: res.leaders.length > 1 ? ts("mg.pegg.stamp.pari", { lista: leadersE }) : ts("mg.pegg.stamp.uno", { c: lead1 }), focus: res.leaders }
-    : res.kind === "accusa"
-    ? { tally: [res.fallenPositions.length ? (res.leaders.length > 1 ? ts("mg.pareggio.testa") : ts("mg.acc.colp", { c: lead1 })) : ts("mg.tutte"), res.fallenPositions.length ? (res.leaders.length > 1 ? ts("mg.acc.pari", { lista: leadersTxt }) : ts("mg.acc.uno", { ...vt, lista: leadersTxt })) : ts("mg.acc.nessuna")] as [string, string], stamp: res.fallenPositions.length ? (res.leaders.length > 1 ? ts("mg.pegg.stamp.pari", { lista: leadersE }) : ts("mg.pegg.stamp.uno", { c: lead1 })) : ts("mg.acc.nessuno"), focus: res.leaders }
-    : { tally: [res.fallenPositions.length ? (res.leaders.length > 1 ? ts("mg.pareggio.testa") : ts("mg.am.testa", { c: lead1 })) : ts("mg.tutte"), res.fallenPositions.length ? ts("mg.am.restano", { lista: leadersTxt }) : ts("mg.am.nessuna")] as [string, string], stamp: res.fallenPositions.length ? ts("mg.am.stamp", { lista: leadersE }) : ts("mg.am.stamp.tutte"), focus: res.leaders }) : undefined;
-
-  // suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
-  const hint = readOnly || (phase === "MINI_PLAY" && !seen) ? null : hintFor(view);
-  const [hintOn, hintClose] = useIdleHint(!!hint && zoomPos === null, `${view.turn}-${phase}`);
-  if (phase === "MINI_PLAY" && !seen && !readOnly) return <MiniIntro kind={kind} view={view} sound={sound} ui={uiv} onGo={() => setSeen(true)} />;
+  useEffect(() => { if (running && slot !== lastSlot.current) { lastSlot.current = slot; sfx.whoosh(sound); if (slot % 6 === 0 && slot > 0) sfx.drum(sound, 0.7); } }, [slot, running, sound]);
+  useEffect(() => { if (post === "verdict") sfx.drum(sound, 1.4); if (post === "finale") sfx.tada(sound); }, [post]); // eslint-disable-line react-hooks/exhaustive-deps
+  const count = inRun && post === null && t0 < 0 && t0 >= -MINI_COUNTDOWN_MS ? Math.ceil(-t0 / 1000) : null, lastCount = useRef<number | null>(null);
+  useEffect(() => { if (count !== null && count !== lastCount.current) { lastCount.current = count; sfx.tap(sound, 440 + (3 - count) * 110); } }, [count, sound]);
 
   return (
     <>
-      {phase === "MINI_VOTE" && <Terrace cardIds={ids} votes={toks} onPick={canVote ? (n) => (isOwn(n) ? setOwnNote(true) : (setOwnNote(false), setZoomPos(n))) : undefined} selected={vpick} />}
-      {phase === "MINI_RESULTS" && res && step === "points" && <Terrace cardIds={ids} votes={toks} />}
-      {phase === "MINI_RESULTS" && res && step === "reveal" && miniText && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={counts} lui={null} tie={res.leaders.length > 1} tieBreak={false} fallPositions={res.fallenPositions} megaName="" sound={sound} skip={skipN} interactive={!readOnly} mini={miniText} onDone={afterReveal} />
-      )}
-      {phase === "MINI_RESULTS" && res && step === "reveal" && !readOnly && <button className="skip" onClick={() => setSkipN((n) => n + 1)} data-testid="skip">{t("mg.salta")}</button>}
-      {phase === "MINI_RESULTS" && res && step === "fall" && <>
-        <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions, seed }} sound={sound} onDone={() => setStep("points")} />
-        {!readOnly && <button className="skip" onClick={() => setStep("points")} data-testid="skip">{t("mg.salta")}</button>}
-      </>}
+      {showStage && <Run {...{ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }} />}
+      {showFinale && res && <Finale res={res} view={view} readOnly={!!readOnly} sound={sound} onDone={endFinale} done={post === "outro"} />}
+      {(post === "points" || post === "board") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post} onStep={setPost} />}
+      <Curtain closed={shut} valance={post === "points" || post === "board" ? null : <span>{ts("mg.turno", { n: view.turn, tot: view.totalTurns })} · {info.icon} {info.title}</span>}>{curtainText}</Curtain>
+    </>
+  );
+}
 
-      <div className="bl">
-        {meta}
-        {phase === "MINI_PLAY" && <>
-          <MiniPill view={view} />
-          {!readOnly && !view.players.find((p) => p.id === me)?.hasPlayed
-            ? <HandPicker view={view} send={send} ui={uiv} sound={sound} title={ts("mg.scegli.t")} sub={info.play} />
-            : <>
-              <WaitCard text={ts("mg.giocata")} sub={ts("mg.giocata.x")} />
-              <BSheet title={t("mg.attendi")} sub={ts("mg.hanno.giocato", { n: flagsPlay.filter((f) => f.done).length, tot: flagsPlay.length })} ui={uiv}><Flags flags={flagsPlay} people={people} /></BSheet>
-            </>}
-        </>}
+type People = ReturnType<typeof usePeople>;
 
-        {phase === "MINI_VOTE" && <>
-          <MiniPill view={view} />
-          <div className="bsp" />
-          {readOnly
-            ? <BSheet title={t("mg.vota.t")} sub={ts("mg.hanno.votato", { n: view.players.filter((p) => p.hasVoted).length, tot: view.players.length })} />
-            : canVote
-              ? <BSheet title={mini?.kind === "accusa" ? t("mg.chi.accusa") : mini?.kind === "amore" ? t("mg.chi.amore") : t("mg.chi.peggiore")} sub={ownNote ? ts("mg.propria") : info.vote} ui={uiv}>
-                <div data-testid="mini-vote"><Row>{tray}<Btn disabled={!vpick} onClick={() => vpick && act({ type: "vote", position: vpick })} testId="confirm-vote">{!vpick ? ts("mg.scegli.carta") : ts("mg.conferma", { c: nn(vpick) })}</Btn></Row></div>
-              </BSheet>
-              : <BSheet title={t("mg.inviato")} sub={t("mg.aspettiamo")} ui={uiv}><Flags flags={flagsVote} people={people} /></BSheet>}
-        </>}
-
-        {phase === "MINI_RESULTS" && res && step === "points" && <>
-          <div className="pp ivl-res" data-testid="mini-tally"><b>{t("mg.resta.t")}</b>
-            <div className="ivl-row">{ids.map((id, i) => { const pos = i + 1, out = res.fallenPositions.includes(pos); return (
-              <div key={id} className={`ivl-t ${out ? "out" : "in"}`}><span className="th" style={{ backgroundImage: `url(${cardFull(id)})` }}><i>{pos}</i></span><b>{counts[pos] ?? 0}</b><u>{out ? t("mg.cade") : t("mg.resta")}</u></div>); })}</div>
-          </div>
-          <div className="pb" data-testid="points-panel">
-            <b className="rv-t" data-testid="points-title">{t("mg.chi.punti")}</b>
-            <div className="pb-scroll">
-              {blocks.length === 0 && <span className="pb-none">{t("mg.nessuno")}</span>}
-              {blocks.map((b, bi) => (
-                <div className={`pb-blk ${b.neg ? "neg" : ""}`} key={b.key} data-testid="points-block" style={{ animationDelay: `${0.4 + bi * 1.4}s` }}>
-                  <div className="pb-h">
-                    <span className="pb-th">{b.thumbs.slice(0, 3).map((p) => <span key={p} className="pb-c" style={{ backgroundImage: `url(${cardFull(ids[p - 1]!)})` }}><i>{p}</i></span>)}</span>
-                    <span className="pb-tx"><b>{b.title}</b><small>{b.sub}</small></span>
-                  </div>
-                  <div className="pb-who">{b.entries.map((e, k) => <span className={`pb-nm ${e.pts < 0 ? "neg" : ""}`} key={k}><i className="dc" style={{ background: e.color }} />{e.name} <em><Pt n={e.pts} /></em></span>)}</div>
-                </div>))}
-            </div>
-          </div>
-          <div className="bsp" />
-          <BSheet title={t("mg.fine.t")} sub={t("mg.fine.s")} ui={uiv}>
-            {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<Btn onClick={() => setStep("board")} testId="points-continue">{t("mg.continua")}</Btn></Row>}
-          </BSheet>
-        </>}
+interface RunProps extends Pick<GameProps, "view" | "send" | "readOnly" | "sound"> {
+  people: People; info: ReturnType<typeof miniInfo>; t0: number; end: number; running: boolean; order: number[]; go: number; post: Post; introShut: boolean; count: number | null; slot: number;
+}
+/** La corsa: palco con il separé, le carte che escono (3 s l'una, 3 giri), conto dei giri e pulsante «QUESTO!». */
+function Run({ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }: RunProps) {
+  const mini = view.mini!, me = view.viewerId;
+  const cast = useCast(view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId)), side = useCast([mini.cardId])[0] ?? null;
+  const [pending, setPending] = useState<number | null>(null), voted = view.myVote ?? pending, sent = useRef(false);
+  useEffect(() => { if (pending !== null && view.myVote === null) { const x = setTimeout(() => { setPending(null); sent.current = false; }, 1500); return () => clearTimeout(x); } return undefined; }, [pending, view.myVote]);
+  const voters = view.players.filter((p) => p.hasVoted).length, over = t0 >= end || post === "verdict";
+  const intro = !introShut && t0 < -MINI_COUNTDOWN_MS, via = t0 >= 0 && t0 < 800 && post === null;
+  const perCycle = Math.max(1, order.length / MINI_CYCLES), cyc = Math.min(MINI_CYCLES - 1, Math.max(0, Math.floor(slot / perCycle))), left = MINI_CYCLES - 1 - cyc;
+  const showCycles = !introShut && t0 >= -MINI_COUNTDOWN_MS && !over, inSlot = t0 - slot * MINI_SLOT_MS;
+  const banner = running && cyc >= 1 && slot % perCycle === 0 && inSlot < 1800 ? (left === 0 ? t("mr.ultimo") : ts("mr.giro.b", { n: cyc + 1 })) : null;
+  const vote = () => {
+    if (readOnly || voted !== null || !running || sent.current) return;
+    sent.current = true;
+    const i = Math.floor((Date.now() - go) / MINI_SLOT_MS), pos = order[Math.min(order.length - 1, Math.max(0, i))]!;
+    setPending(pos); send({ t: "act", action: { type: "vote", position: pos } }); sfx.tap(sound, 660);
+  };
+  const body = mini.kind === "accusa" ? `«${mini.text}»` : info.body ?? "";
+  const hint = readOnly ? null : hintFor(view);
+  const [hintOn, hintClose] = useIdleHint(!!hint && running && voted === null, `run-${view.turn}`);
+  const label = voted !== null ? t("mr.btn.votato") : over ? t("mr.btn.fuori") : running ? t("mr.btn") : t("mr.btn.pronti");
+  return (
+    <div className={`mr${running ? " live" : ""}`} data-testid="mini-run">
+      <RunScene order={order} cast={cast} side={side} sideLabel={info.side} t={post === null ? t0 : -1} />
+      <div className="mr-dark" aria-hidden />
+      <div className={`mr-cap${body.length > 60 ? " l" : ""}`} data-testid="mini-head">
+        <small>{mini.kind === "accusa" ? t("mg.accusatore") : info.tag}</small><b>{body || info.tag}</b>
       </div>
-
-      {phase === "MINI_RESULTS" && step === "board" && (
-        <Standings rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
-          action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: () => act({ type: "advance" }) } : { wait: ts("mg.host.aspetta") }} />
+      {showCycles && (
+        <div className={`mr-giri${left === 0 ? " last" : ""}`} data-testid="mr-giri" key={`g${cyc}`}>
+          <b>{ts("mr.giro", { n: cyc + 1, tot: MINI_CYCLES })}</b>
+          <small>{left === 0 ? t("mr.manca.0") : left === 1 ? t("mr.manca.1") : ts("mr.manca.n", { n: left })}</small>
+          <span className="pips">{Array.from({ length: MINI_CYCLES }, (_, i) => <i key={i} className={i < cyc ? "done" : i === cyc ? "cur" : ""} />)}</span>
+        </div>
       )}
+      {banner && <div key={`bn${cyc}`} className={`mr-banner${left === 0 ? " last" : ""}`} data-testid="mr-banner">{banner}</div>}
+      {intro && (
+        <div className="mr-intro" data-testid="mini-intro" role="dialog" aria-label={ts("mg.interv.aria")}>
+          <div className="strip">{t("mg.strip")}</div>
+          <div className="mr-it">{info.icon} {info.title}</div>
+          <p>{info.rule}</p>
+        </div>
+      )}
+      {count !== null && <div key={count} className="mr-count" data-testid="mr-count">{count}</div>}
+      {via && <div className="mr-count via" data-testid="mr-via">{t("mr.via")}</div>}
+      {!readOnly ? (
+        <div className="mr-bottom">
+          <button type="button" className={`bt ${voted !== null || !running ? "dis" : "mus"} mr-btn`} disabled={voted !== null || !running} onClick={vote} onPointerDown={(e) => { if (e.pointerType === "touch" && running && voted === null) { e.preventDefault(); vote(); } }} data-testid="run-vote" aria-label={ts("mr.btn.aria")}>
+            {voted !== null && <Disc color={people.get(me).color} />}{label}
+          </button>
+        </div>
+      ) : <div className="mr-bottom ro"><b data-testid="run-voti">{ts("mg.hanno.votato", { n: voters, tot: view.players.length })}</b></div>}
+      {hintOn && hint && <><HintBubble onClose={hintClose}>{hint.text}</HintBubble><HintPointer targets={hint.targets} /></>}
+    </div>
+  );
+}
 
-      {hintOn && hint && <><HintBubble onClose={hintClose} onRules={uiv?.rules}>{hint.text}</HintBubble><HintPointer targets={hint.targets} /></>}
-      {zoomPos !== null && ids[zoomPos - 1] && (
-        <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={ids.length} onClose={() => setZoomPos(null)} onNav={setZoomPos}
-          actionLabel={ts("mg.vota.il", { c: nn(zoomPos) })} onAction={() => { if (isOwn(zoomPos)) setOwnNote(true); else setVpick(zoomPos); setZoomPos(null); }} />
+/** La scenetta finale: bande da cinema, sottotitolo, macchina da presa. */
+function Finale({ res, view, readOnly, sound, onDone, done }: { res: MiniResult; view: GameProps["view"]; readOnly: boolean; sound: boolean; onDone: () => void; done: boolean }) {
+  const kind = res.kind, ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
+  const cast = useCast(ids), side = useCast([res.cardId])[0] ?? null;
+  const finale = useMemo(() => buildFinale(kind, res.leaders, res.fallenPositions), [kind, res.leaders.join(","), res.fallenPositions.join(",")]); // eslint-disable-line react-hooks/exhaustive-deps
+  const headline = res.leaders.length === 0 ? t("mr.fin.nessuno") : kind === "accusa" ? t("mr.fin.accusa") : kind === "amore" ? t("mr.fin.amore") : t("mr.fin.peggiore");
+  return (
+    <div className="mr" data-testid="mini-finale">
+      <FinaleScene finale={finale} cast={cast} side={side} onDone={onDone} sound={sound} />
+      <div className="mr-dark" aria-hidden />
+      <Letterbox on text={headline} />
+      {!readOnly && !done && <button className="skip" onClick={onDone} data-testid="skip">{t("mg.salta")}</button>}
+    </div>
+  );
+}
+
+/** Dopo il sipario di chiusura: lo stesso riepilogo dei turni normali («Com'è andata» + «Punti del turno»), poi la classifica. */
+function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onStep }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void }) {
+  const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
+  const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
+  const act = () => send({ t: "act", action: { type: "advance" } });
+  const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false })), [res, people]);
+  // come nei turni normali: chi ha votato per ultimo per primo… qui in ordine di tavolo; chi non ha votato in tempo compare con 0 punti
+  const voters: Voter[] = useMemo(() => people.all.map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: false })), [people]);
+  const rows = view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }));
+  const uiv = readOnly ? null : ui ?? null, tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
+  const body = kind === "accusa" ? `«${res.text}»` : info.body ?? "", size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
+  return (
+    <>
+      {step === "points" && <Terrace cardIds={ids} votes={toks} />}
+      {step === "points" && (
+        <div className="bl">
+          <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} />
+          <div className={`phrase-card pk${size}`} data-testid="mini-head">
+            <span className="mega-ic" aria-hidden>{info.icon}</span><small>{kind === "accusa" ? t("mg.accusatore") : info.tag}</small><b>{body || info.tag}</b>
+          </div>
+          <div className="bsp" />
+          <PointsPanel meId={readOnly ? undefined : me} mini={res} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={null} fallPositions={res.fallenPositions} sound={sound} interactive={!readOnly} hideGo onContinue={() => onStep("board")} />
+          <BSheet title={t("g.punti.t")} sub={ts("mg.mani", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
+            {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<button type="button" className="bt mus" onClick={() => onStep("board")} data-testid="points-continue">{t("g.continua")}</button></Row>}
+          </BSheet>
+        </div>
+      )}
+      {step === "board" && (
+        <Standings rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
+          action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: act } : { wait: ts("mg.host.aspetta") }} />
       )}
     </>
   );

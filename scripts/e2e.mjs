@@ -16,7 +16,7 @@ class Client {
       this.ws.on("unexpected-response", (_q, resp) => { this.closed = { code: resp.statusCode }; res(); });
       this.ws.on("error", (e) => rej(e));
       this.ws.on("close", (code) => { this.closed = { code }; });
-      this.ws.on("message", (d) => { this.msgs++; const m = JSON.parse(d.toString()); if (m.t === "view") this.view = m; else if (m.t === "room") this.room = m; else if (m.t === "error") this.errors.push(m); this.onmsg?.(m); });
+      this.ws.on("message", (d) => { this.msgs++; const m = JSON.parse(d.toString()); if (m.t === "view") { this.view = m; this.rcv = Date.now(); } else if (m.t === "room") this.room = m; else if (m.t === "error") this.errors.push(m); this.onmsg?.(m); });
     });
   }
   send(m) { this.ws.send(JSON.stringify(m)); }
@@ -29,8 +29,8 @@ function botStep(c) {
   if (v.phase === "PLAY" && !mine.hasPlayed && (v.megafonoSa || me !== mega)) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
   if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: v.cnc ? { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } : { type: "placeLui", slot: v.myLuiLeft[0] ?? v.luiTokens[0].slot, position: 1 } }); return true; }
   if (v.phase === "VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
-  if (v.phase === "MINI_PLAY" && !mine.hasPlayed) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
-  if (v.phase === "MINI_VOTE" && v.myVote === null) { const opts = v.tower.map((t) => t.position).filter((x) => x !== v.myPosition); /* nel Peggiore la propria carta non si vota */ c.send({ t: "act", action: { type: "vote", position: opts[Math.floor(Math.random() * opts.length)] } }); return true; }
+  // intervallo a tempo: si vota quando il personaggio è in scena (orologio del server stimato dall'ultimo messaggio)
+  if (v.phase === "MINI_RUN" && v.myVote === null) { const g = c.view.goAt; if (typeof g !== "number") return false; const el = c.view.now + (Date.now() - c.rcv) - g, slot = Math.floor(el / 3000); if (el < 200 || slot >= v.mini.order.length) return false; c.send({ t: "act", action: { type: "vote", position: v.mini.order[slot] } }); return true; }
   if (v.phase === "MINI_RESULTS" && c.room?.hostId === me) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   if (v.phase === "RESULTS" && me === mega) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   return false;

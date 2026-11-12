@@ -22,11 +22,10 @@ import { BMeta, BSheet, LuiInfo, LuiTray, ObjPill, PhrasePill, Row, WaitCard } f
 import type { UiCtl } from "../components/BUi.tsx";
 import LuiDraw from "../components/LuiDraw.tsx";
 import CharIntro from "../components/CharIntro.tsx";
-import HandRenewal from "../components/HandRenewal.tsx";
-import type { Geo } from "../components/HandRenewal.tsx";
+interface Geo { left: number; top: number; w: number; h: number; rot: number }
 import { t as tx, ts as txs } from "../lib/testi.ts";
 
-export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean; ui?: UiCtl }
+export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; /** Intervallo a tempo: istante locale del «via!». */ goAt?: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean; ui?: UiCtl }
 /** Cartelli di inizio fase (letti al momento, così seguono i testi aggiornati). */
 const bannerFor = (phase: string): [string, string] | undefined => phase === "PLAY" ? [txs("g.ban.play.t"), txs("g.ban.play.s")] : phase === "SUSPECT" ? [txs("g.ban.susp.t"), txs("g.ban.susp.s")] : phase === "VOTE" ? [txs("g.ban.vote.t"), txs("g.ban.vote.s")] : undefined;
 export function usePeople(room: RoomMsg) {
@@ -79,7 +78,7 @@ function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; th
 }
 
 /** La mano come carosello: la carta al centro è grande, le vicine si intravedono. Tocca una carta per sceglierla, di nuovo per ingrandirla. */
-export function HandPicker({ view, send, ui, sound = false, title = txs("g.mano.t"), sub = txs("g.mano.s") }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; sound?: boolean; title?: string; sub?: React.ReactNode }) {
+export function HandPicker({ view, send, ui, title = txs("g.mano.t"), sub = txs("g.mano.s") }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; title?: string; sub?: React.ReactNode }) {
   const hand = view.myHand, n = hand.length, [cur, setCur] = useState(Math.floor((n - 1) / 2)), [picked, setPicked] = useState(false), [zoom, setZoom] = useState(false);
   const box = useRef<HTMLDivElement>(null), [dim, setDim] = useState({ w: 372, h: 380 }), x0 = useRef<number | null>(null), y0 = useRef(0);
   useLayoutEffect(() => {
@@ -90,11 +89,6 @@ export function HandPicker({ view, send, ui, sound = false, title = txs("g.mano.
   const mega = view.phase === "PLAY" && view.viewerId === view.megafonoId;   // variante «Il Megafono sa»: la carta del Megafono è riconoscibile
   const play = (idx: number) => send({ t: "act", action: { type: "playCard", cardId: hand[idx]! } });
   const cH = Math.min(dim.h * 0.84, 320), cW = cH / 1.5, SC = [1, 0.78, 0.62, 0.5], OFF = [0, 0.72, 1.05, 1.28];
-  // All'intervallo la mano è tutta nuova: quando si apre la scelta della carta nell'intervallo lo si mostra con un'animazione
-  const renewKey = `gdt.hand.${location.pathname}`;
-  const [renew, setRenew] = useState(() => { try { return !FAST && view.phase === "MINI_PLAY" && view.handRenewals > Number(sessionStorage.getItem(renewKey) ?? 0) && !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } });
-  useEffect(() => { if (view.phase === "MINI_PLAY") { try { if (view.handRenewals > Number(sessionStorage.getItem(renewKey) ?? 0) && !renew) sessionStorage.setItem(renewKey, String(view.handRenewals)); } catch { /* */ } } }, [renew, view.phase, view.handRenewals, renewKey]);
-  const endRenew = () => { try { sessionStorage.setItem(renewKey, String(view.handRenewals)); } catch { /* */ } setRenew(false); };
   const geo = (i: number): Geo => { const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW)); return { left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), w, h, rot: d * 7 }; };
   const move = (d: number) => { setCur((c) => Math.max(0, Math.min(n - 1, c + d))); setPicked(true); };
   return (
@@ -102,20 +96,19 @@ export function HandPicker({ view, send, ui, sound = false, title = txs("g.mano.
       <div className="bscene" data-testid="hand">
         <div className="bhand" ref={box} onTouchStart={(e) => { x0.current = e.touches[0]!.clientX; y0.current = e.touches[0]!.clientY; }}
           onTouchEnd={(e) => { const t = e.changedTouches[0]!; if (x0.current !== null && Math.abs(t.clientX - x0.current) > 35 && Math.abs(t.clientX - x0.current) > Math.abs(t.clientY - y0.current) * 1.2) move(t.clientX < x0.current ? 1 : -1); x0.current = null; }}>
-          {!renew && hand.map((c, i) => {
+          {hand.map((c, i) => {
             const d = i - cur, a = Math.min(3, Math.abs(d)), f = SC[a]!, w = cW * f, h = cH * f, cx = Math.max(w / 2 - cW * 0.15, Math.min(dim.w - w / 2 + cW * 0.15, dim.w / 2 + Math.sign(d) * OFF[a]! * cW));
             const lifted = picked && d === 0;
             return <button key={c} className={`card ${lifted ? "sel" : ""}${d === 0 ? " cur" : ""}${mega ? " gold" : ""}`} data-testid={`hand-card-${i}`} aria-label={txs("g.mano.aria", { n: i + 1 })}
               style={{ width: w, height: h, left: cx - w / 2, top: dim.h / 2 - h / 2 + (d === 0 ? -6 : 8), backgroundImage: `url(${cardFull(c)})`, transform: `rotate(${d * 7}deg)`, zIndex: 20 - a }}
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
-          <div className="bdots">{!renew && hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
-          {mega && !renew && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden>📣</i>}
-          {renew && <HandRenewal cards={hand} geo={hand.map((_, i) => geo(i))} dim={dim} cW={cW} cH={cH} sound={sound} onDone={endRenew} />}
+          <div className="bdots">{hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
+          {mega && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden>📣</i>}
         </div>
       </div>
       <BSheet gold={mega} title={title} sub={sub} ui={ui}>
-        <Row>{ui && <LuiTray view={view} ui={ui} />}<Btn disabled={!picked || renew} onClick={() => picked && !renew && play(cur)} testId="play-card">{picked ? tx("g.gioca") : tx("g.scegli")}</Btn></Row>
+        <Row>{ui && <LuiTray view={view} ui={ui} />}<Btn disabled={!picked} onClick={() => picked && play(cur)} testId="play-card">{picked ? tx("g.gioca") : tx("g.scegli")}</Btn></Row>
       </BSheet>
       {zoom && picked && (
         <div className="zoom on" role="dialog" data-testid="hand-zoom"><div className="zc"><img className="fullcard" src={cardFull(hand[cur]!)} alt={txs("g.tua.alt")} /></div>

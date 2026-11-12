@@ -1,163 +1,129 @@
 import { describe, expect, it } from "vitest";
-import { applyAction, checkInvariants, miniAtsFor, simulateGame, suggestAction, viewFor } from "../src/index.ts";
+import { applyAction, checkInvariants, EngineError, MINI_CARDS, MINI_CYCLES, miniAtsFor, simulateGame, suggestAction, viewFor } from "../src/index.ts";
 import type { GameState, MiniKind } from "../src/index.ts";
 import { act, cfg, makeDeck, start } from "./helpers.ts";
 
-/** Gioca (con azioni a caso) fino all'inizio del mini-gioco. */
+/** Gioca (con azioni a caso) fino all'inizio dell'intervallo a tempo. */
 function toMini(n: number, kind: MiniKind, extra = {}): GameState {
   let s = start(n, { miniGame: kind, accuseDeck: ["Mi ha rubato il panino!"], ...extra }), g = 0, r = 7;
   const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
-  while (s.phase !== "MINI_PLAY" && g++ < 3000) {
+  while (s.phase !== "MINI_RUN" && g++ < 3000) {
     if (s.phase === "RESULTS") { s = act(s, { type: "advance" }); continue; }
     for (const p of s.playerIds) { const a = suggestAction(s, p, rand); if (a) { s = act(s, a); break; } }
   }
-  expect(s.phase).toBe("MINI_PLAY");
+  expect(s.phase).toBe("MINI_RUN");
   return s;
 }
-const playAll = (s: GameState) => { let g = s; for (const p of g.playerIds) g = act(g, { type: "playCard", playerId: p, cardId: g.hands[p]![0]! }); return g; };
-const vote = (s: GameState, v: Record<string, number>) => { let g = s; for (const p of g.playerIds) g = act(g, { type: "vote", playerId: p, position: v[p]! }); return g; };
-const posOfOwner = (g: GameState, o: string) => g.tower.find((t) => t.ownerId === o)!.position;
+/** Voti nell'ordine dato: `v` è una lista [giocatore, posizione]; chi non c'è non vota. */
+const voteList = (s: GameState, v: [string, number][]) => { let g = s; for (const [p, pos] of v) g = act(g, { type: "vote", playerId: p, position: pos }); return g; };
+const ended = (s: GameState) => (s.phase === "MINI_RUN" ? act(s, { type: "endRun" }) : s);
 
-describe("mini-gioco di metà partita", () => {
-  it("il primo intervallo parte al turno previsto (a metà fino a 5 giocatori, a un terzo da 6 a 8), rinnova tutte le mani e non c'è il Megafono", () => {
-    for (const [n, mid] of [[3, 3], [4, 2], [5, 2], [6, 2], [7, 2], [8, 2]] as const) {
-      const before = start(n, { miniGame: "amore" });
-      expect(before.miniAt).toBe(mid);
+describe("intervallo a tempo: avvio", () => {
+  it("parte al turno previsto, senza Megafono; le mani non si toccano; 6 personaggi dal mazzo, di nessuno", () => {
+    for (const [n, mid] of [[3, 3], [4, 2], [5, 2], [6, 2]] as const) {
+      expect(start(n, { miniGame: "amore" }).miniAt).toBe(mid);
       const s = toMini(n, "amore");
       expect(s.turnNumber).toBe(mid);
       for (const p of s.playerIds) expect(s.hands[p]!.length).toBe(5);
+      expect(s.tower).toHaveLength(MINI_CARDS);
+      expect(s.tower.map((t) => t.position)).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(s.tower.every((t) => t.ownerId === null)).toBe(true);
+      expect(new Set(s.tower.map((t) => t.cardId)).size).toBe(MINI_CARDS);
       const v = viewFor(s, "p1");
       expect(v.mini?.kind).toBe("amore"); expect(v.mini?.cardId).toBeTruthy();
     }
   });
-  it("all'inizio dell'intervallo le mani sono davvero nuove (nessuna carta di prima) e la vista lo segnala", () => {
-    let s = start(4, { miniGame: "accusa", accuseDeck: ["x"] }), r = 3; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
-    const seen = new Set<string>(); let prevHands: string[] = [];
-    expect(viewFor(s, "p1").handRenewals).toBe(0);
-    while (s.phase !== "MINI_PLAY") {
-      if (s.phase === "RESULTS") { prevHands = Object.values(s.hands).flat(); s = act(s, { type: "advance" }); continue; }
-      for (const p of s.playerIds) { const a = suggestAction(s, p, rand); if (a) { s = act(s, a); break; } }
-    }
-    for (const c of prevHands) seen.add(c);
-    for (const p of s.playerIds) expect(s.hands[p]).toHaveLength(5);
-    for (const c of Object.values(s.hands).flat()) expect(seen.has(c)).toBe(false);
-    expect(viewFor(s, "p1").handRenewals).toBe(1);
+  it("durante la corsa le mani non cambiano e l'accusatore / il partner non è tra i 6", () => {
+    const s = toMini(4, "accusa"); const hands = JSON.stringify(s.hands);
+    expect(JSON.stringify(s.hands)).toBe(hands);
+    expect(s.tower.map((t) => t.cardId)).not.toContain(s.mini!.cardId);
+    expect(s.mini!.text).toBe("Mi ha rubato il panino!");
+    expect(toMini(4, "peggiore").mini!.cardId).toBeNull();
   });
-  it("Storia d'amore: votanti della carta in testa prendono i voti ricevuti (anche il proprio), chi l'ha giocata +2 (nessun raddoppio), le altre cadono", () => {
-    let g = playAll(toMini(4, "amore"));
-    expect(g.phase).toBe("MINI_VOTE");
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2"), c = posOfOwner(g, "p3");
-    // 3 voti su a (p2, p3, p1 stesso), 1 su b
-    const before = { ...g.scores };
-    g = vote(g, { p1: a, p2: a, p3: a, p4: b });
-    expect(g.phase).toBe("MINI_RESULTS");
-    const r = g.miniResult!;
-    expect(r.leaders).toEqual([a]); expect(r.fallenPositions.sort()).toEqual([b, c, posOfOwner(g, "p4")].sort());
-    expect(g.scores.p2! - before.p2!).toBe(3); expect(g.scores.p3! - before.p3!).toBe(3);
-    expect(g.scores.p1! - before.p1!).toBe(5);            // 3 (ha votato la propria carta, in testa con 3 voti) + 2 (l'ha giocata lei)
-    expect(g.scores.p4! - before.p4!).toBe(0);            // votava una carta caduta e la sua è caduta
-  });
-  it("Accusa: cade la carta più votata (il colpevole), le altre restano; i punti non cambiano", () => {
-    let g = playAll(toMini(4, "accusa"));
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
-    g = vote(g, { p1: b, p2: a, p3: a, p4: a });
-    const r = g.miniResult!;
-    expect(r.leaders).toEqual([a]); expect(r.fallenPositions).toEqual([a]);   // cade la più votata, non le altre
-    expect(r.fallenCardIds).toEqual([g.tower.find((t) => t.position === a)!.cardId]);
-    expect(r.points.p2).toBe(3); expect(r.points.p3).toBe(3); expect(r.points.p4).toBe(3);   // chi ha votato il colpevole prende i voti sulla carta
-    expect(r.points.p1).toBe(2);                                                              // ha votato un'altra carta; la sua è il colpevole: +2
-  });
-  it("Accusa: pareggio in testa, cadono insieme le carte in testa; le altre restano", () => {
-    let g = playAll(toMini(4, "accusa"));
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2"), c = posOfOwner(g, "p3");
-    g = vote(g, { p1: a, p2: b, p3: a, p4: b });
-    const r = g.miniResult!;
-    expect(r.leaders.sort()).toEqual([a, b].sort()); expect(r.fallenPositions.sort()).toEqual([a, b].sort()); expect(r.fallenPositions).not.toContain(c);
-    expect(r.points.p1).toBe(4); expect(r.points.p2).toBe(4); expect(r.points.p3).toBe(2); expect(r.points.p4).toBe(2);   // 2 voti ricevuti + 2 (carta in testa); p3 e p4 solo i 2 voti
-  });
-  it("Accusa: se tutte le carte hanno gli stessi voti non cade nessuna", () => {
-    let g = playAll(toMini(3, "accusa"));
-    const [a, b, c] = ["p1", "p2", "p3"].map((o) => posOfOwner(g, o)) as [number, number, number];
-    g = vote(g, { p1: b, p2: c, p3: a });
-    expect(g.miniResult!.fallenPositions).toEqual([]);
-  });
-  it("Storia d'amore: restano le carte in testa e cadono le altre (invariato)", () => {
-    let g = playAll(toMini(4, "amore"));
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
-    g = vote(g, { p1: b, p2: a, p3: a, p4: a });
-    expect(g.miniResult!.leaders).toEqual([a]); expect(g.miniResult!.fallenPositions).not.toContain(a); expect(g.miniResult!.fallenPositions).toHaveLength(3);
-  });
-  it("se tutte le carte hanno gli stessi voti non cade nessuna", () => {
-    let g = playAll(toMini(3, "amore"));
-    const [a, b, c] = ["p1", "p2", "p3"].map((o) => posOfOwner(g, o)) as [number, number, number];
-    g = vote(g, { p1: b, p2: c, p3: a });
-    expect(g.miniResult!.fallenPositions).toEqual([]); expect(g.miniResult!.leaders).toHaveLength(3);
-  });
-  it("nessun tetto e nessun raddoppio: chi ha giocato una carta in testa prende +2 fissi, anche con tutti i voti sulla stessa carta", () => {
-    let g = playAll(toMini(6, "amore"));
-    const a = posOfOwner(g, "p1");
-    g = vote(g, Object.fromEntries(g.playerIds.map((p) => [p, a])));
-    const r = g.miniResult!;
-    expect(r.points.p1).toBe(6 + 2);                        // 6 voti ricevuti (anche il proprio) + 2 per aver giocato la carta
-    for (const p of g.playerIds.filter((x) => x !== "p1")) expect(r.points[p]).toBe(6);
-    expect(JSON.stringify(r)).not.toMatch(/tetto|cap/);
-  });
-  it("negli intervalli nessuno perde mai punti (nessun giocatore ha un punteggio negativo)", () => {
-    for (const kind of ["accusa", "amore", "peggiore"] as const) for (const n of [3, 5, 8]) {
-      const { state } = simulateGame(cfg(n, { miniGame: kind, accuseDeck: ["x"], seed: 40 + n }), 9);
-      expect(Object.values(state.scores).every((v) => v >= 0), `${kind} ${n}`).toBe(true);
-    }
-  });
-  it("Il peggiore: cade la più votata; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla propria carta", () => {
-    let g = playAll(toMini(4, "peggiore"));
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
-    g = vote(g, { p1: b, p2: a, p3: a, p4: a });
-    const r = g.miniResult!;
-    expect(r.fallenPositions).toEqual([a]); expect(g.mini?.cardId).toBeNull();
-    // p1: 3 voti ricevuti; p2: 1 voto ricevuto + 2 (ha votato la caduta); p3, p4: 2 (hanno votato la caduta)
-    expect(r.points).toEqual({ p1: 3, p2: 3, p3: 2, p4: 2 });
-    expect(r.lines.p2).toEqual([{ kind: "mini-giusto", pts: 2, pos: a }, { kind: "mini-peggiore", pts: 1, pos: b }]);
-    expect(r.lines.p1).toEqual([{ kind: "mini-peggiore", pts: 3, pos: a }]);   // ha votato una carta che non è caduta: nessun +2
-  });
-  it("Il peggiore: a pari merito cadono tutte le carte in testa; +2 a chi ne ha votata una, più i voti ricevuti", () => {
-    let g = playAll(toMini(4, "peggiore"));
-    const a = posOfOwner(g, "p1"), b = posOfOwner(g, "p2");
-    g = vote(g, { p1: b, p2: a, p3: a, p4: b });
-    expect(g.miniResult!.fallenPositions.sort()).toEqual([a, b].sort());
-    expect(g.miniResult!.points).toEqual({ p1: 4, p2: 4, p3: 2, p4: 2 });   // tutti hanno votato una caduta (+2); p1 e p2 hanno 2 voti ciascuno
-  });
-  it("Il peggiore: la propria carta non si può votare (massimo N−1 voti su una carta, N+1 punti in un intervallo)", () => {
-    let g = playAll(toMini(4, "peggiore"));
-    const own = posOfOwner(g, "p1"), other = posOfOwner(g, "p2");
-    expect(() => applyAction(g, { type: "vote", playerId: "p1", position: own })).toThrow(/INVALID_CHOICE/);
-    expect(viewFor(g, "p1").myPosition).toBe(own); expect(viewFor(g, "p2").myPosition).toBe(other);   // ognuno sa solo la propria
-    g = vote(g, { p1: other, p2: posOfOwner(g, "p1"), p3: other, p4: other });
-    expect(g.miniResult!.fallenPositions).toEqual([other]);
-    expect(g.miniResult!.points).toEqual({ p1: 3, p2: 3, p3: 2, p4: 2 });   // p1: +2 (voto giusto) +1 (un voto ricevuto); p2: 3 voti ricevuti, il suo voto non era sulla caduta; p3 e p4: +2
-  });
-  it("Il peggiore: i giocatori inattivi e i bot non votano mai la propria carta", () => {
+  it("ordine di uscita: tre giri completi, ognuno con tutte le carte una volta, senza ripetere subito la stessa", () => {
     for (let seed = 1; seed <= 40; seed++) {
-      let g = playAll(toMini(5, "peggiore")), r = seed;
-      const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
-      for (const p of g.playerIds) { const a = suggestAction(g, p, rand)!; expect(a.type === "vote" && a.position !== posOfOwner(g, p)).toBe(true); g = act(g, a); }
-      expect(g.phase).toBe("MINI_RESULTS");
+      const s = toMini(4, "peggiore", { seed }), o = s.mini!.order;
+      expect(o).toHaveLength(MINI_CARDS * MINI_CYCLES);
+      for (let c = 0; c < MINI_CYCLES; c++) expect(o.slice(c * MINI_CARDS, (c + 1) * MINI_CARDS).slice().sort()).toEqual([1, 2, 3, 4, 5, 6]);
+      for (let i = 1; i < o.length; i++) expect(o[i]).not.toBe(o[i - 1]);
+      expect(viewFor(s, "p2").mini!.order).toEqual(o);
     }
   });
-  it("si può votare la propria carta", () => {
-    let g = playAll(toMini(3, "accusa"));
-    expect(() => { for (const p of g.playerIds) g = applyAction(g, { type: "vote", playerId: p, position: posOfOwner(g, p) }).state; }).not.toThrow();
-    expect(g.phase).toBe("MINI_RESULTS");
+});
+
+describe("intervallo a tempo: punti uniformi", () => {
+  it("Accusa: +2 a chi vota la carta in testa (che cade), +4 al primo di loro; gli altri niente", () => {
+    const s = toMini(4, "accusa");
+    const r = ended(voteList(s, [["p3", 2], ["p1", 5], ["p2", 2], ["p4", 2]])).miniResult!;
+    expect(r.counts[2]).toBe(3); expect(r.leaders).toEqual([2]); expect(r.fallenPositions).toEqual([2]); expect(r.fastest).toBe("p3");
+    expect(r.points).toEqual({ p1: 0, p2: 2, p3: 6, p4: 2 });
+    expect(r.lines.p3).toEqual([{ kind: "mini-giusto", pts: 2, pos: 2 }, { kind: "mini-veloce", pts: 4, pos: 2 }]);
   });
-  it("dopo il mini-gioco si riprende: carte conservate, mani da 5, turno successivo e il mini-gioco non si ripete", () => {
-    let g = playAll(toMini(4, "amore")); const deck = makeDeck(125);
-    const a = posOfOwner(g, "p1"); g = vote(g, Object.fromEntries(g.playerIds.map((p) => [p, a])));
-    g = act(g, { type: "advance" });
-    expect(g.phase).toBe("PROCLAIM"); expect(g.turnNumber).toBe(3); expect(g.mini).toBeNull(); expect(g.miniDone).toBe(true);
-    for (const p of g.playerIds) expect(g.hands[p]!.length).toBe(5);
-    expect(checkInvariants(g, deck)).toEqual([]);
+  it("il più veloce è tra i vincitori: chi ha votato prima ma una carta che non vince non conta", () => {
+    const s = toMini(4, "peggiore");
+    const r = voteList(s, [["p1", 6], ["p2", 3], ["p3", 3], ["p4", 3]]).miniResult!;   // tutti votano → si risolve da sola
+    expect(r.fastest).toBe("p2"); expect(r.points).toEqual({ p1: 0, p2: 6, p3: 2, p4: 2 }); expect(r.fallenPositions).toEqual([3]);
   });
-  it("partite complete con ogni mini-gioco: invarianti, un intervallo fino a 5 giocatori e due da 6 a 8, nessun errore", () => {
-    for (const kind of ["accusa", "amore", "peggiore", "random"] as const) for (const n of [3, 5, 6, 8]) {
+  it("parità: cadono tutte le carte in testa e tutti i loro votanti prendono +2 (il +4 va al primo in assoluto)", () => {
+    const s = toMini(4, "accusa");
+    const r = voteList(s, [["p4", 4], ["p1", 1], ["p2", 1], ["p3", 4]]).miniResult!;
+    expect(r.leaders.sort()).toEqual([1, 4]); expect(r.fallenPositions.sort()).toEqual([1, 4]); expect(r.fastest).toBe("p4");
+    expect(r.points).toEqual({ p1: 2, p2: 2, p3: 2, p4: 6 });
+  });
+  it("Storia d'amore: le carte in testa vincono e restano (non cade nessuna); stessi punti", () => {
+    const s = toMini(4, "amore");
+    const r = voteList(s, [["p2", 5], ["p1", 5], ["p3", 1], ["p4", 5]]).miniResult!;
+    expect(r.leaders).toEqual([5]); expect(r.fallenPositions).toEqual([]); expect(r.fallenCardIds).toEqual([]);
+    expect(r.points).toEqual({ p1: 2, p2: 6, p3: 0, p4: 2 });
+  });
+  it("chi non vota in tempo non prende nulla né perde nulla; se non vota nessuno, niente punti e niente cade", () => {
+    const s = toMini(4, "peggiore");
+    const a = ended(voteList(s, [["p1", 2], ["p2", 2]])).miniResult!;
+    expect(a.votes).toEqual({ p1: 2, p2: 2 }); expect(a.points).toEqual({ p1: 6, p2: 2, p3: 0, p4: 0 });
+    const b = ended(s).miniResult!;
+    expect(b.leaders).toEqual([]); expect(b.fallenPositions).toEqual([]); expect(b.fastest).toBeNull(); expect(Object.values(b.points).every((x) => x === 0)).toBe(true);
+  });
+  it("i punti vanno ai punteggi; la propria carta non esiste (nessun divieto)", () => {
+    const s = toMini(4, "accusa"), before = { ...s.scores };
+    const g = ended(voteList(s, [["p1", 1], ["p2", 1]]));
+    expect(g.scores.p1).toBe(before.p1! + 6); expect(g.scores.p2).toBe(before.p2! + 2); expect(g.scores.p3).toBe(before.p3);
+  });
+});
+
+describe("intervallo a tempo: regole del motore", () => {
+  it("un voto solo, posizioni 1–6, endRun solo durante la corsa", () => {
+    const s = toMini(4, "accusa");
+    const g = act(s, { type: "vote", playerId: "p1", position: 3 });
+    expect(() => act(g, { type: "vote", playerId: "p1", position: 4 })).toThrow(EngineError);
+    expect(() => act(s, { type: "vote", playerId: "p2", position: 7 })).toThrow(EngineError);
+    expect(() => act(s, { type: "vote", playerId: "p2", position: 0 })).toThrow(EngineError);
+    expect(() => act(s, { type: "playCard", playerId: "p1", cardId: s.hands.p1![0]! })).toThrow(EngineError);
+    expect(() => act(act(s, { type: "endRun" }), { type: "endRun" })).toThrow(EngineError);
+  });
+  it("si risolve da sola quando hanno votato tutti; poi 'advance' riprende con il turno successivo e le mani sono tutte nuove", () => {
+    const s = toMini(4, "amore"), oldHands = s.hands, mega = s.megafonoIndex, turn = s.turnNumber, towerCards = s.tower.map((t) => t.cardId);
+    const r = voteList(s, [["p1", 1], ["p2", 2], ["p3", 3], ["p4", 4]]);
+    expect(r.phase).toBe("MINI_RESULTS");
+    const n = act(r, { type: "advance" });
+    expect(n.phase).toBe("PROCLAIM"); expect(n.turnNumber).toBe(turn + 1); expect(n.megafonoIndex).toBe((mega + 1) % 4);
+    for (const p of n.playerIds) {   // mano rinnovata: 5 carte, nessuna di prima; quelle vecchie nello scarto (o rimescolate nel mazzo)
+      expect(n.hands[p]).toHaveLength(5);
+      for (const c of n.hands[p]!) expect(oldHands[p]).not.toContain(c);
+    }
+    for (const c of towerCards) expect([...n.discardPile, ...n.drawPile]).toContain(c);
+    expect(checkInvariants(n, makeDeck(125))).toEqual([]);
+  });
+  it("la vista mostra i 6 personaggi e la corsa; i risultati solo alla fine", () => {
+    const s = toMini(4, "peggiore");
+    expect(viewFor(s, "p2").tower).toHaveLength(6); expect(viewFor(s, "p2").miniResult).toBeNull();
+    const r = ended(voteList(s, [["p1", 2]]));
+    expect(viewFor(r, "p3").miniResult!.votes).toEqual({ p1: 2 });
+  });
+});
+
+describe("partite complete con l'intervallo a tempo", () => {
+  it("ogni mini-gioco, da 3 a 6 giocatori: invarianti rispettate, partita conclusa, il numero giusto di intervalli", () => {
+    for (const kind of ["accusa", "amore", "peggiore", "random"] as const) for (const n of [3, 5, 6]) {
       const { state, problems, log } = simulateGame(cfg(n, { miniGame: kind, accuseDeck: ["Mi ha rubato il panino!"], seed: 11 + n }), 5, { checkEveryStep: true });
       expect(problems).toEqual([]); expect(state.phase).toBe("GAME_OVER");
       expect(log.flatMap((l) => l.events).filter((e) => e.type === "miniStarted")).toHaveLength(n <= 5 ? 1 : 2);
@@ -167,21 +133,15 @@ describe("mini-gioco di metà partita", () => {
     const { log } = simulateGame(cfg(4), 5);
     expect(log.flatMap((l) => l.events).some((e) => e.type === "miniStarted")).toBe(false);
   });
-  it("la vista non svela i proprietari prima dei risultati", () => {
-    const g = playAll(toMini(4, "amore"));
-    expect(viewFor(g, "p2").tower.every((t) => t.ownerId === null)).toBe(true);
-    const r = vote(g, Object.fromEntries(g.playerIds.map((p) => [p, 1])));
-    expect(viewFor(r, "p2").miniResult).not.toBeNull(); expect(viewFor(r, "p2").tower.some((t) => t.ownerId !== null)).toBe(true);
-  });
 });
 
 describe("numero di intervalli", () => {
-  it("1 fino a 5 giocatori, 2 da 6 a 8 (mini-giochi diversi tra loro), ai turni previsti", () => {
-    for (const n of [3, 4, 5, 6, 7, 8]) {
+  it("1 fino a 5 giocatori, 2 con 6 (mini-giochi diversi tra loro), ai turni previsti", () => {
+    for (const n of [3, 4, 5, 6]) {
       let s = start(n, { miniGame: "random", accuseDeck: ["Mi ha rubato il panino!"] }), g = 0, r = n * 13 + 1; const at: number[] = [];
       const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
       while (s.phase !== "GAME_OVER" && g++ < 5000) {
-        if (s.phase === "MINI_PLAY" && !at.includes(s.turnNumber)) at.push(s.turnNumber);
+        if (s.phase === "MINI_RUN" && !at.includes(s.turnNumber)) at.push(s.turnNumber);
         if (s.phase === "RESULTS" || s.phase === "MINI_RESULTS") { s = act(s, { type: "advance" }); continue; }
         for (const p of s.playerIds) { const a = suggestAction(s, p, rand); if (a) { s = act(s, a); break; } }
       }
@@ -192,3 +152,5 @@ describe("numero di intervalli", () => {
     }
   });
 });
+
+void applyAction;

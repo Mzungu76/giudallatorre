@@ -4,7 +4,7 @@ Il server è l'unica autorità: il client invia **azioni**, il motore le valida 
 
 ```mermaid
 stateDiagram-v2
-  [*] --> PROCLAIM: createGame (3..8 giocatori, 5 carte a testa)
+  [*] --> PROCLAIM: createGame (3..8 nel motore, 3..6 in stanza, 5 carte a testa)
   PROCLAIM --> PLAY: Megafono: choosePhrase (carta o frase libera)
   PLAY --> PLAY: playCard (ogni giocatore richiesto, una volta)
   PLAY --> SUSPECT: tutte giocate -> Torre mescolata e numerata
@@ -12,7 +12,10 @@ stateDiagram-v2
   VOTE --> VOTE: vote (tutti, Megafono incluso, una volta)
   VOTE --> RESULTS: tutti hanno votato -> esito e punti
   RESULTS --> PROCLAIM: advance (scarto, pescate, Megafono successivo)
-  RESULTS --> GAME_OVER: advance, se tutti hanno fatto il Megafono 1 (4-8) / 2 (3) volte
+  RESULTS --> GAME_OVER: advance, se tutti hanno fatto il Megafono 1 (4-6) / 2 (3) volte
+  RESULTS --> MINI_RUN: advance, al turno previsto (intervallo a tempo)
+  MINI_RUN --> MINI_RESULTS: tutti hanno votato, oppure fine corsa (endRun del server)
+  MINI_RESULTS --> PROCLAIM: advance (turno successivo, mani invariate)
   GAME_OVER --> [*]
 ```
 
@@ -23,6 +26,8 @@ stateDiagram-v2
 | SUSPECT | Megafono | `placeLui` | VOTE |
 | VOTE | tutti | `vote` | RESULTS quando tutti hanno votato |
 | RESULTS | server / chiunque | `advance` | PROCLAIM o GAME_OVER |
+| MINI_RUN | tutti, a tempo | `vote` (un personaggio in scena); il server fa `endRun` a fine corsa | MINI_RESULTS (anche prima, se hanno votato tutti) |
+| MINI_RESULTS | server / host | `advance` | PROCLAIM del turno successivo (le mani non cambiano) |
 
 Errori tipizzati (`EngineError`): WRONG_PHASE, NOT_ALLOWED, ALREADY_DONE (doppio invio/voto), CARD_NOT_IN_HAND, INVALID_POSITION, INVALID_CHOICE, UNKNOWN_PLAYER, GAME_OVER, DECK_EXHAUSTED.
 

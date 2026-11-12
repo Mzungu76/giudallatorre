@@ -4,6 +4,10 @@ import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
+/** Intervallo a tempo: 6 carte escono dal separé una alla volta (3 s l'una), tre giri completi. Il server dà il «via» dopo la presentazione (sipario, regole: MINI_INTRO_MS) e il conto alla rovescia. */
+export const MINI_CARDS = 6, MINI_CYCLES = 3, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 6000, MINI_COUNTDOWN_MS = 3000;
+/** Punti dell'intervallo: uguali per le tre modalità. */
+export const MINI_PTS = 2, MINI_FAST_PTS = 4;
 /** Pool di segnalini Lui! adatti al numero di giocatori. La scommessa è "almeno k voti degli altri" (oppure nessun voto); i punti sono tarati sulla probabilità di riuscita (simulazioni con i bot, tools/analysis/lui-pool.ts): più è difficile, più paga. */
 export function luiPool(n: number): LuiSpec[] {
   const pool: LuiSpec[] = [{ slot: "zero", k: 0, pts: 5 }, { slot: "k1", k: 1, pts: 4 }];
@@ -199,7 +203,7 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       break;
     }
     case "playCard": {
-      if (s.phase !== "MINI_PLAY") mustBe(s, "PLAY"); else known(s, action.playerId);
+      mustBe(s, "PLAY");
       known(s, action.playerId);
       if (!requiredPlayers(s).includes(action.playerId)) throw new EngineError("NOT_ALLOWED", "il Megafono non gioca carte in questa modalità");
       if (s.played[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "carta già giocata");
@@ -241,15 +245,19 @@ export function applyAction(prev: GameState, action: Action): { state: GameState
       break;
     }
     case "vote": {
-      if (s.phase !== "MINI_VOTE") mustBe(s, "VOTE");
+      if (s.phase !== "MINI_RUN") mustBe(s, "VOTE");
       known(s, action.playerId);
       if (s.votes[action.playerId] !== undefined) throw new EngineError("ALREADY_DONE", "voto già espresso");
       checkPosition(s, action.position);
-      if (s.phase === "MINI_VOTE" && s.mini?.kind === "peggiore" && s.tower.find((t) => t.position === action.position)?.ownerId === action.playerId) throw new EngineError("INVALID_CHOICE", "non puoi votare la tua carta");
       if (s.phase === "VOTE" && luiForbidden(s, action.playerId) === action.position) throw new EngineError("INVALID_CHOICE", s.cnc ? "non puoi votare la carta con Voti nulli!" : "non puoi votare la carta del tuo Lui!");
       s.votes[action.playerId] = action.position;
+      if (s.phase === "MINI_RUN") (s.voteOrder ??= []).push(action.playerId);
       events.push({ type: "voteCast", playerId: action.playerId });
-      if (s.playerIds.every((p) => s.votes[p] !== undefined)) { if (s.phase === "MINI_VOTE") resolveMini(s, events); else resolve(s, events); }
+      if (s.playerIds.every((p) => s.votes[p] !== undefined)) { if (s.phase === "MINI_RUN") resolveMini(s, events); else resolve(s, events); }
+      break;
+    }
+    case "endRun": {
+      mustBe(s, "MINI_RUN"); resolveMini(s, events);
       break;
     }
     case "advance": {
@@ -270,7 +278,7 @@ function revealTower(s: GameState, events: GameEvent[]) {
   if (s.deckCard !== null) raw.push({ cardId: s.deckCard, ownerId: null });
   s.tower = shuffle(raw, s).map((r, i): TowerSlot => ({ position: i + 1, ...r }));
   s.played = {}; s.deckCard = null;
-  s.phase = s.phase === "MINI_PLAY" ? "MINI_VOTE" : "SUSPECT"; events.push({ type: "towerRevealed", positions: s.tower.length });
+  s.phase = "SUSPECT"; events.push({ type: "towerRevealed", positions: s.tower.length });
   // PROPAGANDA con obiettivi: il Megafono riceve il suo obiettivo segreto (un personaggio a caso della Torre) prima di posare il Lui!
   if (s.phase === "SUSPECT" && s.propaganda && s.objectives) { const pool = objectivePool(s.playerIds.length), o = pool[randomInt(pool.length, s)]!; s.objective = { ...o, position: 1 + randomInt(s.tower.length, s) }; }
 }
@@ -392,48 +400,46 @@ function endTurn(s: GameState, events: GameEvent[]) {
 // ---------- mini-giochi di metà partita ----------
 const GENERIC_ACCUSE = "Mi ha rubato il panino al prosciutto!";
 
-/** Tutte le mani vengono rinnovate (5 carte nuove a tutti), si pesca la carta del mini-gioco e tutti giocano una carta. */
+/** Intervallo a tempo: si pescano i 6 personaggi dal mazzo (uguali per tutti, di nessuno), più la carta dell'accusatore / del partner, e si stabilisce l'ordine di uscita dal separé. Le mani non si toccano durante la corsa: si rinnovano alla fine (endMini). */
 function startMini(s: GameState, events: GameEvent[]) {
   // a caso fra i mini-giochi non ancora usciti in questa partita (con due intervalli non si ripete lo stesso)
   const fresh = MINI_KINDS.filter((k) => !(s.miniKinds ?? []).includes(k)), pool = fresh.length ? fresh : MINI_KINDS;
   const kind: MiniKind = s.miniGame === "random" || !s.miniGame ? pool[randomInt(pool.length, s)]! : s.miniGame;
   (s.miniKinds ??= []).push(kind);
-  for (const p of s.playerIds) { s.discardPile.push(...s.hands[p]!); s.hands[p] = []; }
-  for (let k = 0; k < s.handSize; k++) for (const p of s.playerIds) s.hands[p]!.push(draw(s));
+  s.tower = Array.from({ length: MINI_CARDS }, (_, i): TowerSlot => ({ position: i + 1, cardId: draw(s), ownerId: null }));
   const cardId = kind === "peggiore" ? null : draw(s);
   const deck = s.accuseDeck ?? [];
   const text = kind === "accusa" ? (deck.length ? deck[randomInt(deck.length, s)]! : GENERIC_ACCUSE) : null;
-  s.mini = { kind, cardId, text }; s.miniResult = null;
-  s.phase = "MINI_PLAY"; s.played = {}; s.deckCard = null; s.tower = []; s.lui = null; s.votes = {}; if (s.cnc) s.marks = null; s.phrase = null; s.proclaim = null;
+  // tre giri completi, ognuno in ordine nuovo e senza ripetere subito l'ultima carta del giro prima
+  const positions = s.tower.map((t) => t.position), order: number[] = [];
+  for (let c = 0; c < MINI_CYCLES; c++) {
+    let cyc = shuffle(positions, s);
+    if (order.length && cyc[0] === order[order.length - 1]) cyc = [...cyc.slice(1), cyc[0]!];
+    order.push(...cyc);
+  }
+  s.mini = { kind, cardId, text, order }; s.miniResult = null; s.voteOrder = [];
+  s.phase = "MINI_RUN"; s.played = {}; s.deckCard = null; s.lui = null; s.votes = {}; if (s.cnc) s.marks = null; s.phrase = null; s.proclaim = null;
   events.push({ type: "miniStarted", kind });
 }
 
-/** Punti del mini-gioco. Accusa / Storia d'amore: chi ha votato una carta in testa prende i voti ricevuti, chi l'ha giocata +2. Nell'Accusa le carte in testa cadono (il colpevole), nella Storia d'amore restano e cadono le altre. Il peggiore: ognuno vota la carta da buttare giù (non la propria), cadono le più votate; +2 a chi ha votato una carta caduta e un punto per ogni voto ricevuto dalla carta che si è giocata. */
+/** Punti dell'intervallo, uguali per le tre modalità: +2 a chi ha votato una carta in testa (a parità tutte le carte in testa), +4 al più veloce di loro. Chi non ha votato in tempo non prende nulla. Accusa e Peggiore: le carte in testa cadono; Storia d'amore: vincono e restano. */
 function resolveMini(s: GameState, events: GameEvent[]) {
   const mini = s.mini!;
   const counts: Record<number, number> = {};
   for (const t of s.tower) counts[t.position] = 0;
-  for (const p of s.playerIds) counts[s.votes[p]!] = (counts[s.votes[p]!] ?? 0) + 1;
-  const top = Math.max(...Object.values(counts)), leaders = s.tower.map((t) => t.position).filter((k) => counts[k] === top);
-  const peggiore = mini.kind === "peggiore", accusa = mini.kind === "accusa";
-  // Accusa: cade la carta più votata (il colpevole; se tutte sono pari non cade nessuna). Peggiore: cadono le più votate. Storia d'amore: restano le più votate, cadono le altre.
-  const fallen = peggiore ? leaders : accusa ? (leaders.length === s.tower.length ? [] : leaders) : s.tower.map((t) => t.position).filter((k) => counts[k]! < top);
-  const owners: Record<number, PlayerId> = {}; for (const t of s.tower) if (t.ownerId) owners[t.position] = t.ownerId;
+  const voters = (s.voteOrder ?? []).filter((p) => s.votes[p] !== undefined);
+  for (const p of voters) counts[s.votes[p]!] = (counts[s.votes[p]!] ?? 0) + 1;
+  const top = Math.max(0, ...Object.values(counts)), leaders = top === 0 ? [] : s.tower.map((t) => t.position).filter((k) => counts[k] === top);
+  const fallen = mini.kind === "amore" ? [] : leaders;
   const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
   for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number) => { points[p]! += pts; lines[p]!.push({ kind, pts, pos }); };
-  if (peggiore) {
-    // +2 a chi ha votato una carta caduta (voto giusto, come nei turni normali)
-    for (const p of s.playerIds) { const v = s.votes[p]!; if (fallen.includes(v)) give(p, 2, "mini-giusto", v); }
-    // e un punto per ogni voto ricevuto dalla propria carta, cada o no (non si vota la propria: al massimo N−1)
-    for (const t of s.tower) { const o = owners[t.position]; if (o && counts[t.position]! > 0) give(o, counts[t.position]!, "mini-peggiore", t.position); }
-  } else {
-    for (const p of s.playerIds) { const v = s.votes[p]!; if (leaders.includes(v)) give(p, counts[v]!, "mini-voto", v); }
-    for (const k of leaders) { const o = owners[k]; if (o) give(o, 2, "mini-carta", k); }   // +2 a chi ha giocato una carta in testa (nessun raddoppio, nessun tetto)
-  }
+  let fastest: PlayerId | null = null;
+  for (const p of voters) { const v = s.votes[p]!; if (!leaders.includes(v)) continue; give(p, MINI_PTS, "mini-giusto", v); if (fastest === null) fastest = p; }
+  if (fastest !== null) give(fastest, MINI_FAST_PTS, "mini-veloce", s.votes[fastest]!);
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
-  const result: MiniResult = { kind: mini.kind, cardId: mini.cardId, text: mini.text, votes: Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!])), counts, leaders, fallenPositions: fallen,
-    fallenCardIds: fallen.map((k) => s.tower.find((t) => t.position === k)!.cardId), owners, points, lines };
+  const result: MiniResult = { kind: mini.kind, cardId: mini.cardId, text: mini.text, votes: Object.fromEntries(voters.map((p) => [p, s.votes[p]!])), counts, leaders, fallenPositions: fallen,
+    fallenCardIds: fallen.map((k) => s.tower.find((t) => t.position === k)!.cardId), fastest, points, lines };
   s.miniResult = result; s.phase = "MINI_RESULTS"; events.push({ type: "miniResolved", result });
 }
 
@@ -441,7 +447,10 @@ function endMini(s: GameState, events: GameEvent[]) {
   const n = s.playerIds.length;
   for (const t of s.tower) s.discardPile.push(t.cardId);
   if (s.mini?.cardId) s.discardPile.push(s.mini.cardId);
-  for (let k = 1; k <= n; k++) s.hands[s.playerIds[(s.megafonoIndex + k) % n]!]!.push(draw(s));
+  s.tower = []; s.votes = {}; s.voteOrder = [];
+  // alla fine dell'intervallo le mani si rinnovano: via le carte vecchie, 5 nuove a tutti (in ordine di tavolo, deterministico)
+  for (const p of s.playerIds) { s.discardPile.push(...s.hands[p]!); s.hands[p] = []; }
+  for (let k = 0; k < s.handSize; k++) for (let i = 1; i <= n; i++) s.hands[s.playerIds[(s.megafonoIndex + i) % n]!]!.push(draw(s));
   s.miniDone = true; s.minisDone = minisDone(s) + 1; s.mini = null; s.miniResult = null;
   events.push({ type: "turnEnded", turn: s.turnNumber });
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;

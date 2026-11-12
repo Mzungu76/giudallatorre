@@ -62,7 +62,7 @@ export interface ChatDto { id: number; from: string; name: string; text: string;
 export const MAX_CHAT_CHARS = 140;
 export type ServerMessage =
   | { t: "room"; seq: number; code: string; stage: RoomStage; you: string; hostId: string; options: RoomOptionsDto; players: RoomPlayerDto[] }
-  | { t: "view"; seq: number; view: PlayerView; events: GameEvent[]; deadline: number | null }
+  | { t: "view"; seq: number; view: PlayerView; events: GameEvent[]; deadline: number | null; /** Orologio del server (ms): serve ad allineare i conti alla rovescia dell'app. */ now?: number; /** Intervallo a tempo: istante (orologio del server) del «via!», dopo presentazione e 3-2-1. */ goAt?: number | null }
   | { t: "error"; code: string; message: string; reqId?: string }
   | { t: "chat"; msg: ChatDto }
   | { t: "chatlog"; msgs: ChatDto[] }

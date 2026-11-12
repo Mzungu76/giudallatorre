@@ -27,7 +27,7 @@ export default function DisplayScreen({ code }: { code: string }) {
           <div className="stage-outer" style={{ width: 372 * k, height: 826 * k }}>
             <div className="stage" style={{ transform: `scale(${k})` }}>
               <div className="sky" /><div className="skyg" /><div className="skyh" />
-              {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} readOnly /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} /> : <Game room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} />)}
+              {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} readOnly /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} goAt={view.goAtLocal} send={() => undefined} readOnly sound={false} /> : <Game room={room} view={view.view} deadline={view.deadline} send={() => undefined} readOnly sound={false} />)}
               <div className="vig" /><div className="grain" />
             </div>
           </div>

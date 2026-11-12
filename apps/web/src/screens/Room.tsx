@@ -140,7 +140,7 @@ export default function RoomScreen({ code }: { code: string }) {
   return (
     <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
-      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
+      {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} goAt={view.goAtLocal} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
       {overlays}
       {manual && pv && ((h) => h ? <><HintBubble onClose={() => setManual(false)}>{h.text}</HintBubble><HintPointer targets={h.targets} /></> : null)(hintFor(pv))}
       {reconnecting && <div className="banner-conn">{tx("room.riconnessione")}</div>}
