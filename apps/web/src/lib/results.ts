@@ -13,13 +13,14 @@ export function totals(lines: Record<string, ScoreLine[]>, ids: string[]): { id:
 }
 
 /** Perché si prendono punti, a icone: accanto ai punti compare il simbolo del motivo (come il ⚡ del più veloce). I punti a 0 non hanno icona. */
-export const REASON_ICON: Record<ScoreLine["kind"], string> = {
-  voto: "🎯", "mini-giusto": "🎯", "mini-veloce": "⚡", carta: "🃏",
-  lui: "👈", "lui-gregge": "👈", "lui-folla": "👈", "lui-mancato": "", obiettivo: "🏁", "obiettivo-folla": "🏁", "obiettivo-mancato": "",
+export type Reason = "target" | "bolt" | "card" | "hand" | "flag";
+export const REASON_ICON: Record<ScoreLine["kind"], Reason | ""> = {
+  voto: "target", "mini-giusto": "target", "mini-veloce": "bolt", carta: "card",
+  lui: "hand", "lui-gregge": "hand", "lui-folla": "hand", "lui-mancato": "", obiettivo: "flag", "obiettivo-folla": "flag", "obiettivo-mancato": "",
 };
-/** Le icone dei motivi di un insieme di righe, senza doppioni e nell'ordine in cui compaiono (il ⚡ per primo). */
-export function iconsOf(ls: ScoreLine[]): string[] {
-  const out: string[] = [];
+/** Le icone dei motivi di un insieme di righe, senza doppioni e nell'ordine in cui compaiono (bolt per primo). */
+export function iconsOf(ls: ScoreLine[]): Reason[] {
+  const out: Reason[] = [];
   for (const l of [...ls].sort((a, b) => Number(b.kind === "mini-veloce") - Number(a.kind === "mini-veloce"))) { const ic = l.pts > 0 ? REASON_ICON[l.kind] : ""; if (ic && !out.includes(ic)) out.push(ic); }
   return out;
 }
@@ -29,7 +30,7 @@ export function iconsOf(ls: ScoreLine[]): string[] {
  * del Megafono): faccia, punti e, sull'angolo, le icone dei motivi. Stanno in basso sulla carta, su una o due colonne, e occupano al più
  * metà carta: l'immagine resta visibile. `pos[i]` = posizione della carta i+1 (come terracePos).
  */
-export interface Chip { key: string; id: string; color: string; pos: number; gain: number; fast: boolean; icons: string[]; x: number; y: number; w: number; h: number }
+export interface Chip { key: string; id: string; color: string; pos: number; gain: number; fast: boolean; icons: Reason[]; x: number; y: number; w: number; h: number }
 export function chipsFor(toks: Tok[], lines: Record<string, ScoreLine[]>, pos: Record<number, CardPos>, colorOf: (id: string) => string): Chip[] {
   const by = new Map<number, Map<string, { color: string; ls: ScoreLine[] }>>();
   const add = (cardPos: number, id: string, color: string, ls: ScoreLine[]) => {

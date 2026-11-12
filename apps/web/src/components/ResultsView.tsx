@@ -7,6 +7,7 @@ import { chipsFor, iconsOf, totals } from "../lib/results.ts";
 import { FallArrow } from "./Terrace.tsx";
 import type { Tok } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
+import { ReasonIcon } from "./ReasonIcon.tsx";
 
 const sign = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : "0");
 const cls = (n: number) => (n > 0 ? "up" : n < 0 ? "dn" : "zz");
@@ -30,7 +31,7 @@ export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId }: { n
         <div key={c.key} className={`rs-pt ${cls(c.gain)}${c.id === meId ? " me" : ""}`} data-testid="result-chip" style={{ left: c.x, top: c.y, width: c.w, height: c.h, fontSize: Math.round(c.h * 0.7), animationDelay: `${0.35 + order.indexOf(c) * 0.12}s` }}>
           <span className="rs-face" dangerouslySetInnerHTML={{ __html: voteTok(c.color, Math.max(12, c.h - 3), false, false) }} />
           <b>{sign(c.gain)}</b>
-          {c.icons.length > 0 && <span className="rs-ics" aria-hidden>{c.icons.map((ic, i) => <i key={i} className={ic === "⚡" ? "rs-fast" : ""} style={{ width: Math.round(c.h * 0.78), height: Math.round(c.h * 0.78), fontSize: Math.round(c.h * 0.5) }}>{ic}</i>)}</span>}
+          {c.icons.length > 0 && <span className="rs-ics" aria-hidden>{c.icons.map((ic) => <ReasonIcon key={ic} k={ic} s={Math.round(c.h * 0.95)} className={ic === "bolt" ? "rs-fast" : ""} />)}</span>}
         </div>
       ))}
     </div>
@@ -51,7 +52,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
           <Disc color={colorOf(id)} size="l" />
           {annullati?.includes(id) ? <u className="rs-no" aria-hidden>🚫</u> : null}
           <b>{gain > 0 && <PtIcon s={19} />}{sign(gain)}</b>
-          {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic, i) => <i key={i} className={ic === "⚡" ? "rs-fast" : ""}>{ic}</i>)}</span>}
+          {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic) => <ReasonIcon key={ic} k={ic} s={24} className={ic === "bolt" ? "rs-fast" : ""} />)}</span>}
         </div>
       ))}
     </div>

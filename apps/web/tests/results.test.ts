@@ -12,13 +12,13 @@ describe("riepilogo visivo dei punti", () => {
     const lines = { a: [L("voto", 2, 1), L("lui", 4, 1)], b: [L("voto", 2, 2)], c: [], d: [L("voto", 2, 3)] };
     expect(totals(lines, ["c", "b", "a", "d"])).toEqual([{ id: "a", gain: 6 }, { id: "b", gain: 2 }, { id: "d", gain: 2 }, { id: "c", gain: 0 }]);
   });
-  it("i riquadri stanno in basso sulla carta, dal più alto, con le icone dei motivi (⚡ per il più veloce) e dentro la carta", () => {
+  it("i riquadri stanno in basso sulla carta, dal più alto, con le icone dei motivi (bolt per il più veloce) e dentro la carta", () => {
     const toks = [{ p: 1, c: "#f00", id: "a" }, { p: 1, c: "#0f0", id: "b" }, { p: 2, c: "#00f", id: "c" }];
     const lines = { a: [L("mini-giusto", 2, 1), L("mini-veloce", 4, 1)], b: [L("mini-giusto", 2, 1)], c: [] };
     const chips = chipsFor(toks, lines, pos, () => "#000"), on1 = chips.filter((c) => c.pos === 1);
     expect(chips).toHaveLength(3);
     expect(on1.map((c) => [c.id, c.gain, c.fast])).toEqual([["a", 6, true], ["b", 2, false]]);
-    expect(on1[0]!.icons).toEqual(["⚡", "🎯"]); expect(on1[1]!.icons).toEqual(["🎯"]);
+    expect(on1[0]!.icons).toEqual(["bolt", "target"]); expect(on1[1]!.icons).toEqual(["target"]);
     for (const c of chips) { const p = pos[c.pos - 1]!; expect(c.x).toBeGreaterThanOrEqual(p.x); expect(c.x + c.w).toBeLessThanOrEqual(p.x + p.w + 0.5); expect(c.y + c.h).toBeLessThanOrEqual(p.f - 6); expect(c.y).toBeGreaterThanOrEqual(p.f - 6 - p.h * 0.55); }
   });
   it("anche con 6 giocatori sulla stessa carta i riquadri non si sovrappongono e lasciano libera almeno metà carta", () => {

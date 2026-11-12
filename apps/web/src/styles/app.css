@@ -1160,9 +1160,9 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .rs-pt.me{outline:3px solid #ffc72c;outline-offset:1px}
 .rs-pt .rs-face{display:block;line-height:0;flex:none}
 .rs-pt{overflow:visible;padding:0 5px 0 2px}
-.rs-ics{position:absolute;right:-5px;top:-8px;display:flex;gap:1px;pointer-events:none}
-.rs-ics i,.rs-sic i{display:grid;place-items:center;border-radius:50%;background:#fff;border:1.5px solid #13224a;font-style:normal;line-height:1;box-shadow:0 1px 0 #13224a}
-.rs-sic{display:flex;gap:2px;margin-left:2px}.rs-sic i{width:20px;height:20px;font-size:12px}
+.rs-ics{position:absolute;right:-9px;top:-9px;display:flex;gap:1px;pointer-events:none}
+.rsn{display:block;filter:drop-shadow(0 1.5px 0 #13224a99)}
+.rs-sic{display:flex;gap:1px;margin-left:2px}
 .rs-fast{animation:rsZap .55s ease-in-out infinite alternate}
 @keyframes rsZap{from{transform:scale(.85) rotate(-8deg)}to{transform:scale(1.25) rotate(8deg)}}
 @keyframes rsPop{0%{transform:scale(.2) translateY(12px);opacity:0}100%{transform:none;opacity:1}}

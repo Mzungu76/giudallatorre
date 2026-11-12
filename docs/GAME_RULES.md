@@ -160,4 +160,4 @@ Un giocatore umano può uscire in qualsiasi momento (Regolamento «i» → «Esc
 
 
 ### Riepilogo punti: icone dei motivi
-Sulla torre i riquadri dei punti stanno in basso sulla carta (una o due colonne, al più metà carta) e portano sull'angolo l'icona del motivo; la stessa icona compare accanto ai punti di ogni giocatore nella striscia sotto la torre. 🎯 voto giusto · ⚡ il più veloce · 🃏 carta propria · 👈 Lui! · 🏁 obiettivo. I punti a 0 non hanno icona. Alla fine del turno (anche base) si prosegue solo toccando «Continua».
+Sulla torre i riquadri dei punti stanno in basso sulla carta (una o due colonne, al più metà carta) e portano sull'angolo l'icona del motivo; la stessa icona compare accanto ai punti di ogni giocatore nella striscia sotto la torre. bersaglio = voto giusto · fulmine = il più veloce · carta = carta propria · mano = Lui! · bandiera = obiettivo (icone disegnate in `ReasonIcon.tsx`, stile delle illustrazioni). I punti a 0 non hanno icona. Alla fine del turno (anche base) si prosegue solo toccando «Continua».
