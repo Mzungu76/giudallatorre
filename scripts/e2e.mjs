@@ -30,7 +30,7 @@ function botStep(c) {
   if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: v.cnc ? { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } : { type: "placeLui", slot: v.myLuiLeft[0] ?? v.luiTokens[0].slot, position: 1 } }); return true; }
   if (v.phase === "VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
   // intervallo a tempo: si vota quando il personaggio è in scena (orologio del server stimato dall'ultimo messaggio)
-  if (v.phase === "MINI_RUN" && v.myVote === null) { const g = c.view.goAt; if (typeof g !== "number") return false; const el = c.view.now + (Date.now() - c.rcv) - g, slot = Math.floor(el / 1000); if (el < 200 || slot >= v.mini.order.length) return false; c.send({ t: "act", action: { type: "vote", position: v.mini.order[slot] } }); return true; }
+  if (v.phase === "MINI_RUN" && v.myVote === null) { const g = c.view.goAt; if (typeof g !== "number") return false; const el = c.view.now + (Date.now() - c.rcv) - g, slot = Math.floor(el / 3000); if (el < 200 || slot >= v.mini.order.length) return false; c.send({ t: "act", action: { type: "vote", position: v.mini.order[slot] } }); return true; }
   if (v.phase === "MINI_RESULTS" && c.room?.hostId === me) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   if (v.phase === "RESULTS" && me === mega) { c.send({ t: "act", action: { type: "advance" } }); return true; }
   return false;

@@ -1,5 +1,5 @@
 {
- "versione": 18,
+ "versione": 19,
  "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
@@ -577,7 +577,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono: dopo il 3-2-1, 6 personaggi escono uno alla volta da dietro un separé e tu premi **QUESTO!** quando esce quello giusto. Chi sceglie la carta più votata fa +2 punti, il più veloce di loro +4.",
+   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono: dopo il sipario e il 3-2-1, 6 carte escono una alla volta da dietro un separé, per 3 giri, e tu premi **QUESTO!** quando esce quella giusta. Chi sceglie la carta più votata fa +2 punti, il più veloce di loro +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -2695,15 +2695,15 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "mini.accusa.regola": {
-   "t": "Il colpevole esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il colpevole. Chi sceglie la carta più votata fa +2, il più veloce +4.",
    "s": "Mini-gioco «L'Accusa» (intervalli)"
   },
   "mini.amore.regola": {
-   "t": "Il partner perfetto esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il partner perfetto. Chi sceglie la carta più votata fa +2, il più veloce +4.",
    "s": "Mini-gioco «La storia d'amore» (intervalli)"
   },
   "mini.peggiore.regola": {
-   "t": "Il peggiore esce da dietro il separé: premi **QUESTO!** quando lo vedi. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il peggiore. Chi sceglie la carta più votata fa +2, il più veloce +4.",
    "s": "Mini-gioco «Il peggiore» (intervalli)"
   },
   "mr.btn": {
@@ -2794,6 +2794,41 @@
   "mg.blk.veloce.x": {
    "t": "Ha votato per primo una carta in testa: +4.",
    "s": "Intervallo / mini-gioco (schermate)"
+  },
+  "mr.giro": {
+   "t": "Giro {n} di {tot}",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Riquadro in alto a destra durante la corsa"
+  },
+  "mr.manca.n": {
+   "t": "Mancano {n} giri",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Sotto «Giro x di y»"
+  },
+  "mr.manca.1": {
+   "t": "Manca 1 giro",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Sotto «Giro x di y»"
+  },
+  "mr.manca.0": {
+   "t": "ULTIMO GIRO!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Sotto «Giro x di y» nell'ultimo giro"
+  },
+  "mr.giro.b": {
+   "t": "GIRO {n}",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta grande all'inizio di ogni giro (dal secondo)"
+  },
+  "mr.ultimo": {
+   "t": "ULTIMO GIRO!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta grande all'inizio dell'ultimo giro"
+  },
+  "mr.sip.verdetto": {
+   "t": "E ORA… IL VERDETTO!",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Scritta sul sipario chiuso dopo la corsa"
   }
  }
 }

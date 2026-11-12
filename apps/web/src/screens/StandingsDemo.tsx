@@ -53,19 +53,20 @@ export function TerraceDemo() {
 export function MiniDemo() {
   const q = new URLSearchParams(location.search), kind = (q.get("k") ?? "accusa") as MiniKind, ids = ["p01-i01", "p01-i02", "p01-i03", "p01-i04", "p01-i05", "p01-i06"];
   const [ok, setOk] = useState(false); useEffect(() => { loadCards().then(() => setOk(true)); }, []);
+  const [results, setResults] = useState(false); useEffect(() => { const w = Number(q.get("switch")); if (!w) return undefined; const x = setTimeout(() => setResults(true), w); return () => clearTimeout(x); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const list = (s: string | null) => (s ? s.split(",").map(Number).filter(Boolean) : []);
   const view = useMemo(() => ({
     viewerId: "p1", phase: "MINI_RUN", turn: 2, totalTurns: 4, myVote: q.get("voted") ? 3 : null, players: ["p1", "p2", "p3"].map((id, i) => ({ id, name: ["Dariaccio", "Bot Gino", "Bot Mara"][i]!, score: 5, hasVoted: i > 0 })),
     tower: ids.map((c, i) => ({ position: i + 1, cardId: c, ownerId: null })), megafonoId: "p2", luiTokens: [], myLuiLeft: [],
-    mini: { kind, cardId: kind === "peggiore" ? null : "p02-i03", text: kind === "accusa" ? "Mi ha rubato il panino al prosciutto!" : null, order: [3, 1, 5, 2, 6, 4, 2, 5, 1, 4, 6, 3] },
+    mini: { kind, cardId: kind === "peggiore" ? null : "p02-i03", text: kind === "accusa" ? "Mi ha rubato il panino al prosciutto!" : null, order: [3, 1, 5, 2, 6, 4, 2, 5, 1, 4, 6, 3, 6, 2, 4, 1, 3, 5] },
   }), [kind]); // eslint-disable-line react-hooks/exhaustive-deps
   const room = { players: [{ id: "p1", nickname: "Dariaccio", isHost: true, connected: true }, { id: "p2", nickname: "Bot Gino", isHost: false, connected: true }, { id: "p3", nickname: "Bot Mara", isHost: false, connected: true }], hostId: "p1" };
   const goAt = useMemo(() => Date.now() - Number(q.get("t") ?? -5000), []); // eslint-disable-line react-hooks/exhaustive-deps
   const cast = useCast(ids), side = useCast([kind === "peggiore" ? null : "p02-i03"])[0] ?? null;
   const finale = useMemo(() => buildFinale(kind, list(q.get("vincono")), list(q.get("cadono")), () => 0.37), [kind]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!ok) return <Stage bg="sky"><div /></Stage>;
-  if (q.get("res")) {
-    const leaders = list(q.get("vincono") ?? q.get("cadono")), fallen = kind === "amore" ? [] : leaders, votes = { p1: leaders[0] ?? 1, p2: leaders[0] ?? 1, p3: 4 };
+  if (q.get("res") || (q.get("switch") && results)) {
+    const leaders = list(q.get("vincono") ?? q.get("cadono") ?? "2"), fallen = kind === "amore" ? [] : leaders, votes = { p1: leaders[0] ?? 1, p2: leaders[0] ?? 1, p3: 4 };
     const rv = { ...view, phase: "MINI_RESULTS", miniResult: { kind, cardId: view.mini.cardId, text: view.mini.text, votes, counts: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, [leaders[0] ?? 1]: 2 }, leaders, fallenPositions: fallen, fallenCardIds: [], fastest: "p2",
       points: { p1: 2, p2: 6, p3: 0 }, lines: { p1: [{ kind: "mini-giusto", pts: 2, pos: leaders[0] ?? 1 }], p2: [{ kind: "mini-giusto", pts: 2, pos: leaders[0] ?? 1 }, { kind: "mini-veloce", pts: 4, pos: leaders[0] ?? 1 }], p3: [] } } };
     return <Stage bg="sky"><MiniGame room={room as never} view={rv as never} deadline={null} send={() => undefined} sound={false} /></Stage>;

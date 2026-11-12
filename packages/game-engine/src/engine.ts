@@ -4,8 +4,8 @@ import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec
 import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
-/** Intervallo a tempo: 6 personaggi escono dal separé uno alla volta (1 s l'uno), due cicli completi. Il server dà il «via» dopo la presentazione e il conto alla rovescia. */
-export const MINI_CARDS = 6, MINI_CYCLES = 2, MINI_SLOT_MS = 1000, MINI_INTRO_MS = 4500, MINI_COUNTDOWN_MS = 3000;
+/** Intervallo a tempo: 6 carte escono dal separé una alla volta (3 s l'una), tre giri completi. Il server dà il «via» dopo la presentazione (sipario, regole: MINI_INTRO_MS) e il conto alla rovescia. */
+export const MINI_CARDS = 6, MINI_CYCLES = 3, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 6000, MINI_COUNTDOWN_MS = 3000;
 /** Punti dell'intervallo: uguali per le tre modalità. */
 export const MINI_PTS = 2, MINI_FAST_PTS = 4;
 /** Pool di segnalini Lui! adatti al numero di giocatori. La scommessa è "almeno k voti degli altri" (oppure nessun voto); i punti sono tarati sulla probabilità di riuscita (simulazioni con i bot, tools/analysis/lui-pool.ts): più è difficile, più paga. */
@@ -410,11 +410,14 @@ function startMini(s: GameState, events: GameEvent[]) {
   const cardId = kind === "peggiore" ? null : draw(s);
   const deck = s.accuseDeck ?? [];
   const text = kind === "accusa" ? (deck.length ? deck[randomInt(deck.length, s)]! : GENERIC_ACCUSE) : null;
-  // due cicli completi; il secondo in ordine nuovo e senza ripetere subito l'ultimo personaggio del primo
-  const positions = s.tower.map((t) => t.position), first = shuffle(positions, s);
-  let second = shuffle(positions, s);
-  if (second[0] === first[first.length - 1]) second = [...second.slice(1), second[0]!];
-  s.mini = { kind, cardId, text, order: [...first, ...second] }; s.miniResult = null; s.voteOrder = [];
+  // tre giri completi, ognuno in ordine nuovo e senza ripetere subito l'ultima carta del giro prima
+  const positions = s.tower.map((t) => t.position), order: number[] = [];
+  for (let c = 0; c < MINI_CYCLES; c++) {
+    let cyc = shuffle(positions, s);
+    if (order.length && cyc[0] === order[order.length - 1]) cyc = [...cyc.slice(1), cyc[0]!];
+    order.push(...cyc);
+  }
+  s.mini = { kind, cardId, text, order }; s.miniResult = null; s.voteOrder = [];
   s.phase = "MINI_RUN"; s.played = {}; s.deckCard = null; s.lui = null; s.votes = {}; if (s.cnc) s.marks = null; s.phrase = null; s.proclaim = null;
   events.push({ type: "miniStarted", kind });
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildFinale, compress, EDGE_Y, SLOT } from "../src/lib/miniScenes.ts";
+import { buildFinale, compress, EDGE_Y, SLOT, TS } from "../src/lib/miniScenes.ts";
 import type { Finale, WP } from "../src/lib/miniScenes.ts";
 
 const rand = () => 0.5;
@@ -7,10 +7,17 @@ const track = (f: Finale, who: number | "side") => f.figs.find((x) => x.who === 
 const last = (w: WP[]) => w.slice().sort((a, b) => a.t - b.t)[w.length - 1]!;
 
 describe("scenette finali degli intervalli", () => {
+  it("tutti i tempi sono rallentati di TS e le scenette singole durano almeno 8 secondi", () => {
+    expect(TS).toBeGreaterThanOrEqual(1.5);
+    for (const [kind, l, c] of [["accusa", [3], [3]], ["peggiore", [2], [2]], ["amore", [1, 5], []]] as const) expect(buildFinale(kind, [...l], [...c], rand).duration, kind).toBeGreaterThanOrEqual(8000);
+  });
+  it("la macchina da presa parte e torna a inquadratura piena; ci sono effetti sonori", () => {
+    for (const [kind, l, c] of [["accusa", [3], [3]], ["peggiore", [2], [2]], ["amore", [1, 5], []]] as const) { const f = buildFinale(kind, [...l], [...c], rand); expect(f.cam[0]!.s).toBe(1); expect(f.cam[f.cam.length - 1]!.s).toBe(1); expect(Math.max(...f.cam.map((x) => x.s))).toBeGreaterThan(1.05); expect(f.sounds.length, kind).toBeGreaterThan(0); expect(Math.max(...f.cam.map((x) => x.t)), kind).toBeLessThanOrEqual(f.duration + 1); }
+  });
   it("tutte le scenette hanno una durata ragionevole (né troppo veloci né lente) e tempi mai oltre la durata", () => {
     for (const [kind, leaders, fallen] of [["accusa", [3], [3]], ["peggiore", [2], [2]], ["amore", [1, 5], []], ["accusa", [1, 4], [1, 4]], ["peggiore", [1, 2, 3], [1, 2, 3]]] as const) {
       const f = buildFinale(kind, [...leaders], [...fallen], rand);
-      expect(f.duration, kind).toBeGreaterThanOrEqual(5000); expect(f.duration, kind).toBeLessThanOrEqual(16_000);
+      expect(f.duration, kind).toBeGreaterThanOrEqual(8000); expect(f.duration, kind).toBeLessThanOrEqual(20_000);   // abbastanza lunghe da capirsi, non eterne
       for (const fig of f.figs) for (const w of fig.wps) { expect(w.t, `${kind} ${fig.key}`).toBeGreaterThanOrEqual(0); expect(w.t, `${kind} ${fig.key}`).toBeLessThanOrEqual(f.duration + 1); expect(Number.isFinite(w.x + w.y)).toBe(true); }
     }
   });
@@ -39,7 +46,7 @@ describe("scenette finali degli intervalli", () => {
     const p = last(track(f, "side")), w = last(track(f, 1)), w5 = last(track(f, 5));
     for (const q of [w, w5]) expect(Math.hypot(q.x - p.x, q.y - p.y)).toBeLessThan(130);   // vicini al partner
     expect(f.hearts.length).toBeGreaterThanOrEqual(40);
-    for (const h of f.hearts) { expect(h.rise).toBeGreaterThan(0); expect(h.fall).toBeGreaterThan(h.rise); expect(h.t + h.dur).toBeLessThanOrEqual(f.duration + 1500); }
+    for (const h of f.hearts) { expect(h.rise).toBeGreaterThan(0); expect(h.fall).toBeGreaterThan(h.rise); expect(h.t + h.dur).toBeLessThanOrEqual(f.duration + 3500); }
     expect(Math.max(...f.hearts.map((h) => h.t))).toBeGreaterThan(2500);   // una vera fontana: i cuori continuano a sgorgare
   });
   it("più carte in parità: si fanno una dopo l'altra, sempre più rapide, tutte fuori alla fine", () => {
@@ -50,6 +57,6 @@ describe("scenette finali degli intervalli", () => {
     expect(tFall(track(f, 4))).toBeGreaterThan(tFall(track(f, 1)));
   });
   it("nessun voto arrivato: una breve pausa, nessuno cade", () => {
-    for (const kind of ["accusa", "amore", "peggiore"] as const) { const f = buildFinale(kind, [], [], rand); expect(f.duration).toBeLessThan(3000); expect(f.hearts).toHaveLength(0); for (const fig of f.figs) expect(last(fig.wps).o ?? 1).toBe(1); }
+    for (const kind of ["accusa", "amore", "peggiore"] as const) { const f = buildFinale(kind, [], [], rand); expect(f.duration).toBeLessThan(4000); expect(f.hearts).toHaveLength(0); for (const fig of f.figs) expect(last(fig.wps).o ?? 1).toBe(1); }
   });
 });

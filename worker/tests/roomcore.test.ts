@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { megafonoOf, requiredPlayers, suggestAction } from "@gdt/game-engine";
+import { megafonoOf, MINI_SLOT_MS as SLOT, requiredPlayers, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
@@ -492,7 +492,7 @@ describe("intervallo a tempo nella stanza", () => {
   it("si apre con «via!» dopo presentazione e 3-2-1; il server lo comunica a tutti, schermo condiviso compreso", () => {
     const r = toRun(3, 61), run = r.core.data.run!;
     expect(r.core.data.game!.phase).toBe("MINI_RUN");
-    expect(run.goAt).toBeGreaterThan(1_000_100 + 7000); expect(run.endAt).toBeGreaterThan(run.goAt + 12_000);
+    expect(run.goAt).toBeGreaterThan(1_000_100 + 8000); expect(run.endAt).toBeGreaterThan(run.goAt + 18 * SLOT);
     expect(r.core.data.deadline).toBeNull();
     const snap = r.core.snapshot(r.ids[0]!).find((m) => m.msg.t === "view")!.msg as { goAt?: number | null; now?: number };
     expect(snap.goAt).toBe(run.goAt); expect(typeof snap.now).toBe("number");
@@ -503,13 +503,13 @@ describe("intervallo a tempo nella stanza", () => {
     const r = toRun(3, 62), g = r.core.data.game!, run = r.core.data.run!, order = g.mini!.order, pos = order[2]!;
     const vote = (who: number, position: number, at: number) => send(r, who, { t: "act", action: { type: "vote", position } }, at);
     expect(errCode(vote(0, pos, run.goAt - 2000))).toBe("NOT_ON_STAGE");          // durante il conto alla rovescia
-    expect(errCode(vote(0, pos, run.goAt + 500))).toBe("NOT_ON_STAGE");           // quel personaggio esce più tardi
+    expect(errCode(vote(0, pos, run.goAt + SLOT))).toBe("NOT_ON_STAGE");           // quella carta esce più tardi
     const other = order.findIndex((p, i) => p === pos && i !== 2);
-    expect(errCode(vote(0, pos, run.goAt + 2 * 1000 + 300))).toBeUndefined();     // è in scena
+    expect(errCode(vote(0, pos, run.goAt + 2 * SLOT + 300))).toBeUndefined();     // è in scena
     expect(r.core.data.game!.votes[r.ids[0]!]).toBe(pos);
     void other;
-    expect(errCode(vote(1, pos, run.goAt + 2 * 1000 + 1000 + 500))).toBeUndefined();   // appena rientrato: margine per la rete e i riflessi
-    expect(errCode(vote(2, pos, run.goAt + 2 * 1000 + 1000 + 1500))).toBe("NOT_ON_STAGE");
+    expect(errCode(vote(1, pos, run.goAt + 3 * SLOT + 500))).toBeUndefined();   // appena rientrata: margine per la rete e i riflessi
+    expect(errCode(vote(2, pos, run.goAt + 3 * SLOT + 1500))).toBe("NOT_ON_STAGE");
   });
   it("a fine corsa si contano i voti arrivati: chi non ha votato non prende nulla; poi 'advance' riprende", () => {
     const r = toRun(3, 63), g = r.core.data.game!, run = r.core.data.run!, pos = g.mini!.order[0]!;
@@ -527,10 +527,10 @@ describe("intervallo a tempo nella stanza", () => {
     const r = toRun(3, 64, 2), run = r.core.data.run!, g = r.core.data.game!;
     const bots = r.core.data.players.filter((p) => p.isBot);
     expect(Object.keys(run.bots).sort()).toEqual(bots.map((b) => b.id).sort());
-    for (const b of bots) { const v = run.bots[b.id]!, i = g.mini!.order.map((p, k) => (p === v.position ? k : -1)).filter((k) => k >= 0); expect(i.some((k) => v.at >= run.goAt + k * 1000 && v.at < run.goAt + (k + 1) * 1000)).toBe(true); }
-    r.core.tick(run.goAt - 1000);
+    for (const b of bots) { const v = run.bots[b.id]!, i = g.mini!.order.map((p, k) => (p === v.position ? k : -1)).filter((k) => k >= 0); expect(i.some((k) => v.at >= run.goAt + k * SLOT && v.at < run.goAt + (k + 1) * SLOT)).toBe(true); }
+    r.core.tick(run.goAt - SLOT);
     expect(r.core.data.game!.votes[bots[0]!.id]).toBeUndefined();
-    send(r, 0, { t: "act", action: { type: "vote", position: g.mini!.order[1]! } }, run.goAt + 1000 + 200);
+    send(r, 0, { t: "act", action: { type: "vote", position: g.mini!.order[1]! } }, run.goAt + SLOT + 200);
     r.core.tick(Math.max(...Object.values(run.bots).map((v) => v.at)) + 1);
     expect(r.core.data.game!.phase).toBe("MINI_RESULTS");
   });

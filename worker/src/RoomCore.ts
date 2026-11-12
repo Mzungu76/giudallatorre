@@ -42,7 +42,7 @@ export const LIMITS = {
   maxPlayers: 6, minPlayers: 3,
   hostGraceMs: 60_000, lobbyIdleMs: 5 * 60_000, playingIdleMs: 45 * 60_000, maxLifeMs: 4 * 3600_000, finishedMs: 30 * 60_000, resultsAutoMs: 45_000, botMinMs: 900, botJitterMs: 1100, chatMinGapMs: 700, chatKeep: 60,
   /** Intervallo a tempo: un voto vale se arriva mentre il personaggio è in scena, con un po' di margine per la rete e i riflessi. */
-  runEarlyMs: 300, runLateMs: 700, runEndGraceMs: 900,
+  runEarlyMs: 300, runLateMs: 700, runEndGraceMs: 900, miniResultsAutoMs: 75_000,
 };
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
 const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
@@ -265,13 +265,14 @@ export class RoomCore {
       const a = chooseBotAction(g, b.id, b.level ?? "medium", d.botMem, rand);
       if (!a || a.type !== "vote") continue;
       const slots = order.map((p, i) => (p === a.position ? i : -1)).filter((i) => i >= 0), i = slots[Math.floor(rand() * slots.length)]!;
-      run.bots[b.id] = { position: a.position, at: run.goAt + i * MINI_SLOT_MS + 200 + Math.floor(rand() * 600) };
+      run.bots[b.id] = { position: a.position, at: run.goAt + i * MINI_SLOT_MS + 500 + Math.floor(rand() * 1900) };
     }
   }
   private armDeadline(now: number) {
     const d = this.data, g = d.game; if (!g || g.phase === "GAME_OVER") { d.deadline = null; return; }
     if (g.phase === "MINI_RUN") d.deadline = null;   // l'intervallo a tempo ha il suo orologio (d.run)
-    else if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
+    else if (g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.miniResultsAutoMs;   // sipario, scenetta finale e punti: serve più tempo
+    else if (g.phase === "RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
     else d.deadline = d.options.turnTimerSec > 0 ? now + d.options.turnTimerSec * 1000 : null;
   }
 

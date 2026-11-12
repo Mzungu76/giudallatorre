@@ -41,7 +41,7 @@ describe("intervallo a tempo: avvio", () => {
     expect(s.mini!.text).toBe("Mi ha rubato il panino!");
     expect(toMini(4, "peggiore").mini!.cardId).toBeNull();
   });
-  it("ordine di uscita: due cicli completi, ognuno con tutti i personaggi una volta, senza ripetere subito lo stesso", () => {
+  it("ordine di uscita: tre giri completi, ognuno con tutte le carte una volta, senza ripetere subito la stessa", () => {
     for (let seed = 1; seed <= 40; seed++) {
       const s = toMini(4, "peggiore", { seed }), o = s.mini!.order;
       expect(o).toHaveLength(MINI_CARDS * MINI_CYCLES);
