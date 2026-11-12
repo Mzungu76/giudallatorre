@@ -1,5 +1,5 @@
 {
- "versione": 20,
+ "versione": 21,
  "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
@@ -2729,7 +2729,7 @@
    "n": "Scritta in alto nella scenetta finale"
   },
   "mr.fin.peggiore": {
-   "t": "Fuori dalla torre, il peggiore!",
+   "t": "Portato in trionfo… e giù dalla torre!",
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Scritta in alto nella scenetta finale"
   },
@@ -2797,6 +2797,11 @@
   "pp.mini.veloce": {
    "t": "Il più veloce di chi ha scelto bene: +4",
    "s": "Riepilogo del turno («Com'è andata»)"
+  },
+  "mg.mani": {
+   "t": "Turno {n} di {tot} · poi 5 carte nuove per tutti",
+   "s": "Intervallo / mini-gioco (schermate)",
+   "n": "Sotto «Punti del turno» dopo un intervallo: le mani vengono rinnovate"
   }
  }
 }

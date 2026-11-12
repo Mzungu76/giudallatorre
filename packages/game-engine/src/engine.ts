@@ -400,7 +400,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
 // ---------- mini-giochi di metà partita ----------
 const GENERIC_ACCUSE = "Mi ha rubato il panino al prosciutto!";
 
-/** Intervallo a tempo: si pescano i 6 personaggi dal mazzo (uguali per tutti, di nessuno), più la carta dell'accusatore / del partner, e si stabilisce l'ordine di uscita dal separé. Le mani non si toccano. */
+/** Intervallo a tempo: si pescano i 6 personaggi dal mazzo (uguali per tutti, di nessuno), più la carta dell'accusatore / del partner, e si stabilisce l'ordine di uscita dal separé. Le mani non si toccano durante la corsa: si rinnovano alla fine (endMini). */
 function startMini(s: GameState, events: GameEvent[]) {
   // a caso fra i mini-giochi non ancora usciti in questa partita (con due intervalli non si ripete lo stesso)
   const fresh = MINI_KINDS.filter((k) => !(s.miniKinds ?? []).includes(k)), pool = fresh.length ? fresh : MINI_KINDS;
@@ -448,6 +448,9 @@ function endMini(s: GameState, events: GameEvent[]) {
   for (const t of s.tower) s.discardPile.push(t.cardId);
   if (s.mini?.cardId) s.discardPile.push(s.mini.cardId);
   s.tower = []; s.votes = {}; s.voteOrder = [];
+  // alla fine dell'intervallo le mani si rinnovano: via le carte vecchie, 5 nuove a tutti (in ordine di tavolo, deterministico)
+  for (const p of s.playerIds) { s.discardPile.push(...s.hands[p]!); s.hands[p] = []; }
+  for (let k = 0; k < s.handSize; k++) for (let i = 1; i <= n; i++) s.hands[s.playerIds[(s.megafonoIndex + i) % n]!]!.push(draw(s));
   s.miniDone = true; s.minisDone = minisDone(s) + 1; s.mini = null; s.miniResult = null;
   events.push({ type: "turnEnded", turn: s.turnNumber });
   s.megafonoIndex = (s.megafonoIndex + 1) % n; s.turnNumber += 1;

@@ -175,7 +175,7 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
           </div>
           <div className="bsp" />
           <PointsPanel meId={readOnly ? undefined : me} mini={res} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={null} fallPositions={res.fallenPositions} sound={sound} interactive={!readOnly} hideGo onContinue={() => onStep("board")} />
-          <BSheet title={t("g.punti.t")} sub={ts("g.punti.s", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
+          <BSheet title={t("g.punti.t")} sub={ts("mg.mani", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
             {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<button type="button" className="bt mus" onClick={() => onStep("board")} data-testid="points-continue">{t("g.continua")}</button></Row>}
           </BSheet>
         </div>

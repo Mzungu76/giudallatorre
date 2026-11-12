@@ -33,9 +33,8 @@ describe("intervallo a tempo: avvio", () => {
       expect(v.mini?.kind).toBe("amore"); expect(v.mini?.cardId).toBeTruthy();
     }
   });
-  it("le mani di prima restano uguali (niente rinnovo) e l'accusatore / il partner non è tra i 6", () => {
-    const before = toMini(4, "accusa");
-    const s = before; const hands = JSON.stringify(s.hands);
+  it("durante la corsa le mani non cambiano e l'accusatore / il partner non è tra i 6", () => {
+    const s = toMini(4, "accusa"); const hands = JSON.stringify(s.hands);
     expect(JSON.stringify(s.hands)).toBe(hands);
     expect(s.tower.map((t) => t.cardId)).not.toContain(s.mini!.cardId);
     expect(s.mini!.text).toBe("Mi ha rubato il panino!");
@@ -101,14 +100,17 @@ describe("intervallo a tempo: regole del motore", () => {
     expect(() => act(s, { type: "playCard", playerId: "p1", cardId: s.hands.p1![0]! })).toThrow(EngineError);
     expect(() => act(act(s, { type: "endRun" }), { type: "endRun" })).toThrow(EngineError);
   });
-  it("si risolve da sola quando hanno votato tutti; poi 'advance' riprende con il turno successivo, senza pescare, e le carte tornano nello scarto", () => {
-    const s = toMini(4, "amore"), hands = JSON.stringify(s.hands), mega = s.megafonoIndex, turn = s.turnNumber, towerCards = s.tower.map((t) => t.cardId);
+  it("si risolve da sola quando hanno votato tutti; poi 'advance' riprende con il turno successivo e le mani sono tutte nuove", () => {
+    const s = toMini(4, "amore"), oldHands = s.hands, mega = s.megafonoIndex, turn = s.turnNumber, towerCards = s.tower.map((t) => t.cardId);
     const r = voteList(s, [["p1", 1], ["p2", 2], ["p3", 3], ["p4", 4]]);
     expect(r.phase).toBe("MINI_RESULTS");
     const n = act(r, { type: "advance" });
     expect(n.phase).toBe("PROCLAIM"); expect(n.turnNumber).toBe(turn + 1); expect(n.megafonoIndex).toBe((mega + 1) % 4);
-    expect(JSON.stringify(n.hands)).toBe(hands);
-    for (const c of towerCards) expect(n.discardPile).toContain(c);
+    for (const p of n.playerIds) {   // mano rinnovata: 5 carte, nessuna di prima; quelle vecchie nello scarto (o rimescolate nel mazzo)
+      expect(n.hands[p]).toHaveLength(5);
+      for (const c of n.hands[p]!) expect(oldHands[p]).not.toContain(c);
+    }
+    for (const c of towerCards) expect([...n.discardPile, ...n.drawPile]).toContain(c);
     expect(checkInvariants(n, makeDeck(125))).toEqual([]);
   });
   it("la vista mostra i 6 personaggi e la corsa; i risultati solo alla fine", () => {

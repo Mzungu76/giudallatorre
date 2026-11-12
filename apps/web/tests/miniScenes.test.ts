@@ -32,13 +32,23 @@ describe("scenette finali degli intervalli", () => {
     const side = track(f, "side").filter((w) => w.t > 0);
     expect(side.some((w) => w.y > EDGE_Y - 40 && w.x > 90 && w.x < 200)).toBe(true);
   });
-  it("Il peggiore: le altre carte si raccolgono, lo sollevano e lo lanciano; poi lui è fuori", () => {
-    const f = buildFinale("peggiore", [2], [2], rand), a = track(f, 2), top = Math.min(...a.map((w) => w.y));
-    expect(top).toBeLessThan(SLOT[2]!.y - 100);   // sollevato in alto
-    expect(last(a).o).toBe(0); expect(last(a).y).toBeGreaterThan(EDGE_Y + 300);
+  it("Il peggiore (crowd surfing): le altre carte fanno la fila, il peggiore viene portato in orizzontale sopra di loro da sinistra a destra e poi lanciato", () => {
+    const f = buildFinale("peggiore", [2], [2], rand), a = track(f, 2);
+    const lying = a.filter((w) => Math.abs((w.r ?? 0) + 90) <= 12);
+    expect(lying.length).toBeGreaterThanOrEqual(6);   // disteso in orizzontale
+    const xs = lying.map((w) => w.x); expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(200);   // attraversa tutta la fila
+    expect(lying[lying.length - 1]!.x).toBeGreaterThan(lying[0]!.x);   // da sinistra a destra
+    for (const p of [1, 3, 4, 5, 6]) { const w = last(track(f, p)); expect(Math.abs(w.y - 596)).toBeLessThan(25); expect(w.o ?? 1).toBe(1); }   // la folla è in fila davanti
+    const ys = [1, 3, 4, 5, 6].map((p) => last(track(f, p)).x); expect(Math.max(...ys) - Math.min(...ys)).toBeGreaterThan(150);   // la fila è larga
+    const top = Math.min(...lying.map((w) => w.y)); expect(top).toBeLessThan(596 - 100);   // sopra le teste
+    expect(last(a).o).toBe(0); expect(last(a).y).toBeGreaterThan(EDGE_Y + 300);   // poi è fuori
     expect(f.figs.some((x) => x.who === "side")).toBe(false);   // nel Peggiore non c'è un personaggio di lato
-    for (const p of [1, 3, 4, 5, 6]) { const t = track(f, p); expect(t.some((w) => Math.abs(w.x - SLOT[2]!.x) < 120 && Math.abs(w.y - SLOT[2]!.y) < 90)).toBe(true); }
-    expect(f.bursts.length).toBe(1);
+    expect(f.bursts).toHaveLength(1);
+  });
+  it("Il peggiore con più carte cadute: una alla volta, sempre dalla stessa parte", () => {
+    const f = buildFinale("peggiore", [2, 5], [2, 5], rand), start = (p: number) => track(f, p).find((w) => Math.abs((w.r ?? 0) + 90) <= 12)!.t;
+    expect(start(5)).toBeGreaterThan(start(2) + 3000);
+    for (const p of [2, 5]) expect(last(track(f, p)).o).toBe(0);
   });
   it("Storia d'amore: partner e vincitori si avvicinano, nessuno cade, e sgorgano cuori che poi cadono giù dalla torre", () => {
     const f = buildFinale("amore", [1, 5], [], rand);

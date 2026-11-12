@@ -94,34 +94,48 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
   }
 
   if (kind === "peggiore" && fallen.length) {
-    const K = fallen.length, sc = compress(K), D = 3900 * sc, start = 500, end = start + K * D + 700;
-    // tutte le altre carte sollevano il peggiore e lo lanciano giù dalla torre, uno dopo l'altro
-    const cur: Record<number, { x: number; y: number }> = {}; for (const p of positions) cur[p] = { ...stand(p) };
-    const tracks: Record<number, WP[]> = {}; for (const p of positions) tracks[p] = [{ t: 0, x: cur[p]!.x, y: cur[p]!.y, s: FIG_SCALE }];
-    const ring = [{ x: -92, y: 26 }, { x: -46, y: 62 }, { x: 46, y: 62 }, { x: 92, y: 26 }, { x: 0, y: -42 }];
-    const gone = new Set<number>(); const camMid: Cam[] = [];
+    // «crowd surfing»: le carte non cadute si mettono in fila, sollevano sopra di sé una carta caduta per volta, distesa in orizzontale,
+    // la portano di mano in mano da un lato all'altro e infine la lanciano giù dalla torre
+    const K = fallen.length, sc = compress(K), D = 6200 * sc, start = 600, end = start + K * D + 800;
+    const crowd = positions.filter((q) => !fallen.includes(q)), N = crowd.length, YC = 596, XL = 52, XR = 322;
+    const cx = (i: number) => (N === 1 ? 186 : 78 + (i * (296 - 78)) / (N - 1));   // posto di ognuno nella fila
+    const camMid: Cam[] = [];
+    const tracks: Record<number, WP[]> = {}; for (const p of positions) tracks[p] = [{ t: 0, x: stand(p).x, y: stand(p).y, s: FIG_SCALE }];
+    // una carta distesa: il suo centro sta in (c, y); ruotata di -90° attorno ai piedi, il centro cade a sinistra dell'ancora
+    const lie = (t: number, c: number, y: number, r = 0, s = 1.0): WP => ({ t, x: c + 70 * s, y, s, r: -90 + r });
+    // 1) la folla si dispone in fila, davanti, e alza le braccia
+    crowd.forEach((q, i) => {
+      tracks[q]!.push({ t: start, x: stand(q).x, y: stand(q).y, s: FIG_SCALE }, { t: start + 700 * sc, x: cx(i), y: YC, s: FIG_SCALE, r: 0 });
+    });
     fallen.forEach((p, k) => {
-      const b = start + k * D, F = stand(p), others = positions.filter((q) => q !== p && !gone.has(q));
-      const T = (v: number) => b + v * sc;
-      others.forEach((q, i) => {
-        const sp = ring[i % ring.length]!, tx = F.x + sp.x, ty = F.y + sp.y;
-        tracks[q]!.push({ t: T(0), x: cur[q]!.x, y: cur[q]!.y, s: FIG_SCALE }, { t: T(700), x: tx, y: ty, s: FIG_SCALE, r: 0 });
-        tracks[q]!.push({ t: T(950), x: tx, y: ty - 14, s: FIG_SCALE, r: -5 }, { t: T(1250), x: tx, y: ty, s: FIG_SCALE, r: 5 }, { t: T(1550), x: tx, y: ty - 20, s: FIG_SCALE, r: -5 }, { t: T(1850), x: tx, y: ty, s: FIG_SCALE });
-        tracks[q]!.push(...hop(tx, ty, T(2700), 2, 20, 280 * sc).slice(1));
-        cur[q] = { x: tx, y: ty };
+      const b = start + k * D, T = (v: number) => b + v * sc, F = stand(p);
+      // 2) il peggiore si avvicina al lato sinistro della folla e viene preso in alto
+      const wait = { x: 40 + (k % 2) * 30, y: 470 };
+      if (k > 0) tracks[p]!.push({ t: start, x: F.x, y: F.y, s: FIG_SCALE }, { t: start + 700 * sc, x: wait.x, y: wait.y, s: FIG_SCALE });   // chi aspetta il suo turno si ritira sul fondo
+      else tracks[p]!.push({ t: T(0), x: F.x, y: F.y, s: FIG_SCALE });
+      tracks[p]!.push({ t: T(900), x: XL - 4, y: YC - 4, s: FIG_SCALE, r: 0 },
+        lie(T(1500), XL + 8, YC - 128, 0, 1.0));
+      // 3) viene portato da sinistra a destra, sopra le mani, ondeggiando
+      const carry = 3300, bobs = 6;
+      for (let j = 1; j <= bobs; j++) { const u = j / bobs, c = XL + 8 + (XR - XL - 8) * u; tracks[p]!.push(lie(T(1500 + carry * u), c, YC - 128 - (j % 2 ? 12 : -4), j % 2 ? 7 : -7, 1.0)); }
+      // 4) lanciato in aria e giù dalla torre
+      tracks[p]!.push(lie(T(5000), XR + 20, YC - 190, 20, 1.05),
+        { t: T(5400), x: XR + 70, y: EDGE_Y - 40, s: 1.15, r: 200 }, { t: T(5900), x: XR + 120, y: EDGE_Y + 760, s: 1.5, r: 560, o: 1 }, { t: T(5960), x: XR + 120, y: EDGE_Y + 780, s: 1.5, r: 560, o: 0 });
+      // le carte della folla alzano le mani quando il peggiore passa sopra di loro e festeggiano al lancio
+      crowd.forEach((q, i) => {
+        const tp = T(1500 + (carry * (cx(i) - XL)) / (XR - XL));
+        tracks[q]!.push({ t: tp - 260 * sc, x: cx(i), y: YC, s: FIG_SCALE }, { t: tp, x: cx(i), y: YC - 16, s: FIG_SCALE, r: i % 2 ? 4 : -4 }, { t: tp + 260 * sc, x: cx(i), y: YC, s: FIG_SCALE },
+          ...hop(cx(i), YC, T(5100), 2, 20, 260 * sc).slice(1));
       });
-      tracks[p]!.push({ t: T(700), x: F.x, y: F.y, s: FIG_SCALE },
-        { t: T(1000), x: F.x, y: F.y - 105, s: 1.0, r: -6 }, { t: T(1300), x: F.x, y: F.y - 112, s: 1.0, r: 6 }, { t: T(1600), x: F.x, y: F.y - 108, s: 1.02, r: -6 },
-        { t: T(1900), x: F.x + 24, y: F.y - 170, s: 1.1, r: 30 }, { t: T(2300), x: F.x + 70, y: Math.min(F.y, EDGE_Y) + 20, s: 1.2, r: 220 },
-        { t: T(3000), x: F.x + 120, y: EDGE_Y + 760, s: 1.5, r: 600, o: 1 }, { t: T(3060), x: F.x + 120, y: EDGE_Y + 780, s: 1.5, r: 600, o: 0 });
-      bursts.push({ t: T(1800), x: F.x + 8, y: F.y - 260, kind: "via" });
-      sounds.push({ t: T(900), kind: "drum" }, { t: T(1850), kind: "whoosh" }, { t: T(2800), kind: "stamp" });
-      camMid.push({ t: T(700), x: 0, y: 12, s: 1.06 }, { t: T(1600), x: 0, y: 26, s: 1.13 }, { t: T(1900), x: 0, y: 6, s: 1.12 }, ...shake(T(2800), 0, 14, 1.1), { t: T(3300), x: 0, y: 0, s: 1.04 });
-      gone.add(p);
+      bursts.push({ t: T(5000), x: XR - 30, y: YC - 300, kind: "via" });
+      sounds.push({ t: T(900), kind: "drum" }, { t: T(1500), kind: "whoosh" }, { t: T(5000), kind: "whoosh" }, { t: T(5800), kind: "stamp" });
+      // la macchina da presa segue la carta da sinistra a destra, poi trema al lancio
+      camMid.push({ t: T(900), x: 22, y: 14, s: 1.08 }, { t: T(1500 + carry * 0.5), x: 0, y: 18, s: 1.1 }, { t: T(5000), x: -22, y: 14, s: 1.1 }, ...shake(T(5800), -10, 10, 1.08), { t: T(6200), x: 0, y: 0, s: 1.02 });
     });
     for (const p of positions) {
       const t = sort(tracks[p]!), last = t[t.length - 1]!;
-      if (!fallen.includes(p)) t.push(...idle(last.x, last.y, last.t + 200, end, p));
+      if (crowd.includes(p)) t.push(...idle(cx(crowd.indexOf(p)), YC, last.t + 200, end, p));
+      else if (!fallen.includes(p)) t.push(...idle(last.x, last.y, last.t + 200, end, p));
       figs.push({ key: `c${p}`, who: p, wps: t });
     }
     return { duration: end, figs, hearts, bursts, cam: cam(end, camMid), sounds };
