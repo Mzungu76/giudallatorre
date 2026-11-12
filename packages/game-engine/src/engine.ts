@@ -19,7 +19,7 @@ const greggeSpec = (sp: LuiSpec): LuiSpec => (sp.slot === "zero" ? { slot: "zero
 export const IMBROGLIO_PTS = 3;
 /** Gioco base «Cade / Non cade»: i tre segnalini, sempre tutti a disposizione del Megafono, che ne posa uno per turno. */
 export function cncPool(): LuiSpec[] {
-  return [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 1, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
+  return [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 2, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 }
 /**
  * Gioco base «Cade / Non cade»: conteggio. I voti sulla carta con VOTI NULLI! non valgono; cade la più votata; pareggio: se tra le pari c'è la carta con CADE
@@ -344,11 +344,11 @@ function resolveCnc(s: GameState, events: GameEvent[]) {
   // voto giusto (voto valido) e carta caduta (anche quella del Megafono)
   for (const p of s.playerIds) if (!annulled.includes(p) && fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
   for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
-  // segnalini: CADE +4 se cade, NON CADE +1 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
+  // segnalini: CADE +4 se cade, NON CADE +2 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
   const outs = marks.map((m) => {
     const fell = fallen.includes(m.position), voters = s.playerIds.filter((p) => p !== mega && !annulled.includes(p) && s.votes[p] === m.position);
     if (m.effect === "nulli") { const caught = annulled.slice(); return { slot: m.slot, effect: m.effect, position: m.position, hit: caught.length > 0, voters: [], caught }; }
-    const hit = m.effect === "cade" ? fell : !fell, pts = m.effect === "cade" ? 4 : 1;
+    const hit = m.effect === "cade" ? fell : !fell, pts = m.effect === "cade" ? 4 : 2;
     if (hit) { give(mega, pts, "lui", m.position, voters.length); for (const p of voters) give(p, pts, "lui-folla", m.position); }
     else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: m.position });
     return { slot: m.slot, effect: m.effect, position: m.position, hit, voters };

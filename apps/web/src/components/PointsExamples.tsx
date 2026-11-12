@@ -113,7 +113,7 @@ export function PointsKey() {
     <div className="ex-pk">
       <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Tk i={0} s={22} /><i>→</i><Thumb i={FALLEN} w={26} ring /><em>{t("pk.cade")}</em></span><div><b>{t("pk.giusto.t")}</b><p>{t("pk.giusto.x")}</p></div></div>
       <div className="ex-pkr"><Pill kind="ok"><Pt n={2} /></Pill><span className="ex-pkv"><Thumb i={FALLEN} w={26} ring /><em>{t("pk.cade")}</em><i>←</i><Tk i={1} s={22} /></span><div><b>{t("pk.caduta.t")}</b><p>{t("pk.caduta.x")}</p></div></div>
-      <div className="ex-pkr"><Pill kind="luik"><Pt n="+1 / +4" /></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>{t("pk.lui.t")}</b><p>{t("pk.lui.x")}</p></div></div>
+      <div className="ex-pkr"><Pill kind="luik"><Pt n="+2 / +4" /></Pill><span className="ex-pkv" dangerouslySetInnerHTML={{ __html: luiTok(SPEC2, 30) }} /><div><b>{t("pk.lui.t")}</b><p>{t("pk.lui.x")}</p></div></div>
     </div>
   );
 }

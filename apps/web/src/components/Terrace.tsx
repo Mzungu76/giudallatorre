@@ -138,7 +138,7 @@ export interface FallOwner { pos: number; name: string | null; color: string }
 /** Il segnalino com'era, dall'esito (per disegnarlo scoperto). */
 export const luiSpecOf = (lui: LuiOutcome): LuiSpec => ({ slot: lui.slot, k: lui.k, pts: lui.pts, ...(lui.trap ? { trap: true } : {}), ...(lui.herd ? { herd: true } : {}), ...(lui.effect ? { effect: lui.effect, positive: ["propaganda", "spareggio", "influenza"].includes(lui.effect) } : {}) });
 /** Gioco base «Cade / Non cade»: il segnalino com'era, dall'esito. */
-export const markSpec = (m: MarkOutcome): LuiSpec => ({ slot: m.slot, k: 0, pts: m.effect === "cade" ? 4 : m.effect === "noncade" ? 1 : 0, effect: m.effect });
+export const markSpec = (m: MarkOutcome): LuiSpec => ({ slot: m.slot, k: 0, pts: m.effect === "cade" ? 4 : m.effect === "noncade" ? 2 : 0, effect: m.effect });
 /** Gioco base «Cade / Non cade»: cosa hanno fatto i due segnalini, nello spoglio. */
 function marksRevealText(marks: MarkOutcome[]) {
   return marks.map((m, i) => <span key={i} style={{ display: "block" }}>{tx(`rv.m.${m.effect}${m.hit ? "" : ".no"}` as TestoKey, { n: m.position, k: m.effect === "nulli" ? m.caught?.length ?? 0 : m.voters.length, pt: m.effect === "cade" ? 4 : 1 })}</span>);

@@ -210,7 +210,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
           const votes = { ...v, [mega]: mv, [me]: k }, T = tallyMarks(s.tower.map((t) => t.position), votes, marks), valid = k !== nul;
           if (valid && T.fallen.includes(k)) e += 2; if (own && T.fallen.includes(own)) e += 2;
           const mk = marks.find((m) => m.position === k);
-          if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 1;
+          if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 2;
         }
         ev += wc[ci]! * e / smp.length; wz += wc[ci]!;
       });

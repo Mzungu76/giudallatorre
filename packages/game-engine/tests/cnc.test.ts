@@ -3,7 +3,7 @@ import { act, castVotes, cfg, posOf, start } from "./helpers.ts";
 import { applyAction, chooseBotAction, createGame, luiTokens, megafonoOf, newBotMemory, requiredPlayers, viewFor } from "../src/index.ts";
 import type { GameState } from "../src/index.ts";
 
-/** Gioco base «Cade / Non cade»: il Megafono gioca dalla mano e posa 2 segnalini coperti (CADE +4, NON CADE +1, VOTI NULLI!), premi condivisi con chi vota la carta. */
+/** Gioco base «Cade / Non cade»: il Megafono gioca dalla mano e posa 2 segnalini coperti (CADE +4, NON CADE +2, VOTI NULLI!), premi condivisi con chi vota la carta. */
 const C = (n: number, extra = {}) => {
   let g = start(n, { cnc: true, luiSlots: undefined, ...extra });
   g = act(g, { type: "choosePhrase", playerId: megafonoOf(g), mode: "card", index: 0 });
@@ -55,10 +55,10 @@ describe("gioco base «Cade / Non cade»", () => {
     expect(r3.fallenPositions).toEqual([b]); expect(r3.lines.p1!.map((l) => l.kind)).toContain("lui-mancato"); expect(r3.points.p3).toBe(2);   // la sua carta b è caduta; nessun malus per il CADE mancato
   });
 
-  it("NON CADE: se la carta resta su, +1 al Megafono e a chi l'ha votata; se cade, niente", () => {
+  it("NON CADE: se la carta resta su, +2 al Megafono e a chi l'ha votata; se cade, niente", () => {
     const g0 = C(4), { a, b } = pos(g0);
     let r = castVotes(place(g0, "noncade", a), { p1: b, p2: a, p3: b, p4: b }).lastResult!;
-    expect(r.fallenPositions).toEqual([b]); expect(r.points.p2).toBe(1); expect(r.points.p1).toBe(2 + 1);
+    expect(r.fallenPositions).toEqual([b]); expect(r.points.p2).toBe(2); expect(r.points.p1).toBe(2 + 2);
     r = castVotes(place(g0, "noncade", a), { p1: a, p2: a, p3: b, p4: a }).lastResult!;
     expect(r.fallenPositions).toEqual([a]); expect(r.lines.p1!.map((l) => l.kind)).toContain("lui-mancato"); expect(r.points.p1).toBe(2);
   });

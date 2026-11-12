@@ -1,5 +1,5 @@
 {
- "versione": 16,
+ "versione": 17,
  "aggiornato": "2026-11-12",
  "testi": {
   "intro.aria": {
@@ -251,7 +251,7 @@
    "n": "Scelta della carta"
   },
   "hint.lui": {
-   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +1 se resta su, VOTI NULLI! annulla i voti.",
+   "t": "Tocca una carta e scegli il segnalino: CADE +4 se cade, NON CADE +2 se resta su, VOTI NULLI! annulla i voti.",
    "s": "Suggerimenti a fumetto",
    "n": "Megafono, Lui!"
   },
@@ -583,7 +583,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.x": {
-   "t": "CADE +4 se la carta cade, NON CADE +1 se resta su: al Megafono e a chi ha votato quella carta.",
+   "t": "CADE +4 se la carta cade, NON CADE +2 se resta su: al Megafono e a chi ha votato quella carta.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "how.aria": {
@@ -2949,7 +2949,7 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "g.lui.e.noncade": {
-   "t": "+1 se resta su, anche a chi la vota",
+   "t": "+2 se resta su, anche a chi la vota",
    "s": "Partita: turno normale",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -2964,7 +2964,7 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.noncade": {
-   "t": "Se questa carta resta su: +1 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se questa carta resta su: +2 al Megafono e a ognuno che l'ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
