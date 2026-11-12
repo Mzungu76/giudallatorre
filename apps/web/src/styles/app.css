@@ -1168,3 +1168,25 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .rs-pl.up b{color:#1f9d57}.rs-pl.dn b{color:#e8362b}.rs-pl.zz b{color:#8a8470}
 .rs-pl.me{outline:3px solid #ffc72c;outline-offset:1px}
 .rs-no{position:absolute;left:-5px;top:-9px;font-size:15px;text-decoration:none;line-height:1}
+
+/* ===== Spoglio per immagini ===== */
+.stage .rv-layer{z-index:96;pointer-events:none}
+.rv-cnt{position:absolute;width:28px;height:28px;border-radius:50%;background:#fff7e0;border:3px solid #13224a;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;font:400 17px/1 Anton;color:#13224a;animation:rvPop .35s cubic-bezier(.2,1.8,.4,1) both}
+.rv-cnt.lead{background:#ffc72c;animation:rvPop .35s cubic-bezier(.2,1.8,.4,1) both,rvPulse .6s ease-in-out .35s infinite alternate}
+.rv-cnt.tie{background:#ff9f2e}
+@keyframes rvPop{0%{transform:scale(.2);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes rvPulse{from{transform:scale(1)}to{transform:scale(1.2)}}
+.rv-ok{position:absolute;display:flex;align-items:center;gap:4px;height:32px;padding:0 11px 0 9px;border-radius:99px;border:3px solid #13224a;box-shadow:0 3px 0 #13224a;font:400 21px/1 Anton;color:#fff;opacity:0;animation:rvPop .45s cubic-bezier(.2,1.8,.4,1) both}
+.rv-ok.yes{background:#2fbf6a}.rv-ok.no{background:#8a8d99}
+.rv-ok i{font-style:normal;font-size:16px}
+.rvh{position:absolute;left:0;right:0;top:44px;z-index:98;display:flex;justify-content:center;gap:6px;pointer-events:none}
+.rvh-p{position:relative;width:34px;height:34px;border-radius:50%;background:#13224a99;border:3px solid #ffffffaa;display:grid;place-items:center;font:400 17px/1 Anton;color:#fff;transition:transform .2s}
+.rvh-p u{text-decoration:none;opacity:.75}
+.rvh-p.on{background:none;border-color:#13224a}
+.rvh-p.cur{transform:scale(1.28);border-color:#ffc72c;box-shadow:0 0 0 3px #ffc72c88}
+.rvh-p .dc{width:28px;height:28px;margin:0}
+.rvh-p em{position:absolute;right:-9px;top:-10px;font-style:normal;font-size:12px;background:#fff;border:2px solid #13224a;border-radius:50%;width:19px;height:19px;display:grid;place-items:center;line-height:1}
+.rs-fall.slam .rs-arrow{animation:rsSlam .5s cubic-bezier(.3,1.6,.5,1) both}
+.rs-fall.slam .rs-tint{animation:rsTint .4s ease-out both}
+@keyframes rsSlam{0%{transform:translateY(-130px) scale(1.7);opacity:0}55%{opacity:1}100%{transform:none;opacity:1}}
+@keyframes rsTint{from{opacity:0}to{opacity:1}}

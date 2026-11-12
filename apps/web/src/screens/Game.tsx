@@ -225,7 +225,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       )}
       {showPanel && res && afterStep === "points" && needTerrace && <ResultMarks n={ids.length} votes={voteToks} lines={res.lines} fallen={res.fallenPositions ?? [res.fallenPosition]} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} marks={res.marks ?? null} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} megaName={megaName} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} marks={res.marks ?? null} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 

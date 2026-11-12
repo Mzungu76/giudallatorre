@@ -4,6 +4,7 @@ import { terracePos, voteTok } from "../scene/draw.ts";
 import { Disc, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { chipsFor, totals } from "../lib/results.ts";
+import { FallArrow } from "./Terrace.tsx";
 import type { Tok } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
 
@@ -20,13 +21,7 @@ export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId }: { n
   const order = [...chips].sort((a, b) => b.gain - a.gain);
   return (
     <div className="layer rs-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="result-marks">
-      {fallen.map((c) => { const p = pos[c - 1]; return p ? (
-        <div key={`f${c}`} className="rs-fall" data-testid="card-fell" style={{ left: p.x, top: p.f - p.h - 6, width: p.w, height: p.h }}>
-          <i className="rs-tint" />
-          <svg className="rs-arrow" viewBox="0 0 60 70" style={{ width: Math.min(56, p.w * 0.62), left: p.w / 2 - Math.min(56, p.w * 0.62) / 2, top: p.h - Math.min(56, p.w * 0.62) * 0.42 }} aria-hidden>
-            <path d="M18 2h24v34h14L30 66 4 36h14z" fill="#e8362b" stroke="#fff" strokeWidth="5" strokeLinejoin="round" /><path d="M18 2h24v34h14L30 66 4 36h14z" fill="none" stroke="#13224a" strokeWidth="2.4" strokeLinejoin="round" />
-          </svg>
-        </div>) : null; })}
+      {fallen.map((c) => <FallArrow key={`f${c}`} card={pos[c - 1]} />)}
       {(win ?? []).map((c) => { const p = pos[c - 1]; return p ? (
         <div key={`w${c}`} className="rs-win" data-testid="card-won" style={{ left: p.x, top: p.f - p.h - 6, width: p.w, height: p.h }}>
           <svg className="rs-heart" viewBox="0 0 32 29" style={{ width: Math.min(48, p.w * 0.55), left: p.w / 2 - Math.min(48, p.w * 0.55) / 2, top: p.h - Math.min(48, p.w * 0.55) * 0.5 }} aria-hidden><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="#ff4f7b" stroke="#fff" strokeWidth="4" strokeLinejoin="round" /><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="none" stroke="#13224a" strokeWidth="2" strokeLinejoin="round" /></svg>
