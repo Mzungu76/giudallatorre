@@ -1190,3 +1190,22 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .mgi{display:block;filter:drop-shadow(0 1px 0 #13224a66)}
 .rolechip,.bm-who{display:inline-flex;align-items:center;gap:5px}.bm-who{height:20px}
 .rolechip{padding:1px 10px 1px 6px}
+.rs-tk{position:absolute;opacity:0;animation:rsPop .5s cubic-bezier(.2,1.7,.4,1) both}
+.rs-tk.still{opacity:1;animation:none}
+.rs-tk .rs-face{position:absolute;left:0;top:0;display:block;line-height:0;border-radius:50%}
+.rs-tk.me .rs-face{box-shadow:0 0 0 3px #ffc72c}
+.rs-bd{position:absolute;right:0;bottom:-4px;min-width:21px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:99px;border:2px solid #13224a;box-shadow:0 2px 0 #13224a;display:grid;place-items:center;font-family:Anton,Impact,sans-serif;font-weight:400;line-height:1;color:#fff;white-space:nowrap}
+.rs-tk.up .rs-bd{background:#2fbf6a}.rs-tk.dn .rs-bd{background:#e8362b}.rs-tk.zz .rs-bd{background:#8a8d99}
+.rs-strip{position:relative}
+button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;color:inherit}
+.rs-pl.open{outline:3px solid #13224a;outline-offset:1px}
+.rs-det{position:absolute;left:0;right:0;bottom:calc(100% + 8px);z-index:140;background:#fff7e0;border:3px solid #13224a;border-radius:16px;box-shadow:0 4px 0 #13224a;padding:8px 10px;display:flex;flex-direction:column;gap:4px;animation:rsPop .25s ease-out both}
+.rs-dh{display:flex;align-items:center;gap:8px;font:400 22px/1 Anton;color:#1f9d57}
+.rs-dr{display:flex;align-items:center;gap:8px;font:700 13px/1.15 Nunito;color:#13224a}
+.rs-dr b{font:400 18px/1 Anton;color:#1f9d57;min-width:30px}
+.rs-dr.dim b{color:#8a8470}.rs-dr.dim .rsn{filter:grayscale(1) opacity(.55)}
+.rs-dr u{width:28px;text-align:center;text-decoration:none;font-size:20px}
+.rv-wrap{position:absolute;inset:0;pointer-events:none}.rv-wrap button{pointer-events:auto}
+.rv-wrap.leaving{animation:rvOut .65s ease-in both}.rv-wrap.leaving button{pointer-events:none}
+@keyframes rvOut{to{transform:translateY(-8%) scale(1.15);opacity:0}}
+.scene-in{animation:scIn .8s ease-out both}@keyframes scIn{from{opacity:0}to{opacity:1}}

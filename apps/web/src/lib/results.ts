@@ -67,12 +67,12 @@ export function chipsFor(toks: Tok[], lines: Record<string, ScoreLine[]>, pos: R
     const p = pos[cp - 1]; if (!p) continue;
     const list = [...m.entries()].map(([id, v]) => ({ id, color: v.color, gain: v.ls.reduce((a, l) => a + l.pts, 0), fast: v.ls.some((l) => l.kind === "mini-veloce"), icons: iconsOf(v.ls) })).sort((a, b) => b.gain - a.gain || (a.id < b.id ? -1 : 1));
     const cnt = list.length, vr = visibleRect(pos, cp - 1), res = luiPos.includes(cp) ? 24 : 3, ax = p.x + res, aw = p.w - res - 3, ah = vr.h;
-    let h = 20, w = 0, cols = 1, rows = cnt;
-    for (; h >= 12; h--) { w = Math.min(aw, Math.round(h * 3.1)); cols = Math.max(1, Math.floor((aw + 2) / (w + 2))); rows = Math.ceil(cnt / cols); if (rows * (h + 1) <= ah) break; }
+    let h = 28, w = 0, cols = 1, rows = cnt;   // h = diametro del segnalino; w = cella (segnalino + il bollo dei punti che sporge a destra)
+    for (; h >= 16; h -= 2) { w = h + 10; cols = Math.max(1, Math.floor((aw + 2) / (w + 2))); rows = Math.ceil(cnt / cols); if (rows * (h + 2) - 2 <= ah) break; }
     const top = vr.y + 2;   // in alto: sotto resta posto per la freccia della carta che cade
     list.forEach((v, j) => {
       const r = Math.floor(j / cols), inRow = Math.min(cols, cnt - r * cols), c = j - r * cols, rowW = inRow * (w + 2) - 2;
-      out.push({ key: `${v.id}-${cp}`, id: v.id, color: v.color, pos: cp, gain: v.gain, fast: v.fast, icons: v.icons, x: ax + (aw - rowW) / 2 + c * (w + 2), y: top + r * (h + 1), w, h });
+      out.push({ key: `${v.id}-${cp}`, id: v.id, color: v.color, pos: cp, gain: v.gain, fast: v.fast, icons: v.icons, x: ax + (aw - rowW) / 2 + c * (w + 2), y: top + r * (h + 2), w, h });
     });
   }
   return out;

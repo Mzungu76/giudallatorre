@@ -1,5 +1,5 @@
 {
- "versione": 26,
+ "versione": 27,
  "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
@@ -2515,6 +2515,66 @@
    "t": "Gettali dalla torre!",
    "s": "Salita e spoglio dei voti (turno normale)",
    "n": "Pulsante a fine spoglio: fa partire la caduta delle carte"
+  },
+  "rs.m.voto": {
+   "t": "Voto giusto: la carta {n} è caduta",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.mini": {
+   "t": "Voto giusto sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.veloce": {
+   "t": "Il voto più veloce",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.carta": {
+   "t": "La tua carta {n} è caduta",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.lui": {
+   "t": "Il tuo Lui! ha colpito la carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.lui0": {
+   "t": "Il Lui! ha mancato la carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.folla": {
+   "t": "Hai seguito il Lui! sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.obj": {
+   "t": "Obiettivo centrato sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.obj0": {
+   "t": "Obiettivo mancato sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.objf": {
+   "t": "Hai votato la carta dell'obiettivo ({n})",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.nulli": {
+   "t": "Il tuo voto è stato annullato",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.zero": {
+   "t": "Nessun punto in questo turno",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
   }
  }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ScoreLine } from "@gdt/game-engine";
 import { terracePos, voteTok } from "../scene/draw.ts";
 import { Disc, useStage } from "../ui.tsx";
@@ -7,6 +7,9 @@ import { chipsFor, iconsOf, sunk, totals, visibleRect } from "../lib/results.ts"
 import type { Rect, Tok } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
 import { ReasonIcon } from "./ReasonIcon.tsx";
+import { REASON_ICON } from "../lib/results.ts";
+import { ts as txs } from "../lib/testi.ts";
+import type { TestoKey } from "../lib/testi.ts";
 
 /** La grossa freccia rossa sulla carta che cade (nello spoglio scatta con un colpo; nel riepilogo rimbalza). */
 export function FallArrow({ rect, slam, delay = 0 }: { rect: Rect | undefined; slam?: boolean; delay?: number }) {
@@ -22,6 +25,12 @@ export function FallArrow({ rect, slam, delay = 0 }: { rect: Rect | undefined; s
   );
 }
 
+/** Perché si sono presi quei punti (tocco su un giocatore nella striscia). */
+const WHY: Record<ScoreLine["kind"], TestoKey> = {
+  voto: "rs.m.voto", "mini-giusto": "rs.m.mini", "mini-veloce": "rs.m.veloce", carta: "rs.m.carta", lui: "rs.m.lui", "lui-mancato": "rs.m.lui0", "lui-gregge": "rs.m.folla", "lui-folla": "rs.m.folla",
+  obiettivo: "rs.m.obj", "obiettivo-mancato": "rs.m.obj0", "obiettivo-folla": "rs.m.objf",
+};
+const iconFor = (k: ScoreLine["kind"]) => REASON_ICON[k] || (k.startsWith("lui") ? "hand" : "flag");
 const sign = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : "0");
 const cls = (n: number) => (n > 0 ? "up" : n < 0 ? "dn" : "zz");
 
@@ -54,10 +63,9 @@ export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId, megaI
           <svg className="rs-heart" viewBox="0 0 32 29" style={{ width: Math.min(48, p.w * 0.55), left: p.w / 2 - Math.min(48, p.w * 0.55) / 2, top: p.h - Math.min(48, p.w * 0.55) * 0.5 }} aria-hidden><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="#ff4f7b" stroke="#fff" strokeWidth="4" strokeLinejoin="round" /><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="none" stroke="#13224a" strokeWidth="2" strokeLinejoin="round" /></svg>
         </div>) : null; })}
       {chips.map((c) => (
-        <div key={c.key} className={`rs-pt ${cls(c.gain)}${c.id === meId ? " me" : ""}${still ? " still" : ""}`} data-testid="result-chip" style={{ left: c.x, top: c.y, width: c.w, height: c.h, fontSize: Math.round(c.h * 0.7), animationDelay: `${t0 + order.indexOf(c.id) * STEP}s` }}>
-          <span className="rs-face" dangerouslySetInnerHTML={{ __html: voteTok(c.color, Math.max(12, c.h - 3), c.id === megaId, false) }} />
-          {c.icons[0] && <span className="rs-ics" aria-hidden><ReasonIcon k={c.icons[0]} s={Math.round(c.h * 0.95)} className={c.icons[0] === "bolt" ? "rs-fast" : ""} /></span>}
-          <b>{sign(c.gain)}</b>
+        <div key={c.key} className={`rs-tk ${cls(c.gain)}${c.id === meId ? " me" : ""}${still ? " still" : ""}`} data-testid="result-chip" style={{ left: c.x, top: c.y, width: c.w, height: c.h, animationDelay: `${t0 + order.indexOf(c.id) * STEP}s` }}>
+          <span className="rs-face" style={{ width: c.h, height: c.h }} dangerouslySetInnerHTML={{ __html: voteTok(c.color, c.h, c.id === megaId, false) }} />
+          <b className="rs-bd" style={{ fontSize: Math.max(11, Math.round(c.h * 0.46)) }}>{sign(c.gain)}</b>
         </div>
       ))}
     </div>
@@ -72,15 +80,28 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
   useEffect(() => { if (!quiet && !still) sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!interactive && !quiet) { const t = setTimeout(onContinue, 40000); return () => clearTimeout(t); } return undefined; }, [interactive]); // eslint-disable-line react-hooks/exhaustive-deps
   const ord = popOrder(lines, ids, megaId), rows = totals(lines, ids), icons = Object.fromEntries(ids.map((id) => [id, iconsOf(lines[id] ?? [])]));
+  const [open, setOpen] = useState<string | null>(null);
+  const det = open ? [...(lines[open] ?? [])].sort((x, y) => y.pts - x.pts) : [];
   return (
     <div className="rs-strip" data-testid="points-panel">
-      {rows.map(({ id, gain }, i) => (
-        <div key={id} className={`rs-pl ${cls(gain)}${id === meId ? " me" : ""}${still ? " still" : ""}`} data-testid="points-block" style={{ animationDelay: `${base + Math.max(0, ord.indexOf(id)) * STEP}s` }}>
+      {open && (
+        <div className="rs-det" data-testid="points-detail" role="dialog">
+          <div className="rs-dh"><Disc color={colorOf(open)} size="l" /><b>{sign(det.reduce((a, l) => a + l.pts, 0))}</b></div>
+          {det.map((l, i) => (
+            <div key={i} className={`rs-dr${l.pts === 0 ? " dim" : ""}`}><ReasonIcon k={iconFor(l.kind)} s={28} /><b>{sign(l.pts)}</b><span>{txs(WHY[l.kind], { n: l.pos })}</span></div>
+          ))}
+          {annullati?.includes(open) && <div className="rs-dr dim"><u aria-hidden>🚫</u><b>0</b><span>{txs("rs.m.nulli")}</span></div>}
+          {det.length === 0 && !annullati?.includes(open) && <div className="rs-dr dim"><span>{txs("rs.m.zero")}</span></div>}
+        </div>
+      )}
+      {rows.map(({ id, gain }) => (
+        <button type="button" key={id} className={`rs-pl ${cls(gain)}${id === meId ? " me" : ""}${still ? " still" : ""}${open === id ? " open" : ""}`} data-testid="points-block" aria-expanded={open === id}
+          onClick={() => setOpen(open === id ? null : id)} style={{ animationDelay: `${base + Math.max(0, ord.indexOf(id)) * STEP}s` }}>
           <Disc color={colorOf(id)} size="l" />
           {annullati?.includes(id) ? <u className="rs-no" aria-hidden>🚫</u> : null}
           <b>{gain > 0 && <PtIcon s={19} />}{sign(gain)}</b>
           {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic) => <ReasonIcon key={ic} k={ic} s={24} className={ic === "bolt" ? "rs-fast" : ""} />)}</span>}
-        </div>
+        </button>
       ))}
     </div>
   );
