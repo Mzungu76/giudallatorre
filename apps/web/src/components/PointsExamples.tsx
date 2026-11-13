@@ -5,6 +5,7 @@ import { luiTok } from "../scene/draw.ts";
 import { Pt } from "./Pt.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
+import { MegaIcon } from "./MegaIcon.tsx";
 
 /**
  * Esempi visivi dei punti: le carte sono quelle vere, con il numero sul bordo; i segnalini sono quelli dei giocatori.
@@ -53,7 +54,7 @@ function Line({ p, lui }: { p: number; lui?: boolean }) {
   const total = (right ? 2 : 0) + (own ? 2 : 0) + (lui ? 7 : 0);
   return (
     <div className="ex-line">
-      <span className="ex-who"><Tk i={w.c} s={26} /><b>{nome(p)}</b>{w.mega && <em title={ts("ex.mega.tip")}>📣</em>}</span>
+      <span className="ex-who"><Tk i={w.c} s={26} /><b>{nome(p)}</b>{w.mega && <em title={ts("ex.mega.tip")}><MegaIcon s={16} /></em>}</span>
       <span className="ex-vote"><i>{t("ex.vota")}</i><Thumb i={voted} n={voted + 1} w={22} /></span>
       <span className="ex-why">
         {right && <Pill kind="ok">{t("ex.pill.giusto", { pt: <Pt n={2} /> })}</Pill>}

@@ -1160,7 +1160,7 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .rs-pt.me{outline:3px solid #ffc72c;outline-offset:1px}
 .rs-pt .rs-face{display:block;line-height:0;flex:none}
 .rs-pt{overflow:visible;padding:0 5px 0 2px}
-.rs-ics{position:absolute;right:-9px;top:-9px;display:flex;gap:1px;pointer-events:none}
+.rs-ics{display:flex;flex:none;pointer-events:none}
 .rsn{display:block;filter:drop-shadow(0 1.5px 0 #13224a99)}
 .rs-sic{display:flex;gap:1px;margin-left:2px}
 .rs-fast{animation:rsZap .55s ease-in-out infinite alternate}
@@ -1183,3 +1183,10 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 
 .throw{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:99;background:#ffc72c;border:3px solid #13224a;box-shadow:0 4px 0 #13224a;border-radius:14px;padding:12px 22px;font:400 22px/1 Anton;text-transform:uppercase;color:#13224a;white-space:nowrap;opacity:0;animation:rvPopB .45s cubic-bezier(.2,1.7,.4,1) both}
 @keyframes rvPopB{0%{transform:translateX(-50%) scale(.3);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+.rs-pt.still,.rs-pl.still{opacity:1;animation:none}
+.rv-strip{position:absolute;left:0;right:0;bottom:84px;z-index:97;display:flex;justify-content:center;padding:0 8px;box-sizing:border-box}
+.rv-strip .rs-strip{margin:0;padding:0;max-width:100%}
+.rv-strip .rs-pl{font-size:16px;padding:2px 8px 2px 3px}
+.mgi{display:block;filter:drop-shadow(0 1px 0 #13224a66)}
+.rolechip,.bm-who{display:inline-flex;align-items:center;gap:5px}.bm-who{height:20px}
+.rolechip{padding:1px 10px 1px 6px}

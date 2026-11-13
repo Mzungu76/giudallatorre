@@ -5,6 +5,8 @@ import { FAST, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import type { LuiOutcome, LuiSpec, MarkOutcome, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
+import { SINK, sunk, visibleRect } from "../lib/results.ts";
+import { FallArrow, ResultMarks, ScoreStrip } from "./ResultsView.tsx";
 import { t as tx, ts as txs } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
@@ -13,6 +15,7 @@ export interface TerraceProps {
   cardIds: string[]; down?: boolean; show?: number[]; pop?: number; flip?: Record<number, number>;
   votes?: VoteTok[]; lastVote?: number; lui?: { pos: number; spec?: LuiSpec | null } | null;
   /** Gioco base «Cade / Non cade»: i due segnalini (coperti se `spec` è null). */ marks?: { pos: number; spec: LuiSpec | null }[] | null;
+  /** Fila davanti più in basso: più spazio sulle carte dietro per i riquadri dei punti. */ spread?: boolean;
   /** Carte «abbassate» di poco (quelle che stanno per cadere, nello spoglio). */ sink?: number[];
   selected?: number | null; onPick?: (pos: number) => void;
   /** Tocco sul gettone Lui! posato sulla carta (apre la spiegazione). */ onLui?: () => void;
@@ -22,10 +25,10 @@ export interface TerraceProps {
 export function Terrace(p: TerraceProps) {
   const { ts, ty } = useStage(), n = p.cardIds.length;
   const base = useMemo(() => terraceBaseHtml(), []);
-  const pos = useMemo(() => terracePos(n), [n]);
+  const pos = useMemo(() => terracePos(n, p.spread), [n, p.spread]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
-  const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui, p.marks, p.sink]);
-  const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, lui: p.lui?.pos, luiSpec: p.lui?.spec ?? null, luiBack: !!p.lui && !p.lui.spec, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui, p.marks, p.sink, p.spread]);
+  const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, spread: p.spread, lui: p.lui?.pos, luiSpec: p.lui?.spec ?? null, luiBack: !!p.lui && !p.lui.spec, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace">
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
@@ -113,19 +116,6 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 
 export interface Voter { id: string; name: string; color: string; mega: boolean }
 
-/** La grossa freccia rossa sulla carta che cade (nello spoglio scatta con un colpo; nel riepilogo rimbalza). */
-export function FallArrow({ card, slam, dy = 0, delay = 0 }: { card: { x: number; f: number; w: number; h: number } | undefined; slam?: boolean; dy?: number; delay?: number }) {
-  if (!card) return null;
-  const sz = Math.min(56, card.w * 0.62);
-  return (
-    <div className={`rs-fall${slam ? " slam" : ""}`} data-testid="card-fell" style={{ ...(delay ? { "--d": `${delay}s` } as React.CSSProperties : {}), left: card.x, top: card.f - card.h - 6 + dy, width: card.w, height: card.h }}>
-      <i className="rs-tint" />
-      <svg className="rs-arrow" viewBox="0 0 60 70" style={{ width: sz, left: card.w / 2 - sz / 2, top: card.h - sz * 0.42 }} aria-hidden>
-        <path d="M18 2h24v34h14L30 66 4 36h14z" fill="#e8362b" stroke="#fff" strokeWidth="5" strokeLinejoin="round" /><path d="M18 2h24v34h14L30 66 4 36h14z" fill="none" stroke="#13224a" strokeWidth="2.4" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
 
 /** Gettone dei voti «finti» aggiunti da Propaganda! (grigio). */
 const GHOST = "#c9ccd6";
@@ -160,7 +150,8 @@ export const markSpec = (m: MarkOutcome): LuiSpec => ({ slot: m.slot, k: 0, pts:
  * e si aspetta: chi guarda può analizzare i voti con calma e, quando vuole, tocca «Gettalo dalla torre!» (sullo schermo condiviso, senza
  * pulsanti, si prosegue da soli dopo 40 s). Niente frasi, niente conteggi: i punti si vedono dopo la caduta.
  */
-export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip, interactive, onDone, marks }: {
+export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip, interactive, onDone, marks, points }: {
+  /** Per mostrare, a fine spoglio, i riquadri dei punti (sulle carte e in basso): le righe del turno, i colori, ecc. */ points?: { lines: Record<string, ScoreLine[]>; ids: string[]; colorOf: (id: string) => string; meId?: string; annullati?: string[] };
   /** Gioco base «Cade / Non cade»: i due segnalini, scoperti alla fine. */ marks?: MarkOutcome[] | null;
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>;
   lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
@@ -204,17 +195,20 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   const manip = (!!lui || !!marks?.length) && luiOpen && T >= luiStart + 1.2;
   const base = shown.map(({ v }) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega } as VoteTok }));
   const toks: VoteTok[] = manip ? luiToks(base, lui, marks) : base.map((x) => x.tok);
-  const pos = useMemo(() => terracePos(cardIds.length), [cardIds.length]);
+  const pos = useMemo(() => terracePos(cardIds.length, true), [cardIds.length]);
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
-  const plural = fallPositions.length > 1;
+  const plural = fallPositions.length > 1, stamp = phase === "stamp";
+  const luiPos = [...(lui ? [lui.position] : []), ...(marks ?? []).map((x) => x.position)];
+  const finalToks = useMemo(() => luiToks(voters.map((v) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega, id: v.id } as VoteTok })), lui, marks), [voters, votes, lui, marks]);
+  const megaId = voters.find((v) => v.mega)?.id;
   return (
     <>
-      <Terrace cardIds={cardIds} votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={phase === "stamp" ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
-      <div className="layer rv-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="reveal-panel">
-        {phase === "stamp" && fallPositions.map((q, i) => <FallArrow key={`a${q}`} card={pos[q - 1]} dy={14} slam delay={i * 0.45} />)}
-      </div>
+      <Terrace cardIds={cardIds} spread votes={stamp && points ? [] : toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
+      {stamp && points && <ResultMarks n={cardIds.length} votes={finalToks} lines={points.lines} fallen={fallPositions} colorOf={points.colorOf} meId={points.meId} megaId={megaId} sink={fallPositions} spread slam luiPos={luiPos} />}
+      {stamp && !points && <div className="layer rv-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="reveal-panel">{fallPositions.map((q, i) => <FallArrow key={`a${q}`} rect={visibleRect(sunk(pos, fallPositions), q - 1)} slam delay={i * 0.45} />)}</div>}
+      {stamp && points && <div className="rv-strip"><ScoreStrip ids={points.ids} lines={points.lines} colorOf={points.colorOf} meId={points.meId} annullati={points.annullati} megaId={megaId} sound={sound} interactive={interactive} onContinue={onDone} base={0.3 + fallPositions.length * 0.45} quiet /></div>}
       {interactive && phase === "clock" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next" aria-label={txs("rv.avanti")}>⏭</button>}
-      {interactive && phase === "stamp" && <button className="throw" onClick={onDone} data-testid="reveal-throw" style={{ animationDelay: `${0.5 + fallPositions.length * 0.45}s` }}>{txs(plural ? "rv.gettali" : "rv.gettalo")}</button>}
+      {interactive && stamp && <button className="throw" onClick={onDone} data-testid="reveal-throw" style={{ animationDelay: `${0.5 + fallPositions.length * 0.45 + (points ? points.ids.length * 0.32 : 0)}s` }}>{txs(plural ? "rv.gettali" : "rv.gettalo")}</button>}
     </>
   );
 }

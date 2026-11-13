@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ScoreLine } from "@gdt/game-engine";
-import { chipsFor, totals } from "../src/lib/results.ts";
+import { chipsFor, sunk, totals, visibleRect } from "../src/lib/results.ts";
 import type { CardPos } from "../src/lib/results.ts";
 import { buildFinale } from "../src/lib/miniScenes.ts";
 
@@ -12,21 +12,27 @@ describe("riepilogo visivo dei punti", () => {
     const lines = { a: [L("voto", 2, 1), L("lui", 4, 1)], b: [L("voto", 2, 2)], c: [], d: [L("voto", 2, 3)] };
     expect(totals(lines, ["c", "b", "a", "d"])).toEqual([{ id: "a", gain: 6 }, { id: "b", gain: 2 }, { id: "d", gain: 2 }, { id: "c", gain: 0 }]);
   });
-  it("i riquadri stanno in basso sulla carta, dal più alto, con le icone dei motivi (bolt per il più veloce) e dentro la carta", () => {
+  it("la parte visibile di una carta dietro finisce dove iniziano le carte davanti; quella davanti si vede tutta", () => {
+    const back = visibleRect(pos, 0), front = visibleRect(pos, 2);
+    expect(back.y + back.h).toBeLessThanOrEqual(pos[2]!.f - pos[2]!.h - 6);   // sopra il bordo alto della carta davanti
+    expect(front.y + front.h).toBeGreaterThan(pos[2]!.f - 30);
+    expect(visibleRect(sunk(pos, [1]), 0).y).toBeGreaterThan(back.y);          // abbassata: la parte visibile scende
+  });
+  it("i riquadri stanno nella parte visibile della carta, dal più alto, con le icone dei motivi (bolt per il più veloce)", () => {
     const toks = [{ p: 1, c: "#f00", id: "a" }, { p: 1, c: "#0f0", id: "b" }, { p: 2, c: "#00f", id: "c" }];
     const lines = { a: [L("mini-giusto", 2, 1), L("mini-veloce", 4, 1)], b: [L("mini-giusto", 2, 1)], c: [] };
     const chips = chipsFor(toks, lines, pos, () => "#000"), on1 = chips.filter((c) => c.pos === 1);
     expect(chips).toHaveLength(3);
     expect(on1.map((c) => [c.id, c.gain, c.fast])).toEqual([["a", 6, true], ["b", 2, false]]);
     expect(on1[0]!.icons).toEqual(["bolt", "target"]); expect(on1[1]!.icons).toEqual(["target"]);
-    for (const c of chips) { const p = pos[c.pos - 1]!; expect(c.x).toBeGreaterThanOrEqual(p.x); expect(c.x + c.w).toBeLessThanOrEqual(p.x + p.w + 0.5); expect(c.y + c.h).toBeLessThanOrEqual(p.f - 6); expect(c.y).toBeGreaterThanOrEqual(p.f - 6 - p.h * 0.55); }
+    for (const c of chips) { const p = pos[c.pos - 1]!, v = visibleRect(pos, c.pos - 1); expect(c.x).toBeGreaterThanOrEqual(p.x); expect(c.x + c.w).toBeLessThanOrEqual(p.x + p.w + 0.5); expect(c.y).toBeGreaterThanOrEqual(v.y - 0.5); expect(c.y + c.h).toBeLessThanOrEqual(v.y + v.h + 0.5); }
   });
-  it("anche con 6 giocatori sulla stessa carta i riquadri non si sovrappongono e lasciano libera almeno metà carta", () => {
+  it("con il Lui! sulla carta resta libera la fascia a sinistra; con 6 giocatori sulla stessa carta i riquadri non si sovrappongono", () => {
     const toks = ["a", "b", "c", "d", "e", "f"].map((id) => ({ p: 1, c: "#f00", id })), lines = Object.fromEntries(toks.map((t, i) => [t.id, [L("mini-giusto", i ? 2 : 6, 1)]]));
-    const chips = chipsFor(toks, lines, pos, () => "#000");
+    const chips = chipsFor(toks, lines, pos, () => "#000", [1]), v = visibleRect(pos, 0);
     expect(chips).toHaveLength(6);
+    for (const c of chips) { expect(c.x).toBeGreaterThanOrEqual(pos[0]!.x + 24 - 0.5); expect(c.y + c.h).toBeLessThanOrEqual(v.y + v.h + 0.5); }
     for (let i = 0; i < chips.length; i++) for (let j = i + 1; j < chips.length; j++) { const a = chips[i]!, b = chips[j]!; expect(a.x + a.w <= b.x + 0.01 || b.x + b.w <= a.x + 0.01 || a.y + a.h <= b.y + 0.01 || b.y + b.h <= a.y + 0.01).toBe(true); }
-    expect(Math.min(...chips.map((c) => c.y))).toBeGreaterThanOrEqual(pos[0]!.f - 6 - pos[0]!.h * 0.55); expect(chips[0]!.h).toBeGreaterThanOrEqual(14);
   });
   it("i punti non legati a un voto (carta propria caduta, segnalino) compaiono sulla carta interessata, con la faccia del giocatore", () => {
     const toks = [{ p: 1, c: "#f00", id: "a" }];

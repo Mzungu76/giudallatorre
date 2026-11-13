@@ -3,6 +3,7 @@ import { Btn } from "../ui.tsx";
 import { PointsKey } from "./PointsExamples.tsx";
 import { Pt } from "./Pt.tsx";
 import { t, ts } from "../lib/testi.ts";
+import { MegaIcon } from "./MegaIcon.tsx";
 
 const Dots = ({ i, n }: { i: number; n: number }) => <span className="dts">{Array.from({ length: n }, (_, k) => <i key={k} className={k === i ? "on" : ""} />)}</span>;
 
@@ -21,7 +22,7 @@ export function IntroSlides({ onClose }: { onClose: () => void }) {
       {i === 1 && <>
         <h2 className="isl-h sm">{t("intro.2.titolo")}</h2>
         <div className="pp isl-steps">
-          <div className="st"><i className="ic">📣</i><div><b>{t("intro.2.p1.t")}</b><p>{t("intro.2.p1.x")}</p></div></div>
+          <div className="st"><i className="ic"><MegaIcon s={24} /></i><div><b>{t("intro.2.p1.t")}</b><p>{t("intro.2.p1.x")}</p></div></div>
           <div className="st"><i className="ic">🃏</i><div><b>{t("intro.2.p2.t")}</b><p>{t("intro.2.p2.x")}</p></div></div>
           <div className="st"><i className="ic">🗳</i><div><b>{t("intro.2.p3.t")}</b><p>{t("intro.2.p3.x")}</p></div></div>
           <div className="st"><i className="ic">⭐</i><div><b>{t("intro.2.p4.t")}</b><p>{t("intro.2.p4.x")}</p></div></div>
@@ -47,7 +48,7 @@ export function MegaIntro({ megafonoSa, onClose }: { megafonoSa: boolean; onClos
   return (
     <div className="isl mega" role="dialog" aria-label={ts("mega.aria")} data-testid="mega-intro">
       <div className="sky" /><div className="skyg" /><div className="skyh" />
-      <div className="mbig"><i>📣</i></div>
+      <div className="mbig"><i><MegaIcon s={76} /></i></div>
       <h2 className="isl-h gold">{t("mega.titolo")}</h2><p className="isl-cur">{t("mega.sotto")}</p>
       <div className="pp isl-steps tight">
         <div className="st"><i className="ic">1</i><div><b>{t("mega.p1.t")}</b><p>{t("mega.p1.x")}</p></div></div>

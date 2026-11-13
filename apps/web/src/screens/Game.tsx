@@ -25,6 +25,7 @@ import LuiDraw from "../components/LuiDraw.tsx";
 import CharIntro from "../components/CharIntro.tsx";
 interface Geo { left: number; top: number; w: number; h: number; rot: number }
 import { t as tx, ts as txs } from "../lib/testi.ts";
+import { MegaIcon } from "../components/MegaIcon.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; /** Intervallo a tempo: istante locale del «via!». */ goAt?: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean; ui?: UiCtl }
 /** Cartelli di inizio fase (letti al momento, così seguono i testi aggiornati). */
@@ -105,7 +106,7 @@ export function HandPicker({ view, send, ui, title = txs("g.mano.t"), sub = txs(
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
           <div className="bdots">{hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
-          {mega && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden>📣</i>}
+          {mega && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden><MegaIcon s={28} /></i>}
         </div>
       </div>
       <BSheet gold={mega} title={title} sub={sub} ui={ui}>
@@ -196,6 +197,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
+  const annullati: string[] = res ? [...(res.marks?.find((x) => x.effect === "nulli")?.caught ?? []), ...(((res.lui?.trap || res.lui?.effect === "imbroglio") && res.lui.caught) ? res.lui.caught : [])] : [];
+  const fellArr = res ? res.fallenPositions ?? [res.fallenPosition] : [], luiPosArr = [...(res?.lui ? [res.lui.position] : []), ...(res?.marks ?? []).map((x) => x.position)];
   const resLui = res?.lui ? { pos: res.lui.position, spec: luiSpecOf(res.lui) } : null, resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? txs("g.meta.giro", { n: view.round, tot: view.rounds }) : "";
@@ -221,11 +224,11 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? txs("g.ban.vote.t") : txs("g.ban.dopo.mega"), sub: v ? txs("g.ban.vote.s") : txs("g.ban.dopo.mega.s") }); } }} />}
       {!climbing && needTerrace && !revealing && (
-        <Terrace cardIds={ids} votes={res && showPanel && afterStep === "points" ? [] : voteToks} lui={view.cnc ? null : res ? resLui : luiShown} marks={view.cnc ? (res ? resMarks : marksShown) : null} selected={phase === "RESULTS" ? null : dirOn ? dir!.to : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? (dirOn ? (n !== dir!.from && setDir({ ...dir!, to: n })) : setPick(n)) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && (view.luiPosition != null || view.marks.length > 0) ? () => setLuiInfo(true) : undefined} />
+        <Terrace cardIds={ids} spread={!!(res && showPanel && afterStep === "points")} sink={res && showPanel && afterStep === "points" ? fellArr : undefined} votes={res && showPanel && afterStep === "points" ? [] : voteToks} lui={view.cnc ? null : res ? resLui : luiShown} marks={view.cnc ? (res ? resMarks : marksShown) : null} selected={phase === "RESULTS" ? null : dirOn ? dir!.to : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? (dirOn ? (n !== dir!.from && setDir({ ...dir!, to: n })) : setPick(n)) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && (view.luiPosition != null || view.marks.length > 0) ? () => setLuiInfo(true) : undefined} />
       )}
-      {showPanel && res && afterStep === "points" && needTerrace && <ResultMarks megaId={voters.find((v) => v.mega)?.id} n={ids.length} votes={voteToks} lines={res.lines} fallen={res.fallenPositions ?? [res.fallenPosition]} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
+      {showPanel && res && afterStep === "points" && needTerrace && <ResultMarks still spread sink={fellArr} luiPos={luiPosArr} megaId={voters.find((v) => v.mega)?.id} n={ids.length} votes={voteToks} lines={res.lines} fallen={fellArr} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={fellArr} points={{ lines: res.lines, ids: view.players.map((p) => p.id), colorOf: (id) => people.get(id).color, meId: readOnly ? undefined : me, annullati }} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
@@ -300,7 +303,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
               {showPanel && res && afterStep === "points" && <>
                 {phase === "RESULTS" && <div className="bsp" />}
-                <ScoreStrip megaId={voters.find((v) => v.mega)?.id} ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} annullati={[...(res.marks?.find((x) => x.effect === "nulli")?.caught ?? []), ...(((res.lui?.trap || res.lui?.effect === "imbroglio") && res.lui.caught) ? res.lui.caught : [])]} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
+                <ScoreStrip still megaId={voters.find((v) => v.mega)?.id} ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} annullati={annullati} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
                 {res.objective && <span className="pp-obj" data-testid="objective-result">{res.objective.megaHit ? tx("obj.esito.mega", { n: res.objective.position, cond: objCond(res.objective), v: res.objective.votes, pt: res.objective.pts }) : res.objective.winners.length ? tx("obj.esito.folla", { n: res.objective.position, v: res.objective.votes, pt: res.objective.pts, k: res.objective.winners.length }) : tx("obj.esito.nessuno", { n: res.objective.position, v: res.objective.votes })}</span>}
                 <BSheet gold={gold} title={tx("g.punti.t")} sub={txs("g.punti.s", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
                   {readOnly ? <span className="pb-wait">{tx("g.prosegue")}</span> : <Row>{tray}<Btn onClick={() => setAfter({ turn, step: "board" })} testId="points-continue">{tx("g.continua")}</Btn></Row>}

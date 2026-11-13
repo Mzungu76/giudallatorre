@@ -7,10 +7,11 @@ import { luiEffectHow, luiLabel } from "../lib/lui.ts";
 import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
+import { MegaIcon } from "./MegaIcon.tsx";
 
 const DEMO: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 2, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 
-const Step = ({ ic, t, x }: { ic: string; t: ReactNode; x: ReactNode }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
+const Step = ({ ic, t, x }: { ic: ReactNode; t: ReactNode; x: ReactNode }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
@@ -28,7 +29,7 @@ export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeav
       <div className="brg-body" data-testid="howto-body">
         {tab === 0 && <>
           <div className="brg-q">{t("how.1.q")}<small>{t("how.1.qs")}</small></div>
-          <Step ic="📣" t={t("how.1.p1.t")} x={t("how.1.p1.x")} />
+          <Step ic={<MegaIcon s={24} />} t={t("how.1.p1.t")} x={t("how.1.p1.x")} />
           <Step ic="🃏" t={t("how.1.p2.t")} x={t("how.1.p2.x")} />
           <Step ic="🎯" t={t("how.1.p3.t")} x={t("how.1.p3.x")} />
           <Step ic="🗳" t={t("how.1.p4.t")} x={t("how.1.p4.x")} />

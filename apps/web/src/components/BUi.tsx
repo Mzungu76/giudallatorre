@@ -5,6 +5,7 @@ import { luiTok } from "../scene/draw.ts";
 import { luiEffectHow, luiLabel, objCond, objCondPublic } from "../lib/lui.ts";
 import { useNow } from "../ui.tsx";
 import { t, ts } from "../lib/testi.ts";
+import { MegaIcon } from "./MegaIcon.tsx";
 
 /** Comandi delle finestre (chat, classifica, regolamento, segnalini Lui!) per il pannello in basso. */
 export interface UiCtl { unread: number; chat: () => void; rank: () => void; rules: () => void; lui: () => void }
@@ -21,7 +22,7 @@ export function useTimedOpen(ms = OPEN_MS) {
 /** Riga in alto: turno (con il timer, se c'è) e Megafono. */
 export function BMeta({ turn, mega, right, deadline, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
   const now = useNow(), s = deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : null;
-  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip">{t("bui.megachip")}</span> : right ?? ts("bui.mega", { nome: mega ?? "" })}</span></div>;
+  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip"><MegaIcon s={18} />{t("bui.megachip")}</span> : right ?? <span className="bm-who"><MegaIcon s={18} />{mega ?? ""}</span>}</span></div>;
 }
 
 /** La frase del Megafono, sempre per intero (il corpo si riduce se è lunga). */
@@ -36,7 +37,7 @@ export function PhrasePill({ phrase, megaName }: { phrase: PlayerView["phrase"];
   const theme = phrase.mode === "card" ? phrase.theme : undefined, len = body.length, size = len > 90 ? " xl" : len > 55 ? " l" : "";
   return (
     <div className={`phrase-card pk${size}`} data-testid="phrase" aria-label={ts("bui.frase.aria", { nome: megaName, label, testo: body })}>
-      <span className="mega-ic" aria-hidden>📣</span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
+      <span className="mega-ic" aria-hidden><MegaIcon s={30} /></span>{theme && <span className="ctx" data-testid="phrase-theme">{theme}</span>}<small>{label}</small><b>{body}</b>
     </div>
   );
 }
@@ -57,7 +58,7 @@ export function ObjPill({ view }: { view: PlayerView }) {
 export function BSheet({ title, sub, ui, children, gold }: { title: ReactNode; sub?: ReactNode; ui?: UiCtl | null; children?: ReactNode; /** Turno del Megafono: pannello dorato col badge 📣. */ gold?: boolean }) {
   return (
     <div className={`pp bsheet${gold ? " gold" : ""}`} data-testid="sheet">
-      <span className="bgrip" />{gold && <i className="shb" aria-hidden>📣</i>}
+      <span className="bgrip" />{gold && <i className="shb" aria-hidden><MegaIcon s={30} /></i>}
       <div className="bhd">
         <b>{gold && ts("bui.sei")}{title}{sub && <small>{sub}</small>}</b>
         {ui && <>

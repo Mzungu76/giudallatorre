@@ -164,8 +164,8 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
   const body = kind === "accusa" ? `«${res.text}»` : info.body ?? "", size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
     <>
-      {step === "points" && <Terrace cardIds={ids} votes={[]} />}
-      {step === "points" && <ResultMarks n={ids.length} votes={toks} lines={res.lines} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
+      {step === "points" && <Terrace cardIds={ids} votes={[]} spread sink={res.fallenPositions} />}
+      {step === "points" && <ResultMarks spread sink={res.fallenPositions} n={ids.length} votes={toks} lines={res.lines} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {step === "points" && (
         <div className="bl">
           <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} />
