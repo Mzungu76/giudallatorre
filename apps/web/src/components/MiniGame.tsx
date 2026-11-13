@@ -5,7 +5,7 @@ import { Disc, FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import Standings from "./Standings.tsx";
 import { Terrace } from "./Terrace.tsx";
-import type { VoteTok, Voter } from "./Terrace.tsx";
+import type { VoteTok } from "./Terrace.tsx";
 import { BMeta, BSheet, LuiTray, Row } from "./BUi.tsx";
 import { usePeople } from "../screens/Game.tsx";
 import { HintBubble, HintPointer, useIdleHint } from "./IdleHint.tsx";
@@ -13,7 +13,7 @@ import { miniInfo } from "../lib/minis.ts";
 import { hintFor } from "../lib/hints.tsx";
 import { buildFinale } from "../lib/miniScenes.ts";
 import { Curtain, FinaleScene, Letterbox, RunScene, useCast } from "./MiniStage.tsx";
-import PointsPanel from "./PointsPanel.tsx";
+import { ResultMarks, ScoreStrip } from "./ResultsView.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 import { t, ts } from "../lib/testi.ts";
 
@@ -24,7 +24,7 @@ function useTick(ms = 50) { const [n, setN] = useState(Date.now()); useEffect(()
 const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600, LAST_VOTE_MS = 3000;
 type Post = null | "verdict" | "finale" | "outro" | "points" | "board";
 
-export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }: GameProps) {
+export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, startAt }: GameProps & { /** Solo simulatore: apri direttamente il riepilogo dei punti. */ startAt?: "points" }) {
   const people = usePeople(room), me = view.viewerId, res = view.miniResult, mini = view.mini;
   const kind = (mini?.kind ?? res?.kind)!, info = miniInfo(kind), inRun = view.phase === "MINI_RUN", isHost = room.hostId === me;
   const now = useTick();
@@ -37,7 +37,7 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui }
   const t0 = now - go, end = order.length * MINI_SLOT_MS, start = go - (MINI_INTRO_MS + MINI_COUNTDOWN_MS);
 
   // dopo la corsa: sipario (verdetto) → scenetta finale → sipario (fine) → punti → classifica
-  const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST ? "points" : "verdict") : null));
+  const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST || startAt === "points" ? "points" : "verdict") : null));
   const marks = useRef({ shut: Date.now(), outro: 0, res: 0 });
   useEffect(() => {
     const at = Date.now();
@@ -158,15 +158,14 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
   const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
   const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
   const act = () => send({ t: "act", action: { type: "advance" } });
-  const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false })), [res, people]);
-  // come nei turni normali: chi ha votato per ultimo per primo… qui in ordine di tavolo; chi non ha votato in tempo compare con 0 punti
-  const voters: Voter[] = useMemo(() => people.all.map((p) => ({ id: p.id, name: p.nickname, color: p.color, mega: false })), [people]);
+  const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false, id })), [res, people]);
   const rows = view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }));
   const uiv = readOnly ? null : ui ?? null, tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
   const body = kind === "accusa" ? `«${res.text}»` : info.body ?? "", size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
     <>
-      {step === "points" && <Terrace cardIds={ids} votes={toks} />}
+      {step === "points" && <Terrace cardIds={ids} votes={[]} spread sink={res.fallenPositions} />}
+      {step === "points" && <ResultMarks spread sink={res.fallenPositions} n={ids.length} votes={toks} lines={res.lines} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {step === "points" && (
         <div className="bl">
           <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} />
@@ -174,7 +173,7 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
             <span className="mega-ic" aria-hidden>{info.icon}</span><small>{kind === "accusa" ? t("mg.accusatore") : info.tag}</small><b>{body || info.tag}</b>
           </div>
           <div className="bsp" />
-          <PointsPanel meId={readOnly ? undefined : me} mini={res} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={null} fallPositions={res.fallenPositions} sound={sound} interactive={!readOnly} hideGo onContinue={() => onStep("board")} />
+          <ScoreStrip ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} sound={sound} interactive={!readOnly} onContinue={() => onStep("board")} />
           <BSheet title={t("g.punti.t")} sub={ts("mg.mani", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
             {readOnly ? <span className="pb-wait">{t("mg.finisce")}</span> : <Row>{tray}<button type="button" className="bt mus" onClick={() => onStep("board")} data-testid="points-continue">{t("g.continua")}</button></Row>}
           </BSheet>

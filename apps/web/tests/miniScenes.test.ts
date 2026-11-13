@@ -26,7 +26,8 @@ describe("scenette finali degli intervalli", () => {
     expect(end.o).toBe(0); expect(end.y).toBeGreaterThan(EDGE_Y + 300);   // cade oltre il bordo davanti
     const xs = a.map((w) => w.x); expect(Math.max(...xs) - Math.min(...xs)).toBeGreaterThan(150);   // ha attraversato la terrazza
     expect(f.figs.some((x) => x.who === "side")).toBe(true);
-    for (const p of [1, 2, 4, 5, 6]) expect(last(track(f, p)).o ?? 1).toBe(1);
+    for (const p of [1, 2, 4, 5, 6]) expect(last(track(f, p)).o, `carta ${p}`).toBe(0);   // restano solo l'accusato e l'accusatore
+    expect(last(track(f, "side")).o ?? 1).toBe(1);
     expect(f.bursts.some((b) => b.kind === "bam")).toBe(true);
     // l'accusatore insegue: parte dopo l'accusato ma lo raggiunge prima della caduta
     const side = track(f, "side").filter((w) => w.t > 0);
@@ -52,12 +53,16 @@ describe("scenette finali degli intervalli", () => {
   });
   it("Storia d'amore: partner e vincitori si avvicinano, nessuno cade, e sgorgano cuori che poi cadono giù dalla torre", () => {
     const f = buildFinale("amore", [1, 5], [], rand);
-    for (const fig of f.figs) expect(last(fig.wps).o ?? 1, fig.key).toBe(1);
+    for (const fig of f.figs) expect(last(fig.wps).o ?? 1, fig.key).toBe(["side", "c1", "c5"].includes(fig.key) ? 1 : 0);   // restano solo il partner e i vincitori
     const p = last(track(f, "side")), w = last(track(f, 1)), w5 = last(track(f, 5));
     for (const q of [w, w5]) expect(Math.hypot(q.x - p.x, q.y - p.y)).toBeLessThan(130);   // vicini al partner
     expect(f.hearts.length).toBeGreaterThanOrEqual(40);
     for (const h of f.hearts) { expect(h.rise).toBeGreaterThan(0); expect(h.fall).toBeGreaterThan(h.rise); expect(h.t + h.dur).toBeLessThanOrEqual(f.duration + 3500); }
     expect(Math.max(...f.hearts.map((h) => h.t))).toBeGreaterThan(2500);   // una vera fontana: i cuori continuano a sgorgare
+  });
+  it("Il peggiore: il passaggio sopra la folla dura circa 3 secondi (non più di 3,6)", () => {
+    const f = buildFinale("peggiore", [2], [2], rand), lying = track(f, 2).filter((w) => Math.abs((w.r ?? 0) + 90) <= 12), dt = lying[lying.length - 1]!.t - lying[0]!.t;
+    expect(dt).toBeGreaterThan(2000); expect(dt).toBeLessThanOrEqual(3600);
   });
   it("più carte in parità: si fanno una dopo l'altra, sempre più rapide, tutte fuori alla fine", () => {
     expect(compress(1)).toBe(1); expect(compress(2)).toBeLessThan(1); expect(compress(3)).toBeLessThan(compress(2));

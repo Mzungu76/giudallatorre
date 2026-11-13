@@ -21,6 +21,7 @@ import type { ReactNode } from "react";
 import type { PlayerView } from "@gdt/game-engine";
 import { t as tx, ts as txs } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
+import { MegaIcon } from "../components/MegaIcon.tsx";
 
 /** Su schermi larghi la partita sta al centro di una plancia con codice a sinistra e giocatori a destra. */
 function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | null; children: ReactNode }) {
@@ -29,7 +30,7 @@ function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | n
     <div className="plancia">
       <aside className="pside l" aria-hidden><div className="plogo">{tx("room.logo1")}<b>{tx("room.logo2")}</b></div><div className="pp pcode"><small>{tx("room.codice.lab")}</small><strong>{room.code}</strong></div></aside>
       {children}
-      <aside className="pside r"><div className="pp pplayers"><h4>{tx("room.giocatori")}</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={colorFor(room.players, p.id)} />{p.name}{p.id === view?.megafonoId ? " 📣" : ""}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
+      <aside className="pside r"><div className="pp pplayers"><h4>{tx("room.giocatori")}</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={colorFor(room.players, p.id)} />{p.name}{p.id === view?.megafonoId && <> <MegaIcon s={16} /></>}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
     </div>
   );
 }

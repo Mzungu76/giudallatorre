@@ -5,3 +5,5 @@ Stato: **Fase 1 — analisi** (vedi `docs/PROGRESS.md`). Materiali originali in 
 
 ## Testi dell'app
 I testi che i giocatori leggono sono in `public/testi.json` (versione progressiva) e si modificano da `/testi.html`: vedi `docs/TESTI.md`.
+
+**Simulatore degli intervalli**: la pagina `/intervalli` fa vedere e giocare gli intervalli a tempo senza stanza né giocatori: vedi `docs/SIMULATORE_INTERVALLI.md`.

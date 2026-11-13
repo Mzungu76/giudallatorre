@@ -14,5 +14,5 @@ export default function SceneHost(p: SceneHostProps) {
     s.play(p.cue, () => cb.current.onDone());
     return () => { s.destroy(); if (p.apiRef) p.apiRef.current = null; };
   }, [p.cardIds.join("|"), p.cue.fallPositions.join(","), p.cue.seed]); // eslint-disable-line react-hooks/exhaustive-deps
-  return <div className="scene-root" ref={el} data-testid="scene" />;
+  return <div className="scene-root scene-in" ref={el} data-testid="scene" />;
 }

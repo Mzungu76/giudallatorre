@@ -1,6 +1,6 @@
 {
- "versione": 21,
- "aggiornato": "2026-11-12",
+ "versione": 27,
+ "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -639,58 +639,9 @@
    "t": "{k} voti o più",
    "s": "Gettoni Lui! (etichette)"
   },
-  "pp.titolo": {
-   "t": "Com'è andata",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.tu": {
-   "t": "Tu",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Il giocatore che guarda (la sua riga è in cima)"
-  },
-  "pp.giusto": {
-   "t": "Voto giusto: la carta votata è caduta",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.sbagliato": {
-   "t": "Voto sbagliato: la carta votata è rimasta su",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.caduta": {
-   "t": "La sua carta è caduta",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.lui.ok": {
-   "t": "Lui! azzeccato: {lui}",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "{lui} = es. «almeno 2 voti»"
-  },
-  "pp.lui.ko": {
-   "t": "Lui! mancato: {lui}",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.gregge": {
-   "t": "Voto annullato dall'Imbroglio!",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Variante «Il gregge»"
-  },
-  "pp.lui.gregge": {
-   "t": "Ha votato la carta del Lui! ({lui}): +{pt}",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Variante «Il gregge»: soglia riuscita, punti a chi ha votato la carta"
-  },
-  "pp.attesa": {
-   "t": "Il Megafono prosegue…",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
   "bui.megachip": {
-   "t": "📣 Sei il Megafono",
+   "t": "Sei il Megafono",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
-  "bui.mega": {
-   "t": "📣 {nome}",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Chi è il Megafono (barra in alto)"
   },
   "bui.urla": {
    "t": "Il Megafono urla:",
@@ -899,116 +850,10 @@
    "t": "La Torre si svela…",
    "s": "Salita e spoglio dei voti (turno normale)"
   },
-  "rv.spoglio": {
-   "t": "Lo spoglio!",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.spoglio.x": {
-   "t": "Ora si scopre chi ha votato chi. Un voto alla volta.",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.manca": {
-   "t": "Manca l’ultimo voto…",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.manca.mega": {
-   "t": "Aspettiamo il Megafono, {nome}!",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.manca.x": {
-   "t": "Aspettiamo {nome}.",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.voto.n": {
-   "t": "Voto {i} di {tot}",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.ha.votato": {
-   "t": "{nome} ha votato il n. {n}",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.n": {
-   "t": "n. {n}",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Riferimento a una carta della torre"
-  },
-  "rv.e": {
-   "t": " e ",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Tra due carte: «n. 2 e n. 3»"
-  },
-  "rv.pareggio.decide": {
-   "t": "Pareggio! Decide il Megafono",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.pareggio": {
-   "t": "Pareggio!",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.piu": {
-   "t": "Il più votato: {c}",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.pareggio.decide.x": {
-   "t": "{nome} ha votato il n. {n}, tra le carte pari merito: cade la sua, le altre si salvano.",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.pareggio.x": {
-   "t": "Cadono insieme tutte le carte a pari merito: {lista}.",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.cade.x": {
-   "t": "{v} voti su {tot}. Cade giù dalla torre!",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.lui.t": {
-   "t": "Il Lui! di {nome}",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
   "rv.lui.aria": {
    "t": "Che cos'è il segnalino Lui!",
    "s": "Salita e spoglio dei voti (turno normale)",
    "n": "Nome accessibile del gettone sulla Torre"
-  },
-  "rv.lui.x": {
-   "t": "Scommetteva: **{label}** sul n. {n} (la carta col bordo giallo, +{pt} punti). Gli altri gliene hanno dati {altri}: **{esito}**.",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.lui.si": {
-   "t": "azzeccato! +{pt}",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.lui.no": {
-   "t": "mancato",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.gregge.x": {
-   "t": "Ha posato l'**Imbroglio!** sul n. {n} (la carta col bordo giallo): i voti su quella carta non valgono. **{esito}**.",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Variante «Il gregge»"
-  },
-  "rv.gregge.si": {
-   "t": "Voti annullati: {k}. +{pt} al Megafono",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "{k} = quanti voti sono stati annullati, {pt} = punti del Megafono"
-  },
-  "rv.gregge.no": {
-   "t": "Nessuno ci è cascato",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Variante «Il gregge»"
-  },
-  "rv.lui.gregge": {
-   "t": "Il gregge: **+{pt}** anche a chi l'ha votata ({k}).",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Variante «Il gregge»: {k} = quanti l'hanno votata"
-  },
-  "rv.stamp.pari": {
-   "t": "Cadono insieme: {lista}!",
-   "s": "Salita e spoglio dei voti (turno normale)"
-  },
-  "rv.stamp.uno": {
-   "t": "Cade il n. {n}!",
-   "s": "Salita e spoglio dei voti (turno normale)"
   },
   "rv.avanti": {
    "t": "Avanti ›",
@@ -2313,56 +2158,6 @@
    "s": "Variante PROPAGANDA",
    "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
   },
-  "rv.e.propaganda": {
-   "t": "Ha posato **Propaganda!** sul n. {n}: +{k} voti, da {prima} a {dopo}.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.spareggio": {
-   "t": "Ha posato **Spareggio!** sul n. {n}: era in pareggio in testa e cade da sola.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.spareggio.no": {
-   "t": "Ha posato **Spareggio!** sul n. {n}: nessun pareggio in testa, nessun effetto.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.influenza": {
-   "t": "Ha posato **Influenza!**: il suo voto sul n. {v} è valso doppio.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.imbroglio": {
-   "t": "Ha posato **Imbroglio!** sul n. {n}: {k} voti annullati.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.imbroglio.no": {
-   "t": "Ha posato **Imbroglio!** sul n. {n}: nessuno l'ha votata, nessun voto annullato.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.dirottamento": {
-   "t": "Ha posato **Dirottamento!** sul n. {n}: un voto è passato al n. {to}.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.dirottamento.no": {
-   "t": "Ha posato **Dirottamento!** sul n. {n}: non c'erano voti da spostare.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.censura": {
-   "t": "Ha posato **Censura!** sul n. {n}: un voto in meno ({prima} → {dopo}).",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
-  "rv.e.censura.no": {
-   "t": "Ha posato **Censura!** sul n. {n}: non c'erano voti da togliere.",
-   "s": "Spoglio",
-   "n": "Variante PROPAGANDA: cosa ha fatto il segnalino. {n} = carta, {k} = voti, {to} = carta di arrivo, {prima}/{dopo} = voti, {v} = carta votata dal Megafono"
-  },
   "obj.c.almeno": {
    "t": "riceve almeno {k} voti",
    "s": "Variante PROPAGANDA",
@@ -2427,18 +2222,6 @@
    "t": "Obiettivo mancato dal Megafono (voti del n. {n}: {v}), ma nessuno della Folla l'aveva votato.",
    "s": "Variante PROPAGANDA",
    "n": "Riepilogo dei punti"
-  },
-  "pp.obj.ok": {
-   "t": "Obiettivo riuscito",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.obj.ko": {
-   "t": "Obiettivo mancato",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.obj.folla": {
-   "t": "Ha votato il personaggio dell'obiettivo: +{pt}",
-   "s": "Riepilogo del turno («Com'è andata»)"
   },
   "room.propaganda": {
    "t": "Propaganda (prova)",
@@ -2582,56 +2365,6 @@
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
-  "rv.m.t": {
-   "t": "Il Lui! di {nome}",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.cade": {
-   "t": "**CADE** sul n. {n}: è caduta! +{pt} al Megafono e a chi l'ha votata ({k}).",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.cade.no": {
-   "t": "**CADE** sul n. {n}: è rimasta su, niente.",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.noncade": {
-   "t": "**NON CADE** sul n. {n}: è rimasta su! +{pt} al Megafono e a chi l'ha votata ({k}).",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.noncade.no": {
-   "t": "**NON CADE** sul n. {n}: è caduta, niente.",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.nulli": {
-   "t": "**VOTI NULLI!** sul n. {n}: {k} voti annullati.",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.m.nulli.no": {
-   "t": "**VOTI NULLI!** sul n. {n}: nessuno l'ha votata.",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.pareggio.seg": {
-   "t": "Pareggio!",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "rv.pareggio.seg.x": {
-   "t": "Pari merito: {lista}. Lo scioglie il segnalino del Megafono…",
-   "s": "Salita e spoglio dei voti (turno normale)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "pp.m.folla": {
-   "t": "Ha votato la carta del {lui}: +{pt}",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Gioco base «Cade / Non cade»"
-  },
   "g.cnc.t1": {
    "t": "METTI IL LUI!",
    "s": "Partita: turno normale",
@@ -2655,11 +2388,6 @@
   "g.cnc.novoto": {
    "t": "Non puoi votare la carta con VOTI NULLI!: scegline un'altra.",
    "s": "Partita: turno normale",
-   "n": "Gioco base «Cade / Non cade»"
-  },
-  "pp.m.nulli": {
-   "t": "Voto annullato da VOTI NULLI!",
-   "s": "Riepilogo del turno («Com'è andata»)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "mini.accusa.regola": {
@@ -2773,35 +2501,80 @@
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Scritta sul sipario chiuso dopo la corsa"
   },
-  "pp.mini.giusto.accusa": {
-   "t": "Ha scelto il colpevole: la carta più votata",
-   "s": "Riepilogo del turno («Com'è andata»)",
-   "n": "Intervallo a tempo"
-  },
-  "pp.mini.giusto.amore": {
-   "t": "Ha scelto il partner perfetto: la carta più votata",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.mini.giusto.peggiore": {
-   "t": "Ha scelto il peggiore: la carta più votata",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.mini.sbagliato": {
-   "t": "Ha scelto una carta meno votata",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.mini.nessuno": {
-   "t": "Non ha votato in tempo",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
-  "pp.mini.veloce": {
-   "t": "Il più veloce di chi ha scelto bene: +4",
-   "s": "Riepilogo del turno («Com'è andata»)"
-  },
   "mg.mani": {
    "t": "Turno {n} di {tot} · poi 5 carte nuove per tutti",
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Sotto «Punti del turno» dopo un intervallo: le mani vengono rinnovate"
+  },
+  "rv.gettalo": {
+   "t": "Gettalo dalla torre!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Pulsante a fine spoglio: fa partire la caduta delle carte"
+  },
+  "rv.gettali": {
+   "t": "Gettali dalla torre!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Pulsante a fine spoglio: fa partire la caduta delle carte"
+  },
+  "rs.m.voto": {
+   "t": "Voto giusto: la carta {n} è caduta",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.mini": {
+   "t": "Voto giusto sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.veloce": {
+   "t": "Il voto più veloce",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.carta": {
+   "t": "La tua carta {n} è caduta",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.lui": {
+   "t": "Il tuo Lui! ha colpito la carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.lui0": {
+   "t": "Il Lui! ha mancato la carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.folla": {
+   "t": "Hai seguito il Lui! sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.obj": {
+   "t": "Obiettivo centrato sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.obj0": {
+   "t": "Obiettivo mancato sulla carta {n}",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.objf": {
+   "t": "Hai votato la carta dell'obiettivo ({n})",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.nulli": {
+   "t": "Il tuo voto è stato annullato",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "rs.m.zero": {
+   "t": "Nessun punto in questo turno",
+   "s": "Riepilogo punti: perché hai preso quei punti",
+   "n": "Tocco su un giocatore nella striscia dei punti"
   }
  }
 }

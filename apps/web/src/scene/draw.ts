@@ -1,6 +1,8 @@
 // Disegno della terrazza (vista dall'alto) e della Torre di profilo, come stringhe HTML/SVG. Derivato dal mockup approvato.
 // @ts-nocheck
 import { tokenUrl } from "../lib/characters.ts";
+import { megaNested } from "./megaIcon.ts";
+import { visibleRect } from "../lib/results.ts";
 let URLS: string[] = [];
 export const setCardUrls = (u: string[]) => { URLS = u; };
 const A = (_: string) => "";
@@ -9,11 +11,11 @@ const NV='#13224a',ST='#e3c98f',STL='#f3e2b4',STD='#b99a68';
 const sp=(cx,cy,rx,ry,n=4,k=72)=>{let d='';for(let i=0;i<k;i++){const a=i/k*Math.PI*2,c=Math.cos(a),s=Math.sin(a);const x=cx+rx*Math.sign(c)*Math.pow(Math.abs(c),2/n),y=cy+ry*Math.sign(s)*Math.pow(Math.abs(s),2/n);d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1)}return d+'Z'};
 const spPt=(cx,cy,rx,ry,a,n=4)=>{const c=Math.cos(a),s=Math.sin(a);return [cx+rx*Math.sign(c)*Math.pow(Math.abs(c),2/n),cy+ry*Math.sign(s)*Math.pow(Math.abs(s),2/n)]};
 /* ---- gettoni ---- */
-function voteTok(color,sz=30,mega=false,glow=false){const mp=`<g transform="translate(8 8) scale(.78) translate(-50 -50)"><path d="M38 56V44l16-9v30z" fill="${NV}"/><path d="M58 42q6 8 0 16" stroke="${NV}" stroke-width="4" fill="none" stroke-linecap="round"/><rect x="34" y="44" width="6" height="12" fill="${NV}"/></g>`;return `<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" style="overflow:visible;filter:drop-shadow(2px 3px 0 #13224a)"><image href="${tokenUrl(color)}" x="1" y="1" width="98" height="98"/><circle cx="50" cy="50" r="48" fill="none" stroke="${NV}" stroke-width="4"/>${mega?`<circle cx="9" cy="9" r="23" fill="#fff" stroke="${NV}" stroke-width="4"/>${mp}<g class="${glow?'tbbadge':''}"><circle cx="91" cy="9" r="23" fill="#ffc72c" stroke="${NV}" stroke-width="4"/><text x="91" y="21" text-anchor="middle" font-family="Anton" font-size="34" fill="${NV}">=</text></g>`:''}</svg>`}
+function voteTok(color,sz=30,mega=false,glow=false){return `<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" style="overflow:visible;filter:drop-shadow(2px 3px 0 #13224a)"><image href="${tokenUrl(color)}" x="1" y="1" width="98" height="98"/><circle cx="50" cy="50" r="48" fill="none" stroke="${NV}" stroke-width="4"/>${mega?`<circle cx="9" cy="9" r="23" fill="#fff7e0" stroke="${NV}" stroke-width="4"/>${megaNested(-8,-8,34)}`:''}</svg>`}
 /* PROPAGANDA: gettone con icona; verde i positivi, rosso i negativi; nel bollo il segno */
-const EFF={cade:['⬇','CADE'],noncade:['⬆','NON CADE'],nulli:['🚫','VOTI NULLI'],propaganda:['📣','PROPAGANDA'],spareggio:['⚖️','SPAREGGIO'],influenza:['✖️2','INFLUENZA'],imbroglio:['🚫','IMBROGLIO'],dirottamento:['↪️','DIROTTA'],censura:['✂️','CENSURA']};
+const EFF={cade:['⬇','CADE'],noncade:['⬆','NON CADE'],nulli:['🚫','VOTI NULLI'],propaganda:['@mega','PROPAGANDA'],spareggio:['⚖️','SPAREGGIO'],influenza:['✖️2','INFLUENZA'],imbroglio:['🚫','IMBROGLIO'],dirottamento:['↪️','DIROTTA'],censura:['✂️','CENSURA']};
 function effTok(spec,sz){const [ic,nm]=EFF[spec.effect]||['?',''],base={cade:'#e8362b',noncade:'#3f8fd0',nulli:'#3b3f4a'}[spec.effect],col=base||(spec.positive?'#2fae5b':'#d6452f'),sg=base?(spec.pts?'+'+spec.pts:'0'):(spec.positive?'+':'−');
- return `<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" style="filter:drop-shadow(2px 3px 0 #13224a)"><circle cx="50" cy="50" r="46" fill="${col}" stroke="${NV}" stroke-width="6"/><circle cx="50" cy="50" r="38" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="4 4" opacity=".8"/><circle cx="46" cy="44" r="21" fill="#fff" stroke="${NV}" stroke-width="3"/><text x="46" y="${ic.length>2?51:53}" text-anchor="middle" font-size="${ic.length>2?17:24}" font-family="Anton">${ic}</text><text x="46" y="80" text-anchor="middle" font-family="Anton" font-size="${nm.length>9?10.5:12}" letter-spacing=".6" fill="#fff" stroke="${NV}" stroke-width="2.2" paint-order="stroke">${nm}</text><circle cx="80" cy="22" r="15" fill="#ffc72c" stroke="${NV}" stroke-width="4"/><text x="80" y="31" text-anchor="middle" font-family="Anton" font-size="24" fill="${NV}">${sg}</text></svg>`}
+ return `<svg width="${sz}" height="${sz}" viewBox="0 0 100 100" style="filter:drop-shadow(2px 3px 0 #13224a)"><circle cx="50" cy="50" r="46" fill="${col}" stroke="${NV}" stroke-width="6"/><circle cx="50" cy="50" r="38" fill="none" stroke="#fff" stroke-width="2.4" stroke-dasharray="4 4" opacity=".8"/><circle cx="46" cy="44" r="21" fill="#fff" stroke="${NV}" stroke-width="3"/>${ic==='@mega'?megaNested(29,27,34):`<text x="46" y="${ic.length>2?51:53}" text-anchor="middle" font-size="${ic.length>2?17:24}" font-family="Anton">${ic}</text>`}<text x="46" y="80" text-anchor="middle" font-family="Anton" font-size="${nm.length>9?10.5:12}" letter-spacing=".6" fill="#fff" stroke="${NV}" stroke-width="2.2" paint-order="stroke">${nm}</text><circle cx="80" cy="22" r="15" fill="#ffc72c" stroke="${NV}" stroke-width="4"/><text x="80" y="31" text-anchor="middle" font-family="Anton" font-size="24" fill="${NV}">${sg}</text></svg>`}
 function luiTok(spec,sz=34,back=false){ if(back||!spec)return `<img src="/lui-coperto.png" width="${sz}" height="${sz}" alt="" style="display:block;filter:drop-shadow(2px 3px 0 #13224a)"/>`;
  if(spec.effect)return effTok(spec,sz);
  const col=spec.trap?'#3b3f4a':{k1:'#4fb3e8',k2:'#ff8a1f',k3:'#e8362b',zero:'#9b59d0'}[spec.slot]||'#ffc72c',big=spec.slot==='zero'?'0':spec.k+'+';
@@ -63,27 +65,31 @@ function standCard(i,x,feet,w,rot,z,o={}){const h=Math.round(w*1.5);
   const flip=o.flip!==undefined;const sx=flip?Math.max(.05,Math.abs(Math.cos(o.flip*Math.PI))):1,st=flip?(o.flip<.5?'down':'up'):(o.state||'up');
   return `<div style="position:absolute;left:${x-4}px;top:${feet-10}px;width:${w+30}px;height:30px;z-index:${z}">
      <svg width="${w+30}" height="30" viewBox="0 0 ${w+30} 30" overflow="visible"><polygon points="6,12 ${w+2},12 ${w+30},2 32,2" fill="#13224a" opacity=".2"/><ellipse cx="${w/2+8}" cy="16" rx="${w*.52}" ry="9" fill="#13224a" opacity=".38"/></svg></div>
-   <div style="position:absolute;left:${x}px;top:${feet-h-6}px;width:${w}px;height:${h+10}px;transform:rotate(${rot}deg);transform-origin:50% 100%;z-index:${z+1}">
-    <div style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;transform:scaleX(${sx});transform-origin:50% 50%">${cardFace(i,w,h,st,o.lui)}</div>${o.lui?`<div class="luitag" style="position:absolute;left:50%;top:-30px;transform:translateX(-50%);z-index:6">${luiTok(o.lui.spec,46,o.lui.back)}</div>`:''}
+   <div style="position:absolute;left:${x}px;top:${feet-h-6+(o.sink?14:0)}px;width:${w}px;height:${h+10}px;transform:rotate(${rot}deg);transform-origin:50% 100%;z-index:${z+1}">
+    <div style="position:absolute;left:0;top:0;width:${w}px;height:${h}px;transform:scaleX(${sx});transform-origin:50% 50%">${cardFace(i,w,h,st,o.lui)}</div>${o.lui?`<div class="luitag" style="position:absolute;left:-18px;top:${o.luiY!==undefined?Math.round(o.luiY):Math.round(h/2)}px;transform:translateY(-50%);z-index:6">${luiTok(o.lui.spec,46,o.lui.back)}</div>`:''}
     <div style="position:absolute;left:${(w-Math.max(18,w*.3))/2}px;top:${h-5}px;width:${Math.max(18,w*.3)}px;height:13px;background:#13224a;border-radius:3px 3px 5px 5px;box-shadow:inset 0 3px 0 #3b4a6e,inset 0 -2px 0 #0a1230"></div>
    </div>`}
 const jit=(k)=>[(Math.sin(k*12.9898)*43758.5453)%1,(Math.sin(k*78.233)*12345.678)%1,(Math.sin(k*39.346)*9871.123)%1].map(v=>v-Math.floor(v)-.5);
 function cardsLayout(n,opt={}){
   const back=(n<=5?[0,1]:[0,1,2,3]).filter(i=>i<n),front=(n<=5?[2,3,4]:[4,5,6,7]).filter(i=>i<n);
-  const wB=n<=5?88:68,wF=n<=5?100:76,spB=n<=5?100:62,spF=n<=5?102:66,yB=n<=5?466:458,yF=n<=5?566:566;
-  let o='';const pos={};
+  const wB=n<=5?88:68,wF=n<=5?100:76,spB=n<=5?100:62,spF=n<=5?102:66,yB=n<=5?466:458,yF=opt.spread?600:566;
+  let o='';const pos={};const pre={};const geo=(list,feet,w,sp)=>{const m=(list.length-1)/2;list.forEach((i,k)=>{const [jx,jy]=jit(i+1);pre[i]={x:CX+(k-m)*sp-w/2+jx*8,f:feet+jy*6+((opt.sink||[]).includes(i+1)?14:0),w,h:Math.round(w*1.5)}})};geo(back,yB,wB,spB);geo(front,yF,wF,spF);
   const put=(list,feet,w,sp,zb)=>{const m=(list.length-1)/2;list.forEach((i,k)=>{const [jx,jy,jr]=jit(i+1),x=CX+(k-m)*sp-w/2+jx*8,f=feet+jy*6,rot=jr*6;pos[i]={x,f,w,h:Math.round(w*1.5)};
-     if(opt.show&&!opt.show.includes(i))return;const sc=standCard(i,x,f,w,rot,zb+k*2,{state:opt.down?'down':'up',flip:(opt.flip&&opt.flip[i]!==undefined)?opt.flip[i]:undefined,lui:opt.luiList?(()=>{const m=opt.luiList.find(x=>x.pos===i+1);return m?{spec:m.spec||null,back:!m.spec}:undefined})():(opt.lui===i+1)?{spec:opt.luiSpec||null,back:!!opt.luiBack}:undefined});o+=(opt.pop&&opt.pop===i+1)?`<div class="popin" style="position:absolute;inset:0">${sc}</div>`:sc})};
+     if(opt.show&&!opt.show.includes(i))return;const sc=standCard(i,x,f,w,rot,zb+k*2,{sink:(opt.sink||[]).includes(i+1),luiY:(()=>{const q=pre[i],v=visibleRect(pre,i);return v.y+v.h/2-(q.f-q.h-6)})(),state:opt.down?'down':'up',flip:(opt.flip&&opt.flip[i]!==undefined)?opt.flip[i]:undefined,lui:opt.luiList?(()=>{const m=opt.luiList.find(x=>x.pos===i+1);return m?{spec:m.spec||null,back:!m.spec}:undefined})():(opt.lui===i+1)?{spec:opt.luiSpec||null,back:!!opt.luiBack}:undefined});o+=(opt.pop&&opt.pop===i+1)?`<div class="popin" style="position:absolute;inset:0">${sc}</div>`:sc})};
   put(back,yB,wB,spB,10);put(front,yF,wF,spF,30);
   // gettoni DIRETTAMENTE sulla carta (colore giocatore); il Megafono ha il simbolo del megafono
-  (opt.votes||[]).forEach((v,idx,all)=>{const p=pos[v.p-1];if(!p)return;const same=all.filter(q=>q.p===v.p),j=same.indexOf(v),cnt=same.length;const tx=p.x+p.w/2-14+((j%2)?9:-9)*(cnt>1?1:0),ty=p.f-p.h*.55-Math.floor(j/2)*14+((j%2)?10:0);
-     const sz=v.mega?44:28,off=(sz-28)/2;o+=`<div class="${idx===opt.lastVote?'tokdrop':''}${v.glow?' tbg':''}" style="position:absolute;left:${tx-off}px;top:${ty-off}px;z-index:${v.mega?72:70};transform:rotate(${(j-1)*9}deg)">${voteTok(v.c,sz,v.mega,!!v.glow)}</div>`});
+  const bySlot={};(opt.votes||[]).forEach((v,idx)=>{(bySlot[v.p]=bySlot[v.p]||[]).push({v,idx})});
+  const luiAt=new Set([...(opt.lui?[opt.lui]:[]),...((opt.luiList||[]).map(m=>m.pos))]);
+  Object.entries(bySlot).forEach(([pp,list])=>{const p=pre[pp-1];if(!p)return;const vr=visibleRect(pre,pp-1),rs=luiAt.has(Number(pp))?24:3,ax=p.x+rs,aw=p.w-rs-3,ay=vr.y,ah=vr.h,cnt=list.length;
+    let s=28,cols=1,rows=cnt;for(;s>=16;s-=2){cols=Math.max(1,Math.floor((aw+2)/(s+2)));rows=Math.ceil(cnt/cols);if(rows*(s+2)-2<=ah)break}
+    list.forEach(({v,idx},j)=>{const r=Math.floor(j/cols),c=j%cols,inRow=Math.min(cols,cnt-r*cols),cx=ax+aw/2+(c-(inRow-1)/2)*(s+2),cy=ay+ah/2+(r-(rows-1)/2)*(s+2),sz=v.mega?Math.round(s*1.35):s;
+      o+=`<div class="${idx===opt.lastVote?'tokdrop':''}${v.glow?' tbg':''}" style="position:absolute;left:${cx-sz/2}px;top:${cy-sz/2}px;z-index:${v.mega?72:70}">${voteTok(v.c,sz,v.mega,!!v.glow)}</div>`})});
   if(opt.posOut)Object.assign(opt.posOut,pos);
   return o}
 const terrace=(n,opt={})=>shaft()+terraceBase()+cardsLayout(n,opt);
 export function terraceBaseHtml(): string { return shaft() + terraceBase(); }
 export function terraceCardsHtml(urls: string[], n: number, opt: any = {}): string { URLS = urls; return cardsLayout(n, opt); }
-export function terracePos(n: number): Record<number, { x: number; f: number; w: number; h: number }> { const pos: any = {}; cardsLayout(n, { posOut: pos }); return pos; }
+export function terracePos(n: number, spread = false): Record<number, { x: number; f: number; w: number; h: number }> { const pos: any = {}; cardsLayout(n, { posOut: pos, spread }); return pos; }
 export { voteTok, luiTok };
 
 export const MEGA_ICON = "";

@@ -6,7 +6,8 @@ import { Btn, Disc, FAST, PLAYER_COLORS, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
-import PointsPanel from "../components/PointsPanel.tsx";
+import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
+import { objCond } from "../lib/lui.ts";
 import Zoom from "../components/Zoom.tsx";
 import { Climb, Reveal, Terrace, luiSpecOf, luiToks, markSpec } from "../components/Terrace.tsx";
 import type { Voter, VoteTok } from "../components/Terrace.tsx";
@@ -24,6 +25,7 @@ import LuiDraw from "../components/LuiDraw.tsx";
 import CharIntro from "../components/CharIntro.tsx";
 interface Geo { left: number; top: number; w: number; h: number; rot: number }
 import { t as tx, ts as txs } from "../lib/testi.ts";
+import { MegaIcon } from "../components/MegaIcon.tsx";
 
 export interface GameProps { room: RoomMsg; view: PlayerView; deadline: number | null; /** Intervallo a tempo: istante locale del «via!». */ goAt?: number | null; send: (m: ClientMessage) => void; readOnly?: boolean; sound: boolean; ui?: UiCtl }
 /** Cartelli di inizio fase (letti al momento, così seguono i testi aggiornati). */
@@ -104,7 +106,7 @@ export function HandPicker({ view, send, ui, title = txs("g.mano.t"), sub = txs(
               onClick={() => { if (d === 0 && picked) setZoom(true); else { setCur(i); setPicked(true); } }} />;
           })}
           <div className="bdots">{hand.map((_, i) => <i key={i} className={i === cur ? "on" : ""} />)}</div>
-          {mega && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden>📣</i>}
+          {mega && n > 0 && <i className="hstamp" style={{ left: geo(cur).left - 6, top: geo(cur).top - 8 }} aria-hidden><MegaIcon s={28} /></i>}
         </div>
       </div>
       <BSheet gold={mega} title={title} sub={sub} ui={ui}>
@@ -168,6 +170,13 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const showFallScene = !!res && watched && !revealing && !FAST;
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
   const afterStep = after.turn === turn ? after.step : "points";
+  // chi ha visto spoglio e caduta non rivede i punti: dopo la caduta si passa da soli alla classifica (subito se ha saltato l'animazione)
+  const skippedAt = useRef(0), seenAll = !!res && watched && !FAST;
+  useEffect(() => {
+    if (!seenAll || fallDone !== turn || afterStep !== "points") return undefined;
+    const tt = setTimeout(() => setAfter({ turn, step: "board" }), skippedAt.current === turn ? 150 : 2200);
+    return () => clearTimeout(tt);
+  }, [seenAll, fallDone, turn, afterStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const voters: Voter[] = useMemo(() => {
     // Gli altri in ordine di tavolo, il Megafono per ultimo (rullo di tamburi).
@@ -186,7 +195,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const canPick = !readOnly && !climbing && (canVote || (phase === "SUSPECT" && isMega));
   const luiShown = phase === "SUSPECT" && isMega && pick ? { pos: pick, spec: null } : view.luiPosition != null ? { pos: view.luiPosition, spec: view.luiSlot ? view.luiTokens.find((x) => x.slot === view.luiSlot) ?? null : null } : null;
   const voteToks: VoteTok[] = useMemo(() => {
-    if (res) return luiToks(voters.map((v) => ({ v, tok: { p: res.votes[v.id]!, c: v.color, mega: v.mega } })), res.lui ?? null, res.marks ?? null);   // conteggio ufficiale (Imbroglio!, Propaganda!, …)
+    if (res) return luiToks(voters.map((v) => ({ v, tok: { p: res.votes[v.id]!, c: v.color, mega: v.mega, id: v.id } })), res.lui ?? null, res.marks ?? null);   // conteggio ufficiale (Imbroglio!, Propaganda!, …)
     if (phase === "VOTE" && view.myVote) return [{ p: view.myVote, c: people.get(me).color, mega: isMega }];
     return [];
   }, [res, voters, phase, view.myVote, me, isMega, people]);
@@ -195,6 +204,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
+  const annullati: string[] = res ? [...(res.marks?.find((x) => x.effect === "nulli")?.caught ?? []), ...(((res.lui?.trap || res.lui?.effect === "imbroglio") && res.lui.caught) ? res.lui.caught : [])] : [];
+  const fellArr = res ? res.fallenPositions ?? [res.fallenPosition] : [], luiPosArr = [...(res?.lui ? [res.lui.position] : []), ...(res?.marks ?? []).map((x) => x.position)];
   const resLui = res?.lui ? { pos: res.lui.position, spec: luiSpecOf(res.lui) } : null, resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? txs("g.meta.giro", { n: view.round, tot: view.rounds }) : "";
@@ -220,10 +231,11 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? txs("g.ban.vote.t") : txs("g.ban.dopo.mega"), sub: v ? txs("g.ban.vote.s") : txs("g.ban.dopo.mega.s") }); } }} />}
       {!climbing && needTerrace && !revealing && (
-        <Terrace cardIds={ids} votes={voteToks} lui={view.cnc ? null : res ? resLui : luiShown} marks={view.cnc ? (res ? resMarks : marksShown) : null} selected={phase === "RESULTS" ? null : dirOn ? dir!.to : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? (dirOn ? (n !== dir!.from && setDir({ ...dir!, to: n })) : setPick(n)) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && (view.luiPosition != null || view.marks.length > 0) ? () => setLuiInfo(true) : undefined} />
+        <Terrace cardIds={ids} spread={!!(res && showPanel && !seenAll && afterStep === "points")} sink={res && showPanel && !seenAll && afterStep === "points" ? fellArr : undefined} votes={res && showPanel && !seenAll && afterStep === "points" ? [] : voteToks} lui={view.cnc ? null : res ? resLui : luiShown} marks={view.cnc ? (res ? resMarks : marksShown) : null} selected={phase === "RESULTS" ? null : dirOn ? dir!.to : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? (dirOn ? (n !== dir!.from && setDir({ ...dir!, to: n })) : setPick(n)) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && (view.luiPosition != null || view.marks.length > 0) ? () => setLuiInfo(true) : undefined} />
       )}
+      {showPanel && !seenAll && res && afterStep === "points" && needTerrace && <ResultMarks still spread sink={fellArr} luiPos={luiPosArr} megaId={voters.find((v) => v.mega)?.id} n={ids.length} votes={voteToks} lines={res.lines} fallen={fellArr} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} marks={res.marks ?? null} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} megaName={megaName} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={fellArr} points={{ lines: res.lines, ids: view.players.map((p) => p.id), colorOf: (id) => people.get(id).color, meId: readOnly ? undefined : me, annullati }} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
@@ -296,9 +308,10 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
                     : <BSheet gold={gold} title={tx("g.inviato")} sub={tx("g.aspettiamo")} ui={uiv}><Flags flags={flagsVote} people={people} /></BSheet>}
               </>}
 
-              {showPanel && res && afterStep === "points" && <>
+              {showPanel && !seenAll && res && afterStep === "points" && <>
                 {phase === "RESULTS" && <div className="bsp" />}
-                <PointsPanel meId={readOnly ? undefined : me} objective={res.objective ?? null} marks={res.marks ?? null} cardIds={ids} voters={voters} votes={res.votes} lines={res.lines} lui={res.lui} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} interactive={!readOnly} hideGo onContinue={() => setAfter({ turn, step: "board" })} />
+                <ScoreStrip still megaId={voters.find((v) => v.mega)?.id} ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} annullati={annullati} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
+                {res.objective && <span className="pp-obj" data-testid="objective-result">{res.objective.megaHit ? tx("obj.esito.mega", { n: res.objective.position, cond: objCond(res.objective), v: res.objective.votes, pt: res.objective.pts }) : res.objective.winners.length ? tx("obj.esito.folla", { n: res.objective.position, v: res.objective.votes, pt: res.objective.pts, k: res.objective.winners.length }) : tx("obj.esito.nessuno", { n: res.objective.position, v: res.objective.votes })}</span>}
                 <BSheet gold={gold} title={tx("g.punti.t")} sub={txs("g.punti.s", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
                   {readOnly ? <span className="pb-wait">{tx("g.prosegue")}</span> : <Row>{tray}<Btn onClick={() => setAfter({ turn, step: "board" })} testId="points-continue">{tx("g.continua")}</Btn></Row>}
                 </BSheet>
@@ -307,7 +320,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
           )}
         </div>
       )}
-      {animating && !readOnly && <button className="skip" onClick={() => { setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
+      {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
       {showPanel && res && afterStep === "board" && (
         <Standings title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
           rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}

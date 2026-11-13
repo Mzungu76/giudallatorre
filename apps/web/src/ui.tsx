@@ -37,7 +37,10 @@ function calcDims(maxScale: number): StageDims {
   const vh = window.visualViewport?.height ?? window.innerHeight;
   let k = Math.max(0.3, Math.min(maxScale, window.innerWidth / 372)), H = vh / k;
   if (H < 640) { H = 640; k = vh / 640; }
-  H = Math.min(H, 940);
+  return stageDims(k, Math.min(H, 940));
+}
+/** Dimensioni del palco per una scala `k` e un'altezza logica `H` (640–940): serve anche al simulatore, che mostra un telefono di altezza scelta. */
+export function stageDims(k: number, H: number): StageDims {
   // Layout B: la terrazza (alta ~392 nel disegno, dal punto 278) sta tra la frase in alto (~102) e il pannello in basso (~196), la torre prosegue sotto.
   const T0 = 102, avail = H - 196 - T0, ts = clamp(avail / 392, 0.72, 1), y0 = T0 + 22 * ts;
   return { k, H, dy: clamp((H - 826) * 0.6, -80, 70), ts, ty: y0 - 300 };
@@ -49,8 +52,8 @@ export function useAdaptive(maxScale = 1.5): StageDims {
 }
 
 /** Palco 372×H: tutto il disegno è in queste coordinate e viene scalato. L'altezza H si adatta allo schermo. */
-export function Stage({ children, bg = "paper", frame = true, testId, fixed }: { children: ReactNode; bg?: "paper" | "sky" | "none"; frame?: boolean; testId?: string; fixed?: boolean }) {
-  const ad = useAdaptive(), fk = useFit(), d: StageDims = fixed ? { k: fk, H: 826, dy: 0, ts: 1, ty: -27 } : ad;
+export function Stage({ children, bg = "paper", frame = true, testId, fixed, dims }: { children: ReactNode; bg?: "paper" | "sky" | "none"; frame?: boolean; testId?: string; fixed?: boolean; /** Dimensioni imposte (simulatore). */ dims?: StageDims }) {
+  const ad = useAdaptive(), fk = useFit(), d: StageDims = dims ?? (fixed ? { k: fk, H: 826, dy: 0, ts: 1, ty: -27 } : ad);
   return (
     <StageCtx.Provider value={d}>
       <div className="stage-outer" style={{ width: 372 * d.k, height: d.H * d.k }} data-testid={testId}>
