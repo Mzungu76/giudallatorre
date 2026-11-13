@@ -35,10 +35,10 @@ export function visibleRect(pos: Record<number, CardPos>, i: number): Rect {
 }
 
 /** Perché si prendono punti, a icone: accanto ai punti compare il simbolo del motivo (come il ⚡ del più veloce). I punti a 0 non hanno icona. */
-export type Reason = "target" | "bolt" | "card" | "hand" | "herd" | "flag";
+export type Reason = "target" | "bolt" | "card" | "hand" | "flag";
 export const REASON_ICON: Record<ScoreLine["kind"], Reason | ""> = {
   voto: "target", "mini-giusto": "target", "mini-veloce": "bolt", carta: "card",
-  lui: "hand", "lui-gregge": "herd", "lui-folla": "herd", "lui-mancato": "", obiettivo: "flag", "obiettivo-folla": "flag", "obiettivo-mancato": "",
+  lui: "hand", "lui-gregge": "hand", "lui-folla": "hand", "lui-mancato": "", obiettivo: "flag", "obiettivo-folla": "flag", "obiettivo-mancato": "",
 };
 /** I punti per ogni icona (stesso motivo = una sola icona, punti sommati), con il ⚡ in testa. Le righe a 0 non hanno icona. */
 export function iconPts(ls: ScoreLine[]): { k: Reason; pts: number }[] {

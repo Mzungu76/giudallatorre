@@ -1,9 +1,9 @@
 /**
  * Le icone dei motivi dei punti: piccole scene nello stile delle illustrazioni (bordo blu notte, colori pieni).
- * target = voto giusto (la carta cade) · bolt = il voto più veloce · card = la tua carta cade · hand = il tuo Lui! colpisce
- * · herd = hai seguito il Lui! (gregge) · flag = obiettivo centrato.
+ * target = voto giusto (la carta cade) · bolt = il voto più veloce · card = la tua carta cade · hand = il segnalino Lui! (anche per chi lo ha seguito)
+ * · flag = obiettivo centrato.
  */
-export type Reason = "target" | "bolt" | "card" | "hand" | "herd" | "flag";
+export type Reason = "target" | "bolt" | "card" | "hand" | "flag";
 const NV = "#13224a", st = { stroke: NV, strokeLinejoin: "round", strokeLinecap: "round" } as const;
 
 const Card = ({ x = 9, y = 6, w = 26, h = 34, rot = 0, ring = false, tint = false }: { x?: number; y?: number; w?: number; h?: number; rot?: number; ring?: boolean; tint?: boolean }) => (
@@ -21,10 +21,6 @@ const Arrow = ({ x, y, s }: { x: number; y: number; s: number }) => (
 const Check = ({ cx, cy, r = 9 }: { cx: number; cy: number; r?: number }) => (
   <><circle cx={cx} cy={cy} r={r} fill="#2fbf6a" {...st} strokeWidth="2" /><path d={`M${cx - r * 0.45} ${cy}l${r * 0.3} ${r * 0.35}l${r * 0.6} -${r * 0.7}`} fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></>
 );
-const Hand = ({ x, y, s }: { x: number; y: number; s: number }) => (
-  <g transform={`translate(${x} ${y}) scale(${s / 32})`}><path d="M6.2 14.2h8.6c.6-1.6 3.4-1.6 3.4 0h1.2c1.9 0 3.4 1.5 3.4 3.4v1.6c0 2.4-1.9 4.3-4.3 4.3h-5.2c-1.7 0-3.2-1-3.9-2.6l-2.6-4.2c-.7-1.1-.3-2.5.9-2.5z" fill="#fff7e0" stroke={NV} strokeWidth="1.9" strokeLinejoin="round" /></g>
-);
-const LuiTok = () => (<><circle cx="24" cy="24" r="20" fill="#ff9f2e" {...st} strokeWidth="3" /><circle cx="24" cy="24" r="14.5" fill="none" stroke="#fff" strokeWidth="1.6" strokeDasharray="3 3" /><Hand x={7} y={6} s={34} /></>);
 
 function Body({ k }: { k: Reason }) {
   switch (k) {
@@ -34,11 +30,7 @@ function Body({ k }: { k: Reason }) {
       <g transform="translate(15 18) scale(.56)"><path d="M18.6 4.8 9.4 17.6h5.6l-2 9.6 9.6-13.4h-5.8z" fill="#ffc72c" stroke={NV} strokeWidth="2.6" strokeLinejoin="round" /></g>
       <circle cx="38" cy="10" r="8" fill="#ffc72c" {...st} strokeWidth="2" /><text x="38" y="14" textAnchor="middle" fontFamily="Anton, Impact, sans-serif" fontSize="11" fill={NV}>1°</text></>);
     case "card": return (<><Card ring x={8} y={8} /><Arrow x={16} y={22} s={20} /><path d="M36 2l2.4 5 5.4.7-4 3.7 1 5.4-4.8-2.7-4.8 2.7 1-5.4-4-3.7 5.4-.7z" transform="translate(-2 0)" fill="#ffc72c" {...st} strokeWidth="1.8" /></>);
-    case "hand": return (<><LuiTok /><Check cx={38} cy={38} /></>);
-    case "herd": return (<>
-      <g {...st} strokeWidth="2.2"><circle cx="13" cy="26" r="8" fill="#fff" /><circle cx="22" cy="21" r="8" fill="#fff" /><circle cx="31" cy="26" r="8" fill="#fff" /><circle cx="21" cy="32" r="8" fill="#fff" />
-        <ellipse cx="33" cy="33" rx="6" ry="5.5" fill="#3b3f4a" /><rect x="13" y="37" width="3.4" height="8" rx="1.4" fill="#3b3f4a" /><rect x="26" y="37" width="3.4" height="8" rx="1.4" fill="#3b3f4a" /></g>
-      <circle cx="35" cy="32" r="1.3" fill="#fff" /><circle cx="36" cy="11" r="10" fill="#ff9f2e" {...st} strokeWidth="2.2" /><Hand x={24} y={0} s={24} /></>);
+    case "hand": return <image href="/lui-coperto.png" x="1" y="1" width="46" height="46" />;
     case "flag": return (<><Card x={6} y={10} w={24} h={32} /><path d="M32 42V4" stroke={NV} strokeWidth="3.2" strokeLinecap="round" /><path d="M33 5c6-3 10 3 14 0v12c-4 3-8-3-14 0z" fill="#e8362b" {...st} strokeWidth="2.2" /></>);
   }
 }
