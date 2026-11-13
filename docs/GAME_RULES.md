@@ -164,3 +164,6 @@ Sulla torre i riquadri dei punti stanno in basso sulla carta (una o due colonne,
 
 ### Sovrapposizioni e Megafono
 Segnalini, riquadri dei punti e frecce stanno solo nella parte visibile di ogni carta (`visibleRect` in `lib/results.ts`): la fila davanti copre il fondo di quella dietro. Il Lui! sta a sinistra, al centro della parte visibile. L'icona del Megafono è una sola (`scene/megaIcon.ts` / `MegaIcon`), usata ovunque.
+
+### Dopo la caduta
+Chi ha visto spoglio e caduta non rivede i punti: finita la scena si passa da soli alla classifica dopo ~2 s (subito se si è saltata l'animazione della caduta). Chi arriva a turno già iniziato vede ancora il riepilogo dei punti con «Continua».
