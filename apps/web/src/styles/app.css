@@ -1217,12 +1217,12 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 
 /* ===== Crea la partita: passi ===== */
 .wdots{display:flex;gap:7px;margin:-2px 0 4px 54px;flex:none}.wdots i{width:30px;height:9px;border-radius:9px;border:2.5px solid var(--navy);background:#fff7e0}.wdots i.on{background:var(--mus)}
-.chars{margin:0 -22px}
-.chars-row{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 18% 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.chars{margin:0 -22px;flex:1;min-height:0;display:flex;flex-direction:column}
+.chars-row{flex:1;min-height:0;container-type:size;display:flex;align-items:center;gap:6px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 calc(50cqw - var(--cw)/2);scrollbar-width:none;-webkit-overflow-scrolling:touch;--ch:min(86cqh,calc(66cqw*1.43));--cw:calc(var(--ch)*.6994)}
 .chars-row::-webkit-scrollbar{display:none}
-.chc{flex:none;width:64%;position:relative;scroll-snap-align:center;border:0;background:none;padding:0;transform:scale(.82);opacity:.6;transition:transform .25s,opacity .25s}
+.chc{flex:none;width:var(--cw);height:var(--ch);position:relative;scroll-snap-align:center;border:0;background:none;padding:0;transform:scale(.82);opacity:.6;transition:transform .25s,opacity .25s}
 .chc.on{transform:none;opacity:1}
-.chc-card{display:block;width:100%;aspect-ratio:349/499;object-fit:cover;border-radius:14px;border:4px solid var(--navy);box-shadow:0 6px 0 var(--navy);background:#fff7e0}
+.chc-card{display:block;width:100%;height:100%;object-fit:cover;border-radius:14px;border:4px solid var(--navy);box-shadow:0 6px 0 var(--navy);background:#fff7e0}
 .chc-tok{position:absolute;right:-12px;bottom:-12px;width:42%;filter:drop-shadow(2px 3px 0 #13224a)}
 .chars-name{text-align:center;margin-top:6px}.chars-name b{font:400 28px/1 Anton;text-transform:uppercase}
 .wcards{display:flex;gap:12px}
@@ -1257,3 +1257,5 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .lsum{margin:0 0 10px}
 .ptile .tg{font:400 11px Anton;text-transform:uppercase;color:var(--navy);background:var(--mus);border:2px solid var(--navy);border-radius:99px;padding:1px 8px}
 .ptile.em .nmx{white-space:normal;font:800 12px/1.2 Nunito;text-transform:none;text-shadow:0 1px 0 var(--navy)}
+.fbody .fld.grow{flex:1;min-height:0;display:flex;flex-direction:column}
+.fbody .fld.mid{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:6%}

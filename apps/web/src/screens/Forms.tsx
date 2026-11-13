@@ -69,7 +69,7 @@ export function CreateScreen() {
               <label className="lb" htmlFor="nick">{t("fm.nick")}</label>
               <input id="nick" className="in" data-testid="nick" value={nick} maxLength={16} autoComplete="nickname" onChange={(e) => setNick(e.target.value)} placeholder={ts("fm.nick.ph.crea")} />
             </div>
-            <div className="fld"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} /></div>
+            <div className="fld grow"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} /></div>
           </>}
           {step === 1 && <>
             <div className="fld">
@@ -78,7 +78,7 @@ export function CreateScreen() {
                 <button type="button" className={`wcard${mode === "remote" ? " on" : ""}`} onClick={() => setMode("remote")} data-testid="mode-remote"><span className="wi r" aria-hidden />{t("fm.distanza")}<small>{t("fm.w.distanza.x")}</small></button>
               </div>
             </div>
-            <div className="fld" data-testid="bots-box">
+            <div className="fld mid" data-testid="bots-box">
               <span className="lb">{t("fm.w.bot")}</span>
               <div className="wstep">
                 <button type="button" className="wpm" onClick={() => setBots(Math.max(0, bots - 1))} aria-label={ts("fm.bot.meno")} data-testid="bots-minus">−</button>

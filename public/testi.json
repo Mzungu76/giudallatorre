@@ -1,5 +1,5 @@
 {
- "versione": 30,
+ "versione": 31,
  "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
@@ -2509,7 +2509,7 @@
    "s": "Crea la partita (passi)"
   },
   "fm.w.pubblico": {
-   "t": "Per chi giocate?",
+   "t": "Che età avete?",
    "s": "Crea la partita (passi)",
    "n": "Fascia d'età dei testi"
   },
