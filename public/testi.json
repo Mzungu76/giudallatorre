@@ -1,5 +1,5 @@
 {
- "versione": 28,
+ "versione": 30,
  "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
@@ -1547,32 +1547,6 @@
    "t": "In attesa di altri giocatori…",
    "s": "Stanza e lobby"
   },
-  "room.pubblico": {
-   "t": "Pubblico",
-   "s": "Stanza e lobby"
-  },
-  "room.confessioni": {
-   "t": "Confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.gregge": {
-   "t": "Il gregge (prova)",
-   "s": "Stanza e lobby",
-   "n": "Casella della variante «Il gregge»"
-  },
-  "room.gregge.info": {
-   "t": "Variante: il gettone 0 del Lui! diventa l'Imbroglio! (i voti sulla sua carta non valgono; +3 al Megafono se ne annulla almeno uno); la soglia, se riesce, dà i punti al Megafono e anche a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
-   "s": "Stanza e lobby",
-   "n": "Suggerimento sulla casella"
-  },
-  "room.timer": {
-   "t": "Timer",
-   "s": "Stanza e lobby"
-  },
-  "room.timer.0": {
-   "t": "nessuno",
-   "s": "Stanza e lobby"
-  },
   "room.servono": {
    "t": "Servono 3 giocatori",
    "s": "Stanza e lobby"
@@ -1583,22 +1557,6 @@
   },
   "room.aspetta.host": {
    "t": "Aspetta che l'host avvii la partita…",
-   "s": "Stanza e lobby"
-  },
-  "room.pubblico.info": {
-   "t": "Pubblico: {eta}",
-   "s": "Stanza e lobby"
-  },
-  "room.con.conf": {
-   "t": " · con confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.senza.conf": {
-   "t": " · senza confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.con.gregge": {
-   "t": " · variante Il gregge",
    "s": "Stanza e lobby"
   },
   "room.schermo": {
@@ -1765,10 +1723,6 @@
    "t": "Prima di salire…",
    "s": "Crea / entra in partita"
   },
-  "fm.crea.titolo": {
-   "t": "Crea la partita",
-   "s": "Crea / entra in partita"
-  },
   "fm.nick": {
    "t": "Il tuo nickname",
    "s": "Crea / entra in partita"
@@ -1782,36 +1736,12 @@
    "t": "Es. Giulia",
    "s": "Crea / entra in partita"
   },
-  "fm.dove": {
-   "t": "Dove giocate?",
-   "s": "Crea / entra in partita"
-  },
   "fm.tavolo": {
    "t": "Stesso tavolo",
    "s": "Crea / entra in partita"
   },
   "fm.distanza": {
    "t": "A distanza",
-   "s": "Crea / entra in partita"
-  },
-  "fm.tavolo.x": {
-   "t": "Ognuno ha il proprio telefono. Un tablet o un PC può fare da schermo condiviso.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.distanza.x": {
-   "t": "Ognuno da casa: serve una chiamata o una chat per parlare.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.sa.t": {
-   "t": "Il Megafono sa",
-   "s": "Crea / entra in partita"
-  },
-  "fm.sa.x": {
-   "t": "Il Megafono gioca una carta della sua mano invece di pescarla.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.bot": {
-   "t": "Bot",
    "s": "Crea / entra in partita"
   },
   "fm.bot.meno": {
@@ -1840,10 +1770,6 @@
   },
   "fm.lv.hard": {
    "t": "Difficile",
-   "s": "Crea / entra in partita"
-  },
-  "fm.bot.x": {
-   "t": "I bot giocano come avversari veri. In tutto servono almeno 3 giocatori.",
    "s": "Crea / entra in partita"
   },
   "fm.creo": {
@@ -2223,32 +2149,6 @@
    "s": "Variante PROPAGANDA",
    "n": "Riepilogo dei punti"
   },
-  "room.propaganda": {
-   "t": "Propaganda (prova)",
-   "s": "Stanza e lobby",
-   "n": "Casella della variante PROPAGANDA"
-  },
-  "room.propaganda.info": {
-   "t": "Variante: ogni Megafono ha un segnalino positivo e uno negativo che cambiano il conteggio dei voti. Esclude «Il gregge».",
-   "s": "Stanza e lobby"
-  },
-  "room.obiettivi": {
-   "t": "Obiettivi contrapposti",
-   "s": "Stanza e lobby",
-   "n": "Casella dentro PROPAGANDA"
-  },
-  "room.obiettivi.info": {
-   "t": "A ogni turno il Megafono riceve un obiettivo segreto sui voti di un personaggio; se fallisce, prende i punti chi ha votato quel personaggio.",
-   "s": "Stanza e lobby"
-  },
-  "room.con.propaganda": {
-   "t": " · variante Propaganda",
-   "s": "Stanza e lobby"
-  },
-  "room.con.propaganda.obj": {
-   "t": " · variante Propaganda con obiettivi",
-   "s": "Stanza e lobby"
-  },
   "g.dir.t": {
    "t": "Dirottamento! Dove sposti il voto?",
    "s": "Partita: turno normale"
@@ -2575,6 +2475,65 @@
    "t": "Nessun punto in questo turno",
    "s": "Riepilogo punti: perché hai preso quei punti",
    "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "fm.w.chi": {
+   "t": "Chi sei?",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 1"
+  },
+  "fm.w.come": {
+   "t": "Come giocate?",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 2"
+  },
+  "fm.w.ultimi": {
+   "t": "Ultimi dettagli",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 3"
+  },
+  "fm.w.pers": {
+   "t": "Il tuo personaggio",
+   "s": "Crea la partita (passi)",
+   "n": "Etichetta: carte da scorrere"
+  },
+  "fm.w.tavolo.x": {
+   "t": "Ognuno il suo telefono",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.distanza.x": {
+   "t": "Ognuno a casa sua",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.bot": {
+   "t": "Bot al tavolo",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.pubblico": {
+   "t": "Per chi giocate?",
+   "s": "Crea la partita (passi)",
+   "n": "Fascia d'età dei testi"
+  },
+  "fm.w.timer": {
+   "t": "Tempo per scegliere",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.libero": {
+   "t": "Libero",
+   "s": "Crea la partita (passi)",
+   "n": "Nessun timer"
+  },
+  "fm.w.sec": {
+   "t": "{n} s",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.avanti": {
+   "t": "Avanti ›",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.passo": {
+   "t": "Passo {n} di {tot}",
+   "s": "Crea la partita (passi)",
+   "n": "Nome accessibile dei puntini"
   }
  }
 }

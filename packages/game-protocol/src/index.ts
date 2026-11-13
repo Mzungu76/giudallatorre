@@ -22,7 +22,7 @@ export const botLevelSchema = z.enum(["easy", "medium", "hard"]);
 export const MAX_PHRASE_CHARS = 80;
 
 // ---------- API HTTP ----------
-export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
+export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), /** Personaggio scelto dall'host (0–7). */ char: z.number().int().min(0).max(7).optional(), /** Fascia d'età dei testi (6, 10, 14, 18). */ ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), /** Tempo per scegliere (s): 0 = libero. */ turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional(), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
 export const joinRoomBody = z.object({ nickname: nicknameSchema }).strict();
 export type CreateRoomBody = z.infer<typeof createRoomBody>;
 export interface SessionResponse { code: string; playerId: string; token: string }

@@ -15,7 +15,7 @@ const shot = async (n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}
 const txt = async (id) => (await p.locator(`[data-testid="${id}"]`).first().innerText().catch(() => "")) ?? "";
 
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
-await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="bot-hard"]');
+await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); await p.click('[data-testid="wiz-next"]');
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(400);
 await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="game"]');
 

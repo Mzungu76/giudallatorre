@@ -10,8 +10,8 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   return data as T;
 }
 export type BotLevel = "easy" | "medium" | "hard";
-export const createRoom = (nickname: string, mode: "table" | "remote", megafonoSa: boolean, bots?: { count: number; level: BotLevel }) =>
-  call<Session>("/api/rooms", { method: "POST", body: JSON.stringify({ nickname, mode, megafonoSa, ...(bots && bots.count > 0 ? { bots } : {}) }) });
+export const createRoom = (nickname: string, mode: "table" | "remote", megafonoSa: boolean, bots?: { count: number; level: BotLevel }, extra?: { char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120 }) =>
+  call<Session>("/api/rooms", { method: "POST", body: JSON.stringify({ nickname, mode, megafonoSa, ...(extra ?? {}), ...(bots && bots.count > 0 ? { bots } : {}) }) });
 export const joinRoom = (code: string, nickname: string) =>
   call<Session>(`/api/rooms/${encodeURIComponent(code)}/join`, { method: "POST", body: JSON.stringify({ nickname }) });
 export const roomInfo = (code: string) => call<{ exists: boolean; stage?: string; players?: number; full?: boolean; mode?: string }>(`/api/rooms/${encodeURIComponent(code)}/info`);
