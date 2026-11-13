@@ -1209,3 +1209,8 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .rv-wrap.leaving{animation:rvOut .65s ease-in both}.rv-wrap.leaving button{pointer-events:none}
 @keyframes rvOut{to{transform:translateY(-8%) scale(1.15);opacity:0}}
 .scene-in{animation:scIn .8s ease-out both}@keyframes scIn{from{opacity:0}to{opacity:1}}
+.rs-ip{position:relative;display:inline-block;flex:none;margin-right:6px}
+.rs-ip .rsn{display:block}
+.rs-ip i{position:absolute;right:-9px;bottom:-5px;min-width:20px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:99px;background:#2fbf6a;border:2px solid #13224a;box-shadow:0 1.5px 0 #13224a;color:#fff;font:400 12px/1 Anton,Impact,sans-serif;font-style:normal;display:grid;place-items:center}
+.rs-ip i.dn{background:#e8362b}
+.rs-sic{gap:4px;margin-left:4px}

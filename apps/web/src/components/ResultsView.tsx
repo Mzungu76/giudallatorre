@@ -3,8 +3,8 @@ import type { ScoreLine } from "@gdt/game-engine";
 import { terracePos, voteTok } from "../scene/draw.ts";
 import { Disc, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
-import { chipsFor, iconsOf, sunk, totals, visibleRect } from "../lib/results.ts";
-import type { Rect, Tok } from "../lib/results.ts";
+import { chipsFor, iconPts, sunk, totals, visibleRect } from "../lib/results.ts";
+import type { Reason, Rect, Tok } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
 import { ReasonIcon } from "./ReasonIcon.tsx";
 import { REASON_ICON } from "../lib/results.ts";
@@ -31,6 +31,10 @@ const WHY: Record<ScoreLine["kind"], TestoKey> = {
   obiettivo: "rs.m.obj", "obiettivo-mancato": "rs.m.obj0", "obiettivo-folla": "rs.m.objf",
 };
 const iconFor = (k: ScoreLine["kind"]) => REASON_ICON[k] || (k.startsWith("lui") ? "hand" : "flag");
+/** L'icona di un motivo col bollo dei punti che ha dato (notifica). */
+function IcoPts({ k, pts, s }: { k: Reason; pts: number; s: number }) {
+  return <span className="rs-ip" style={{ width: s, height: s }}><ReasonIcon k={k} s={s} className={k === "bolt" ? "rs-fast" : ""} /><i className={pts < 0 ? "dn" : ""}>{sign(pts)}</i></span>;
+}
 const sign = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : "0");
 const cls = (n: number) => (n > 0 ? "up" : n < 0 ? "dn" : "zz");
 
@@ -79,7 +83,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
 }) {
   useEffect(() => { if (!quiet && !still) sfx.tada(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!interactive && !quiet) { const t = setTimeout(onContinue, 40000); return () => clearTimeout(t); } return undefined; }, [interactive]); // eslint-disable-line react-hooks/exhaustive-deps
-  const ord = popOrder(lines, ids, megaId), rows = totals(lines, ids), icons = Object.fromEntries(ids.map((id) => [id, iconsOf(lines[id] ?? [])]));
+  const ord = popOrder(lines, ids, megaId), rows = totals(lines, ids), icons = Object.fromEntries(ids.map((id) => [id, iconPts(lines[id] ?? [])]));
   const [open, setOpen] = useState<string | null>(null);
   const det = open ? [...(lines[open] ?? [])].sort((x, y) => y.pts - x.pts) : [];
   return (
@@ -88,7 +92,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
         <div className="rs-det" data-testid="points-detail" role="dialog">
           <div className="rs-dh"><Disc color={colorOf(open)} size="l" /><b>{sign(det.reduce((a, l) => a + l.pts, 0))}</b></div>
           {det.map((l, i) => (
-            <div key={i} className={`rs-dr${l.pts === 0 ? " dim" : ""}`}><ReasonIcon k={iconFor(l.kind)} s={28} /><b>{sign(l.pts)}</b><span>{txs(WHY[l.kind], { n: l.pos })}</span></div>
+            <div key={i} className={`rs-dr${l.pts === 0 ? " dim" : ""}`}><ReasonIcon k={iconFor(l.kind)} s={34} /><b>{sign(l.pts)}</b><span>{txs(WHY[l.kind], { n: l.pos })}</span></div>
           ))}
           {annullati?.includes(open) && <div className="rs-dr dim"><u aria-hidden>🚫</u><b>0</b><span>{txs("rs.m.nulli")}</span></div>}
           {det.length === 0 && !annullati?.includes(open) && <div className="rs-dr dim"><span>{txs("rs.m.zero")}</span></div>}
@@ -100,7 +104,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
           <Disc color={colorOf(id)} size="l" />
           {annullati?.includes(id) ? <u className="rs-no" aria-hidden>🚫</u> : null}
           <b>{gain > 0 && <PtIcon s={19} />}{sign(gain)}</b>
-          {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic) => <ReasonIcon key={ic} k={ic} s={24} className={ic === "bolt" ? "rs-fast" : ""} />)}</span>}
+          {(icons[id] ?? []).length > 0 && <span className="rs-sic" aria-hidden>{icons[id]!.map((ic) => <IcoPts key={ic.k} k={ic.k} pts={ic.pts} s={34} />)}</span>}
         </button>
       ))}
     </div>

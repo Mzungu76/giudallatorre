@@ -35,11 +35,17 @@ export function visibleRect(pos: Record<number, CardPos>, i: number): Rect {
 }
 
 /** Perché si prendono punti, a icone: accanto ai punti compare il simbolo del motivo (come il ⚡ del più veloce). I punti a 0 non hanno icona. */
-export type Reason = "target" | "bolt" | "card" | "hand" | "flag";
+export type Reason = "target" | "bolt" | "card" | "hand" | "herd" | "flag";
 export const REASON_ICON: Record<ScoreLine["kind"], Reason | ""> = {
   voto: "target", "mini-giusto": "target", "mini-veloce": "bolt", carta: "card",
-  lui: "hand", "lui-gregge": "hand", "lui-folla": "hand", "lui-mancato": "", obiettivo: "flag", "obiettivo-folla": "flag", "obiettivo-mancato": "",
+  lui: "hand", "lui-gregge": "herd", "lui-folla": "herd", "lui-mancato": "", obiettivo: "flag", "obiettivo-folla": "flag", "obiettivo-mancato": "",
 };
+/** I punti per ogni icona (stesso motivo = una sola icona, punti sommati), con il ⚡ in testa. Le righe a 0 non hanno icona. */
+export function iconPts(ls: ScoreLine[]): { k: Reason; pts: number }[] {
+  const m = new Map<Reason, number>();
+  for (const l of ls) { const ic = REASON_ICON[l.kind]; if (ic && l.pts !== 0) m.set(ic, (m.get(ic) ?? 0) + l.pts); }
+  return [...m.entries()].map(([k, pts]) => ({ k, pts })).sort((a, b) => Number(b.k === "bolt") - Number(a.k === "bolt"));
+}
 /** Le icone dei motivi di un insieme di righe, senza doppioni e nell'ordine in cui compaiono (bolt per primo). */
 export function iconsOf(ls: ScoreLine[]): Reason[] {
   const out: Reason[] = [];
