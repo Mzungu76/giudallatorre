@@ -13,7 +13,7 @@ stateDiagram-v2
   VOTE --> RESULTS: tutti hanno votato -> esito e punti
   RESULTS --> PROCLAIM: advance (scarto, pescate, Megafono successivo)
   RESULTS --> GAME_OVER: advance, se tutti hanno fatto il Megafono 1 (4-6) / 2 (3) volte
-  RESULTS --> MINI_RUN: advance, al turno previsto (intervallo a tempo)
+  RESULTS --> MINI_RUN: advance, al turno previsto (fuori programma a tempo)
   MINI_RUN --> MINI_RESULTS: tutti hanno votato, oppure fine corsa (endRun del server)
   MINI_RESULTS --> PROCLAIM: advance (turno successivo, mani invariate)
   GAME_OVER --> [*]
