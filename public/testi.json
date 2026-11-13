@@ -1,5 +1,5 @@
 {
- "versione": 31,
+ "versione": 32,
  "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
@@ -2534,6 +2534,11 @@
    "t": "Passo {n} di {tot}",
    "s": "Crea la partita (passi)",
    "n": "Nome accessibile dei puntini"
+  },
+  "fm.w.preso": {
+   "t": "Già scelto",
+   "s": "Crea la partita (passi)",
+   "n": "Sotto il nome: personaggio preso da un altro giocatore"
   }
  }
 }

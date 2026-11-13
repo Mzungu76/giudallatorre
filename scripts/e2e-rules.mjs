@@ -10,7 +10,7 @@ const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().ca
 const A = await mk(), B = await mk();
 await A.goto(BASE + "/crea"); await A.fill("#nick", "Ann"); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForSelector('[data-testid="lobby"]');
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim();
-await B.goto(`${BASE}/entra?c=${code}`); await B.fill("#nick", "Bea"); await B.click('[data-testid="join-submit"]'); await B.waitForSelector('[data-testid="lobby"]');
+await B.goto(`${BASE}/entra?c=${code}`); await B.fill("#nick", "Bea"); await B.click('[data-testid="wiz-next"]'); await B.click('[data-testid="join-submit"]'); await B.waitForSelector('[data-testid="lobby"]');
 await sleep(300);
 // chat
 await A.click('[data-testid="chat-open"]'); await A.fill('[data-testid="chat-input"]', "Ciao Bea, preparati a perdere"); await A.click('[data-testid="chat-send"]'); await sleep(500);

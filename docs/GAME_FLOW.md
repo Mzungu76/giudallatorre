@@ -38,3 +38,8 @@ Eventi trasversali gestiti dal backend (non dal motore): disconnessione/riconnes
 2. **Come giocate?** Stesso tavolo / A distanza, bot (numero e livello).
 3. **Ultimi dettagli.** Pubblico (6/10/14/18) e timer (libero, 30–120 s), riepilogo e «Crea partita».
 Il personaggio, il pubblico e il timer viaggiano nella richiesta di creazione (`char`, `ageBand`, `turnTimerSec`); nella lobby sono solo mostrati. Gli altri giocatori ricevono un personaggio libero a caso. «Il Megafono sa» è sempre attivo (la creazione manda `megafonoSa: true`).
+
+### Personaggi, nomi dei bot e timer
+- Chi entra sceglie il personaggio in un secondo passo (carte scorrevoli): quelli già presi sono grigi con ✕ e non si possono scegliere (`/info` restituisce `taken`; se un altro lo prende nel frattempo, il server ne assegna uno libero).
+- I bot prendono un nome del sesso del loro personaggio (le due facce femminili sono la 4 e la 7: `FEMALE_CHARS`).
+- Timer: il server aggiunge a ogni fase il tempo delle animazioni (`animMs` in `RoomCore.ts`: cartello, salita delle carte, schede di inizio partita) prima dei secondi impostati; i telefoni mostrano il conto alla rovescia limitato al timer impostato, quindi i secondi scelti restano tutti per decidere.

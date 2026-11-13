@@ -23,10 +23,10 @@ export const MAX_PHRASE_CHARS = 80;
 
 // ---------- API HTTP ----------
 export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), /** Personaggio scelto dall'host (0–7). */ char: z.number().int().min(0).max(7).optional(), /** Fascia d'età dei testi (6, 10, 14, 18). */ ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), /** Tempo per scegliere (s): 0 = libero. */ turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional(), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
-export const joinRoomBody = z.object({ nickname: nicknameSchema }).strict();
+export const joinRoomBody = z.object({ nickname: nicknameSchema, /** Personaggio scelto (0–7); se è già preso se ne assegna uno libero. */ char: z.number().int().min(0).max(7).optional() }).strict();
 export type CreateRoomBody = z.infer<typeof createRoomBody>;
 export interface SessionResponse { code: string; playerId: string; token: string }
-export interface RoomInfoResponse { exists: boolean; stage?: "LOBBY" | "PLAYING" | "FINISHED"; players?: number; full?: boolean; mode?: "table" | "remote" }
+export interface RoomInfoResponse { exists: boolean; stage?: "LOBBY" | "PLAYING" | "FINISHED"; players?: number; full?: boolean; mode?: "table" | "remote"; /** Personaggi (0–7) già presi in stanza. */ taken?: number[] }
 
 // ---------- messaggi client -> server ----------
 const act = z.union([

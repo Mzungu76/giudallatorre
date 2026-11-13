@@ -16,10 +16,10 @@ await A.goto(BASE + "/"); await A.waitForSelector('[data-testid="home"]', { time
 await A.click('[data-testid="go-create"]'); await A.fill("#nick", "Ann"); await shot(A, "02-crea");
 await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\/[A-Z0-9]{5}/);
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim(); check("stanza creata con codice", /^[A-HJ-NP-Z2-9]{5}$/.test(code), code);
-for (const [p, n] of [[B, "Bea"], [C, "Cle"]]) { await p.goto(`${BASE}/entra?c=${code}`); await p.fill("#nick", n); await p.click('[data-testid="join-submit"]'); await p.waitForURL(/\/stanza\//); }
+for (const [p, n] of [[B, "Bea"], [C, "Cle"]]) { await p.goto(`${BASE}/entra?c=${code}`); await p.fill("#nick", n); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="join-submit"]'); await p.waitForURL(/\/stanza\//); }
 await B.waitForSelector('[data-testid="lobby"]'); await sleep(400);
 check("3 giocatori in lobby", (await A.locator('[data-testid="player-row"]').count()) === 3); await shot(A, "03-lobby");
-const dup = await mk("D"); await dup.goto(`${BASE}/entra?c=${code}`); await dup.fill("#nick", "ann"); await dup.click('[data-testid="join-submit"]'); await sleep(600);
+const dup = await mk("D"); await dup.goto(`${BASE}/entra?c=${code}`); await dup.fill("#nick", "ann"); await dup.click('[data-testid="wiz-next"]'); await dup.click('[data-testid="join-submit"]'); await sleep(600);
 check("nickname duplicato: messaggio chiaro", await vis(dup, "toast") && /già/.test(await dup.locator('[data-testid="toast"]').textContent())); await shot(dup, "04-nick-duplicato");
 
 console.log("Schermo condiviso e avvio");

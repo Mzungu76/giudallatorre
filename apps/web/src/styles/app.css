@@ -1259,3 +1259,6 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .ptile.em .nmx{white-space:normal;font:800 12px/1.2 Nunito;text-transform:none;text-shadow:0 1px 0 var(--navy)}
 .fbody .fld.grow{flex:1;min-height:0;display:flex;flex-direction:column}
 .fbody .fld.mid{flex:1;display:flex;flex-direction:column;justify-content:center;padding-bottom:6%}
+.chc.taken .chc-card{filter:grayscale(1) brightness(.8)}.chc.taken .chc-tok{filter:grayscale(1)}
+.chc.taken::after{content:"✕";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 64px Anton;color:#e8362b;text-shadow:0 3px 0 #13224a;-webkit-text-stroke:2px #13224a}
+.chars-name small{display:block;font:800 12px Nunito;color:#e8362b;margin-top:2px}

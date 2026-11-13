@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { megafonoOf, MINI_SLOT_MS as SLOT, requiredPlayers, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
-import { RoomCore, RoomError, LIMITS } from "../src/RoomCore.ts";
+import { RoomCore, RoomError, LIMITS, FEMALE_CHARS, animMs } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
 import { fullPhrase, PHRASES_PER_CARD } from "@gdt/game-engine";
 import { CONFESSIONS, PHRASE_POOL } from "../src/content.ts";
@@ -284,7 +284,7 @@ function playOneTurn(r: ReturnType<typeof makeRoom>) {
 describe("timer e pulizia", () => {
   it("con timer attivo, alla scadenza il server gioca per gli assenti e la partita avanza", () => {
     const r = makeRoom(4, 5, 1_000_000); send(r, 0, { t: "setOptions", turnTimerSec: 30 }); send(r, 0, { t: "start" }, 1_000_000);
-    const d = r.core.data; expect(d.deadline).toBe(1_030_000 + 0 || d.deadline);
+    const d = r.core.data; expect(d.deadline).toBe(1_000_000 + animMs(d.game as GameState) + 30_000);   // il timer parte dopo le animazioni
     const before = (d.game as GameState).phase;
     const out = r.core.tick(d.deadline! + 1);
     expect((d.game as GameState).phase).not.toBe(before);
@@ -540,5 +540,27 @@ describe("intervallo a tempo nella stanza", () => {
     expect(copy.data.run).toEqual(run);
     copy.tick(run.endAt + 1);
     expect(copy.data.game!.phase).toBe("MINI_RESULTS");
+  });
+});
+
+describe("personaggi e bot", () => {
+  it("i bot hanno un nome del sesso del loro personaggio", () => {
+    const { core } = RoomCore.create("BOTNM", deps(11), 0, { nickname: "Ann", mode: "table", megafonoSa: true, char: 0, bots: { count: 5, level: "easy" } });
+    const F = ["Mara", "Lella", "Rosa", "Dora", "Gina", "Tina", "Lia", "Nina"];
+    for (const p of core.data.players.filter((q) => q.isBot)) expect(F.some((n) => p.nickname === `Bot ${n}`)).toBe(FEMALE_CHARS.has(p.char!));
+  });
+  it("chi entra sceglie il personaggio; se è già preso ne riceve uno libero; l'elenco dei presi è pubblico", () => {
+    const { core } = RoomCore.create("CHARS", deps(12), 0, { nickname: "Ann", mode: "table", megafonoSa: true, char: 5 });
+    expect(core.publicInfo().taken).toEqual([5]);
+    const a = core.join("Bea", 1, 2); expect(core.data.players.find((p) => p.id === a.playerId)!.char).toBe(2);
+    const b = core.join("Cle", 2, 5); const cb = core.data.players.find((p) => p.id === b.playerId)!.char!;
+    expect([5, 2]).not.toContain(cb);
+    expect(core.publicInfo().taken!.sort()).toEqual([2, 5, cb].sort());
+  });
+  it("il timer concede il tempo delle animazioni a ogni fase", () => {
+    const r = makeRoom(4, 5, 1_000_000); send(r, 0, { t: "setOptions", turnTimerSec: 30 }); send(r, 0, { t: "start" }, 1_000_000);
+    const g = r.core.data.game as GameState;
+    for (const ph of ["PROCLAIM", "PLAY", "SUSPECT", "VOTE"] as const) expect(animMs({ ...g, phase: ph })).toBeGreaterThanOrEqual(3000);
+    expect(animMs({ ...g, phase: "PROCLAIM", turnNumber: 1 })).toBeGreaterThan(animMs({ ...g, phase: "PROCLAIM", turnNumber: 2 }));
   });
 });

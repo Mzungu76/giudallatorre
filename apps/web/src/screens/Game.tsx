@@ -209,7 +209,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const resLui = res?.lui ? { pos: res.lui.position, spec: luiSpecOf(res.lui) } : null, resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? txs("g.meta.giro", { n: view.round, tot: view.rounds }) : "";
-  const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? txs("g.meta.sparegg") : txs("mg.turno", { n: view.turn, tot: view.totalTurns })) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} />;
+  const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? txs("g.meta.sparegg") : txs("mg.turno", { n: view.turn, tot: view.totalTurns })) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} cap={room.options.turnTimerSec || undefined} />;
   const uiv = readOnly ? null : ui ?? null;
   const tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
   const pill = <PhrasePill phrase={view.phrase} megaName={megaName} />;
