@@ -1,6 +1,6 @@
 {
- "versione": 23,
- "aggiornato": "2026-11-12",
+ "versione": 24,
+ "aggiornato": "2026-11-13",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -2510,6 +2510,16 @@
    "t": "Turno {n} di {tot} · poi 5 carte nuove per tutti",
    "s": "Intervallo / mini-gioco (schermate)",
    "n": "Sotto «Punti del turno» dopo un intervallo: le mani vengono rinnovate"
+  },
+  "rv.gettalo": {
+   "t": "Gettalo dalla torre!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Pulsante a fine spoglio: fa partire la caduta delle carte"
+  },
+  "rv.gettali": {
+   "t": "Gettali dalla torre!",
+   "s": "Salita e spoglio dei voti (turno normale)",
+   "n": "Pulsante a fine spoglio: fa partire la caduta delle carte"
   }
  }
 }

@@ -223,9 +223,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {!climbing && needTerrace && !revealing && (
         <Terrace cardIds={ids} votes={res && showPanel && afterStep === "points" ? [] : voteToks} lui={view.cnc ? null : res ? resLui : luiShown} marks={view.cnc ? (res ? resMarks : marksShown) : null} selected={phase === "RESULTS" ? null : dirOn ? dir!.to : pick} onPick={canPick ? (n) => (phase === "SUSPECT" ? (dirOn ? (n !== dir!.from && setDir({ ...dir!, to: n })) : setPick(n)) : banned(n) ? (setLuiNo(turn), setPick(null)) : (setLuiNo(null), setZoomPos(n))) : undefined} onLui={phase === "VOTE" && !readOnly && (view.luiPosition != null || view.marks.length > 0) ? () => setLuiInfo(true) : undefined} />
       )}
-      {showPanel && res && afterStep === "points" && needTerrace && <ResultMarks n={ids.length} votes={voteToks} lines={res.lines} fallen={res.fallenPositions ?? [res.fallenPosition]} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
+      {showPanel && res && afterStep === "points" && needTerrace && <ResultMarks megaId={voters.find((v) => v.mega)?.id} n={ids.length} votes={voteToks} lines={res.lines} fallen={res.fallenPositions ?? [res.fallenPosition]} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
       {revealing && res && (
-        <Reveal cardIds={ids} voters={voters} votes={res.votes} counts={res.counts} lui={res.lui} marks={res.marks ?? null} tie={res.tie} tieBreak={res.tieBreak} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
+        <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={res.fallenPositions ?? [res.fallenPosition]} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
@@ -300,7 +300,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
 
               {showPanel && res && afterStep === "points" && <>
                 {phase === "RESULTS" && <div className="bsp" />}
-                <ScoreStrip ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} annullati={[...(res.marks?.find((x) => x.effect === "nulli")?.caught ?? []), ...(((res.lui?.trap || res.lui?.effect === "imbroglio") && res.lui.caught) ? res.lui.caught : [])]} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
+                <ScoreStrip megaId={voters.find((v) => v.mega)?.id} ids={view.players.map((p) => p.id)} lines={res.lines} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} annullati={[...(res.marks?.find((x) => x.effect === "nulli")?.caught ?? []), ...(((res.lui?.trap || res.lui?.effect === "imbroglio") && res.lui.caught) ? res.lui.caught : [])]} sound={sound} interactive={!readOnly} onContinue={() => setAfter({ turn, step: "board" })} />
                 {res.objective && <span className="pp-obj" data-testid="objective-result">{res.objective.megaHit ? tx("obj.esito.mega", { n: res.objective.position, cond: objCond(res.objective), v: res.objective.votes, pt: res.objective.pts }) : res.objective.winners.length ? tx("obj.esito.folla", { n: res.objective.position, v: res.objective.votes, pt: res.objective.pts, k: res.objective.winners.length }) : tx("obj.esito.nessuno", { n: res.objective.position, v: res.objective.votes })}</span>}
                 <BSheet gold={gold} title={tx("g.punti.t")} sub={txs("g.punti.s", { n: view.turn, tot: view.totalTurns })} ui={uiv}>
                   {readOnly ? <span className="pb-wait">{tx("g.prosegue")}</span> : <Row>{tray}<Btn onClick={() => setAfter({ turn, step: "board" })} testId="points-continue">{tx("g.continua")}</Btn></Row>}
