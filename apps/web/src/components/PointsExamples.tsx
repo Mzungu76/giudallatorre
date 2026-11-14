@@ -103,7 +103,6 @@ export function ExampleLui() {
       </div>
       <div className="ex-res ok"><b>{t("exl.ok.t")}</b><span>{t("exl.ok.x", { pt: <Pt n={4} /> })}</span></div>
       <div className="ex-res ko"><b>{t("exl.ko.t")}</b><span>{t("exl.ko.x", { pt: <Pt n={0} plus={false} /> })}</span></div>
-      <p className="ex-foot">{t("exl.piede")}</p>
     </div>
   );
 }

@@ -764,11 +764,12 @@ body{background:radial-gradient(ellipse at 50% 40%,#2a4a9a 0,#0c1736 75%)}
 .brg-f{padding:8px 14px 14px;flex:none}.brg-f .bt{width:100%}
 .brg-q{background:#e8362b;color:#fff;border:3px solid #13224a;border-radius:14px;box-shadow:0 4px 0 #13224a;padding:10px 14px;font:400 22px/1.1 Anton;text-transform:uppercase;text-align:center}
 .brg-q small{display:block;font:700 12.5px/1.35 Nunito;text-transform:none;margin-top:5px}
-.brg-step{display:grid;grid-template-columns:42px 1fr;gap:12px;position:relative}
-.brg-step:not(:last-child):after{content:"";position:absolute;left:20px;top:44px;bottom:-12px;border-left:3px dashed #13224a55}
-.brg-step .how-ic{width:42px;height:42px;font-size:20px;position:relative;z-index:1}
-.brg-step b{display:block;font:400 18px/1.1 Anton;text-transform:uppercase}
-.brg-step p{font:700 13.5px/1.4 Nunito;margin-top:2px}
+.brg-step{display:grid;grid-template-columns:54px 1fr;gap:14px;position:relative;align-items:center}
+.brg-step:not(:last-child):after{content:"";position:absolute;left:26px;top:56px;bottom:-14px;border-left:3px dashed #13224a55}
+.brg-step .how-ic{width:54px;height:54px;font-size:26px;position:relative;z-index:1}
+.brg-step b{display:block;font:400 21px/1.1 Anton;text-transform:uppercase}
+.brg-step p b{display:inline;font:inherit;color:#e8362b;text-transform:none}
+.brg-step p{font:700 15px/1.35 Nunito;margin-top:2px}
 .brg-note{background:#fff7e0;border:3px dashed #13224a88;border-radius:12px;padding:9px 12px;font:700 13px/1.4 Nunito}
 .brg-note b{display:block;font:400 15px Anton;text-transform:uppercase;color:#e8362b;margin-bottom:2px}
 .brg-row{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center;background:#fff;border:3px solid #13224a;border-radius:14px;box-shadow:0 3px 0 #13224a;padding:8px 12px}
