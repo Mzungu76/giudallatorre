@@ -204,7 +204,7 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   const megaId = voters.find((v) => v.mega)?.id;
   return (
     <div className={`rv-wrap${leaving ? " leaving" : ""}`}>
-      <Terrace cardIds={cardIds} spread votes={stamp && points ? [] : toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
+      <Terrace cardIds={cardIds} spread votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
       {stamp && points && <ResultMarks n={cardIds.length} fallen={fallPositions} sink={fallPositions} spread slam />}
       {stamp && !points && <div className="layer rv-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="reveal-panel">{fallPositions.map((q, i) => <FallArrow key={`a${q}`} rect={visibleRect(sunk(pos, fallPositions), q - 1)} slam delay={i * 0.45} />)}</div>}
       {stamp && points && <div className="rv-strip"><ScoreStrip ids={points.ids} lines={points.lines} colorOf={points.colorOf} meId={points.meId} annullati={points.annullati} megaId={megaId} sound={sound} interactive={interactive} onContinue={onDone} base={0.3 + fallPositions.length * 0.45} quiet /></div>}

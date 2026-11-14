@@ -165,7 +165,7 @@ function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onR
   const body = kind === "accusa" ? `«${res.text}»` : info.body ?? "", size = body.length > 90 ? " xl" : body.length > 55 ? " l" : "";
   return (
     <>
-      {step === "points" && <Terrace cardIds={ids} votes={[]} spread sink={res.fallenPositions} />}
+      {step === "points" && <Terrace cardIds={ids} votes={toks} spread sink={res.fallenPositions} />}
       {step === "points" && <ResultMarks spread sink={res.fallenPositions} n={ids.length} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} />}
       {step === "points" && (
         <div className="bl">
