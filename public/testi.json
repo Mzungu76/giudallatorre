@@ -1,5 +1,5 @@
 {
- "versione": 35,
+ "versione": 37,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -901,16 +901,8 @@
    "t": "La tua frase",
    "s": "Partita: turno normale"
   },
-  "g.fr.mega": {
-   "t": "Sei il Megafono",
-   "s": "Partita: turno normale"
-  },
   "g.fr.inventala": {
    "t": "Inventala",
-   "s": "Partita: turno normale"
-  },
-  "g.fr.scegli": {
-   "t": "Scegli cosa urlare",
    "s": "Partita: turno normale"
   },
   "g.fr.oggi": {
@@ -2674,6 +2666,16 @@
    "t": "Adora il gossip, soprattutto quello su di sé.",
    "s": "Il personaggio (chi è)",
    "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "g.fr.pescato": {
+   "t": "Hai pescato dal mazzo…",
+   "s": "Partita: scelta della frase del Megafono",
+   "n": "Titolo sopra la carta pescata"
+  },
+  "g.fr.confessalo": {
+   "t": "Confessalo!",
+   "s": "Partita: scelta della frase del Megafono",
+   "n": "Targhetta sulla carta confessione"
   }
  }
 }

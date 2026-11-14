@@ -43,16 +43,22 @@ export function Tip({ children, style, className = "" }: { children: React.React
 
 /** Frasi tra cui sceglie il Megafono: ognuna su due righe, si apre con ▾ (e si richiude da sola); un tocco la sceglie, «Proclama» conferma. */
 function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; meta: React.ReactNode }) {
-  const card = view.proclaimCard!, single = card.phrases.length === 1;
+  const card = view.proclaimCard!, single = card.phrases.length === 1, conf = /^C\d+$/.test(card.id);   // le confessioni sono le carte «C01…» a frase singola
   const [own, setOwn] = useState(false), [text, setText] = useState(""), [voice, setVoice] = useState(false), [sel, setSel] = useState<number | null>(single ? 0 : null);
   const say = (i: number) => send({ t: "act", action: { type: "choosePhrase", mode: "card", index: i } });
   const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } });
   return (
     <div className="bl" data-testid="phrase-picker">
       {meta}
-      <div className="bhead"><small>{own ? tx("g.fr.tua") : tx("g.fr.mega")}</small>{own ? tx("g.fr.inventala") : tx("g.fr.scegli")}</div>
-      <div className="bscene" style={{ display: "flex", alignItems: "flex-start" }}>
-        {!own && <div className="bopts">{card.phrases.map((t, k) => <PhraseOpt key={k} k={k} text={t} theme={card.themes?.[k]} on={sel === k} onPick={() => setSel(k)} />)}</div>}
+      {own ? <div className="bhead"><small>{tx("g.fr.tua")}</small>{tx("g.fr.inventala")}</div> : <div className="pc-title">{tx("g.fr.pescato")}</div>}
+      <div className={own ? "bscene" : "bscene pc-wrap"} style={own ? { display: "flex", alignItems: "flex-start" } : undefined}>
+        {!own && (
+          // la carta pescata dal mazzo: stesse proporzioni e contorno delle carte dei personaggi; le frasi sono scritte sopra
+          <div className={`pcard${conf ? " conf" : ""}`} data-testid="phrase-card">
+            <span className="pc-badge" aria-hidden><MegaIcon s={46} /></span>{conf && <span className="pc-rib">{tx("g.fr.confessalo")}</span>}
+            <div className="pc-face"><div className="pc-list">{card.phrases.map((t, k) => <PhraseCardOpt key={k} k={k} num={!single} text={t} theme={card.themes?.[k]} on={sel === k} onPick={() => setSel(k)} />)}</div></div>
+          </div>
+        )}
         {own && (
           <div className="bopts" style={{ gap: 10 }}>
             <div className="phr-fixed" style={{ color: "#fff", textShadow: "2px 2px 0 #13224a" }}>{tx("g.fr.oggi")}</div>
@@ -72,6 +78,13 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
   );
 }
 
+function PhraseCardOpt({ k, num, text, theme, on, onPick }: { k: number; num: boolean; text: string; theme?: string; on: boolean; onPick: () => void }) {
+  return (
+    <div className={`pco${on ? " on" : ""}`} role="button" tabIndex={0} aria-pressed={on} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
+      {num && <span className="pn">{k + 1}</span>}<span className="tx">{theme && <span className="opt-ctx">{theme}</span>}{text}</span>
+    </div>
+  );
+}
 function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; theme?: string; on: boolean; onPick: () => void }) {
   return (
     <div className={`bopt${on ? " on" : ""}`} role="button" tabIndex={0} aria-pressed={on} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
