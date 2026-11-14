@@ -43,13 +43,12 @@ export default function HowTo({ onClose, sound, setSound, onLeave, leaveHint }: 
         </>}
         {tab === 2 && <>
           {tk.map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{luiLabel(sp)}</b><p>{luiEffectHow(sp)}</p></div></div>)}
-          <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}
         {tab === 3 && <>
-          <Note t={t("how.4.fine.t")}>{t("how.4.fine.x")}</Note>
-          <Note t={t("how.4.int.t")}>{t("how.4.int.x")}</Note>
-          <Note t={t("how.4.parla.t")}>{t("how.4.parla.x")}</Note>
+          <Step ic="🏁" t={t("how.4.fine.t")} x={t("how.4.fine.x")} />
+          <Step ic="🎭" t={t("how.4.int.t")} x={t("how.4.int.x")} />
+          <Step ic="🗣" t={t("how.4.parla.t")} x={t("how.4.parla.x")} />
         </>}
       </div>
       <div className="brg-f">

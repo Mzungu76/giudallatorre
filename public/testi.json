@@ -1,5 +1,5 @@
 {
- "versione": 42,
+ "versione": 45,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -336,7 +336,7 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.testo": {
-   "t": "Anna, il Megafono, ha messo il CADE (coperto) sulla carta col bordo giallo.",
+   "t": "Anna (Megafono) copre la carta gialla.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.altri": {
@@ -344,11 +344,11 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.t": {
-   "t": "La carta cade: CADE azzeccato!",
+   "t": "Cade: CADE azzeccato!",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.x": {
-   "t": "{pt} ad Anna e a ognuno che l'ha votata",
+   "t": "{pt} ad Anna e a chi l’ha votata",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ko.t": {
@@ -357,10 +357,6 @@
   },
   "exl.ko.x": {
    "t": "{pt} Nessuno perde nulla.",
-   "s": "Esempio del Lui! (regolamento)"
-  },
-  "exl.piede": {
-   "t": "A ogni turno il Megafono posa un segnalino coperto su una carta, scegliendo tra CADE, NON CADE e VOTI NULLI!.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "pk.giusto.t": {
@@ -381,7 +377,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.caduta.x": {
-   "t": "La carta che cade l’hai giocata tu.",
+   "t": "Hai giocato la carta che cade.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.t": {
@@ -389,7 +385,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.x": {
-   "t": "CADE +4 se la carta cade, NON CADE +2 se resta su: al Megafono e a chi ha votato quella carta.",
+   "t": "CADE +4, NON CADE +2: Megafono e chi la vota.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "how.aria": {
@@ -402,7 +398,7 @@
    "s": "Regolamento completo"
   },
   "how.tab.0": {
-   "t": "Il turno",
+   "t": "Turno",
    "s": "Regolamento completo",
    "n": "Nome della scheda"
   },
@@ -422,19 +418,19 @@
    "n": "Nome della scheda (non cambiarlo senza aggiornare le prove e2e)"
   },
   "how.1.q": {
-   "t": "Chi butteresti giù dalla torre oggi?",
+   "t": "Chi butteresti giù dalla torre?",
    "s": "Regolamento completo"
   },
   "how.1.qs": {
-   "t": "Si accusa, si vota in segreto e si ride. Sotto la torre ci sono i materassi.",
+   "t": "Sotto ci sono i materassi.",
    "s": "Regolamento completo"
   },
   "how.1.p1.t": {
-   "t": "Il Megafono urla",
+   "t": "Il Megafono parla",
    "s": "Regolamento completo"
   },
   "how.1.p1.x": {
-   "t": "Sceglie una frase che comincia con «Oggi sale sulla torre…». A ogni turno tocca a uno di voi.",
+   "t": "Sceglie una frase.",
    "s": "Regolamento completo"
   },
   "how.1.p2.t": {
@@ -442,31 +438,31 @@
    "s": "Regolamento completo"
   },
   "how.1.p2.x": {
-   "t": "Tutti, Megafono compreso, scelgono in segreto dalla propria mano il personaggio che farebbe di sicuro quella cosa. Nessuno sa di chi è ogni carta.",
+   "t": "Una carta a testa, in segreto.",
    "s": "Regolamento completo"
   },
   "how.1.p3.t": {
-   "t": "Il Lui!",
+   "t": "Il segnalino",
    "s": "Regolamento completo"
   },
   "how.1.p3.x": {
-   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
+   "t": "Il Megafono lo posa, coperto, su una carta.",
    "s": "Regolamento completo"
   },
   "how.1.p4.t": {
-   "t": "Il voto",
+   "t": "Tutti votano",
    "s": "Regolamento completo"
   },
   "how.1.p4.x": {
-   "t": "Tutti votano in segreto la carta che somiglia di più alla frase, anche la propria. La più votata cade. I voti sulla carta con VOTI NULLI! non valgono.",
+   "t": "Anche la tua. La più votata cade.",
    "s": "Regolamento completo"
   },
   "how.1.p5.t": {
-   "t": "I punti",
+   "t": "Punti",
    "s": "Regolamento completo"
   },
   "how.1.p5.x": {
-   "t": "Si contano i punti e il Megafono passa al giocatore dopo.",
+   "t": "Poi tocca al prossimo Megafono.",
    "s": "Regolamento completo"
   },
   "how.1.pari.t": {
@@ -474,7 +470,7 @@
    "s": "Regolamento completo"
   },
   "how.1.pari.x": {
-   "t": "Se più carte hanno gli stessi voti e una ha il segnalino CADE, cade solo quella. Altrimenti cadono tutte.",
+   "t": "Cade quella con CADE; se non c’è, tutte.",
    "s": "Regolamento completo"
   },
   "how.2.somm.t": {
@@ -482,15 +478,7 @@
    "s": "Regolamento completo"
   },
   "how.2.somm.x": {
-   "t": "Nello stesso turno puoi prendere punti per più motivi. Ecco un turno vero:",
-   "s": "Regolamento completo"
-  },
-  "how.3.come.t": {
-   "t": "Come funziona",
-   "s": "Regolamento completo"
-  },
-  "how.3.come.x": {
-   "t": "A ogni turno il Megafono ha tutti e 3 i segnalini e ne posa uno, coperto, su una carta: si scopre alla fine. I premi di CADE e NON CADE vanno al Megafono e a chiunque abbia votato quella carta. Il Megafono non può votare la carta con VOTI NULLI!.",
+   "t": "Un turno, più motivi:",
    "s": "Regolamento completo"
   },
   "how.4.fine.t": {
@@ -498,7 +486,7 @@
    "s": "Regolamento completo"
   },
   "how.4.fine.x": {
-   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–6 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
+   "t": "Tutti fanno il Megafono. Vince chi ha più punti.",
    "s": "Regolamento completo"
   },
   "how.4.int.t": {
@@ -506,7 +494,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un fuori programma a metà partita, con 6 ce ne sono due: 6 carte escono una alla volta da dietro un separé, per 3 giri. Premi **QUESTO!** quando esce quella giusta: carta più votata +2, il più veloce +4.",
+   "t": "Premi **QUESTO!** alla carta giusta: +2, il più veloce +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -514,7 +502,7 @@
    "s": "Regolamento completo"
   },
   "how.4.parla.x": {
-   "t": "Si può chiacchierare e bluffare quanto si vuole. L'unica regola è non rivelare la propria carta prima del voto.",
+   "t": "Bluffa quanto vuoi. Non mostrare la tua carta.",
    "s": "Regolamento completo"
   },
   "how.resto": {
@@ -1731,17 +1719,17 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.cade": {
-   "t": "Se questa carta cade: +4 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se cade: +4 al Megafono e a chi l’ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.noncade": {
-   "t": "Se questa carta resta su: +2 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se resta su: +2 al Megafono e a chi l’ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.nulli": {
-   "t": "I voti su questa carta non valgono: chi la vota non prende il +2. Il Megafono non può votarla.",
+   "t": "Voti annullati: niente +2. Il Megafono non la vota.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
