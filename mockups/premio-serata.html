@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Premio della serata — mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--pink:#ff7aa8;--sky1:#79d3ee;--sky2:#4fbce6}
+*{box-sizing:border-box}
+body{margin:0;background:#2b2b3a;font-family:Nunito,Arial,sans-serif;color:var(--navy);padding:18px 12px 40px}
+.ctl{max-width:1240px;margin:0 auto 18px;background:var(--paper);border:4px solid var(--navy);box-shadow:5px 6px 0 #000a;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px 28px;align-items:center}
+.ctl h1{font:400 22px Anton;letter-spacing:.04em;text-transform:uppercase;margin:0;color:var(--red);text-shadow:2px 2px 0 var(--navy)}
+.grp{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.grp>span{font:800 12px Nunito;text-transform:uppercase;opacity:.7;margin-right:2px}
+.grp button{font:400 15px Anton;letter-spacing:.03em;text-transform:uppercase;background:#fff7e0;color:var(--navy);border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:4px 10px;cursor:pointer}
+.grp button[aria-pressed=true]{background:var(--mus)}
+.row{display:flex;gap:22px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+figcaption{font:700 13px Nunito;color:#fff;text-align:center;max-width:372px;opacity:.9}
+.ph{position:relative;width:372px;height:760px;overflow:hidden;border:4px solid #000;border-radius:6px;background:var(--paper)}
+.sun{background:radial-gradient(circle at 50% 38%,#8fd1f4,#4f9fd6 60%,#2f77b8)}
+.sun:before{content:"";position:absolute;inset:-40%;background:repeating-conic-gradient(from 0deg at 50% 40%,#ffffff26 0 6deg,transparent 6deg 12deg);animation:spin 40s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.top{position:absolute;left:0;right:0;top:16px;text-align:center;z-index:2}
+.t{font:400 34px/1 Anton;color:#fff;text-shadow:3px 3px 0 var(--red),5px 5px 0 var(--navy);letter-spacing:.04em;text-transform:uppercase}
+.s{font:800 13px Nunito;color:#fff;text-shadow:0 2px 0 var(--navy);margin-top:6px}
+.btn{position:absolute;left:24px;right:24px;bottom:22px;z-index:5;font:400 25px Anton;letter-spacing:.04em;text-transform:uppercase;text-align:center;background:var(--mus);color:var(--navy);border:3px solid var(--navy);box-shadow:0 5px 0 var(--navy);padding:11px 8px}
+.btn.alt{background:var(--paper);font-size:20px;bottom:98px}
+.pp{background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px}
+.note{font:400 21px/1.15 "Caveat Brush",cursive}
+/* --- schermata 1: suspense --- */
+.env{position:absolute;left:50%;top:210px;width:250px;height:300px;margin-left:-125px;z-index:2;background:var(--red);border:4px solid var(--navy);box-shadow:8px 9px 0 var(--navy);display:grid;place-items:center;transform:rotate(-3deg);animation:wob 1.6s ease-in-out infinite}
+.env:before{content:"";position:absolute;inset:14px;border:3px dashed #fff8;pointer-events:none}
+.env b{font:400 150px/1 Anton;color:var(--mus);text-shadow:5px 5px 0 var(--navy)}
+@keyframes wob{50%{transform:rotate(3deg) translateY(-8px)}}
+.drum{position:absolute;left:0;right:0;top:140px;text-align:center;z-index:2}
+.drum span{display:inline-block;font:400 20px Anton;letter-spacing:.06em;text-transform:uppercase;color:var(--navy);background:var(--mus);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:4px 12px;transform:rotate(-2deg)}
+.dots{position:absolute;left:0;right:0;top:545px;text-align:center;z-index:2;display:flex;gap:10px;justify-content:center}
+.dots i{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--navy);animation:bl 1s infinite}.dots i:nth-child(2){animation-delay:.25s}.dots i:nth-child(3){animation-delay:.5s}
+@keyframes bl{50%{background:var(--mus);transform:translateY(-6px)}}
+/* --- schermata 2: rivelazione --- */
+.conf i{position:absolute;width:10px;height:16px;z-index:1;animation:fall 5s linear infinite}
+@keyframes fall{from{transform:translateY(-30px) rotate(0)}to{transform:translateY(800px) rotate(520deg)}}
+.stamp{position:absolute;left:50%;top:64px;width:300px;margin-left:-150px;text-align:center;z-index:3;transform:rotate(-4deg);animation:pop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{transform:rotate(-14deg) scale(2.2);opacity:0}}
+.stamp .k{display:inline-block;font:400 15px Anton;letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:3px 12px}
+.stamp .n{font:400 50px/1 Anton;text-transform:uppercase;color:var(--red);text-shadow:3px 3px 0 var(--navy);letter-spacing:.02em;margin-top:5px;-webkit-text-stroke:1px var(--navy)}
+.hero{position:absolute;left:50%;top:238px;margin-left:-86px;width:172px;z-index:3;filter:drop-shadow(0 0 0 #fff);animation:rise .8s .35s both}
+.hero img{width:100%;display:block;border:3px solid #fff;border-radius:10px;box-shadow:5px 6px 0 var(--navy);background:#fff}
+@keyframes rise{from{transform:translateY(60px);opacity:0}}
+.medal{position:absolute;left:50%;top:210px;margin-left:44px;z-index:4;width:84px;height:84px;animation:pop .6s .8s cubic-bezier(.2,1.6,.4,1) both}
+.pname{position:absolute;left:0;right:0;top:588px;text-align:center;z-index:3}
+.hero2{position:absolute;left:50%;top:482px;margin-left:-110px;width:220px;z-index:4;text-align:center}
+.who{display:inline-block;font:400 26px Anton;text-transform:uppercase;letter-spacing:.04em;background:var(--mus);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:3px 16px;transform:rotate(1.5deg)}
+.num{position:absolute;right:18px;top:236px;z-index:5;width:92px;height:92px;border-radius:50%;background:var(--teal);border:4px solid var(--navy);box-shadow:4px 5px 0 var(--navy);color:#fff;display:grid;place-items:center;text-align:center;transform:rotate(9deg);animation:pop .6s 1s cubic-bezier(.2,1.6,.4,1) both}
+.num b{font:400 32px/.95 Anton;display:block}.num small{font:800 11px/1.05 Nunito;text-transform:uppercase;display:block}
+.quip{position:absolute;left:16px;right:16px;top:538px;z-index:4;animation:rise .6s 1.2s both}
+.quip p{margin:0}.quip .why{font:800 11.5px/1.25 Nunito;opacity:.7;margin-top:6px;border-top:2px dashed #13224a55;padding-top:5px}
+/* --- schermata 3: classifica --- */
+.tbl{position:absolute;left:14px;right:14px;top:92px;z-index:2;display:flex;flex-direction:column;gap:7px}
+.r{display:flex;align-items:center;gap:9px;background:#fff7e0;border:3px solid var(--navy);box-shadow:3px 4px 0 var(--navy);padding:6px 9px;font:800 16px Nunito}
+.r.win{background:var(--mus)}
+.r .p{font:400 22px Anton;width:20px;text-align:center}
+.r img{width:38px;height:38px;border-radius:50%;border:2.5px solid var(--navy);background:#fff;object-fit:cover}
+.r .pts{margin-left:auto;font:400 22px Anton}
+.tag{font:400 11px Anton;letter-spacing:.05em;text-transform:uppercase;background:var(--red);color:#fff;border:2px solid var(--navy);padding:1px 6px;margin-left:6px;white-space:nowrap}
+.mini{position:absolute;left:14px;right:14px;top:470px;z-index:2}
+.mini .hd{font:400 15px Anton;letter-spacing:.06em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:8px}
+.mini .card{display:flex;gap:10px;align-items:center;margin-top:8px}
+.mini .card img{width:62px;border:2px solid #fff;border-radius:6px;box-shadow:3px 3px 0 var(--navy)}
+.mini .card div{font:700 13.5px/1.25 Nunito}
+.mini .card b{font:400 19px Anton;text-transform:uppercase;display:block;color:var(--navy);letter-spacing:.03em}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.stamp .n.long{font-size:38px}
+.note{font-size:19px}
+</style>
+</head>
+<body>
+
+<div class="ctl">
+  <h1>Premio della serata</h1>
+  <div class="grp" id="gAward"><span>Premio</span></div>
+  <div class="grp" id="gAge"><span>Pubblico</span></div>
+</div>
+
+<div class="row">
+  <figure>
+    <div class="ph sun">
+      <div class="top"><div class="t">Fine partita!</div><div class="s">Prima della classifica… c'è un premio</div></div>
+      <div class="drum"><span>E il premio della serata va a…</span></div>
+      <div class="env"><b>?</b></div>
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="btn">Apri la busta!</div>
+    </div>
+    <figcaption><b>1 · Suspense.</b> Rullo di tamburi e busta che dondola. Un tocco per aprirla (sullo schermo condiviso si apre da sola dopo 4 s).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="ph sun" id="screen2">
+      <div class="conf" id="conf"></div>
+      <div class="stamp"><span class="k" id="kicker">Premio della serata</span><div class="n" id="award">Il Pollo</div></div>
+      <div class="hero"><img id="heroImg" alt=""></div>
+      <div class="medal">
+        <svg viewBox="0 0 84 84" width="84" height="84"><circle cx="42" cy="42" r="34" fill="#ffc72c" stroke="#13224a" stroke-width="4"/><circle cx="42" cy="42" r="25" fill="none" stroke="#13224a" stroke-width="2.5" stroke-dasharray="4 3"/><path d="M42 24l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#e8362b" stroke="#13224a" stroke-width="2.5" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="num"><div><b id="big">7/8</b><small id="bigLab">volte</small></div></div>
+      <div class="hero2" style="top:498px"><span class="who" id="winner">Giulia</span></div>
+      <div class="quip pp" style="top:546px">
+        <p class="note" id="quip"></p>
+        <p class="why" id="why"></p>
+      </div>
+      <div class="btn" style="bottom:12px;font-size:22px;padding:8px">Vai alla classifica</div>
+    </div>
+    <figcaption><b>2 · Rivelazione.</b> Timbro che cala, vincitore con medaglia, numero che lo motiva e battuta a mano. È la schermata da fotografare: cambiano premio e tono (usa i controlli in alto).</figcaption>
+  </figure>
+
+  <figure>
+    <div class="ph sun">
+      <div class="top"><div class="t">Classifica</div><div class="s">Vince chi ha più punti</div></div>
+      <div class="tbl" id="tbl"></div>
+      <div class="mini pp" style="padding:10px 12px;top:450px">
+        <div class="hd">Premio della serata</div>
+        <div class="card"><img id="miniImg" alt=""><div><b id="miniAward"></b><span id="miniWho"></span></div></div>
+      </div>
+      <div class="btn alt">Nuova partita</div>
+      <div class="btn">Esci</div>
+    </div>
+    <figcaption><b>3 · Classifica.</b> Resta com'è oggi. Sotto, una targhetta ricorda il premio; chi l'ha vinto ha anche il suo bollino accanto al nome.</figcaption>
+  </figure>
+</div>
+
+<script>
+const IMG="../public/giocatori/";
+const AWARDS={
+ pollo:{n:"Il Pollo",who:"Marco",ch:1,big:"7/8",lab:"volte",why:"Ha votato dove puntava il Megafono 7 volte su 8.",
+  t:{"6+":"Si fida di tutti. Proprio di tutti! Anche di chi non dovrebbe.","14+":"Ha creduto al Megafono 7 volte su 8. Gli venderesti anche il ponte.","18+":"Il Megafono ha detto «fidati» e lui ha pure ringraziato. Sette volte."}},
+ bugiardo:{n:"Il Bugiardo di Stato",who:"Giulia",ch:3,big:"0",lab:"voti presi",why:"Ha giocato 4 carte e nessuna ha preso un solo voto.",
+  t:{"6+":"Faccia d'angelo, carte da furbetto: nessuno ha capito nulla!","14+":"Mente guardandoti negli occhi. E le sue carte sono sempre salve.","18+":"Mentirebbe al notaio, e il notaio la ringrazierebbe. Zero sospetti in quattro turni."}},
+ veggente:{n:"Il Veggente",who:"Luca",ch:4,big:"6/6",lab:"segnalini",why:"Da Megafono ha azzeccato tutti i segnalini CADE / NON CADE.",
+  t:{"6+":"Ha la sfera di cristallo! Sa sempre dove cade tutto.","14+":"Sei su sei. O è un mago, o ha sbirciato le carte.","18+":"Indovina tutto. O è un mago, o è un truffatore. Teniamolo d'occhio."}},
+ bocciato:{n:"Il Visionario Bocciato",who:"Sara",ch:6,big:"4/5",lab:"sbagliati",why:"Da Megafono ha sbagliato 4 segnalini su 5.",
+  t:{"6+":"Oggi la sfera di cristallo era scarica. Riprovaci!","14+":"Quattro segnalini su cinque sbagliati. Neanche a caso.","18+":"Tirare una moneta avrebbe reso meglio. Molto meglio."}}
+};
+const ROWS=[["Giulia",3,18],["Marco",1,15],["Luca",4,13],["Sara",6,9]];
+let A="pollo",G="14+";
+const el=id=>document.getElementById(id);
+function mk(g,items,cur,fn){const box=el(g);items.forEach(([k,l])=>{const b=document.createElement("button");b.textContent=l;b.dataset.k=k;b.onclick=()=>{fn(k);paint()};box.appendChild(b)})}
+mk("gAward",Object.entries(AWARDS).map(([k,v])=>[k,v.n.replace("Il ","")]),A,k=>A=k);
+mk("gAge",[["6+","6+"],["14+","14+"],["18+","18+"]],G,k=>G=k);
+function paint(){
+  const a=AWARDS[A];
+  document.querySelectorAll("#gAward button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===A));
+  document.querySelectorAll("#gAge button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k===G));
+  el("award").textContent=a.n;el("award").classList.toggle("long",a.n.length>14); el("winner").textContent=a.who; el("heroImg").src=IMG+"card-"+a.ch+".webp";
+  el("big").textContent=a.big; el("bigLab").textContent=a.lab; el("quip").textContent=a.t[G]; el("why").textContent=a.why;
+  el("miniImg").src=IMG+"tok-"+a.ch+".webp"; el("miniAward").textContent=a.n; el("miniWho").textContent="a "+a.who;
+  el("tbl").innerHTML=ROWS.map((r,i)=>`<div class="r ${i==0?"win":""}"><span class="p">${i+1}</span><img src="${IMG}tok-${r[1]}.webp" alt=""><span>${r[0]}</span>${r[0]===a.who?`<span class="tag">${a.n}</span>`:""}<span class="pts">${r[2]}</span></div>`).join("");
+  const s=el("screen2");s.classList.remove("re");void s.offsetWidth;
+  ["stamp","hero","medal","num","quip"].forEach(c=>{const e=s.querySelector("."+c);if(e){e.style.animation="none";void e.offsetWidth;e.style.animation=""}});
+}
+const cols=["#e8362b","#ffc72c","#14a3a1","#ff7aa8","#fff"];
+el("conf").innerHTML=Array.from({length:26},(_,i)=>`<i style="left:${(i*37)%100}%;background:${cols[i%5]};animation-delay:${-(i*0.43)%5}s;animation-duration:${4+(i%4)}s;border:1.5px solid #13224a"></i>`).join("");
+paint();
+</script>
+</body>
+</html>
