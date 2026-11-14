@@ -42,15 +42,15 @@ function CharCarousel({ value, onChange, taken = [] }: { value: number; onChange
 export function CreateScreen() {
   const solo = /[?&]solo=1/.test(location.search);
   const [step, setStep] = useState(0), [nick, setNick] = useState(lastNickname()), [char, setChar] = useState(() => Math.floor(Math.random() * 8));
-  const [mode, setMode] = useState<"table" | "remote">("table"), [bots, setBots] = useState(solo ? 3 : 0), [level, setLevel] = useState<BotLevel>("medium");
+  const [bots, setBots] = useState(solo ? 3 : 0), [level, setLevel] = useState<BotLevel>("medium");
   const [age, setAge] = useState<Age>(14), [timer, setTimer] = useState<Timer>(0);
   const [busy, setBusy] = useState(false), [err, setErr] = useState<string | null>(null);
-  const LAST = 2, titles = ["fm.w.chi", "fm.w.come", "fm.w.ultimi"] as const;
+  const LAST = 2, titles = ["fm.w.chi", "fm.w.bot.t", "fm.w.ultimi"] as const;
   async function submit(e: FormEvent) {
     e.preventDefault(); if (busy) return;
     if (step < LAST) { if (step === 0 && !nick.trim()) return; setStep(step + 1); return; }
     setBusy(true); setErr(null);
-    try { const s = await createRoom(nick, mode, true, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(/[?&]debug=bot/.test(location.search) ? { debug: true } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
+    try { const s = await createRoom(nick, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(/[?&]debug=bot/.test(location.search) ? { debug: true } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
     catch (x) { setErr(errText(x)); setBusy(false); }
   }
   const back = () => (step > 0 ? setStep(step - 1) : navigate("/"));
@@ -72,12 +72,6 @@ export function CreateScreen() {
             <div className="fld grow"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} /></div>
           </>}
           {step === 1 && <>
-            <div className="fld">
-              <div className="wcards">
-                <button type="button" className={`wcard${mode === "table" ? " on" : ""}`} onClick={() => setMode("table")} data-testid="mode-table"><span className="wi t" aria-hidden />{t("fm.tavolo")}<small>{t("fm.w.tavolo.x")}</small></button>
-                <button type="button" className={`wcard${mode === "remote" ? " on" : ""}`} onClick={() => setMode("remote")} data-testid="mode-remote"><span className="wi r" aria-hidden />{t("fm.distanza")}<small>{t("fm.w.distanza.x")}</small></button>
-              </div>
-            </div>
             <div className="fld mid" data-testid="bots-box">
               <span className="lb">{t("fm.w.bot")}</span>
               <div className="wstep">
@@ -95,7 +89,7 @@ export function CreateScreen() {
             <div className="fld"><span className="lb">{t("fm.w.timer")}</span>
               <div className="wchips">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
             <div className="wsum">
-              <span>{mode === "table" ? t("fm.tavolo") : t("fm.distanza")}</span><span>{bots === 0 ? t("fm.bot.nessuno") : ts("fm.bot.n", { n: bots })}</span><span>{t(`room.age.${age}` as TestoKey)}</span><span>{timer === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: timer })}</span>
+              <span>{bots === 0 ? t("fm.bot.nessuno") : ts("fm.bot.n", { n: bots })}</span><span>{t(`room.age.${age}` as TestoKey)}</span><span>{timer === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: timer })}</span>
             </div>
           </>}
         </div>
@@ -151,8 +145,7 @@ export function JoinScreen({ initialCode }: { initialCode: string }) {
           {step === 1 && <div className="fld grow"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} taken={taken} /></div>}
         </div>
         <div className="fbot">
-          {step === 0 && <a className="lnk" onClick={() => code.length === 5 && navigate(`/schermo/${code}`)} role="button" tabIndex={0} data-testid="open-display">{t("fm.schermo")}</a>}
-          {step === 0
+                    {step === 0
             ? <Btn type="submit" disabled={busy || code.length !== 5 || !nick.trim()} testId="wiz-next">{busy ? t("fm.entro") : t("fm.w.avanti")}</Btn>
             : <Btn type="submit" disabled={busy || taken.includes(char)} testId="join-submit">{busy ? t("fm.entro") : t("fm.entra")}</Btn>}
         </div>

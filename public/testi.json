@@ -1,5 +1,5 @@
 {
- "versione": 38,
+ "versione": 40,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -1543,10 +1543,6 @@
    "t": "Aspetta che l'host avvii la partita…",
    "s": "Stanza e lobby"
   },
-  "room.schermo": {
-   "t": "Schermo condiviso",
-   "s": "Stanza e lobby"
-  },
   "room.esci": {
    "t": "Esci dalla stanza",
    "s": "Stanza e lobby"
@@ -1720,14 +1716,6 @@
    "t": "Es. Giulia",
    "s": "Crea / entra in partita"
   },
-  "fm.tavolo": {
-   "t": "Stesso tavolo",
-   "s": "Crea / entra in partita"
-  },
-  "fm.distanza": {
-   "t": "A distanza",
-   "s": "Crea / entra in partita"
-  },
   "fm.bot.meno": {
    "t": "Meno bot",
    "s": "Crea / entra in partita"
@@ -1780,10 +1768,6 @@
    "t": "TORRE",
    "s": "Crea / entra in partita",
    "n": "Esempio nel campo codice"
-  },
-  "fm.schermo": {
-   "t": "Apri lo schermo condiviso (tablet o PC)",
-   "s": "Crea / entra in partita"
   },
   "fm.entro": {
    "t": "Entro…",
@@ -2465,11 +2449,6 @@
    "s": "Crea la partita (passi)",
    "n": "Titolo del passo 1"
   },
-  "fm.w.come": {
-   "t": "Come giocate?",
-   "s": "Crea la partita (passi)",
-   "n": "Titolo del passo 2"
-  },
   "fm.w.ultimi": {
    "t": "Ultimi dettagli",
    "s": "Crea la partita (passi)",
@@ -2479,14 +2458,6 @@
    "t": "Il tuo personaggio",
    "s": "Crea la partita (passi)",
    "n": "Etichetta: carte da scorrere"
-  },
-  "fm.w.tavolo.x": {
-   "t": "Ognuno il suo telefono",
-   "s": "Crea la partita (passi)"
-  },
-  "fm.w.distanza.x": {
-   "t": "Ognuno a casa sua",
-   "s": "Crea la partita (passi)"
   },
   "fm.w.bot": {
    "t": "Bot al tavolo",
@@ -2672,6 +2643,11 @@
    "t": "Confessalo!",
    "s": "Partita: scelta della frase del Megafono",
    "n": "Targhetta sulla carta confessione"
+  },
+  "fm.w.bot.t": {
+   "t": "Chi gioca con te?",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 2: i bot"
   }
  }
 }

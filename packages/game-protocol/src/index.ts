@@ -17,16 +17,15 @@ export const nicknameSchema = z
   .pipe(z.string().min(1).max(16).regex(/^[\p{L}\p{N}][\p{L}\p{N} _.'-]*$/u, "caratteri non ammessi"));
 export const tokenSchema = z.string().regex(/^[A-Za-z0-9_-]{22}$/);
 export const playerIdSchema = z.string().regex(/^[0-9a-f]{16}$/);
-export const modeSchema = z.enum(["table", "remote"]);
 export const botLevelSchema = z.enum(["easy", "medium", "hard"]);
 export const MAX_PHRASE_CHARS = 80;
 
 // ---------- API HTTP ----------
-export const createRoomBody = z.object({ nickname: nicknameSchema, mode: modeSchema.default("table"), megafonoSa: z.boolean().default(false), /** Collaudo dei bot: mostra il loro carattere. */ debug: z.boolean().optional(), /** Personaggio scelto dall'host (0–7). */ char: z.number().int().min(0).max(7).optional(), /** Fascia d'età dei testi (6, 10, 14, 18). */ ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), /** Tempo per scegliere (s): 0 = libero. */ turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional(), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
+export const createRoomBody = z.object({ nickname: nicknameSchema, /** Campi di versioni precedenti (modalità al tavolo, «Il Megafono sa»): accettati e ignorati, così un'app rimasta in cache non si rompe. */ mode: z.unknown().optional(), megafonoSa: z.unknown().optional(), /** Collaudo dei bot: mostra il loro carattere. */ debug: z.boolean().optional(), /** Personaggio scelto dall'host (0–7). */ char: z.number().int().min(0).max(7).optional(), /** Fascia d'età dei testi (6, 10, 14, 18). */ ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), /** Tempo per scegliere (s): 0 = libero. */ turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional(), bots: z.object({ count: z.number().int().min(0).max(5), level: botLevelSchema.default("medium") }).strict().optional() }).strict();
 export const joinRoomBody = z.object({ nickname: nicknameSchema, /** Personaggio scelto (0–7); se è già preso se ne assegna uno libero. */ char: z.number().int().min(0).max(7).optional() }).strict();
 export type CreateRoomBody = z.infer<typeof createRoomBody>;
 export interface SessionResponse { code: string; playerId: string; token: string }
-export interface RoomInfoResponse { exists: boolean; stage?: "LOBBY" | "PLAYING" | "FINISHED"; players?: number; full?: boolean; mode?: "table" | "remote"; /** Personaggi (0–7) già presi in stanza. */ taken?: number[] }
+export interface RoomInfoResponse { exists: boolean; stage?: "LOBBY" | "PLAYING" | "FINISHED"; players?: number; full?: boolean; /** Personaggi (0–7) già presi in stanza. */ taken?: number[] }
 
 // ---------- messaggi client -> server ----------
 const act = z.union([
@@ -42,7 +41,7 @@ export const clientMessageSchema = z.discriminatedUnion("t", [
   z.object({ t: z.literal("hello"), token: tokenSchema }).strict(),
   z.object({ t: z.literal("watch") }).strict(),
   z.object({ t: z.literal("ping") }).strict(),
-  z.object({ t: z.literal("setOptions"), megafonoSa: z.boolean().optional(), gregge: z.boolean().optional(), propaganda: z.boolean().optional(), objectives: z.boolean().optional(), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), confessions: z.boolean().optional(), display: z.boolean().optional(), mode: modeSchema.optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
+  z.object({ t: z.literal("setOptions"), ageBand: z.union([z.literal(6), z.literal(10), z.literal(14), z.literal(18)]).optional(), display: z.boolean().optional(), turnTimerSec: z.union([z.literal(0), z.literal(30), z.literal(60), z.literal(90), z.literal(120)]).optional() }).strict(),
   z.object({ t: z.literal("kick"), playerId: playerIdSchema }).strict(),
   z.object({ t: z.literal("addBot"), level: botLevelSchema.default("medium") }).strict(),
   z.object({ t: z.literal("removeBot"), playerId: playerIdSchema }).strict(),
@@ -56,7 +55,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
-export interface RoomOptionsDto { /** Solo per chi collauda i bot: i telefoni vedono il carattere di gioco dei bot (si attiva creando la partita da /crea?debug=bot). */ debug?: boolean; megafonoSa: boolean; /** Variante «Il gregge» (in prova): lo 0 è l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi la vota. */ gregge?: boolean; /** Variante PROPAGANDA (in prova) e, dentro, obiettivi contrapposti. PROPAGANDA e «Il gregge» si escludono. */ propaganda?: boolean; objectives?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
+export interface RoomOptionsDto { /** Solo per chi collauda i bot: i telefoni vedono il carattere di gioco dei bot (si attiva creando la partita da /crea?debug=bot). */ debug?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
 export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; /** Personaggio 0–7 (colore e segnalino). */ char?: number; isBot?: boolean; level?: "easy" | "medium" | "hard"; /** Carattere di gioco del bot: solo nelle partite di collaudo (`options.debug`). */ style?: string }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;

@@ -74,7 +74,7 @@ export class RoomCore {
   private clock = 0;
   private lastChat = new Map<string, number>();
   constructor(public data: RoomData, private deps: Deps) {
-    data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false; data.run ??= null;
+    data.options.ageBand ??= DEFAULT_AGE_BAND; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false; data.run ??= null;
     data.players.forEach((p, i) => { p.char ??= data.players.some((q) => q.char === i % 8) ? this.freeChar() : i % 8; }); // stanze salvate prima di questa versione: personaggi in ordine di ingresso
   }
   private rnd(n: number): number { return new DataView(this.deps.rng(4).buffer).getUint32(0) % n; }
@@ -90,11 +90,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; debug?: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.debug ? { debug: true } : {}), megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -127,7 +127,7 @@ export class RoomCore {
   }
   publicInfo(): RoomInfoResponse {
     const d = this.data;
-    return { exists: true, stage: d.stage, players: d.players.length, full: d.players.length >= LIMITS.maxPlayers, mode: d.options.mode, taken: d.players.flatMap((p) => (p.char !== undefined ? [p.char] : [])) };
+    return { exists: true, stage: d.stage, players: d.players.length, full: d.players.length >= LIMITS.maxPlayers, taken: d.players.flatMap((p) => (p.char !== undefined ? [p.char] : [])) };
   }
 
   // ---------- presenza ----------
@@ -167,15 +167,9 @@ export class RoomCore {
       case "setOptions": {
         if (!me.isHost) return err("NOT_HOST", "solo l'host cambia le opzioni");
         if (d.stage !== "LOBBY") return err("WRONG_STAGE", "le opzioni si cambiano prima dell'avvio");
-        if (msg.megafonoSa !== undefined) d.options.megafonoSa = msg.megafonoSa;
-        if (msg.mode !== undefined) d.options.mode = msg.mode;
         if (msg.display !== undefined) d.options.display = msg.display;
         if (msg.turnTimerSec !== undefined) d.options.turnTimerSec = msg.turnTimerSec;
         if (msg.ageBand !== undefined) d.options.ageBand = msg.ageBand;
-        if (msg.confessions !== undefined) d.options.confessions = msg.confessions;
-        if (msg.gregge !== undefined) { d.options.gregge = msg.gregge; if (msg.gregge) d.options.propaganda = false; }
-        if (msg.propaganda !== undefined) { d.options.propaganda = msg.propaganda; if (msg.propaganda) d.options.gregge = false; }
-        if (msg.objectives !== undefined) d.options.objectives = msg.objectives;
         d.seq++; out.persist = true; return this.broadcastRoom(out);
       }
       case "chat": {
@@ -242,8 +236,8 @@ export class RoomCore {
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
         const pool = this.deps.phrasePool;
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
-        const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995, confessions: d.options.confessions }) : this.deps.phraseDeck;
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, megafonoSa: d.options.megafonoSa, cnc: !d.options.gregge && !d.options.propaganda, gregge: !!d.options.gregge && !d.options.propaganda, propaganda: !!d.options.propaganda, objectives: !!d.options.propaganda && !!d.options.objectives, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
+        const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995 }) : this.deps.phraseDeck;
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, cnc: true, mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);
