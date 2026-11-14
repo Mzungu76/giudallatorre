@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PlayerView, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
-import { Btn, Disc, FAST, PLAYER_COLORS, useStage } from "../ui.tsx";
+import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
@@ -139,7 +139,8 @@ const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; peop
 
 
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
-  const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
+  const stage = useStage(), { H, dy } = stage, [shift, setShift] = useState({ dy: 0, sc: 1 });
+  const people = usePeople(room), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
   const [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
@@ -235,12 +236,33 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   useEffect(() => {
     if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !luiDraw && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
   }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, luiDraw, megaIntro]);
+  // La frase del Megafono può essere lunga (e il chip del Megafono occupa spazio in alto): se la carta della frase arriva sopra le carte sulla torre, la torre scende
+  // quanto basta (e, se non c'è più spazio sotto, si rimpicciolisce un po'), così niente si sovrappone.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const pill = document.querySelector('.stage [data-testid="phrase"]') as HTMLElement | null, st = pill?.closest(".stage") as HTMLElement | null;
+      let next = { dy: 0, sc: 1 };
+      if (pill && st) {
+        const bottom = (pill.getBoundingClientRect().bottom - st.getBoundingClientRect().top) / stage.k, top0 = 300 + stage.ty + 28 * stage.ts;
+        const extra = Math.max(0, Math.round(bottom + 10 - top0)), limit = H - 206;
+        const sc = extra > 0 ? Math.max(0.78, Math.min(1, (limit - 300 - stage.ty - extra) / (276 * stage.ts))) : 1;
+        next = { dy: extra, sc: Math.round(sc * 100) / 100 };
+      }
+      setShift((c) => (Math.abs(c.dy - next.dy) > 1 || c.sc !== next.sc ? next : c));
+    };
+    measure(); const t = setTimeout(measure, 120);   // il testo della frase e i font arrivano un attimo dopo
+    const pill = document.querySelector('.stage [data-testid="phrase"]'), ro = pill && typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    if (pill && ro) ro.observe(pill);
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  });
+  const shifted = useMemo(() => ({ ...stage, ty: stage.ty + shift.dy, ts: stage.ts * shift.sc }), [stage, shift]);
   // Suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
   const hint = readOnly ? null : hintFor(view), hintText = hint?.text ?? null;
   const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !luiDraw && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
+      <StageCtx.Provider value={shifted}>
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? txs("g.ban.vote.t") : txs("g.ban.dopo.mega"), sub: v ? txs("g.ban.vote.s") : txs("g.ban.dopo.mega.s") }); } }} />}
       {!climbing && needTerrace && !revealing && (
@@ -250,6 +272,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {revealing && res && (
         <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={fellArr} points={{ lines: res.lines, ids: view.players.map((p) => p.id), colorOf: (id) => people.get(id).color, meId: readOnly ? undefined : me, annullati }} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
+      </StageCtx.Provider>
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
       {inPicker && <PhrasePicker view={view} send={act} ui={uiv} meta={metaEl} />}
