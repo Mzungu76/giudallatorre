@@ -12,8 +12,8 @@ export default function HomeTools() {
   const install = async () => { if (!(await promptInstall())) setHelp(true); };
   return (
     <>
+      <button onClick={() => setSound(!sound)} aria-label={sound ? ts("help.suoni.off") : ts("help.suoni.on")} title={sound ? ts("help.suoni.off") : ts("help.suoni.on")} data-testid="sound-toggle-home" className="home-sound">{sound ? "🔊" : "🔇"}</button>
       <div className="home-tools">
-        <button onClick={() => setSound(!sound)} aria-label={sound ? ts("help.suoni.off") : ts("help.suoni.on")} title={sound ? ts("help.suoni.off") : ts("help.suoni.on")} data-testid="sound-toggle-home" style={{ fontSize: 20 }}>{sound ? "🔊" : "🔇"}</button>
         <button onClick={share} aria-label={ts("ht.condividi")} title={ts("ht.condividi")} data-testid="share-app">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 10.6l6.8-4M8.6 13.4l6.8 4" /></svg>
         </button>
