@@ -6,7 +6,7 @@ export { suggestAction } from "./bot.ts";
 export { simulateGame } from "./sim.ts";
 export { checkInvariants } from "./invariants.ts";
 export { shuffle, nextRandom } from "./rng.ts";
-export { chooseBotAction, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
+export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";
 export { registerTags, affinity, phraseTagCount } from "./tags.ts";
 export type { TagSet } from "./tags.ts";

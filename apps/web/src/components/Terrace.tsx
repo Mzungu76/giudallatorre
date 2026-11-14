@@ -201,13 +201,11 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   // «Gettalo dalla torre!»: la vista dello spoglio sale e svanisce, poi la scena della caduta compare in dissolvenza (niente scatto netto)
   const [leaving, setLeaving] = useState(false);
   const go = () => { if (leaving) return; setLeaving(true); setTimeout(onDone, 650); };
-  const luiPos = [...(lui ? [lui.position] : []), ...(marks ?? []).map((x) => x.position)];
-  const finalToks = useMemo(() => luiToks(voters.map((v) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega, id: v.id } as VoteTok })), lui, marks), [voters, votes, lui, marks]);
   const megaId = voters.find((v) => v.mega)?.id;
   return (
     <div className={`rv-wrap${leaving ? " leaving" : ""}`}>
       <Terrace cardIds={cardIds} spread votes={stamp && points ? [] : toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
-      {stamp && points && <ResultMarks n={cardIds.length} votes={finalToks} lines={points.lines} fallen={fallPositions} colorOf={points.colorOf} meId={points.meId} megaId={megaId} sink={fallPositions} spread slam luiPos={luiPos} />}
+      {stamp && points && <ResultMarks n={cardIds.length} fallen={fallPositions} sink={fallPositions} spread slam />}
       {stamp && !points && <div className="layer rv-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="reveal-panel">{fallPositions.map((q, i) => <FallArrow key={`a${q}`} rect={visibleRect(sunk(pos, fallPositions), q - 1)} slam delay={i * 0.45} />)}</div>}
       {stamp && points && <div className="rv-strip"><ScoreStrip ids={points.ids} lines={points.lines} colorOf={points.colorOf} meId={points.meId} annullati={points.annullati} megaId={megaId} sound={sound} interactive={interactive} onContinue={onDone} base={0.3 + fallPositions.length * 0.45} quiet /></div>}
       {interactive && phase === "clock" && <button className="next" onClick={() => seek.current?.(nextT())} data-testid="reveal-next" aria-label={txs("rv.avanti")}>⏭</button>}

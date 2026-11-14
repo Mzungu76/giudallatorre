@@ -1262,3 +1262,12 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .chc.taken .chc-card{filter:grayscale(1) brightness(.8)}.chc.taken .chc-tok{filter:grayscale(1)}
 .chc.taken::after{content:"✕";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font:400 64px Anton;color:#e8362b;text-shadow:0 3px 0 #13224a;-webkit-text-stroke:2px #13224a}
 .chars-name small{display:block;font:800 12px Nunito;color:#e8362b;margin-top:2px}
+.mr-intro p{font-size:17px;line-height:1.25}.mr-intro p.pts{margin-top:8px;font-size:15px;color:#13224a;opacity:.85}
+
+/* Chip inferiori compatti: due per riga, così con 6 giocatori restano in 3 righe */
+.rv-strip .rs-strip,.rs-strip{gap:6px 6px}
+.rv-strip .rs-pl{flex:0 1 calc(50% - 3px);min-width:0;justify-content:space-between;font-size:15px;padding:2px 6px 2px 3px;gap:3px}
+.rv-strip .rs-pl .dc.l{width:30px;height:30px}
+.rv-strip .rs-sic{gap:3px;margin-left:2px}.rv-strip .rs-ip{margin-right:4px}
+.rv-strip .rs-ip svg{width:26px;height:26px}.rv-strip .rs-ip{width:26px !important;height:26px !important}
+.rv-strip .rs-ip i{min-width:17px;height:14px;font-size:10px;right:-8px;top:-8px;padding:0 3px}

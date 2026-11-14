@@ -1,4 +1,4 @@
-import { applyAction, chooseBotAction, createGame, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction } from "@gdt/game-engine";
+import { applyAction, createGame, planMiniVote, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction } from "@gdt/game-engine";
 import type { Action, BotLevel, GameState, MiniKind } from "@gdt/game-engine";
 
 /**
@@ -51,9 +51,13 @@ export function newSim(o: SimOpts, cardIds: string[], now: number): SimRun {
     const mem = newBotMemory(), voters = s.playerIds.filter((p) => p !== SIM_ME || o.autoMe), single = o.forced.length ? o.forced : [1 + Math.floor(rand() * 6)];
     voters.forEach((id, i) => {
       let position: number;
+      if (o.votes === "caso") {   // come in partita: il bot guarda le carte man mano che escono e preme dopo il suo tempo di reazione
+        const pl = planMiniVote(s, id, o.level, mem, rand); if (!pl) return;
+        run.plan[id] = { position: pl.position, at: goAt + pl.slot * MINI_SLOT_MS + pl.delayMs }; return;
+      }
       if (o.votes === "forzato") position = o.forced.length ? o.forced[i % o.forced.length]! : 1 + Math.floor(rand() * 6);
       else if (o.votes === "presto") position = single[i % single.length]!;
-      else { const a = chooseBotAction(s, id, o.level, mem, rand); position = a && a.type === "vote" ? a.position : 1 + Math.floor(rand() * 6); }
+      else position = 1;
       const sl = slotsOf(order, position), k = o.votes === "presto" ? sl[0]! : sl[Math.floor(rand() * sl.length)]!;
       run.plan[id] = { position, at: o.votes === "presto" ? goAt + k * MINI_SLOT_MS + 400 + Math.floor(rand() * 1600) : goAt + k * MINI_SLOT_MS + 500 + Math.floor(rand() * 1900) };
     });

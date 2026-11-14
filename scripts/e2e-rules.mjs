@@ -8,7 +8,7 @@ const browser = await chromium.launch();
 const mk = async () => { const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 1.5 }); const p = await ctx.newPage(); p.setDefaultTimeout(5000); await p.addInitScript((fast) => { try { localStorage.setItem("gdt.intro", "1"); localStorage.setItem("gdt.nochar", "1"); sessionStorage.setItem("gdt.fast", fast); } catch {} }, process.env.FAST === "0" ? "0" : "1"); p.errors = []; p.on("pageerror", (e) => p.errors.push(e.message)); return p; };
 const vis = (p, id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 const A = await mk(), B = await mk();
-await A.goto(BASE + "/crea"); await A.fill("#nick", "Ann"); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForSelector('[data-testid="lobby"]');
+await A.goto(BASE + "/crea"); await A.fill("#nick", "Ann"); await A.click('[data-testid="wiz-next"]'); for (let i = 0; i < +(process.env.BOTS ?? 2); i++) await A.click('[data-testid="bots-plus"]'); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForSelector('[data-testid="lobby"]');
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim();
 await B.goto(`${BASE}/entra?c=${code}`); await B.fill("#nick", "Bea"); await B.click('[data-testid="wiz-next"]'); await B.click('[data-testid="join-submit"]'); await B.waitForSelector('[data-testid="lobby"]');
 await sleep(300);
