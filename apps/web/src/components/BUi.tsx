@@ -6,6 +6,8 @@ import { luiEffectHow, luiLabel, objCond, objCondPublic } from "../lib/lui.ts";
 import { useNow } from "../ui.tsx";
 import { t, ts } from "../lib/testi.ts";
 import { MegaIcon } from "./MegaIcon.tsx";
+import { Who } from "./Persona.tsx";
+import { tokenUrl } from "../lib/characters.ts";
 
 /** Comandi delle finestre (chat, classifica, regolamento, segnalini Lui!) per il pannello in basso. */
 export interface UiCtl { unread: number; chat: () => void; rank: () => void; rules: () => void; lui: () => void }
@@ -20,9 +22,9 @@ export function useTimedOpen(ms = OPEN_MS) {
 }
 
 /** Riga in alto: turno (con il timer, se c'è) e Megafono. */
-export function BMeta({ turn, mega, right, deadline, cap, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Secondi del timer impostato: il conto parte da qui (prima il server concede il tempo delle animazioni). */ cap?: number; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
+export function BMeta({ turn, mega, megaId, megaColor, right, deadline, cap, me }: { turn: string; mega?: string; /** Il Megafono: segnalino accanto al nome, e tocco sul nome/segnalino apre la sua persona. */ megaId?: string; megaColor?: string; right?: string; deadline?: number | null; /** Secondi del timer impostato: il conto parte da qui (prima il server concede il tempo delle animazioni). */ cap?: number; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
   const now = useNow(), s = deadline ? Math.max(0, Math.min(cap ?? 1e9, Math.ceil((deadline - now) / 1000))) : null;
-  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip"><MegaIcon s={18} />{t("bui.megachip")}</span> : right ?? <span className="bm-who"><MegaIcon s={18} />{mega ?? ""}</span>}</span></div>;
+  return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip"><MegaIcon s={18} />{t("bui.megachip")}</span> : right ?? <span className="bm-who"><MegaIcon s={18} />{megaId && megaColor ? <Who id={megaId} className="bm-id"><img className="bm-tok" src={tokenUrl(megaColor)} alt="" />{mega ?? ""}</Who> : mega ?? ""}</span>}</span></div>;
 }
 
 /** La frase del Megafono, sempre per intero (il corpo si riduce se è lunga). */

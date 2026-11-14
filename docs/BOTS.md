@@ -36,3 +36,7 @@ Ogni bot decide **solo** con ciò che vedrebbe un giocatore seduto al tavolo: la
 - **Caratteri** (`packages/game-engine/src/botstyle.ts`): dodici, estratti a caso a ogni partita e diversi tra i bot della stanza (fiducia, gregarietà, voglia di bluffare, sospetto, rischio, rapidità). Non cambiano la bravura (±10% di punti tra i caratteri): la fa il livello.
 - **Bluff**: il Megafono sceglie, con un po' di valore in meno, il segnalino che gli altri leggerebbero peggio; i votanti stimano che segnalino ci sia davvero in base a come si comporterebbe un Megafono che sceglie bene (più rumore se sono sospettosi), solo con informazioni pubbliche.
 - **Nomi**: dal pool di 16 nomi del sesso del personaggio, a caso a ogni partita. **Scheda**: toccando il nome (lobby, classifica) si apre la carta con categoria e 2–3 righe (carattere compreso per i bot).
+
+## «Carattere» e «persona»
+- **Carattere** = le regole interne con cui un bot gioca (`botstyle.ts`, tarate sul livello): non si mostra mai ai giocatori (si vede solo nelle partite create da `/crea?debug=bot`).
+- **Persona** = chi è il bot (la categoria e tre righe: età, lavoro, manie, `char.N.chi1..3`): si apre toccando il nome o il segnalino del giocatore ovunque (lobby, classifica, Megafono in alto a destra, chi ha giocato/votato, chat, gettoni sulla torre, fine partita). `PersonaProvider` / `Who` in `components/Persona.tsx`.
