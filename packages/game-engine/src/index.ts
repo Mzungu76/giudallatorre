@@ -14,3 +14,5 @@ export type { TagSet } from "./tags.ts";
 export { buildPhraseDeck, PHRASES_PER_CARD, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
 export type { AgeBand, PhraseFamily, PoolPhrase, PoolConfession, BuildOptions } from "./phrases.ts";
 export { BOT_STYLES, NEUTRAL_STYLE, styleById } from "./botstyle.ts";
+export { pickAward, awardCandidates, eligiblePlayers, AWARD_WEIGHTS, AWARD_IDS } from "./awards.ts";
+export type { AwardInput, AwardCandidate } from "./awards.ts";
