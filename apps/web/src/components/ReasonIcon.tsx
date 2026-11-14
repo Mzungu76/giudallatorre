@@ -3,7 +3,7 @@
  * target = voto giusto (la carta cade) · bolt = il voto più veloce · card = la tua carta cade · hand = il segnalino Lui! (anche per chi lo ha seguito)
  * · flag = obiettivo centrato.
  */
-export type Reason = "target" | "bolt" | "card" | "hand" | "flag";
+export type Reason = "target" | "bolt" | "card" | "hand";
 const NV = "#13224a", st = { stroke: NV, strokeLinejoin: "round", strokeLinecap: "round" } as const;
 
 const Card = ({ x = 9, y = 6, w = 26, h = 34, rot = 0, ring = false, tint = false }: { x?: number; y?: number; w?: number; h?: number; rot?: number; ring?: boolean; tint?: boolean }) => (
@@ -31,7 +31,6 @@ function Body({ k }: { k: Reason }) {
       <circle cx="38" cy="10" r="8" fill="#ffc72c" {...st} strokeWidth="2" /><text x="38" y="14" textAnchor="middle" fontFamily="Anton, Impact, sans-serif" fontSize="11" fill={NV}>1°</text></>);
     case "card": return (<><Card ring x={8} y={8} /><Arrow x={16} y={22} s={20} /><path d="M36 2l2.4 5 5.4.7-4 3.7 1 5.4-4.8-2.7-4.8 2.7 1-5.4-4-3.7 5.4-.7z" transform="translate(-2 0)" fill="#ffc72c" {...st} strokeWidth="1.8" /></>);
     case "hand": return <image href="/lui-coperto.png" x="1" y="1" width="46" height="46" />;
-    case "flag": return (<><Card x={6} y={10} w={24} h={32} /><path d="M32 42V4" stroke={NV} strokeWidth="3.2" strokeLinecap="round" /><path d="M33 5c6-3 10 3 14 0v12c-4 3-8-3-14 0z" fill="#e8362b" {...st} strokeWidth="2.2" /></>);
   }
 }
 

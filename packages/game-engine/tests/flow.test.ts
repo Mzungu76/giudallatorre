@@ -4,24 +4,20 @@ import { applyAction, checkInvariants, megafonoOf, simulateGame, createGame, sug
 import type { GameState } from "../src/index.ts";
 
 function finishTurn(s: ReturnType<typeof start>) {
-  const g = act(toSuspect(s), { type: "placeLui", playerId: megafonoOf(toSuspect(s)), slot: "k1", position: 1 });
+  const g = act(toSuspect(s), { type: "placeMarks", playerId: megafonoOf(toSuspect(s)), marks: [{ slot: "noncade", position: 1 }] });
   return castVotes(g, Object.fromEntries(g.playerIds.map((p) => [p, 1])));
 }
 
 describe("fine turno e rotazione", () => {
-  it("scarta la Torre, la Folla pesca 1 carta, il Megafono (modalità base) no, il Megafono passa al giocatore successivo", () => {
+  it("scarta la Torre, tutti pescano 1 carta, il Megafono passa al giocatore successivo", () => {
     const r = finishTurn(start(4));
     const n = act(r, { type: "advance" });
     expect(n.turnNumber).toBe(2); expect(megafonoOf(n)).toBe("p2"); expect(n.phase).toBe("PROCLAIM");
     for (const p of n.playerIds) expect(n.hands[p]).toHaveLength(5);
     expect(checkInvariants(n, makeDeck(125))).toEqual([]);
     expect(Object.values(n.hands).flat().length + n.drawPile.length + n.discardPile.length).toBe(125);
-    expect(n.tower).toHaveLength(0); expect(n.lui).toBeNull(); expect(n.votes).toEqual({}); expect(n.proclaim).not.toBeNull();
+    expect(n.tower).toHaveLength(0); expect(n.marks).toBeNull(); expect(n.votes).toEqual({}); expect(n.proclaim).not.toBeNull();
     expect(n.megafonoTurns.p1).toBe(1);
-  });
-  it("variante Megafono sa: pesca anche il Megafono", () => {
-    const n = act(finishTurn(start(4, { megafonoSa: true })), { type: "advance" });
-    for (const p of n.playerIds) expect(n.hands[p]).toHaveLength(5);
   });
   it("mazzo esaurito: lo scarto viene rimescolato (mazzo minimo, partita completa)", () => {
     for (const n of [3, 5, 8]) {
@@ -99,9 +95,9 @@ describe("robustezza", () => {
     for (const { action } of full.log) state = applyAction(JSON.parse(JSON.stringify(state)) as GameState, action).state;
     expect(state).toEqual(full.state);
   });
-  it("molte partite simulate (3–8 giocatori, entrambe le varianti) rispettano le invarianti", () => {
-    for (const n of [3, 4, 5, 6, 7, 8]) for (const megafonoSa of [false, true]) for (let seed = 1; seed <= 12; seed++) {
-      const { state, problems } = simulateGame(cfg(n, { seed, megafonoSa }), seed * 7, { checkEveryStep: seed <= 2 });
+  it("molte partite simulate (3–8 giocatori) rispettano le invarianti", () => {
+    for (const n of [3, 4, 5, 6, 7, 8]) for (let seed = 1; seed <= 12; seed++) {
+      const { state, problems } = simulateGame(cfg(n, { seed }), seed * 7, { checkEveryStep: seed <= 2 });
       expect(problems).toEqual([]); expect(state.phase).toBe("GAME_OVER");
       expect(Object.values(state.scores).every((v) => Number.isInteger(v))).toBe(true);
       expect(checkInvariants(state, makeDeck(125))).toEqual([]);

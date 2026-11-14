@@ -15,8 +15,8 @@ const Step = ({ ic, t, x }: { ic: ReactNode; t: ReactNode; x: ReactNode }) => <d
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
-export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeave, leaveHint }: { onClose: () => void; tokens?: LuiSpec[]; /** Variante «Il gregge»: la soglia premia anche chi vota la carta. */ gregge?: boolean; sound?: boolean; setSound?: (v: boolean) => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }) {
-  const [tab, setTab] = useState(0), [askLeave, setAskLeave] = useState(false), tk = tokens && tokens.length >= 2 ? tokens : DEMO;
+export default function HowTo({ onClose, sound, setSound, onLeave, leaveHint }: { onClose: () => void; sound?: boolean; setSound?: (v: boolean) => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }) {
+  const [tab, setTab] = useState(0), [askLeave, setAskLeave] = useState(false), tk = DEMO;
   return (
     <div className="brg" role="dialog" aria-label={ts("how.aria")} data-testid="howto">
       <div className="pap" /><div className="hr" /><div className="ht" />
@@ -42,7 +42,7 @@ export default function HowTo({ onClose, tokens, gregge, sound, setSound, onLeav
           <ExampleTurn />
         </>}
         {tab === 2 && <>
-          {tk.map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{sp.effect ? luiLabel(sp) : sp.trap ? t("how.3.gregge.t", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.t", { pt: sp.pts }) : t("how.3.k.t", { k: sp.k, pt: sp.pts })}</b><p>{sp.effect ? luiEffectHow(sp) : sp.trap ? t("how.3.gregge.x", { pt: sp.pts }) : sp.slot === "zero" ? t("how.3.zero.x") : gregge ? t("how.3.k.x.gregge", { k: sp.k }) : t("how.3.k.x", { k: sp.k })}</p></div></div>)}
+          {tk.map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{luiLabel(sp)}</b><p>{luiEffectHow(sp)}</p></div></div>)}
           <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}

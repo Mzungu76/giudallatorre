@@ -3,7 +3,7 @@
 > Fonte: `Giù dalla Torre! rev. 5.2l.pdf` (confermato definitivo dall'utente) + decisioni in `RULES_AMBIGUITIES.md`.
 
 ## Gioco base attuale: «Cade / Non cade» (dal 2026-11-10)
-È la partita normale dell'app (motore: `GameConfig.cnc`; il server la usa quando non sono attive «Il gregge» o PROPAGANDA). Le sezioni più sotto su «Segnalini Lui!» 0 / soglia descrivono le regole precedenti, ancora nel motore senza `cnc`.
+È **l'unica** partita dell'app: le varianti precedenti (segnalini Lui! 0/soglia, «Il gregge», PROPAGANDA, obiettivi, Megafono che non gioca carte) e la modalità al tavolo sono state rimosse dal motore e dal prodotto.
 
 1. **«Il Megafono sa» sempre attivo**: il Megafono sceglie la frase e poi gioca una carta dalla mano come gli altri (poi ripesca). Sulla Torre ci sono N carte, ognuna di un giocatore; ognuno conosce solo la propria.
 2. **Segnalino**: il Megafono ha a ogni turno tutti e tre i segnalini (tornano disponibili) e quando le carte sono salite ne posa **uno solo**, coperto, su una carta (anche la sua): **CADE**, **NON CADE** o **VOTI NULLI!**. Gli altri vedono dove, non quale; si scopre a fine turno. Nessun malus. (Dal 2026-11-10 al primo test erano 2 per turno: troppo carico da gestire.)
@@ -105,52 +105,6 @@ L'fuori programma finisce quando hanno votato tutti oppure quando le carte sono 
 **Server.** Il server dà il «via» (`goAt`, orologio del server; i client lo convertono con l'orologio del messaggio) e decide chi ha votato in tempo: un voto vale solo se arriva mentre il personaggio è in scena, con un margine di 0,3 s prima e 0,7 s dopo per la rete e i riflessi (la finestra è lunga quanto i 3 secondi della carta) (altrimenti errore `NOT_ON_STAGE`). A fine corsa (`endAt`) conta i voti arrivati. Parametri in `packages/game-engine` (`MINI_*`: 6 carte, 3 giri, 3 s a carta, 6 s di sipario e regole + 3 s di 3-2-1) e `apps/web/src/lib/miniScenes.ts` (`TS`, durata delle scenette) e `worker/src/RoomCore.ts` (`LIMITS.run*`).
 
 Bot: votano da soli, ciascuno nel momento in cui il personaggio scelto è in scena (con un po' di ritardo umano). Accusa: affinità tra personaggio e accusa; Il peggiore: i personaggi che cadono spesso un po' di più; Storia d'amore: scelta quasi libera.
-
-## Segnalini Lui! 0 / soglia (regole precedenti, motore senza `cnc`)
-Ogni partita ha **2 segnalini Lui!**, uguali per tutti i giocatori: **sempre lo 0** (altrimenti, con una soglia, nessuno voterebbe mai la carta del Lui!) più **una soglia a caso** dal pool adatto al numero di giocatori. Ognuno si usa **una volta sola**. Ogni giocatore vede sempre i **propri** segnalini (accanto al suo nome, quelli spesi sono grigi); **quelli degli altri non si vedono** e vanno ricordati. Quando è Megafono, il giocatore posa uno dei suoi gettoni, coperto, su una carta e scommette sul **numero di voti che la carta riceve dagli ALTRI** (il voto del Megafono non conta). "k voti" riesce con **almeno k** voti degli altri; lo **0** riesce solo se **nessun altro** vota la carta. Se riesce, il Megafono incassa i punti stampati; se no, niente (nessun malus, ma il gettone è speso). Finiti i gettoni (spareggio) tornano tutti.
-
-I punti stampati sono **tarati sulla probabilità di riuscita** (simulazioni con i bot, `tools/analysis/lui-pool.ts`): più il segnalino è difficile, più paga.
-
-| Giocatori | Pool (gettone → punti) |
-|---|---|
-| 3 | 0 → 5 · almeno 1 → 4 · almeno 2 → 10 |
-| 4 | 0 → 5 · almeno 1 → 4 · almeno 2 → 7 · almeno 3 → 16 |
-| 5–8 | 0 → 5 · almeno 1 → 4 · almeno 2 → 7 · almeno 3 → 14 |
-
-Il Megafono per il resto fa punti come gli altri: +2 se vota una carta che cade (e +2 se cade la carta che ha giocato nella variante "Il Megafono sa"). Spariscono "Cade lui!/Non cade", il malus −1 e il +1 per voto raccolto.
-
-**Bot.** Il Megafono bot sceglie gettone e carta con il valore atteso (voti simulati dalla stima del gruppo) in modo imprevedibile. I bot non Megafono vedono il Lui! su una carta ma non il numero né quali gettoni gli restano: stimano quale dei due gettoni ha usato e quanto il proprio voto su quella carta gli regala (soglie) o gli toglie (lo 0), e lo pesano nella scelta (Difficile di più).
-
-## Variante «Il gregge» (in prova, opzione di stanza)
-L'host la attiva nella lobby (casella «Il gregge (prova)»; di serie è spenta). Cambia **solo il segnalino 0**:
-- I segnalini restano 2 per partita: **sempre lo 0** più **una soglia a caso** dal pool per numero di giocatori (come sopra).
-- **Lo 0 è l'Imbroglio!**: i voti di chi vota la sua carta **non valgono**, come se non esistessero. La maggioranza (e l'eventuale pareggio) si calcola solo con i voti validi, quindi la carta dell'Imbroglio! non cade mai (il Megafono non può votarla). Chi ha votato la carta non prende il +2 del voto giusto ma tiene gli altri punti (es. la propria carta caduta). Se l'Imbroglio! annulla **almeno un voto**, il Megafono prende **+3** (valore tarato con i bot: `tools/analysis/imbroglio.ts`); se nessuno vota la carta, niente.
-- **Il Megafono non può votare la carta su cui ha posato il Lui!** (Imbroglio! o soglia). Se in app la tocca durante il voto, il pannello gli dice «Non puoi votare la carta dove hai posato il Lui!: scegline un'altra»; il motore rifiuta comunque il voto.
-- **La soglia** riesce come nella partita normale (la carta riceve almeno k voti dagli altri, che cada o no), e i punti stampati vanno **al Megafono (che non può votarla) e a tutti quelli che hanno votato quella carta**. Soglia mancata: niente a nessuno. Sul gettone c'è il simbolo 🗳 (i punti vanno a chi vota).
-- In app il gettone dell'Imbroglio! è grigio scuro con «0 VOTI», 🚫 in alto e la stella «+3». Lo spoglio resta lo stesso (voti, conteggio, Lui!): il conteggio usa già solo i voti validi e, quando si scopre l'Imbroglio!, i voti annullati spariscono dalla Torre. Nel riepilogo chi l'ha votata ha «Voto annullato dall'Imbroglio!».
-- **Estrazione a inizio partita**: dopo la schermata del personaggio, ogni giocatore vede l'estrazione della soglia (componente `LuiDraw`): una carrellata dei segnalini soglia possibili per quel numero di giocatori che rallenta e si ferma su quello della partita («Esce: …!»), poi arriva accanto l'Imbroglio! e si vede il set della partita con la spiegazione dei due gettoni. Si può saltare; compare una volta sola per stanza (non con la modalità veloce né sugli schermi condivisi). La soglia è già estratta dal server all'avvio: l'animazione la mostra soltanto.
-- Motore: `GameConfig.gregge`; il segnalino ha `trap: true`, `k: 1` e `pts: 3` (`IMBROGLIO_PTS`); l'esito (`LuiOutcome`) riporta `trap` e `caught` (chi l'ha votata); i voti di `caught` sono esclusi da `counts`. Soglia: il segnalino ha `herd: true`; se riesce, `shared` elenca chi ha votato la carta e prende i punti (riga `lui` per il Megafono, `lui-gregge` per chi l'ha votata). `luiForbidden(stato, giocatore)` dice quale carta il giocatore non può votare.
-- Bot (Medio e Difficile): ragionano sul **vantaggio rispetto agli altri** (i propri punti meno la media di quelli degli avversari), non sui soli punti propri: raggiungere una soglia che premia anche il Megafono e gli altri che votano la carta conviene solo se il mio voto non è quello decisivo. Il **Megafono** sceglie prima il gettone e poi la carta in modo imprevedibile (bluff: non sempre il gettone che rende di più, non sempre la carta più votata) e mette in conto quanto la carta del Lui! attira i voti: chi vota non vede il gettone, quindi reagisce allo stesso modo ai due (se la soglia è attraente, la carta del Lui! attira, e lì l'Imbroglio! rende). **Chi vota** stima quale gettone è dai gettoni rimasti al Megafono, da quanto spesso è uscito l'Imbroglio! negli spogli già visti e da un'idea "sfocata" di come ragiona il Megafono, con un po' di dubbio. Ogni bot ha un **carattere** fisso (più diffidente o più fiducioso; da Megafono più o meno bluffone), così non vanno tutti nella stessa direzione. Misura: `npx tsx tools/analysis/gregge-bots.ts hard 40`.
-
-## Variante PROPAGANDA (in prova, opzione di stanza)
-L'host la attiva in lobby (casella «Propaganda (prova)»); esclude «Il gregge». Dentro c'è una seconda casella indipendente, **Obiettivi contrapposti**. Configurazioni: gioco base · PROPAGANDA · PROPAGANDA con obiettivi. Senza PROPAGANDA le regole restano quelle originali.
-
-**Segnalini.** Sei segnalini di manipolazione del voto: a ogni partita se ne estrae **uno positivo e uno negativo** (uguali per tutti i Megafoni, mostrati all'inizio con l'estrazione animata, in due giri). Ogni Megafono ne posa uno a turno, coperto, su una carta, come sempre (monouso, tornano negli spareggi). **Non danno punti da soli**: cambiano il conteggio dei voti, e quindi chi cade. Il Megafono qui **può votare** la carta del suo Lui!.
-
-| Segnalino | Effetto |
-|---|---|
-| Propaganda! (+) | +1 voto alla carta con 3–4 giocatori, +2 con 5–8 |
-| Spareggio! (+) | se la carta è in pareggio in testa cade lei da sola (vince sul voto del Megafono); senza pareggio non fa nulla |
-| Influenza! (+) | il voto del Megafono vale doppio, qualunque carta voti (il gettone si posa comunque su una carta, per bluffare) |
-| Imbroglio! (−) | annulla tutti i voti della carta (anche quello del Megafono); chi l'ha votata non prende il +2 |
-| Dirottamento! (−) | sposta un voto dalla carta a un'altra che il Megafono sceglie quando lo posa; senza voti non fa nulla |
-| Censura! (−) | toglie un voto alla carta (se ne ha) |
-
-Il +2 del voto giusto va a chi ha votato davvero la carta che cade (i segnalini cambiano il conteggio, non i voti delle persone; fa eccezione l'Imbroglio!, che annulla i voti). Se nessuna carta ha voti validi decide il voto del Megafono. Lo spoglio resta lo stesso: il conteggio annunciato tiene già conto del segnalino; quando si scopre il Lui!, i gettoni sulla Torre passano al conteggio ufficiale (voti tolti, spostati, aggiunti in grigio, voto doppio del Megafono) e una frase spiega cosa è successo.
-
-**Obiettivi contrapposti.** Quando le carte salgono sulla Torre il Megafono riceve un obiettivo segreto su un personaggio a caso, sui **voti ufficiali** (dopo i segnalini, voto del Megafono compreso; la caduta non conta). Lui vede «Se il personaggio 3 riceve almeno 2 voti, prendi 4 punti!»; gli altri vedono la condizione opposta senza il numero: «Se il personaggio … riceve meno di 2 voti, chi l'ha votato prende 4 punti!». Il numero si scopre nel riepilogo. Se il Megafono centra l'obiettivo prende i punti; se no, li prende **ognuno della Folla che ha votato quel personaggio** (voto valido). Obiettivi per numero di giocatori: almeno 2 (4), nessun voto (4), esattamente 2 (4); da 4 giocatori anche almeno 3 (5); da 6 anche almeno 4 (6).
-
-Motore: `GameConfig.propaganda` / `objectives`, `propagandaPool`, `objectivePool`, `tallyVotes` (conteggio usato da motore e bot), azione `placeLui` con `to` per il Dirottamento!. Bot: il Megafono simula i voti e sceglie segnalino, carta (e carta di arrivo) e voto per far cadere la carta che vota e centrare l'obiettivo; gli altri non vedono il segnalino né il personaggio dell'obiettivo e pesano le possibilità. Misura: `npx tsx tools/analysis/propaganda.ts hard 25 1`.
 
 ## Spiegazione del Lui! sulla Torre (tutte le versioni)
 Durante il voto, toccando il gettone Lui! posato su una carta si apre un popup che spiega in breve come funziona: agli altri mostra i 2 gettoni della partita («può essere uno di questi», senza dire quale), al Megafono quello che ha posato. I testi seguono la variante (normale o «Il gregge»).

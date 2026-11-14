@@ -36,7 +36,7 @@ export function newSim(o: SimOpts, cardIds: string[], now: number): SimRun {
   const rand = lcg(o.seed), n = Math.max(3, Math.min(6, o.players));
   let s = createGame({
     players: SIM_NAMES.slice(0, n).map((name, i) => ({ id: `p${i + 1}`, name })), seed: o.seed | 0, deck: cardIds, phraseDeck: PHRASES, accuseDeck: ACCUSE,
-    miniGame: o.kind, cnc: true, megafonoSa: true, firstMegafonoIndex: 0,
+    miniGame: o.kind, firstMegafonoIndex: 0,
   }).state;
   for (let g = 0; s.phase !== "MINI_RUN" && g < 4000; g++) {
     if (s.phase === "RESULTS") { s = applyAction(s, { type: "advance" }).state; continue; }

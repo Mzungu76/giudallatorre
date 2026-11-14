@@ -8,7 +8,7 @@ export const PHRASES: PhraseCard[] = [
 ];
 export const names = (n: number) => Array.from({ length: n }, (_, i) => ({ id: `p${i + 1}`, name: `Giocatore ${i + 1}` }));
 export function cfg(n: number, extra: Partial<GameConfig> = {}): GameConfig {
-  return { players: names(n), seed: 42, deck: makeDeck(125), phraseDeck: PHRASES, firstMegafonoIndex: 0, luiSlots: ["k1", "k2", "k3", "zero"], ...extra };
+  return { players: names(n), seed: 42, deck: makeDeck(125), phraseDeck: PHRASES, firstMegafonoIndex: 0, ...extra };
 }
 export const start = (n: number, extra: Partial<GameConfig> = {}) => createGame(cfg(n, extra)).state;
 export const act = (s: GameState, a: Action) => applyAction(s, a).state;
@@ -19,10 +19,10 @@ export function toSuspect(s: GameState): GameState {
   for (const p of requiredPlayers(g)) g = act(g, { type: "playCard", playerId: p, cardId: g.hands[p]![0]! });
   return g;
 }
-/** Come toSuspect ma posa anche il Lui! e arriva alla fase VOTE. */
-export function toVote(s: GameState, lui: { slot: "k1" | "k3" | "zero"; position: number } = { slot: "k1", position: 1 }): GameState {
+/** Come toSuspect ma posa anche il segnalino e arriva alla fase VOTE. */
+export function toVote(s: GameState, mark: { slot: "cade" | "noncade" | "nulli"; position: number } = { slot: "cade", position: 1 }): GameState {
   const g = toSuspect(s);
-  return act(g, { type: "placeLui", playerId: megafonoOf(g), ...lui });
+  return act(g, { type: "placeMarks", playerId: megafonoOf(g), marks: [mark] });
 }
 /** Fa votare ciascun giocatore secondo la mappa id->posizione e restituisce lo stato (RESULTS se tutti hanno votato). */
 export function castVotes(s: GameState, votes: Record<string, number>): GameState {

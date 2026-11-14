@@ -29,24 +29,15 @@ describe("fase Su sulla Torre (frase)", () => {
 });
 
 describe("fase di gioco delle carte", () => {
-  it("modalità base: la Folla gioca, il Megafono NON gioca e la Torre ha N carte (N-1 giocate + 1 dal mazzo)", () => {
+  it("tutti giocano una carta dalla mano, il Megafono compreso; nessuna carta dal mazzo; la Torre ha N carte", () => {
     for (const n of [3, 5, 8]) {
       let g = act(start(n), { type: "choosePhrase", playerId: "p1", mode: "free" });
-      expect(g.deckCard).not.toBeNull();
-      err(() => applyAction(g, { type: "playCard", playerId: "p1", cardId: g.hands.p1![0]! }), "NOT_ALLOWED");
+      expect(requiredPlayers(g)).toHaveLength(n);
       for (const p of requiredPlayers(g)) g = act(g, { type: "playCard", playerId: p, cardId: g.hands[p]![0]! });
-      expect(g.phase).toBe("SUSPECT"); expect(g.tower).toHaveLength(n);
-      expect(g.tower.filter((t) => t.ownerId === null)).toHaveLength(1);
+      expect(g.phase).toBe("SUSPECT"); expect(g.tower).toHaveLength(n); expect(g.tower.every((t) => t.ownerId !== null)).toBe(true);
       expect(g.tower.map((t) => t.position)).toEqual(Array.from({ length: n }, (_, i) => i + 1));
-      expect(g.hands.p1).toHaveLength(5);
+      expect(g.hands.p1).toHaveLength(4);
     }
-  });
-  it("variante 'Il Megafono sa': anche il Megafono gioca dalla mano; nessuna carta dal mazzo; Torre di N carte", () => {
-    let g = act(start(4, { megafonoSa: true }), { type: "choosePhrase", playerId: "p1", mode: "free" });
-    expect(g.deckCard).toBeNull();
-    for (const p of requiredPlayers(g)) g = act(g, { type: "playCard", playerId: p, cardId: g.hands[p]![0]! });
-    expect(g.tower).toHaveLength(4); expect(g.tower.every((t) => t.ownerId !== null)).toBe(true);
-    expect(g.hands.p1).toHaveLength(4);
   });
   it("controlli: carta non in mano, doppio invio, fuori fase", () => {
     let g = act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free" });
@@ -55,7 +46,7 @@ describe("fase di gioco delle carte", () => {
     g = act(g, { type: "playCard", playerId: "p2", cardId: g.hands.p2![0]! });
     err(() => applyAction(g, { type: "playCard", playerId: "p2", cardId: g.hands.p2![0]! }), "ALREADY_DONE");
     err(() => applyAction(g, { type: "vote", playerId: "p2", position: 1 }), "WRONG_PHASE");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 1 }), "WRONG_PHASE");
+    err(() => applyAction(g, { type: "placeMarks", playerId: "p1", marks: [{ slot: "cade", position: 1 }] }), "WRONG_PHASE");
   });
   it("la Torre non rivela nulla finché non hanno giocato tutti", () => {
     let g = act(start(4), { type: "choosePhrase", playerId: "p1", mode: "free" });
@@ -65,25 +56,25 @@ describe("fase di gioco delle carte", () => {
   });
 });
 
-describe("segnalino Lui! e voto", () => {
-  it("solo il Megafono posa il Lui!, su una posizione valida", () => {
-    const g = toSuspect(start(4));
-    err(() => applyAction(g, { type: "placeLui", playerId: "p2", slot: "k1", position: 1 }), "NOT_ALLOWED");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 0 }), "INVALID_POSITION");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "k1", position: 5 }), "INVALID_POSITION");
-    err(() => applyAction(g, { type: "placeLui", playerId: "p1", slot: "BOH" as never, position: 1 }), "INVALID_CHOICE");
-    err(() => applyAction(g, { type: "vote", playerId: "p2", position: 1 }), "WRONG_PHASE"); // non si vota prima del Lui!
-    expect(act(g, { type: "placeLui", playerId: "p1", slot: "zero", position: 2 }).phase).toBe("VOTE");
+describe("segnalino e voto", () => {
+  it("solo il Megafono posa il segnalino, su una posizione valida e di un tipo valido", () => {
+    const g = toSuspect(start(4)), ok = (position: number, slot = "cade", who = "p1") => applyAction(g, { type: "placeMarks", playerId: who, marks: [{ slot, position }] });
+    err(() => ok(1, "cade", "p2"), "NOT_ALLOWED");
+    err(() => ok(0), "INVALID_POSITION");
+    err(() => ok(5), "INVALID_POSITION");
+    err(() => ok(1, "BOH"), "INVALID_CHOICE");
+    err(() => applyAction(g, { type: "vote", playerId: "p2", position: 1 }), "WRONG_PHASE"); // non si vota prima del segnalino
+    expect(act(g, { type: "placeMarks", playerId: "p1", marks: [{ slot: "noncade", position: 2 }] }).phase).toBe("VOTE");
   });
-  it("tutti votano, Megafono incluso; si può votare la propria carta e quella del mazzo; niente doppi voti", () => {
+  it("tutti votano, Megafono incluso; si può votare la propria carta; niente doppi voti", () => {
     let g = toVote(start(4));
     g = act(g, { type: "vote", playerId: "p2", position: 1 });
     err(() => applyAction(g, { type: "vote", playerId: "p2", position: 2 }), "ALREADY_DONE");
     err(() => applyAction(g, { type: "vote", playerId: "p3", position: 9 }), "INVALID_POSITION");
     err(() => applyAction(g, { type: "vote", playerId: "p3", position: 1.5 }), "INVALID_POSITION");
-    const mine = g.tower.find((t) => t.ownerId === "p3")!.position, deck = g.tower.find((t) => t.ownerId === null)!.position;
+    const mine = g.tower.find((t) => t.ownerId === "p3")!.position, other = g.tower.find((t) => t.ownerId === "p4")!.position;
     g = act(g, { type: "vote", playerId: "p3", position: mine });
-    g = act(g, { type: "vote", playerId: "p1", position: deck });
+    g = act(g, { type: "vote", playerId: "p1", position: other });
     expect(g.phase).toBe("VOTE");
     g = act(g, { type: "vote", playerId: "p4", position: 1 });
     expect(g.phase).toBe("RESULTS");

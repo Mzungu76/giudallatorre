@@ -1,5 +1,5 @@
 {
- "versione": 40,
+ "versione": 42,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -120,11 +120,6 @@
    "s": "Scheda «Sei il Megafono!»",
    "n": "Variante «Il Megafono sa»"
   },
-  "mega.nongioca": {
-   "t": "**Non giochi carte**: la tua Carta viene pescata a caso dal mazzo",
-   "s": "Scheda «Sei il Megafono!»",
-   "n": "Modalità base"
-  },
   "mega.punti": {
    "t": "**Come fai punti:** {p2} se voti la carta che cade e {p2} se cade la tua · segnalini azzeccati {pl} (sbagliati: {p0})",
    "s": "Scheda «Sei il Megafono!»",
@@ -137,39 +132,6 @@
   "mega.nomore": {
    "t": "Non mostrare più questa scheda",
    "s": "Scheda «Sei il Megafono!»"
-  },
-  "nocard.aria": {
-   "t": "Questo turno non giochi carte",
-   "s": "Avviso «Questo turno non giochi carte»",
-   "n": "Nome accessibile della finestra"
-  },
-  "nocard.titolo": {
-   "t": "Questo turno\nnon giochi carte",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.mazzo": {
-   "t": "MAZZO",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.perche.t": {
-   "t": "Perché?",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.perche.x": {
-   "t": "Il Megafono sceglie la frase e scommette con il Lui!: non gioca un personaggio. La Torre prende __una carta a caso dal mazzo__ al tuo posto, così le carte sono tante quanti i giocatori.",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.adesso.t": {
-   "t": "E adesso?",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.adesso.x": {
-   "t": "Aspetta che gli altri scelgano il loro personaggio. Poi le carte salgono e tocca a te mettere il __Lui!__.",
-   "s": "Avviso «Questo turno non giochi carte»"
-  },
-  "nocard.ok": {
-   "t": "Ho capito",
-   "s": "Avviso «Questo turno non giochi carte»"
   },
   "help.aria": {
    "t": "Aiuto",
@@ -523,39 +485,6 @@
    "t": "Nello stesso turno puoi prendere punti per più motivi. Ecco un turno vero:",
    "s": "Regolamento completo"
   },
-  "how.3.zero.t": {
-   "t": "Nessun voto · +{pt}",
-   "s": "Regolamento completo",
-   "n": "{pt} = punti del gettone"
-  },
-  "how.3.k.t": {
-   "t": "Almeno {k} voti · +{pt}",
-   "s": "Regolamento completo",
-   "n": "{k} = soglia di voti; {pt} = punti"
-  },
-  "how.3.zero.x": {
-   "t": "Scommetti che nessuno degli altri vota la carta del gettone.",
-   "s": "Regolamento completo"
-  },
-  "how.3.gregge.t": {
-   "t": "Imbroglio! · +{pt}",
-   "s": "Regolamento completo",
-   "n": "Variante «Il gregge»"
-  },
-  "how.3.gregge.x": {
-   "t": "I voti di chi vota la carta del gettone **non valgono**: è come se non ci fossero, e il conteggio si fa senza. Se annulla almeno un voto, il Megafono prende +{pt}.",
-   "s": "Regolamento completo",
-   "n": "Variante «Il gregge»"
-  },
-  "how.3.k.x": {
-   "t": "Scommetti che almeno {k} giocatori votano la carta del gettone. La soglia cambia a ogni partita.",
-   "s": "Regolamento completo"
-  },
-  "how.3.k.x.gregge": {
-   "t": "Se almeno {k} degli altri votano la carta del gettone, i punti vanno a te **e a tutti quelli che l'hanno votata**, che cada o no (simbolo 🗳 sul gettone). Il Megafono non può votare la carta del suo Lui!.",
-   "s": "Regolamento completo",
-   "n": "Variante «Il gregge»"
-  },
   "how.3.come.t": {
    "t": "Come funziona",
    "s": "Regolamento completo"
@@ -603,41 +532,6 @@
   "how.ok": {
    "t": "Ho capito",
    "s": "Regolamento completo"
-  },
-  "lui.zero": {
-   "t": "Nessun voto",
-   "s": "Gettoni Lui! (etichette)"
-  },
-  "lui.gregge": {
-   "t": "Imbroglio!",
-   "s": "Gettoni Lui! (etichette)",
-   "n": "Variante «Il gregge»: lo 0 annulla i voti sulla sua carta"
-  },
-  "lui.k1": {
-   "t": "Almeno 1 voto",
-   "s": "Gettoni Lui! (etichette)"
-  },
-  "lui.k": {
-   "t": "Almeno {k} voti",
-   "s": "Gettoni Lui! (etichette)",
-   "n": "{k} = numero"
-  },
-  "lui.ask.zero": {
-   "t": "nessuno la vota",
-   "s": "Gettoni Lui! (etichette)"
-  },
-  "lui.ask.gregge": {
-   "t": "i voti sulla carta non valgono",
-   "s": "Gettoni Lui! (etichette)",
-   "n": "Variante «Il gregge»"
-  },
-  "lui.ask.k1": {
-   "t": "1 voto o più",
-   "s": "Gettoni Lui! (etichette)"
-  },
-  "lui.ask.k": {
-   "t": "{k} voti o più",
-   "s": "Gettoni Lui! (etichette)"
   },
   "bui.megachip": {
    "t": "Sei il Megafono",
@@ -689,87 +583,18 @@
    "t": "I tuoi segnalini Lui!: {elenco}",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
-  "bui.nessuno": {
-   "t": "nessuno",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
   "bui.lui.lab": {
    "t": "LUI!",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
-  "bui.usato": {
-   "t": " (già usato)",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.popup.titolo": {
    "t": "I tuoi segnalini Lui!",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
-  "bui.popup.zero": {
-   "t": "Nessun altro vota la carta del gettone.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
-  "bui.popup.gregge": {
-   "t": "Imbroglio!: i voti di chi vota la carta del gettone non valgono, come se non ci fossero. Se ne annulla almeno uno, prendi +{pt}.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante «Il gregge»"
-  },
-  "bui.popup.k": {
-   "t": "Almeno {k} giocatori votano la carta del gettone.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
-  "bui.popup.k.gregge": {
-   "t": "Se almeno {k} degli altri votano la carta del gettone, prendi i punti tu e anche chi l'ha votata. Tu non puoi votarla.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante «Il gregge»"
-  },
-  "bui.popup.usato": {
-   "t": "Già usato in questa partita.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
-  "bui.popup.nota": {
-   "t": "Ogni gettone si usa una sola volta. Contano solo i voti degli altri, non il tuo. Gli altri non vedono quali ti restano.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)"
-  },
   "bui.info.titolo": {
    "t": "Il segnalino Lui!",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Popup che si apre toccando il Lui! sulla Torre durante il voto"
-  },
-  "bui.info.altri": {
-   "t": "Il Megafono ha posato coperto uno dei suoi gettoni sulla carta n. {n}. Si scopre dopo il voto. Può essere uno di questi:",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "{n} = carta del Lui!"
-  },
-  "bui.info.mio": {
-   "t": "Hai posato questo gettone sulla carta n. {n}. Gli altri non sanno quale sia:",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Per il Megafono"
-  },
-  "bui.info.zero": {
-   "t": "Il Megafono prende +{pt} se nessuno degli altri vota questa carta.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Gettone 0"
-  },
-  "bui.info.k": {
-   "t": "Il Megafono prende +{pt} se almeno {k} degli altri votano questa carta, che cada o no.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Gettone soglia"
-  },
-  "bui.info.trap": {
-   "t": "I voti su questa carta non valgono, come se non ci fossero, e il conteggio si fa senza. Se ne annulla almeno uno, il Megafono prende +{pt}.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante «Il gregge»: gettone 0"
-  },
-  "bui.info.herd": {
-   "t": "Se almeno {k} degli altri votano questa carta, prendono +{pt} il Megafono e chi l'ha votata, che cada o no. Il Megafono non può votarla.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante «Il gregge»: gettone soglia"
-  },
-  "bui.info.nota": {
-   "t": "Per contare i voti del Lui! non vale il voto del Megafono.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Nota in fondo al popup"
   },
   "bui.chiudi": {
    "t": "Chiudi",
@@ -994,14 +819,6 @@
    "t": "Il Megafono sceglie la frase",
    "s": "Partita: turno normale"
   },
-  "g.nocard.t": {
-   "t": "Questo turno non giochi carte.",
-   "s": "Partita: turno normale"
-  },
-  "g.nocard.x": {
-   "t": "La Torre ha una carta a caso dal mazzo. Aspettiamo gli altri, poi metti il Lui!.",
-   "s": "Partita: turno normale"
-  },
   "g.giocata": {
    "t": "Carta giocata.",
    "s": "Partita: turno normale"
@@ -1016,45 +833,6 @@
   },
   "g.hanno.votato": {
    "t": "{n} su {tot} hanno votato",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.t": {
-   "t": "METTI IL LUI!",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.s": {
-   "t": "Tocca la carta su cui scommetti.",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.t.n": {
-   "t": "LUI! SUL N. {n}",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.s.n": {
-   "t": "Quanti voti prenderà dagli altri? Il tuo non conta.",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.pt": {
-   "t": "+{pt} punti",
-   "s": "Partita: turno normale"
-  },
-  "g.lui.gregge": {
-   "t": "+{pt} se annulla almeno un voto",
-   "s": "Partita: turno normale",
-   "n": "Variante «Il gregge»: scelta del gettone"
-  },
-  "g.lui.gregge.k": {
-   "t": "+{pt} a te e a chi la vota (tu non puoi votarla)",
-   "s": "Partita: turno normale",
-   "n": "Variante «Il gregge»: soglia"
-  },
-  "g.lui.novoto": {
-   "t": "Non puoi votare la carta dove hai posato il Lui!: scegline un'altra.",
-   "s": "Partita: turno normale",
-   "n": "Variante «Il gregge»: il Megafono tocca la carta del suo Lui! durante il voto"
-  },
-  "g.lui.usato": {
-   "t": "già usato",
    "s": "Partita: turno normale"
   },
   "g.lui.guarda": {
@@ -1287,46 +1065,6 @@
   "chi.ok": {
    "t": "Ci sono!",
    "s": "Il tuo personaggio"
-  },
-  "ld.aria": {
-   "t": "Estrazione del segnalino Lui!",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Nome accessibile della schermata"
-  },
-  "ld.titolo": {
-   "t": "Estrazione!",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Titolo durante la carrellata dei segnalini"
-  },
-  "ld.sotto": {
-   "t": "Quale soglia del Lui! toccherà a questa partita?",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Sopra il titolo durante la carrellata"
-  },
-  "ld.scelto": {
-   "t": "Esce: {label}!",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "{label} = nome del segnalino estratto"
-  },
-  "ld.set": {
-   "t": "Il Lui! della partita",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Titolo finale con i due segnalini"
-  },
-  "ld.set.s": {
-   "t": "Ogni Megafono avrà questi due segnalini:",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Sopra il titolo finale"
-  },
-  "ld.ok": {
-   "t": "Si gioca!",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Pulsante finale"
-  },
-  "ld.salta": {
-   "t": "Salta",
-   "s": "Estrazione del Lui! (variante «Il gregge»)",
-   "n": "Pulsante durante l'estrazione"
   },
   "chat.aria": {
    "t": "Chat",
@@ -1962,212 +1700,6 @@
    "t": "Un giocatore virtuale prende il tuo posto.",
    "s": "Menu Aiuto («i»)"
   },
-  "lui.e.propaganda": {
-   "t": "Propaganda!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "lui.e.spareggio": {
-   "t": "Spareggio!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "lui.e.influenza": {
-   "t": "Influenza!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "lui.e.imbroglio": {
-   "t": "Imbroglio!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "lui.e.dirottamento": {
-   "t": "Dirottamento!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "lui.e.censura": {
-   "t": "Censura!",
-   "s": "Variante PROPAGANDA",
-   "n": "Nome del segnalino"
-  },
-  "g.lui.e.propaganda": {
-   "t": "+{k} voti a questa carta",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "g.lui.e.spareggio": {
-   "t": "vince il pareggio in testa",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "g.lui.e.influenza": {
-   "t": "il tuo voto vale doppio",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "g.lui.e.imbroglio": {
-   "t": "annulla i voti della carta",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "g.lui.e.dirottamento": {
-   "t": "sposta un voto su un'altra carta",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "g.lui.e.censura": {
-   "t": "toglie un voto alla carta",
-   "s": "Variante PROPAGANDA",
-   "n": "Sotto il segnalino, quando il Megafono lo sceglie (frase breve). {k} = voti aggiunti"
-  },
-  "bui.info.e.propaganda": {
-   "t": "Aggiunge {k} voti a questa carta.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "bui.info.e.spareggio": {
-   "t": "Se questa carta è in pareggio in testa, cade lei da sola: vince su ogni altra regola di spareggio.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "bui.info.e.influenza": {
-   "t": "Il voto del Megafono vale doppio, qualunque carta voti.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "bui.info.e.imbroglio": {
-   "t": "Annulla tutti i voti di questa carta: chi l'ha votata non prende il +2.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "bui.info.e.dirottamento": {
-   "t": "Sposta un voto da questa carta a un'altra, scelta dal Megafono.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "bui.info.e.censura": {
-   "t": "Toglie un voto a questa carta.",
-   "s": "Variante PROPAGANDA",
-   "n": "Spiegazione del segnalino (popup, regolamento, estrazione). {k} = voti aggiunti"
-  },
-  "obj.c.almeno": {
-   "t": "riceve almeno {k} voti",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione del Megafono"
-  },
-  "obj.c.nessuno": {
-   "t": "non riceve nessun voto",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione del Megafono"
-  },
-  "obj.c.esattamente": {
-   "t": "riceve esattamente {k} voti",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione del Megafono"
-  },
-  "obj.p.almeno": {
-   "t": "riceve meno di {k} voti",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione pubblica (il contrario)"
-  },
-  "obj.p.nessuno": {
-   "t": "riceve almeno 1 voto",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione pubblica (il contrario)"
-  },
-  "obj.p.esattamente": {
-   "t": "riceve meno o più di {k} voti",
-   "s": "Variante PROPAGANDA",
-   "n": "Condizione pubblica (il contrario)"
-  },
-  "obj.t.mega": {
-   "t": "Il tuo obiettivo segreto",
-   "s": "Variante PROPAGANDA",
-   "n": "Titoletto dell'obiettivo, solo per il Megafono"
-  },
-  "obj.t.folla": {
-   "t": "Obiettivo della Folla",
-   "s": "Variante PROPAGANDA",
-   "n": "Titoletto dell'obiettivo pubblico"
-  },
-  "obj.mega": {
-   "t": "Se il personaggio {n} {cond}, prendi {pt} punti!",
-   "s": "Variante PROPAGANDA",
-   "n": "Obiettivo del Megafono. {cond} = condizione"
-  },
-  "obj.folla": {
-   "t": "Se il personaggio … {cond}, chi l'ha votato prende {pt} punti!",
-   "s": "Variante PROPAGANDA",
-   "n": "Obiettivo pubblico: il personaggio resta segreto"
-  },
-  "obj.esito.mega": {
-   "t": "Obiettivo del Megafono: il n. {n} {cond} (voti: {v}). Riuscito: +{pt}!",
-   "s": "Variante PROPAGANDA",
-   "n": "Riepilogo dei punti"
-  },
-  "obj.esito.folla": {
-   "t": "Obiettivo mancato dal Megafono (voti del n. {n}: {v}): +{pt} a chi della Folla l'ha votato ({k}).",
-   "s": "Variante PROPAGANDA",
-   "n": "Riepilogo dei punti"
-  },
-  "obj.esito.nessuno": {
-   "t": "Obiettivo mancato dal Megafono (voti del n. {n}: {v}), ma nessuno della Folla l'aveva votato.",
-   "s": "Variante PROPAGANDA",
-   "n": "Riepilogo dei punti"
-  },
-  "g.dir.t": {
-   "t": "Dirottamento! Dove sposti il voto?",
-   "s": "Partita: turno normale"
-  },
-  "g.dir.s": {
-   "t": "Tocca la carta che riceve il voto (non il n. {n}).",
-   "s": "Partita: turno normale"
-  },
-  "g.dir.s.ok": {
-   "t": "Un voto passerà dal n. {da} al n. {a}.",
-   "s": "Partita: turno normale"
-  },
-  "g.dir.annulla": {
-   "t": "Annulla",
-   "s": "Partita: turno normale"
-  },
-  "g.dir.ok": {
-   "t": "Sul n. {n} ›",
-   "s": "Partita: turno normale"
-  },
-  "g.dir.scegli": {
-   "t": "Scegli la carta",
-   "s": "Partita: turno normale"
-  },
-  "ld.sotto.pos": {
-   "t": "Quale segnalino positivo toccherà a questa partita?",
-   "s": "Estrazione del Lui! (variante «Il gregge»)"
-  },
-  "ld.sotto.neg": {
-   "t": "E quale segnalino negativo?",
-   "s": "Estrazione del Lui! (variante «Il gregge»)"
-  },
-  "ld.set.s.prop": {
-   "t": "Ogni Megafono avrà questi due segnalini, uno positivo e uno negativo:",
-   "s": "Estrazione del Lui! (variante «Il gregge»)"
-  },
-  "g.lui.s.prop": {
-   "t": "Tocca la carta su cui posare il Lui!.",
-   "s": "Partita: turno normale",
-   "n": "Variante PROPAGANDA"
-  },
-  "g.lui.s.n.prop": {
-   "t": "Scegli il segnalino: cambierà il conteggio dei voti. Gli altri non sapranno quale.",
-   "s": "Partita: turno normale",
-   "n": "Variante PROPAGANDA"
-  },
-  "bui.info.nota.prop": {
-   "t": "Il segnalino si scopre dopo il voto: il conteggio annunciato ne tiene già conto.",
-   "s": "Pannelli in basso (frase, gettoni, chat…)",
-   "n": "Variante PROPAGANDA"
-  },
   "lui.e.cade": {
    "t": "CADE",
    "s": "Gettoni Lui! (etichette)",
@@ -2419,21 +1951,6 @@
    "s": "Riepilogo punti: perché hai preso quei punti",
    "n": "Tocco su un giocatore nella striscia dei punti"
   },
-  "rs.m.obj": {
-   "t": "Obiettivo centrato sulla carta {n}",
-   "s": "Riepilogo punti: perché hai preso quei punti",
-   "n": "Tocco su un giocatore nella striscia dei punti"
-  },
-  "rs.m.obj0": {
-   "t": "Obiettivo mancato sulla carta {n}",
-   "s": "Riepilogo punti: perché hai preso quei punti",
-   "n": "Tocco su un giocatore nella striscia dei punti"
-  },
-  "rs.m.objf": {
-   "t": "Hai votato la carta dell'obiettivo ({n})",
-   "s": "Riepilogo punti: perché hai preso quei punti",
-   "n": "Tocco su un giocatore nella striscia dei punti"
-  },
   "rs.m.nulli": {
    "t": "Il tuo voto è stato annullato",
    "s": "Riepilogo punti: perché hai preso quei punti",
@@ -2452,7 +1969,7 @@
   "fm.w.ultimi": {
    "t": "Ultimi dettagli",
    "s": "Crea la partita (passi)",
-   "n": "Titolo del passo 3"
+   "n": "Titolo del passo 2 (bot, pubblico, timer)"
   },
   "fm.w.pers": {
    "t": "Il tuo personaggio",
@@ -2643,11 +2160,6 @@
    "t": "Confessalo!",
    "s": "Partita: scelta della frase del Megafono",
    "n": "Targhetta sulla carta confessione"
-  },
-  "fm.w.bot.t": {
-   "t": "Chi gioca con te?",
-   "s": "Crea la partita (passi)",
-   "n": "Titolo del passo 2: i bot"
   }
  }
 }

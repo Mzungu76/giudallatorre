@@ -308,14 +308,14 @@ describe("persistenza", () => {
 });
 
 describe("schermo condiviso (sola visione)", () => {
-  it("non vede mani, proprietari delle carte né voti prima dei risultati; non vede il tipo di Lui!", () => {
+  it("non vede mani, proprietari delle carte né voti prima dei risultati; non vede il tipo di segnalino", () => {
     const r = makeRoom(4, 12); send(r, 0, { t: "start" });
     const g0 = r.core.data.game as GameState;
     playOneTurnTo(r, "VOTE");
     const msgs = r.core.spectatorMessages();
-    const view = msgs.find((m) => m.t === "view") as { view: { myHand: string[]; tower: { ownerId: string | null }[]; luiSlot: string | null; votes: unknown } };
+    const view = msgs.find((m) => m.t === "view") as { view: { myHand: string[]; tower: { ownerId: string | null }[]; marks: { slot: string | null }[]; votes: unknown } };
     expect(view.view.myHand).toEqual([]); expect(view.view.tower.every((t) => t.ownerId === null)).toBe(true);
-    expect(view.view.luiSlot).toBeNull(); expect(view.view.votes).toBeNull();
+    expect(view.view.marks.every((m) => m.slot === null)).toBe(true); expect(view.view.votes).toBeNull();
     const json = JSON.stringify(msgs);
     for (const hand of Object.values((r.core.data.game as GameState).hands)) for (const c of hand) expect(json).not.toContain(`"${c}"`);
     expect(g0.turnNumber).toBe(1);

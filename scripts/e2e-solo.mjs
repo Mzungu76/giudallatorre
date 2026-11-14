@@ -10,7 +10,7 @@ const p = await ctx.newPage(); p.setDefaultTimeout(5000); p.errors = []; p.on("p
 if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} });
 const vis = (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
-await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); for (let i = 3; i < +(process.env.BOTS ?? 3); i++) await p.click('[data-testid="bots-plus"]'); await p.click('[data-testid="wiz-next"]');
+await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); for (let i = 3; i < +(process.env.BOTS ?? 3); i++) await p.click('[data-testid="bots-plus"]'); 
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-crea.png` });
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(500);
 const NB = +(process.env.BOTS ?? 3); check(`lobby: io + ${NB} bot`, (await p.locator('[data-testid="player-row"]').count()) === NB + 1 && (await p.locator('[data-testid="bot-tag"]').count()) === NB);
@@ -22,7 +22,6 @@ const clk = (sel, o) => { globalThis.__s = "click " + sel; return p.click(sel, o
 async function step() {
   if (await vis("char-ok")) { await clk('[data-testid="char-ok"]'); return true; }
   if (await vis("intro-slides")) { await clk('[data-testid="intro-skip"]'); return true; }
-  if (await vis("nocard-notice")) { await clk('[data-testid="nocard-ok"]'); return true; }
   if (await vis("mega-intro")) { await clk('[data-testid="mega-ok"]'); return true; }
   if (await vis("idle-hint")) { await clk('[data-testid="idle-hint-ok"]'); return true; }
   if (await vis("howto")) { await clk('[data-testid="howto-close"]'); return true; }
@@ -36,6 +35,7 @@ async function step() {
   if (await vis("lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="confirm-vote"]'); return true; }
   if (await vis("points-continue")) { await sleep(SAMPLE ? 4000 : 800); await clk('[data-testid="points-continue"]', { timeout: 3000 }); return true; }
+  if (await vis("reveal-throw")) { await clk('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis("skip") && !SAMPLE) { await clk('[data-testid="skip"]', { timeout: 3000 }); return true; }
   if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await clk('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
   return false;

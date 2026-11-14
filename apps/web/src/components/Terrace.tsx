@@ -4,7 +4,7 @@ import { cardFull } from "../lib/cards.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { usePersona } from "./Persona.tsx";
 import { sfx } from "../lib/sfx.ts";
-import type { LuiOutcome, LuiSpec, MarkOutcome, ScoreLine } from "@gdt/game-engine";
+import type { LuiSpec, MarkOutcome, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
 import { SINK, sunk, visibleRect } from "../lib/results.ts";
 import { FallArrow, ResultMarks, ScoreStrip } from "./ResultsView.tsx";
@@ -14,7 +14,7 @@ import type { TestoKey } from "../lib/testi.ts";
 export interface VoteTok { p: number; c: string; /** Giocatore del gettone (serve al riepilogo dei punti). */ id?: string; mega?: boolean; glow?: boolean }
 export interface TerraceProps {
   cardIds: string[]; down?: boolean; show?: number[]; pop?: number; flip?: Record<number, number>;
-  votes?: VoteTok[]; lastVote?: number; lui?: { pos: number; spec?: LuiSpec | null } | null;
+  votes?: VoteTok[]; lastVote?: number;
   /** Gioco base «Cade / Non cade»: i due segnalini (coperti se `spec` è null). */ marks?: { pos: number; spec: LuiSpec | null }[] | null;
   /** Fila davanti più in basso: più spazio sulle carte dietro per i riquadri dei punti. */ spread?: boolean;
   /** Carte «abbassate» di poco (quelle che stanno per cadere, nello spoglio). */ sink?: number[];
@@ -28,8 +28,8 @@ export function Terrace(p: TerraceProps) {
   const base = useMemo(() => terraceBaseHtml(), []);
   const pos = useMemo(() => terracePos(n, p.spread), [n, p.spread]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
-  const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui, p.marks, p.sink, p.spread]);
-  const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, spread: p.spread, lui: p.lui?.pos, luiSpec: p.lui?.spec ?? null, luiBack: !!p.lui && !p.lui.spec, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.marks, p.sink, p.spread]);
+  const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, spread: p.spread, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace" onClick={(e) => { const el = (e.target as HTMLElement).closest("[data-pid]") as HTMLElement | null; if (el?.dataset.pid) openPersona?.(el.dataset.pid); }}>
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
@@ -39,7 +39,7 @@ export function Terrace(p: TerraceProps) {
         return <button key={i} className={`hit ${p.selected === num ? "sel" : ""}`} data-pos={num} data-testid={`card-${num}`} aria-label={txs("rv.carta.aria", { n: num })}
           style={{ left: c.x, top: c.f - c.h - 6, width: c.w, height: c.h + 10, zIndex: 100 }} onClick={() => p.onPick!(num)} />;
       })}
-      {p.onLui && [...(p.lui ? [p.lui.pos] : []), ...(p.marks ?? []).map((m) => m.pos)].map((lp) => { const c = pos[lp - 1]; return c ? (
+      {p.onLui && (p.marks ?? []).map((m) => m.pos).map((lp) => { const c = pos[lp - 1]; return c ? (
         <button key={lp} className="hit luihit" aria-label={txs("rv.lui.aria")} data-testid="lui-token" onClick={p.onLui}
           style={{ left: c.x - 24, top: c.f - 6 - c.h / 2 - 27, width: 56, height: 54, zIndex: 120, background: "none", border: 0 }} />) : null; })}
     </div>
@@ -118,32 +118,18 @@ export function Climb({ cardIds, sound, skip, onDone }: { cardIds: string[]; sou
 export interface Voter { id: string; name: string; color: string; mega: boolean }
 
 
-/** Gettone dei voti «finti» aggiunti da Propaganda! (grigio). */
-const GHOST = "#c9ccd6";
 /**
  * Dopo che il Lui! è scoperto, i gettoni sulla Torre mostrano il conteggio ufficiale: spariscono i voti annullati (Imbroglio!) o tolti (Censura!),
  * si sposta quello dirottato (Dirottamento!), compaiono quelli aggiunti (Propaganda!) e il voto doppio del Megafono (Influenza!).
  */
-export function luiToks(list: { v: Voter; tok: VoteTok }[], lui: LuiOutcome | null, marks?: MarkOutcome[] | null): VoteTok[] {
-  // gioco base «Cade / Non cade»: spariscono i voti annullati da VOTI NULLI!
+export function luiToks(list: { v: Voter; tok: VoteTok }[], marks?: MarkOutcome[] | null): VoteTok[] {
+  // VOTI NULLI!: spariscono i gettoni di chi ha votato la carta con quel segnalino
   const nul = marks?.find((m) => m.effect === "nulli")?.caught ?? [];
-  if (marks?.length) return list.filter((x) => !nul.includes(x.v.id)).map((x) => x.tok);
-  if (!lui) return list.map((x) => x.tok);
-  const annul = (lui.trap || lui.effect === "imbroglio") && lui.caught ? lui.caught : [];
-  let out = list.filter((x) => !annul.includes(x.v.id));
-  const lastOn = (p: number) => { for (let i = out.length - 1; i >= 0; i--) if (out[i]!.tok.p === p && !out[i]!.v.mega) return i; for (let i = out.length - 1; i >= 0; i--) if (out[i]!.tok.p === p) return i; return -1; };
-  if (lui.effect === "censura" && lui.hit) { const i = lastOn(lui.position); if (i >= 0) out = out.filter((_, k) => k !== i); }
-  if (lui.effect === "dirottamento" && lui.hit && lui.to) { const i = lastOn(lui.position); if (i >= 0) out = out.map((x, k) => (k === i ? { ...x, tok: { ...x.tok, p: lui.to! } } : x)); }
-  const toks = out.map((x) => x.tok);
-  if (lui.effect === "propaganda") for (let i = 0; i < lui.k; i++) toks.push({ p: lui.position, c: GHOST });
-  if (lui.effect === "influenza") { const m = out.find((x) => x.v.mega); if (m) toks.push({ ...m.tok, glow: true }); }
-  return toks;
+  return list.filter((x) => !nul.includes(x.v.id)).map((x) => x.tok);
 }
 type Step = { t0: number; t1: number; kind: "intro" | "vote" | "suspense" | "tally" | "lui"; i?: number };
 export interface FallOwner { pos: number; name: string | null; color: string }
 /** Il segnalino com'era, dall'esito (per disegnarlo scoperto). */
-export const luiSpecOf = (lui: LuiOutcome): LuiSpec => ({ slot: lui.slot, k: lui.k, pts: lui.pts, ...(lui.trap ? { trap: true } : {}), ...(lui.herd ? { herd: true } : {}), ...(lui.effect ? { effect: lui.effect, positive: ["propaganda", "spareggio", "influenza"].includes(lui.effect) } : {}) });
-/** Gioco base «Cade / Non cade»: il segnalino com'era, dall'esito. */
 export const markSpec = (m: MarkOutcome): LuiSpec => ({ slot: m.slot, k: 0, pts: m.effect === "cade" ? 4 : m.effect === "noncade" ? 2 : 0, effect: m.effect });
 /**
  * Lo spoglio per immagini: i gettoni cadono uno alla volta sulle carte (il Megafono per ultimo, dopo una pausa di suspense col rullo),
@@ -151,11 +137,11 @@ export const markSpec = (m: MarkOutcome): LuiSpec => ({ slot: m.slot, k: 0, pts:
  * e si aspetta: chi guarda può analizzare i voti con calma e, quando vuole, tocca «Gettalo dalla torre!» (sullo schermo condiviso, senza
  * pulsanti, si prosegue da soli dopo 40 s). Niente frasi, niente conteggi: i punti si vedono dopo la caduta.
  */
-export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip, interactive, onDone, marks, points }: {
+export function Reveal({ cardIds, voters, votes, fallPositions, sound, skip, interactive, onDone, marks, points }: {
   /** Per mostrare, a fine spoglio, i riquadri dei punti (sulle carte e in basso): le righe del turno, i colori, ecc. */ points?: { lines: Record<string, ScoreLine[]>; ids: string[]; colorOf: (id: string) => string; meId?: string; annullati?: string[] };
   /** Gioco base «Cade / Non cade»: i due segnalini, scoperti alla fine. */ marks?: MarkOutcome[] | null;
   cardIds: string[]; voters: Voter[]; votes: Record<string, number>;
-  lui: LuiOutcome | null; fallPositions: number[]; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
+  fallPositions: number[]; sound: boolean; skip: number; interactive: boolean; onDone: () => void;
 }) {
   const { ts, ty } = useStage(), m = voters.length;
   const dv = m > 4 ? 0.6 : 0.75;
@@ -166,9 +152,9 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
       if (i === m - 1 && m > 1) add("suspense", 1.5);
       add("vote", i === m - 1 ? 0.9 : dv, i);
     });
-    if (lui || marks?.length) add("lui", 2.0); else add("tally", 0.5);
+    if (marks?.length) add("lui", 2.0); else add("tally", 0.5);
     return st;
-  }, [voters, lui, m, marks]);
+  }, [voters, m, marks]);
   const END = steps[steps.length - 1]!.t1;
   const seek = useRef<((t: number) => void) | null>(null);
   const [phase, setPhase] = useState<"clock" | "stamp">("clock");
@@ -190,12 +176,12 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   const voteStep = (i: number) => steps.find((s) => s.kind === "vote" && s.i === i)!;
   const shown = voters.map((v, i) => ({ v, i })).filter(({ i }) => T >= voteStep(i).t0);
   const luiStart = steps.find((s) => s.kind === "lui")?.t0 ?? 0;
-  const luiOpen = (!!lui || !!marks?.length) && (cur.kind === "lui" || phase !== "clock") && T >= luiStart + 0.5;
+  const luiOpen = !!marks?.length && (cur.kind === "lui" || phase !== "clock") && T >= luiStart + 0.5;
   useEffect(() => { if (luiOpen) once("luiflip", () => { sfx.stamp(sound); sfx.ding(sound); }); }, [luiOpen]); // eslint-disable-line react-hooks/exhaustive-deps
   // quando il segnalino è scoperto, i gettoni passano al conteggio ufficiale (voti annullati, tolti, spostati, aggiunti)
-  const manip = (!!lui || !!marks?.length) && luiOpen && T >= luiStart + 1.2;
+  const manip = !!marks?.length && luiOpen && T >= luiStart + 1.2;
   const base = shown.map(({ v }) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega, id: v.id } as VoteTok }));
-  const toks: VoteTok[] = manip ? luiToks(base, lui, marks) : base.map((x) => x.tok);
+  const toks: VoteTok[] = manip ? luiToks(base, marks) : base.map((x) => x.tok);
   const pos = useMemo(() => terracePos(cardIds.length, true), [cardIds.length]);
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;
   const plural = fallPositions.length > 1, stamp = phase === "stamp";
@@ -205,7 +191,7 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   const megaId = voters.find((v) => v.mega)?.id;
   return (
     <div className={`rv-wrap${leaving ? " leaving" : ""}`}>
-      <Terrace cardIds={cardIds} spread votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} lui={lui ? { pos: lui.position, spec: luiOpen ? luiSpecOf(lui) : null } : null} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
+      <Terrace cardIds={cardIds} spread votes={toks} lastVote={cur.kind === "vote" ? toks.length - 1 : -1} sink={stamp ? fallPositions : undefined} marks={marks?.length ? marks.map((x) => ({ pos: x.position, spec: luiOpen ? markSpec(x) : null })) : null} />
       {stamp && points && <ResultMarks n={cardIds.length} fallen={fallPositions} sink={fallPositions} spread slam />}
       {stamp && !points && <div className="layer rv-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="reveal-panel">{fallPositions.map((q, i) => <FallArrow key={`a${q}`} rect={visibleRect(sunk(pos, fallPositions), q - 1)} slam delay={i * 0.45} />)}</div>}
       {stamp && points && <div className="rv-strip"><ScoreStrip ids={points.ids} lines={points.lines} colorOf={points.colorOf} meId={points.meId} annullati={points.annullati} megaId={megaId} sound={sound} interactive={interactive} onContinue={onDone} base={0.3 + fallPositions.length * 0.45} quiet /></div>}
