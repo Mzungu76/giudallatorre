@@ -40,7 +40,7 @@ console.log("API");
 let r = await fetch(BASE + "/api/health"); check("health", r.status === 200);
 r = await post("/api/rooms", { nickname: "<b>x</b>" }); check("nickname non valido rifiutato (400)", r.status === 400);
 r = await post("/api/rooms", { nickname: "Marta", extra: 1 }); check("campi extra rifiutati (400)", r.status === 400);
-const created = await post("/api/rooms", { nickname: "Marta", mode: "remote" });
+const created = await post("/api/rooms", { nickname: "Marta" });
 check("creazione stanza", created.status === 200 && /^[A-HJ-NP-Z2-9]{5}$/.test(created.json.code) && created.json.token.length === 22, JSON.stringify(created));
 const code = created.json.code;
 let info = await (await fetch(`${BASE}/api/rooms/${code}/info`)).json(); check("info pubblica senza dati privati", info.exists && info.players === 1 && !("tokens" in info));
@@ -71,7 +71,7 @@ check("riconnessione con lo stesso token dopo la caduta", A2.room?.you === creat
 await A2.until(() => B.room?.players?.find((p) => p.id === created.json.playerId)?.connected);
 
 console.log("Partita completa via WebSocket (3 giocatori)");
-A2.send({ t: "setOptions", turnTimerSec: 0, megafonoSa: false }); A2.send({ t: "start" });
+A2.send({ t: "setOptions", turnTimerSec: 0 }); A2.send({ t: "start" });
 const clients = [A2, B, C];
 check("avvio partita", await A2.until(() => A2.view?.view?.phase === "PROCLAIM"));
 // verifica privacy: nessuno vede le mani altrui
