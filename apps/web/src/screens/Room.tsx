@@ -8,6 +8,7 @@ import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
 import MiniGame from "../components/MiniGame.tsx";
 import ChatPanel, { useChatState } from "../components/Chat.tsx";
+import { music } from "../lib/music.ts";
 import HowTo from "../components/HowTo.tsx";
 import HelpMenu from "../components/HelpMenu.tsx";
 import { IntroSlides } from "../components/Intro.tsx";
@@ -97,6 +98,8 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
 export default function RoomScreen({ code }: { code: string }) {
   const { status, room, view, error, send, chat } = useRoom(code, "player");
   const [sound, setSound] = useSound();
+  const inLobby = room?.stage === "LOBBY";
+  useEffect(() => { music.play(sound && inLobby ? "musica-tema.mp3" : null); return () => music.play(null); }, [sound, inLobby]);
   const [notice, setNotice] = useState<string | null>(null), botsSeen = useRef<Set<string> | null>(null);
   // un giocatore esce a partita in corso e un bot prende il suo posto: lo dico a chi resta
   useEffect(() => {
