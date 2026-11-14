@@ -53,33 +53,3 @@ export function iconsOf(ls: ScoreLine[]): Reason[] {
   return out;
 }
 
-/**
- * I riquadri dei punti: uno per giocatore che ha votato quella carta o che ha preso punti per quella carta (la propria carta, il segnalino
- * del Megafono): faccia, punti e, sull'angolo, le icone dei motivi. Stanno in basso sulla carta, su una o due colonne, e occupano al più
- * la parte visibile della carta: l'immagine resta in vista. `pos[i]` = posizione della carta i+1 (come terracePos).
- */
-export interface Chip { key: string; id: string; color: string; pos: number; gain: number; fast: boolean; icons: Reason[]; x: number; y: number; w: number; h: number }
-export function chipsFor(toks: Tok[], lines: Record<string, ScoreLine[]>, pos: Record<number, CardPos>, colorOf: (id: string) => string, luiPos: number[] = []): Chip[] {
-  const by = new Map<number, Map<string, { color: string; ls: ScoreLine[] }>>();
-  const add = (cardPos: number, id: string, color: string, ls: ScoreLine[]) => {
-    const m = by.get(cardPos) ?? new Map(); by.set(cardPos, m);
-    const cur = m.get(id) ?? { color, ls: [] };
-    m.set(id, { color, ls: [...cur.ls, ...ls] });
-  };
-  for (const t of toks) if (t.id) add(t.p, t.id, t.c, (lines[t.id] ?? []).filter((l) => l.pos === t.p));
-  for (const [id, ls] of Object.entries(lines)) { const g = new Map<number, ScoreLine[]>(); for (const l of ls) g.set(l.pos, [...(g.get(l.pos) ?? []), l]); for (const [cp, group] of g) { if (!(by.get(cp)?.has(id))) add(cp, id, colorOf(id), group); } }
-  const out: Chip[] = [];
-  for (const [cp, m] of by) {
-    const p = pos[cp - 1]; if (!p) continue;
-    const list = [...m.entries()].map(([id, v]) => ({ id, color: v.color, gain: v.ls.reduce((a, l) => a + l.pts, 0), fast: v.ls.some((l) => l.kind === "mini-veloce"), icons: iconsOf(v.ls) })).sort((a, b) => b.gain - a.gain || (a.id < b.id ? -1 : 1));
-    const cnt = list.length, vr = visibleRect(pos, cp - 1), res = luiPos.includes(cp) ? 24 : 3, ax = p.x + res, aw = p.w - res - 3, ah = vr.h;
-    let h = 28, w = 0, cols = 1, rows = cnt;   // h = diametro del segnalino; w = cella (segnalino + il bollo dei punti che sporge a destra)
-    for (; h >= 16; h -= 2) { w = h + 10; cols = Math.max(1, Math.floor((aw + 2) / (w + 2))); rows = Math.ceil(cnt / cols); if (rows * (h + 2) - 2 <= ah) break; }
-    const top = vr.y + 2;   // in alto: sotto resta posto per la freccia della carta che cade
-    list.forEach((v, j) => {
-      const r = Math.floor(j / cols), inRow = Math.min(cols, cnt - r * cols), c = j - r * cols, rowW = inRow * (w + 2) - 2;
-      out.push({ key: `${v.id}-${cp}`, id: v.id, color: v.color, pos: cp, gain: v.gain, fast: v.fast, icons: v.icons, x: ax + (aw - rowW) / 2 + c * (w + 2), y: top + r * (h + 2), w, h });
-    });
-  }
-  return out;
-}

@@ -13,7 +13,7 @@ function parse(): Route {
   if ((m = p.match(/^\/stanza\/([A-Za-z0-9]{5})$/))) return { name: "room", code: m[1]!.toUpperCase() };
   if ((m = p.match(/^\/schermo\/([A-Za-z0-9]{5})$/))) return { name: "display", code: m[1]!.toUpperCase() };
   if (p === "/crea") return { name: "create" };
-  if (p === "/intervalli") return { name: "sim" };
+  if (p === "/intervalli" || p === "/fuoriprogramma") return { name: "sim" };
   if (p === "/entra") return { name: "join", code: (q.get("c") ?? "").toUpperCase().slice(0, 5) };
   return { name: "home" };
 }

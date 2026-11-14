@@ -9,7 +9,7 @@ import { SIM_ME, SIM_NAMES, humanVote, newSim, optsFromQuery, optsToQuery, stepS
 import type { SimOpts, SimRun, SimStart, SimVotes } from "../lib/miniSim.ts";
 
 /**
- * Simulatore degli intervalli: /intervalli. Il motore vero, senza stanza né giocatori: si sceglie modalità, esito e punto di partenza
+ * Simulatore del fuori programma: /intervalli. Il motore vero, senza stanza né giocatori: si sceglie modalità, esito e punto di partenza
  * e si guarda (o si gioca) l'intervallo, senza aspettare che capiti in una partita. Il collegamento riproduce lo scenario scelto.
  * (Strumento per chi sviluppa: i testi dei controlli stanno qui e non in public/testi.json.)
  */
@@ -68,11 +68,11 @@ export default function Simulator() {
           <Stage bg="sky" dims={stageDims(k, H)}>
             <MiniGame key={runId} room={room} view={view} deadline={null} goAt={run.goAt} send={send} sound={sound} startAt={opts.start === "punti" ? "points" : undefined} />
           </Stage>
-        ) : <div className="sim-start"><b>Simulatore degli intervalli</b><p>Scegli le opzioni e premi Avvia.</p><button type="button" className="sim-go" disabled={!ids} onClick={() => start()} data-testid="sim-avvia">{ids ? "▶ Avvia" : "Carico le carte…"}</button></div>}
+        ) : <div className="sim-start"><b>Simulatore del fuori programma</b><p>Scegli le opzioni e premi Avvia.</p><button type="button" className="sim-go" disabled={!ids} onClick={() => start()} data-testid="sim-avvia">{ids ? "▶ Avvia" : "Carico le carte…"}</button></div>}
         {toast && <div className="sim-toast">{toast}</div>}
       </div>
       <aside className="sim-ctl">
-        <h1>Simulatore intervalli</h1>
+        <h1>Simulatore fuori programma</h1>
         <div className="sim-row"><button type="button" className="sim-go" disabled={!ids} onClick={() => start()}>{run ? "↻ Ricomincia" : "▶ Avvia"}</button><button type="button" className="sim-btn" onClick={() => { void navigator.clipboard?.writeText(link()).then(() => setToast("Collegamento copiato")).catch(() => setToast(link())); }}>🔗 Copia il collegamento</button></div>
         <Field label="Mini-gioco"><Seg value={opts.kind} items={KINDS} onChange={(v) => set({ kind: v }, !!run)} /></Field>
         <Field label="Parti da"><Seg value={opts.start} items={STARTS} onChange={(v) => set({ start: v }, true)} /></Field>

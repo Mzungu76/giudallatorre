@@ -20,8 +20,8 @@ export function useTimedOpen(ms = OPEN_MS) {
 }
 
 /** Riga in alto: turno (con il timer, se c'è) e Megafono. */
-export function BMeta({ turn, mega, right, deadline, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
-  const now = useNow(), s = deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : null;
+export function BMeta({ turn, mega, right, deadline, cap, me }: { turn: string; mega?: string; right?: string; deadline?: number | null; /** Secondi del timer impostato: il conto parte da qui (prima il server concede il tempo delle animazioni). */ cap?: number; /** Il giocatore è il Megafono: chip dorato sempre visibile. */ me?: boolean }) {
+  const now = useNow(), s = deadline ? Math.max(0, Math.min(cap ?? 1e9, Math.ceil((deadline - now) / 1000))) : null;
   return <div className="bmeta"><span>{turn}{s !== null && <b data-testid="countdown"> · ⏱ {s}s</b>}</span><span>{me ? <span className="rolechip" data-testid="role-chip"><MegaIcon s={18} />{t("bui.megachip")}</span> : right ?? <span className="bm-who"><MegaIcon s={18} />{mega ?? ""}</span>}</span></div>;
 }
 

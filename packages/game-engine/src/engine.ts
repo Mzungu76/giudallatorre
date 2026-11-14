@@ -5,7 +5,7 @@ import { randomInt, shuffle } from "./rng.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 /** Intervallo a tempo: 6 carte escono dal separé una alla volta (3 s l'una), tre giri completi. Il server dà il «via» dopo la presentazione (sipario, regole: MINI_INTRO_MS) e il conto alla rovescia. */
-export const MINI_CARDS = 6, MINI_CYCLES = 3, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 6000, MINI_COUNTDOWN_MS = 3000;
+export const MINI_CARDS = 6, MINI_CYCLES = 3, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 9000, MINI_COUNTDOWN_MS = 3000;
 /** Punti dell'intervallo: uguali per le tre modalità. */
 export const MINI_PTS = 2, MINI_FAST_PTS = 4;
 /** Pool di segnalini Lui! adatti al numero di giocatori. La scommessa è "almeno k voti degli altri" (oppure nessun voto); i punti sono tarati sulla probabilità di riuscita (simulazioni con i bot, tools/analysis/lui-pool.ts): più è difficile, più paga. */

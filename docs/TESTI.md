@@ -18,7 +18,7 @@ Vedi `CLAUDE.md`. Il test `apps/web/tests/testi.test.ts` fa fallire `npm test` s
 Cancellare un testo = togliere il suo uso nel codice **e** la voce nel JSON; aggiungerlo = voce nel JSON + `t("chiave")`; poi `versione + 1`.
 
 ## Copertura
-**Migrati** (586 testi): tutto ciò che il giocatore legge nell'app: tutorial e schede del Megafono, menu Aiuto e fumetti, regolamento, schermate di gioco (frase, mano, Lui!, voto, riepilogo punti, classifica, finale), spoglio e narrazione, mini-giochi, lobby/crea/entra, chat, schermo condiviso, nomi e frasi dei personaggi, messaggi di errore, scritte buffe della scena della caduta, condivisione e installazione.
+**Migrati** (586 testi): tutto ciò che il giocatore legge nell'app: tutorial e schede del Megafono, menu Aiuto e fumetti, regolamento, schermate di gioco (frase, mano, Lui!, voto, riepilogo punti, classifica, finale), spoglio e narrazione, fuori programma, lobby/crea/entra, chat, schermo condiviso, nomi e frasi dei personaggi, messaggi di errore, scritte buffe della scena della caduta, condivisione e installazione.
 **Non migrati** (restano nel codice):
 - le **frasi del Megafono e le confessioni** (`content/*.json`): sono dati del server, non si aggiornano con questo meccanismo;
 - i **nomi dei bot** e la parola «ammette» delle confessioni, composti dal server (`worker/`, `packages/game-engine`);

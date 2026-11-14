@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { CHAR_COLORS, tokenUrl } from "../lib/characters.ts";
 import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS, colorFor } from "../ui.tsx";
 import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
@@ -57,36 +58,31 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
           <span className="chip nb">{txs("room.lobby", { n: room.players.length })}</span>
           <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("room.chat.n", { n: ui.unread }) : txs("room.chat")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
         </div>
-        <div className="pp codepanel bc">
-          <Qr text={link} size={84} />
-          <div><div className="cap2">{tx("room.codice")}</div><div className="code-big" data-testid="room-code">{room.code}</div><a className="lnk" role="button" tabIndex={0} onClick={share} data-testid="share">{copied ? tx("room.copiato") : tx("room.condividi")}</a></div>
+        <div className="pp codepanel bc cp2">
+          <div className="cap2">{tx("room.codice")}</div>
+          <div className="code-big" data-testid="room-code">{room.code.split("").map((ch, i) => <span key={i}>{ch}</span>)}</div>
+          <div className="cp-row"><a className="lnk" role="button" tabIndex={0} onClick={share} data-testid="share">{copied ? tx("room.copiato") : tx("room.condividi")}</a><Qr text={link} size={72} /></div>
         </div>
-        <div className="plist2">
+        <div className="ptiles">
           {room.players.map((p, i) => (
-            <div className="pl" key={p.id} data-testid="player-row"><Disc color={PLAYER_COLORS[(p.char ?? i) % 8]!} size="l" /><span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
+            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row">
+              <img src={tokenUrl(CHAR_COLORS[(p.char ?? i) % 8]!)} alt="" />
+              <span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
               {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}
-              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={() => send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id })} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}</div>
+              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={() => send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id })} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}
+            </div>
           ))}
-          {room.players.length < 6 && <div className="pl em" style={{ gridColumn: "1 / -1" }}>{tx("room.attesa.altri")}</div>}
+          {Array.from({ length: Math.max(0, Math.min(6, Math.max(3, room.players.length + 1)) - room.players.length) }).map((_, i) => <div className="ptile em" key={`e${i}`}><i /><span className="nmx">{i === 0 ? tx("room.attesa.altri") : ""}</span></div>)}
         </div>
         <div className="bsp" />
         <div className="pp bsheet lob">
           <span className="bgrip" />
-          {host && (
-            <div className="opts-row">
-              <label>{tx("room.pubblico")} <select value={o.ageBand} onChange={(e) => send({ t: "setOptions", ageBand: Number(e.target.value) as 14 })} data-testid="opt-age">
-                {AGES.map((v) => <option key={v} value={v}>{ageLabel(v)}</option>)}</select></label>
-              <label className="chk"><input type="checkbox" checked={o.confessions} onChange={(e) => send({ t: "setOptions", confessions: e.target.checked })} data-testid="opt-confessions" /> {tx("room.confessioni")}</label>
-              <label className="chk" title={txs("room.gregge.info")}><input type="checkbox" checked={!!o.gregge} onChange={(e) => send({ t: "setOptions", gregge: e.target.checked })} data-testid="opt-gregge" /> {tx("room.gregge")}</label>
-              <label className="chk" title={txs("room.propaganda.info")}><input type="checkbox" checked={!!o.propaganda} onChange={(e) => send({ t: "setOptions", propaganda: e.target.checked })} data-testid="opt-propaganda" /> {tx("room.propaganda")}</label>
-              {o.propaganda && <label className="chk" title={txs("room.obiettivi.info")}><input type="checkbox" checked={!!o.objectives} onChange={(e) => send({ t: "setOptions", objectives: e.target.checked })} data-testid="opt-objectives" /> {tx("room.obiettivi")}</label>}
-              <label>{tx("room.timer")} <select value={o.turnTimerSec} onChange={(e) => send({ t: "setOptions", turnTimerSec: Number(e.target.value) as 0 })} data-testid="opt-timer">
-                <option value={0}>{tx("room.timer.0")}</option><option value={30}>30 s</option><option value={60}>60 s</option><option value={90}>90 s</option><option value={120}>120 s</option></select></label>
-            </div>
-          )}
+          <div className="wsum lsum" data-testid="age-info">
+            <span>{o.mode === "remote" ? tx("fm.distanza") : tx("fm.tavolo")}</span><span>{txs(`room.age.${o.ageBand}` as TestoKey)}</span><span>{o.turnTimerSec === 0 ? tx("fm.w.libero") : txs("fm.w.sec", { n: o.turnTimerSec })}</span>
+          </div>
           {host
             ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? tx("room.servono") : tx("room.avvia")}</Btn>
-            : <div className="pp mini">{tx("room.aspetta.host")}<br /><span data-testid="age-info">{txs("room.pubblico.info", { eta: ageLabel(o.ageBand) })}{o.confessions ? txs("room.con.conf") : txs("room.senza.conf")}{o.gregge ? txs("room.con.gregge") : ""}{o.propaganda ? txs(o.objectives ? "room.con.propaganda.obj" : "room.con.propaganda") : ""}</span></div>}
+            : <div className="pp mini">{tx("room.aspetta.host")}</div>}
           <div className="blnks">
             <a className="lnk" onClick={() => window.open(`/schermo/${room.code}`, "_blank")} role="button" tabIndex={0}>{tx("room.schermo")}</a>
             <a className="lnk" onClick={() => { send({ t: "leave" }); forgetSession(room.code); navigate("/"); }} role="button" tabIndex={0}>{tx("room.esci")}</a>

@@ -76,7 +76,7 @@ export class GameRoom extends DurableObject<Env> {
       const body = joinRoomBody.safeParse(await request.json().catch(() => null));
       if (!body.success) return json({ error: "INVALID_REQUEST" }, 400);
       try {
-        const r = this.core.join(body.data.nickname, Date.now());
+        const r = this.core.join(body.data.nickname, Date.now(), body.data.char);
         await this.apply(r.out);
         return json({ code: this.core.data.code, playerId: r.playerId, token: r.token } satisfies SessionResponse);
       } catch (e) { if (e instanceof RoomError) return json({ error: e.code, message: e.message }, e.code === "ROOM_FULL" || e.code === "NICKNAME_TAKEN" || e.code === "GAME_STARTED" ? 409 : 400); throw e; }

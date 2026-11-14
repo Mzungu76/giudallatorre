@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { ScoreLine } from "@gdt/game-engine";
-import { chipsFor, sunk, totals, visibleRect } from "../src/lib/results.ts";
+import { iconPts, sunk, totals, visibleRect } from "../src/lib/results.ts";
 import type { CardPos } from "../src/lib/results.ts";
 import { buildFinale } from "../src/lib/miniScenes.ts";
 
@@ -18,34 +18,9 @@ describe("riepilogo visivo dei punti", () => {
     expect(front.y + front.h).toBeGreaterThan(pos[2]!.f - 30);
     expect(visibleRect(sunk(pos, [1]), 0).y).toBeGreaterThan(back.y);          // abbassata: la parte visibile scende
   });
-  it("i riquadri stanno nella parte visibile della carta, dal più alto, con le icone dei motivi (bolt per il più veloce)", () => {
-    const toks = [{ p: 1, c: "#f00", id: "a" }, { p: 1, c: "#0f0", id: "b" }, { p: 2, c: "#00f", id: "c" }];
-    const lines = { a: [L("mini-giusto", 2, 1), L("mini-veloce", 4, 1)], b: [L("mini-giusto", 2, 1)], c: [] };
-    const chips = chipsFor(toks, lines, pos, () => "#000"), on1 = chips.filter((c) => c.pos === 1);
-    expect(chips).toHaveLength(3);
-    expect(on1.map((c) => [c.id, c.gain, c.fast])).toEqual([["a", 6, true], ["b", 2, false]]);
-    expect(on1[0]!.icons).toEqual(["bolt", "target"]); expect(on1[1]!.icons).toEqual(["target"]);
-    for (const c of chips) { const p = pos[c.pos - 1]!, v = visibleRect(pos, c.pos - 1); expect(c.x).toBeGreaterThanOrEqual(p.x); expect(c.x + c.w).toBeLessThanOrEqual(p.x + p.w + 0.5); expect(c.y).toBeGreaterThanOrEqual(v.y - 0.5); expect(c.y + c.h).toBeLessThanOrEqual(v.y + v.h + 0.5); }
-  });
-  it("con il Lui! sulla carta resta libera la fascia a sinistra; con 6 giocatori sulla stessa carta i riquadri non si sovrappongono", () => {
-    const toks = ["a", "b", "c", "d", "e", "f"].map((id) => ({ p: 1, c: "#f00", id })), lines = Object.fromEntries(toks.map((t, i) => [t.id, [L("mini-giusto", i ? 2 : 6, 1)]]));
-    const chips = chipsFor(toks, lines, pos, () => "#000", [1]), v = visibleRect(pos, 0);
-    expect(chips).toHaveLength(6);
-    for (const c of chips) { expect(c.x).toBeGreaterThanOrEqual(pos[0]!.x + 24 - 0.5); expect(c.y + c.h).toBeLessThanOrEqual(v.y + v.h + 0.5); }
-    for (let i = 0; i < chips.length; i++) for (let j = i + 1; j < chips.length; j++) { const a = chips[i]!, b = chips[j]!; expect(a.x + a.w <= b.x + 0.01 || b.x + b.w <= a.x + 0.01 || a.y + a.h <= b.y + 0.01 || b.y + b.h <= a.y + 0.01).toBe(true); }
-  });
-  it("i punti non legati a un voto (carta propria caduta, segnalino) compaiono sulla carta interessata, con la faccia del giocatore", () => {
-    const toks = [{ p: 1, c: "#f00", id: "a" }];
-    const lines = { a: [L("voto", 2, 1)], b: [L("carta", 2, 2)], c: [L("lui", 4, 2)] };   // b e c non hanno votato la carta 2
-    const chips = chipsFor(toks, lines, pos, (id) => `col-${id}`), on2 = chips.filter((c) => c.pos === 2);
-    expect(on2.map((c) => [c.id, c.gain])).toEqual([["c", 4], ["b", 2]]); expect(on2[0]!.color).toBe("col-c");
-  });
-  it("un giocatore che ha votato una carta senza prendere punti compare con 0", () => {
-    const chips = chipsFor([{ p: 3, c: "#abc", id: "z" }], { z: [] }, pos, () => "");
-    expect(chips).toHaveLength(1); expect(chips[0]!.gain).toBe(0);
-  });
-  it("gettoni senza giocatore (fantasmi di Propaganda!) non danno riquadri", () => {
-    expect(chipsFor([{ p: 1, c: "#999" }], {}, pos, () => "")).toEqual([]);
+  it("le icone dei motivi sommano i punti dello stesso motivo, il ⚡ per primo, e saltano gli zeri", () => {
+    const ic = iconPts([L("mini-giusto", 2, 1), L("carta", 2, 1), L("mini-veloce", 4, 1), L("voto", 2, 2), L("lui-mancato", 0, 1)]);
+    expect(ic).toEqual([{ k: "bolt", pts: 4 }, { k: "target", pts: 4 }, { k: "card", pts: 2 }]);
   });
 });
 

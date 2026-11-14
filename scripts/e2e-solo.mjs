@@ -10,7 +10,7 @@ const p = await ctx.newPage(); p.setDefaultTimeout(5000); p.errors = []; p.on("p
 if (process.env.FAST === "1") await p.addInitScript(() => { try { sessionStorage.setItem("gdt.fast", "1"); } catch {} });
 const vis = (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false);
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
-await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="bot-hard"]'); for (let i = 3; i < +(process.env.BOTS ?? 3); i++) await p.click('[data-testid="bots-plus"]');
+await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); for (let i = 3; i < +(process.env.BOTS ?? 3); i++) await p.click('[data-testid="bots-plus"]'); await p.click('[data-testid="wiz-next"]');
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/solo-crea.png` });
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(500);
 const NB = +(process.env.BOTS ?? 3); check(`lobby: io + ${NB} bot`, (await p.locator('[data-testid="player-row"]').count()) === NB + 1 && (await p.locator('[data-testid="bot-tag"]').count()) === NB);

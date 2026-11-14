@@ -80,7 +80,8 @@ function cardsLayout(n,opt={}){
   // gettoni DIRETTAMENTE sulla carta (colore giocatore); il Megafono ha il simbolo del megafono
   const bySlot={};(opt.votes||[]).forEach((v,idx)=>{(bySlot[v.p]=bySlot[v.p]||[]).push({v,idx})});
   const luiAt=new Set([...(opt.lui?[opt.lui]:[]),...((opt.luiList||[]).map(m=>m.pos))]);
-  Object.entries(bySlot).forEach(([pp,list])=>{const p=pre[pp-1];if(!p)return;const vr=visibleRect(pre,pp-1),rs=luiAt.has(Number(pp))?24:3,ax=p.x+rs,aw=p.w-rs-3,ay=vr.y,ah=vr.h,cnt=list.length;
+  Object.entries(bySlot).forEach(([pp,list])=>{const p=pre[pp-1];if(!p)return;const vr=visibleRect(pre,pp-1),rs=luiAt.has(Number(pp))?24:3,ax=p.x+rs,aw=p.w-rs-3,ay=vr.y,ah=(opt.sink||[]).includes(Number(pp))?Math.round(vr.h*.58):vr.h,cnt=list.length;   // sulle carte che cadono i gettoni stanno in alto: sotto c'è la freccia
+    
     let s=28,cols=1,rows=cnt;for(;s>=16;s-=2){cols=Math.max(1,Math.floor((aw+2)/(s+2)));rows=Math.ceil(cnt/cols);if(rows*(s+2)-2<=ah)break}
     list.forEach(({v,idx},j)=>{const r=Math.floor(j/cols),c=j%cols,inRow=Math.min(cols,cnt-r*cols),cx=ax+aw/2+(c-(inRow-1)/2)*(s+2),cy=ay+ah/2+(r-(rows-1)/2)*(s+2),sz=v.mega?Math.round(s*1.35):s;
       o+=`<div class="${idx===opt.lastVote?'tokdrop':''}${v.glow?' tbg':''}" style="position:absolute;left:${cx-sz/2}px;top:${cy-sz/2}px;z-index:${v.mega?72:70}">${voteTok(v.c,sz,v.mega,!!v.glow)}</div>`})});

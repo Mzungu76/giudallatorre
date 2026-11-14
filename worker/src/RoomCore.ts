@@ -1,4 +1,4 @@
-import { applyAction, buildPhraseDeck, chooseBotAction, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, buildPhraseDeck, chooseBotAction, planMiniVote, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -47,7 +47,26 @@ export const LIMITS = {
 const emptyOut = (): Outbox => ({ send: [], close: [], persist: false, destroy: false });
 const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
 
-export const BOT_NAMES = ["Bot Gino", "Bot Mara", "Bot Pino", "Bot Lella", "Bot Tito", "Bot Rosa", "Bot Nino", "Bot Dora"];
+/** I personaggi femminili (le altre sei facce sono maschili): i bot prendono un nome del loro sesso. */
+export const FEMALE_CHARS = new Set([4, 7]);
+export const BOT_NAMES_M = ["Bot Gino", "Bot Pino", "Bot Tito", "Bot Nino", "Bot Beppe", "Bot Enzo", "Bot Mario", "Bot Franco"];
+export const BOT_NAMES_F = ["Bot Mara", "Bot Lella", "Bot Rosa", "Bot Dora", "Bot Gina", "Bot Tina", "Bot Lia", "Bot Nina"];
+
+/**
+ * Il timer del turno parte dopo le animazioni: a ogni fase si aggiunge il tempo che i telefoni impiegano a mostrarle (cartello di fase,
+ * salita delle carte, schede di inizio partita), così i secondi impostati restano tutti per scegliere. I telefoni mostrano il conto alla
+ * rovescia solo da quando il tempo residuo scende sotto il timer impostato.
+ */
+export function animMs(g: GameState): number {
+  const n = g.playerIds.length;
+  switch (g.phase) {
+    case "PROCLAIM": return 3_000 + (g.turnNumber === 1 ? 14_000 : 5_000);   // cartello + scheda «Sei il Megafono!» (+ carta personaggio ed estrazione alla prima mano)
+    case "PLAY": return 3_000;
+    case "SUSPECT": return Math.round(5_000 + n * 290) + 2_500;       // salita delle carte + cartello
+    case "VOTE": return 3_000;
+    default: return 0;
+  }
+}
 
 export class RoomCore {
   readonly connected = new Set<string>();
@@ -65,12 +84,12 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: 0, display: true, ageBand: DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
-      players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now }],
+      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
     for (let i = 0; i < (p.bots?.count ?? 0); i++) core.insertBot(p.bots!.level, now + i + 1);
@@ -78,18 +97,19 @@ export class RoomCore {
   }
   private insertBot(level: BotLevel, now: number) {
     const d = this.data, used = new Set(d.players.map((q) => norm(q.nickname)));
-    const name = BOT_NAMES.find((n) => !used.has(norm(n))) ?? `Bot ${d.players.length + 1}`;
-    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level, char: this.freeChar() });
+    const char = this.freeChar(), names = FEMALE_CHARS.has(char) ? BOT_NAMES_F : BOT_NAMES_M;
+    const name = names.find((n) => !used.has(norm(n))) ?? [...BOT_NAMES_M, ...BOT_NAMES_F].find((n) => !used.has(norm(n))) ?? `Bot ${d.players.length + 1}`;
+    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level, char });
   }
 
   // ---------- accesso ----------
-  join(nickname: string, now: number) {
+  join(nickname: string, now: number, char?: number) {
     const d = this.data;
     if (d.stage !== "LOBBY") throw new RoomError("GAME_STARTED", "la partita è già iniziata");
     if (d.players.length >= LIMITS.maxPlayers) throw new RoomError("ROOM_FULL", "la stanza è piena");
     if (d.players.some((p) => norm(p.nickname) === norm(nickname))) throw new RoomError("NICKNAME_TAKEN", "nickname già in uso in questa stanza");
     const playerId = newPlayerId(this.deps.rng), token = newToken(this.deps.rng);
-    d.players.push({ id: playerId, nickname, tokenHash: hashToken(token), isHost: false, joinedAt: now, char: this.freeChar() });
+    d.players.push({ id: playerId, nickname, tokenHash: hashToken(token), isHost: false, joinedAt: now, char: char !== undefined && !d.players.some((q) => q.char === char) ? char : this.freeChar() });
     d.lastActivity = now; d.seq++;
     return { playerId, token, out: this.broadcastRoom({ ...emptyOut(), persist: true }) };
   }
@@ -100,7 +120,7 @@ export class RoomCore {
   }
   publicInfo(): RoomInfoResponse {
     const d = this.data;
-    return { exists: true, stage: d.stage, players: d.players.length, full: d.players.length >= LIMITS.maxPlayers, mode: d.options.mode };
+    return { exists: true, stage: d.stage, players: d.players.length, full: d.players.length >= LIMITS.maxPlayers, mode: d.options.mode, taken: d.players.flatMap((p) => (p.char !== undefined ? [p.char] : [])) };
   }
 
   // ---------- presenza ----------
@@ -262,10 +282,8 @@ export class RoomCore {
     const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296, order = g.mini!.order;
     for (const b of d.players.filter((p) => p.isBot)) {
       if (g.votes[b.id] !== undefined || run.bots[b.id]) continue;
-      const a = chooseBotAction(g, b.id, b.level ?? "medium", d.botMem, rand);
-      if (!a || a.type !== "vote") continue;
-      const slots = order.map((p, i) => (p === a.position ? i : -1)).filter((i) => i >= 0), i = slots[Math.floor(rand() * slots.length)]!;
-      run.bots[b.id] = { position: a.position, at: run.goAt + i * MINI_SLOT_MS + 500 + Math.floor(rand() * 1900) };
+      const pl = planMiniVote(g, b.id, b.level ?? "medium", d.botMem, rand);   // carta per carta e con il tempo di reazione di una persona
+      if (pl) run.bots[b.id] = { position: pl.position, at: run.goAt + pl.slot * MINI_SLOT_MS + pl.delayMs };
     }
   }
   private armDeadline(now: number) {
@@ -273,7 +291,7 @@ export class RoomCore {
     if (g.phase === "MINI_RUN") d.deadline = null;   // l'intervallo a tempo ha il suo orologio (d.run)
     else if (g.phase === "MINI_RESULTS") d.deadline = now + LIMITS.miniResultsAutoMs;   // sipario, scenetta finale e punti: serve più tempo
     else if (g.phase === "RESULTS") d.deadline = now + LIMITS.resultsAutoMs;
-    else d.deadline = d.options.turnTimerSec > 0 ? now + d.options.turnTimerSec * 1000 : null;
+    else d.deadline = d.options.turnTimerSec > 0 ? now + animMs(g) + d.options.turnTimerSec * 1000 : null;
   }
 
   // ---------- timer e pulizia ----------

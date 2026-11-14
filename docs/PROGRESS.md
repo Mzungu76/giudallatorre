@@ -51,11 +51,11 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Confessione mostrata a tutti con il nome del Megafono («Marco ammette…»)
 - [x] Etichette dei bot per le nuove frasi; 165 test unit, `npm run e2e`, `npm run e2e:ui`
 - [ ] Curatela delle frasi con l'autore (togliere, riscrivere, cambiare età) e prova a tavolo
-- [x] Turni: 6 con 3 giocatori (2 giri), altrimenti un turno a testa (1 giro). Intervalli: 1 fino a 5 giocatori, 2 da 6 a 8 (mini-giochi diversi tra loro)
+- [x] Turni: 6 con 3 giocatori (2 giri), altrimenti un turno a testa (1 giro). Fuori programma: 1 fino a 5 giocatori, 2 da 6 a 8 (fuori programma diversi tra loro)
 - [x] Uscita dalla partita: chi esce è sostituito da un bot se restano altri umani, altrimenti la stanza si chiude subito (`scripts/e2e-leave.mjs`)
-- [x] Mini-gioco «Il raccomandato» sostituito da **«Il peggiore»**: si gioca il personaggio peggiore in assoluto, si vota la carta da buttare giù (non la propria), ognuno prende un punto per ogni voto ricevuto dalla sua carta; nessun punto si perde
-- [x] Spoglio dell'intervallo identico a quello dei turni (voti uno alla volta, «Avanti ›» / «Salta ›»)
-- [x] Mano rinnovata all'intervallo: animazione «Rinnoviamo la tua mano!» (dal vuoto, mazzetto coperto, ventaglio, carte scoperte) quando si apre la scelta della carta
+- [x] Fuori programma «Il raccomandato» sostituito da **«Il peggiore»**: si gioca il personaggio peggiore in assoluto, si vota la carta da buttare giù (non la propria), ognuno prende un punto per ogni voto ricevuto dalla sua carta; nessun punto si perde
+- [x] Spoglio dell'fuori programma identico a quello dei turni (voti uno alla volta, «Avanti ›» / «Salta ›»)
+- [x] Mano rinnovata all'fuori programma: animazione «Rinnoviamo la tua mano!» (dal vuoto, mazzetto coperto, ventaglio, carte scoperte) quando si apre la scelta della carta
 - [x] Aiuto ai giocatori (`docs/AIUTO_GIOCATORI.md`): 3 schermate iniziali, scheda «Sei il Megafono!», ruolo sempre visibile, fumetti solo se si resta fermi, esempi dei punti con carte vere, riga «Tu» nel riepilogo
 - [x] Corretto il gettone Lui! che non si vedeva nella scheda «Il Lui!» del regolamento
-- [x] Menu «i» → Aiuto (cosa devo fare adesso con freccia, tutorial, regolamento); «Questo turno non giochi carte» che resta finché lo tocchi; icona dei punti accanto ai numeri; intervalli senza tetto e con +2 fisso al posto del ×2; tolto il numero sotto il pulsante nello zoom
+- [x] Menu «i» → Aiuto (cosa devo fare adesso con freccia, tutorial, regolamento); «Questo turno non giochi carte» che resta finché lo tocchi; icona dei punti accanto ai numeri; fuori programma senza tetto e con +2 fisso al posto del ×2; tolto il numero sotto il pulsante nello zoom

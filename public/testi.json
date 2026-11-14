@@ -1,6 +1,6 @@
 {
- "versione": 27,
- "aggiornato": "2026-11-13",
+ "versione": 33,
+ "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -262,37 +262,37 @@
   },
   "mini.accusa.titolo": {
    "t": "L' Accusa",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
+   "s": "Fuori programma «L'Accusa» (fuori programma)"
   },
   "mini.accusa.tag": {
    "t": "Chi l'avrebbe fatto?",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
+   "s": "Fuori programma «L'Accusa» (fuori programma)"
   },
   "mini.accusa.capo": {
    "t": "L'accusatore",
-   "s": "Mini-gioco «L'Accusa» (intervalli)",
+   "s": "Fuori programma «L'Accusa» (fuori programma)",
    "n": "Nome della carta in testa"
   },
   "mini.amore.titolo": {
    "t": "La storia d'amore",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+   "s": "Fuori programma «La storia d'amore» (fuori programma)"
   },
   "mini.amore.tag": {
    "t": "Chi è il partner perfetto?",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+   "s": "Fuori programma «La storia d'amore» (fuori programma)"
   },
   "mini.amore.capo": {
    "t": "Il protagonista",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)",
+   "s": "Fuori programma «La storia d'amore» (fuori programma)",
    "n": "Nome della carta in testa"
   },
   "mini.peggiore.titolo": {
    "t": "Il peggiore",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
+   "s": "Fuori programma «Il peggiore» (fuori programma)"
   },
   "mini.peggiore.tag": {
    "t": "Chi butteresti giù?",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
+   "s": "Fuori programma «Il peggiore» (fuori programma)"
   },
   "ex.board.aria": {
    "t": "Quattro carte sulla torre con i voti ricevuti",
@@ -573,11 +573,11 @@
    "s": "Regolamento completo"
   },
   "how.4.int.t": {
-   "t": "Intervallo",
+   "t": "Fuori programma",
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un mini-gioco a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono: dopo il sipario e il 3-2-1, 6 carte escono una alla volta da dietro un separé, per 3 giri, e tu premi **QUESTO!** quando esce quella giusta. Chi sceglie la carta più votata fa +2 punti, il più veloce di loro +4.",
+   "t": "Fino a 5 giocatori c'è un fuori programma a metà partita, con 6 ce ne sono due: 6 carte escono una alla volta da dietro un separé, per 3 giri. Premi **QUESTO!** quando esce quella giusta: carta più votata +2, il più veloce +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -777,62 +777,58 @@
   },
   "mg.turno": {
    "t": "Turno {n}/{tot}",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Barra in alto, anche nelle partite normali"
   },
   "mg.interv.aria": {
-   "t": "Intervallo",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "t": "Fuori programma",
+   "s": "Fuori programma (schermate)"
   },
   "mg.strip": {
-   "t": "★ INTERVALLO ★",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "t": "★ FUORI PROGRAMMA ★",
+   "s": "Fuori programma (schermate)"
   },
   "mg.body.amore": {
    "t": "Chi sarà il suo partner perfetto?",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.body.peggiore": {
    "t": "Chi è il peggiore di tutti?",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.accusatore": {
    "t": "L'accusatore dice:",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.salta": {
    "t": "Salta ›",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Anche nelle altre schermate di spoglio"
   },
   "mg.hanno.votato": {
    "t": "{n} su {tot} hanno votato",
-   "s": "Intervallo / mini-gioco (schermate)"
-  },
-  "mg.fine.t": {
-   "t": "FINE INTERVALLO",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.finisce": {
-   "t": "Il mini-gioco finisce a breve…",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "t": "Il fuori programma finisce a breve…",
+   "s": "Fuori programma (schermate)"
   },
   "mg.dopo": {
-   "t": "Dopo l'intervallo",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "t": "Dopo il fuori programma",
+   "s": "Fuori programma (schermate)",
    "n": "Titolo della classifica"
   },
   "mg.host.wait": {
    "t": "Prosegue l'host…",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.riprendiamo": {
    "t": "Riprendiamo la partita",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "mg.host.aspetta": {
    "t": "Aspettiamo che l'host riprenda la partita…",
-   "s": "Intervallo / mini-gioco (schermate)"
+   "s": "Fuori programma (schermate)"
   },
   "rv.carta.aria": {
    "t": "Carta numero {n}",
@@ -1547,32 +1543,6 @@
    "t": "In attesa di altri giocatori…",
    "s": "Stanza e lobby"
   },
-  "room.pubblico": {
-   "t": "Pubblico",
-   "s": "Stanza e lobby"
-  },
-  "room.confessioni": {
-   "t": "Confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.gregge": {
-   "t": "Il gregge (prova)",
-   "s": "Stanza e lobby",
-   "n": "Casella della variante «Il gregge»"
-  },
-  "room.gregge.info": {
-   "t": "Variante: il gettone 0 del Lui! diventa l'Imbroglio! (i voti sulla sua carta non valgono; +3 al Megafono se ne annulla almeno uno); la soglia, se riesce, dà i punti al Megafono e anche a chi ha votato la carta. Il Megafono non può votare la carta del suo Lui!.",
-   "s": "Stanza e lobby",
-   "n": "Suggerimento sulla casella"
-  },
-  "room.timer": {
-   "t": "Timer",
-   "s": "Stanza e lobby"
-  },
-  "room.timer.0": {
-   "t": "nessuno",
-   "s": "Stanza e lobby"
-  },
   "room.servono": {
    "t": "Servono 3 giocatori",
    "s": "Stanza e lobby"
@@ -1583,22 +1553,6 @@
   },
   "room.aspetta.host": {
    "t": "Aspetta che l'host avvii la partita…",
-   "s": "Stanza e lobby"
-  },
-  "room.pubblico.info": {
-   "t": "Pubblico: {eta}",
-   "s": "Stanza e lobby"
-  },
-  "room.con.conf": {
-   "t": " · con confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.senza.conf": {
-   "t": " · senza confessioni",
-   "s": "Stanza e lobby"
-  },
-  "room.con.gregge": {
-   "t": " · variante Il gregge",
    "s": "Stanza e lobby"
   },
   "room.schermo": {
@@ -1765,10 +1719,6 @@
    "t": "Prima di salire…",
    "s": "Crea / entra in partita"
   },
-  "fm.crea.titolo": {
-   "t": "Crea la partita",
-   "s": "Crea / entra in partita"
-  },
   "fm.nick": {
    "t": "Il tuo nickname",
    "s": "Crea / entra in partita"
@@ -1782,36 +1732,12 @@
    "t": "Es. Giulia",
    "s": "Crea / entra in partita"
   },
-  "fm.dove": {
-   "t": "Dove giocate?",
-   "s": "Crea / entra in partita"
-  },
   "fm.tavolo": {
    "t": "Stesso tavolo",
    "s": "Crea / entra in partita"
   },
   "fm.distanza": {
    "t": "A distanza",
-   "s": "Crea / entra in partita"
-  },
-  "fm.tavolo.x": {
-   "t": "Ognuno ha il proprio telefono. Un tablet o un PC può fare da schermo condiviso.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.distanza.x": {
-   "t": "Ognuno da casa: serve una chiamata o una chat per parlare.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.sa.t": {
-   "t": "Il Megafono sa",
-   "s": "Crea / entra in partita"
-  },
-  "fm.sa.x": {
-   "t": "Il Megafono gioca una carta della sua mano invece di pescarla.",
-   "s": "Crea / entra in partita"
-  },
-  "fm.bot": {
-   "t": "Bot",
    "s": "Crea / entra in partita"
   },
   "fm.bot.meno": {
@@ -1840,10 +1766,6 @@
   },
   "fm.lv.hard": {
    "t": "Difficile",
-   "s": "Crea / entra in partita"
-  },
-  "fm.bot.x": {
-   "t": "I bot giocano come avversari veri. In tutto servono almeno 3 giocatori.",
    "s": "Crea / entra in partita"
   },
   "fm.creo": {
@@ -2223,32 +2145,6 @@
    "s": "Variante PROPAGANDA",
    "n": "Riepilogo dei punti"
   },
-  "room.propaganda": {
-   "t": "Propaganda (prova)",
-   "s": "Stanza e lobby",
-   "n": "Casella della variante PROPAGANDA"
-  },
-  "room.propaganda.info": {
-   "t": "Variante: ogni Megafono ha un segnalino positivo e uno negativo che cambiano il conteggio dei voti. Esclude «Il gregge».",
-   "s": "Stanza e lobby"
-  },
-  "room.obiettivi": {
-   "t": "Obiettivi contrapposti",
-   "s": "Stanza e lobby",
-   "n": "Casella dentro PROPAGANDA"
-  },
-  "room.obiettivi.info": {
-   "t": "A ogni turno il Megafono riceve un obiettivo segreto sui voti di un personaggio; se fallisce, prende i punti chi ha votato quel personaggio.",
-   "s": "Stanza e lobby"
-  },
-  "room.con.propaganda": {
-   "t": " · variante Propaganda",
-   "s": "Stanza e lobby"
-  },
-  "room.con.propaganda.obj": {
-   "t": " · variante Propaganda con obiettivi",
-   "s": "Stanza e lobby"
-  },
   "g.dir.t": {
    "t": "Dirottamento! Dove sposti il voto?",
    "s": "Partita: turno normale"
@@ -2391,45 +2287,45 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "mini.accusa.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il colpevole. Chi sceglie la carta più votata fa +2, il più veloce +4.",
-   "s": "Mini-gioco «L'Accusa» (intervalli)"
+   "t": "Premi **QUESTO!** quando esce il colpevole.",
+   "s": "Fuori programma «L'Accusa» (fuori programma)"
   },
   "mini.amore.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il partner perfetto. Chi sceglie la carta più votata fa +2, il più veloce +4.",
-   "s": "Mini-gioco «La storia d'amore» (intervalli)"
+   "t": "Premi **QUESTO!** quando esce il partner perfetto.",
+   "s": "Fuori programma «La storia d'amore» (fuori programma)"
   },
   "mini.peggiore.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il peggiore. Chi sceglie la carta più votata fa +2, il più veloce +4.",
-   "s": "Mini-gioco «Il peggiore» (intervalli)"
+   "t": "Premi **QUESTO!** quando esce il peggiore.",
+   "s": "Fuori programma «Il peggiore» (fuori programma)"
   },
   "mr.btn": {
    "t": "QUESTO!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Pulsante grande in basso durante la corsa a tempo"
   },
   "mr.btn.pronti": {
    "t": "PRONTI…",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Pulsante prima del «via!»"
   },
   "mr.btn.votato": {
    "t": "VOTATO",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Pulsante dopo aver votato"
   },
   "mr.btn.fuori": {
    "t": "TEMPO SCADUTO",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Pulsante a corsa finita"
   },
   "mr.btn.aria": {
    "t": "Vota il personaggio che è in scena adesso",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Etichetta per i lettori di schermo (solo testo semplice)"
   },
   "mr.via": {
    "t": "VIA!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Dopo il 3-2-1"
   },
   "mr.hint": {
@@ -2438,72 +2334,72 @@
   },
   "mr.fx.bam": {
    "t": "BAM!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta nella scenetta dell'Accusa"
   },
   "mr.fx.via": {
    "t": "VIA!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta nella scenetta del Peggiore"
   },
   "mr.fin.accusa": {
    "t": "Il colpevole cade giù dalla torre!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta in alto nella scenetta finale"
   },
   "mr.fin.amore": {
    "t": "Che coppia! Pioggia di cuori.",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta in alto nella scenetta finale"
   },
   "mr.fin.peggiore": {
    "t": "Portato in trionfo… e giù dalla torre!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta in alto nella scenetta finale"
   },
   "mr.fin.nessuno": {
    "t": "Nessuno ha votato in tempo.",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta in alto quando nessun voto è arrivato"
   },
   "mr.giro": {
    "t": "Giro {n} di {tot}",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Riquadro in alto a destra durante la corsa"
   },
   "mr.manca.n": {
    "t": "Mancano {n} giri",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Sotto «Giro x di y»"
   },
   "mr.manca.1": {
    "t": "Manca 1 giro",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Sotto «Giro x di y»"
   },
   "mr.manca.0": {
    "t": "ULTIMO GIRO!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Sotto «Giro x di y» nell'ultimo giro"
   },
   "mr.giro.b": {
    "t": "GIRO {n}",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta grande all'inizio di ogni giro (dal secondo)"
   },
   "mr.ultimo": {
    "t": "ULTIMO GIRO!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta grande all'inizio dell'ultimo giro"
   },
   "mr.sip.verdetto": {
    "t": "E ORA… IL VERDETTO!",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Scritta sul sipario chiuso dopo la corsa"
   },
   "mg.mani": {
    "t": "Turno {n} di {tot} · poi 5 carte nuove per tutti",
-   "s": "Intervallo / mini-gioco (schermate)",
+   "s": "Fuori programma (schermate)",
    "n": "Sotto «Punti del turno» dopo un intervallo: le mani vengono rinnovate"
   },
   "rv.gettalo": {
@@ -2575,6 +2471,80 @@
    "t": "Nessun punto in questo turno",
    "s": "Riepilogo punti: perché hai preso quei punti",
    "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "fm.w.chi": {
+   "t": "Chi sei?",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 1"
+  },
+  "fm.w.come": {
+   "t": "Come giocate?",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 2"
+  },
+  "fm.w.ultimi": {
+   "t": "Ultimi dettagli",
+   "s": "Crea la partita (passi)",
+   "n": "Titolo del passo 3"
+  },
+  "fm.w.pers": {
+   "t": "Il tuo personaggio",
+   "s": "Crea la partita (passi)",
+   "n": "Etichetta: carte da scorrere"
+  },
+  "fm.w.tavolo.x": {
+   "t": "Ognuno il suo telefono",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.distanza.x": {
+   "t": "Ognuno a casa sua",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.bot": {
+   "t": "Bot al tavolo",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.pubblico": {
+   "t": "Che età avete?",
+   "s": "Crea la partita (passi)",
+   "n": "Fascia d'età dei testi"
+  },
+  "fm.w.timer": {
+   "t": "Tempo per scegliere",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.libero": {
+   "t": "Libero",
+   "s": "Crea la partita (passi)",
+   "n": "Nessun timer"
+  },
+  "fm.w.sec": {
+   "t": "{n} s",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.avanti": {
+   "t": "Avanti ›",
+   "s": "Crea la partita (passi)"
+  },
+  "fm.w.passo": {
+   "t": "Passo {n} di {tot}",
+   "s": "Crea la partita (passi)",
+   "n": "Nome accessibile dei puntini"
+  },
+  "fm.w.preso": {
+   "t": "Già scelto",
+   "s": "Crea la partita (passi)",
+   "n": "Sotto il nome: personaggio preso da un altro giocatore"
+  },
+  "mg.chiusura": {
+   "t": "E ORA… TORNIAMO ALLA PARTITA!",
+   "s": "Fuori programma (schermate)",
+   "n": "Sipario che si chiude alla fine del fuori programma, prima di riprendere il gioco"
+  },
+  "mini.punti": {
+   "t": "Carta più votata: **+2**. Il più veloce: **+4**.",
+   "s": "Fuori programma (schermate)",
+   "n": "Seconda riga della spiegazione iniziale"
   }
  }
 }

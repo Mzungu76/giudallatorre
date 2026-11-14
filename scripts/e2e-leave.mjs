@@ -13,9 +13,9 @@ const exists = async (code) => (await (await fetch(`${BASE}/api/rooms/${code}/in
 
 console.log("Partita con tre umani");
 const A = await mk(), B = await mk(), C = await mk();
-await A.goto(BASE + "/"); await A.click('[data-testid="go-create"]'); await A.fill("#nick", "Ann"); await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\//);
+await A.goto(BASE + "/"); await A.click('[data-testid="go-create"]'); await A.fill("#nick", "Ann"); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="wiz-next"]'); await A.click('[data-testid="create-submit"]'); await A.waitForURL(/\/stanza\//);
 const code = (await A.locator('[data-testid="room-code"]').textContent()).trim();
-for (const [p, n] of [[B, "Bea"], [C, "Cle"]]) { await p.goto(`${BASE}/entra?c=${code}`); await p.fill("#nick", n); await p.click('[data-testid="join-submit"]'); await p.waitForURL(/\/stanza\//); }
+for (const [p, n] of [[B, "Bea"], [C, "Cle"]]) { await p.goto(`${BASE}/entra?c=${code}`); await p.fill("#nick", n); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="join-submit"]'); await p.waitForURL(/\/stanza\//); }
 await sleep(500); await A.click('[data-testid="start"]');
 await Promise.all([A, B, C].map((p) => p.waitForSelector('[data-testid="game"]')));
 for (const p of [A, B, C]) { const ok = p.locator("text=HO CAPITO").first(); if (await ok.isVisible().catch(() => false)) await ok.click(); }
