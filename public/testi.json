@@ -1,5 +1,5 @@
 {
- "versione": 52,
+ "versione": 53,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -2100,15 +2100,15 @@
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s4.x": {
-   "t": "Ognuno vota la carta più adatta, anche la sua. La più votata cade dalla torre.",
+   "t": "Ogni giocatore vota in segreto il personaggio che merita di cadere dalla torre.",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s5.x": {
-   "t": "Chi ha votato bene fa punti. Alla fine vince chi ne ha di più.",
+   "t": "Il personaggio che ha ricevuto più voti viene gettato dalla torre! Se l’hai votato, fai punti!",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s0.x": {
-   "t": "Gioco di gruppo: si accusa, si vota, si ride. A turno uno di voi è il Megafono, gli altri sono la folla.",
+   "t": "Benvenuti in Giù dalla Torre! Il party game che risponde alla più antica (e più importante?) domanda filosofica dell’umanità:\n\n“Chi butteresti giù dalla torre oggi?”",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s0.t": {
@@ -2117,19 +2117,19 @@
    "n": "Titolo 1"
   },
   "intro.s1.t": {
-   "t": "Il Megafono parla",
+   "t": "Il Megafono incita La folla",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s2.t": {
-   "t": "Tutti giocano",
+   "t": "Su sulla torre!",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s3.t": {
-   "t": "Il segnalino",
+   "t": "Gettiamo giù Lui!",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s2.x": {
-   "t": "Scegli in segreto il personaggio più adatto alla frase.",
+   "t": "i giocatori scelgono segretamente i personaggi che meritano di salire sopra alla torre.",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s4.t": {
@@ -2137,11 +2137,11 @@
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s1.x": {
-   "t": "È il giocatore di turno: sceglie o inventa una frase d’accusa.",
+   "t": "Ogni turno, un giocatore interpreta il Megafono e sceglie una frase;",
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s3.x": {
-   "t": "Il Megafono ne posa uno, coperto, su una carta.",
+   "t": "Il Megafono fa una puntata segreta su un personaggio. Vuole aiutarti? O vuole annullare il tuo voto?",
    "s": "Tutorial (Come si gioca)"
   },
   "premio.ruffiano.b6": {

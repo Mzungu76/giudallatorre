@@ -45,6 +45,8 @@ async function stepPage(p) {
   if (await vis(p, "confirm-vote")) {
     const n = 1 + Math.floor(Math.random() * 3); await p.locator(`button.hit[data-pos="${n}"]`).dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]');
     await p.click('[data-testid="zoom-action"]'); if (!p.s3) { await shot(p, "09-voto"); p.s3 = 1; } await p.click('[data-testid="confirm-vote"]'); return true; }
+  if (await vis(p, "award-open")) { await p.click('[data-testid="award-open"]'); return true; }
+  if (await vis(p, "award-next")) { await p.click('[data-testid="award-next"]'); return true; }
   if (await vis(p, "reveal-throw")) { await p.click('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); await shot(D, "10b-schermo-in-partita"); p.s4 = 1; } await p.click('[data-testid="skip"]', { timeout: 5000 }); return true; }
   if (await vis(p, "advance")) { if (!p.s5) { await shot(p, "11-punti"); p.s5 = 1; } await p.click('[data-testid="advance"]'); turns++; return true; }

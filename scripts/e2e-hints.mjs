@@ -69,6 +69,8 @@ async function step() {
     if (turns === 0) { await shot("6-punti-tu"); check("i punti del turno mostrano prima la riga «Tu»", /^Tu/.test((await p.locator('[data-testid="points-block"]').first().innerText()).trim())); }
     await sleep(500); await p.click('[data-testid="points-continue"]', { timeout: 3000 }); return true;
   }
+  if (await vis("award-open")) { await p.click('[data-testid="award-open"]'); return true; }
+  if (await vis("award-next")) { await p.click('[data-testid="award-next"]'); return true; }
   if (await vis("reveal-throw")) { await p.click('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis("skip")) { await p.click('[data-testid="skip"]', { timeout: 3000 }); return true; }
   if (await vis("standings-action")) { turns++; await p.click('[data-testid="standings-action"]'); return true; }

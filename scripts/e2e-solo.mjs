@@ -35,6 +35,8 @@ async function step() {
   if (await vis("lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="confirm-vote"]'); return true; }
   if (await vis("points-continue")) { await sleep(SAMPLE ? 4000 : 800); await clk('[data-testid="points-continue"]', { timeout: 3000 }); return true; }
+  if (await vis("award-open")) { await clk('[data-testid="award-open"]'); return true; }
+  if (await vis("award-next")) { await clk('[data-testid="award-next"]'); return true; }
   if (await vis("reveal-throw")) { await clk('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis("skip") && !SAMPLE) { await clk('[data-testid="skip"]', { timeout: 3000 }); return true; }
   if (await vis("advance")) { if (SAMPLE && turns === 0) await sleep(2500); await clk('[data-testid="advance"]'); turns++; if (turns >= 1) sampling = false; return true; }
