@@ -20,7 +20,6 @@ await B.fill('[data-testid="chat-input"]', "Vedremo 🐑"); await B.click('[data
 await A.click('[data-testid="start"]'); await Promise.all([A, B].map((p) => p.waitForSelector('[data-testid="game"]')));
 let seenReason = false, sawVoteBox = false, sawMega = false, turns = 0; const t0 = Date.now();
 async function step(p, name) {
-  if (await vis(p, "nocard-notice")) { await p.click('[data-testid="nocard-ok"]'); return true; }
   if (await vis(p, "mega-intro")) { await p.click('[data-testid="mega-ok"]'); return true; }
   if (await vis(p, "run-vote")) { const b = p.locator('[data-testid="run-vote"]'); if (await b.isEnabled()) { await b.click(); return true; } return false; }   // intervallo a tempo: il pulsante si attiva al «via!»
   if (await vis(p, "standings-action")) { await p.click('[data-testid="standings-action"]'); if (typeof turns !== "undefined") turns++; return true; }

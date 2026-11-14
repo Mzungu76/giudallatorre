@@ -18,14 +18,10 @@ function hideFrom(s: GameState, me: PlayerId): GameState {
   const t = structuredClone(s), others = t.playerIds.filter((p) => p !== me), mega = megafonoOf(t);
   for (const p of others) t.hands[p] = t.hands[p]!.map((_, k) => `carta-finta-${p}-${k}`);                  // mani degli altri
   for (const p of others) if (t.played[p] !== undefined) t.played[p] = "carta-finta-giocata";               // carte giocate coperte
-  if (t.deckCard !== null) t.deckCard = "carta-finta-mazzo";                                               // carta pescata dal mazzo, coperta
   for (const p of others) if (t.votes[p] !== undefined && (t.phase.endsWith("VOTE") || t.phase === "MINI_RUN")) t.votes[p] = (t.votes[p]! % Math.max(1, t.tower.length)) + 1; // voti degli altri, segreti
   let k = 0;                                                                                                // proprietari delle carte sulla Torre (tranne la propria)
   for (const sl of t.tower) if (sl.ownerId !== null && sl.ownerId !== me) { sl.ownerId = others[(++k) % others.length]!; }
-  if (t.lui && me !== mega) t.lui.slot = t.lui.slot === "zero" ? "k1" : "zero";                            // quale segnalino ha giocato il Megafono
-  if (t.lui && me !== mega && t.propaganda) { const set = t.luiSet ?? [], other = set.find((x) => x.slot !== s.lui!.slot) ?? set[0]!; t.lui.slot = other.slot; if (other.effect === "dirottamento") t.lui.to = (t.lui.position % t.tower.length) + 1; else delete t.lui.to; }   // PROPAGANDA: gettone e carta di arrivo del Dirottamento!
   if (t.marks && me !== mega) { const order = ["cade", "noncade", "nulli"]; t.marks = t.marks.map((m) => ({ ...m, slot: order[(order.indexOf(m.slot) + 1) % 3]! })); }   // «Cade / Non cade»: quali segnalini sono
-  if (t.objective && me !== mega) t.objective = { ...t.objective, position: (t.objective.position % Math.max(1, t.tower.length)) + 1 };   // personaggio dell'obiettivo del Megafono
   if (me !== mega) t.proclaim = null;                                                                      // la carta frase è solo del Megafono
   t.drawPile = t.drawPile.slice().reverse(); t.discardPile = t.discardPile.slice().reverse();              // ordine dei mazzi
   t.phraseDraw = t.phraseDraw.slice().reverse(); t.rng = (t.rng + 7) | 0;
@@ -37,11 +33,9 @@ describe("fair play dei giocatori virtuali", () => {
     registerTags(json("content/tags-personaggi.json"), json("content/tags-frasi.json"));   // con le etichette reali, come nel gioco
     const seen: Record<string, number> = {}; let compared = 0;
     for (const n of [3, 4, 6, 8]) for (let seed = 1; seed <= 7; seed++) {
-      // semi 4 e 5: variante PROPAGANDA con obiettivi (segnalini e obiettivo del Megafono segreti); 6 e 7: gioco base «Cade / Non cade»
-      const prop = seed === 4 || seed === 5, cnc = seed >= 6;
       const players = Array.from({ length: n }, (_, i) => ({ id: `p${i + 1}`, name: `B${i + 1}` }));
       const levelOf = (id: PlayerId): BotLevel => (["easy", "medium", "hard"] as const)[(Number(id.slice(1)) + seed) % 3]!;
-      let s = createGame({ players, seed: seed * 101 + n, deck: manifest, phraseDeck: buildPhraseDeck(pool, confessions, { age: 18, seed }), miniGame: "random", accuseDeck: ["Mi ha rubato il panino!"], propaganda: prop, objectives: prop, cnc }).state;
+      let s = createGame({ players, seed: seed * 101 + n, deck: manifest, phraseDeck: buildPhraseDeck(pool, confessions, { age: 18, seed }), miniGame: "random", accuseDeck: ["Mi ha rubato il panino!"] }).state;
       const mem = newBotMemory(); let guard = 0;
       while (s.phase !== "GAME_OVER" && guard++ < 4000) {
         let moved = false;
@@ -74,7 +68,7 @@ describe("fair play dei giocatori virtuali", () => {
   it("la memoria condivisa dei bot contiene solo informazioni pubbliche (carte mostrate e cadute, mai mani o proprietari)", () => {
     const mem = newBotMemory();
     learnFromResult(mem, [{ cardId: "a" }, { cardId: "b" }], { fallenCardId: "a", fallenCardIds: ["a"] } as never);
-    expect(Object.keys(mem).sort()).toEqual(["fell", "lui", "shown", "turns"]);
-    expect(mem.shown).toEqual({ a: 1, b: 1 }); expect(mem.fell).toEqual({ a: 1 }); expect(mem.lui).toEqual({});
+    expect(Object.keys(mem).sort()).toEqual(["fell", "shown", "turns"]);
+    expect(mem.shown).toEqual({ a: 1, b: 1 }); expect(mem.fell).toEqual({ a: 1 });
   });
 });

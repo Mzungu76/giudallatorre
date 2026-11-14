@@ -5,7 +5,7 @@ import type { GameState } from "../src/index.ts";
 
 /** Gioco base «Cade / Non cade»: il Megafono gioca dalla mano e posa 2 segnalini coperti (CADE +4, NON CADE +2, VOTI NULLI!), premi condivisi con chi vota la carta. */
 const C = (n: number, extra = {}) => {
-  let g = start(n, { cnc: true, luiSlots: undefined, ...extra });
+  let g = start(n, { ...extra });
   g = act(g, { type: "choosePhrase", playerId: megafonoOf(g), mode: "card", index: 0 });
   for (const p of requiredPlayers(g)) g = act(g, { type: "playCard", playerId: p, cardId: g.hands[p]![0]! });
   return g;
@@ -14,14 +14,11 @@ const place = (g: GameState, slot: string, position: number) => act(g, { type: "
 const pos = (g: GameState) => ({ m: posOf(g, "p1"), a: posOf(g, "p2"), b: posOf(g, "p3"), c: posOf(g, "p4") });
 
 describe("gioco base «Cade / Non cade»", () => {
-  it("il Megafono gioca sempre dalla mano; i tre segnalini; senza cnc resta il gioco di prima", () => {
+  it("il Megafono gioca sempre dalla mano; i tre segnalini sono sempre gli stessi", () => {
     const g = C(4);
-    expect(g.megafonoSa).toBe(true); expect(g.tower).toHaveLength(4); expect(g.tower.some((t) => t.ownerId === "p1")).toBe(true);
+    expect(g.tower).toHaveLength(4); expect(g.tower.some((t) => t.ownerId === "p1")).toBe(true);
     expect(luiTokens(g).map((x) => x.slot)).toEqual(["cade", "noncade", "nulli"]);
-    expect(viewFor(g, "p2").cnc).toBe(true);
-    const old = createGame(cfg(4)).state; expect(old.cnc).toBe(false); expect(old.megafonoSa).toBe(false);
-    // «Il gregge» e PROPAGANDA restano varianti a sé
-    expect(createGame({ ...cfg(4, { cnc: true, gregge: true }), luiSlots: undefined }).state.cnc).toBe(false);
+    expect(viewFor(g, "p2").luiTokens.map((x) => x.slot)).toEqual(["cade", "noncade", "nulli"]);
   });
 
   it("si posa un solo segnalino tra i tre; gli altri vedono dove, non quale", () => {
@@ -29,7 +26,6 @@ describe("gioco base «Cade / Non cade»", () => {
     expect(() => act(g, { type: "placeMarks", playerId: "p1", marks: [{ slot: "cade", position: a }, { slot: "nulli", position: b }] })).toThrow(/un solo segnalino/);
     expect(() => act(g, { type: "placeMarks", playerId: "p1", marks: [] })).toThrow(/un solo segnalino/);
     expect(() => act(g, { type: "placeMarks", playerId: "p2", marks: [{ slot: "cade", position: a }] })).toThrow(/solo il Megafono/);
-    expect(() => act(g, { type: "placeLui", playerId: "p1", slot: "cade", position: a })).toThrow(/placeMarks/);
     const v = place(g, "cade", a);
     expect(v.phase).toBe("VOTE");
     expect(viewFor(v, "p1").marks).toEqual([{ position: a, slot: "cade" }]);
@@ -86,7 +82,7 @@ describe("gioco base «Cade / Non cade»", () => {
 
   it("i bot giocano il gioco base fino in fondo, da 3 a 8 giocatori, senza azioni illegali", () => {
     for (const n of [3, 4, 6, 8]) for (const level of ["easy", "medium", "hard"] as const) {
-      let s = createGame({ ...cfg(n, { seed: 21 + n, cnc: true, miniGame: false }), luiSlots: undefined }).state;
+      let s = createGame({ ...cfg(n, { seed: 21 + n, miniGame: false }) }).state;
       const mem = newBotMemory(); let seed = 5; const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
       for (let i = 0; i < 3000 && s.phase !== "GAME_OVER"; i++) {
         if (s.phase === "RESULTS") { s = act(s, { type: "advance" }); continue; }

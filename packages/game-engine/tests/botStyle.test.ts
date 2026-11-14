@@ -25,7 +25,7 @@ describe("leggere i bluff", () => {
 });
 
 describe("bluff del Megafono", () => {
-  const s0: GameState = toSuspect(start(5, { cnc: true, megafonoSa: true, seed: 11 }));
+  const s0: GameState = toSuspect(start(5, { seed: 11 }));
   const mega = megafonoOf(s0);
   const modal = (lvl: BotLevel, bluff: number, n = 250) => {
     const c: Record<string, number> = {};

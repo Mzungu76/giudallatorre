@@ -16,7 +16,7 @@ export function hintFor(v: PlayerView): Hint | null {
     case "PROCLAIM":
       return isMega && v.proclaimCard ? { text: t("hint.proclama"), targets: [act('[data-testid="phrase-go"]'), '[data-testid="phrase-0"]'] } : null;
     case "PLAY":
-      return !mine?.hasPlayed && (v.megafonoSa || !isMega) ? { text: t("hint.gioca"), targets: [act('[data-testid="play-card"]'), '[data-testid="hand"] .card.cur'] } : null;
+      return !mine?.hasPlayed ? { text: t("hint.gioca"), targets: [act('[data-testid="play-card"]'), '[data-testid="hand"] .card.cur'] } : null;
     case "SUSPECT":
       return isMega ? { text: t("hint.lui"), targets: ['.lui-opts button:not([disabled])', 'button.hit'] } : null;
     case "VOTE":

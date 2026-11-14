@@ -22,7 +22,6 @@ const clk = (sel, o) => { globalThis.__s = "click " + sel; return p.click(sel, o
 async function step() {
   if (await vis("char-ok")) { await clk('[data-testid="char-ok"]'); return true; }
   if (await vis("intro-slides")) { await clk('[data-testid="intro-skip"]'); return true; }
-  if (await vis("nocard-notice")) { await clk('[data-testid="nocard-ok"]'); return true; }
   if (await vis("mega-intro")) { await clk('[data-testid="mega-ok"]'); return true; }
   if (await vis("idle-hint")) { await clk('[data-testid="idle-hint-ok"]'); return true; }
   if (await vis("howto")) { await clk('[data-testid="howto-close"]'); return true; }

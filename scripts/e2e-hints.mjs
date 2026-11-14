@@ -32,17 +32,12 @@ check("si chiude e non torna più (memorizzato)", !(await vis("intro-slides")) &
 if (await vis("char-ok") || (await p.waitForSelector('[data-testid="char-ok"]', { timeout: 3000 }).then(() => true).catch(() => false))) await p.click('[data-testid="char-ok"]');
 
 console.log("Partita: scheda del Megafono, badge, fumetti");
-let sawNoCard = false, helpChecked = false, sawMegaIntro = false, sawChip = false, sawGold = false, sawHint = false, hintGone = false, calmOk = true, turns = 0, hintChecked = false;
+let helpChecked = false, sawMegaIntro = false, sawChip = false, sawGold = false, sawHint = false, hintGone = false, calmOk = true, turns = 0, hintChecked = false;
 const t0 = Date.now();
 async function step() {
   if (await vis("mega-intro")) {
     sawMegaIntro = true; check("scheda «Sei il Megafono!» con i 3 passi e come si fanno punti", /sei il megafono/i.test(await txt("mega-intro")) && /come fai punti/i.test(await txt("mega-intro"))); await shot("4-mega-intro");
     await p.click('[data-testid="mega-ok"]'); return true;
-  }
-  if (await vis("nocard-notice")) {
-    sawNoCard = true; await sleep(2500);
-    check("«non giochi carte» resta finché non lo tocchi", await vis("nocard-notice")); await shot("9-nocard");
-    await p.click('[data-testid="nocard-ok"]'); return true;
   }
   if (await vis("role-chip")) sawChip = true;
   if ((await p.locator(".bsheet.gold").count()) > 0) sawGold = true;
@@ -81,7 +76,6 @@ async function step() {
   return false;
 }
 while (Date.now() - t0 < 300_000) { if (await vis("final")) break; let a = false; try { a = await step(); } catch { /* stato cambiato */ } if (!a) await sleep(150); }
-check("l'avviso «non giochi carte» è comparso quando ero Megafono", sawNoCard);
 check("la scheda del Megafono è comparsa la prima volta che è toccato a me", sawMegaIntro);
 check("il badge «Sei il Megafono» è sempre visibile nel mio turno", sawChip);
 check("i pannelli del Megafono sono dorati", sawGold);

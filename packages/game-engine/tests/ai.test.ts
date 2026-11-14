@@ -27,7 +27,7 @@ describe("giocatori virtuali", () => {
     }
   });
   it("variante 'Il Megafono sa': i bot giocano anche da Megafono", () => {
-    const s = playBots(cfg(5, { seed: 3, megafonoSa: true }), Array(5).fill("hard"), 9);
+    const s = playBots(cfg(5, { seed: 3 }), Array(5).fill("hard"), 9);
     expect(s.phase).toBe("GAME_OVER");
   });
   it("le scelte sono deterministiche a parità di seme", () => {
@@ -73,7 +73,7 @@ describe("giocatori virtuali con etichette", () => {
   const play = (levels: BotLevel[], seed: number) => {
     const phrases = Object.keys(phraseTags).filter((f) => phraseTags[f].tipo.length > 0 && !f.includes("sarebbe"));   // solo frasi di tratto con un tipo umano chiaro
     const deck = manifest, phraseDeck = phrases.map((f, i) => ({ id: "t" + i, phrases: [f, f + " ", f + "  ", f + "   ", f + "    "] }));
-    return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck, cnc: true, megafonoSa: true } as GameConfig, levels, seed * 31);
+    return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck } as GameConfig, levels, seed * 31);
   };
   it("con le etichette il Medio e il Difficile battono il Facile più del caso (partite da 4)", () => {
     registerTags(cardsTags, phraseTags);
@@ -83,36 +83,5 @@ describe("giocatori virtuali con etichette", () => {
       expect(wins / games).toBeGreaterThan(lvl === "hard" ? 0.38 : 0.3);   // il caso è 25%: il vantaggio dei bot è moderato
     }
   });
-  it("il Megafono bot usa solo segnalini che gli restano, vari tra loro e imprevedibili", () => {
-    const slots = new Set<string>(); let n = 0;
-    for (let seed = 1; seed <= 60; seed++) {
-      let s = createGame(cfg(5, { seed })).state;
-      const mem = newBotMemory(); let r = seed * 104729 % 2147483647 || 1; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
-      s = applyAction(s, { type: "choosePhrase", playerId: megafonoOf(s), mode: "free" }).state;
-      for (const p of s.playerIds) if (p !== megafonoOf(s)) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
-      s.luiSpent = { ...(s.luiSpent ?? {}), [megafonoOf(s)]: ["k1"] };
-      const a = chooseBotAction(s, megafonoOf(s), "hard", mem, rand);
-      if (a && a.type === "placeLui") { slots.add(a.slot); n++; expect(a.slot).not.toBe("k1"); }
-    }
-    expect(n).toBe(60); expect(slots.size).toBe(3);
-  });
-  it("i bot non Megafono reagiscono al Lui!: con la soglia che temono votano meno la carta del Lui! di quando non c'è", () => {
-    const base = () => createGame(cfg(6, { seed: 5 })).state;
-    const toVoteWith = (slot: "k1" | "k3" | "zero") => {
-      let s = base(); const m = megafonoOf(s);
-      s = applyAction(s, { type: "choosePhrase", playerId: m, mode: "free" }).state;
-      for (const p of s.playerIds) if (p !== m) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
-      s = applyAction(s, { type: "placeLui", playerId: m, slot, position: 1 }).state; return s;
-    };
-    const share = (slot: "k1" | "k3" | "zero") => {
-      let on = 0, tot = 0; const s = toVoteWith(slot), m = megafonoOf(s);
-      for (let k = 0; k < 400; k++) { let r = k + 11; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
-        const me = s.playerIds.find((p) => p !== m)!, a = chooseBotAction(s, me, "hard", newBotMemory(), rand); if (a && a.type === "vote") { tot++; if (a.position === 1) on++; } }
-      return on / tot;
-    };
-    // il bot non conosce il segnalino: ragiona su quelli rimasti, quindi il comportamento è lo stesso per qualunque segnalino posato (non "sbircia" la mano del Megafono)
-    expect(Math.abs(share("k1") - share("zero"))).toBeLessThan(0.12);
-  });
-  void MAX_PLAYERS;
 });
 import { megafonoOf as megafonoOf } from "../src/index.ts";

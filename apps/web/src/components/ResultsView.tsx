@@ -28,10 +28,9 @@ export function FallArrow({ rect, slam, delay = 0 }: { rect: Rect | undefined; s
 
 /** Perché si sono presi quei punti (tocco su un giocatore nella striscia). */
 const WHY: Record<ScoreLine["kind"], TestoKey> = {
-  voto: "rs.m.voto", "mini-giusto": "rs.m.mini", "mini-veloce": "rs.m.veloce", carta: "rs.m.carta", lui: "rs.m.lui", "lui-mancato": "rs.m.lui0", "lui-gregge": "rs.m.folla", "lui-folla": "rs.m.folla",
-  obiettivo: "rs.m.obj", "obiettivo-mancato": "rs.m.obj0", "obiettivo-folla": "rs.m.objf",
+  voto: "rs.m.voto", "mini-giusto": "rs.m.mini", "mini-veloce": "rs.m.veloce", carta: "rs.m.carta", lui: "rs.m.lui", "lui-mancato": "rs.m.lui0", "lui-folla": "rs.m.folla",
 };
-const iconFor = (k: ScoreLine["kind"]) => REASON_ICON[k] || (k.startsWith("lui") ? "hand" : "flag");
+const iconFor = (k: ScoreLine["kind"]) => REASON_ICON[k] || "hand";
 /** L'icona di un motivo col bollo dei punti che ha dato (notifica). */
 function IcoPts({ k, pts, s }: { k: Reason; pts: number; s: number }) {
   return <span className="rs-ip" style={{ width: s, height: s }}><ReasonIcon k={k} s={s} className={k === "bolt" ? "rs-fast" : ""} /><i className={pts < 0 ? "dn" : ""}>{sign(pts)}</i></span>;

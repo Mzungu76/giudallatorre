@@ -127,7 +127,7 @@ export default function RoomScreen({ code }: { code: string }) {
     : ov === "help" ? <HelpMenu canHint={!!(pv && hintFor(pv))} sound={sound} setSound={setSound} onHint={() => { setOv(null); setManual(true); }} onTutorial={() => setOv("tutorial")} onRules={() => setOv("rules")} onClose={close}
         {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "tutorial" ? <IntroSlides onClose={() => setOv("help")} />
-    : ov === "rules" ? <HowTo onClose={() => setOv("help")} tokens={pv?.luiTokens} gregge={pv?.gregge} sound={sound} setSound={setSound}
+    : ov === "rules" ? <HowTo onClose={() => setOv("help")} sound={sound} setSound={setSound}
         {...(room.stage === "PLAYING" ? { onLeave: leave, leaveHint } : {})} />
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />

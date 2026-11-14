@@ -8,7 +8,7 @@ stateDiagram-v2
   PROCLAIM --> PLAY: Megafono: choosePhrase (carta o frase libera)
   PLAY --> PLAY: playCard (ogni giocatore richiesto, una volta)
   PLAY --> SUSPECT: tutte giocate -> Torre mescolata e numerata
-  SUSPECT --> VOTE: Megafono: placeLui (CADE / NON_CADE + posizione)
+  SUSPECT --> VOTE: Megafono: placeMarks (CADE / NON_CADE + posizione)
   VOTE --> VOTE: vote (tutti, Megafono incluso, una volta)
   VOTE --> RESULTS: tutti hanno votato -> esito e punti
   RESULTS --> PROCLAIM: advance (scarto, pescate, Megafono successivo)
@@ -23,7 +23,7 @@ stateDiagram-v2
 |---|---|---|---|
 | PROCLAIM | Megafono | `choosePhrase` (`card`+indice, oppure `free`) | PLAY; in modalità base pesca la carta dal mazzo per la Torre |
 | PLAY | Folla (+ Megafono se "Megafono sa") | `playCard` | SUSPECT quando tutti hanno giocato |
-| SUSPECT | Megafono | `placeLui` | VOTE |
+| SUSPECT | Megafono | `placeMarks` | VOTE |
 | VOTE | tutti | `vote` | RESULTS quando tutti hanno votato |
 | RESULTS | server / chiunque | `advance` | PROCLAIM o GAME_OVER |
 | MINI_RUN | tutti, a tempo | `vote` (un personaggio in scena); il server fa `endRun` a fine corsa | MINI_RESULTS (anche prima, se hanno votato tutti) |

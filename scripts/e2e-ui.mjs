@@ -33,7 +33,6 @@ console.log("Partita completa tramite interfaccia");
 const pages = [A, B, C]; let shots = 0, turns = 0, lastTurn = "";
 const t0 = Date.now();
 async function stepPage(p) {
-  if (await vis(p, "nocard-notice")) { await p.click('[data-testid="nocard-ok"]'); return true; }
   if (await vis(p, "mega-intro")) { await p.click('[data-testid="mega-ok"]'); return true; }
   if (await vis(p, "run-vote")) { const b = p.locator('[data-testid="run-vote"]'); if (await b.isEnabled()) { await b.click(); return true; } return false; }   // intervallo a tempo: il pulsante si attiva al «via!»
   if (await vis(p, "points-continue")) { await p.click('[data-testid="points-continue"]'); return true; }

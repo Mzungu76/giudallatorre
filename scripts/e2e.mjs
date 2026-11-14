@@ -26,8 +26,8 @@ class Client {
 function botStep(c) {
   const v = c.view?.view; if (!v) return false; const me = v.viewerId, mega = v.megafonoId, mine = v.players.find((p) => p.id === me);
   if (v.phase === "PROCLAIM" && me === mega) { c.send({ t: "act", action: v.proclaimCard.phrases.length > 1 ? { type: "choosePhrase", mode: "card", index: 1 } : { type: "choosePhrase", mode: "card", index: 0 } }); return true; }
-  if (v.phase === "PLAY" && !mine.hasPlayed && (v.megafonoSa || me !== mega)) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
-  if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: v.cnc ? { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } : { type: "placeLui", slot: v.myLuiLeft[0] ?? v.luiTokens[0].slot, position: 1 } }); return true; }
+  if (v.phase === "PLAY" && !mine.hasPlayed && true) { c.send({ t: "act", action: { type: "playCard", cardId: v.myHand[0] } }); return true; }
+  if (v.phase === "SUSPECT" && me === mega) { c.send({ t: "act", action: { type: "placeMarks", marks: [{ slot: "cade", position: 1 }] } }); return true; }
   if (v.phase === "VOTE" && v.myVote === null) { c.send({ t: "act", action: { type: "vote", position: 1 + Math.floor(Math.random() * v.tower.length) } }); return true; }
   // intervallo a tempo: si vota quando il personaggio è in scena (orologio del server stimato dall'ultimo messaggio)
   if (v.phase === "MINI_RUN" && v.myVote === null) { const g = c.view.goAt; if (typeof g !== "number") return false; const el = c.view.now + (Date.now() - c.rcv) - g, slot = Math.floor(el / 3000); if (el < 200 || slot >= v.mini.order.length) return false; c.send({ t: "act", action: { type: "vote", position: v.mini.order[slot] } }); return true; }

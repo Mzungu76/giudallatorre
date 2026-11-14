@@ -93,7 +93,7 @@ describe("costruzione del mazzo frasi", () => {
   it("una partita completa con i contenuti reali per ogni fascia (8 giocatori, variante Megafono sa)", () => {
     const players = Array.from({ length: 8 }, (_, i) => ({ id: `p${i + 1}`, name: `G${i + 1}` }));
     for (const a of AGE_BANDS) {
-      const { state, problems } = simulateGame({ players, seed: 2026, deck, phraseDeck: build(a, 99), megafonoSa: true }, 77, { checkEveryStep: true });
+      const { state, problems } = simulateGame({ players, seed: 2026, deck, phraseDeck: build(a, 99) }, 77, { checkEveryStep: true });
       expect(problems).toEqual([]); expect(state.phase).toBe("GAME_OVER");
     }
   });

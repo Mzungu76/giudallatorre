@@ -5,7 +5,7 @@ Tutti i messaggi sono validati lato server con **zod** (schemi *strict*: campi e
 ## HTTP (stesso dominio dell'app)
 | Metodo e percorso | Corpo | Risposta |
 |---|---|---|
-| `POST /api/rooms` | `{nickname, mode?: "table"\|"remote", megafonoSa?: boolean, bots?: {count: 0–7, level: "easy"\|"medium"\|"hard"}}` | `{code, playerId, token}` — crea la stanza, chi crea è host |
+| `POST /api/rooms` | `{nickname, bots?: {count: 0–7, level: "easy"\|"medium"\|"hard"}}` | `{code, playerId, token}` — crea la stanza, chi crea è host |
 | `POST /api/rooms/:code/join` | `{nickname}` | `{code, playerId, token}`; 409 se `NICKNAME_TAKEN`, `ROOM_FULL`, `GAME_STARTED` |
 | `GET /api/rooms/:code/info` | — | `{exists, stage?, players?, full?, mode?}` (nessun dato privato) |
 | `GET /ws/:code` (Upgrade) | — | WebSocket; il primo messaggio deve essere `hello` |
@@ -18,7 +18,7 @@ Codice stanza: 5 caratteri da `ABCDEFGHJKMNPQRSTUVWXYZ23456789` (senza I, L, O, 
 |---|---|---|
 | `hello` | `token` | **obbligatorio come primo messaggio** (entro 10 s) |
 | `ping` | — | risposta `{"t":"pong"}` automatica, senza svegliare la stanza (stringa esatta `{"t":"ping"}`) |
-| `setOptions` | `megafonoSa?`, `mode?`, `turnTimerSec?` (0/30/60/90/120), `ageBand?` (6/10/14/18, predefinita 14), `confessions?` (carte «Ammetto…», predefinita sì) | solo host, solo lobby |
+| `setOptions` | `turnTimerSec?` (0/30/60/90/120), `ageBand?` (6/10/14/18, predefinita 14) | solo host, solo lobby |
 | `kick` | `playerId` | solo host, solo lobby |
 | `chat` | `text` (≤ 140 caratteri dopo la pulizia) | messaggio a tutta la stanza; errori `INVALID_MESSAGE`, `RATE_LIMIT` |
 | `start` | — | solo host, da 3 giocatori (i bot contano) |
