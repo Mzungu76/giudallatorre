@@ -14,7 +14,7 @@ export function Pawn({ color, size = 40 }: { color: string; size?: number }) {
 
 /** Classifica come salita lungo la torre: le pedine stanno al centro e salgono in base ai punti.
  *  Oltre l'ultima tacca la torre si allunga (la scala passa a multipli di 10), così nessuno "esce" dal disegno. */
-export default function Standings({ rows, turn, total, onClose, action, title }: { rows: StandRow[]; turn: number; total: number; onClose: () => void; /** Pulsante principale (es. "Prosegui") o un messaggio di attesa al suo posto. */ action?: { label: string; onClick: () => void } | { wait: string }; title?: string }) {
+export default function Standings({ rows, turn, total, onClose, action, title, onProfile }: { /** Tocco sul nome di un giocatore: apre la sua scheda. */ onProfile?: (id: string) => void; rows: StandRow[]; turn: number; total: number; onClose: () => void; /** Pulsante principale (es. "Prosegui") o un messaggio di attesa al suo posto. */ action?: { label: string; onClick: () => void } | { wait: string }; title?: string }) {
   const { H } = useStage(), animate = rows.some((r) => r.prev !== undefined && r.prev !== r.score), [moved, setMoved] = useState(!animate);
   useEffect(() => { if (!animate) return undefined; const t = setTimeout(() => setMoved(true), 900); return () => clearTimeout(t); }, [animate]);
   const shown = (r: StandRow) => (moved ? r.score : r.prev ?? r.score);
@@ -53,7 +53,7 @@ export default function Standings({ rows, turn, total, onClose, action, title }:
       {placed.map(({ r, dx, py, side, ly }) => (
         <div key={r.id} className="stbd-grp">
           <div className={`stbd-lead ${side}`} style={{ top: py - 2, ["--dx" as string]: `${dx}px` }} />
-          <div className={`stbd-tag ${side}`} style={{ top: ly - 12 }} data-testid="standings-row"><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><b>{shown(r)}</b>{r.prev !== undefined && r.score !== r.prev && <u className={`stbd-d ${r.score < r.prev ? "neg" : ""}`}><PtIcon s={11} />{r.score > r.prev ? "+" : "−"}{Math.abs(r.score - r.prev)}</u>}</div>
+          <div className={`stbd-tag ${side}`} style={{ top: ly - 12, ...(onProfile ? { cursor: "pointer" } : {}) }} data-testid="standings-row" {...(onProfile ? { role: "button", tabIndex: 0, onClick: () => onProfile(r.id) } : {})}><i className="dc" style={{ background: r.color }} /><span>{r.name}</span><b>{shown(r)}</b>{r.prev !== undefined && r.score !== r.prev && <u className={`stbd-d ${r.score < r.prev ? "neg" : ""}`}><PtIcon s={11} />{r.score > r.prev ? "+" : "−"}{Math.abs(r.score - r.prev)}</u>}</div>
           <div className="stbd-pawn" style={{ left: `calc(50% + ${dx}px)`, top: py - 36, animationDelay: `${0.1 + (1 - shown(r) / Math.max(1, leader)) * 0.3}s` }}>
             {shown(r) === leader && leader > 0 && <em className="stbd-crown">👑</em>}
             <Pawn color={r.color} size={40} />

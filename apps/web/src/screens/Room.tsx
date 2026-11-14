@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CHAR_COLORS, tokenUrl } from "../lib/characters.ts";
+import BotProfile from "../components/BotProfile.tsx";
+import type { ProfileData } from "../components/BotProfile.tsx";
 import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS, colorFor } from "../ui.tsx";
 import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
@@ -46,7 +48,7 @@ const AGES = [6, 10, 14, 18] as const;
 const ageLabel = (v: number) => (AGES as readonly number[]).includes(v) ? txs(`room.age.${v}` as TestoKey) : `${v}+`;
 function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMessage) => void; ui: UiCtl; overlays: ReactNode }) {
   const me = room.you, host = room.hostId === me, link = `${location.origin}/entra?c=${room.code}`, o = room.options;
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false), [prof, setProf] = useState<ProfileData | null>(null);
   async function share() {
     try { if (navigator.share) { await navigator.share({ title: txs("room.share.titolo"), text: txs("room.share.testo", { codice: room.code }), url: link }); return; } } catch { /* annullato */ }
     try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* */ }
@@ -65,11 +67,11 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
         </div>
         <div className="ptiles">
           {room.players.map((p, i) => (
-            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row">
+            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row" role="button" tabIndex={0} onClick={() => setProf({ nickname: p.nickname, char: (p.char ?? i) % 8, ...(p.isBot ? { bot: true, level: p.level ?? "medium", style: p.style } : {}) })}>
               <img src={tokenUrl(CHAR_COLORS[(p.char ?? i) % 8]!)} alt="" />
               <span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
               {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}
-              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={() => send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id })} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}
+              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={(e) => { e.stopPropagation(); send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id }); }} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}
             </div>
           ))}
           {Array.from({ length: Math.max(0, Math.min(6, Math.max(3, room.players.length + 1)) - room.players.length) }).map((_, i) => <div className="ptile em" key={`e${i}`}><i /><span className="nmx">{i === 0 ? tx("room.attesa.altri") : ""}</span></div>)}
@@ -89,6 +91,7 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
           </div>
         </div>
       </div>
+      {prof && <BotProfile p={prof} onClose={() => setProf(null)} />}
       {overlays}
     </Stage>
   );

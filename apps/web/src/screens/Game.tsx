@@ -7,6 +7,8 @@ import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
 import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
+import BotProfile, { profileOf } from "../components/BotProfile.tsx";
+import type { ProfileData } from "../components/BotProfile.tsx";
 import { objCond } from "../lib/lui.ts";
 import Zoom from "../components/Zoom.tsx";
 import { Climb, Reveal, Terrace, luiSpecOf, luiToks, markSpec } from "../components/Terrace.tsx";
@@ -127,6 +129,7 @@ const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; peop
 
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
   const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
+  const [prof, setProf] = useState<ProfileData | null>(null);
   const [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
@@ -322,11 +325,12 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       )}
       {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
       {showPanel && res && afterStep === "board" && (
-        <Standings title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
+        <Standings onProfile={(id) => setProf(profileOf(room.players, id))} title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
           rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}
           action={!readOnly && (isMega || isHost || megaBot) ? { label: view.turn >= view.totalTurns ? txs("g.az.finale") : view.roundEnd ? txs("g.az.giro") : txs("g.az.turno"), onClick: () => act({ t: "act", action: { type: "advance" } }) } : { wait: readOnly ? txs("g.az.wait.ro") : txs("g.az.wait") }} />
       )}
 
+      {prof && <BotProfile p={prof} onClose={() => setProf(null)} />}
       {luiInfo && phase === "VOTE" && <LuiInfo view={view} onClose={() => setLuiInfo(false)} />}
       {zoomPos !== null && ids[zoomPos - 1] && (
         <Zoom cardId={ids[zoomPos - 1]!} pos={zoomPos} total={N} onClose={() => setZoomPos(null)} onNav={setZoomPos}

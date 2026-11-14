@@ -63,7 +63,7 @@ describe("testi.json", () => {
 
 describe("niente testi scritti a mano nei file già migrati", () => {
   // File completamente migrati: qui un testo italiano scritto nel codice è un errore. Aggiungi un file alla lista quando lo migri.
-  const PULITI = ["components/Intro.tsx", "components/HowTo.tsx", "components/MiniGame.tsx", "components/BUi.tsx", "lib/lui.ts", "components/Terrace.tsx", "screens/Game.tsx", "components/Standings.tsx", "components/CharIntro.tsx", "components/LuiDraw.tsx", "components/Chat.tsx", "components/Zoom.tsx", "screens/Home.tsx", "screens/Room.tsx", "screens/Display.tsx", "components/HomeTools.tsx", "lib/install.ts", "lib/characters.ts", "screens/Forms.tsx", "lib/api.ts", "hooks/useRoom.ts", "scene/fallScene.ts", "components/FinalScene.tsx", "components/HelpMenu.tsx", "components/PointsExamples.tsx", "lib/minis.ts", "lib/hints.tsx"];
+  const PULITI = ["components/BotProfile.tsx", "components/Intro.tsx", "components/HowTo.tsx", "components/MiniGame.tsx", "components/BUi.tsx", "lib/lui.ts", "components/Terrace.tsx", "screens/Game.tsx", "components/Standings.tsx", "components/CharIntro.tsx", "components/LuiDraw.tsx", "components/Chat.tsx", "components/Zoom.tsx", "screens/Home.tsx", "screens/Room.tsx", "screens/Display.tsx", "components/HomeTools.tsx", "lib/install.ts", "lib/characters.ts", "screens/Forms.tsx", "lib/api.ts", "hooks/useRoom.ts", "scene/fallScene.ts", "components/FinalScene.tsx", "components/HelpMenu.tsx", "components/PointsExamples.tsx", "lib/minis.ts", "lib/hints.tsx"];
   const ITA = /[A-Za-zÀ-ÿ’']{3,}(?:\s+[A-Za-zÀ-ÿ’',.!?]+){2,}/;
   for (const rel of PULITI) {
     it(rel, () => {

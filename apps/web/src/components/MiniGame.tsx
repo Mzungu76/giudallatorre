@@ -14,6 +14,8 @@ import { hintFor } from "../lib/hints.tsx";
 import { buildFinale } from "../lib/miniScenes.ts";
 import { Curtain, FinaleScene, Letterbox, RunScene, useCast } from "./MiniStage.tsx";
 import { ResultMarks, ScoreStrip } from "./ResultsView.tsx";
+import BotProfile, { profileOf } from "./BotProfile.tsx";
+import type { ProfileData } from "./BotProfile.tsx";
 import type { GameProps } from "../screens/Game.tsx";
 import { t, ts } from "../lib/testi.ts";
 
@@ -27,7 +29,7 @@ type Post = null | "verdict" | "finale" | "points" | "board" | "closing";
 export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, startAt }: GameProps & { /** Solo simulatore: apri direttamente il riepilogo dei punti. */ startAt?: "points" }) {
   const people = usePeople(room), me = view.viewerId, res = view.miniResult, mini = view.mini;
   const kind = (mini?.kind ?? res?.kind)!, info = miniInfo(kind), inRun = view.phase === "MINI_RUN", isHost = room.hostId === me;
-  const now = useTick();
+  const now = useTick(), [prof, setProf] = useState<ProfileData | null>(null);
   const orderRef = useRef<number[]>(mini?.order ?? []); if (mini) orderRef.current = mini.order;
   const order = orderRef.current;
   const goRef = useRef<number | null>(goAt ?? null);
@@ -71,7 +73,8 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
     <>
       {showStage && <Run {...{ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }} />}
       {showFinale && res && <Finale res={res} view={view} readOnly={!!readOnly} sound={sound} onDone={endFinale} done={false} />}
-      {(post === "points" || post === "board" || post === "closing") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post === "closing" ? "board" : post} onStep={setPost} onResume={resume} closing={post === "closing"} />}
+      {(post === "points" || post === "board" || post === "closing") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post === "closing" ? "board" : post} onStep={setPost} onResume={resume} closing={post === "closing"} onProfile={(id) => setProf(profileOf(room.players, id))} />}
+      {prof && <BotProfile p={prof} onClose={() => setProf(null)} />}
       <Curtain closed={shut} valance={post === "points" || post === "board" || post === "closing" ? null : <span>{ts("mg.turno", { n: view.turn, tot: view.totalTurns })} · {info.icon} {info.title}</span>}>{curtainText}</Curtain>
     </>
   );
@@ -156,7 +159,7 @@ function Finale({ res, view, readOnly, sound, onDone, done }: { res: MiniResult;
 }
 
 /** Dopo il sipario di chiusura: lo stesso riepilogo dei turni normali («Com'è andata» + «Punti del turno»), poi la classifica. */
-function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onResume, closing }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void; onResume: () => void; closing: boolean }) {
+function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onResume, closing, onProfile }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { onProfile: (id: string) => void; people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void; onResume: () => void; closing: boolean }) {
   const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
   const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
   const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false, id })), [res, people]);
@@ -181,7 +184,7 @@ function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onR
         </div>
       )}
       {step === "board" && (
-        <Standings rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
+        <Standings onProfile={onProfile} rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
           action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: closing ? () => undefined : onResume } : { wait: ts("mg.host.aspetta") }} />
       )}
     </>

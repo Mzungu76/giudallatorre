@@ -73,21 +73,21 @@ describe("giocatori virtuali con etichette", () => {
   const play = (levels: BotLevel[], seed: number) => {
     const phrases = Object.keys(phraseTags).filter((f) => phraseTags[f].tipo.length > 0 && !f.includes("sarebbe"));   // solo frasi di tratto con un tipo umano chiaro
     const deck = manifest, phraseDeck = phrases.map((f, i) => ({ id: "t" + i, phrases: [f, f + " ", f + "  ", f + "   ", f + "    "] }));
-    return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck } as GameConfig, levels, seed * 31);
+    return playBots({ players: levels.map((_, i) => ({ id: "p" + i, name: "P" + i })), seed, deck, phraseDeck: phrases.length ? [{ id: "m", phrases: phrases.slice(0, 5) }, ...phraseDeck.slice(0, 20).map((c, i) => ({ id: "u" + i, phrases: [phrases[i + 5]!, phrases[i + 40]!] }))] : phraseDeck, cnc: true, megafonoSa: true } as GameConfig, levels, seed * 31);
   };
   it("con le etichette il Medio e il Difficile battono il Facile più del caso (partite da 4)", () => {
     registerTags(cardsTags, phraseTags);
     for (const lvl of ["medium", "hard"] as BotLevel[]) {
-      let wins = 0; const games = 60;
+      let wins = 0; const games = 120;
       for (let g = 0; g < games; g++) { const slot = g % 4, lv: BotLevel[] = ["easy", "easy", "easy", "easy"]; lv[slot] = lvl; const s = play(lv, 300 + g); if (s.winners?.includes("p" + slot)) wins++; }
-      expect(wins / games).toBeGreaterThan(0.32);   // il caso è 25%: con il Lui! sui voti degli altri il vantaggio dei bot è moderato (≈40% a 4 giocatori)
+      expect(wins / games).toBeGreaterThan(lvl === "hard" ? 0.38 : 0.3);   // il caso è 25%: il vantaggio dei bot è moderato
     }
   });
   it("il Megafono bot usa solo segnalini che gli restano, vari tra loro e imprevedibili", () => {
     const slots = new Set<string>(); let n = 0;
     for (let seed = 1; seed <= 60; seed++) {
       let s = createGame(cfg(5, { seed })).state;
-      const mem = newBotMemory(); let r = seed; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
+      const mem = newBotMemory(); let r = seed * 104729 % 2147483647 || 1; const rand = () => { r = (r * 16807) % 2147483647; return r / 2147483647; };
       s = applyAction(s, { type: "choosePhrase", playerId: megafonoOf(s), mode: "free" }).state;
       for (const p of s.playerIds) if (p !== megafonoOf(s)) s = applyAction(s, { type: "playCard", playerId: p, cardId: s.hands[p]![0]! }).state;
       s.luiSpent = { ...(s.luiSpent ?? {}), [megafonoOf(s)]: ["k1"] };

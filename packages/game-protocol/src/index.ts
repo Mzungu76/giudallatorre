@@ -57,7 +57,7 @@ export type ClientAction = Extract<ClientMessage, { t: "act" }>["action"];
 // ---------- messaggi server -> client ----------
 export type RoomStage = "LOBBY" | "PLAYING" | "FINISHED";
 export interface RoomOptionsDto { megafonoSa: boolean; /** Variante «Il gregge» (in prova): lo 0 è l'Imbroglio! (annulla i voti sulla sua carta), la soglia premia anche chi la vota. */ gregge?: boolean; /** Variante PROPAGANDA (in prova) e, dentro, obiettivi contrapposti. PROPAGANDA e «Il gregge» si escludono. */ propaganda?: boolean; objectives?: boolean; /** Fascia d'età del gruppo: il mazzo contiene solo frasi con età ≤ questa. */ ageBand: 6 | 10 | 14 | 18; /** Carte «Ammetto che…» nel mazzo. */ confessions: boolean; mode: "table" | "remote"; turnTimerSec: number; /** Consente schermi condivisi di sola visione (nessun dato privato). */ display: boolean }
-export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; /** Personaggio 0–7 (colore e segnalino). */ char?: number; isBot?: boolean; level?: "easy" | "medium" | "hard" }
+export interface RoomPlayerDto { id: string; nickname: string; isHost: boolean; connected: boolean; /** Personaggio 0–7 (colore e segnalino). */ char?: number; isBot?: boolean; level?: "easy" | "medium" | "hard"; /** Carattere del bot (id): i testi sono `bot.stile.<id>.*`. */ style?: string }
 export interface ChatDto { id: number; from: string; name: string; text: string; ts: number }
 export const MAX_CHAT_CHARS = 140;
 export type ServerMessage =

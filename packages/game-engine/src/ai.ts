@@ -1,6 +1,8 @@
 import { luiAvailable, luiForbidden, luiTokens, megafonoOf, objectiveHit, requiredPlayers, tallyMarks, tallyVotes } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
 import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "./types.ts";
+import { NEUTRAL_STYLE } from "./botstyle.ts";
+import type { BotStyle } from "./botstyle.ts";
 
 /**
  * Giocatori virtuali. Usano le etichette nascoste (personaggio ↔ frase, vedi tags.ts) per stimare chi cadrà, il punteggio atteso,
@@ -179,28 +181,50 @@ function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>
   return { m, f: f / Math.max(1, folla.length), T };
 }
 /** «Cade / Non cade», il Megafono: per ogni carta e segnalino, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
-function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
-  const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, p, [me], rand), cands: { marks: Mark[]; ev: number }[] = [];
+/** Quanto un bot sa leggere i bluff e quanto ne fa: dipende dal livello (facile non legge né bluffa, difficile al massimo). */
+const SKILL = { easy: { depth: 0, bluff: 0 }, medium: { depth: 0.5, bluff: 0.5 }, hard: { depth: 1, bluff: 1 } } as const;
+type Skill = (typeof SKILL)[BotLevel];
+/** Convinzione degli altri sul segnalino posato su una carta: dato il valore (per il Megafono) di ogni scelta (carta, tipo), con che probabilità un osservatore pensa
+ *  che sia ciascun tipo. Chi legge bene i bluff immagina il Megafono che sceglie bene (poco rumore); il sospettoso lo immagina più imprevedibile. */
+export function typeBelief(evOf: (type: string) => number, tau: number, susp: number, depth: number): number[] {
+  const post = softmax(CNC_TYPES.map((t) => evOf(t) / (tau * (1 + 1.5 * susp))));
+  return post.map((x) => depth * x + (1 - depth) / CNC_TYPES.length);
+}
+function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, sk: Skill, st: BotStyle): Action {
+  const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, p, [me], rand), cands: { marks: Mark[]; ev: number; pos: number; type: string }[] = [];
   for (let a = 1; a <= n; a++) for (const ta of CNC_TYPES) {
     const marks = [{ effect: ta, position: a }], nul = marks.find((x) => x.effect === "nulli")?.position;
     let best = -Infinity;
     for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of smp) { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); ev += r.m - r.f; } best = Math.max(best, ev / smp.length); }
-    cands.push({ marks, ev: best });
+    // il gusto del rischio: il temerario ama il CADE (+4), il prudente il NON CADE (punti più sicuri)
+    best += (st.risk - 0.5) * (ta === "cade" ? 0.5 : ta === "noncade" ? -0.25 : 0);
+    cands.push({ marks, ev: best, pos: a, type: ta });
   }
-  const tau = level === "hard" ? TUNE.propTempHard : TUNE.propTempMed, top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / tau)), rand)]!;
+  const tau = level === "hard" ? TUNE.cncTempHard : TUNE.propTempMed;
+  // bluff: si preferisce la scelta che gli osservatori più probabilmente leggono male (il tipo vero ha poca probabilità nella loro convinzione), a costo di un po' di valore
+  const lam = TUNE.bluffLambda * sk.bluff * st.bluff;
+  if (lam > 0) for (const c of cands) { const bel = typeBelief((t) => cands.find((x) => x.pos === c.pos && x.type === t)!.ev, TUNE.cncTempHard, 0.4, 1); c.ev += lam * -Math.log(bel[CNC_TYPES.indexOf(c.type as (typeof CNC_TYPES)[number])]! + 0.05); }
+  const top = Math.max(...cands.map((c) => c.ev)), ch = cands[pickProb(softmax(cands.map((c) => (c.ev - top) / (tau * (1.3 - 0.6 * st.conf)))), rand)]!;
   return { type: "placeMarks", playerId: me, marks: ch.marks.map((m) => ({ slot: m.effect, position: m.position })) };
 }
-/** «Cade / Non cade», voto. Il Megafono conosce il suo segnalino (e non può votare VOTI NULLI!); gli altri vedono solo dov'è: pesano i tre possibili. */
-function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action {
+/** «Cade / Non cade», voto. Il Megafono conosce il suo segnalino (e non può votare VOTI NULLI!); gli altri vedono solo dov'è: pesano i tre possibili
+ *  con la convinzione che si sono fatti su come il Megafono sceglie (leggere i bluff) e col proprio carattere. */
+function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, sk: Skill, st: BotStyle): Action {
   const p = crowdProbs(s, mem, level), n = s.tower.length, mega = megafonoOf(s), hard = level === "hard", vals: number[] = [];
   if (me === mega) {
     const marks = (s.marks ?? []).map((m) => ({ effect: m.slot, position: m.position })), nul = luiForbidden(s, me), smp = propSample(s, p, [me], rand);
     for (let mv = 1; mv <= n; mv++) vals.push(mv === nul ? -1e9 : smp.reduce((a, v) => { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); return a + r.m - r.f; }, 0) / smp.length);
   } else {
     const pos = (s.marks ?? []).map((m) => m.position), own = s.tower.find((t) => t.ownerId === me)?.position, smp = propSample(s, p, [me, mega], rand);
-    // i segnalini possibili sulla carta segnata (il carattere del bot pesa un po' di più o di meno lo spauracchio di VOTI NULLI!)
+    // i segnalini possibili sulla carta segnata, pesati con quanto è plausibile che il Megafono li abbia posati lì (leggere il bluff)
     const combos: Mark[][] = pos.length ? CNC_TYPES.map((t) => [{ effect: t, position: pos[0]! }]) : [];
-    const fear = 1 + TUNE.greggeTrait * -trait(me), wc = combos.map((c) => (c.some((m) => m.effect === "nulli") ? fear : 1));
+    let wc = combos.map(() => 1);
+    if (pos.length && sk.depth > 0) {
+      const sPub = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) }, smM = propSample(s, p, [mega], rand), evAt = (type: string) => { let best = -Infinity; for (let mv = 1; mv <= n; mv++) { if (type === "nulli" && mv === pos[0]) continue; let ev = 0; for (const v of smM) { const r = cncPoints(sPub, mega, { ...v, [mega]: mv }, [{ effect: type, position: pos[0]! }]); ev += r.m - r.f; } best = Math.max(best, ev / smM.length); } return best; };
+      const evs = Object.fromEntries(CNC_TYPES.map((t) => [t, evAt(t)]));
+      wc = typeBelief((t) => evs[t]!, TUNE.cncTempHard, st.susp, sk.depth).map((x) => x * CNC_TYPES.length);
+    }
+    const fear = 1 + 0.4 * (st.susp - 0.5), wcc = wc.map((x, i) => (CNC_TYPES[i] === "nulli" ? x * fear : x));
     for (let k = 1; k <= n; k++) {
       let ev = 0, wz = 0;
       combos.forEach((marks, ci) => {
@@ -212,20 +236,26 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
           const mk = marks.find((m) => m.position === k);
           if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 2;
         }
-        ev += wc[ci]! * e / smp.length; wz += wc[ci]!;
+        ev += wcc[ci]! * e / smp.length; wz += wcc[ci]!;
       });
       vals.push(combos.length ? ev / wz : p[k - 1]! * 2);
     }
   }
-  const ww = softmax(vals.map((x) => x / (hard ? TUNE.propVoteTempHard : TUNE.propVoteTempMed)));
-  return { type: "vote", playerId: me, position: pickProb(ww.map((x, k) => (vals[k]! <= -1e8 ? 0 : x + 0.03)), rand) + 1 };
+  const temp = (hard ? TUNE.cncVoteTempHard : TUNE.propVoteTempMed) * (1.5 - 0.9 * st.conf);
+  const ww = softmax(vals.map((x) => x / temp)).map((x, k) => (vals[k]! <= -1e8 ? 0 : x + 0.03));
+  // il carattere: il gregario si accoda alla stima del gruppo, il bastian contrario la rovescia
+  const a = (st.herd - 0.5) * 0.4;
+  const z = ww.reduce((x, y) => x + y, 0), mixed = ww.map((x, k) => (vals[k]! <= -1e8 ? 0 : a >= 0 ? (1 - a) * (x / z) + a * p[k]! : (1 + a) * (x / z) - a * (1 - p[k]!) / (n - 1)));
+  return { type: "vote", playerId: me, position: pickProb(mixed, rand) + 1 };
 }
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
-export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45, propSamples: 36, propTempHard: 0.6, propTempMed: 1.2, propVoteTempHard: 0.35, propVoteTempMed: 0.6 };
+export const TUNE = { reactHard: 0.25, reactMed: 0.12, luiTempHard: 0.7, luiTempMed: 1.3, luiSamples: 70, tempHard: 1.6, ownBonus: true, hardNoise: 0.12, feedMega: 0.35, voteTemp: 0.12, voteTempMed: 0.22, medNoise: 1.0, medVary: 0.25, greggeTokTempHard: 2, greggeTokTempMed: 3, greggePosTempHard: 1.6, greggePosTempMed: 2.2, greggeBluff: 0.4, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2, greggeBlurHard: 1.5, greggeBlurMed: 2.2, greggeTrait: 0.4, greggeReact: 1.0, greggeDoubtHard: 0.35, greggeDoubtMed: 0.45, propSamples: 36, propTempHard: 0.6, cncTempHard: 0.3, cncVoteTempHard: 0.12, propTempMed: 1.2, propVoteTempHard: 0.35, propVoteTempMed: 0.6 };
 const argmax = (a: number[]) => a.indexOf(Math.max(...a));
 
-export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number): Action | null {
+export function chooseBotAction(s: GameState, me: PlayerId, level0: BotLevel, mem: BotMemory, rand: () => number, style: BotStyle = NEUTRAL_STYLE): Action | null {
+  // le sviste: il facile sbaglia spesso (a caso 6 volte su 10, il resto come un medio che non legge i bluff), il medio ogni tanto, il difficile mai
+  const lapse = level0 === "easy" ? TUNE.easyLapse : level0 === "medium" ? TUNE.mediumLapse : 0, level: BotLevel = rand() < lapse ? "easy" : level0 === "easy" ? "medium" : level0, sk = SKILL[level0], st = style;
   const mega = megafonoOf(s), pick = <T,>(a: readonly T[]) => a[Math.floor(rand() * a.length)]!;
   const noise = level === "hard" ? TUNE.hardNoise : TUNE.medNoise, n = s.tower.length;
   switch (s.phase) {
@@ -241,7 +271,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       if (level === "easy") return { type: "playCard", playerId: me, cardId: pick(hand) };
       // la carta che meglio rappresenta la frase è quella che il gruppo voterà: se cade, +2 anche a me
       const hist = (c: CardId) => ((mem.fell[c] ?? 0) + 0.5) / ((mem.shown[c] ?? 0) + 2);
-      const score = (c: CardId) => { const a = text ? affinity(c, text) : null; return (a ?? hist(c) * 3) + rand() * (level === "hard" ? 0.6 : 2.5); };
+      const score = (c: CardId) => { const a = text ? affinity(c, text) : null; return (a ?? hist(c) * 3) + rand() * (level === "hard" ? 0.6 : 2.5) * (1.4 - 0.8 * st.conf); };
       return { type: "playCard", playerId: me, cardId: hand.slice().sort((a, b) => score(b) - score(a))[0]! };
     }
     case "SUSPECT": {
@@ -249,7 +279,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const av = luiAvailable(s, me), specs = luiTokens(s).filter((x) => av.includes(x.slot));
       if (s.cnc) {
         if (level === "easy") return { type: "placeMarks", playerId: me, marks: [{ slot: CNC_TYPES[Math.floor(rand() * 3)]!, position: 1 + Math.floor(rand() * n) }] };
-        return cncPlace(s, me, level, mem, rand);
+        return cncPlace(s, me, level, mem, rand, sk, st);
       }
       if (level === "easy") { const sp = pick(specs), position = 1 + Math.floor(rand() * n); return { type: "placeLui", playerId: me, slot: sp.slot, position, ...(sp.effect === "dirottamento" ? { to: (position % n) + 1 } : {}) }; }
       if (s.propaganda) return propMegaPlace(s, me, level, mem, rand);
@@ -272,7 +302,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       const banned = luiForbidden(s, me);   // «Il gregge»: il Megafono non vota la carta del suo Lui!
       if (level === "easy") { const opts = s.tower.map((t) => t.position).filter((x) => x !== banned); return vote(opts[Math.floor(rand() * opts.length)]!); }
       if (s.propaganda) return propVote(s, me, level, mem, rand);
-      if (s.cnc) return cncVote(s, me, level, mem, rand);
+      if (s.cnc) return cncVote(s, me, level, mem, rand, sk, st);
       const p = crowdProbs(s, mem, level), lui = s.lui, ownPos = s.tower.find((t) => t.ownerId === me)?.position ?? -1, hard = level === "hard";
       let harm = 0, X = lui ? lui.position - 1 : -1;
       if (lui && me !== mega && !s.gregge) {
@@ -303,7 +333,7 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
     }
     case "MINI_RUN": {
       // Fuori programma: il voto lo decide planMiniVote (carta per carta, come una persona); qui solo la posizione, per le simulazioni del motore.
-      const plan = planMiniVote(s, me, level, mem, rand, true);
+      const plan = planMiniVote(s, me, level0, mem, rand, true, st);
       return plan ? { type: "vote", playerId: me, position: plan.position } : null;
     }
     default: return null;
@@ -320,9 +350,9 @@ export interface MiniPlan { position: number; /** Quale uscita dal separé (0 = 
  * Dopo l'uscita della carta ci mette il tempo di reazione di una persona (più lungo ai livelli bassi, più corto se è impulsivo); a volte è troppo tardi e non vota.
  * Usa solo informazioni pubbliche: le carte in scena, la frase dell'accusa e la storia delle carte cadute.
  */
-export function planMiniVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, force = false): MiniPlan | null {
+export function planMiniVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, force = false, style: BotStyle = NEUTRAL_STYLE): MiniPlan | null {
   const mini = s.mini; if (!mini || s.votes[me] !== undefined) return null;
-  const order = mini.order, cycles = 3, per = Math.max(1, Math.floor(order.length / cycles)), imp = (trait(me) + 1) / 2;   // 0 paziente … 1 impulsivo
+  const order = mini.order, cycles = 3, per = Math.max(1, Math.floor(order.length / cycles)), imp = style.speed;   // 0 paziente … 1 impulsivo
   const sigma = level === "easy" ? 3 : level === "medium" ? 1.6 : 0.9, thr = (level === "easy" ? 3 : level === "medium" ? 4.5 : 5.5) - 2 * imp;
   const meanMs = (level === "easy" ? 1900 : level === "medium" ? 1500 : 1200) - 350 * imp, miss = level === "easy" ? 0.12 : level === "medium" ? 0.05 : 0.02;
   const gauss = () => Math.sqrt(-2 * Math.log(1 - rand() + 1e-9)) * Math.cos(2 * Math.PI * rand());

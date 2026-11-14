@@ -30,3 +30,9 @@ Ogni bot decide **solo** con ciò che vedrebbe un giocatore seduto al tavolo: la
 - La **memoria condivisa** dei bot (`BotMemory`) contiene solo informazioni pubbliche: quante volte ogni personaggio è comparso sulla Torre e quante volte è caduto.
 - Le **etichette** dei personaggi e delle frasi sono la "percezione" dei bot (cosa c'entra con cosa), non informazioni sugli altri giocatori.
 - `packages/game-engine/tests/fairplay.test.ts` altera tutte le informazioni nascoste e verifica che nessuna decisione cambi (partite da 3 a 8 giocatori, tutti i livelli, tutte le fasi, fuori programma compresi). Un bot che barasse farebbe fallire il test (verificato inserendo di proposito un imbroglio).
+
+## Livelli, caratteri e bluff (versione attuale)
+- **Livelli**: facile = a caso 6 volte su 10, il resto come un medio che non legge i bluff; medio = una svista su 5, legge i bluff a metà; difficile = nessuna svista, legge i bluff fino in fondo, decide con poco rumore. Taratura (`TARA=1 npx vitest run worker/tests/taratura.test.ts`, 400 partite): in un tavolo a 4 con 2 facili e 2 difficili i facili fanno circa il 70% dei punti dei difficili (≈25% delle vittorie); il medio circa l'80%.
+- **Caratteri** (`packages/game-engine/src/botstyle.ts`): dodici, estratti a caso a ogni partita e diversi tra i bot della stanza (fiducia, gregarietà, voglia di bluffare, sospetto, rischio, rapidità). Non cambiano la bravura (±10% di punti tra i caratteri): la fa il livello.
+- **Bluff**: il Megafono sceglie, con un po' di valore in meno, il segnalino che gli altri leggerebbero peggio; i votanti stimano che segnalino ci sia davvero in base a come si comporterebbe un Megafono che sceglie bene (più rumore se sono sospettosi), solo con informazioni pubbliche.
+- **Nomi**: dal pool di 16 nomi del sesso del personaggio, a caso a ogni partita. **Scheda**: toccando il nome (lobby, classifica) si apre la carta con categoria e 2–3 righe (carattere compreso per i bot).
