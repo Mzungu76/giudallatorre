@@ -16,9 +16,12 @@ Principio: **si impara giocando, non leggendo**. Meno testo all'inizio, aiuto ne
 
 ## Per le prove
 - Il ritardo del fumetto si cambia con `localStorage gdt.hintms` (millisecondi): `scripts/e2e-hints.mjs` lo imposta a 2500.
-- `scripts/e2e-hints.mjs` gioca una partita con bot e controlla: 3 schermate, scheda del Megafono, chip, pannelli dorati, fumetto (compare da fermi e sparisce al tocco), riga «Tu», esempi senza «n. 2».
+- `scripts/e2e-hints.mjs` gioca una partita con bot e controlla: tutorial a videate vere, scheda del Megafono, chip, pannelli dorati, fumetto (compare da fermi e sparisce al tocco), riga «Tu», esempi senza «n. 2».
 - In modalità veloce (`gdt.fast`, `?fast=1`) la scheda del Megafono non compare.
 
 ## Da valutare con i giocatori
 - Il ritardo del fumetto (14 s) e quante volte mostrare la scheda del Megafono (2).
 - Se i fumetti aiutano chi è davvero fermo senza infastidire chi sta pensando.
+
+## Videate del tutorial e del regolamento
+Le immagini sono videate vere dell'app in `public/tutorial/*.webp`. Per rigenerarle dopo un cambio grafico: avviare il Worker in locale e lanciare `OUT=/percorso node scripts/capture-tutorial.mjs`, poi convertire i PNG in webp (larghezza 520). «Come si gioca» in Home apre il tutorial; il regolamento si apre dal menu «i» in partita.

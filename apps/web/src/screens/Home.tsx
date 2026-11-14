@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
-import HowTo from "../components/HowTo.tsx";
+import { IntroSlides } from "../components/Intro.tsx";
 import HomeTools from "../components/HomeTools.tsx";
 import { t } from "../lib/testi.ts";
 
@@ -25,7 +25,7 @@ export default function Home() {
       </div>
       <HomeTools />
       <div className="credit" data-testid="credit">{t("home.credito")}</div>
-      {how && <HowTo onClose={() => setHow(false)} />}
+      {how && <IntroSlides onClose={() => setHow(false)} />}
     </Stage>
   );
 }

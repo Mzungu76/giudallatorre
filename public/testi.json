@@ -1,5 +1,5 @@
 {
- "versione": 48,
+ "versione": 49,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -17,65 +17,6 @@
   },
   "intro.fine": {
    "t": "Ho capito, giochiamo",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.1.titolo": {
-   "t": "Chi butteresti\ngiù dalla torre?",
-   "s": "Prima partita · 3 schermate",
-   "n": "«\\n» = a capo"
-  },
-  "intro.1.card.titolo": {
-   "t": "Un gioco di accuse e di voti",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.1.card.testo": {
-   "t": "A ogni turno uno di voi impersonerà __Il Megafono__ e gli altri La folla. __Il Megafono__ pronuncerà la frase \"d'accusa\" e tutti sceglieranno un personaggio da far salire sopra alla torre. Voterete quindi il personaggio da lanciare giù dalla torre!",
-   "s": "Prima partita · 3 schermate",
-   "n": "__testo__ = evidenziato in giallo"
-  },
-  "intro.2.titolo": {
-   "t": "Ogni turno,\n4 passi",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p1.t": {
-   "t": "Il Megafono",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p1.x": {
-   "t": "Sceglie una frase: «Oggi sale sulla torre… ~i più ipocriti~».",
-   "s": "Prima partita · 3 schermate",
-   "n": "~testo~ = corsivo"
-  },
-  "intro.2.p2.t": {
-   "t": "Su sulla torre",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p2.x": {
-   "t": "Scegli tra le tue carte il personaggio che vuoi far salire sulla torre. Scegli con attenzione, se cade dalla torre ti frutterà punti.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p3.t": {
-   "t": "Si vota",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p3.x": {
-   "t": "Ognuno vota il personaggio che pensa meriti di più di essere lanciato dalla torre.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p4.t": {
-   "t": "Giù dalla torre!",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p4.x": {
-   "t": "Il personaggio più votato viene la ciato dalla torre! Tranquilli, sotto abbiamo messo dei materassi. Nessuna carta è stata maltrattata in questo gioco, fino ad ora.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.3.titolo": {
-   "t": "Come si fanno\ni punti",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.3.nota": {
-   "t": "Si sommano: nello stesso turno puoi fare più punti. Gli esempi con le carte li trovi in «i».",
    "s": "Prima partita · 3 schermate"
   },
   "mega.aria": {
@@ -2148,6 +2089,55 @@
    "t": "Confessalo!",
    "s": "Partita: scelta della frase del Megafono",
    "n": "Targhetta sulla carta confessione"
+  },
+  "intro.s0.t": {
+   "t": "Chi butteresti\ngiù dalla torre?",
+   "s": "Tutorial (Come si gioca)",
+   "n": "Titolo 1"
+  },
+  "intro.s0.x": {
+   "t": "Gioco di gruppo: si accusa, si vota, si ride. A turno uno di voi è il Megafono, gli altri sono la folla.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s1.t": {
+   "t": "Il Megafono parla",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s1.x": {
+   "t": "È il giocatore di turno: sceglie o inventa una frase d’accusa.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s2.t": {
+   "t": "Tutti giocano",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s2.x": {
+   "t": "Scegli in segreto il personaggio più adatto alla frase.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s3.t": {
+   "t": "Il segnalino",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s3.x": {
+   "t": "Il Megafono ne posa uno, coperto, su una carta: CADE, NON CADE o VOTI NULLI!",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s4.t": {
+   "t": "Si vota",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s4.x": {
+   "t": "Ognuno vota la carta più adatta, anche la sua. La più votata cade dalla torre.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s5.t": {
+   "t": "I punti",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s5.x": {
+   "t": "Chi ha votato bene fa punti. Alla fine vince chi ne ha di più.",
+   "s": "Tutorial (Come si gioca)"
   }
  }
 }

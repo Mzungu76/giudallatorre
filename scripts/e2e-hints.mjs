@@ -19,13 +19,12 @@ await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.c
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(400);
 await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="game"]');
 
-console.log("Prima partita: tre schermate");
+console.log("Prima partita: tutorial con videate vere");
 await p.waitForSelector('[data-testid="intro-slides"]');
-check("compaiono le 3 schermate al posto del regolamento", await vis("intro-slides") && !(await vis("howto")));
+check("compare il tutorial al posto del regolamento", await vis("intro-slides") && !(await vis("howto")));
 await shot("1-intro-scopo");
-await p.click('[data-testid="intro-next"]'); await shot("2-intro-passi");
-await p.click('[data-testid="intro-next"]');
-check("la terza mostra i punti con le carte, senza numeri", (await p.locator('[data-testid="intro-slides"] .ex-th').count()) >= 1 && !/\bn\.\s?\d/.test(await txt("intro-slides")));
+for (let k = 0; k < 5; k++) { await p.click('[data-testid="intro-next"]'); if (k === 0) await shot("2-intro-passi"); }
+check("le schermate mostrano videate vere dell'app", (await p.locator('[data-testid="intro-slides"] .isl-shot img').count()) === 1 && /punti/i.test(await txt("intro-slides")));
 await shot("3-intro-punti");
 await p.click('[data-testid="intro-next"]');
 check("si chiude e non torna più (memorizzato)", !(await vis("intro-slides")) && (await p.evaluate(() => localStorage.getItem("gdt.intro"))) === "1");
@@ -84,19 +83,22 @@ check("il fumetto compare solo dopo un po' di inattività e sparisce al tocco", 
 if (!(await vis("final"))) console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300));
 check("la partita arriva alla classifica finale", await vis("final"));
 
-console.log("Regolamento: esempi con le carte");
-// la finale copre il pannello: riapro il regolamento da una nuova pagina in una stanza vuota non serve, uso la home
+console.log("Home: «Come si gioca» apre il tutorial; regolamento dal menu in partita");
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
-const how = p.locator('[data-testid="go-how"]').first();
-if (await how.isVisible().catch(() => false)) {
-  await how.click(); await p.waitForSelector('[data-testid="howto"]');
-  await p.locator('.brg-tabs button', { hasText: "I punti" }).click(); await sleep(200);
-  check("«I punti»: esempio di un turno con carte vere", (await p.locator('[data-testid="example-turn"] .ex-th').count()) >= 4);
-  check("«I punti»: nessun riferimento tipo «n. 2»", !/\bn\.\s?\d/.test(await txt("howto-body")), await txt("howto-body"));
-  await shot("7-esempio-turno");
-  await p.locator('.brg-tabs button', { hasText: "Il Lui" }).click(); await sleep(200);
-  check("«Il Lui!»: esempio con immagini, senza «n. 2»", (await vis("example-lui")) && !/\bn\.\s?\d/.test(await txt("howto-body")));
-  await shot("8-esempio-lui");
-} else console.log("  (salto: pulsante del regolamento non trovato in home)");
+await p.evaluate(() => { localStorage.setItem("gdt.nochar", "1"); localStorage.setItem("gdt.mega", "off"); });
+await p.click('[data-testid="go-how"]'); await p.waitForSelector('[data-testid="intro-slides"]');
+check("«Come si gioca» porta al tutorial (non al regolamento)", !(await vis("howto")));
+await p.click('[data-testid="intro-skip"]');
+await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="create-submit"]');
+await p.waitForSelector('[data-testid="lobby"]'); await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="legend-btn"]');
+await p.click('[data-testid="legend-btn"]'); await p.click('[data-testid="help-rules"]'); await p.waitForSelector('[data-testid="howto"]');
+check("regolamento: passi con miniature delle videate", (await p.locator('[data-testid="howto"] .brg-th').count()) >= 4);
+await p.locator('.brg-tabs button', { hasText: "I punti" }).click(); await sleep(200);
+check("«I punti»: videata dei punteggi e esempio con carte vere", (await p.locator('[data-testid="howto"] .brg-shot img').count()) === 1 && (await p.locator('[data-testid="example-turn"] .ex-th').count()) >= 4);
+check("«I punti»: nessun riferimento tipo «n. 2»", !/\bn\.\s?\d/.test(await txt("howto-body")), await txt("howto-body"));
+await shot("7-esempio-turno");
+await p.locator('.brg-tabs button', { hasText: "Il Lui" }).click(); await sleep(200);
+check("«Il Lui!»: esempio con immagini, senza «n. 2»", (await vis("example-lui")) && !/\bn\.\s?\d/.test(await txt("howto-body")));
+await shot("8-esempio-lui");
 check("nessun errore JavaScript", p.errors.length === 0, JSON.stringify(p.errors));
 await browser.close(); console.log(failures ? `\n${failures} controlli falliti` : "\nTutti i controlli superati"); process.exit(failures ? 1 : 0);
