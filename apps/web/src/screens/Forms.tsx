@@ -45,7 +45,7 @@ export function CreateScreen() {
   const [bots, setBots] = useState(solo ? 3 : 0), [level, setLevel] = useState<BotLevel>("medium");
   const [age, setAge] = useState<Age>(14), [timer, setTimer] = useState<Timer>(0);
   const [busy, setBusy] = useState(false), [err, setErr] = useState<string | null>(null);
-  const LAST = 2, titles = ["fm.w.chi", "fm.w.bot.t", "fm.w.ultimi"] as const;
+  const LAST = 1, titles = ["fm.w.chi", "fm.w.ultimi"] as const;
   async function submit(e: FormEvent) {
     e.preventDefault(); if (busy) return;
     if (step < LAST) { if (step === 0 && !nick.trim()) return; setStep(step + 1); return; }
@@ -62,7 +62,7 @@ export function CreateScreen() {
           <button type="button" className="bib big" onClick={back} aria-label={ts("fm.indietro")} data-testid="wiz-back">‹</button>
           <div className="h r"><small>{t("fm.crea.sopra")}</small>{t(titles[step]!)}</div>
         </div>
-        <div className="wdots" role="img" aria-label={ts("fm.w.passo", { n: step + 1, tot: LAST + 1 })}>{[0, 1, 2].map((k) => <i key={k} className={k <= step ? "on" : ""} />)}</div>
+        <div className="wdots" role="img" aria-label={ts("fm.w.passo", { n: step + 1, tot: LAST + 1 })}>{[0, 1].map((k) => <i key={k} className={k <= step ? "on" : ""} />)}</div>
         <div className="fbody">
           {step === 0 && <>
             <div className="fld">
@@ -72,7 +72,7 @@ export function CreateScreen() {
             <div className="fld grow"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} /></div>
           </>}
           {step === 1 && <>
-            <div className="fld mid" data-testid="bots-box">
+            <div className="fld" data-testid="bots-box">
               <span className="lb">{t("fm.w.bot")}</span>
               <div className="wstep">
                 <button type="button" className="wpm" onClick={() => setBots(Math.max(0, bots - 1))} aria-label={ts("fm.bot.meno")} data-testid="bots-minus">−</button>
@@ -82,15 +82,10 @@ export function CreateScreen() {
               </div>
               {bots > 0 && <div className="wchips c">{(["easy", "medium", "hard"] as const).map((k) => <button key={k} type="button" className={`wchip${level === k ? " on" : ""}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`}>{t(`fm.lv.${k}` as TestoKey)}</button>)}</div>}
             </div>
-          </>}
-          {step === 2 && <>
             <div className="fld"><span className="lb">{t("fm.w.pubblico")}</span>
               <div className="wchips">{AGES.map((a) => <button key={a} type="button" className={`wchip${age === a ? " on" : ""}`} onClick={() => setAge(a)} data-testid={`age-${a}`}>{t(`room.age.${a}` as TestoKey)}</button>)}</div></div>
             <div className="fld"><span className="lb">{t("fm.w.timer")}</span>
               <div className="wchips">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
-            <div className="wsum">
-              <span>{bots === 0 ? t("fm.bot.nessuno") : ts("fm.bot.n", { n: bots })}</span><span>{t(`room.age.${age}` as TestoKey)}</span><span>{timer === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: timer })}</span>
-            </div>
           </>}
         </div>
         <div className="fbot">

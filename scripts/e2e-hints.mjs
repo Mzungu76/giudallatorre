@@ -15,7 +15,7 @@ const shot = async (n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}
 const txt = async (id) => (await p.locator(`[data-testid="${id}"]`).first().innerText().catch(() => "")) ?? "";
 
 await p.goto(BASE + "/"); await p.waitForSelector('[data-testid="home"]');
-await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); await p.click('[data-testid="wiz-next"]');
+await p.click('[data-testid="go-solo"]'); await p.fill("#nick", "Io"); await p.click('[data-testid="wiz-next"]'); await p.click('[data-testid="bot-hard"]'); 
 await p.click('[data-testid="create-submit"]'); await p.waitForURL(/\/stanza\//); await p.waitForSelector('[data-testid="lobby"]'); await sleep(400);
 await p.click('[data-testid="start"]'); await p.waitForSelector('[data-testid="game"]');
 
@@ -70,6 +70,7 @@ async function step() {
     if (turns === 0) { await shot("6-punti-tu"); check("i punti del turno mostrano prima la riga «Tu»", /^Tu/.test((await p.locator('[data-testid="points-block"]').first().innerText()).trim())); }
     await sleep(500); await p.click('[data-testid="points-continue"]', { timeout: 3000 }); return true;
   }
+  if (await vis("reveal-throw")) { await p.click('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis("skip")) { await p.click('[data-testid="skip"]', { timeout: 3000 }); return true; }
   if (await vis("standings-action")) { turns++; await p.click('[data-testid="standings-action"]'); return true; }
   if (await vis("advance")) { turns++; await p.click('[data-testid="advance"]'); return true; }

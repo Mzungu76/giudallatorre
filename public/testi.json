@@ -1,5 +1,5 @@
 {
- "versione": 41,
+ "versione": 42,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -1969,7 +1969,7 @@
   "fm.w.ultimi": {
    "t": "Ultimi dettagli",
    "s": "Crea la partita (passi)",
-   "n": "Titolo del passo 3"
+   "n": "Titolo del passo 2 (bot, pubblico, timer)"
   },
   "fm.w.pers": {
    "t": "Il tuo personaggio",
@@ -2160,11 +2160,6 @@
    "t": "Confessalo!",
    "s": "Partita: scelta della frase del Megafono",
    "n": "Targhetta sulla carta confessione"
-  },
-  "fm.w.bot.t": {
-   "t": "Chi gioca con te?",
-   "s": "Crea la partita (passi)",
-   "n": "Titolo del passo 2: i bot"
   }
  }
 }
