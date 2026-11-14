@@ -80,12 +80,12 @@ export function CreateScreen() {
                   <div className="wfaces">{faces.map((f, k) => <img key={f} src={tokenUrl(CHAR_COLORS[f]!)} alt="" className={k < bots ? "" : "off"} />)}</div></div>
                 <button type="button" className="wpm" onClick={() => setBots(Math.min(5, bots + 1))} aria-label={ts("fm.bot.piu")} data-testid="bots-plus">+</button>
               </div>
-              {bots > 0 && <div className="wchips c">{(["easy", "medium", "hard"] as const).map((k) => <button key={k} type="button" className={`wchip${level === k ? " on" : ""}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`}>{t(`fm.lv.${k}` as TestoKey)}</button>)}</div>}
+              {bots > 0 && <div className="wchips c g3">{(["easy", "medium", "hard"] as const).map((k) => <button key={k} type="button" className={`wchip${level === k ? " on" : ""}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`}>{t(`fm.lv.${k}` as TestoKey)}</button>)}</div>}
             </div>
             <div className="fld"><span className="lb">{t("fm.w.pubblico")}</span>
-              <div className="wchips">{AGES.map((a) => <button key={a} type="button" className={`wchip${age === a ? " on" : ""}`} onClick={() => setAge(a)} data-testid={`age-${a}`}>{t(`room.age.${a}` as TestoKey)}</button>)}</div></div>
+              <div className="wchips g2">{AGES.map((a) => <button key={a} type="button" className={`wchip${age === a ? " on" : ""}`} onClick={() => setAge(a)} data-testid={`age-${a}`}>{t(`room.age.${a}` as TestoKey)}</button>)}</div></div>
             <div className="fld"><span className="lb">{t("fm.w.timer")}</span>
-              <div className="wchips">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
+              <div className="wchips g5">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
           </>}
         </div>
         <div className="fbot">
