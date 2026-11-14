@@ -79,13 +79,12 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
         <div className="pp bsheet lob">
           <span className="bgrip" />
           <div className="wsum lsum" data-testid="age-info">
-            <span>{o.mode === "remote" ? tx("fm.distanza") : tx("fm.tavolo")}</span><span>{txs(`room.age.${o.ageBand}` as TestoKey)}</span><span>{o.turnTimerSec === 0 ? tx("fm.w.libero") : txs("fm.w.sec", { n: o.turnTimerSec })}</span>
+            <span>{txs(`room.age.${o.ageBand}` as TestoKey)}</span><span>{o.turnTimerSec === 0 ? tx("fm.w.libero") : txs("fm.w.sec", { n: o.turnTimerSec })}</span>
           </div>
           {host
             ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? tx("room.servono") : tx("room.avvia")}</Btn>
             : <div className="pp mini">{tx("room.aspetta.host")}</div>}
           <div className="blnks">
-            <a className="lnk" onClick={() => window.open(`/schermo/${room.code}`, "_blank")} role="button" tabIndex={0}>{tx("room.schermo")}</a>
             <a className="lnk" onClick={() => { send({ t: "leave" }); forgetSession(room.code); navigate("/"); }} role="button" tabIndex={0}>{tx("room.esci")}</a>
           </div>
         </div>

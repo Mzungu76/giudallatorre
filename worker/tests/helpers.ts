@@ -13,7 +13,7 @@ export interface Room { core: RoomCore; ids: string[]; tokens: string[]; names: 
 /** Crea una stanza con n giocatori tutti connessi. */
 export function makeRoom(n: number, seed = 1, now = 1_000_000): Room {
   const names = Array.from({ length: n }, (_, i) => `Giocatore${i + 1}`);
-  const first = RoomCore.create("ABCDE", deps(seed), now, { nickname: names[0]!, mode: "table", megafonoSa: false });
+  const first = RoomCore.create("ABCDE", deps(seed), now, { nickname: names[0]! });
   const ids = [first.playerId], tokens = [first.token];
   for (let i = 1; i < n; i++) { const j = first.core.join(names[i]!, now + i); ids.push(j.playerId); tokens.push(j.token); }
   for (const id of ids) first.core.onConnect(id, now);

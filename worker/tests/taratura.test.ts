@@ -11,7 +11,7 @@ export function playBots(levels: BotLevel[], styles: (BotStyle | undefined)[], s
   let r = seed | 0; const rand = () => { r = (Math.imul(r, 1664525) + 1013904223) | 0; return ((r >>> 0) % 1e9) / 1e9; };
   const players = levels.map((_, i) => ({ id: `p${i}`, name: `B${i}` }));
   const phraseDeck = buildPhraseDeck(PHRASE_POOL!, CONFESSIONS, { age: DEFAULT_AGE_BAND, seed: seed ^ 0x5bd1e995, confessions: true });
-  let s: GameState = createGame({ players, seed, megafonoSa: true, cnc: true, gregge: false, propaganda: false, objectives: false, mixPhrases: false, deck: DECK, phraseDeck, miniGame: "random", accuseDeck: [] }).state;
+  let s: GameState = createGame({ players, seed, cnc: true, mixPhrases: false, deck: DECK, phraseDeck, miniGame: "random", accuseDeck: [] }).state;
   const mem = newBotMemory(); let guard = 0;
   while (s.phase !== "GAME_OVER" && guard++ < 8000) {
     if (s.phase === "RESULTS" || s.phase === "MINI_RESULTS") { if (s.phase === "RESULTS" && s.lastResult) learnFromResult(mem, s.tower, s.lastResult); s = applyAction(s, { type: "advance" }).state; continue; }

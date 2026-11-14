@@ -43,7 +43,7 @@ describe("validazione dei messaggi (zod)", () => {
   it("creazione stanza: campi sconosciuti rifiutati", () => {
     expect(createRoomBody.safeParse({ nickname: "Ann" }).success).toBe(true);
     expect(createRoomBody.safeParse({ nickname: "Ann", admin: true }).success).toBe(false);
-    expect(createRoomBody.safeParse({ nickname: "Ann", mode: "boh" }).success).toBe(false);
+    expect(createRoomBody.safeParse({ nickname: "Ann", mode: "table", megafonoSa: true }).success).toBe(true);   // campi di versioni precedenti: ignorati
   });
   it("messaggi WebSocket: forma stretta, limiti numerici, niente campi extra", () => {
     const ok = (m: unknown) => clientMessageSchema.safeParse(m).success;
