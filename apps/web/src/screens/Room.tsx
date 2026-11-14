@@ -99,7 +99,10 @@ export default function RoomScreen({ code }: { code: string }) {
   const { status, room, view, error, send, chat } = useRoom(code, "player");
   const [sound, setSound] = useSound();
   const inLobby = room?.stage === "LOBBY";
-  useEffect(() => { music.play(sound && inLobby ? "musica-tema.mp3" : null); return () => music.play(null); }, [sound, inLobby]);
+  // una sola musica di sottofondo per tutta la stanza (lobby, partita, finale): più alta in lobby, più discreta in partita
+  const inRoom = !!room;
+  useEffect(() => { music.play(sound && inRoom ? "musica-tema.mp3" : null); return () => music.play(null); }, [sound, inRoom]);
+  useEffect(() => { music.level(inLobby ? 0.35 : 0.2); }, [inLobby]);
   const [notice, setNotice] = useState<string | null>(null), botsSeen = useRef<Set<string> | null>(null);
   // un giocatore esce a partita in corso e un bot prende il suo posto: lo dico a chi resta
   useEffect(() => {

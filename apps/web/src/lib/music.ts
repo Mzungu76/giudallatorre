@@ -1,21 +1,20 @@
 // Musica di sottofondo: un loop da file MP3 in public/audio/, con dissolvenza in entrata e in uscita.
 // Il browser blocca l'audio finché l'utente non tocca la pagina: se parte troppo presto, riprova al primo tocco.
-const VOL = 0.35, STEP_MS = 50, FADE_MS = 1200;
-let el: HTMLAudioElement | null = null, key = "", timer = 0, wanted = false, armed = false;
+let el: HTMLAudioElement | null = null, key = "", timer = 0, duckTimer = 0, wanted = false, armed = false, base = 0.35;
 
-function fadeTo(target: number, then?: () => void) {
+function fadeTo(target: number, ms = 1200, then?: () => void) {
   window.clearInterval(timer);
   if (!el) return;
-  const a = el, from = a.volume, n = Math.max(1, Math.round(FADE_MS / STEP_MS));
+  const a = el, from = a.volume, n = Math.max(1, Math.round(ms / 50));
   let i = 0;
   timer = window.setInterval(() => {
     i++; a.volume = Math.min(1, Math.max(0, from + (target - from) * (i / n)));
     if (i >= n) { window.clearInterval(timer); then?.(); }
-  }, STEP_MS);
+  }, 50);
 }
 function retryOnTouch() {
   if (armed) return; armed = true;
-  const go = () => { armed = false; window.removeEventListener("pointerdown", go); if (wanted && el) void el.play().catch(() => undefined); };
+  const go = () => { armed = false; window.removeEventListener("pointerdown", go); if (wanted && el) void el.play().then(() => fadeTo(base)).catch(() => undefined); };
   window.addEventListener("pointerdown", go, { once: true });
 }
 export const music = {
@@ -23,13 +22,21 @@ export const music = {
   play(file: string | null) {
     try {
       wanted = file !== null;
-      if (file === null) { fadeTo(0, () => { el?.pause(); }); return; }
+      if (file === null) { fadeTo(0, 800, () => { if (!wanted) el?.pause(); }); return; }
       if (!el || key !== file) {
         el?.pause();
         el = new Audio(`/audio/${file}`); el.loop = true; el.preload = "auto"; el.volume = 0; key = file;
       }
-      void el.play().then(() => fadeTo(VOL)).catch(() => retryOnTouch());
-      if (el.volume === 0 && !el.paused) fadeTo(VOL);
+      void el.play().then(() => { if (wanted) fadeTo(base); }).catch(() => retryOnTouch());
     } catch { /* audio non disponibile: l'app funziona lo stesso */ }
+  },
+  /** Volume di base (0–1): più basso in partita, più alto in lobby. */
+  level(v: number) { base = v; if (wanted && el && !el.paused) fadeTo(base, 800); },
+  /** Abbassa un attimo la musica mentre suona un effetto importante, poi la riporta su. */
+  duck(ms: number) {
+    if (!wanted || !el || el.paused) return;
+    window.clearTimeout(duckTimer);
+    fadeTo(base * 0.3, 150);
+    duckTimer = window.setTimeout(() => fadeTo(base, 700), ms);
   },
 };
