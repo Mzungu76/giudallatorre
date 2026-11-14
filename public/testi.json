@@ -1,5 +1,5 @@
 {
- "versione": 37,
+ "versione": 38,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -657,7 +657,7 @@
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.libera": {
-   "t": "una frase tutta sua (detta a voce)!",
+   "t": "una frase tutta sua!",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.frase.aria": {
@@ -918,10 +918,6 @@
    "t": "La tua frase",
    "s": "Partita: turno normale"
   },
-  "g.fr.voce": {
-   "t": " La dico a voce, non la scrivo",
-   "s": "Partita: turno normale"
-  },
   "g.fr.t.own": {
    "t": "LA TUA FRASE",
    "s": "Partita: turno normale"
@@ -931,7 +927,7 @@
    "s": "Partita: turno normale"
   },
   "g.fr.s.own": {
-   "t": "Se la dici a voce, gli altri non la leggono.",
+   "t": "Scrivila: la leggeranno tutti.",
    "s": "Partita: turno normale"
   },
   "g.fr.s.single": {

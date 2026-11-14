@@ -26,7 +26,7 @@ function histProbs(s: GameState, mem: BotMemory): number[] {
 }
 const softmax = (xs: number[]) => { const m = Math.max(...xs), e = xs.map((x) => Math.exp(x - m)), z = e.reduce((a, b) => a + b, 0); return e.map((x) => x / z); };
 const normalize = (p: number[]) => { const z = p.reduce((a, b) => a + b, 0); return p.map((x) => x / z); };
-const phraseText = (s: GameState) => (s.phrase && s.phrase.mode === "card" ? s.phrase.text : undefined);
+const phraseText = (s: GameState) => (s.phrase ? s.phrase.text : undefined);   // anche la frase inventata: è visibile a tutti, i bot ne deducono le etichette dalle parole
 
 /** Probabilità stimata che il gruppo voti (e quindi cada) ciascuna posizione della Torre. */
 export function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel): number[] {

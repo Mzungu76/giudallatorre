@@ -40,3 +40,6 @@ Ogni bot decide **solo** con ciò che vedrebbe un giocatore seduto al tavolo: la
 ## «Carattere» e «persona»
 - **Carattere** = le regole interne con cui un bot gioca (`botstyle.ts`, tarate sul livello): non si mostra mai ai giocatori (si vede solo nelle partite create da `/crea?debug=bot`).
 - **Persona** = chi è il bot (la categoria e tre righe: età, lavoro, manie, `char.N.chi1..3`): si apre toccando il nome o il segnalino del giocatore ovunque (lobby, classifica, Megafono in alto a destra, chi ha giocato/votato, chat, gettoni sulla torre, fine partita). `PersonaProvider` / `Who` in `components/Persona.tsx`.
+
+## Frasi inventate dal Megafono
+Le frasi del mazzo hanno etichette scritte a mano (tipo umano e temi); quelle inventate no. I bot ne deducono le etichette dalle parole (`inferTags` in `tags.ts`): un piccolo lessico di radici-chiave per ogni etichetta più quanto imparato dalle ~400 frasi etichettate. Verifica a esclusione: per il 70% delle frasi si deduce qualcosa e nel 71% dei casi almeno un'etichetta è giusta (il caso farebbe l'11%). È buon senso approssimativo, non comprensione vera: parole sconosciute → il bot ripiega sulla storia delle carte cadute. Le frasi «dette a voce» sono state tolte: si scrive sempre il testo (così lo leggono anche i bot).

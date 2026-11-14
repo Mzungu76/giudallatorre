@@ -44,9 +44,9 @@ export function Tip({ children, style, className = "" }: { children: React.React
 /** Frasi tra cui sceglie il Megafono: ognuna su due righe, si apre con ▾ (e si richiude da sola); un tocco la sceglie, «Proclama» conferma. */
 function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; meta: React.ReactNode }) {
   const card = view.proclaimCard!, single = card.phrases.length === 1, conf = /^C\d+$/.test(card.id);   // le confessioni sono le carte «C01…» a frase singola
-  const [own, setOwn] = useState(false), [text, setText] = useState(""), [voice, setVoice] = useState(false), [sel, setSel] = useState<number | null>(single ? 0 : null);
+  const [own, setOwn] = useState(false), [text, setText] = useState(""), [sel, setSel] = useState<number | null>(single ? 0 : null);
   const say = (i: number) => send({ t: "act", action: { type: "choosePhrase", mode: "card", index: i } });
-  const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } });
+  const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", text: text.trim() } });
   return (
     <div className="bl" data-testid="phrase-picker">
       {meta}
@@ -62,16 +62,15 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
         {own && (
           <div className="bopts" style={{ gap: 10 }}>
             <div className="phr-fixed" style={{ color: "#fff", textShadow: "2px 2px 0 #13224a" }}>{tx("g.fr.oggi")}</div>
-            <textarea className="phr-in" maxLength={MAX_PHRASE_CHARS} value={text} disabled={voice} onChange={(e) => setText(e.target.value)} placeholder={txs("g.fr.ph")} data-testid="phrase-text" aria-label={txs("g.fr.aria")} />
+            <textarea className="phr-in" maxLength={MAX_PHRASE_CHARS} value={text} onChange={(e) => setText(e.target.value)} placeholder={txs("g.fr.ph")} data-testid="phrase-text" aria-label={txs("g.fr.aria")} />
             <div className="hint" style={{ textAlign: "right", margin: 0 }}>{text.length}/{MAX_PHRASE_CHARS}</div>
-            <label className="hint" style={{ display: "flex", gap: 8, alignItems: "center", margin: 0 }}><input type="checkbox" checked={voice} onChange={(e) => setVoice(e.target.checked)} data-testid="phrase-voice" />{tx("g.fr.voce")}</label>
           </div>
         )}
       </div>
       <BSheet gold title={own ? tx("g.fr.t.own") : tx("g.fr.t")} sub={own ? tx("g.fr.s.own") : single ? tx("g.fr.s.single") : tx("g.fr.s")} ui={ui}>
         <Row>
           {(!single || own) && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 15, padding: "0 12px", flex: "none" }} testId="phrase-free">{own ? tx("g.fr.indietro") : tx("g.fr.inventa")}</Btn>}
-          <Btn kind="red" disabled={!own && sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
+          <Btn kind="red" disabled={own ? !text.trim() : sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
         </Row>
       </BSheet>
     </div>

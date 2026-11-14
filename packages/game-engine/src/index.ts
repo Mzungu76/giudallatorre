@@ -9,7 +9,7 @@ export { shuffle, nextRandom } from "./rng.ts";
 export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";
 export type { BotStyle } from "./botstyle.ts";
-export { registerTags, affinity, phraseTagCount } from "./tags.ts";
+export { registerTags, affinity, phraseTagCount, inferTags } from "./tags.ts";
 export type { TagSet } from "./tags.ts";
 export { buildPhraseDeck, PHRASES_PER_CARD, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
 export type { AgeBand, PhraseFamily, PoolPhrase, PoolConfession, BuildOptions } from "./phrases.ts";
