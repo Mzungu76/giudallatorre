@@ -12,7 +12,9 @@ import { MegaIcon } from "./MegaIcon.tsx";
 
 const DEMO: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 2, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 
-const Step = ({ ic, t, x }: { ic: ReactNode; t: ReactNode; x: ReactNode }) => <div className="brg-step"><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div></div>;
+const Step = ({ ic, t, x, img }: { ic: ReactNode; t: ReactNode; x: ReactNode; img?: string }) => <div className={`brg-step${img ? " th" : ""}`}><span className="how-ic">{ic}</span><div><b>{t}</b><p>{x}</p></div>{img && <img className="brg-th" src={img} alt="" />}</div>;
+/** Videata vera dell'app (public/tutorial). */
+const Shot = ({ src }: { src: string }) => <div className="brg-shot"><img src={src} alt="" /></div>;
 const Note = ({ t, children }: { t: ReactNode; children: ReactNode }) => <div className="brg-note"><b>{t}</b>{children}</div>;
 
 /** Regolamento a schede: il turno, i punti, i segnalini Lui!, la fine della partita. Si apre dalla Home e dal tasto «i» del pannello. */
@@ -31,27 +33,29 @@ export default function HowTo({ onClose, sound, setSound, onLeave, leaveHint }: 
       <div className="brg-body" data-testid="howto-body">
         {tab === 0 && <>
           <div className="brg-q">{t("how.1.q")}<small>{t("how.1.qs")}</small></div>
-          <Step ic={<MegaIcon s={24} />} t={t("how.1.p1.t")} x={t("how.1.p1.x")} />
-          <Step ic="🃏" t={t("how.1.p2.t")} x={t("how.1.p2.x")} />
-          <Step ic="🎯" t={t("how.1.p3.t")} x={t("how.1.p3.x")} />
-          <Step ic="🗳" t={t("how.1.p4.t")} x={t("how.1.p4.x")} />
-          <Step ic="⭐" t={t("how.1.p5.t")} x={t("how.1.p5.x")} />
+          <Step ic={<MegaIcon s={24} />} t={t("how.1.p1.t")} x={t("how.1.p1.x")} img="/tutorial/frase.webp" />
+          <Step ic="🃏" t={t("how.1.p2.t")} x={t("how.1.p2.x")} img="/tutorial/mano.webp" />
+          <Step ic="🎯" t={t("how.1.p3.t")} x={t("how.1.p3.x")} img="/tutorial/segnalino.webp" />
+          <Step ic="🗳" t={t("how.1.p4.t")} x={t("how.1.p4.x")} img="/tutorial/voto.webp" />
+          <Step ic="⭐" t={t("how.1.p5.t")} x={t("how.1.p5.x")} img="/tutorial/punti.webp" />
           <Note t={t("how.1.pari.t")}>{t("how.1.pari.x")}</Note>
         </>}
         {tab === 1 && <>
+          <Shot src="/tutorial/spoglio.webp" />
           <PointsKey />
           <Note t={t("how.2.somm.t")}>{t("how.2.somm.x")}</Note>
           <ExampleTurn />
         </>}
         {tab === 2 && <>
+          <Shot src="/tutorial/segnalino.webp" />
           {tk.map((sp) => <div className="brg-lui" key={sp.slot}><span className="tk" dangerouslySetInnerHTML={{ __html: luiTok(sp, 76) }} /><div><b>{luiLabel(sp)}</b><p>{luiEffectHow(sp)}</p></div></div>)}
-          <Note t={t("how.3.come.t")}>{t("how.3.come.x")}</Note>
           <ExampleLui />
         </>}
         {tab === 3 && <>
-          <Note t={t("how.4.fine.t")}>{t("how.4.fine.x")}</Note>
-          <Note t={t("how.4.int.t")}>{t("how.4.int.x")}</Note>
-          <Note t={t("how.4.parla.t")}>{t("how.4.parla.x")}</Note>
+          <Shot src="/tutorial/classifica.webp" />
+          <Step ic="🏁" t={t("how.4.fine.t")} x={t("how.4.fine.x")} />
+          <Step ic="🎭" t={t("how.4.int.t")} x={t("how.4.int.x")} />
+          <Step ic="🗣" t={t("how.4.parla.t")} x={t("how.4.parla.x")} />
         </>}
       </div>
       <div className="brg-f">

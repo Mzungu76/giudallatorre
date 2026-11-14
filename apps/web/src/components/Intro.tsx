@@ -1,37 +1,38 @@
 import { useState } from "react";
 import { Btn } from "../ui.tsx";
-import { PointsKey } from "./PointsExamples.tsx";
 import { Pt } from "./Pt.tsx";
 import { t, ts } from "../lib/testi.ts";
+import type { TestoKey } from "../lib/testi.ts";
 import { MegaIcon } from "./MegaIcon.tsx";
+import type { LuiSpec } from "@gdt/game-engine";
+import { luiTok } from "../scene/draw.ts";
+import { luiLabel } from "../lib/lui.ts";
+
+const TOKS: LuiSpec[] = [{ slot: "cade", k: 0, pts: 4, effect: "cade" }, { slot: "noncade", k: 0, pts: 2, effect: "noncade" }, { slot: "nulli", k: 0, pts: 0, effect: "nulli" }];
 
 const Dots = ({ i, n }: { i: number; n: number }) => <span className="dts">{Array.from({ length: n }, (_, k) => <i key={k} className={k === i ? "on" : ""} />)}</span>;
 
-/** Prima partita su questo telefono: tre schermate brevi al posto del regolamento. Si saltano e si rivedono da «i». */
+/** Le schermate del tutorial: videate vere dell'app (public/tutorial, scripts/capture-tutorial.mjs). */
+const SLIDES = [
+  { k: "s0", img: "/giocatori/torre.webp", tower: true },
+  { k: "s1", img: "/tutorial/frase.webp" },
+  { k: "s2", img: "/tutorial/mano.webp" },
+  { k: "s3", img: "/tutorial/segnalino.webp", toks: true },
+  { k: "s4", img: "/tutorial/voto.webp" },
+  { k: "s5", img: "/tutorial/punti.webp" },
+] as const;
+
+/** Tutorial: poche schermate con videate vere dell'app. Si apre da «Come si gioca», alla prima partita e dal menu «i». */
 export function IntroSlides({ onClose }: { onClose: () => void }) {
-  const [i, setI] = useState(0), last = i === 2;
+  const [i, setI] = useState(0), last = i === SLIDES.length - 1, sl = SLIDES[i]!;
   return (
     <div className="isl" role="dialog" aria-label={ts("intro.aria")} data-testid="intro-slides">
       <div className="sky" /><div className="skyg" /><div className="skyh" />
-      <div className="isl-top"><Dots i={i} n={3} /><a className="skp" role="button" tabIndex={0} onClick={onClose} onKeyDown={(e) => { if (e.key === "Enter") onClose(); }} data-testid="intro-skip">{t("intro.salta")}</a></div>
-      {i === 0 && <>
-        <h2 className="isl-h">{t("intro.1.titolo")}</h2>
-        <img className="isl-tower" src="/giocatori/torre.webp" alt="" />
-        <div className="pp isl-card"><b>{t("intro.1.card.titolo")}</b><p>{t("intro.1.card.testo")}</p></div>
-      </>}
-      {i === 1 && <>
-        <h2 className="isl-h sm">{t("intro.2.titolo")}</h2>
-        <div className="pp isl-steps">
-          <div className="st"><i className="ic"><MegaIcon s={24} /></i><div><b>{t("intro.2.p1.t")}</b><p>{t("intro.2.p1.x")}</p></div></div>
-          <div className="st"><i className="ic">🃏</i><div><b>{t("intro.2.p2.t")}</b><p>{t("intro.2.p2.x")}</p></div></div>
-          <div className="st"><i className="ic">🗳</i><div><b>{t("intro.2.p3.t")}</b><p>{t("intro.2.p3.x")}</p></div></div>
-          <div className="st"><i className="ic">⭐</i><div><b>{t("intro.2.p4.t")}</b><p>{t("intro.2.p4.x")}</p></div></div>
-        </div>
-      </>}
-      {i === 2 && <>
-        <h2 className="isl-h sm">{t("intro.3.titolo")}</h2>
-        <div className="pp isl-steps"><PointsKey /><div className="isl-note">{t("intro.3.nota")}</div></div>
-      </>}
+      <div className="isl-top"><Dots i={i} n={SLIDES.length} /><a className="skp" role="button" tabIndex={0} onClick={onClose} onKeyDown={(e) => { if (e.key === "Enter") onClose(); }} data-testid="intro-skip">{t("intro.salta")}</a></div>
+      <h2 className="isl-h sm">{t(`intro.${sl.k}.t` as TestoKey)}</h2>
+      <div className={`isl-shot${"tower" in sl ? " tower" : ""}`}><img src={sl.img} alt="" /></div>
+      {"toks" in sl && <div className="isl-toks" data-testid="intro-toks">{TOKS.map((sp) => <span key={sp.slot}><i dangerouslySetInnerHTML={{ __html: luiTok(sp, 64) }} /><b>{luiLabel(sp)}</b></span>)}</div>}
+      <div className="pp isl-card"><p>{t(`intro.${sl.k}.x` as TestoKey)}</p></div>
       <div className="isl-ba"><Btn onClick={() => (last ? onClose() : setI(i + 1))} testId="intro-next">{last ? t("intro.fine") : t("intro.avanti")}</Btn></div>
     </div>
   );

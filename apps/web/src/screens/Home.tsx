@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
-import HowTo from "../components/HowTo.tsx";
+import { IntroSlides } from "../components/Intro.tsx";
 import HomeTools from "../components/HomeTools.tsx";
 import { t } from "../lib/testi.ts";
-import { useAudio } from "../lib/audio.ts";
 
 export default function Home() {
-  const [how, setHow] = useState(false), { sound, setSound } = useAudio();
+  const [how, setHow] = useState(false);
   return (
     <Stage bg="sky" testId="home">
       <div className="logo">
@@ -26,7 +25,7 @@ export default function Home() {
       </div>
       <HomeTools />
       <div className="credit" data-testid="credit">{t("home.credito")}</div>
-      {how && <HowTo onClose={() => setHow(false)} sound={sound} setSound={setSound} />}
+      {how && <IntroSlides onClose={() => setHow(false)} />}
     </Stage>
   );
 }

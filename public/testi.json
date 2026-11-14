@@ -1,5 +1,5 @@
 {
- "versione": 44,
+ "versione": 52,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -17,65 +17,6 @@
   },
   "intro.fine": {
    "t": "Ho capito, giochiamo",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.1.titolo": {
-   "t": "Chi butteresti\ngiù dalla torre?",
-   "s": "Prima partita · 3 schermate",
-   "n": "«\\n» = a capo"
-  },
-  "intro.1.card.titolo": {
-   "t": "Un gioco di accuse e di voti",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.1.card.testo": {
-   "t": "A ogni turno uno di voi impersonerà __Il Megafono__ e gli altri La folla. __Il Megafono__ pronuncerà la frase \"d'accusa\" e tutti sceglieranno un personaggio da far salire sopra alla torre. Voterete quindi il personaggio da lanciare giù dalla torre!",
-   "s": "Prima partita · 3 schermate",
-   "n": "__testo__ = evidenziato in giallo"
-  },
-  "intro.2.titolo": {
-   "t": "Ogni turno,\n4 passi",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p1.t": {
-   "t": "Il Megafono",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p1.x": {
-   "t": "Sceglie una frase: «Oggi sale sulla torre… ~i più ipocriti~».",
-   "s": "Prima partita · 3 schermate",
-   "n": "~testo~ = corsivo"
-  },
-  "intro.2.p2.t": {
-   "t": "Su sulla torre",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p2.x": {
-   "t": "Scegli tra le tue carte il personaggio che vuoi far salire sulla torre. Scegli con attenzione, se cade dalla torre ti frutterà punti.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p3.t": {
-   "t": "Si vota",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p3.x": {
-   "t": "Ognuno vota il personaggio che pensa meriti di più di essere lanciato dalla torre.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p4.t": {
-   "t": "Giù dalla torre!",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.2.p4.x": {
-   "t": "Il personaggio più votato viene la ciato dalla torre! Tranquilli, sotto abbiamo messo dei materassi. Nessuna carta è stata maltrattata in questo gioco, fino ad ora.",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.3.titolo": {
-   "t": "Come si fanno\ni punti",
-   "s": "Prima partita · 3 schermate"
-  },
-  "intro.3.nota": {
-   "t": "Si sommano: nello stesso turno puoi fare più punti. Gli esempi con le carte li trovi in «i».",
    "s": "Prima partita · 3 schermate"
   },
   "mega.aria": {
@@ -336,7 +277,7 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.testo": {
-   "t": "Anna, il Megafono, ha messo il CADE (coperto) sulla carta col bordo giallo.",
+   "t": "Anna (Megafono) copre la carta gialla.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.altri": {
@@ -344,11 +285,11 @@
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.t": {
-   "t": "La carta cade: CADE azzeccato!",
+   "t": "Cade: CADE azzeccato!",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ok.x": {
-   "t": "{pt} ad Anna e a ognuno che l'ha votata",
+   "t": "{pt} ad Anna e a chi l’ha votata",
    "s": "Esempio del Lui! (regolamento)"
   },
   "exl.ko.t": {
@@ -357,10 +298,6 @@
   },
   "exl.ko.x": {
    "t": "{pt} Nessuno perde nulla.",
-   "s": "Esempio del Lui! (regolamento)"
-  },
-  "exl.piede": {
-   "t": "A ogni turno il Megafono posa un segnalino coperto su una carta, scegliendo tra CADE, NON CADE e VOTI NULLI!.",
    "s": "Esempio del Lui! (regolamento)"
   },
   "pk.giusto.t": {
@@ -381,7 +318,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.caduta.x": {
-   "t": "La carta che cade l’hai giocata tu.",
+   "t": "Hai giocato la carta che cade.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.t": {
@@ -389,7 +326,7 @@
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "pk.lui.x": {
-   "t": "CADE +4 se la carta cade, NON CADE +2 se resta su: al Megafono e a chi ha votato quella carta.",
+   "t": "CADE +4, NON CADE +2: Megafono e chi la vota.",
    "s": "Esempi dei punti (regolamento e tutorial)"
   },
   "how.aria": {
@@ -402,7 +339,7 @@
    "s": "Regolamento completo"
   },
   "how.tab.0": {
-   "t": "Il turno",
+   "t": "Turno",
    "s": "Regolamento completo",
    "n": "Nome della scheda"
   },
@@ -422,35 +359,35 @@
    "n": "Nome della scheda (non cambiarlo senza aggiornare le prove e2e)"
   },
   "how.1.q": {
-   "t": "Chi butteresti giù dalla torre oggi?",
+   "t": "Chi butteresti giù dalla torre?",
    "s": "Regolamento completo"
   },
   "how.1.qs": {
-   "t": "Si accusa, si vota in segreto e si ride. Sotto la torre ci sono i materassi.",
+   "t": "Si accusa, si vota, si ride.",
    "s": "Regolamento completo"
   },
   "how.1.p1.t": {
-   "t": "Il Megafono urla",
+   "t": "Il Megafono",
    "s": "Regolamento completo"
   },
   "how.1.p1.x": {
-   "t": "Sceglie una frase che comincia con «Oggi sale sulla torre…». A ogni turno tocca a uno di voi.",
+   "t": "È il giocatore di turno: sceglie una frase, tipo «i più ipocriti».",
    "s": "Regolamento completo"
   },
   "how.1.p2.t": {
-   "t": "Tutti giocano",
+   "t": "Le carte",
    "s": "Regolamento completo"
   },
   "how.1.p2.x": {
-   "t": "Tutti, Megafono compreso, scelgono in segreto dalla propria mano il personaggio che farebbe di sicuro quella cosa. Nessuno sa di chi è ogni carta.",
+   "t": "Ognuno ha carte con personaggi. Tutti ne giocano una adatta alla frase, in segreto.",
    "s": "Regolamento completo"
   },
   "how.1.p3.t": {
-   "t": "Il Lui!",
+   "t": "Il segnalino",
    "s": "Regolamento completo"
   },
   "how.1.p3.x": {
-   "t": "Le carte salgono sulla torre, mescolate e numerate. Il Megafono posa un segnalino coperto su una carta: CADE, NON CADE o VOTI NULLI!.",
+   "t": "Il Megafono ne nasconde uno su una carta. Cosa fa? Vedi «Il Lui!».",
    "s": "Regolamento completo"
   },
   "how.1.p4.t": {
@@ -458,7 +395,7 @@
    "s": "Regolamento completo"
   },
   "how.1.p4.x": {
-   "t": "Tutti votano in segreto la carta che somiglia di più alla frase, anche la propria. La più votata cade. I voti sulla carta con VOTI NULLI! non valgono.",
+   "t": "Si vota la carta più adatta, anche la tua. La più votata cade dalla torre.",
    "s": "Regolamento completo"
   },
   "how.1.p5.t": {
@@ -466,15 +403,15 @@
    "s": "Regolamento completo"
   },
   "how.1.p5.x": {
-   "t": "Si contano i punti e il Megafono passa al giocatore dopo.",
+   "t": "Chi ci ha preso ne fa. Poi il Megafono passa al prossimo.",
    "s": "Regolamento completo"
   },
   "how.1.pari.t": {
-   "t": "Pareggio",
+   "t": "Voti pari",
    "s": "Regolamento completo"
   },
   "how.1.pari.x": {
-   "t": "Se più carte hanno gli stessi voti e una ha il segnalino CADE, cade solo quella. Altrimenti cadono tutte.",
+   "t": "Cade la carta con il segnalino CADE; se non c’è, cadono tutte.",
    "s": "Regolamento completo"
   },
   "how.2.somm.t": {
@@ -482,15 +419,7 @@
    "s": "Regolamento completo"
   },
   "how.2.somm.x": {
-   "t": "Nello stesso turno puoi prendere punti per più motivi. Ecco un turno vero:",
-   "s": "Regolamento completo"
-  },
-  "how.3.come.t": {
-   "t": "Come funziona",
-   "s": "Regolamento completo"
-  },
-  "how.3.come.x": {
-   "t": "A ogni turno il Megafono ha tutti e 3 i segnalini e ne posa uno, coperto, su una carta: si scopre alla fine. I premi di CADE e NON CADE vanno al Megafono e a chiunque abbia votato quella carta. Il Megafono non può votare la carta con VOTI NULLI!.",
+   "t": "Un turno, più motivi:",
    "s": "Regolamento completo"
   },
   "how.4.fine.t": {
@@ -498,7 +427,7 @@
    "s": "Regolamento completo"
   },
   "how.4.fine.x": {
-   "t": "Si gioca finché tutti hanno fatto il Megafono: due volte in 3 giocatori (6 turni), una volta con 4–6 (un turno a testa). Vince chi ha più punti. In caso di parità si fanno turni di spareggio.",
+   "t": "Tutti fanno il Megafono. Vince chi ha più punti.",
    "s": "Regolamento completo"
   },
   "how.4.int.t": {
@@ -506,7 +435,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un fuori programma a metà partita, con 6 ce ne sono due: 6 carte escono una alla volta da dietro un separé, per 3 giri. Premi **QUESTO!** quando esce quella giusta: carta più votata +2, il più veloce +4.",
+   "t": "Premi **QUESTO!** alla carta giusta: +2, il più veloce +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -514,7 +443,7 @@
    "s": "Regolamento completo"
   },
   "how.4.parla.x": {
-   "t": "Si può chiacchierare e bluffare quanto si vuole. L'unica regola è non rivelare la propria carta prima del voto.",
+   "t": "Bluffa quanto vuoi. Non mostrare la tua carta.",
    "s": "Regolamento completo"
   },
   "how.resto": {
@@ -1731,17 +1660,17 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.cade": {
-   "t": "Se questa carta cade: +4 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se cade: +4 al Megafono e a chi l’ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.noncade": {
-   "t": "Se questa carta resta su: +2 al Megafono e a ognuno che l'ha votata.",
+   "t": "Se resta su: +2 al Megafono e a chi l’ha votata.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
   "bui.info.e.nulli": {
-   "t": "I voti su questa carta non valgono: chi la vota non prende il +2. Il Megafono non può votarla.",
+   "t": "Voti annullati: niente +2. Il Megafono non la vota.",
    "s": "Pannelli in basso (frase, gettoni, chat…)",
    "n": "Gioco base «Cade / Non cade»"
   },
@@ -2166,109 +2095,272 @@
    "s": "Menu Aiuto («i»)",
    "n": "Cursore del volume (lettori di schermo)"
   },
-  "aw.titolo": {
-   "t": "Fine partita!",
+  "intro.s5.t": {
+   "t": "I punti",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s4.x": {
+   "t": "Ognuno vota la carta più adatta, anche la sua. La più votata cade dalla torre.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s5.x": {
+   "t": "Chi ha votato bene fa punti. Alla fine vince chi ne ha di più.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s0.x": {
+   "t": "Gioco di gruppo: si accusa, si vota, si ride. A turno uno di voi è il Megafono, gli altri sono la folla.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s0.t": {
+   "t": "Chi butteresti\ngiù dalla torre?",
+   "s": "Tutorial (Come si gioca)",
+   "n": "Titolo 1"
+  },
+  "intro.s1.t": {
+   "t": "Il Megafono parla",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s2.t": {
+   "t": "Tutti giocano",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s3.t": {
+   "t": "Il segnalino",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s2.x": {
+   "t": "Scegli in segreto il personaggio più adatto alla frase.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s4.t": {
+   "t": "Si vota",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s1.x": {
+   "t": "È il giocatore di turno: sceglie o inventa una frase d’accusa.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "intro.s3.x": {
+   "t": "Il Megafono ne posa uno, coperto, su una carta.",
+   "s": "Tutorial (Come si gioca)"
+  },
+  "premio.ruffiano.b6": {
+   "t": "Il migliore amico del Megafono: gli vota sempre la carta!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
+  },
+  "premio.ruffiano.b18": {
+   "t": "Ha leccato il Megafono più di un gelato in agosto.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.ruffiano.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.veggente.why": {
+   "t": "Da Megafono ha azzeccato tutti i segnalini giocati ({of}).",
    "s": "Fine partita: premio della serata"
+  },
+  "premio.bersaglio.b18": {
+   "t": "Tutti si sono accaniti sulle sue carte. Chissà cos'ha fatto.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.tabellone.lab": {
+   "t": "punti",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ingenuo.nome": {
+   "t": "L'Ingenuo",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.narciso.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
   },
   "aw.sotto": {
    "t": "Prima della classifica… c'è un premio",
    "s": "Fine partita: premio della serata"
   },
-  "aw.drum": {
-   "t": "E il premio della serata va a…",
-   "s": "Fine partita: premio della serata"
+  "premio.bersaglio.b6": {
+   "t": "Tutti guardavano le sue carte! Che successo!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
   },
   "aw.apri": {
    "t": "Apri la busta!",
    "s": "Fine partita: premio della serata"
   },
-  "aw.kicker": {
-   "t": "Premio della serata",
-   "s": "Fine partita: premio della serata"
-  },
-  "aw.avanti": {
-   "t": "Vai alla classifica",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.pollo.nome": {
-   "t": "Il Pollo",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.pollo.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.pollo.lab": {
-   "t": "volte",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.pollo.why": {
-   "t": "Ha votato dove puntava il Megafono {n} volte su {of}.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.pollo.b6": {
-   "t": "Si fida di tutti. Proprio di tutti! Anche di chi non dovrebbe.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.pollo.b14": {
-   "t": "Ha creduto al Megafono quasi sempre. Gli venderesti anche il ponte.",
+  "premio.narciso.b14": {
+   "t": "Autostima alle stelle: si vota la carta da solo.",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 14+"
-  },
-  "premio.pollo.b18": {
-   "t": "Il Megafono ha detto «fidati» e c'è pure cascato. Più volte.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
   },
   "premio.bugiardo.nome": {
    "t": "Il Bugiardo di Stato",
    "s": "Fine partita: premio della serata"
   },
-  "premio.bugiardo.big": {
-   "t": "{n}",
+  "premio.tabellone.b18": {
+   "t": "Fondo classifica, ma almeno ha tenuto alto il morale degli altri.",
    "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.bugiardo.lab": {
-   "t": "voti presi",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.bugiardo.why": {
-   "t": "Voti degli altri sulle sue {of} carte: {n}.",
-   "s": "Fine partita: premio della serata"
+   "n": "Battuta per il pubblico 18+"
   },
   "premio.bugiardo.b6": {
    "t": "Faccia d'angelo, carte da furbetto: nessuno ha capito nulla!",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 6+ e 10+"
   },
-  "premio.bugiardo.b14": {
-   "t": "Mente guardandoti negli occhi. E le sue carte sono sempre salve.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.bugiardo.b18": {
-   "t": "Mentirebbe al notaio e farebbe pure la ricevuta. Zero sospetti.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.ingenuo.nome": {
-   "t": "L'Ingenuo",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.ingenuo.big": {
+  "premio.lupo.big": {
    "t": "{n}/{of}",
    "s": "Fine partita: premio della serata",
    "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.veggente.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "aw.kicker": {
+   "t": "Premio della serata",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.bersaglio.why": {
+   "t": "Gli altri hanno votato le sue {of} carte {n} volte.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.pollo.lab": {
+   "t": "volte",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.lupo.b18": {
+   "t": "Contro tutti, sempre. Visione geniale o semplice bastian contrario?",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.bugiardo.why": {
+   "t": "Voti degli altri sulle sue {of} carte: {n}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.bocciato.nome": {
+   "t": "Il Visionario Bocciato",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ingenuo.b14": {
+   "t": "Quasi ogni voto è finito nel posto sbagliato. Neanche a caso.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.bersaglio.b14": {
+   "t": "Sulle sue carte c'era scritto «votami». Nessuno sa come.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.bugiardo.big": {
+   "t": "{n}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.pollo.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.tabellone.b14": {
+   "t": "Meno punti di tutti. Ma il vero premio è la compagnia, dicono.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.lupo.why": {
+   "t": "Ha votato una carta che nessun altro ha votato {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.lupo.nome": {
+   "t": "Il Lupo Solitario",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.segugio.lab": {
+   "t": "centri",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.pollo.nome": {
+   "t": "Il Pollo",
+   "s": "Fine partita: premio della serata"
   },
   "premio.ingenuo.lab": {
    "t": "sbagliati",
    "s": "Fine partita: premio della serata"
   },
-  "premio.ingenuo.why": {
-   "t": "Ha votato carte che non sono cadute {n} volte su {of}.",
+  "premio.bersaglio.lab": {
+   "t": "voti addosso",
+   "s": "Fine partita: premio della serata"
+  },
+  "aw.titolo": {
+   "t": "Fine partita!",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.segugio.b14": {
+   "t": "Fiuta le carte che cadono come un cane da tartufi.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.veggente.nome": {
+   "t": "Il Veggente",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.bugiardo.lab": {
+   "t": "voti presi",
+   "s": "Fine partita: premio della serata"
+  },
+  "aw.avanti": {
+   "t": "Vai alla classifica",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.tabellone.why": {
+   "t": "Nessun altro premio meritato stasera: questo va a chi ha fatto meno punti.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ruffiano.why": {
+   "t": "Ha votato la carta del Megafono {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.veggente.b6": {
+   "t": "Ha la sfera di cristallo! Sa sempre cosa succede.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
+  },
+  "premio.tabellone.b6": {
+   "t": "Meno punti di tutti, ma tanto divertimento!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
+  },
+  "premio.bocciato.why": {
+   "t": "Da Megafono ha sbagliato tutti i segnalini giocati ({of}).",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.narciso.b6": {
+   "t": "Si vota da solo: che autostima!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
+  },
+  "premio.segugio.why": {
+   "t": "Ha votato la carta che poi è caduta {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.lupo.b14": {
+   "t": "Quando tutti vanno da una parte, va dall'altra. Per principio.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.pollo.b14": {
+   "t": "Ha creduto al Megafono quasi sempre. Gli venderesti anche il ponte.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.veggente.lab": {
+   "t": "azzeccati",
    "s": "Fine partita: premio della serata"
   },
   "premio.ingenuo.b6": {
@@ -2276,8 +2368,30 @@
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 6+ e 10+"
   },
-  "premio.ingenuo.b14": {
-   "t": "Quasi ogni voto è finito nel posto sbagliato. Neanche a caso.",
+  "premio.narciso.why": {
+   "t": "Ha votato la propria carta {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.veggente.b18": {
+   "t": "Indovina tutto. O è un mago o è un truffatore: teniamo d'occhio.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.ingenuo.why": {
+   "t": "Ha votato carte che non sono cadute {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "aw.drum": {
+   "t": "E il premio della serata va a…",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.veggente.b14": {
+   "t": "Ha azzeccato il segnalino. O è un mago, o ha sbirciato.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 14+"
+  },
+  "premio.bugiardo.b14": {
+   "t": "Mente guardandoti negli occhi. E le sue carte sono sempre salve.",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 14+"
   },
@@ -2286,131 +2400,17 @@
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 18+"
   },
-  "premio.segugio.nome": {
-   "t": "Il Segugio",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.segugio.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.segugio.lab": {
-   "t": "centri",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.segugio.why": {
-   "t": "Ha votato la carta che poi è caduta {n} volte su {of}.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.segugio.b6": {
-   "t": "Ha il naso fino: sa sempre dove cade tutto!",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.segugio.b14": {
-   "t": "Fiuta le carte che cadono come un cane da tartufi.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.segugio.b18": {
-   "t": "O è un mago, o ha sbirciato le carte. Teniamo d'occhio.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.bersaglio.nome": {
-   "t": "Il Bersaglio",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.bersaglio.big": {
+  "premio.tabellone.big": {
    "t": "{n}",
    "s": "Fine partita: premio della serata",
    "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
   },
-  "premio.bersaglio.lab": {
-   "t": "voti addosso",
+  "premio.tabellone.nome": {
+   "t": "Il Tabellone Vuoto",
    "s": "Fine partita: premio della serata"
   },
-  "premio.bersaglio.why": {
-   "t": "Gli altri hanno votato le sue {of} carte {n} volte.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.bersaglio.b6": {
-   "t": "Tutti guardavano le sue carte! Che successo!",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.bersaglio.b14": {
-   "t": "Sulle sue carte c'era scritto «votami». Nessuno sa come.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.bersaglio.b18": {
-   "t": "Tutti si sono accaniti sulle sue carte. Chissà cos'ha fatto.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.ruffiano.nome": {
-   "t": "Il Ruffiano",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.ruffiano.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.ruffiano.lab": {
-   "t": "volte",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.ruffiano.why": {
-   "t": "Ha votato la carta del Megafono {n} volte su {of}.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.ruffiano.b6": {
-   "t": "Il migliore amico del Megafono: gli vota sempre la carta!",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.ruffiano.b14": {
-   "t": "Votare la carta del Megafono è il suo modo di dire «mi piaci».",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.ruffiano.b18": {
-   "t": "Ha leccato il Megafono più di un gelato in agosto.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.lupo.nome": {
-   "t": "Il Lupo Solitario",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.lupo.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.lupo.lab": {
-   "t": "da solo",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.lupo.why": {
-   "t": "Ha votato una carta che nessun altro ha votato {n} volte su {of}.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.lupo.b6": {
-   "t": "Fa sempre di testa sua, anche quando nessuno è d'accordo!",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.lupo.b14": {
-   "t": "Quando tutti vanno da una parte, va dall'altra. Per principio.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.lupo.b18": {
-   "t": "Contro tutti, sempre. Visione geniale o semplice bastian contrario?",
+  "premio.pollo.b18": {
+   "t": "Il Megafono ha detto «fidati» e c'è pure cascato. Più volte.",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 18+"
   },
@@ -2418,68 +2418,8 @@
    "t": "Il Narciso",
    "s": "Fine partita: premio della serata"
   },
-  "premio.narciso.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.narciso.lab": {
-   "t": "volte",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.narciso.why": {
-   "t": "Ha votato la propria carta {n} volte su {of}.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.narciso.b6": {
-   "t": "Si vota da solo: che autostima!",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.narciso.b14": {
-   "t": "Autostima alle stelle: si vota la carta da solo.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.narciso.b18": {
-   "t": "Si è votato da solo. Applauso, ma anche un po' d'imbarazzo.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.veggente.nome": {
-   "t": "Il Veggente",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.veggente.big": {
-   "t": "{n}/{of}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.veggente.lab": {
-   "t": "azzeccati",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.veggente.why": {
-   "t": "Da Megafono ha azzeccato tutti i segnalini giocati ({of}).",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.veggente.b6": {
-   "t": "Ha la sfera di cristallo! Sa sempre cosa succede.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 6+ e 10+"
-  },
-  "premio.veggente.b14": {
-   "t": "Ha azzeccato il segnalino. O è un mago, o ha sbirciato.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 14+"
-  },
-  "premio.veggente.b18": {
-   "t": "Indovina tutto. O è un mago o è un truffatore: teniamo d'occhio.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.bocciato.nome": {
-   "t": "Il Visionario Bocciato",
+  "premio.bersaglio.nome": {
+   "t": "Il Bersaglio",
    "s": "Fine partita: premio della serata"
   },
   "premio.bocciato.big": {
@@ -2487,16 +2427,48 @@
    "s": "Fine partita: premio della serata",
    "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
   },
-  "premio.bocciato.lab": {
-   "t": "sbagliati",
-   "s": "Fine partita: premio della serata"
+  "premio.segugio.b6": {
+   "t": "Ha il naso fino: sa sempre dove cade tutto!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
   },
-  "premio.bocciato.why": {
-   "t": "Da Megafono ha sbagliato tutti i segnalini giocati ({of}).",
-   "s": "Fine partita: premio della serata"
+  "premio.ingenuo.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
   },
-  "premio.bocciato.b6": {
-   "t": "Oggi il segnalino era un po' dispettoso. Riprova!",
+  "premio.bugiardo.b18": {
+   "t": "Mentirebbe al notaio e farebbe pure la ricevuta. Zero sospetti.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.segugio.b18": {
+   "t": "O è un mago, o ha sbirciato le carte. Teniamo d'occhio.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.bersaglio.big": {
+   "t": "{n}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.segugio.big": {
+   "t": "{n}/{of}",
+   "s": "Fine partita: premio della serata",
+   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
+  },
+  "premio.bocciato.b18": {
+   "t": "Un indovino da fiera: tutto sbagliato, ma con grande sicurezza.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.narciso.b18": {
+   "t": "Si è votato da solo. Applauso, ma anche un po' d'imbarazzo.",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 18+"
+  },
+  "premio.lupo.b6": {
+   "t": "Fa sempre di testa sua, anche quando nessuno è d'accordo!",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 6+ e 10+"
   },
@@ -2505,42 +2477,48 @@
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 14+"
   },
-  "premio.bocciato.b18": {
-   "t": "Un indovino da fiera: tutto sbagliato, ma con grande sicurezza.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
-  },
-  "premio.tabellone.nome": {
-   "t": "Il Tabellone Vuoto",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.tabellone.big": {
-   "t": "{n}",
-   "s": "Fine partita: premio della serata",
-   "n": "Il numero grande nel bollino; {n} e {of} sono i valori del premio"
-  },
-  "premio.tabellone.lab": {
-   "t": "punti",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.tabellone.why": {
-   "t": "Nessun altro premio meritato stasera: questo va a chi ha fatto meno punti.",
-   "s": "Fine partita: premio della serata"
-  },
-  "premio.tabellone.b6": {
-   "t": "Meno punti di tutti, ma tanto divertimento!",
+  "premio.pollo.b6": {
+   "t": "Si fida di tutti. Proprio di tutti! Anche di chi non dovrebbe.",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 6+ e 10+"
   },
-  "premio.tabellone.b14": {
-   "t": "Meno punti di tutti. Ma il vero premio è la compagnia, dicono.",
+  "premio.bocciato.lab": {
+   "t": "sbagliati",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ruffiano.lab": {
+   "t": "volte",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.lupo.lab": {
+   "t": "da solo",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.bocciato.b6": {
+   "t": "Oggi il segnalino era un po' dispettoso. Riprova!",
+   "s": "Fine partita: premio della serata",
+   "n": "Battuta per il pubblico 6+ e 10+"
+  },
+  "premio.pollo.why": {
+   "t": "Ha votato dove puntava il Megafono {n} volte su {of}.",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.segugio.nome": {
+   "t": "Il Segugio",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.narciso.lab": {
+   "t": "volte",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ruffiano.nome": {
+   "t": "Il Ruffiano",
+   "s": "Fine partita: premio della serata"
+  },
+  "premio.ruffiano.b14": {
+   "t": "Votare la carta del Megafono è il suo modo di dire «mi piaci».",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 14+"
-  },
-  "premio.tabellone.b18": {
-   "t": "Fondo classifica, ma almeno ha tenuto alto il morale degli altri.",
-   "s": "Fine partita: premio della serata",
-   "n": "Battuta per il pubblico 18+"
   }
  }
 }
