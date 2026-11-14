@@ -556,6 +556,17 @@ describe("caratteri e nomi dei bot", () => {
   });
 });
 
+describe("collaudo dei bot", () => {
+  const dto = (debug: boolean) => {
+    const { core, playerId } = RoomCore.create("DBGXX", deps(5), 0, { nickname: "Ann", mode: "table", megafonoSa: true, debug, bots: { count: 3, level: "hard" } });
+    return (core.roomMsg(playerId) as unknown as { players: { isBot?: boolean; style?: string }[] }).players;
+  };
+  it("il carattere di gioco dei bot non arriva ai telefoni, salvo nelle partite di collaudo", () => {
+    expect(dto(false).some((p) => p.style)).toBe(false);
+    const on = dto(true).filter((p) => p.isBot); expect(on).toHaveLength(3); expect(on.every((p) => !!p.style)).toBe(true);
+  });
+});
+
 describe("personaggi e bot", () => {
   it("i bot hanno un nome del sesso del loro personaggio", () => {
     const { core } = RoomCore.create("BOTNM", deps(11), 0, { nickname: "Ann", mode: "table", megafonoSa: true, char: 0, bots: { count: 5, level: "easy" } });

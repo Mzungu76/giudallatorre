@@ -90,11 +90,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; debug?: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -378,7 +378,7 @@ export class RoomCore {
   roomMsg(forPlayer: string): ServerMessage {
     const d = this.data, host = d.players.find((p) => p.isHost);
     return { t: "room", seq: d.seq, code: d.code, stage: d.stage, you: forPlayer, hostId: host?.id ?? "", options: { ...d.options },
-      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
+      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level, ...(d.options.debug && p.style ? { style: p.style } : {}) } : {}) })) };
   }
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
     const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];

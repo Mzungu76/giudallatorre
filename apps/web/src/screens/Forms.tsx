@@ -50,7 +50,7 @@ export function CreateScreen() {
     e.preventDefault(); if (busy) return;
     if (step < LAST) { if (step === 0 && !nick.trim()) return; setStep(step + 1); return; }
     setBusy(true); setErr(null);
-    try { const s = await createRoom(nick, mode, true, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
+    try { const s = await createRoom(nick, mode, true, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(/[?&]debug=bot/.test(location.search) ? { debug: true } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
     catch (x) { setErr(errText(x)); setBusy(false); }
   }
   const back = () => (step > 0 ? setStep(step - 1) : navigate("/"));
