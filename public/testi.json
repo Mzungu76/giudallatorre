@@ -1,5 +1,5 @@
 {
- "versione": 45,
+ "versione": 47,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -422,23 +422,23 @@
    "s": "Regolamento completo"
   },
   "how.1.qs": {
-   "t": "Sotto ci sono i materassi.",
+   "t": "Si accusa, si vota, si ride. Sotto ci sono i materassi.",
    "s": "Regolamento completo"
   },
   "how.1.p1.t": {
-   "t": "Il Megafono parla",
+   "t": "Il Megafono",
    "s": "Regolamento completo"
   },
   "how.1.p1.x": {
-   "t": "Sceglie una frase.",
+   "t": "È il giocatore di turno: sceglie una frase, tipo «i più ipocriti».",
    "s": "Regolamento completo"
   },
   "how.1.p2.t": {
-   "t": "Tutti giocano",
+   "t": "Le carte",
    "s": "Regolamento completo"
   },
   "how.1.p2.x": {
-   "t": "Una carta a testa, in segreto.",
+   "t": "Ognuno ha carte con personaggi. Tutti ne giocano una adatta alla frase, in segreto.",
    "s": "Regolamento completo"
   },
   "how.1.p3.t": {
@@ -446,31 +446,31 @@
    "s": "Regolamento completo"
   },
   "how.1.p3.x": {
-   "t": "Il Megafono lo posa, coperto, su una carta.",
+   "t": "Il Megafono ne nasconde uno su una carta. Cosa fa? Vedi «Il Lui!».",
    "s": "Regolamento completo"
   },
   "how.1.p4.t": {
-   "t": "Tutti votano",
+   "t": "Il voto",
    "s": "Regolamento completo"
   },
   "how.1.p4.x": {
-   "t": "Anche la tua. La più votata cade.",
+   "t": "Si vota la carta più adatta, anche la tua. La più votata cade dalla torre.",
    "s": "Regolamento completo"
   },
   "how.1.p5.t": {
-   "t": "Punti",
+   "t": "I punti",
    "s": "Regolamento completo"
   },
   "how.1.p5.x": {
-   "t": "Poi tocca al prossimo Megafono.",
+   "t": "Chi ci ha preso ne fa. Poi il Megafono passa al prossimo.",
    "s": "Regolamento completo"
   },
   "how.1.pari.t": {
-   "t": "Pareggio",
+   "t": "Voti pari",
    "s": "Regolamento completo"
   },
   "how.1.pari.x": {
-   "t": "Cade quella con CADE; se non c’è, tutte.",
+   "t": "Cade la carta con il segnalino CADE; se non c’è, cadono tutte.",
    "s": "Regolamento completo"
   },
   "how.2.somm.t": {
