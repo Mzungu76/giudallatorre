@@ -59,3 +59,9 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Aiuto ai giocatori (`docs/AIUTO_GIOCATORI.md`): 3 schermate iniziali, scheda «Sei il Megafono!», ruolo sempre visibile, fumetti solo se si resta fermi, esempi dei punti con carte vere, riga «Tu» nel riepilogo
 - [x] Corretto il gettone Lui! che non si vedeva nella scheda «Il Lui!» del regolamento
 - [x] Menu «i» → Aiuto (cosa devo fare adesso con freccia, tutorial, regolamento); «Questo turno non giochi carte» che resta finché lo tocchi; icona dei punti accanto ai numeri; fuori programma senza tetto e con +2 fisso al posto del ×2; tolto il numero sotto il pulsante nello zoom
+
+## Fase 8 — Premio della serata
+- [x] Registro per turno nel motore e `pickAward` (un solo premio a partita, pesi, consolazione, bot esclusi) con test (`packages/game-engine/tests/awards.test.ts`)
+- [x] Scena `AwardScene` prima della scalata finale, testi per fascia d'età in `public/testi.json`; mockup in `mockups/premio-serata.html`
+- [ ] Taratura di soglie e pesi dopo qualche partita vera
+- [ ] Stanze ricorrenti e statistiche per giocatore (passi successivi)
