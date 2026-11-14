@@ -72,7 +72,7 @@ export function CreateScreen() {
             <div className="fld grow"><span className="lb">{t("fm.w.pers")}</span><CharCarousel value={char} onChange={setChar} /></div>
           </>}
           {step === 1 && <>
-            <div className="fld" data-testid="bots-box">
+            <div className="fld sec sA" data-testid="bots-box">
               <span className="lb">{t("fm.w.bot")}</span>
               <div className="wstep">
                 <button type="button" className="wpm" onClick={() => setBots(Math.max(0, bots - 1))} aria-label={ts("fm.bot.meno")} data-testid="bots-minus">−</button>
@@ -82,9 +82,9 @@ export function CreateScreen() {
               </div>
               {bots > 0 && <div className="wchips c g3">{(["easy", "medium", "hard"] as const).map((k) => <button key={k} type="button" className={`wchip${level === k ? " on" : ""}`} onClick={() => setLevel(k)} data-testid={`bot-${k}`}>{t(`fm.lv.${k}` as TestoKey)}</button>)}</div>}
             </div>
-            <div className="fld"><span className="lb">{t("fm.w.pubblico")}</span>
+            <div className="fld sec sB"><span className="lb">{t("fm.w.pubblico")}</span>
               <div className="wchips g2">{AGES.map((a) => <button key={a} type="button" className={`wchip${age === a ? " on" : ""}`} onClick={() => setAge(a)} data-testid={`age-${a}`}>{t(`room.age.${a}` as TestoKey)}</button>)}</div></div>
-            <div className="fld"><span className="lb">{t("fm.w.timer")}</span>
+            <div className="fld sec sC"><span className="lb">{t("fm.w.timer")}</span>
               <div className="wchips g5">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
           </>}
         </div>

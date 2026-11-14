@@ -1244,7 +1244,13 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .wchips.g5{grid-template-columns:1.5fr repeat(4,1fr);gap:8px}
 .wchips.g3 .wchip,.wchips.g2 .wchip,.wchips.g5 .wchip{padding:10px 4px;text-align:center;font-size:17px;line-height:1.05;display:flex;align-items:center;justify-content:center;min-height:46px}
 .wchips.g5 .wchip{font-size:18px;padding:10px 2px}
-.fbody{gap:16px}
+.fbody{gap:26px;padding-top:18px}
+.fbody .sec{border:3.5px solid var(--navy);border-radius:20px;box-shadow:0 5px 0 var(--navy);padding:22px 12px 14px;margin-top:6px}
+.fbody .sec .lb{position:absolute;top:-17px;left:14px;display:inline-block;background:var(--tab);border:3px solid var(--navy);border-radius:99px;padding:2px 14px 3px;font-size:18px;box-shadow:0 3px 0 var(--navy);transform:rotate(-1.5deg)}
+.fbody .sec.sA{--tab:#7fd8d6;background:#d3f0ee}
+.fbody .sec.sB{--tab:var(--pink);background:#ffe0ea}
+.fbody .sec.sC{--tab:var(--mus);background:#fff2c6}
+.fbody .sec .wchips.g3{margin-top:12px}
 .wchip.on{background:var(--mus);outline:3px solid #fff;box-shadow:0 0 0 5px var(--mus),0 4px 0 5px var(--navy)}
 .wsum{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-top:auto}
 .wsum span{border:3px solid var(--navy);border-radius:99px;background:#fff7e0;padding:4px 11px;font:400 15px Anton;text-transform:uppercase}
