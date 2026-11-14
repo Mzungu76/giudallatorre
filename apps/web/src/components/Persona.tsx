@@ -21,5 +21,5 @@ export function PersonaProvider({ players, children }: { players: Parameters<typ
 export function Who({ id, children, className = "" }: { id?: string; children: ReactNode; className?: string }) {
   const open = usePersona();
   if (!open || !id) return <span className={className}>{children}</span>;
-  return <span className={`who ${className}`} role="button" tabIndex={0} onClick={(e) => { e.stopPropagation(); open(id); }} onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); open(id); } }}>{children}</span>;
+  return <span className={`pers ${className}`} role="button" tabIndex={0} onClick={(e) => { e.stopPropagation(); open(id); }} onKeyDown={(e) => { if (e.key === "Enter") { e.stopPropagation(); open(id); } }}>{children}</span>;
 }
