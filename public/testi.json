@@ -1,5 +1,5 @@
 {
- "versione": 47,
+ "versione": 48,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -422,7 +422,7 @@
    "s": "Regolamento completo"
   },
   "how.1.qs": {
-   "t": "Si accusa, si vota, si ride. Sotto ci sono i materassi.",
+   "t": "Si accusa, si vota, si ride.",
    "s": "Regolamento completo"
   },
   "how.1.p1.t": {
