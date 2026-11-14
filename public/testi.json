@@ -1,5 +1,5 @@
 {
- "versione": 50,
+ "versione": 51,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -2141,7 +2141,7 @@
    "s": "Tutorial (Come si gioca)"
   },
   "intro.s3.x": {
-   "t": "Il Megafono ne posa uno, coperto, su una carta: CADE, NON CADE o VOTI NULLI!",
+   "t": "Il Megafono ne posa uno, coperto, su una carta.",
    "s": "Tutorial (Come si gioca)"
   }
  }
