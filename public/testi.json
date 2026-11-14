@@ -1,6 +1,6 @@
 {
- "versione": 28,
- "aggiornato": "2026-11-13",
+ "versione": 30,
+ "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -577,7 +577,7 @@
    "s": "Regolamento completo"
   },
   "how.4.int.x": {
-   "t": "Fino a 5 giocatori c'è un fuori programma a metà partita, con 6 ce ne sono due (uno diverso dall'altro): L'Accusa, La storia d'amore o Il peggiore. Non c'è il Megafono: dopo il sipario e il 3-2-1, 6 carte escono una alla volta da dietro un separé, per 3 giri, e tu premi **QUESTO!** quando esce quella giusta. Chi sceglie la carta più votata fa +2 punti, il più veloce di loro +4.",
+   "t": "Fino a 5 giocatori c'è un fuori programma a metà partita, con 6 ce ne sono due: 6 carte escono una alla volta da dietro un separé, per 3 giri. Premi **QUESTO!** quando esce quella giusta: carta più votata +2, il più veloce +4.",
    "s": "Regolamento completo"
   },
   "how.4.parla.t": {
@@ -807,10 +807,6 @@
   },
   "mg.hanno.votato": {
    "t": "{n} su {tot} hanno votato",
-   "s": "Fuori programma (schermate)"
-  },
-  "mg.fine.t": {
-   "t": "FINE DEL FUORI PROGRAMMA",
    "s": "Fuori programma (schermate)"
   },
   "mg.finisce": {
@@ -2391,15 +2387,15 @@
    "n": "Gioco base «Cade / Non cade»"
   },
   "mini.accusa.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il colpevole. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Premi **QUESTO!** quando esce il colpevole.",
    "s": "Fuori programma «L'Accusa» (fuori programma)"
   },
   "mini.amore.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il partner perfetto. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Premi **QUESTO!** quando esce il partner perfetto.",
    "s": "Fuori programma «La storia d'amore» (fuori programma)"
   },
   "mini.peggiore.regola": {
-   "t": "Le carte escono dal separé una alla volta, per 3 giri: premi **QUESTO!** quando esce il peggiore. Chi sceglie la carta più votata fa +2, il più veloce +4.",
+   "t": "Premi **QUESTO!** quando esce il peggiore.",
    "s": "Fuori programma «Il peggiore» (fuori programma)"
   },
   "mr.btn": {
@@ -2575,6 +2571,16 @@
    "t": "Nessun punto in questo turno",
    "s": "Riepilogo punti: perché hai preso quei punti",
    "n": "Tocco su un giocatore nella striscia dei punti"
+  },
+  "mg.chiusura": {
+   "t": "E ORA… TORNIAMO ALLA PARTITA!",
+   "s": "Fuori programma (schermate)",
+   "n": "Sipario che si chiude alla fine del fuori programma, prima di riprendere il gioco"
+  },
+  "mini.punti": {
+   "t": "Carta più votata: **+2**. Il più veloce: **+4**.",
+   "s": "Fuori programma (schermate)",
+   "n": "Seconda riga della spiegazione iniziale"
   }
  }
 }

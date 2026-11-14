@@ -302,24 +302,49 @@ export function chooseBotAction(s: GameState, me: PlayerId, level: BotLevel, mem
       return vote(pickProb(ww.map((x, k) => (k + 1 === banned ? 0 : x + 0.04)), rand) + 1);
     }
     case "MINI_RUN": {
-      // Intervallo a tempo: la posizione è quella che il bot sceglie di votare (il server decide quando, vedi RoomCore). Prendo punti se voto una carta che arriva in testa → seguo il gruppo.
-      if (s.votes[me] !== undefined || !s.mini) return null;
-      const mini = s.mini, vote = (position: number): Action => ({ type: "vote", playerId: me, position });
-      const sample = (w: number[]) => { const z = w.reduce((x, y) => x + y, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
-      const len = s.tower.length;
-      if (level === "easy") return vote(1 + Math.floor(rand() * len));
-      if (mini.kind === "peggiore") {
-        // il "peggiore": i personaggi che cadono spesso un po' di più, in modo imprevedibile
-        const w = s.tower.map((t) => (1 + 0.8 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1))) * (0.6 + rand()));
-        return vote(sample(w) + 1);
-      }
-      // Accusa: il più "colpevole" per affinità con l'accusa; Storia d'amore: nessuna accusa, i gusti si somigliano poco e la scelta è quasi libera
-      const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
-      const aff = s.tower.map((t) => { const a = text ? affinity(t.cardId, text) : null; return a === null ? 0 : a; });
-      const temp = level === "hard" ? 1.5 : 2.5;
-      const w = softmax(aff.map((a) => a / temp));
-      return vote(sample(w.map((x) => x + 0.04)) + 1);
+      // Fuori programma: il voto lo decide planMiniVote (carta per carta, come una persona); qui solo la posizione, per le simulazioni del motore.
+      const plan = planMiniVote(s, me, level, mem, rand, true);
+      return plan ? { type: "vote", playerId: me, position: plan.position } : null;
     }
     default: return null;
   }
+}
+
+/** Il voto di un bot nel fuori programma: quando e su quale carta. */
+export interface MiniPlan { position: number; /** Quale uscita dal separé (0 = la prima). */ slot: number; /** Dopo quanti ms dall'uscita della carta preme il bottone. */ delayMs: number }
+
+/**
+ * Un bot decide come una persona, senza vantaggi: guarda le carte man mano che escono dal separé (la lista dell'ordine è pubblica, ma una carta si
+ * «conosce» solo dopo averla vista), ne dà un giudizio un po' sfocato (più sfocato ai livelli bassi) e preme quando gli pare quella giusta:
+ * al primo giro solo se è evidente e la migliore vista finora, al secondo se è la migliore tra tutte quelle viste, all'ultimo giro se è quella e non l'ha ancora fatto.
+ * Dopo l'uscita della carta ci mette il tempo di reazione di una persona (più lungo ai livelli bassi, più corto se è impulsivo); a volte è troppo tardi e non vota.
+ * Usa solo informazioni pubbliche: le carte in scena, la frase dell'accusa e la storia delle carte cadute.
+ */
+export function planMiniVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, force = false): MiniPlan | null {
+  const mini = s.mini; if (!mini || s.votes[me] !== undefined) return null;
+  const order = mini.order, cycles = 3, per = Math.max(1, Math.floor(order.length / cycles)), imp = (trait(me) + 1) / 2;   // 0 paziente … 1 impulsivo
+  const sigma = level === "easy" ? 3 : level === "medium" ? 1.6 : 0.9, thr = (level === "easy" ? 3 : level === "medium" ? 4.5 : 5.5) - 2 * imp;
+  const meanMs = (level === "easy" ? 1900 : level === "medium" ? 1500 : 1200) - 350 * imp, miss = level === "easy" ? 0.12 : level === "medium" ? 0.05 : 0.02;
+  const gauss = () => Math.sqrt(-2 * Math.log(1 - rand() + 1e-9)) * Math.cos(2 * Math.PI * rand());
+  const text = mini.kind === "accusa" ? mini.text ?? undefined : undefined;
+  const taste = (pos: number) => { let h = 11; for (const ch of `${me}:${pos}`) h = (h * 33 + ch.charCodeAt(0)) | 0; return ((Math.abs(h) % 1000) / 1000) * 2; };
+  const base = (pos: number): number => {
+    const t = s.tower.find((x) => x.position === pos)!;
+    if (mini.kind === "accusa") { const a = text ? affinity(t.cardId, text) : null; return (a ?? 0) + taste(pos) * 0.3; }
+    if (mini.kind === "peggiore") return 4 * ((mem.fell[t.cardId] ?? 0) / ((mem.shown[t.cardId] ?? 0) + 1)) + taste(pos) * 2.5;
+    return taste(pos) * 2.5;   // storia d'amore: nessun indizio, contano i gusti
+  };
+  const est: Record<number, number> = {};   // il giudizio su una carta si forma la prima volta che la si vede e non cambia
+  const react = () => Math.max(650, Math.min(2750, meanMs * Math.exp(0.3 * gauss())));
+  for (let i = 0; i < order.length; i++) {
+    const pos = order[i]!, cyc = Math.floor(i / per); if (est[pos] === undefined) est[pos] = base(pos) + sigma * gauss();
+    const seen = Object.values(est), best = Math.max(...seen), isBest = est[pos]! >= best - 1e-9, all = seen.length >= s.tower.length;
+    const go = cyc === 0 ? isBest && est[pos]! >= thr && rand() < 0.5 + 0.5 * imp
+      : cyc === 1 ? all && isBest && rand() < 0.55 + 0.35 * imp
+      : all && isBest && rand() < 0.93;
+    if (go) { if (rand() < miss && !force) return null; return { position: pos, slot: i, delayMs: Math.round(react()) }; }
+  }
+  if (!force) return null;   // (simulazioni del motore: vota comunque la carta che gli sembrava migliore)
+  const top = Number(Object.entries(est).sort((a, b) => b[1] - a[1])[0]?.[0] ?? order[0]);
+  return { position: top, slot: order.lastIndexOf(top), delayMs: 1500 };
 }

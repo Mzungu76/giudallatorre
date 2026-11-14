@@ -3,8 +3,8 @@ import type { ScoreLine } from "@gdt/game-engine";
 import { terracePos, voteTok } from "../scene/draw.ts";
 import { Disc, useStage } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
-import { chipsFor, iconPts, sunk, totals, visibleRect } from "../lib/results.ts";
-import type { Reason, Rect, Tok } from "../lib/results.ts";
+import { iconPts, sunk, totals, visibleRect } from "../lib/results.ts";
+import type { Reason, Rect } from "../lib/results.ts";
 import { PtIcon } from "./Pt.tsx";
 import { ReasonIcon } from "./ReasonIcon.tsx";
 import { REASON_ICON } from "../lib/results.ts";
@@ -49,16 +49,12 @@ export function popOrder(lines: Record<string, ScoreLine[]>, ids: string[], mega
 }
 const STEP = 0.32;
 
-export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId, megaId, sink, still, slam, luiPos, spread }: {
-  /** Fila davanti più in basso (come la Terrace). */ spread?: boolean;
-  n: number; votes: Tok[]; lines: Record<string, ScoreLine[]>; fallen: number[]; win?: number[]; colorOf: (id: string) => string; meId?: string; megaId?: string;
-  /** Carte abbassate (quelle che cadono): i riquadri le seguono. */ sink?: number[]; /** Già visti: senza animazione. */ still?: boolean;
-  /** Spoglio: la freccia scatta una carta alla volta e i punteggi arrivano dopo. */ slam?: boolean; /** Carte col Lui!: a sinistra resta posto per il segnalino. */ luiPos?: number[];
+export function ResultMarks({ n, fallen, win, sink, still, slam, spread }: {
+  n: number; fallen: number[]; win?: number[];
+  /** Carte abbassate (quelle che cadono). */ sink?: number[]; /** Già visti: senza animazione. */ still?: boolean;
+  /** Spoglio: la freccia scatta una carta alla volta. */ slam?: boolean; /** Fila davanti più in basso (come la Terrace). */ spread?: boolean;
 }) {
   const { ts, ty } = useStage(), pos = useMemo(() => sunk(terracePos(Math.max(3, n), spread), sink), [n, sink, spread]);
-  const chips = useMemo(() => chipsFor(votes, lines, pos, colorOf, luiPos), [votes, lines, pos, luiPos]); // eslint-disable-line react-hooks/exhaustive-deps
-  const order = useMemo(() => popOrder(lines, [...new Set([...Object.keys(lines), ...chips.map((c) => c.id)])], megaId), [lines, chips, megaId]);
-  const t0 = still ? 0 : slam ? 0.3 + fallen.length * 0.45 : 0.3;
   return (
     <div className="layer rs-layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="result-marks">
       {fallen.map((c, i) => <FallArrow key={`f${c}`} rect={pos[c - 1] ? visibleRect(pos, c - 1) : undefined} slam={slam && !still} delay={i * 0.45} />)}
@@ -66,12 +62,6 @@ export function ResultMarks({ n, votes, lines, fallen, win, colorOf, meId, megaI
         <div key={`w${c}`} className="rs-win" data-testid="card-won" style={{ left: p.x, top: p.f - p.h - 6, width: p.w, height: p.h }}>
           <svg className="rs-heart" viewBox="0 0 32 29" style={{ width: Math.min(48, p.w * 0.55), left: p.w / 2 - Math.min(48, p.w * 0.55) / 2, top: p.h - Math.min(48, p.w * 0.55) * 0.5 }} aria-hidden><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="#ff4f7b" stroke="#fff" strokeWidth="4" strokeLinejoin="round" /><path d="M16 27C-6 12 3 -3 16 7 29 -3 38 12 16 27Z" fill="none" stroke="#13224a" strokeWidth="2" strokeLinejoin="round" /></svg>
         </div>) : null; })}
-      {chips.map((c) => (
-        <div key={c.key} className={`rs-tk ${cls(c.gain)}${c.id === meId ? " me" : ""}${still ? " still" : ""}`} data-testid="result-chip" style={{ left: c.x, top: c.y, width: c.w, height: c.h, animationDelay: `${t0 + order.indexOf(c.id) * STEP}s` }}>
-          <span className="rs-face" style={{ width: c.h, height: c.h }} dangerouslySetInnerHTML={{ __html: voteTok(c.color, c.h, c.id === megaId, false) }} />
-          <b className="rs-bd" style={{ fontSize: Math.max(11, Math.round(c.h * 0.46)) }}>{sign(c.gain)}</b>
-        </div>
-      ))}
     </div>
   );
 }

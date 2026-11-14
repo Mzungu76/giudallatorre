@@ -21,8 +21,8 @@ import { t, ts } from "../lib/testi.ts";
 function useTick(ms = 50) { const [n, setN] = useState(Date.now()); useEffect(() => { const i = setInterval(() => setN(Date.now()), ms); return () => clearInterval(i); }, [ms]); return n; }
 
 /** Il sipario resta chiuso per la scritta (poi si apre sul palco); dopo la corsa si richiude per il verdetto e dopo la scenetta per la fine. */
-const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, OUTRO_MS = 2600, LAST_VOTE_MS = 3000;
-type Post = null | "verdict" | "finale" | "outro" | "points" | "board";
+const CURTAIN_INTRO_MS = 1900, VERDICT_MS = 2800, CLOSING_MS = 2200, LAST_VOTE_MS = 3000;
+type Post = null | "verdict" | "finale" | "points" | "board" | "closing";
 
 export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, startAt }: GameProps & { /** Solo simulatore: apri direttamente il riepilogo dei punti. */ startAt?: "points" }) {
   const people = usePeople(room), me = view.viewerId, res = view.miniResult, mini = view.mini;
@@ -36,9 +36,9 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
   const go = goRef.current ?? (first.current ??= Date.now() + MINI_INTRO_MS + MINI_COUNTDOWN_MS);
   const t0 = now - go, end = order.length * MINI_SLOT_MS, start = go - (MINI_INTRO_MS + MINI_COUNTDOWN_MS);
 
-  // dopo la corsa: sipario (verdetto) → scenetta finale → sipario (fine) → punti → classifica
+  // dopo la corsa: sipario (verdetto) → scenetta finale → punti → classifica → sipario di chiusura → si riprende la partita
   const [post, setPost] = useState<Post>(() => (view.phase === "MINI_RESULTS" ? (FAST || startAt === "points" ? "points" : "verdict") : null));
-  const marks = useRef({ shut: Date.now(), outro: 0, res: 0 });
+  const marks = useRef({ shut: Date.now(), closing: 0, res: 0 }), advanced = useRef(false);
   useEffect(() => {
     const at = Date.now();
     if (post === null) {
@@ -47,30 +47,32 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
       const allVoted = view.phase === "MINI_RESULTS" && at - marks.current.res >= (FAST ? 0 : LAST_VOTE_MS), timeUp = inRun && order.length > 0 && t0 >= end;
       if (allVoted || timeUp) { marks.current.shut = at; setPost(FAST && view.phase === "MINI_RESULTS" ? "points" : "verdict"); }
     } else if (post === "verdict" && view.phase === "MINI_RESULTS" && at - marks.current.shut >= (FAST ? 0 : VERDICT_MS)) setPost(FAST ? "points" : "finale");
-    else if (post === "outro" && at - marks.current.outro >= OUTRO_MS) setPost("points");
+    else if (post === "closing" && !advanced.current && at - marks.current.closing >= (FAST ? 0 : CLOSING_MS)) { advanced.current = true; send({ t: "act", action: { type: "advance" } }); }
   }, [now]); // eslint-disable-line react-hooks/exhaustive-deps
-  const endFinale = () => { marks.current.outro = Date.now(); setPost("outro"); };
+  const endFinale = () => setPost("points");
+  /** «Riprendiamo la partita»: prima si chiude il sipario, poi si torna al gioco normale. */
+  const resume = () => { marks.current.closing = Date.now(); advanced.current = false; setPost("closing"); };
 
   const introShut = inRun && post === null && !FAST && now < start + CURTAIN_INTRO_MS;
-  const shut = introShut || post === "verdict" || post === "outro";
-  const curtainText = post === "verdict" || post === "finale" ? <b>{t("mr.sip.verdetto")}</b> : post !== null ? <b>{t("mg.fine.t")}</b> : <><small>{t("mg.strip")}</small><b>{info.icon} {info.title}</b></>;
-  const showStage = post === null || post === "verdict", showFinale = post === "finale" || post === "outro";
+  const shut = introShut || post === "verdict" || post === "closing";
+  const curtainText = post === "verdict" || post === "finale" ? <b>{t("mr.sip.verdetto")}</b> : post === "closing" ? <b>{t("mg.chiusura")}</b> : <><small>{t("mg.strip")}</small><b>{info.icon} {info.title}</b></>;
+  const showStage = post === null || post === "verdict", showFinale = post === "finale";
 
   // suoni: apertura, ogni carta che esce, ultimo giro, verdetto, fine della scenetta
   const slot = Math.floor(t0 / MINI_SLOT_MS), running = inRun && post === null && t0 >= 0 && t0 < end;
   const lastSlot = useRef(-1);
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (running && slot !== lastSlot.current) { lastSlot.current = slot; sfx.whoosh(sound); if (slot % 6 === 0 && slot > 0) sfx.drum(sound, 0.7); } }, [slot, running, sound]);
-  useEffect(() => { if (post === "verdict") sfx.drum(sound, 1.4); if (post === "finale") sfx.tada(sound); }, [post]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (post === "verdict") sfx.drum(sound, 1.4); if (post === "finale") sfx.tada(sound); if (post === "closing") sfx.drum(sound, 1.2); }, [post]); // eslint-disable-line react-hooks/exhaustive-deps
   const count = inRun && post === null && t0 < 0 && t0 >= -MINI_COUNTDOWN_MS ? Math.ceil(-t0 / 1000) : null, lastCount = useRef<number | null>(null);
   useEffect(() => { if (count !== null && count !== lastCount.current) { lastCount.current = count; sfx.tap(sound, 440 + (3 - count) * 110); } }, [count, sound]);
 
   return (
     <>
       {showStage && <Run {...{ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }} />}
-      {showFinale && res && <Finale res={res} view={view} readOnly={!!readOnly} sound={sound} onDone={endFinale} done={post === "outro"} />}
-      {(post === "points" || post === "board") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post} onStep={setPost} />}
-      <Curtain closed={shut} valance={post === "points" || post === "board" ? null : <span>{ts("mg.turno", { n: view.turn, tot: view.totalTurns })} · {info.icon} {info.title}</span>}>{curtainText}</Curtain>
+      {showFinale && res && <Finale res={res} view={view} readOnly={!!readOnly} sound={sound} onDone={endFinale} done={false} />}
+      {(post === "points" || post === "board" || post === "closing") && res && <End {...{ view, send, readOnly, sound, ui, people, res, isHost }} step={post === "closing" ? "board" : post} onStep={setPost} onResume={resume} closing={post === "closing"} />}
+      <Curtain closed={shut} valance={post === "points" || post === "board" || post === "closing" ? null : <span>{ts("mg.turno", { n: view.turn, tot: view.totalTurns })} · {info.icon} {info.title}</span>}>{curtainText}</Curtain>
     </>
   );
 }
@@ -120,7 +122,7 @@ function Run({ view, send, readOnly, sound, people, info, t0, end, running, orde
         <div className="mr-intro" data-testid="mini-intro" role="dialog" aria-label={ts("mg.interv.aria")}>
           <div className="strip">{t("mg.strip")}</div>
           <div className="mr-it">{info.icon} {info.title}</div>
-          <p>{info.rule}</p>
+          <p>{info.rule}</p><p className="pts">{t("mini.punti")}</p>
         </div>
       )}
       {count !== null && <div key={count} className="mr-count" data-testid="mr-count">{count}</div>}
@@ -154,10 +156,9 @@ function Finale({ res, view, readOnly, sound, onDone, done }: { res: MiniResult;
 }
 
 /** Dopo il sipario di chiusura: lo stesso riepilogo dei turni normali («Com'è andata» + «Punti del turno»), poi la classifica. */
-function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onStep }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void }) {
+function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onResume, closing }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void; onResume: () => void; closing: boolean }) {
   const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
   const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
-  const act = () => send({ t: "act", action: { type: "advance" } });
   const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false, id })), [res, people]);
   const rows = view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score }));
   const uiv = readOnly ? null : ui ?? null, tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
@@ -165,7 +166,7 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
   return (
     <>
       {step === "points" && <Terrace cardIds={ids} votes={[]} spread sink={res.fallenPositions} />}
-      {step === "points" && <ResultMarks spread sink={res.fallenPositions} n={ids.length} votes={toks} lines={res.lines} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} colorOf={(id) => people.get(id).color} meId={readOnly ? undefined : me} />}
+      {step === "points" && <ResultMarks spread sink={res.fallenPositions} n={ids.length} fallen={res.fallenPositions} win={kind === "amore" ? res.leaders : []} />}
       {step === "points" && (
         <div className="bl">
           <BMeta turn={ts("mg.turno", { n: view.turn, tot: view.totalTurns })} right={`🎭 ${info.title}`} />
@@ -181,7 +182,7 @@ function End({ view, send, readOnly, sound, ui, people, res, isHost, step, onSte
       )}
       {step === "board" && (
         <Standings rows={rows} turn={view.turn} total={view.totalTurns} title={ts("mg.dopo")} onClose={() => undefined}
-          action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: act } : { wait: ts("mg.host.aspetta") }} />
+          action={readOnly ? { wait: ts("mg.host.wait") } : isHost ? { label: ts("mg.riprendiamo"), onClick: closing ? () => undefined : onResume } : { wait: ts("mg.host.aspetta") }} />
       )}
     </>
   );

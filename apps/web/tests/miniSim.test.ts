@@ -15,7 +15,7 @@ describe("simulatore degli intervalli", () => {
     }
   });
   it("tempi di partenza: dall'inizio 9 s al «via», dal 3-2-1 3 s, dalla corsa subito", () => {
-    expect(newSim(base({ start: "inizio" }), ids, 0).goAt).toBe(9000);
+    expect(newSim(base({ start: "inizio" }), ids, 0).goAt).toBe(12000);
     expect(newSim(base({ start: "conto" }), ids, 0).goAt).toBe(3000);
     expect(newSim(base({ start: "corsa" }), ids, 0).goAt).toBeLessThan(1000);
   });

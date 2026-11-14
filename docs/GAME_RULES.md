@@ -167,3 +167,9 @@ Segnalini, riquadri dei punti e frecce stanno solo nella parte visibile di ogni 
 
 ### Dopo la caduta
 Chi ha visto spoglio e caduta non rivede i punti: finita la scena si passa da soli alla classifica dopo ~2 s (subito se si è saltata l'animazione della caduta). Chi arriva a turno già iniziato vede ancora il riepilogo dei punti con «Continua».
+
+### Fuori programma: introduzione, chiusura e bot
+- **Introduzione**: due frasi corte (chi si vota e come si fanno punti), visibili circa 7 s dopo l'apertura del sipario (`MINI_INTRO_MS` = 9 s prima del 3-2-1).
+- **Chiusura**: la scenetta finale porta direttamente ai punti e alla classifica; il sipario si chiude solo alla fine («E ORA… TORNIAMO ALLA PARTITA!», ~2 s), quando l'host preme «Riprendiamo la partita».
+- **Bot**: votano come persone (`planMiniVote`): guardano le carte man mano che escono, le giudicano con un po' di sfocatura (più alta ai livelli bassi), premono al primo giro solo se evidente, altrimenti dopo aver visto tutte le carte; tempo di reazione 0,65–2,75 s (più lungo ai livelli bassi, più corto se impulsivi); a volte sono troppo tardi. Usano solo informazioni pubbliche.
+- **Riepilogo punti**: sulle carte restano solo le frecce (e i cuori nella Storia d'amore); i punti sono nei chip in basso, due per riga.

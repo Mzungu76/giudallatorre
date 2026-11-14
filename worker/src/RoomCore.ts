@@ -1,4 +1,4 @@
-import { applyAction, buildPhraseDeck, chooseBotAction, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, buildPhraseDeck, chooseBotAction, planMiniVote, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -262,10 +262,8 @@ export class RoomCore {
     const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296, order = g.mini!.order;
     for (const b of d.players.filter((p) => p.isBot)) {
       if (g.votes[b.id] !== undefined || run.bots[b.id]) continue;
-      const a = chooseBotAction(g, b.id, b.level ?? "medium", d.botMem, rand);
-      if (!a || a.type !== "vote") continue;
-      const slots = order.map((p, i) => (p === a.position ? i : -1)).filter((i) => i >= 0), i = slots[Math.floor(rand() * slots.length)]!;
-      run.bots[b.id] = { position: a.position, at: run.goAt + i * MINI_SLOT_MS + 500 + Math.floor(rand() * 1900) };
+      const pl = planMiniVote(g, b.id, b.level ?? "medium", d.botMem, rand);   // carta per carta e con il tempo di reazione di una persona
+      if (pl) run.bots[b.id] = { position: pl.position, at: run.goAt + pl.slot * MINI_SLOT_MS + pl.delayMs };
     }
   }
   private armDeadline(now: number) {
