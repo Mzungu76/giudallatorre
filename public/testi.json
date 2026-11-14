@@ -1,5 +1,5 @@
 {
- "versione": 33,
+ "versione": 38,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -657,7 +657,7 @@
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.libera": {
-   "t": "una frase tutta sua (detta a voce)!",
+   "t": "una frase tutta sua!",
    "s": "Pannelli in basso (frase, gettoni, chat…)"
   },
   "bui.frase.aria": {
@@ -901,16 +901,8 @@
    "t": "La tua frase",
    "s": "Partita: turno normale"
   },
-  "g.fr.mega": {
-   "t": "Sei il Megafono",
-   "s": "Partita: turno normale"
-  },
   "g.fr.inventala": {
    "t": "Inventala",
-   "s": "Partita: turno normale"
-  },
-  "g.fr.scegli": {
-   "t": "Scegli cosa urlare",
    "s": "Partita: turno normale"
   },
   "g.fr.oggi": {
@@ -926,10 +918,6 @@
    "t": "La tua frase",
    "s": "Partita: turno normale"
   },
-  "g.fr.voce": {
-   "t": " La dico a voce, non la scrivo",
-   "s": "Partita: turno normale"
-  },
   "g.fr.t.own": {
    "t": "LA TUA FRASE",
    "s": "Partita: turno normale"
@@ -939,7 +927,7 @@
    "s": "Partita: turno normale"
   },
   "g.fr.s.own": {
-   "t": "Se la dici a voce, gli altri non la leggono.",
+   "t": "Scrivila: la leggeranno tutti.",
    "s": "Partita: turno normale"
   },
   "g.fr.s.single": {
@@ -2545,6 +2533,145 @@
    "t": "Carta più votata: **+2**. Il più veloce: **+4**.",
    "s": "Fuori programma (schermate)",
    "n": "Seconda riga della spiegazione iniziale"
+  },
+  "bot.profilo.aria": {
+   "t": "Scheda di {nome}",
+   "s": "Scheda del giocatore",
+   "n": "Nome accessibile della finestra"
+  },
+  "bot.profilo.chiudi": {
+   "t": "Chiudi",
+   "s": "Scheda del giocatore"
+  },
+  "char.0.chi1": {
+   "t": "Palestrato, 38 anni, vende auto usate.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.0.chi2": {
+   "t": "Racconta sempre di aver vinto qualcosa.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.0.chi3": {
+   "t": "Ci prova con tutti… e gli riesce a metà.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi1": {
+   "t": "Trentenne, lavora da remoto (quando lavora).",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi2": {
+   "t": "Ha sempre la testa in vacanza.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi3": {
+   "t": "Single: è innamorato dell'idea dell'amore.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi1": {
+   "t": "50 anni, insegna filosofia.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi2": {
+   "t": "Corregge tutti, anche a cena.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi3": {
+   "t": "Vedovo e riservato: i segreti li custodisce bene.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi1": {
+   "t": "35 anni, animatore di feste.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi2": {
+   "t": "Ride di tutto e fa ridere tutti.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi3": {
+   "t": "Dietro le risate un cuore tenero… e molti ex.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi1": {
+   "t": "32 anni, commercialista.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi2": {
+   "t": "Tiene il conto di tutto, favori compresi.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi3": {
+   "t": "Riservata: sa più cose di quante ne dica.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi1": {
+   "t": "28 anni, zaino sempre pronto.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi2": {
+   "t": "Ha un amore in ogni città.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi3": {
+   "t": "Mai la stessa foto due volte.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi1": {
+   "t": "45 anni, contabile, sposato.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi2": {
+   "t": "Si preoccupa di tutto, anche delle confessioni.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi3": {
+   "t": "Ogni segreto gli pesa il doppio.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi1": {
+   "t": "29 anni, influencer.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi2": {
+   "t": "Sempre sotto i riflettori, sempre con un fan.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi3": {
+   "t": "Adora il gossip, soprattutto quello su di sé.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "g.fr.pescato": {
+   "t": "Hai pescato dal mazzo…",
+   "s": "Partita: scelta della frase del Megafono",
+   "n": "Titolo sopra la carta pescata"
+  },
+  "g.fr.confessalo": {
+   "t": "Confessalo!",
+   "s": "Partita: scelta della frase del Megafono",
+   "n": "Targhetta sulla carta confessione"
   }
  }
 }

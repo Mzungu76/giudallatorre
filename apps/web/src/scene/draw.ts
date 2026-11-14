@@ -84,7 +84,7 @@ function cardsLayout(n,opt={}){
     
     let s=28,cols=1,rows=cnt;for(;s>=16;s-=2){cols=Math.max(1,Math.floor((aw+2)/(s+2)));rows=Math.ceil(cnt/cols);if(rows*(s+2)-2<=ah)break}
     list.forEach(({v,idx},j)=>{const r=Math.floor(j/cols),c=j%cols,inRow=Math.min(cols,cnt-r*cols),cx=ax+aw/2+(c-(inRow-1)/2)*(s+2),cy=ay+ah/2+(r-(rows-1)/2)*(s+2),sz=v.mega?Math.round(s*1.35):s;
-      o+=`<div class="${idx===opt.lastVote?'tokdrop':''}${v.glow?' tbg':''}" style="position:absolute;left:${cx-sz/2}px;top:${cy-sz/2}px;z-index:${v.mega?72:70}">${voteTok(v.c,sz,v.mega,!!v.glow)}</div>`})});
+      o+=`<div class="${idx===opt.lastVote?'tokdrop':''}${v.glow?' tbg':''}"${v.id?` data-pid="${v.id}"`:''} style="${v.id?'pointer-events:auto;cursor:pointer;':''}position:absolute;left:${cx-sz/2}px;top:${cy-sz/2}px;z-index:${v.mega?72:70}">${voteTok(v.c,sz,v.mega,!!v.glow)}</div>`})});
   if(opt.posOut)Object.assign(opt.posOut,pos);
   return o}
 const terrace=(n,opt={})=>shaft()+terraceBase()+cardsLayout(n,opt);

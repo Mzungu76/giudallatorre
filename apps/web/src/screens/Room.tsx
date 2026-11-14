@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { CHAR_COLORS, tokenUrl } from "../lib/characters.ts";
+import { PersonaProvider, usePersona } from "../components/Persona.tsx";
 import { Stage, Btn, Disc, Toast, navigate, PLAYER_COLORS, colorFor } from "../ui.tsx";
 import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
@@ -46,7 +47,7 @@ const AGES = [6, 10, 14, 18] as const;
 const ageLabel = (v: number) => (AGES as readonly number[]).includes(v) ? txs(`room.age.${v}` as TestoKey) : `${v}+`;
 function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMessage) => void; ui: UiCtl; overlays: ReactNode }) {
   const me = room.you, host = room.hostId === me, link = `${location.origin}/entra?c=${room.code}`, o = room.options;
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(false), openPersona = usePersona();
   async function share() {
     try { if (navigator.share) { await navigator.share({ title: txs("room.share.titolo"), text: txs("room.share.testo", { codice: room.code }), url: link }); return; } } catch { /* annullato */ }
     try { await navigator.clipboard.writeText(link); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch { /* */ }
@@ -65,11 +66,11 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
         </div>
         <div className="ptiles">
           {room.players.map((p, i) => (
-            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row">
+            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row" role="button" tabIndex={0} onClick={() => openPersona?.(p.id)}>
               <img src={tokenUrl(CHAR_COLORS[(p.char ?? i) % 8]!)} alt="" />
               <span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
-              {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}
-              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={() => send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id })} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}
+              {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{p.isBot && p.style && <small className="dbg-st">{p.style}</small>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}
+              {host && p.id !== me && <button className="x" aria-label={p.isBot ? txs("room.togli", { nome: p.nickname }) : txs("room.espelli", { nome: p.nickname })} onClick={(e) => { e.stopPropagation(); send(p.isBot ? { t: "removeBot", playerId: p.id } : { t: "kick", playerId: p.id }); }} data-testid={p.isBot ? "remove-bot" : "kick"}>×</button>}
             </div>
           ))}
           {Array.from({ length: Math.max(0, Math.min(6, Math.max(3, room.players.length + 1)) - room.players.length) }).map((_, i) => <div className="ptile em" key={`e${i}`}><i /><span className="nmx">{i === 0 ? tx("room.attesa.altri") : ""}</span></div>)}
@@ -132,9 +133,10 @@ export default function RoomScreen({ code }: { code: string }) {
     : ov === "lui" && pv ? <LuiPopup view={pv} onClose={close} />
     : ov === "rank" && pv ? <Standings turn={pv.turn} total={pv.totalTurns} onClose={close} rows={pv.players.map((p) => ({ id: p.id, name: p.name, color: colorOf(p.id), score: p.score }))} />
     : null;
-  if (room.stage === "LOBBY") return <><Plancia room={room} view={null}><Lobby room={room} send={send} ui={ui} overlays={overlays} /></Plancia>{reconnecting && <div className="banner-conn">{tx("room.riconnessione")}</div>}<Toast text={error ?? notice} /></>;
+  if (room.stage === "LOBBY") return <PersonaProvider players={room.players}><Plancia room={room} view={null}><Lobby room={room} send={send} ui={ui} overlays={overlays} /></Plancia>{reconnecting && <div className="banner-conn">{tx("room.riconnessione")}</div>}<Toast text={error ?? notice} /></PersonaProvider>;
   if (!view) return <Stage bg="sky"><div className="center-msg"><h2>{tx("room.carico")}</h2></div></Stage>;
   return (
+    <PersonaProvider players={room.players}>
     <Plancia room={room} view={view.view}>
     <Stage bg="sky" testId="game">
       {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} goAt={view.goAtLocal} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
@@ -144,5 +146,6 @@ export default function RoomScreen({ code }: { code: string }) {
       <Toast text={error ?? notice} />
     </Stage>
     </Plancia>
+    </PersonaProvider>
   );
 }

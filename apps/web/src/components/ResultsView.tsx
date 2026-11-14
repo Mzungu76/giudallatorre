@@ -1,3 +1,4 @@
+import { Who } from "./Persona.tsx";
 import { useEffect, useMemo, useState } from "react";
 import type { ScoreLine } from "@gdt/game-engine";
 import { terracePos, voteTok } from "../scene/draw.ts";
@@ -80,7 +81,7 @@ export function ScoreStrip({ ids, lines, colorOf, meId, annullati, sound, intera
     <div className="rs-strip" data-testid="points-panel">
       {open && (
         <div className="rs-det" data-testid="points-detail" role="dialog">
-          <div className="rs-dh"><Disc color={colorOf(open)} size="l" /><b>{sign(det.reduce((a, l) => a + l.pts, 0))}</b></div>
+          <div className="rs-dh"><Who id={open}><Disc color={colorOf(open)} size="l" /></Who><b>{sign(det.reduce((a, l) => a + l.pts, 0))}</b></div>
           {det.map((l, i) => (
             <div key={i} className={`rs-dr${l.pts === 0 ? " dim" : ""}`}><ReasonIcon k={iconFor(l.kind)} s={34} /><b>{sign(l.pts)}</b><span>{txs(WHY[l.kind], { n: l.pos })}</span></div>
           ))}

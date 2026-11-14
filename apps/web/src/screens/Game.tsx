@@ -2,11 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PlayerView, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
-import { Btn, Disc, FAST, PLAYER_COLORS, useStage } from "../ui.tsx";
+import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
 import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
+import { Who } from "../components/Persona.tsx";
 import { objCond } from "../lib/lui.ts";
 import Zoom from "../components/Zoom.tsx";
 import { Climb, Reveal, Terrace, luiSpecOf, luiToks, markSpec } from "../components/Terrace.tsx";
@@ -42,35 +43,47 @@ export function Tip({ children, style, className = "" }: { children: React.React
 
 /** Frasi tra cui sceglie il Megafono: ognuna su due righe, si apre con ▾ (e si richiude da sola); un tocco la sceglie, «Proclama» conferma. */
 function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; meta: React.ReactNode }) {
-  const card = view.proclaimCard!, single = card.phrases.length === 1;
-  const [own, setOwn] = useState(false), [text, setText] = useState(""), [voice, setVoice] = useState(false), [sel, setSel] = useState<number | null>(single ? 0 : null);
+  const card = view.proclaimCard!, single = card.phrases.length === 1, conf = /^C\d+$/.test(card.id);   // le confessioni sono le carte «C01…» a frase singola
+  const [own, setOwn] = useState(false), [text, setText] = useState(""), [sel, setSel] = useState<number | null>(single ? 0 : null);
   const say = (i: number) => send({ t: "act", action: { type: "choosePhrase", mode: "card", index: i } });
-  const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", ...(voice || !text.trim() ? {} : { text: text.trim() }) } });
+  const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", text: text.trim() } });
   return (
     <div className="bl" data-testid="phrase-picker">
       {meta}
-      <div className="bhead"><small>{own ? tx("g.fr.tua") : tx("g.fr.mega")}</small>{own ? tx("g.fr.inventala") : tx("g.fr.scegli")}</div>
-      <div className="bscene" style={{ display: "flex", alignItems: "flex-start" }}>
-        {!own && <div className="bopts">{card.phrases.map((t, k) => <PhraseOpt key={k} k={k} text={t} theme={card.themes?.[k]} on={sel === k} onPick={() => setSel(k)} />)}</div>}
+      {own ? <div className="bhead"><small>{tx("g.fr.tua")}</small>{tx("g.fr.inventala")}</div> : <div className="pc-title">{tx("g.fr.pescato")}</div>}
+      <div className={own ? "bscene" : "bscene pc-wrap"} style={own ? { display: "flex", alignItems: "flex-start" } : undefined}>
+        {!own && (
+          // la carta pescata dal mazzo: stesse proporzioni e contorno delle carte dei personaggi; le frasi sono scritte sopra
+          <div className={`pcard${conf ? " conf" : ""}`} data-testid="phrase-card">
+            <span className="pc-badge" aria-hidden><MegaIcon s={46} /></span>{conf && <span className="pc-rib">{tx("g.fr.confessalo")}</span>}
+            <div className="pc-face"><div className="pc-list">{card.phrases.map((t, k) => <PhraseCardOpt key={k} k={k} num={!single} text={t} theme={card.themes?.[k]} on={sel === k} onPick={() => setSel(k)} />)}</div></div>
+          </div>
+        )}
         {own && (
           <div className="bopts" style={{ gap: 10 }}>
             <div className="phr-fixed" style={{ color: "#fff", textShadow: "2px 2px 0 #13224a" }}>{tx("g.fr.oggi")}</div>
-            <textarea className="phr-in" maxLength={MAX_PHRASE_CHARS} value={text} disabled={voice} onChange={(e) => setText(e.target.value)} placeholder={txs("g.fr.ph")} data-testid="phrase-text" aria-label={txs("g.fr.aria")} />
+            <textarea className="phr-in" maxLength={MAX_PHRASE_CHARS} value={text} onChange={(e) => setText(e.target.value)} placeholder={txs("g.fr.ph")} data-testid="phrase-text" aria-label={txs("g.fr.aria")} />
             <div className="hint" style={{ textAlign: "right", margin: 0 }}>{text.length}/{MAX_PHRASE_CHARS}</div>
-            <label className="hint" style={{ display: "flex", gap: 8, alignItems: "center", margin: 0 }}><input type="checkbox" checked={voice} onChange={(e) => setVoice(e.target.checked)} data-testid="phrase-voice" />{tx("g.fr.voce")}</label>
           </div>
         )}
       </div>
       <BSheet gold title={own ? tx("g.fr.t.own") : tx("g.fr.t")} sub={own ? tx("g.fr.s.own") : single ? tx("g.fr.s.single") : tx("g.fr.s")} ui={ui}>
         <Row>
           {(!single || own) && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 15, padding: "0 12px", flex: "none" }} testId="phrase-free">{own ? tx("g.fr.indietro") : tx("g.fr.inventa")}</Btn>}
-          <Btn kind="red" disabled={!own && sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
+          <Btn kind="red" disabled={own ? !text.trim() : sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
         </Row>
       </BSheet>
     </div>
   );
 }
 
+function PhraseCardOpt({ k, num, text, theme, on, onPick }: { k: number; num: boolean; text: string; theme?: string; on: boolean; onPick: () => void }) {
+  return (
+    <div className={`pco${on ? " on" : ""}`} role="button" tabIndex={0} aria-pressed={on} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
+      {num && <span className="pn">{k + 1}</span>}<span className="tx">{theme && <span className="opt-ctx">{theme}</span>}{text}</span>
+    </div>
+  );
+}
 function PhraseOpt({ k, text, theme, on, onPick }: { k: number; text: string; theme?: string; on: boolean; onPick: () => void }) {
   return (
     <div className={`bopt${on ? " on" : ""}`} role="button" tabIndex={0} aria-pressed={on} onClick={onPick} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onPick(); } }} data-testid={`phrase-${k}`}>
@@ -121,12 +134,13 @@ export function HandPicker({ view, send, ui, title = txs("g.mano.t"), sub = txs(
 }
 
 const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; people: ReturnType<typeof usePeople> }) => (
-  <div className="bflags">{flags.map((f) => <span key={f.id} className="chip">{<Disc color={people.get(f.id).color} />}{people.get(f.id).name}{f.done ? " ✓" : " …"}</span>)}</div>
+  <div className="bflags">{flags.map((f) => <span key={f.id} className="chip"><Who id={f.id}><Disc color={people.get(f.id).color} />{people.get(f.id).name}</Who>{f.done ? " ✓" : " …"}</span>)}</div>
 );
 
 
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
-  const people = usePeople(room), { H, dy } = useStage(), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
+  const stage = useStage(), { H, dy } = stage, [shift, setShift] = useState({ dy: 0, sc: 1 });
+  const people = usePeople(room), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
   const [after, setAfter] = useState<{ turn: number; step: "points" | "board" }>({ turn: -1, step: "points" });
   const megaBot = people.get(view.megafonoId).bot;
   const [pick, setPick] = useState<number | null>(null);
@@ -209,7 +223,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const resLui = res?.lui ? { pos: res.lui.position, spec: luiSpecOf(res.lui) } : null, resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;
   const megaName = people.get(view.megafonoId).name;
   const tag = phase === "PROCLAIM" && view.turn > 1 && !view.goldenGoal && (view.turn - 1) % view.players.length === 0 ? txs("g.meta.giro", { n: view.round, tot: view.rounds }) : "";
-  const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? txs("g.meta.sparegg") : txs("mg.turno", { n: view.turn, tot: view.totalTurns })) + tag} mega={megaName} deadline={phase !== "RESULTS" ? deadline : null} cap={room.options.turnTimerSec || undefined} />;
+  const metaEl = <BMeta me={gold} turn={(view.goldenGoal ? txs("g.meta.sparegg") : txs("mg.turno", { n: view.turn, tot: view.totalTurns })) + tag} mega={megaName} megaId={view.megafonoId} megaColor={people.get(view.megafonoId).color} deadline={phase !== "RESULTS" ? deadline : null} cap={room.options.turnTimerSec || undefined} />;
   const uiv = readOnly ? null : ui ?? null;
   const tray = uiv ? <LuiTray view={view} ui={uiv} /> : null;
   const pill = <PhrasePill phrase={view.phrase} megaName={megaName} />;
@@ -222,12 +236,33 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   useEffect(() => {
     if (phase === "PLAY" && isMega && !view.megafonoSa && !readOnly && !FAST && noCardShown.current !== turn && !intro && !charIntro && !luiDraw && !megaIntro && noCardDue()) { noCardShown.current = turn; setNoCard(true); }
   }, [phase, turn, isMega, view.megafonoSa, readOnly, intro, charIntro, luiDraw, megaIntro]);
+  // La frase del Megafono può essere lunga (e il chip del Megafono occupa spazio in alto): se la carta della frase arriva sopra le carte sulla torre, la torre scende
+  // quanto basta (e, se non c'è più spazio sotto, si rimpicciolisce un po'), così niente si sovrappone.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const pill = document.querySelector('.stage [data-testid="phrase"]') as HTMLElement | null, st = pill?.closest(".stage") as HTMLElement | null;
+      let next = { dy: 0, sc: 1 };
+      if (pill && st) {
+        const bottom = (pill.getBoundingClientRect().bottom - st.getBoundingClientRect().top) / stage.k, top0 = 300 + stage.ty + 28 * stage.ts;
+        const extra = Math.max(0, Math.round(bottom + 10 - top0)), limit = H - 206;
+        const sc = extra > 0 ? Math.max(0.78, Math.min(1, (limit - 300 - stage.ty - extra) / (276 * stage.ts))) : 1;
+        next = { dy: extra, sc: Math.round(sc * 100) / 100 };
+      }
+      setShift((c) => (Math.abs(c.dy - next.dy) > 1 || c.sc !== next.sc ? next : c));
+    };
+    measure(); const t = setTimeout(measure, 120);   // il testo della frase e i font arrivano un attimo dopo
+    const pill = document.querySelector('.stage [data-testid="phrase"]'), ro = pill && typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    if (pill && ro) ro.observe(pill);
+    return () => { clearTimeout(t); ro?.disconnect(); };
+  });
+  const shifted = useMemo(() => ({ ...stage, ty: stage.ty + shift.dy, ts: stage.ts * shift.sc }), [stage, shift]);
   // Suggerimento a fumetto con freccia: solo se devi agire e resti fermo a lungo
   const hint = readOnly ? null : hintFor(view), hintText = hint?.text ?? null;
   const [hintOn, hintClose] = useIdleHint(!!hintText && !animating && !climbing && !banner && !intro && !charIntro && !luiDraw && !megaIntro && !noCard && zoomPos === null, `${turn}-${phase}`);
   const inPicker = phase === "PROCLAIM" && isMega && !readOnly;
   return (
     <>
+      <StageCtx.Provider value={shifted}>
       {showFallScene && res && <SceneHost cardIds={ids} cue={{ fallPositions: res.fallenPositions ?? [res.fallenPosition], seed }} sound={sound} onDone={() => setFallDone(turn)} apiRef={apiRef} />}
       {climbing && <Climb cardIds={ids} sound={sound} skip={skip} onDone={() => { setClimbDone(turn); if (!FAST) { const v = phaseRef.current === "VOTE"; setBanner({ k: `${turn}-after`, title: v ? txs("g.ban.vote.t") : txs("g.ban.dopo.mega"), sub: v ? txs("g.ban.vote.s") : txs("g.ban.dopo.mega.s") }); } }} />}
       {!climbing && needTerrace && !revealing && (
@@ -237,6 +272,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       {revealing && res && (
         <Reveal cardIds={ids} voters={voters} votes={res.votes} lui={res.lui} marks={res.marks ?? null} fallPositions={fellArr} points={{ lines: res.lines, ids: view.players.map((p) => p.id), colorOf: (id) => people.get(id).color, meId: readOnly ? undefined : me, annullati }} sound={sound} skip={skip} interactive={!readOnly} onDone={() => setRevealDone(turn)} />
       )}
+      </StageCtx.Provider>
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
       {inPicker && <PhrasePicker view={view} send={act} ui={uiv} meta={metaEl} />}

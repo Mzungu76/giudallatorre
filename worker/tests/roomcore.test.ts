@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { megafonoOf, MINI_SLOT_MS as SLOT, requiredPlayers, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
-import { RoomCore, RoomError, LIMITS, FEMALE_CHARS, animMs } from "../src/RoomCore.ts";
+import { RoomCore, RoomError, LIMITS, FEMALE_CHARS, BOT_NAMES_F, animMs } from "../src/RoomCore.ts";
 import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
 import { fullPhrase, PHRASES_PER_CARD } from "@gdt/game-engine";
 import { CONFESSIONS, PHRASE_POOL } from "../src/content.ts";
@@ -543,11 +543,34 @@ describe("intervallo a tempo nella stanza", () => {
   });
 });
 
+describe("caratteri e nomi dei bot", () => {
+  it("ogni bot ha un carattere diverso dagli altri e i nomi cambiano da una partita all'altra", () => {
+    const names = new Set<string>();
+    for (let seed = 1; seed <= 12; seed++) {
+      const { core } = RoomCore.create("BOTST", deps(seed * 31), 0, { nickname: "Ann", mode: "table", megafonoSa: true, bots: { count: 5, level: "medium" } });
+      const bots = core.data.players.filter((p) => p.isBot);
+      expect(new Set(bots.map((b) => b.style)).size).toBe(5); expect(bots.every((b) => !!b.style)).toBe(true);
+      expect(core.publicInfo().taken!.length).toBe(6); bots.forEach((b) => names.add(b.nickname));
+    }
+    expect(names.size).toBeGreaterThan(8);   // non sono sempre gli stessi
+  });
+});
+
+describe("collaudo dei bot", () => {
+  const dto = (debug: boolean) => {
+    const { core, playerId } = RoomCore.create("DBGXX", deps(5), 0, { nickname: "Ann", mode: "table", megafonoSa: true, debug, bots: { count: 3, level: "hard" } });
+    return (core.roomMsg(playerId) as unknown as { players: { isBot?: boolean; style?: string }[] }).players;
+  };
+  it("il carattere di gioco dei bot non arriva ai telefoni, salvo nelle partite di collaudo", () => {
+    expect(dto(false).some((p) => p.style)).toBe(false);
+    const on = dto(true).filter((p) => p.isBot); expect(on).toHaveLength(3); expect(on.every((p) => !!p.style)).toBe(true);
+  });
+});
+
 describe("personaggi e bot", () => {
   it("i bot hanno un nome del sesso del loro personaggio", () => {
     const { core } = RoomCore.create("BOTNM", deps(11), 0, { nickname: "Ann", mode: "table", megafonoSa: true, char: 0, bots: { count: 5, level: "easy" } });
-    const F = ["Mara", "Lella", "Rosa", "Dora", "Gina", "Tina", "Lia", "Nina"];
-    for (const p of core.data.players.filter((q) => q.isBot)) expect(F.some((n) => p.nickname === `Bot ${n}`)).toBe(FEMALE_CHARS.has(p.char!));
+    for (const p of core.data.players.filter((q) => q.isBot)) expect(BOT_NAMES_F.includes(p.nickname)).toBe(FEMALE_CHARS.has(p.char!));
   });
   it("chi entra sceglie il personaggio; se è già preso ne riceve uno libero; l'elenco dei presi è pubblico", () => {
     const { core } = RoomCore.create("CHARS", deps(12), 0, { nickname: "Ann", mode: "table", megafonoSa: true, char: 5 });

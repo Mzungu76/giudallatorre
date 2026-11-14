@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { terraceBaseHtml, terraceCardsHtml, terracePos, profileShaft } from "../scene/draw.ts";
 import { cardFull } from "../lib/cards.ts";
 import { FAST, useStage } from "../ui.tsx";
+import { usePersona } from "./Persona.tsx";
 import { sfx } from "../lib/sfx.ts";
 import type { LuiOutcome, LuiSpec, MarkOutcome, ScoreLine } from "@gdt/game-engine";
 import { luiLabel } from "../lib/lui.ts";
@@ -23,14 +24,14 @@ export interface TerraceProps {
 
 /** La terrazza vista dall'alto: carte intere su piedini neri, gettoni sopra. Disegno dal mockup approvato. */
 export function Terrace(p: TerraceProps) {
-  const { ts, ty } = useStage(), n = p.cardIds.length;
+  const { ts, ty } = useStage(), n = p.cardIds.length, openPersona = usePersona();
   const base = useMemo(() => terraceBaseHtml(), []);
   const pos = useMemo(() => terracePos(n, p.spread), [n, p.spread]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
   const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.lui, p.marks, p.sink, p.spread]);
   const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, spread: p.spread, lui: p.lui?.pos, luiSpec: p.lui?.spec ?? null, luiBack: !!p.lui && !p.lui.spec, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace">
+    <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace" onClick={(e) => { const el = (e.target as HTMLElement).closest("[data-pid]") as HTMLElement | null; if (el?.dataset.pid) openPersona?.(el.dataset.pid); }}>
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
       {p.onPick && Object.entries(pos).map(([i, c]) => {
@@ -193,7 +194,7 @@ export function Reveal({ cardIds, voters, votes, lui, fallPositions, sound, skip
   useEffect(() => { if (luiOpen) once("luiflip", () => { sfx.stamp(sound); sfx.ding(sound); }); }, [luiOpen]); // eslint-disable-line react-hooks/exhaustive-deps
   // quando il segnalino è scoperto, i gettoni passano al conteggio ufficiale (voti annullati, tolti, spostati, aggiunti)
   const manip = (!!lui || !!marks?.length) && luiOpen && T >= luiStart + 1.2;
-  const base = shown.map(({ v }) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega } as VoteTok }));
+  const base = shown.map(({ v }) => ({ v, tok: { p: votes[v.id]!, c: v.color, mega: v.mega, id: v.id } as VoteTok }));
   const toks: VoteTok[] = manip ? luiToks(base, lui, marks) : base.map((x) => x.tok);
   const pos = useMemo(() => terracePos(cardIds.length, true), [cardIds.length]);
   const nextT = () => steps.find((s) => s.t0 > T + 0.05)?.t0 ?? END;

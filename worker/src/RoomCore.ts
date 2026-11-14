@@ -1,11 +1,11 @@
-import { applyAction, buildPhraseDeck, chooseBotAction, planMiniVote, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
 import type { RandomBytes } from "./security.ts";
 
-export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Personaggio (0–7: colore e segnalino), assegnato a caso tra gli otto quando entra in stanza. */ char?: number; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
+export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Carattere del bot (id di BOT_STYLES), estratto a caso a ogni partita. */ style?: string; /** Personaggio (0–7: colore e segnalino), assegnato a caso tra gli otto quando entra in stanza. */ char?: number; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
 export interface RoomData {
   code: string; createdAt: number; lastActivity: number; stage: RoomStage; finishedAt: number | null;
   options: RoomOptionsDto; seq: number; deadline: number | null; players: PlayerRec[]; game: GameState | null;
@@ -49,8 +49,8 @@ const norm = (n: string) => n.normalize("NFKC").toLocaleLowerCase("it");
 
 /** I personaggi femminili (le altre sei facce sono maschili): i bot prendono un nome del loro sesso. */
 export const FEMALE_CHARS = new Set([4, 7]);
-export const BOT_NAMES_M = ["Bot Gino", "Bot Pino", "Bot Tito", "Bot Nino", "Bot Beppe", "Bot Enzo", "Bot Mario", "Bot Franco"];
-export const BOT_NAMES_F = ["Bot Mara", "Bot Lella", "Bot Rosa", "Bot Dora", "Bot Gina", "Bot Tina", "Bot Lia", "Bot Nina"];
+export const BOT_NAMES_M = ["Gino", "Pino", "Tito", "Nino", "Beppe", "Enzo", "Mario", "Franco", "Rino", "Aldo", "Carlo", "Dino", "Elio", "Gigi", "Sandro", "Walter"].map((n) => `Bot ${n}`);
+export const BOT_NAMES_F = ["Mara", "Lella", "Rosa", "Dora", "Gina", "Tina", "Lia", "Nina", "Wilma", "Elsa", "Bice", "Clara", "Ines", "Marta", "Silvia", "Vera"].map((n) => `Bot ${n}`);
 
 /**
  * Il timer del turno parte dopo le animazioni: a ogni fase si aggiunge il tempo che i telefoni impiegano a mostrarle (cartello di fase,
@@ -77,6 +77,12 @@ export class RoomCore {
     data.options.ageBand ??= DEFAULT_AGE_BAND; data.options.confessions ??= true; data.botMem ??= newBotMemory(); data.botAt ??= null; data.chat ??= []; data.chatSeq ??= 0; data.emptySince ??= null; data.leftExplicit ??= false; data.run ??= null;
     data.players.forEach((p, i) => { p.char ??= data.players.some((q) => q.char === i % 8) ? this.freeChar() : i % 8; }); // stanze salvate prima di questa versione: personaggi in ordine di ingresso
   }
+  private rnd(n: number): number { return new DataView(this.deps.rng(4).buffer).getUint32(0) % n; }
+  /** Un carattere a caso tra quelli che nessun altro bot della stanza ha. */
+  private freeStyle(): string {
+    const used = new Set(this.data.players.map((q) => q.style)), free = BOT_STYLES.filter((x) => !used.has(x.id));
+    return (free.length ? free : BOT_STYLES)[this.rnd(free.length || BOT_STYLES.length)]!.id;
+  }
   /** Un personaggio a caso tra gli otto che nessuno in stanza ha già. */
   private freeChar(): number {
     const used = new Set(this.data.players.map((q) => q.char)), free = [0, 1, 2, 3, 4, 5, 6, 7].filter((c) => !used.has(c));
@@ -84,11 +90,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; mode: "table" | "remote"; megafonoSa: boolean; debug?: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), megafonoSa: p.megafonoSa, mode: p.mode, turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, confessions: true }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -98,8 +104,9 @@ export class RoomCore {
   private insertBot(level: BotLevel, now: number) {
     const d = this.data, used = new Set(d.players.map((q) => norm(q.nickname)));
     const char = this.freeChar(), names = FEMALE_CHARS.has(char) ? BOT_NAMES_F : BOT_NAMES_M;
-    const name = names.find((n) => !used.has(norm(n))) ?? [...BOT_NAMES_M, ...BOT_NAMES_F].find((n) => !used.has(norm(n))) ?? `Bot ${d.players.length + 1}`;
-    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level, char });
+    const free = names.filter((n) => !used.has(norm(n))), pool = free.length ? free : [...BOT_NAMES_M, ...BOT_NAMES_F].filter((n) => !used.has(norm(n)));
+    const name = pool.length ? pool[this.rnd(pool.length)]! : `Bot ${d.players.length + 1}`;   // un nome diverso a ogni partita, del sesso della faccia
+    d.players.push({ id: newPlayerId(this.deps.rng), nickname: name, tokenHash: "", isHost: false, joinedAt: now, isBot: true, level, char, style: this.freeStyle() });
   }
 
   // ---------- accesso ----------
@@ -217,7 +224,7 @@ export class RoomCore {
           if (me.isHost) { me.isHost = false; (humansLeft.find((p) => this.connected.has(p.id)) ?? humansLeft[0]!).isHost = true; d.hostLostAt = null; }
           if (d.stage !== "PLAYING") me.left = true;
           if (d.stage === "PLAYING") {
-            me.isBot = true; me.level = "medium"; me.tokenHash = "";   // il vecchio token non entra più
+            me.isBot = true; me.level = "medium"; me.style = this.freeStyle(); me.tokenHash = "";   // il vecchio token non entra più
             d.botAt = null; this.scheduleBots(now); this.planBots();
           }
           d.seq++; out.persist = true; return this.broadcastRoom(out);
@@ -282,7 +289,7 @@ export class RoomCore {
     const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296, order = g.mini!.order;
     for (const b of d.players.filter((p) => p.isBot)) {
       if (g.votes[b.id] !== undefined || run.bots[b.id]) continue;
-      const pl = planMiniVote(g, b.id, b.level ?? "medium", d.botMem, rand);   // carta per carta e con il tempo di reazione di una persona
+      const pl = planMiniVote(g, b.id, b.level ?? "medium", d.botMem, rand, false, styleById(b.style));   // carta per carta e con il tempo di reazione di una persona
       if (pl) run.bots[b.id] = { position: pl.position, at: run.goAt + pl.slot * MINI_SLOT_MS + pl.delayMs };
     }
   }
@@ -322,7 +329,7 @@ export class RoomCore {
       d.botAt = null; const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296;
       for (const b of d.players.filter((p) => p.isBot)) {
         if (!d.game || d.stage !== "PLAYING") break;
-        const a = chooseBotAction(d.game, b.id, b.level ?? "medium", d.botMem, rand);
+        const a = chooseBotAction(d.game, b.id, b.level ?? "medium", d.botMem, rand, styleById(b.style));
         if (a) { try { out = this.applyGame(out, a, now); } catch (e) { if (!(e instanceof EngineError)) throw e; } }
       }
       this.scheduleBots(now);
@@ -371,7 +378,7 @@ export class RoomCore {
   roomMsg(forPlayer: string): ServerMessage {
     const d = this.data, host = d.players.find((p) => p.isHost);
     return { t: "room", seq: d.seq, code: d.code, stage: d.stage, you: forPlayer, hostId: host?.id ?? "", options: { ...d.options },
-      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
+      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level, ...(d.options.debug && p.style ? { style: p.style } : {}) } : {}) })) };
   }
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
     const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];

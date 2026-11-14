@@ -30,3 +30,16 @@ Ogni bot decide **solo** con ciò che vedrebbe un giocatore seduto al tavolo: la
 - La **memoria condivisa** dei bot (`BotMemory`) contiene solo informazioni pubbliche: quante volte ogni personaggio è comparso sulla Torre e quante volte è caduto.
 - Le **etichette** dei personaggi e delle frasi sono la "percezione" dei bot (cosa c'entra con cosa), non informazioni sugli altri giocatori.
 - `packages/game-engine/tests/fairplay.test.ts` altera tutte le informazioni nascoste e verifica che nessuna decisione cambi (partite da 3 a 8 giocatori, tutti i livelli, tutte le fasi, fuori programma compresi). Un bot che barasse farebbe fallire il test (verificato inserendo di proposito un imbroglio).
+
+## Livelli, caratteri e bluff (versione attuale)
+- **Livelli**: facile = a caso 6 volte su 10, il resto come un medio che non legge i bluff; medio = una svista su 5, legge i bluff a metà; difficile = nessuna svista, legge i bluff fino in fondo, decide con poco rumore. Taratura (`TARA=1 npx vitest run worker/tests/taratura.test.ts`, 400 partite): in un tavolo a 4 con 2 facili e 2 difficili i facili fanno circa il 70% dei punti dei difficili (≈25% delle vittorie); il medio circa l'80%.
+- **Caratteri** (`packages/game-engine/src/botstyle.ts`): dodici, estratti a caso a ogni partita e diversi tra i bot della stanza (fiducia, gregarietà, voglia di bluffare, sospetto, rischio, rapidità). Non cambiano la bravura (±10% di punti tra i caratteri): la fa il livello.
+- **Bluff**: il Megafono sceglie, con un po' di valore in meno, il segnalino che gli altri leggerebbero peggio; i votanti stimano che segnalino ci sia davvero in base a come si comporterebbe un Megafono che sceglie bene (più rumore se sono sospettosi), solo con informazioni pubbliche.
+- **Nomi**: dal pool di 16 nomi del sesso del personaggio, a caso a ogni partita. **Scheda**: toccando il nome (lobby, classifica) si apre la carta con categoria e 2–3 righe (carattere compreso per i bot).
+
+## «Carattere» e «persona»
+- **Carattere** = le regole interne con cui un bot gioca (`botstyle.ts`, tarate sul livello): non si mostra mai ai giocatori (si vede solo nelle partite create da `/crea?debug=bot`).
+- **Persona** = chi è il bot (la categoria e tre righe: età, lavoro, manie, `char.N.chi1..3`): si apre toccando il nome o il segnalino del giocatore ovunque (lobby, classifica, Megafono in alto a destra, chi ha giocato/votato, chat, gettoni sulla torre, fine partita). `PersonaProvider` / `Who` in `components/Persona.tsx`.
+
+## Frasi inventate dal Megafono
+Le frasi del mazzo hanno etichette scritte a mano (tipo umano e temi); quelle inventate no. I bot ne deducono le etichette dalle parole (`inferTags` in `tags.ts`): un piccolo lessico di radici-chiave per ogni etichetta più quanto imparato dalle ~400 frasi etichettate. Verifica a esclusione: per il 70% delle frasi si deduce qualcosa e nel 71% dei casi almeno un'etichetta è giusta (il caso farebbe l'11%). È buon senso approssimativo, non comprensione vera: parole sconosciute → il bot ripiega sulla storia delle carte cadute. Le frasi «dette a voce» sono state tolte: si scrive sempre il testo (così lo leggono anche i bot).

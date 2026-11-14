@@ -1,3 +1,4 @@
+import { Who } from "./Persona.tsx";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { ChatDto, ClientMessage } from "@gdt/game-protocol";
@@ -32,7 +33,7 @@ export default function ChatPanel({ chat, me, players, send, onClose }: { chat: 
         <div className="chat-l" ref={list} aria-live="polite">
           {chat.length === 0 && <div className="chat-e">{t("chat.vuota")}</div>}
           {chat.map((m) => (
-            <div key={m.id} className={`msg ${m.from === me ? "mine" : ""}`} data-testid="chat-msg"><small><Disc color={colorOf(m.from)} />{m.from === me ? ts("chat.tu") : m.name}</small><span>{m.text}</span></div>
+            <div key={m.id} className={`msg ${m.from === me ? "mine" : ""}`} data-testid="chat-msg"><small><Who id={m.from}><Disc color={colorOf(m.from)} />{m.from === me ? ts("chat.tu") : m.name}</Who></small><span>{m.text}</span></div>
           ))}
         </div>
         <div className="chat-q">{QUICK.map((q) => <button key={q} onClick={() => send({ t: "chat", text: q })} aria-label={ts("chat.invia.q", { q })}>{q}</button>)}</div>
