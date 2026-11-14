@@ -8,6 +8,7 @@ import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
 import MiniGame from "../components/MiniGame.tsx";
 import ChatPanel, { useChatState } from "../components/Chat.tsx";
+import { useAudio } from "../lib/audio.ts";
 import HowTo from "../components/HowTo.tsx";
 import HelpMenu from "../components/HelpMenu.tsx";
 import { IntroSlides } from "../components/Intro.tsx";
@@ -35,10 +36,6 @@ function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | n
       <aside className="pside r"><div className="pp pplayers"><h4>{tx("room.giocatori")}</h4>{list.map((p, i) => <div className="prow" key={p.id}><Disc color={colorFor(room.players, p.id)} />{p.name}{p.id === view?.megafonoId && <> <MegaIcon s={16} /></>}{p.score !== null && <b>{p.score < 0 ? `−${-p.score}` : p.score}</b>}</div>)}</div></aside>
     </div>
   );
-}
-function useSound() {
-  const [on, setOn] = useState(() => { try { return localStorage.getItem("gdt.sound") !== "0"; } catch { return true; } });
-  return [on, (v: boolean) => { setOn(v); try { localStorage.setItem("gdt.sound", v ? "1" : "0"); } catch { /* */ } }] as const;
 }
 
 const lv = (l: "easy" | "medium" | "hard") => txs(`room.lv.${l}` as TestoKey);
@@ -96,7 +93,7 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
 
 export default function RoomScreen({ code }: { code: string }) {
   const { status, room, view, error, send, chat } = useRoom(code, "player");
-  const [sound, setSound] = useSound();
+  const { sound, setSound } = useAudio();
   const [notice, setNotice] = useState<string | null>(null), botsSeen = useRef<Set<string> | null>(null);
   // un giocatore esce a partita in corso e un bot prende il suo posto: lo dico a chi resta
   useEffect(() => {

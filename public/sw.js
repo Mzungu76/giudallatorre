@@ -5,7 +5,7 @@ self.addEventListener("install", (e) => { e.waitUntil(caches.open(CACHE).then((c
 self.addEventListener("activate", (e) => { e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener("fetch", (e) => {
   const req = e.request, url = new URL(req.url);
-  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/ws/") || url.pathname === "/testi.json" || url.pathname === "/testi.html") return; // API, WebSocket e testi: sempre rete (i testi li legge l'app all'apertura)
+  if (req.method !== "GET" || url.origin !== location.origin || url.pathname.startsWith("/api/") || url.pathname.startsWith("/ws/") || url.pathname.startsWith("/audio/") || url.pathname === "/testi.json" || url.pathname === "/testi.html") return; // API, WebSocket, testi e audio: sempre rete (l'audio usa richieste a pezzi, ci pensa la cache del browser) (i testi li legge l'app all'apertura)
   if (req.mode === "navigate") { e.respondWith(fetch(req).catch(() => caches.match("/"))); return; }
   // asset statici: dalla cache, aggiornati in background (stale-while-revalidate)
   e.respondWith(caches.open(CACHE).then(async (c) => {
