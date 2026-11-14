@@ -67,7 +67,7 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
         </div>
         <div className="ptiles">
           {room.players.map((p, i) => (
-            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row" role="button" tabIndex={0} onClick={() => setProf({ nickname: p.nickname, char: (p.char ?? i) % 8, ...(p.isBot ? { bot: true, level: p.level ?? "medium", style: p.style } : {}) })}>
+            <div className={`ptile${p.id === me ? " me" : ""}`} key={p.id} data-testid="player-row" role="button" tabIndex={0} onClick={() => setProf({ nickname: p.nickname, char: (p.char ?? i) % 8, ...(p.isBot ? { bot: true, level: p.level ?? "medium" } : {}) })}>
               <img src={tokenUrl(CHAR_COLORS[(p.char ?? i) % 8]!)} alt="" />
               <span className="nmx">{p.id === me ? txs("room.tu", { nome: p.nickname }) : p.nickname}</span>
               {p.isHost && <span className="tg">{tx("room.host")}</span>}{p.isBot && <span className="bot-tag" data-testid="bot-tag">{txs("room.bot", { lv: lv(p.level ?? "medium") })}</span>}{!p.isBot && !p.connected && <span className="off">{tx("room.offline")}</span>}

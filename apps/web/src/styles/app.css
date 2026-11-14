@@ -1281,6 +1281,5 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .bprof-txt{text-align:center;display:flex;flex-direction:column;gap:3px;margin-top:6px}
 .bprof-name{font:400 26px/1 Anton;text-transform:uppercase}
 .bprof-cat{font:400 15px Anton;text-transform:uppercase;color:var(--red)}.bprof-cat em{font-style:normal;color:var(--navy);opacity:.7}
-.bprof-txt p{font:800 14px/1.3 Nunito}.bprof-st{margin-top:6px;font:400 17px Anton !important;text-transform:uppercase;color:var(--teal)}
 .bprof-ok{margin-top:4px}
 .ptile{cursor:pointer}

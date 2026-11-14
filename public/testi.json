@@ -1,5 +1,5 @@
 {
- "versione": 34,
+ "versione": 35,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -2546,194 +2546,134 @@
    "s": "Fuori programma (schermate)",
    "n": "Seconda riga della spiegazione iniziale"
   },
-  "bot.stile.bluffatore.nome": {
-   "t": "Il Bluffatore",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.bluffatore.d1": {
-   "t": "Posa i segnalini per ingannarti.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.bluffatore.d2": {
-   "t": "Sorride sempre. Quando è sicuro, forse bluffa.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.sospettoso.nome": {
-   "t": "Il Sospettoso",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.sospettoso.d1": {
-   "t": "Non si fida dei segnalini degli altri.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.sospettoso.d2": {
-   "t": "Vede un bluff dietro ogni carta coperta.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.ingenuo.nome": {
-   "t": "L'Ingenuo",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.ingenuo.d1": {
-   "t": "Crede a tutto quello che vede.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.ingenuo.d2": {
-   "t": "I bluff con lui funzionano… quasi sempre.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.prudente.nome": {
-   "t": "Il Prudente",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.prudente.d1": {
-   "t": "Punta sui punti sicuri, mai sul +4.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.prudente.d2": {
-   "t": "Prima pensa, poi (forse) vota.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.temerario.nome": {
-   "t": "Il Temerario",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.temerario.d1": {
-   "t": "Ama il CADE: +4 o niente.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.temerario.d2": {
-   "t": "Il rischio è il suo secondo nome.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.gregario.nome": {
-   "t": "Il Gregario",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.gregario.d1": {
-   "t": "Vota dove vota il gruppo.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.gregario.d2": {
-   "t": "Se tutti saltano, salta anche lui.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.bastiancontrario.nome": {
-   "t": "Il Bastian Contrario",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.bastiancontrario.d1": {
-   "t": "Se tutti dicono sì, lui dice no.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.bastiancontrario.d2": {
-   "t": "Imprevedibile per principio.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.pignolo.nome": {
-   "t": "Il Pignolo",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.pignolo.d1": {
-   "t": "Pesa ogni carta prima di decidere.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.pignolo.d2": {
-   "t": "Sicuro di sé, ma lentissimo.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.impulsivo.nome": {
-   "t": "L'Impulsivo",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.impulsivo.d1": {
-   "t": "Preme il bottone prima di pensare.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.impulsivo.d2": {
-   "t": "Veloce sul tasto, meno sul ragionamento.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.calcolatore.nome": {
-   "t": "Il Calcolatore",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.calcolatore.d1": {
-   "t": "Fa i conti su ogni mossa.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.calcolatore.d2": {
-   "t": "Legge i tuoi bluff e prepara i suoi.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.distratto.nome": {
-   "t": "Il Distratto",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.distratto.d1": {
-   "t": "Guarda le carte… e pensa ad altro.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.distratto.d2": {
-   "t": "A volte azzecca per puro caso.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
-  "bot.stile.stratega.nome": {
-   "t": "Lo Stratega",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Carattere del bot (titolo)"
-  },
-  "bot.stile.stratega.d1": {
-   "t": "Bluffa e sospetta in egual misura.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Prima riga di descrizione"
-  },
-  "bot.stile.stratega.d2": {
-   "t": "Gioca due turni avanti.",
-   "s": "Scheda del giocatore (bot)",
-   "n": "Seconda riga di descrizione"
-  },
   "bot.profilo.aria": {
    "t": "Scheda di {nome}",
-   "s": "Scheda del giocatore (bot)",
+   "s": "Scheda del giocatore",
    "n": "Nome accessibile della finestra"
   },
   "bot.profilo.chiudi": {
    "t": "Chiudi",
-   "s": "Scheda del giocatore (bot)"
+   "s": "Scheda del giocatore"
+  },
+  "char.0.chi1": {
+   "t": "Palestrato, 38 anni, vende auto usate.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.0.chi2": {
+   "t": "Racconta sempre di aver vinto qualcosa.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.0.chi3": {
+   "t": "Ci prova con tutti… e gli riesce a metà.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi1": {
+   "t": "Trentenne, lavora da remoto (quando lavora).",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi2": {
+   "t": "Ha sempre la testa in vacanza.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.1.chi3": {
+   "t": "Single: è innamorato dell'idea dell'amore.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi1": {
+   "t": "50 anni, insegna filosofia.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi2": {
+   "t": "Corregge tutti, anche a cena.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.2.chi3": {
+   "t": "Vedovo e riservato: i segreti li custodisce bene.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi1": {
+   "t": "35 anni, animatore di feste.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi2": {
+   "t": "Ride di tutto e fa ridere tutti.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.3.chi3": {
+   "t": "Dietro le risate un cuore tenero… e molti ex.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi1": {
+   "t": "32 anni, commercialista.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi2": {
+   "t": "Tiene il conto di tutto, favori compresi.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.4.chi3": {
+   "t": "Riservata: sa più cose di quante ne dica.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi1": {
+   "t": "28 anni, zaino sempre pronto.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi2": {
+   "t": "Ha un amore in ogni città.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.5.chi3": {
+   "t": "Mai la stessa foto due volte.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi1": {
+   "t": "45 anni, contabile, sposato.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi2": {
+   "t": "Si preoccupa di tutto, anche delle confessioni.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.6.chi3": {
+   "t": "Ogni segreto gli pesa il doppio.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi1": {
+   "t": "29 anni, influencer.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 1, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi2": {
+   "t": "Sempre sotto i riflettori, sempre con un fan.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 2, serve a capire chi è (es. per le confessioni)"
+  },
+  "char.7.chi3": {
+   "t": "Adora il gossip, soprattutto quello su di sé.",
+   "s": "Il personaggio (chi è)",
+   "n": "Scheda del giocatore: riga 3, serve a capire chi è (es. per le confessioni)"
   }
  }
 }

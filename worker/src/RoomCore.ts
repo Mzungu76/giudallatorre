@@ -378,7 +378,7 @@ export class RoomCore {
   roomMsg(forPlayer: string): ServerMessage {
     const d = this.data, host = d.players.find((p) => p.isHost);
     return { t: "room", seq: d.seq, code: d.code, stage: d.stage, you: forPlayer, hostId: host?.id ?? "", options: { ...d.options },
-      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level, ...(p.style ? { style: p.style } : {}) } : {}) })) };
+      players: d.players.map((p) => ({ id: p.id, nickname: p.nickname, isHost: p.isHost, connected: p.isBot ? true : this.connected.has(p.id), ...(p.char !== undefined ? { char: p.char } : {}), ...(p.isBot ? { isBot: true, level: p.level } : {}) })) };
   }
   snapshot(playerId: string): { to: string; msg: ServerMessage }[] {
     const res: { to: string; msg: ServerMessage }[] = [{ to: playerId, msg: this.roomMsg(playerId) }];
