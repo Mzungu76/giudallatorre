@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Btn } from "../ui.tsx";
 import { t, ts } from "../lib/testi.ts";
+import VolumeSlider from "./VolumeSlider.tsx";
 
 interface Props { canHint: boolean; sound?: boolean; setSound?: (v: boolean) => void; onHint: () => void; onTutorial: () => void; onRules: () => void; onClose: () => void; /** Solo in partita: esce dalla stanza (chiede conferma). */ onLeave?: () => void; leaveHint?: string }
 
@@ -16,6 +17,7 @@ export default function HelpMenu({ canHint, sound, setSound, onHint, onTutorial,
         <button className="bib" onClick={onClose} aria-label={ts("help.chiudi")} data-testid="help-x">×</button>
       </div>
       <div className="help-body">
+        {setSound && <VolumeSlider />}
         <button className={`help-it ${canHint ? "main" : "off"}`} onClick={canHint ? onHint : undefined} disabled={!canHint} data-testid="help-hint">
           <i>💡</i><span><b>{t("help.hint.t")}</b><small>{canHint ? t("help.hint.si") : t("help.hint.no")}</small></span>
         </button>

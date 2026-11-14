@@ -1317,3 +1317,6 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .pco{display:flex;gap:.6em;align-items:flex-start;padding:.55em .5em;border-radius:12px;border:3px solid transparent;font:800 1em/1.25 Nunito;color:var(--navy);cursor:pointer;background:#ffffff55}
 .pco .pn{flex:none;width:1.7em;height:1.7em;border-radius:50%;border:2.5px solid var(--navy);background:#fff;font:400 .85em/1.55em Anton;text-align:center}
 .pco.on{background:#fff0b3;border-color:var(--navy);box-shadow:0 3px 0 var(--navy)}.pco.on .pn{background:var(--mus)}
+.vol{display:flex;align-items:center;gap:10px;margin:6px 14px 2px;font:800 14px Nunito;color:#13224a}
+.vol input{flex:1;min-width:0;accent-color:#13224a;height:28px}
+.vol b{min-width:40px;text-align:right}

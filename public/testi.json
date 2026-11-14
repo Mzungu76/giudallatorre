@@ -1,5 +1,5 @@
 {
- "versione": 42,
+ "versione": 43,
  "aggiornato": "2026-11-14",
  "testi": {
   "intro.aria": {
@@ -2160,6 +2160,11 @@
    "t": "Confessalo!",
    "s": "Partita: scelta della frase del Megafono",
    "n": "Targhetta sulla carta confessione"
+  },
+  "vol.aria": {
+   "t": "Volume della musica",
+   "s": "Menu Aiuto («i»)",
+   "n": "Cursore del volume (lettori di schermo)"
   }
  }
 }

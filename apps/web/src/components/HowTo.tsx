@@ -6,6 +6,7 @@ import { luiTok } from "../scene/draw.ts";
 import { luiEffectHow, luiLabel } from "../lib/lui.ts";
 import { ExampleLui, ExampleTurn, PointsKey } from "./PointsExamples.tsx";
 import { t, ts } from "../lib/testi.ts";
+import VolumeSlider from "./VolumeSlider.tsx";
 import type { TestoKey } from "../lib/testi.ts";
 import { MegaIcon } from "./MegaIcon.tsx";
 
@@ -25,6 +26,7 @@ export default function HowTo({ onClose, sound, setSound, onLeave, leaveHint }: 
         {setSound && <button className="bib" onClick={() => setSound(!sound)} aria-label={sound ? ts("help.suoni.off") : ts("help.suoni.on")} data-testid="sound-toggle">{sound ? "🔊" : "🔇"}</button>}
         <button className="bib" onClick={onClose} aria-label={ts("help.chiudi")} data-testid="howto-x">×</button>
       </div>
+      {setSound && <VolumeSlider />}
       <div className="brg-tabs" role="tablist">{[0, 1, 2, 3].map((i) => <button key={i} role="tab" aria-selected={tab === i} className={tab === i ? "on" : ""} onClick={() => setTab(i)}>{t(`how.tab.${i}` as TestoKey)}</button>)}</div>
       <div className="brg-body" data-testid="howto-body">
         {tab === 0 && <>

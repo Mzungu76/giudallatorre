@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useAudio } from "./lib/audio.ts";
+import { music } from "./lib/music.ts";
 import Home from "./screens/Home.tsx";
 import { CreateScreen, JoinScreen } from "./screens/Forms.tsx";
 import RoomScreen from "./screens/Room.tsx";
@@ -19,6 +21,10 @@ function parse(): Route {
 }
 export default function App() {
   const [route, setRoute] = useState<Route>(parse);
+  // musica di sottofondo dall'apertura dell'app (non sul grande schermo TV né nel simulatore)
+  const { sound, volume } = useAudio(), quiet = route.name === "display" || route.name === "sim";
+  useEffect(() => { music.level(volume); }, [volume]);
+  useEffect(() => { music.play(sound && !quiet ? "musica-tema.mp3" : null); }, [sound, quiet]);
   useEffect(() => { const f = () => setRoute(parse()); window.addEventListener("popstate", f); return () => window.removeEventListener("popstate", f); }, []);
   if (import.meta.env.DEV && location.pathname === "/__classifica") return <StandingsDemo />;
   if (import.meta.env.DEV && location.pathname === "/__personaggio") return <CharDemo />;

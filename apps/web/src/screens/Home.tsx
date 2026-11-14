@@ -3,9 +3,10 @@ import { Stage, Btn, navigate } from "../ui.tsx";
 import HowTo from "../components/HowTo.tsx";
 import HomeTools from "../components/HomeTools.tsx";
 import { t } from "../lib/testi.ts";
+import { useAudio } from "../lib/audio.ts";
 
 export default function Home() {
-  const [how, setHow] = useState(false);
+  const [how, setHow] = useState(false), { sound, setSound } = useAudio();
   return (
     <Stage bg="sky" testId="home">
       <div className="logo">
@@ -25,7 +26,7 @@ export default function Home() {
       </div>
       <HomeTools />
       <div className="credit" data-testid="credit">{t("home.credito")}</div>
-      {how && <HowTo onClose={() => setHow(false)} />}
+      {how && <HowTo onClose={() => setHow(false)} sound={sound} setSound={setSound} />}
     </Stage>
   );
 }
