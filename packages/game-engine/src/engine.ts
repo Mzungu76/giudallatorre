@@ -2,6 +2,7 @@ import { EngineError } from "./types.ts";
 import { MINI_KINDS } from "./types.ts";
 import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
+import { pickAward } from "./awards.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 /** Intervallo a tempo: 6 carte escono dal separé una alla volta (3 s l'una), tre giri completi. Il server dà il «via» dopo la presentazione (sipario, regole: MINI_INTRO_MS) e il conto alla rovescia. */
@@ -69,7 +70,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, tower: [], votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
-    lastResult: null, winners: null, goldenGoal: false, goldenTurns: 0,
+    lastResult: null, winners: null, history: [], botIds: (config.botIds ?? []).filter((b) => ids.includes(b)), award: null, goldenGoal: false, goldenTurns: 0,
     miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null,
   };
   s.drawPile = shuffle(config.deck, s);
@@ -222,7 +223,14 @@ function resolve(s: GameState, events: GameEvent[]) {
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes, counts, tie, fallenPosition: fallen[0] ?? 0,
     fallenCardId: slots[0]?.cardId ?? "", fallenOwnerId: slots[0]?.ownerId ?? null, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId),
     marks: outs, points, lines, collected: s.playerIds.filter((p) => p !== mega && s.votes[p] === megaVote).length, megaVote, tieBreak: T.cadeTie };
-  s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
+  record(s, result); s.lastResult = result; s.phase = "RESULTS"; events.push({ type: "resolved", result });
+}
+
+/** Aggiunge il turno al registro (serve a calcolare il premio della serata). Va chiamata prima di svuotare la Torre. */
+function record(s: GameState, r: TurnResult) {
+  const m = r.marks?.[0];
+  (s.history ??= []).push({ turn: r.turn, megafonoId: r.megafonoId, votes: { ...r.votes }, owners: Object.fromEntries(s.tower.map((t) => [t.position, t.ownerId])), fallen: r.fallenPositions.slice(), megaVote: r.megaVote,
+    mark: m ? { position: m.position, effect: m.effect, hit: m.hit } : null });
 }
 
 function endTurn(s: GameState, events: GameEvent[]) {
@@ -243,7 +251,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
       s.goldenGoal = true; s.goldenTurns += 1; s.totalTurns += 1;
       events.push({ type: "goldenGoal", leaders });
     } else {
-      s.winners = leaders; s.phase = "GAME_OVER";
+      s.winners = leaders; s.phase = "GAME_OVER"; s.award = pickAward({ playerIds: s.playerIds, scores: s.scores, history: s.history ?? [], botIds: s.botIds }, s);
       s.tower = []; s.played = {}; s.votes = {}; s.marks = null;
       events.push({ type: "gameOver", winners: s.winners });
       return;

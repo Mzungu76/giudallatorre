@@ -1335,3 +1335,33 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .vol b{min-width:40px;text-align:right}
 .home-sound{position:absolute;top:14px;left:12px;z-index:30;width:42px;height:42px;border-radius:50%;border:3px solid #13224a;background:#fff7e0;box-shadow:0 3px 0 #13224a;display:grid;place-items:center;padding:0;cursor:pointer;font-size:20px}
 .home-sound:active{transform:translateY(2px);box-shadow:0 1px 0 #13224a}
+
+/* Premio della serata (dopo la fine partita, prima della scalata) */
+.aw{position:absolute;inset:0;z-index:30;overflow:hidden;color:var(--navy)}
+.aw-box{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;padding:16px 14px 18px;gap:10px;z-index:2}
+.aw-top{text-align:center}.aw-t{font:400 34px/1 Anton;color:#fff;text-shadow:3px 3px 0 var(--red),5px 5px 0 var(--navy);letter-spacing:.04em;text-transform:uppercase}
+.aw-s{font:800 13px Nunito;color:#fff;text-shadow:0 2px 0 var(--navy);margin-top:6px}
+.aw-drum{margin-top:26px}.aw-drum span{display:inline-block;font:400 20px Anton;letter-spacing:.06em;text-transform:uppercase;background:var(--mus);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:4px 12px;transform:rotate(-2deg)}
+.aw-env{width:min(250px,66%);flex:1 1 0;min-height:0;max-height:300px;background:var(--red);border:4px solid var(--navy);box-shadow:8px 9px 0 var(--navy);display:grid;place-items:center;position:relative;animation:awWob 1.6s ease-in-out infinite}
+.aw-env:before{content:"";position:absolute;inset:14px;border:3px dashed #fff8}
+.aw-env b{font:400 130px/1 Anton;color:var(--mus);text-shadow:5px 5px 0 var(--navy)}
+@keyframes awWob{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-8px)}}
+.aw-dots{display:flex;gap:10px;margin:4px 0 8px}.aw-dots i{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--navy);animation:awBl 1s infinite}
+.aw-dots i:nth-child(2){animation-delay:.25s}.aw-dots i:nth-child(3){animation-delay:.5s}
+@keyframes awBl{50%{background:var(--mus);transform:translateY(-6px)}}
+.aw-btn{width:calc(100% - 24px);flex:none;margin-top:auto;z-index:5}
+.aw-conf{position:absolute;top:0;width:10px;height:16px;border:1.5px solid var(--navy);z-index:1;pointer-events:none;animation:awFall 5s linear infinite}
+@keyframes awFall{from{transform:translateY(-30px) rotate(0)}to{transform:translateY(960px) rotate(520deg)}}
+.aw-stamp{text-align:center;z-index:3;transform:rotate(-4deg);margin-top:6px;animation:awPop .7s cubic-bezier(.2,1.6,.4,1) both}
+.aw-k{display:inline-block;font:400 15px Anton;letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:3px 12px}
+.aw-n{font:400 46px/1 Anton;text-transform:uppercase;color:var(--red);text-shadow:3px 3px 0 var(--navy);letter-spacing:.02em;margin-top:5px;-webkit-text-stroke:1px var(--navy)}.aw-n.long{font-size:36px}
+@keyframes awPop{from{transform:rotate(-14deg) scale(2.2);opacity:0}}
+.aw-hero{position:relative;z-index:3;margin-top:8px;animation:awRise .8s .35s both}.aw-hero img{width:100%;display:block;border:3px solid #fff;border-radius:10px;box-shadow:5px 6px 0 var(--navy);background:#fff}
+@keyframes awRise{from{transform:translateY(60px);opacity:0}}
+.aw-num{position:absolute;right:-48px;top:-14px;width:88px;height:88px;border-radius:50%;background:var(--teal);border:4px solid var(--navy);box-shadow:4px 5px 0 var(--navy);color:#fff;display:grid;place-items:center;text-align:center;transform:rotate(9deg);animation:awPop .6s 1s cubic-bezier(.2,1.6,.4,1) both}
+.aw-num b{font:400 30px/.95 Anton;display:block}.aw-num small{font:800 11px/1.05 Nunito;text-transform:uppercase;display:block}
+.aw-who{z-index:4}.aw-who span{display:inline-block;font:400 26px Anton;text-transform:uppercase;letter-spacing:.04em;background:var(--mus);border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:3px 16px;transform:rotate(1.5deg)}
+.aw-quip{z-index:4;width:100%;animation:awRise .6s 1.2s both}.aw-quip p{margin:0}
+.aw-note{font:400 19px/1.15 'Caveat Brush',cursive}
+.aw-why{font:800 11.5px/1.25 Nunito;opacity:.7;margin-top:6px!important;border-top:2px dashed #13224a55;padding-top:5px}
+@media (prefers-reduced-motion:reduce){.aw *{animation:none!important}}

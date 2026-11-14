@@ -29,6 +29,13 @@ stateDiagram-v2
 | MINI_RUN | tutti, a tempo | `vote` (un personaggio in scena); il server fa `endRun` a fine corsa | MINI_RESULTS (anche prima, se hanno votato tutti) |
 | MINI_RESULTS | server / host | `advance` | PROCLAIM del turno successivo (le mani non cambiano) |
 
+## Premio della serata (a fine partita)
+- Il motore tiene un registro per turno (`GameState.history`: voti, proprietari delle carte, carte cadute, segnalino del Megafono). Alla transizione verso GAME_OVER sceglie **un solo premio** (`pickAward`, `packages/game-engine/src/awards.ts`) e lo mette in `GameState.award`, che la vista (`PlayerView.award`) mostra solo a partita finita.
+- Candidati: i premi la cui soglia è raggiunta (Pollo, Bugiardo di Stato, Ingenuo, Segugio, Bersaglio, Ruffiano, Lupo Solitario, Narciso, Veggente, Visionario Bocciato); si sorteggia con i pesi di `AWARD_WEIGHTS`, con lo stato rng del motore (deterministico, uguale per tutti i client). A pari merito si sorteggia tra i vincitori.
+- Se nessuna soglia è raggiunta: premio di consolazione «Il Tabellone Vuoto» a chi ha meno punti.
+- I giocatori virtuali (`GameConfig.botIds`) non vincono (salvo partite con soli bot).
+- App: `AwardScene` (busta → timbro, vincitore, numero e battuta) prima della scalata finale; la battuta dipende dalla fascia d'età della stanza (6+ e 10+ morbida, 14+, 18+). Testi in `public/testi.json` (`aw.*`, `premio.<id>.*`). Con `?fast=1` o «riduci animazioni» la scena è saltata.
+
 Errori tipizzati (`EngineError`): WRONG_PHASE, NOT_ALLOWED, ALREADY_DONE (doppio invio/voto), CARD_NOT_IN_HAND, INVALID_POSITION, INVALID_CHOICE, UNKNOWN_PLAYER, GAME_OVER, DECK_EXHAUSTED.
 
 Eventi trasversali gestiti dal backend (non dal motore): disconnessione/riconnessione, espulsione in lobby, timeout (il server può usare `suggestAction` per giocare al posto di un inattivo).

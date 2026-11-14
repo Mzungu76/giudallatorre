@@ -17,6 +17,8 @@ export interface PhraseCard { id: string; phrases: string[]; /** Contesto della 
 export interface GameConfig {
   players: { id: PlayerId; name: string }[];
   seed: number;
+  /** Giocatori virtuali: non ricevono il premio della serata (se ci sono giocatori veri). */
+  botIds?: PlayerId[];
   /** Mescola a caso le frasi di tutte le carte (ogni frase porta il proprio contesto) e le ridistribuisce in gruppi da 5. */
   mixPhrases?: boolean;
   deck: CardId[];
@@ -91,6 +93,28 @@ export interface MiniResult {
   points: Record<PlayerId, number>; lines: Record<PlayerId, ScoreLine[]>;
 }
 
+/** Premi della serata (uno solo a partita, assegnato a fine partita). Titolo e battute vivono in public/testi.json (premio.<id>.*). */
+export type AwardId = "pollo" | "bugiardo" | "ingenuo" | "segugio" | "bersaglio" | "ruffiano" | "lupo" | "narciso" | "veggente" | "bocciato" | "tabellone";
+export interface Award {
+  id: AwardId; winnerId: PlayerId;
+  /** Il numero che motiva il premio (per esempio 7 voti su 8 turni); nel premio di consolazione `n` sono i punti e `of` è 0. */
+  n: number; of: number;
+  /** True se nessun premio ha raggiunto la soglia e si assegna quello di consolazione. */
+  consolation?: boolean;
+}
+
+/** Cosa è successo in un turno, in forma compatta: il motore ne tiene uno per turno per calcolare il premio della serata. */
+export interface TurnRecord {
+  turn: number; megafonoId: PlayerId;
+  votes: Record<PlayerId, number>;
+  /** Chi aveva giocato la carta in ciascuna posizione (null = carta del mazzo). */
+  owners: Record<number, PlayerId | null>;
+  fallen: number[];
+  megaVote: number;
+  /** Segnalino del Megafono (gioco base): dove, che tipo e se ha avuto ragione. */
+  mark: { position: number; effect: LuiEffect; hit: boolean } | null;
+}
+
 export interface GameState {
   version: 1;
   playerIds: PlayerId[];
@@ -119,6 +143,12 @@ export interface GameState {
   megafonoTurns: Record<PlayerId, number>;
   lastResult: TurnResult | null;
   winners: PlayerId[] | null;
+  /** Registro dei turni giocati (campo assente nelle partite salvate prima del premio della serata). */
+  history?: TurnRecord[];
+  /** Giocatori virtuali, esclusi dal premio della serata. */
+  botIds?: PlayerId[];
+  /** Premio della serata, assegnato quando la partita finisce. */
+  award?: Award | null;
   /** Spareggio a oltranza: si gioca un turno alla volta finché un giocatore ha più punti di tutti gli altri. */
   goldenGoal: boolean;
   goldenTurns: number;
