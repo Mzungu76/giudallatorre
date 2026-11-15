@@ -34,6 +34,11 @@ export const BOT_ENGINES: Record<string, BotEngine> = {
     description: "Come i bot nuovi in produzione (v2 + etichette v2) ma con l'affinità «morbida»: conta le etichette imparentate e deduce con prudenza le etichette delle frasi libere. Collaudo: ?motore=v2m.",
     chooseAction: v2.chooseBotActionSmooth as never, planMiniVote: v2.planMiniVote as never, newMemory: v2.newBotMemory as never, learn: v2.learnFromResult as never, tune: v2.TUNE,
   },
+  "v2o": {
+    id: "v2o", label: "Bot v2 + occhi diversi (sperimentale)",
+    description: "v2m + una lente per bot (bias cognitivi: salienza, posizione, ripetizione, alone, segnalino, propria carta, seconda lettura, buffo, trasparenza, falso consenso) e previsione degli altri con lenti diverse. Collaudo: ?motore=v2o. Vedi docs/BOT_LENTI.md.",
+    chooseAction: v2.chooseBotActionLens as never, planMiniVote: v2.planMiniVote as never, newMemory: v2.newBotMemory as never, learn: v2.learnFromResult as never, tune: v2.TUNE,
+  },
   "production": {
     id: "production", label: "Bot in produzione (ai.ts)",
     description: "Il codice vivo di ai.ts, identico alla baseline e protetto da un test di impronta. È quello usato nelle stanze.",

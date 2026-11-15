@@ -19,7 +19,7 @@ function run(id: string, seed: number, n: number): string {
 describe("bot v2: con le leve spente decide come i bot attuali", () => {
   it("partite intere identiche (3–6 giocatori, tutti i livelli)", () => {
     const t = getBotEngine("v2").tune, saved = { ...t };
-    try { t.markBoost = 0; t.adaptFollow = 0; t.labelsV2 = 0; for (const n of [3, 4, 5, 6]) for (let seed = 1; seed <= 5; seed++) expect(run("v2", seed, n), `n ${n} seed ${seed}`).toBe(run("production", seed, n)); } finally { Object.assign(t, saved); }
+    try { t.markBoost = 0; t.adaptFollow = 0; t.labelsV2 = 0; t.miniFix = 0; for (const n of [3, 4, 5, 6]) for (let seed = 1; seed <= 5; seed++) expect(run("v2", seed, n), `n ${n} seed ${seed}`).toBe(run("production", seed, n)); } finally { Object.assign(t, saved); }
   });
   it("con le leve accese (predefinito) gioca partite complete legali", () => {
     const t = getBotEngine("v2").tune, saved = { ...t };

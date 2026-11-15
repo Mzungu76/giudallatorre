@@ -1,4 +1,6 @@
 import { affinity as affinityOld } from "../tags.ts";
+import { hash32 } from "./lens.ts";
+import type { Lens } from "./lens.ts";
 
 /**
  * Etichette v2 («occhi dei bot»): catalogo unico di tipi e temi, con peso 1–3 (quanto l'etichetta è centrale) su carte e frasi.
@@ -15,20 +17,25 @@ let CARDS: Record<string, Tag2> = {}, PHRASES: Record<string, Tag2> = {};
 /** Parentela tra etichette: soglia minima del coseno e quanto pesa rispetto a una coincidenza esatta. */
 export const SMOOTH = { theta: 0.2, beta: 0.6, minDf: 2, minScore: 1.0 };
 const SIM = new Map<string, number>();
+const NEIGH = new Map<string, [string, number][]>(), PROF = new Map<string, { sal: number; fun: number }>();
 let DF = new Map<string, number>(), CNT = new Map<string, Map<string, number>>(), NDOC = 0;
 
+const FUNNY = new Set(["eccentrico", "goffo", "drammatico", "festaiolo", "vanitoso", "influencer", "artista", "guru", "complottista", "mangione", "pettegolo", "ribelle"]);
 const feats = (x: Tag2): [string, number][] => [...Object.entries(x.tipi).map(([k, w]) => ["t:" + k, w] as [string, number]), ...Object.entries(x.temi).map(([k, w]) => ["m:" + k, w] as [string, number])];
 const STOP = new Set("sale salgono sulla torre oggi troppo tutto chi che con per una uno degli delle dello nella nelle sono come piu anche questo questa quelli quelle tutti tutte loro suo sua suoi sue sempre molto dopo prima ogni cosa cose essere fare fatto sarebbe primo quando senza dalla alla della".split(" "));
 const stems = (t: string): string[] => [...new Set(t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().split(/[^a-z]+/).filter((w) => w.length >= 4 && !STOP.has(w)).map((w) => w.slice(0, 5)))];
 
 export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<string, Tag2>): void {
-  CARDS = cards; PHRASES = phrases; SIM.clear(); DF = new Map(); CNT = new Map(); NDOC = 0;
+  CARDS = cards; PHRASES = phrases; SIM.clear(); NEIGH.clear(); PROF.clear(); DF = new Map(); CNT = new Map(); NDOC = 0;
   if (!Object.keys(cards).length) return;
   // parentela tra etichette: coseno dei profili (in quali frasi/carte compaiono, pesate)
   const vec = new Map<string, Map<number, number>>(); let i = 0;
   for (const it of [...Object.values(phrases), ...Object.values(cards)]) { for (const [k, w] of feats(it)) { let m = vec.get(k); if (!m) vec.set(k, (m = new Map())); m.set(i, w / 3); } i++; }
   const norm = (m: Map<number, number>) => Math.sqrt([...m.values()].reduce((s, x) => s + x * x, 0)), tags = [...vec.keys()];
-  for (const a of tags) for (const b of tags) { if (a === b) continue; const va = vec.get(a)!, vb = vec.get(b)!; let d = 0; for (const [j, w] of va) { const u = vb.get(j); if (u) d += w * u; } const c = d / (norm(va) * norm(vb)); if (c >= SMOOTH.theta) SIM.set(a + "|" + b, c); }
+  for (const a of tags) for (const b of tags) { if (a === b) continue; const va = vec.get(a)!, vb = vec.get(b)!; let d = 0; for (const [j, w] of va) { const u = vb.get(j); if (u) d += w * u; } const c = d / (norm(va) * norm(vb)); if (c >= SMOOTH.theta) { SIM.set(a + "|" + b, c); let n = NEIGH.get(a); if (!n) NEIGH.set(a, (n = [])); n.push([b, c]); } }
+  // profilo di ogni carta: salienza (ricchezza di tratti forti) e gusto per il buffo
+  let mx = 0; const raw = Object.entries(cards).map(([id, c]) => { const t = feats(c).reduce((s, [, w]) => s + w, 0), f = Object.entries(c.tipi).filter(([k]) => FUNNY.has(k)).reduce((s, [, w]) => s + w, 0); mx = Math.max(mx, t); return [id, t, f] as const; });
+  for (const [id, t, f] of raw) PROF.set(id, { sal: mx ? t / mx : 0.5, fun: Math.min(1, f / 5) });
   // dizionario parole → etichette (dalle frasi etichettate) per le frasi scritte a mano
   for (const [text, tg] of Object.entries(phrases)) { NDOC++; for (const w of stems(text)) { DF.set(w, (DF.get(w) ?? 0) + 1); let m = CNT.get(w); if (!m) CNT.set(w, (m = new Map())); for (const [t, wt] of feats(tg)) m.set(t, (m.get(t) ?? 0) + wt / 3); } }
 }
@@ -66,4 +73,29 @@ export function affinityV2m(cardId: string, phraseText: string): number | null {
     if (s > 0) a += (x[0] === "t" && y[0] === "t" ? 3 : x[0] === "m" && y[0] === "m" ? 2 : 2.5) * s * (wx + wy) / 6;
   }
   return a;
+}
+
+/** Salienza (0–1) e gusto per il buffo (0–1) di una carta, dalle sue etichette. */
+export const cardProfile = (cardId: string): { sal: number; fun: number } => PROF.get(cardId) ?? { sal: 0.5, fun: 0 };
+
+/** La seconda lettura personale di una carta per una lente: un'etichetta vicina (parentela) che per lui spicca. Stabile (dipende da lente e carta). */
+export function angleOf(cardId: string, seed: number, prob: number): [string, number] | null {
+  const c = CARDS[cardId]; if (!c || (hash32(`${cardId}:${seed}`) % 1000) / 1000 >= prob) return null;
+  const mine = new Set(feats(c).map(([k]) => k)), cand = new Map<string, number>();
+  for (const a of mine) for (const [k, s] of NEIGH.get(a) ?? []) if (!mine.has(k)) cand.set(k, Math.max(cand.get(k) ?? 0, s));
+  const top = [...cand.entries()].sort((x, y) => y[1] - x[1]).slice(0, 3); if (!top.length) return null;
+  return [top[hash32(`${cardId}#${seed}`) % top.length]![0], 2];
+}
+
+/** Affinità carta–frase vista da una lente: parentele con il suo «raggio», seconda lettura della carta ed effetto alone. Null se la frase non dà alcun indizio. */
+export function affinityLens(cardId: string, phraseText: string, lens: Lens): number | null {
+  const c = CARDS[cardId]; if (!c) return affinityOld(cardId, phraseText);
+  const p = PHRASES[phraseText] ?? inferV2(phraseText); if (!p) return null;
+  const cf = feats(c), ang = angleOf(cardId, lens.seed, lens.angle); if (ang) cf.push(ang);
+  let a = 0;
+  for (const [x, wx] of cf) for (const [y, wy] of feats(p)) {
+    const q = SIM.get(x + "|" + y), s = x === y ? 1 : q !== undefined ? lens.reach * q : 0;
+    if (s > 0) a += (x[0] === "t" && y[0] === "t" ? 3 : x[0] === "m" && y[0] === "m" ? 2 : 2.5) * s * (wx + wy) / 6;
+  }
+  return a + (lens.halo * a * a) / 8;
 }
