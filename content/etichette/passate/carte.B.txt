@@ -1,0 +1,28 @@
+p01-i01|dice una cosa e il suo contrario (cartelli opposti)|ipocrita3 bugiardo2 politico1|politica3 bugie2 fiducia2
+p01-i03|influencer che si mostra in palestra e con prodotti|influencer3 vanitoso2|social3 corpo2 tecnologia1
+p01-i04|inventore preoccupato con una lampadina che non si accende|ansioso2 nerd2 testardo1|tecnologia2 lavoro2 cultura1
+p01-i05|insegnante che predica a una classe che si annoia|saputello3 noioso2 arrogante1|scuola3 cultura3
+p01-i09|attivista vegana che fa la predica a tutti|moralista3 rabbioso2|cibo3 ambiente2 salute2 politica1
+p03-i06|infermiera che si fa un selfie davanti ai pazienti|vanitoso2 egoista2 influencer1|salute3 social3 lavoro2 tecnologia1
+p03-i08|istruttrice che fuma e predica sport|pigro1 ipocrita2 sportivo1|sport3 corpo2 fumo3 salute3
+p04-i05|concorrente esaltato di un quiz|vanitoso2 festaiolo1 ingenuo1|spettacolo3 gioco2
+p04-i08|convinto di essere il re dei meme|nerd3 ingenuo1|tecnologia3 social3
+p04-i10|guru spirituale che guarda il telefono|guru3 ipocrita1|superstizione2 tecnologia2 religione1 natura1
+p05-i02|urla contro il mondo con le cuffie da gamer|rabbioso2 testardo2 maleducato1|tecnologia3 gioco3
+p05-i06|attacca da anonimo, nascosto dietro un cappuccio|complottista2 codardo2 ribelle1|segreti3 tecnologia2 casa1
+p05-i08|madre con il telefono, figli persi nel tablet|distratto3 genitore3|famiglia3 bambini3 tecnologia3
+p05-i09|sorride e stringe una mazzetta|ipocrita3 furbo2 politico1|soldi3 politica3 truffe2
+p06-i04|corre in ritardo, trafelato, verso il lavoro|inaffidabile2 ansioso2 goffo1|lavoro3 caos2
+p07-i02|selfie provocante con aria di conquista|vanitoso3 infedele1|seduzione3 social3 vanita3
+p07-i08|spiaggia, bitcoin al collo, vita facile|vanitoso2 spendaccione2 furbo1|viaggio3 soldi3 tecnologia1 alcol1
+p08-i01|comico fischiato, lanciano verdure|goffo3 ansioso1 ingenuo1|spettacolo3 imbarazzo3
+p08-i06|madre che ride davanti alla TV mentre i figli piangono dalla paura|genitore2 egoista2 dispettoso1|bambini3 famiglia3 spettacolo1 casa2
+p08-i09|dalla cabina ride dell'attore arrabbiato sotto il riflettore|dispettoso3 rabbioso1|spettacolo3 rabbia1
+p08-i11|si torce in una posa di yoga impossibile|goffo2 testardo1 vanitoso1|corpo3 salute3 sport1 imbarazzo2
+p10-i07|canta a squarciagola e stona piangendo|drammatico2 goffo2 artista1|musica3 spettacolo3 imbarazzo2
+p10-i08|vicino che falcia con la cuffia, incurante del rumore|maleducato3 rabbioso1|casa3 caos2
+p11-i03|nonna con dolci per tutti|genitore2 mangione3|cibo3 famiglia2 vecchiaia1
+p12-i01|meccanico perplesso con i pezzi sparsi|goffo3 inaffidabile1|mezzi3 lavoro3 caos2
+p13-i01|urla con la musica mentre il bambino si tappa le orecchie|maleducato3 egoista1 genitore1|musica3 casa3 bambini2 caos2
+p13-i09|finge uno svenimento davanti a tutti|drammatico3 bugiardo1|salute3 imbarazzo3 spettacolo1
+p14-i04|bricoleur con il muro pieno di buchi|goffo3 testardo1|casa3 caos3 lavoro1

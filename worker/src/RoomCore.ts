@@ -1,4 +1,4 @@
-import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, learnFromResultV2, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -6,6 +6,11 @@ import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.
 import type { RandomBytes } from "./security.ts";
 
 export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Carattere del bot (id di BOT_STYLES), estratto a caso a ogni partita. */ style?: string; /** Personaggio (0–7: colore e segnalino), assegnato a caso tra gli otto quando entra in stanza. */ char?: number; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
+/** Interruttore di spegnimento della v2 sperimentale: con `false` l'opzione `botEngine` viene ignorata (docs/AI_ROLLBACK.md). */
+export const V2_BOTS_ENABLED = true;
+/** Bot predefiniti delle stanze create da ora: v2 con etichette v2 («v2e»). `false` = tornano i bot di sempre (ai.ts) per le nuove stanze; le stanze già create non cambiano mai motore a metà partita. Vedi docs/AI_ROLLBACK.md. */
+export const NEW_BOTS_DEFAULT = true;
+
 export interface RoomData {
   code: string; createdAt: number; lastActivity: number; stage: RoomStage; finishedAt: number | null;
   options: RoomOptionsDto; seq: number; deadline: number | null; players: PlayerRec[]; game: GameState | null;
@@ -90,11 +95,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "attuali"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.debug ? { debug: true } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -260,7 +265,7 @@ export class RoomCore {
     d.game = state; d.seq++; out.persist = true;
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
-    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) learnFromResult(d.botMem, state.tower, state.lastResult);
+    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine === "v2" || d.options.botEngine === "v2e" ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);
@@ -323,7 +328,7 @@ export class RoomCore {
       d.botAt = null; const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296;
       for (const b of d.players.filter((p) => p.isBot)) {
         if (!d.game || d.stage !== "PLAYING") break;
-        const a = chooseBotAction(d.game, b.id, b.level ?? "medium", d.botMem, rand, styleById(b.style));
+        const a = this.botChoice()(d.game, b.id, b.level ?? "medium", d.botMem, rand, styleById(b.style));
         if (a) { try { out = this.applyGame(out, a, now); } catch (e) { if (!(e instanceof EngineError)) throw e; } }
       }
       this.scheduleBots(now);
@@ -343,11 +348,13 @@ export class RoomCore {
     }
     return { ...out, alarmAt: this.nextAlarm() };
   }
+  /** Funzione di scelta dei bot: quella di sempre, salvo nelle stanze di collaudo create con `motore=v2`. */
+  private botChoice() { const e = this.data.options.botEngine; return e === "v2e" ? chooseBotActionV2E : e === "v2" ? chooseBotActionV2 : chooseBotAction; }
   /** Programma la prossima azione dei bot se ce n'è almeno una disponibile (ritardo umano: 0,9–2 s). */
   private scheduleBots(now: number) {
     const d = this.data;
     if (d.stage !== "PLAYING" || !d.game || d.game.phase === "MINI_RUN" || !d.players.some((p) => p.isBot) || this.connected.size === 0) { d.botAt = null; return; }
-    const g = d.game, any = d.players.some((p) => p.isBot && chooseBotAction(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null);
+    const g = d.game, any = d.players.some((p) => p.isBot && this.botChoice()(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null);
     if (!any) { d.botAt = null; return; }
     if (d.botAt === null) d.botAt = now + LIMITS.botMinMs + (new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296) * LIMITS.botJitterMs;
   }

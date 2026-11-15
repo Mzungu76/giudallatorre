@@ -1,0 +1,4254 @@
+{
+ "versione": 1,
+ "frasi": [
+  {
+   "id": "F021",
+   "testo": "chi sarebbe il primo a tradire sotto interrogatorio.",
+   "tipi": {
+    "codardo": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "legge": 3,
+    "coraggio": 2,
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F173",
+   "testo": "chi sarebbe il primo ad arrendersi in montagna.",
+   "tipi": {
+    "pigro": 3,
+    "codardo": 1
+   },
+   "temi": {
+    "natura": 3,
+    "coraggio": 1,
+    "pigrizia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "sportivo"
+    ],
+    "temi": [
+     "viaggio"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F188",
+   "testo": "chi tradirebbe un amico per fare carriera.",
+   "tipi": {
+    "ambizioso": 3,
+    "infedele": 1,
+    "egoista": 1
+   },
+   "temi": {
+    "carriera": 3,
+    "amicizia": 3,
+    "tradimento": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F193",
+   "testo": "chi non andrebbe al funerale di un amico per vedere una partita.",
+   "tipi": {
+    "egoista": 2,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "morte": 3,
+    "amicizia": 2,
+    "sport": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "sportivo",
+     "religioso"
+    ],
+    "temi": [
+     "religione"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F194",
+   "testo": "chi riderebbe a un funerale.",
+   "tipi": {
+    "maleducato": 2,
+    "goffo": 1
+   },
+   "temi": {
+    "morte": 3,
+    "imbarazzo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso"
+    ],
+    "temi": [
+     "religione"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F202",
+   "testo": "chi tradirebbe il proprio migliore amico per una notte.",
+   "tipi": {
+    "infedele": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "amicizia": 3,
+    "tradimento": 3,
+    "notte": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F216",
+   "testo": "chi è convinto di avere un talento nascosto.",
+   "tipi": {
+    "vanitoso": 2,
+    "ingenuo": 1
+   },
+   "temi": {
+    "spettacolo": 2,
+    "vanita": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F251",
+   "testo": "i più traditori.",
+   "tipi": {
+    "infedele": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "tradimento": 3,
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F257",
+   "testo": "i più calcolatori.",
+   "tipi": {
+    "furbo": 3,
+    "ambizioso": 2
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F286",
+   "testo": "quelli che flirtano con l’ex del migliore amico.",
+   "tipi": {
+    "infedele": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "tradimento": 3,
+    "amicizia": 3,
+    "seduzione": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "amore"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F291",
+   "testo": "chi venderebbe i segreti di un amico a un giornale.",
+   "tipi": {
+    "furbo": 2,
+    "egoista": 2,
+    "ipocrita": 2
+   },
+   "temi": {
+    "segreti": 3,
+    "soldi": 3,
+    "tradimento": 2,
+    "amicizia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F294",
+   "testo": "chi ruberebbe dal portafoglio di un amico.",
+   "tipi": {
+    "egoista": 3,
+    "avaro": 2
+   },
+   "temi": {
+    "soldi": 3,
+    "amicizia": 3,
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F303",
+   "testo": "chi parlerebbe male del defunto subito dopo il funerale.",
+   "tipi": {
+    "ipocrita": 2,
+    "pettegolo": 2,
+    "maleducato": 1
+   },
+   "temi": {
+    "morte": 3,
+    "pettegolezzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso"
+    ],
+    "temi": [
+     "religione"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F304",
+   "testo": "chi perdonerebbe un tradimento per comodità.",
+   "tipi": {
+    "codardo": 1,
+    "pigro": 1
+   },
+   "temi": {
+    "amore": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F318",
+   "testo": "chi sarebbe il primo a rimorchiare a un funerale.",
+   "tipi": {
+    "infedele": 2,
+    "maleducato": 2
+   },
+   "temi": {
+    "morte": 3,
+    "seduzione": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso"
+    ],
+    "temi": [
+     "religione"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F325",
+   "testo": "chi è convinto che un tradimento all’estero non conti.",
+   "tipi": {
+    "infedele": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "tradimento": 3,
+    "viaggio": 3,
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F359",
+   "testo": "quelli che chiedono la password del Wi-Fi appena entrano.",
+   "tipi": {
+    "maleducato": 2
+   },
+   "temi": {
+    "casa": 3,
+    "tecnologia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F370",
+   "testo": "chi si dimenticherebbe di un impegno importante.",
+   "tipi": {
+    "distratto": 3,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "lavoro": 1,
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F386",
+   "testo": "chi tradirebbe per noia.",
+   "tipi": {
+    "infedele": 3,
+    "impulsivo": 1
+   },
+   "temi": {
+    "amore": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F389",
+   "testo": "chi tradirebbe la squadra per un premio.",
+   "tipi": {
+    "egoista": 2,
+    "ambizioso": 1,
+    "furbo": 1
+   },
+   "temi": {
+    "sport": 2,
+    "lavoro": 1,
+    "tradimento": 3,
+    "soldi": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "sportivo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso",
+    "tema-diverso"
+   ],
+   "priorita": 2
+  },
+  {
+   "id": "F002",
+   "testo": "chi sparlerebbe di te appena esci dalla stanza.",
+   "tipi": {
+    "pettegolo": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "pettegolezzo": 3,
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F004",
+   "testo": "chi non terrebbe mai un segreto.",
+   "tipi": {
+    "pettegolo": 3,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "segreti": 3,
+    "pettegolezzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F007",
+   "testo": "chi si farebbe corrompere per poco.",
+   "tipi": {
+    "furbo": 2,
+    "ipocrita": 1
+   },
+   "temi": {
+    "truffe": 3,
+    "soldi": 2,
+    "legge": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F016",
+   "testo": "chi dopo un funerale chiederebbe subito cosa c’è da mangiare.",
+   "tipi": {
+    "mangione": 3,
+    "maleducato": 2
+   },
+   "temi": {
+    "morte": 3,
+    "cibo": 3,
+    "imbarazzo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso"
+    ],
+    "temi": [
+     "religione",
+     "cibo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F020",
+   "testo": "chi ha più bisogno di una lezione di umiltà.",
+   "tipi": {
+    "vanitoso": 3,
+    "arrogante": 2
+   },
+   "temi": {
+    "vanita": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F023",
+   "testo": "chi pensa solo a salvare sé stesso.",
+   "tipi": {
+    "egoista": 3,
+    "codardo": 1
+   },
+   "temi": {
+    "fiducia": 2,
+    "coraggio": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F024",
+   "testo": "chi non ammette mai di aver perso.",
+   "tipi": {
+    "testardo": 3,
+    "vanitoso": 1
+   },
+   "temi": {
+    "vanita": 2,
+    "gioco": 2,
+    "sport": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F028",
+   "testo": "i più ruffiani.",
+   "tipi": {
+    "ruffiano": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "lavoro": 1,
+    "carriera": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "furbo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F030",
+   "testo": "i più lamentosi.",
+   "tipi": {
+    "drammatico": 3
+   },
+   "temi": {
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F033",
+   "testo": "i più antipatici.",
+   "tipi": {
+    "noioso": 2,
+    "maleducato": 2
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F034",
+   "testo": "i più ipocriti.",
+   "tipi": {
+    "ipocrita": 3
+   },
+   "temi": {
+    "bugie": 2,
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F037",
+   "testo": "i più inaffidabili.",
+   "tipi": {
+    "inaffidabile": 3
+   },
+   "temi": {
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F038",
+   "testo": "i più scostanti.",
+   "tipi": {
+    "maleducato": 2,
+    "noioso": 1
+   },
+   "temi": {
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F039",
+   "testo": "i più testardi.",
+   "tipi": {
+    "testardo": 3
+   },
+   "temi": {
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F040",
+   "testo": "i più ingordi.",
+   "tipi": {
+    "mangione": 3
+   },
+   "temi": {
+    "cibo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F042",
+   "testo": "i più perfettini.",
+   "tipi": {
+    "pignolo": 3,
+    "saputello": 1
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F043",
+   "testo": "i più generosi solo quando c’è pubblico.",
+   "tipi": {
+    "vanitoso": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "vanita": 3,
+    "soldi": 2,
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F047",
+   "testo": "i più smielati.",
+   "tipi": {
+    "romantico": 2,
+    "ruffiano": 1
+   },
+   "temi": {
+    "amore": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F053",
+   "testo": "quelli che fanno sempre finta di non aver visto il messaggio.",
+   "tipi": {
+    "inaffidabile": 2,
+    "bugiardo": 1,
+    "maleducato": 1
+   },
+   "temi": {
+    "social": 3,
+    "tecnologia": 1,
+    "bugie": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F059",
+   "testo": "i più rumorosi.",
+   "tipi": {
+    "chiacchierone": 2,
+    "maleducato": 2
+   },
+   "temi": {
+    "feste": 1,
+    "caos": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F060",
+   "testo": "i più ritardatari.",
+   "tipi": {
+    "inaffidabile": 3,
+    "distratto": 1
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F065",
+   "testo": "i più invidiosi.",
+   "tipi": {
+    "invidioso": 3
+   },
+   "temi": {
+    "rabbia": 1,
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F066",
+   "testo": "i più gelosi.",
+   "tipi": {
+    "geloso": 3
+   },
+   "temi": {
+    "amore": 3,
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F069",
+   "testo": "i più noiosi.",
+   "tipi": {
+    "noioso": 3
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F070",
+   "testo": "i più chiacchieroni.",
+   "tipi": {
+    "chiacchierone": 3,
+    "pettegolo": 1
+   },
+   "temi": {
+    "pettegolezzo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F071",
+   "testo": "i più dispettosi.",
+   "tipi": {
+    "dispettoso": 3,
+    "vendicativo": 1
+   },
+   "temi": {
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F073",
+   "testo": "i più egoisti.",
+   "tipi": {
+    "egoista": 3
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F076",
+   "testo": "i più cinici.",
+   "tipi": {
+    "cinico": 3
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F077",
+   "testo": "i più ingenui.",
+   "tipi": {
+    "ingenuo": 3
+   },
+   "temi": {
+    "truffe": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F079",
+   "testo": "i più maleducati.",
+   "tipi": {
+    "maleducato": 3
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F086",
+   "testo": "i più sfacciati.",
+   "tipi": {
+    "arrogante": 2,
+    "maleducato": 2
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F087",
+   "testo": "i più codardi.",
+   "tipi": {
+    "codardo": 3
+   },
+   "temi": {
+    "coraggio": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F088",
+   "testo": "i più rancorosi.",
+   "tipi": {
+    "vendicativo": 3
+   },
+   "temi": {
+    "rabbia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F089",
+   "testo": "i più smemorati.",
+   "tipi": {
+    "distratto": 3
+   },
+   "temi": {
+    "caos": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F091",
+   "testo": "i più maniaci del controllo.",
+   "tipi": {
+    "pignolo": 2,
+    "geloso": 1,
+    "arrogante": 1
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F092",
+   "testo": "i più viziati.",
+   "tipi": {
+    "viziato": 3,
+    "egoista": 1,
+    "drammatico": 1
+   },
+   "temi": {
+    "famiglia": 1,
+    "soldi": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F093",
+   "testo": "i più sdolcinati.",
+   "tipi": {
+    "romantico": 3,
+    "ruffiano": 1
+   },
+   "temi": {
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F094",
+   "testo": "i più pignoli.",
+   "tipi": {
+    "pignolo": 3
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F098",
+   "testo": "i più ansiosi.",
+   "tipi": {
+    "ansioso": 3,
+    "drammatico": 1
+   },
+   "temi": {
+    "salute": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F099",
+   "testo": "i più impulsivi.",
+   "tipi": {
+    "impulsivo": 3
+   },
+   "temi": {
+    "rabbia": 1,
+    "coraggio": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F105",
+   "testo": "i più intransigenti.",
+   "tipi": {
+    "testardo": 3,
+    "moralista": 1
+   },
+   "temi": {
+    "legge": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F106",
+   "testo": "i più bacchettoni.",
+   "tipi": {
+    "moralista": 3,
+    "religioso": 2
+   },
+   "temi": {
+    "religione": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F112",
+   "testo": "quelli che sparlano di chi è assente.",
+   "tipi": {
+    "pettegolo": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "pettegolezzo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F113",
+   "testo": "quelli che si lamentano e non fanno niente.",
+   "tipi": {
+    "pigro": 3,
+    "drammatico": 1
+   },
+   "temi": {
+    "lavoro": 1,
+    "pigrizia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F114",
+   "testo": "quelli che non ammettono mai di aver sbagliato.",
+   "tipi": {
+    "testardo": 3,
+    "arrogante": 2
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F116",
+   "testo": "quelli che spoilerano i film.",
+   "tipi": {
+    "maleducato": 2,
+    "dispettoso": 2
+   },
+   "temi": {
+    "spettacolo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F117",
+   "testo": "quelli che raccontano sempre la stessa storia.",
+   "tipi": {
+    "noioso": 3,
+    "chiacchierone": 2
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F118",
+   "testo": "quelli che sono gentili solo quando serve.",
+   "tipi": {
+    "ipocrita": 3,
+    "ruffiano": 2,
+    "furbo": 1
+   },
+   "temi": {
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F119",
+   "testo": "quelli che non restituiscono mai quello che prendono in prestito.",
+   "tipi": {
+    "egoista": 2,
+    "inaffidabile": 2,
+    "avaro": 1
+   },
+   "temi": {
+    "fiducia": 2,
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F121",
+   "testo": "quelli che guardano il telefono mentre gli altri parlano.",
+   "tipi": {
+    "maleducato": 3
+   },
+   "temi": {
+    "tecnologia": 2,
+    "social": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F123",
+   "testo": "quelli che vogliono sempre l’ultima parola.",
+   "tipi": {
+    "testardo": 3,
+    "arrogante": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F127",
+   "testo": "quelli che non sanno stare zitti.",
+   "tipi": {
+    "chiacchierone": 3,
+    "maleducato": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F129",
+   "testo": "quelli che trattano male i camerieri.",
+   "tipi": {
+    "maleducato": 3,
+    "arrogante": 2
+   },
+   "temi": {
+    "cibo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F131",
+   "testo": "quelli che fanno la morale agli altri.",
+   "tipi": {
+    "moralista": 3,
+    "ipocrita": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F134",
+   "testo": "quelli che pretendono un trattamento di favore.",
+   "tipi": {
+    "viziato": 3,
+    "arrogante": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F135",
+   "testo": "quelli che sono servili con i capi e prepotenti con gli altri.",
+   "tipi": {
+    "ruffiano": 3,
+    "ipocrita": 2,
+    "arrogante": 1
+   },
+   "temi": {
+    "lavoro": 3,
+    "carriera": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F136",
+   "testo": "quelli che portano sfortuna.",
+   "tipi": {
+    "ingenuo": 1,
+    "goffo": 2
+   },
+   "temi": {
+    "superstizione": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "complottista"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F137",
+   "testo": "quelli che sanno sempre tutto prima degli altri.",
+   "tipi": {
+    "pettegolo": 3,
+    "impiccione": 2
+   },
+   "temi": {
+    "pettegolezzo": 3,
+    "segreti": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F139",
+   "testo": "quelli che non rispettano la fila.",
+   "tipi": {
+    "maleducato": 3,
+    "furbo": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F141",
+   "testo": "quelli che danno la colpa all’arbitro.",
+   "tipi": {
+    "testardo": 1,
+    "egoista": 1
+   },
+   "temi": {
+    "sport": 3,
+    "legge": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "sportivo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F145",
+   "testo": "quelli che cambiano idea a seconda di chi hanno davanti.",
+   "tipi": {
+    "ipocrita": 3,
+    "ruffiano": 1
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F148",
+   "testo": "quelli che non chiedono mai scusa.",
+   "tipi": {
+    "arrogante": 2,
+    "testardo": 2
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F152",
+   "testo": "chi sarebbe il peggior ospite.",
+   "tipi": {
+    "maleducato": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "casa": 2,
+    "cibo": 1
+   },
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "feste"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F155",
+   "testo": "chi sarebbe il peggior compagno di squadra.",
+   "tipi": {
+    "egoista": 3
+   },
+   "temi": {
+    "sport": 3,
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "sportivo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F158",
+   "testo": "chi sarebbe la peggior babysitter.",
+   "tipi": {
+    "distratto": 2,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "bambini": 3,
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "genitore"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F161",
+   "testo": "chi sarebbe il peggior consigliere sentimentale.",
+   "tipi": {
+    "ipocrita": 1,
+    "egoista": 1
+   },
+   "temi": {
+    "amore": 3,
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F164",
+   "testo": "chi dimenticherebbe il proprio compleanno.",
+   "tipi": {
+    "distratto": 3
+   },
+   "temi": {
+    "feste": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "feste",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F165",
+   "testo": "chi si addormenterebbe a una cena di gala.",
+   "tipi": {
+    "noioso": 2,
+    "pigro": 1
+   },
+   "temi": {
+    "feste": 3,
+    "imbarazzo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "feste",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F166",
+   "testo": "chi sarebbe il primo a litigare per l’ultima fetta di torta.",
+   "tipi": {
+    "egoista": 1,
+    "mangione": 3
+   },
+   "temi": {
+    "cibo": 3,
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": [
+     "cibo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F168",
+   "testo": "chi sarebbe il primo a dare la colpa agli altri.",
+   "tipi": {
+    "codardo": 2,
+    "egoista": 2
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F172",
+   "testo": "chi sarebbe il primo a rovinare una sorpresa.",
+   "tipi": {
+    "dispettoso": 2,
+    "chiacchierone": 2
+   },
+   "temi": {
+    "segreti": 3,
+    "feste": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F177",
+   "testo": "chi non riuscirebbe a stare un giorno senza lamentarsi.",
+   "tipi": {
+    "drammatico": 3
+   },
+   "temi": {
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "drammatico"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F180",
+   "testo": "chi ti lascerebbe a piedi sotto la pioggia.",
+   "tipi": {
+    "egoista": 3
+   },
+   "temi": {
+    "mezzi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F185",
+   "testo": "chi vorresti meno in squadra a un gioco da tavolo.",
+   "tipi": {
+    "testardo": 2,
+    "furbo": 1
+   },
+   "temi": {
+    "gioco": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "sportivo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F186",
+   "testo": "chi sarebbe il primo a discutere con un vigile.",
+   "tipi": {
+    "rabbioso": 3,
+    "arrogante": 1
+   },
+   "temi": {
+    "legge": 3,
+    "mezzi": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F187",
+   "testo": "chi sarebbe il primo a rubare il posto in fila.",
+   "tipi": {
+    "maleducato": 3,
+    "furbo": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F189",
+   "testo": "chi sarebbe il primo a litigare per l’eredità.",
+   "tipi": {
+    "avaro": 3,
+    "egoista": 2
+   },
+   "temi": {
+    "famiglia": 3,
+    "soldi": 3,
+    "morte": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F190",
+   "testo": "chi darebbe la colpa a un innocente pur di salvarsi.",
+   "tipi": {
+    "codardo": 3,
+    "egoista": 2,
+    "bugiardo": 1
+   },
+   "temi": {
+    "legge": 2,
+    "bugie": 2,
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F191",
+   "testo": "chi lascerebbe il partner con un messaggio.",
+   "tipi": {
+    "codardo": 3,
+    "infedele": 1
+   },
+   "temi": {
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "amore",
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F196",
+   "testo": "chi si addormenterebbe durante la messa.",
+   "tipi": {
+    "pigro": 3
+   },
+   "temi": {
+    "religione": 3,
+    "pigrizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "religioso"
+    ],
+    "temi": [
+     "religione",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F203",
+   "testo": "chi da ubriaco si metterebbe a ballare sul tavolo.",
+   "tipi": {
+    "festaiolo": 3,
+    "impulsivo": 2
+   },
+   "temi": {
+    "alcol": 3,
+    "feste": 3,
+    "imbarazzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F204",
+   "testo": "chi da ubriaco confesserebbe tutto.",
+   "tipi": {
+    "chiacchierone": 3,
+    "impulsivo": 1
+   },
+   "temi": {
+    "alcol": 3,
+    "segreti": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso",
+     "eccentrico"
+    ],
+    "temi": [
+     "religione",
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F207",
+   "testo": "chi è convinto di essere sempre nel giusto.",
+   "tipi": {
+    "arrogante": 3,
+    "testardo": 1
+   },
+   "temi": {
+    "vanita": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F215",
+   "testo": "chi è convinto di meritare di più.",
+   "tipi": {
+    "viziato": 2,
+    "arrogante": 2,
+    "ambizioso": 1
+   },
+   "temi": {
+    "lavoro": 1,
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F227",
+   "testo": "chi è convinto di essere immune alle truffe.",
+   "tipi": {
+    "ingenuo": 2,
+    "arrogante": 2
+   },
+   "temi": {
+    "truffe": 3,
+    "soldi": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F228",
+   "testo": "chi è convinto di poter bere senza conseguenze.",
+   "tipi": {
+    "festaiolo": 2,
+    "impulsivo": 1
+   },
+   "temi": {
+    "alcol": 3,
+    "salute": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F236",
+   "testo": "i più bravi a fare i bravi.",
+   "tipi": {
+    "ipocrita": 3,
+    "vanitoso": 1
+   },
+   "temi": {
+    "vanita": 2,
+    "bugie": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F237",
+   "testo": "i più gentili solo per interesse.",
+   "tipi": {
+    "ipocrita": 2,
+    "furbo": 2,
+    "ruffiano": 1
+   },
+   "temi": {
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F239",
+   "testo": "i più calmi solo quando conviene.",
+   "tipi": {
+    "ipocrita": 2,
+    "furbo": 1
+   },
+   "temi": {
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F240",
+   "testo": "i più generosi con i soldi degli altri.",
+   "tipi": {
+    "egoista": 2,
+    "furbo": 1,
+    "spendaccione": 1
+   },
+   "temi": {
+    "soldi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F244",
+   "testo": "i più romantici solo a San Valentino.",
+   "tipi": {
+    "romantico": 2,
+    "ipocrita": 2
+   },
+   "temi": {
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F246",
+   "testo": "i più sani a parole.",
+   "tipi": {
+    "ipocrita": 3
+   },
+   "temi": {
+    "salute": 3,
+    "corpo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F247",
+   "testo": "i più puntuali solo quando serve a loro.",
+   "tipi": {
+    "egoista": 2,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "pigro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F252",
+   "testo": "i più viscidi.",
+   "tipi": {
+    "ipocrita": 3,
+    "furbo": 2,
+    "ruffiano": 1
+   },
+   "temi": {
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F256",
+   "testo": "i più subdoli.",
+   "tipi": {
+    "furbo": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "fiducia": 3,
+    "segreti": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F258",
+   "testo": "i più vigliacchi.",
+   "tipi": {
+    "codardo": 3
+   },
+   "temi": {
+    "coraggio": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F260",
+   "testo": "i più sleali.",
+   "tipi": {
+    "ipocrita": 2,
+    "furbo": 2,
+    "infedele": 1
+   },
+   "temi": {
+    "fiducia": 3,
+    "tradimento": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F261",
+   "testo": "i più spietati.",
+   "tipi": {
+    "vendicativo": 2,
+    "arrogante": 2,
+    "egoista": 1
+   },
+   "temi": {
+    "rabbia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F263",
+   "testo": "i più infedeli.",
+   "tipi": {
+    "infedele": 3
+   },
+   "temi": {
+    "amore": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F264",
+   "testo": "i più libertini.",
+   "tipi": {
+    "infedele": 2,
+    "festaiolo": 2
+   },
+   "temi": {
+    "seduzione": 3,
+    "amore": 2,
+    "notte": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F265",
+   "testo": "i più lussuriosi.",
+   "tipi": {
+    "festaiolo": 2,
+    "infedele": 1
+   },
+   "temi": {
+    "seduzione": 3,
+    "notte": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F266",
+   "testo": "i più viziosi.",
+   "tipi": {
+    "festaiolo": 2,
+    "impulsivo": 1
+   },
+   "temi": {
+    "alcol": 2,
+    "fumo": 1,
+    "notte": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F267",
+   "testo": "i più spudorati.",
+   "tipi": {
+    "maleducato": 3,
+    "arrogante": 1
+   },
+   "temi": {
+    "imbarazzo": 3,
+    "seduzione": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F268",
+   "testo": "i più morbosi.",
+   "tipi": {
+    "impiccione": 2,
+    "pettegolo": 1
+   },
+   "temi": {
+    "seduzione": 2,
+    "segreti": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F269",
+   "testo": "i più dissoluti.",
+   "tipi": {
+    "festaiolo": 3
+   },
+   "temi": {
+    "seduzione": 2,
+    "alcol": 2,
+    "notte": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F270",
+   "testo": "i più ubriaconi.",
+   "tipi": {
+    "festaiolo": 2,
+    "impulsivo": 1
+   },
+   "temi": {
+    "alcol": 3,
+    "feste": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F271",
+   "testo": "quelli che stanno con qualcuno solo per i soldi.",
+   "tipi": {
+    "ambizioso": 1,
+    "furbo": 2,
+    "infedele": 1
+   },
+   "temi": {
+    "amore": 3,
+    "soldi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F272",
+   "testo": "quelli che sparlano degli amici appena escono.",
+   "tipi": {
+    "pettegolo": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "pettegolezzo": 3,
+    "amicizia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F275",
+   "testo": "quelli che flirtano con tutti, anche quando sono impegnati.",
+   "tipi": {
+    "infedele": 2,
+    "festaiolo": 1
+   },
+   "temi": {
+    "seduzione": 3,
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro",
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F277",
+   "testo": "quelli che vanno ai funerali solo per fare scena.",
+   "tipi": {
+    "ipocrita": 3,
+    "drammatico": 2
+   },
+   "temi": {
+    "morte": 3,
+    "imbarazzo": 1
+   },
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "feste"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F279",
+   "testo": "quelli che ti sorridono e poi ti pugnalano alle spalle.",
+   "tipi": {
+    "ipocrita": 3,
+    "furbo": 1
+   },
+   "temi": {
+    "tradimento": 3,
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F280",
+   "testo": "quelli che si fanno belli con i soldi dei genitori.",
+   "tipi": {
+    "vanitoso": 3,
+    "viziato": 2
+   },
+   "temi": {
+    "soldi": 3,
+    "famiglia": 3,
+    "vanita": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro",
+     "genitore"
+    ],
+    "temi": [
+     "soldi",
+     "famiglia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F281",
+   "testo": "quelli che ci provano con tutti ai matrimoni.",
+   "tipi": {
+    "festaiolo": 2,
+    "infedele": 1,
+    "impulsivo": 1
+   },
+   "temi": {
+    "seduzione": 3,
+    "feste": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F283",
+   "testo": "quelli che portano a casa chiunque dopo due drink.",
+   "tipi": {
+    "festaiolo": 3,
+    "impulsivo": 2
+   },
+   "temi": {
+    "seduzione": 3,
+    "alcol": 3,
+    "notte": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F285",
+   "testo": "quelli che dopo il terzo bicchiere dicono la verità.",
+   "tipi": {
+    "impulsivo": 1,
+    "chiacchierone": 2
+   },
+   "temi": {
+    "alcol": 3,
+    "segreti": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F287",
+   "testo": "quelli che non sanno dire di no a un’avventura.",
+   "tipi": {
+    "infedele": 2,
+    "impulsivo": 2
+   },
+   "temi": {
+    "seduzione": 3,
+    "amore": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F288",
+   "testo": "chi ti pugnalerebbe alle spalle per una promozione.",
+   "tipi": {
+    "ambizioso": 3,
+    "furbo": 2,
+    "ipocrita": 1
+   },
+   "temi": {
+    "carriera": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F289",
+   "testo": "chi ruberebbe il partner a un amico.",
+   "tipi": {
+    "infedele": 3,
+    "egoista": 2
+   },
+   "temi": {
+    "amicizia": 3,
+    "amore": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "amore",
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F292",
+   "testo": "chi andrebbe in vacanza il giorno dopo un funerale.",
+   "tipi": {
+    "egoista": 2,
+    "maleducato": 2
+   },
+   "temi": {
+    "morte": 3,
+    "viaggio": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "religioso"
+    ],
+    "temi": [
+     "religione",
+     "viaggio"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F293",
+   "testo": "chi sarebbe il primo a litigare al funerale.",
+   "tipi": {
+    "maleducato": 2,
+    "rabbioso": 3
+   },
+   "temi": {
+    "morte": 3,
+    "rabbia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "religioso"
+    ],
+    "temi": [
+     "religione"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F295",
+   "testo": "chi sarebbe il primo a fare una scenata di gelosia in pubblico.",
+   "tipi": {
+    "geloso": 3,
+    "drammatico": 3
+   },
+   "temi": {
+    "amore": 3,
+    "imbarazzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "drammatico"
+    ],
+    "temi": [
+     "feste"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F296",
+   "testo": "chi non pagherebbe le tasse e ne andrebbe fiero.",
+   "tipi": {
+    "furbo": 3,
+    "arrogante": 1
+   },
+   "temi": {
+    "soldi": 3,
+    "legge": 3,
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F300",
+   "testo": "chi lascerebbe un amico ubriaco da solo in strada.",
+   "tipi": {
+    "egoista": 3,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "amicizia": 3,
+    "alcol": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F307",
+   "testo": "chi tradirebbe il partner con il suo migliore amico.",
+   "tipi": {
+    "infedele": 3
+   },
+   "temi": {
+    "amore": 3,
+    "amicizia": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "amore",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F312",
+   "testo": "chi manderebbe una foto compromettente alla persona sbagliata.",
+   "tipi": {
+    "goffo": 3,
+    "distratto": 2
+   },
+   "temi": {
+    "social": 3,
+    "tecnologia": 3,
+    "imbarazzo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F313",
+   "testo": "chi si spoglierebbe per una scommessa.",
+   "tipi": {
+    "impulsivo": 3,
+    "festaiolo": 2
+   },
+   "temi": {
+    "gioco": 3,
+    "imbarazzo": 3,
+    "corpo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F315",
+   "testo": "chi bacerebbe il cognato dopo qualche bicchiere.",
+   "tipi": {
+    "infedele": 2,
+    "festaiolo": 2
+   },
+   "temi": {
+    "famiglia": 3,
+    "alcol": 3,
+    "seduzione": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "famiglia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F320",
+   "testo": "chi è convinto di poter comprare tutto con i soldi.",
+   "tipi": {
+    "viziato": 2,
+    "arrogante": 3
+   },
+   "temi": {
+    "soldi": 3,
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F322",
+   "testo": "chi è convinto di non dover mai chiedere scusa.",
+   "tipi": {
+    "arrogante": 3,
+    "testardo": 2
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F324",
+   "testo": "chi è convinto di essere il migliore a letto.",
+   "tipi": {
+    "vanitoso": 3
+   },
+   "temi": {
+    "seduzione": 3,
+    "vanita": 3
+   },
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "amore"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F326",
+   "testo": "chi è convinto di non aver mai tradito nessuno.",
+   "tipi": {
+    "infedele": 2,
+    "ipocrita": 2
+   },
+   "temi": {
+    "tradimento": 3,
+    "bugie": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F328",
+   "testo": "i più fedeli, ma solo a parole.",
+   "tipi": {
+    "infedele": 2,
+    "ipocrita": 3
+   },
+   "temi": {
+    "amore": 3,
+    "tradimento": 3,
+    "bugie": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F329",
+   "testo": "i più puri, finché nessuno guarda.",
+   "tipi": {
+    "ipocrita": 3,
+    "moralista": 1
+   },
+   "temi": {
+    "segreti": 3,
+    "bugie": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F330",
+   "testo": "i più devoti, fino a lunedì.",
+   "tipi": {
+    "religioso": 2,
+    "ipocrita": 3
+   },
+   "temi": {
+    "religione": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F331",
+   "testo": "i più generosi con i soldi dell’azienda.",
+   "tipi": {
+    "spendaccione": 2,
+    "egoista": 2
+   },
+   "temi": {
+    "lavoro": 3,
+    "soldi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro",
+     "lavoratore"
+    ],
+    "temi": [
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F332",
+   "testo": "i più sinceri quando bevono.",
+   "tipi": {
+    "impulsivo": 1,
+    "chiacchierone": 2
+   },
+   "temi": {
+    "alcol": 3,
+    "segreti": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F333",
+   "testo": "i più casti in pubblico.",
+   "tipi": {
+    "ipocrita": 3,
+    "moralista": 1
+   },
+   "temi": {
+    "seduzione": 2,
+    "bugie": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F334",
+   "testo": "i più fedeli finché il partner è nella stanza.",
+   "tipi": {
+    "infedele": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "amore": 3,
+    "tradimento": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": [
+     "amore"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F335",
+   "testo": "i più innocenti quando non hanno testimoni.",
+   "tipi": {
+    "ipocrita": 3,
+    "furbo": 1
+   },
+   "temi": {
+    "bugie": 3,
+    "segreti": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F339",
+   "testo": "i più rompiscatole.",
+   "tipi": {
+    "maleducato": 2,
+    "chiacchierone": 2,
+    "testardo": 1
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F341",
+   "testo": "i più pretenziosi.",
+   "tipi": {
+    "viziato": 3,
+    "arrogante": 2
+   },
+   "temi": {},
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F342",
+   "testo": "i più moralisti.",
+   "tipi": {
+    "moralista": 3,
+    "ipocrita": 1
+   },
+   "temi": {
+    "religione": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F344",
+   "testo": "i più spendaccioni.",
+   "tipi": {
+    "spendaccione": 3
+   },
+   "temi": {
+    "soldi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F347",
+   "testo": "i più possessivi.",
+   "tipi": {
+    "geloso": 3
+   },
+   "temi": {
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F348",
+   "testo": "quelli che ti scrivono solo quando gli serve qualcosa.",
+   "tipi": {
+    "egoista": 3,
+    "furbo": 1
+   },
+   "temi": {
+    "amicizia": 3,
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F349",
+   "testo": "quelli che spariscono quando c’è da aiutare.",
+   "tipi": {
+    "inaffidabile": 3,
+    "egoista": 2
+   },
+   "temi": {
+    "amicizia": 3,
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F352",
+   "testo": "quelli che sparlano del gruppo nel gruppo.",
+   "tipi": {
+    "pettegolo": 3,
+    "ipocrita": 2
+   },
+   "temi": {
+    "pettegolezzo": 3,
+    "amicizia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F354",
+   "testo": "quelli che si autoinvitano.",
+   "tipi": {
+    "maleducato": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "feste": 3,
+    "casa": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F356",
+   "testo": "quelli che sbagliano sempre il tuo nome.",
+   "tipi": {
+    "distratto": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F360",
+   "testo": "quelli che spariscono dopo il primo appuntamento.",
+   "tipi": {
+    "inaffidabile": 3
+   },
+   "temi": {
+    "amore": 3,
+    "seduzione": 1
+   },
+   "vecchie": {
+    "tipo": [],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F363",
+   "testo": "quelli che spariscono quando litighi e tornano quando serve.",
+   "tipi": {
+    "egoista": 3,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "amicizia": 3,
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "pigro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F366",
+   "testo": "quelli che giurano di non bere e poi bevono.",
+   "tipi": {
+    "ipocrita": 3,
+    "bugiardo": 1
+   },
+   "temi": {
+    "alcol": 3,
+    "bugie": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": [
+     "alcol"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F371",
+   "testo": "chi manderebbe il messaggio sbagliato alla persona sbagliata.",
+   "tipi": {
+    "goffo": 3,
+    "distratto": 2
+   },
+   "temi": {
+    "social": 3,
+    "tecnologia": 3,
+    "imbarazzo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F372",
+   "testo": "chi lascerebbe il gruppo su “visualizzato”.",
+   "tipi": {
+    "maleducato": 3,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "social": 3,
+    "tecnologia": 3,
+    "amicizia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer"
+    ],
+    "temi": [
+     "social"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F373",
+   "testo": "chi sarebbe il primo a dire “non è colpa mia”.",
+   "tipi": {
+    "codardo": 3,
+    "egoista": 1
+   },
+   "temi": {
+    "fiducia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F374",
+   "testo": "chi mollerebbe tutti per una nuova fiamma.",
+   "tipi": {
+    "egoista": 2,
+    "infedele": 1,
+    "impulsivo": 1
+   },
+   "temi": {
+    "amicizia": 3,
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo",
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F375",
+   "testo": "chi sarebbe il primo a spifferare un segreto.",
+   "tipi": {
+    "pettegolo": 3,
+    "inaffidabile": 1
+   },
+   "temi": {
+    "segreti": 3,
+    "fiducia": 3,
+    "pettegolezzo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo"
+    ],
+    "temi": [
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tema-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F376",
+   "testo": "chi si dimenticherebbe di restituire un prestito.",
+   "tipi": {
+    "distratto": 2,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "soldi": 3,
+    "fiducia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro",
+     "bugiardo"
+    ],
+    "temi": [
+     "soldi",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F379",
+   "testo": "chi si autoinviterebbe a ogni festa.",
+   "tipi": {
+    "maleducato": 3
+   },
+   "temi": {
+    "feste": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "avaro"
+    ],
+    "temi": [
+     "feste"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F380",
+   "testo": "chi sarebbe il primo a cadere in una truffa online.",
+   "tipi": {
+    "ingenuo": 3
+   },
+   "temi": {
+    "truffe": 3,
+    "social": 3,
+    "tecnologia": 3,
+    "soldi": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F381",
+   "testo": "chi sparirebbe per settimane dopo una lite.",
+   "tipi": {
+    "egoista": 2,
+    "testardo": 2,
+    "vendicativo": 1
+   },
+   "temi": {
+    "amicizia": 1,
+    "rabbia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F382",
+   "testo": "chi non risponderebbe mai a un invito.",
+   "tipi": {
+    "maleducato": 2,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "feste": 1,
+    "social": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F383",
+   "testo": "chi sparirebbe senza una parola dopo un anno insieme.",
+   "tipi": {
+    "codardo": 3,
+    "egoista": 2
+   },
+   "temi": {
+    "amore": 3,
+    "fiducia": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F390",
+   "testo": "chi sparlerebbe del capo senza accorgersi che lo sente.",
+   "tipi": {
+    "goffo": 3,
+    "distratto": 1,
+    "ipocrita": 1
+   },
+   "temi": {
+    "lavoro": 3,
+    "imbarazzo": 3,
+    "pettegolezzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo",
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro",
+     "bugie"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F391",
+   "testo": "chi è convinto di essere più furbo di tutti.",
+   "tipi": {
+    "arrogante": 3,
+    "vanitoso": 1
+   },
+   "temi": {
+    "vanita": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "furbo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F394",
+   "testo": "chi è convinto di meritare sempre la prima fila.",
+   "tipi": {
+    "viziato": 2,
+    "arrogante": 2
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso",
+     "ribelle"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F400",
+   "testo": "i più maturi a parole.",
+   "tipi": {
+    "ingenuo": 1,
+    "vanitoso": 1
+   },
+   "temi": {
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "bugiardo"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "F404",
+   "testo": "i più romantici solo all’inizio.",
+   "tipi": {
+    "romantico": 2,
+    "inaffidabile": 2
+   },
+   "temi": {
+    "amore": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico"
+    ],
+    "temi": []
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  }
+ ]
+}

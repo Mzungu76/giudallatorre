@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Revisione etichette</title>
+<style>
+:root{--bg:#fff7e6;--fg:#2b1d0e;--card:#fff;--line:#e5d3b3;--acc:#c2410c;--ok:#15803d}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1409;--fg:#f4e6cf;--card:#2a1d0f;--line:#4a3820;--acc:#fb923c;--ok:#4ade80}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,sans-serif;padding:16px;max-width:880px;margin-inline:auto}
+h1{font-size:1.3rem;margin:.2em 0}button,select,input{font:inherit;color:inherit}
+button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:.55em 1em;cursor:pointer;min-height:44px}button.sec{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}img{width:120px;border-radius:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.chip{border:1px solid var(--line);border-radius:99px;padding:.25em .7em;cursor:pointer;background:transparent;min-height:36px}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}.muted{opacity:.7;font-size:.9rem}.ok{color:var(--ok)}
+.w{display:inline-block;margin-left:.3em;font-size:.8rem;opacity:.9}
+</style></head><body>
+<h1>Revisione etichette — «gli occhi dei bot»</h1>
+<p class="muted">Pagina di lavoro del proprietario. Non pubblica nulla: apri i file dal repository (cartella <code>content/etichette/</code>), decidi, poi scarica il file delle decisioni e consegnalo.
+Tocca un'etichetta per accenderla; tocca ancora per cambiarne il peso (1 = marginale, 2 = presente, 3 = centrale) o spegnerla.</p>
+<div class="box">
+  <p>1. <label>Catalogo <input type="file" id="fcat" accept=".json"></label></p>
+  <p>2. <label>Da rivedere (<code>revisione.frasi.json</code> o <code>revisione.personaggi.json</code>) <input type="file" id="frev" accept=".json"></label></p>
+  <p class="muted" id="stat">Nessun file caricato.</p>
+</div>
+<div id="lista"></div>
+<div class="box"><button id="scarica">Scarica le decisioni</button> <span class="muted" id="n"></span></div>
+<script>
+const $=id=>document.getElementById(id);let cat=null,items=[],dec={},kind="frasi";
+try{dec=JSON.parse(localStorage.getItem("etichette-dec")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("etichette-dec",JSON.stringify(dec))}catch(e){}};
+const rd=(f,cb)=>{const r=new FileReader();r.onload=()=>cb(JSON.parse(r.result));r.readAsText(f)};
+$("fcat").onchange=e=>rd(e.target.files[0],j=>{cat=j;draw()});
+$("frev").onchange=e=>rd(e.target.files[0],j=>{kind=j.frasi?"frasi":"personaggi";items=j[kind];draw()});
+function cur(it){return dec[it.id]&&dec[it.id]!=="ok"?dec[it.id]:{tipi:it.tipi,temi:it.temi}}
+function chips(it,k,list){const c=cur(it),box=document.createElement("div");box.className="chips";
+  list.forEach(v=>{const w=c[k][v.id]||0,b=document.createElement("button");b.className="chip"+(w?" on":"");b.title=v.def;b.textContent=v.id;
+    if(w){const s=document.createElement("span");s.className="w";s.textContent="●".repeat(w);b.append(s)}
+    b.onclick=()=>{const n=JSON.parse(JSON.stringify(c));const nw=(w+1)%4;if(nw)n[k][v.id]=nw;else delete n[k][v.id];dec[it.id]=n;save();draw()};box.append(b)});return box}
+function draw(){const L=$("lista");L.innerHTML="";if(!cat||!items.length){return}
+  const done=items.filter(i=>dec[i.id]).length;$("stat").textContent=items.length+" elementi da rivedere · "+done+" decisi";$("n").textContent=done+" decisioni salvate nel browser";
+  items.forEach(it=>{const d=document.createElement("div");d.className="box";
+    const head=document.createElement("div");head.className="row";
+    if(kind==="personaggi"){const im=document.createElement("img");im.src="/cards/"+it.id+".webp";im.alt=it.id;head.append(im)}
+    const t=document.createElement("div");t.style.flex="1";t.innerHTML="<b>"+it.id+"</b> "+(it.testo?("— "+it.testo):"")+"<div class='muted'>Motivi: "+it.motivi.join(", ")+" · etichette vecchie: "+[...(it.vecchie.tipo||[]),...(it.vecchie.temi||[])].join(", ")+"</div>";head.append(t);d.append(head);
+    d.append(Object.assign(document.createElement("div"),{textContent:"Tipi umani",className:"muted"}),chips(it,"tipi",cat.tipi));
+    d.append(Object.assign(document.createElement("div"),{textContent:"Temi",className:"muted"}),chips(it,"temi",cat.temi));
+    const ok=document.createElement("button");ok.className="sec";ok.textContent=dec[it.id]?"Annulla decisione":"Va bene così";
+    ok.onclick=()=>{if(dec[it.id])delete dec[it.id];else dec[it.id]="ok";save();draw()};d.append(ok);L.append(d)})}
+$("scarica").onclick=()=>{const b=new Blob([JSON.stringify({tipo:kind,decisioni:dec},null,1)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="decisioni-etichette-"+kind+".json";a.click()};
+</script></body></html>

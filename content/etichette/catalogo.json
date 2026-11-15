@@ -1,0 +1,419 @@
+{
+ "versione": 1,
+ "note": "Catalogo comune di tipi (che persona è) e temi (di cosa si parla) per carte e frasi. Pesi: 1 = accenno, 2 = presente, 3 = tratto dominante.",
+ "pesi": [
+  1,
+  2,
+  3
+ ],
+ "max_tipi": 3,
+ "max_temi": 6,
+ "tipi": [
+  {
+   "id": "vanitoso",
+   "def": "Si crede il migliore, cura l'immagine, ama farsi guardare e applaudire."
+  },
+  {
+   "id": "arrogante",
+   "def": "Prepotente e presuntuoso, vuole avere ragione e comandare."
+  },
+  {
+   "id": "bugiardo",
+   "def": "Mente, inganna, racconta cose non vere."
+  },
+  {
+   "id": "ipocrita",
+   "def": "Dice una cosa e ne fa un'altra; sorride in faccia e pugnala alle spalle."
+  },
+  {
+   "id": "furbo",
+   "def": "Approfittatore, paraculo, trova la scorciatoia a spese altrui."
+  },
+  {
+   "id": "avaro",
+   "def": "Tirchio, scrocca, non paga mai, non restituisce."
+  },
+  {
+   "id": "spendaccione",
+   "def": "Spende senza freni, sperpera, vive sopra le possibilità."
+  },
+  {
+   "id": "pigro",
+   "def": "Scansafatiche, divano, evita fatica e responsabilità."
+  },
+  {
+   "id": "goffo",
+   "def": "Maldestro, combina disastri, rompe cose, inciampa."
+  },
+  {
+   "id": "distratto",
+   "def": "Smemorato, svampito, perde chiavi e filo del discorso."
+  },
+  {
+   "id": "rabbioso",
+   "def": "Nervoso, litigioso, perde la pazienza, brontola."
+  },
+  {
+   "id": "vendicativo",
+   "def": "Rancoroso, non perdona, si vendica."
+  },
+  {
+   "id": "drammatico",
+   "def": "Teatrale, si lamenta, fa la vittima, esagera le emozioni."
+  },
+  {
+   "id": "saputello",
+   "def": "Sa tutto lui, corregge gli altri, pedante."
+  },
+  {
+   "id": "moralista",
+   "def": "Predica bene e fa la morale agli altri."
+  },
+  {
+   "id": "pettegolo",
+   "def": "Sparla, spettegola, racconta i fatti altrui."
+  },
+  {
+   "id": "impiccione",
+   "def": "Curioso dei fatti altrui, si intromette, spia."
+  },
+  {
+   "id": "influencer",
+   "def": "Vive per i social, foto, follower, visibilità."
+  },
+  {
+   "id": "ambizioso",
+   "def": "Lavoratore o arrivista, carriera, capo, ufficio."
+  },
+  {
+   "id": "genitore",
+   "def": "Mamma o papà, accudisce, apprensivo con i figli."
+  },
+  {
+   "id": "sportivo",
+   "def": "Atletico, vive di sport, palestra, gare."
+  },
+  {
+   "id": "religioso",
+   "def": "Devoto o bigotto, chiesa, preghiera, santarello."
+  },
+  {
+   "id": "complottista",
+   "def": "Vede complotti, teorie strane, superstizioso."
+  },
+  {
+   "id": "politico",
+   "def": "Politico o che ragiona da politico: promesse, voti, potere."
+  },
+  {
+   "id": "ribelle",
+   "def": "Anticonformista, infrange le regole, trasgressivo."
+  },
+  {
+   "id": "eccentrico",
+   "def": "Strano, bizzarro, fuori dagli schemi."
+  },
+  {
+   "id": "nerd",
+   "def": "Appassionato di tecnologia, scienza, fumetti, giochi."
+  },
+  {
+   "id": "artista",
+   "def": "Creativo, musicista, pittore, attore, bohémien."
+  },
+  {
+   "id": "guru",
+   "def": "Esperto o maestro autoproclamato, santone, motivatore."
+  },
+  {
+   "id": "festaiolo",
+   "def": "Animatore di feste, sempre in giro, vita notturna."
+  },
+  {
+   "id": "romantico",
+   "def": "Sentimentale, corteggiatore, sognatore d'amore."
+  },
+  {
+   "id": "infedele",
+   "def": "Tradisce, seduttore seriale, non fedele."
+  },
+  {
+   "id": "geloso",
+   "def": "Possessivo, controllante, geloso del partner."
+  },
+  {
+   "id": "coraggioso",
+   "def": "Audace, affronta il pericolo (anche per vantarsi)."
+  },
+  {
+   "id": "codardo",
+   "def": "Vigliacco, scappa, si nasconde, evita i rischi."
+  },
+  {
+   "id": "ingenuo",
+   "def": "Credulone, si fa fregare, candido."
+  },
+  {
+   "id": "noioso",
+   "def": "Pedante, monotono, antipatico, spegne l'atmosfera."
+  },
+  {
+   "id": "impulsivo",
+   "def": "Agisce senza pensare, precipitoso."
+  },
+  {
+   "id": "mangione",
+   "def": "Vive per il cibo, ingordo, a sbafo."
+  },
+  {
+   "id": "egoista",
+   "def": "Pensa solo a sé, non condivide, non aiuta."
+  },
+  {
+   "id": "invidioso",
+   "def": "Invidia gli altri, rosica, non sopporta i successi altrui."
+  },
+  {
+   "id": "maleducato",
+   "def": "Scortese, sfacciato, non saluta, non rispetta le regole di buona educazione."
+  },
+  {
+   "id": "testardo",
+   "def": "Cocciuto, non cede, non ammette di aver torto o perso."
+  },
+  {
+   "id": "ansioso",
+   "def": "Preoccupato, in apprensione, vive di paure e allarmi."
+  },
+  {
+   "id": "viziato",
+   "def": "Capriccioso, abituato ad avere tutto, pretenzioso."
+  },
+  {
+   "id": "ruffiano",
+   "def": "Lecchino, adulatore, ruffiano con chi comanda."
+  },
+  {
+   "id": "inaffidabile",
+   "def": "Non mantiene le promesse, arriva tardi, non ci si può contare."
+  },
+  {
+   "id": "cinico",
+   "def": "Disilluso, sarcastico, diffida di tutti."
+  },
+  {
+   "id": "chiacchierone",
+   "def": "Parla troppo, rumoroso, non sta zitto."
+  },
+  {
+   "id": "dispettoso",
+   "def": "Fa dispetti, punzecchia, piccole cattiverie."
+  },
+  {
+   "id": "pignolo",
+   "def": "Perfezionista, maniaco dei dettagli e del controllo."
+  }
+ ],
+ "temi": [
+  {
+   "id": "amore",
+   "def": "Relazioni sentimentali, innamoramento, coppia."
+  },
+  {
+   "id": "tradimento",
+   "def": "Infedeltà, corna, amanti, tradire un amico."
+  },
+  {
+   "id": "seduzione",
+   "def": "Rimorchiare, flirt, sesso, conquista."
+  },
+  {
+   "id": "famiglia",
+   "def": "Parenti, genitori, suoceri, casa di famiglia."
+  },
+  {
+   "id": "amicizia",
+   "def": "Amici, compagnia, lealtà tra amici."
+  },
+  {
+   "id": "bambini",
+   "def": "Figli piccoli, infanzia, baby-sitter."
+  },
+  {
+   "id": "giovinezza",
+   "def": "Giovani, adolescenti, ragazzi."
+  },
+  {
+   "id": "vecchiaia",
+   "def": "Anziani, pensione, nonni."
+  },
+  {
+   "id": "scuola",
+   "def": "Scuola, università, studio, insegnanti."
+  },
+  {
+   "id": "lavoro",
+   "def": "Ufficio, capo, colleghi, lavoro di gruppo."
+  },
+  {
+   "id": "carriera",
+   "def": "Promozioni, ambizione, aumenti, curriculum."
+  },
+  {
+   "id": "soldi",
+   "def": "Denaro, conti, prestiti, mance, spese."
+  },
+  {
+   "id": "truffe",
+   "def": "Inganni economici, raggiri, corruzione."
+  },
+  {
+   "id": "legge",
+   "def": "Tribunale, polizia, multe, regole, carcere."
+  },
+  {
+   "id": "politica",
+   "def": "Elezioni, governo, partiti, potere."
+  },
+  {
+   "id": "religione",
+   "def": "Chiesa, preghiera, funerali, fede."
+  },
+  {
+   "id": "superstizione",
+   "def": "Sfortuna, scaramanzia, oroscopi, complotti."
+  },
+  {
+   "id": "social",
+   "def": "Social network, foto, follower, messaggi."
+  },
+  {
+   "id": "tecnologia",
+   "def": "Telefoni, computer, internet, gadget."
+  },
+  {
+   "id": "spettacolo",
+   "def": "Cinema, TV, teatro, palco, celebrità."
+  },
+  {
+   "id": "musica",
+   "def": "Musica, concerti, strumenti, cantare."
+  },
+  {
+   "id": "arte",
+   "def": "Pittura, creatività, mostre, scrivere."
+  },
+  {
+   "id": "cultura",
+   "def": "Libri, sapere, musei, discussioni colte."
+  },
+  {
+   "id": "moda",
+   "def": "Vestiti, trucco, look, stile."
+  },
+  {
+   "id": "corpo",
+   "def": "Aspetto fisico, palestra, bellezza, igiene."
+  },
+  {
+   "id": "salute",
+   "def": "Malattie, medici, dieta, benessere."
+  },
+  {
+   "id": "sport",
+   "def": "Sport, partite, squadra, arbitro."
+  },
+  {
+   "id": "natura",
+   "def": "Montagna, campeggio, escursioni, aria aperta."
+  },
+  {
+   "id": "animali",
+   "def": "Cani, gatti, animali domestici."
+  },
+  {
+   "id": "ambiente",
+   "def": "Ecologia, rifiuti, riciclo."
+  },
+  {
+   "id": "viaggio",
+   "def": "Vacanze, gite, aeroporti, valigie."
+  },
+  {
+   "id": "mezzi",
+   "def": "Auto, treno, traffico, parcheggio."
+  },
+  {
+   "id": "casa",
+   "def": "Abitazione, vicini, condominio, pulizie, bricolage."
+  },
+  {
+   "id": "cibo",
+   "def": "Cucina, ristoranti, mangiare, cene."
+  },
+  {
+   "id": "alcol",
+   "def": "Bere, ubriacarsi, bar."
+  },
+  {
+   "id": "fumo",
+   "def": "Sigarette, fumare."
+  },
+  {
+   "id": "feste",
+   "def": "Feste, compleanni, serate, ricorrenze."
+  },
+  {
+   "id": "notte",
+   "def": "Vita notturna, locali, discoteca, tardi."
+  },
+  {
+   "id": "imbarazzo",
+   "def": "Figuracce, vergogna, situazioni imbarazzanti."
+  },
+  {
+   "id": "bugie",
+   "def": "Menzogne, scuse, segreti nascosti."
+  },
+  {
+   "id": "pettegolezzo",
+   "def": "Voci, chiacchiere, sparlare."
+  },
+  {
+   "id": "segreti",
+   "def": "Confessioni, cose nascoste, privacy."
+  },
+  {
+   "id": "fiducia",
+   "def": "Lealtà, promesse, affidabilità, scarica barile."
+  },
+  {
+   "id": "rabbia",
+   "def": "Litigi, rancore, vendetta, nervosismo."
+  },
+  {
+   "id": "coraggio",
+   "def": "Paura, rischio, audacia, codardia."
+  },
+  {
+   "id": "pigrizia",
+   "def": "Fare niente, rimandare, divano."
+  },
+  {
+   "id": "caos",
+   "def": "Disordine, disastri, rovinare, distrazione."
+  },
+  {
+   "id": "gioco",
+   "def": "Giochi, scommesse, fortuna, carte."
+  },
+  {
+   "id": "morte",
+   "def": "Funerali, lutto, eredità, defunti."
+  },
+  {
+   "id": "vanita",
+   "def": "Vantarsi, presunzione, volersi mettere in mostra."
+  }
+ ]
+}

@@ -7,10 +7,10 @@ const ids = Array.from({ length: 100 }, (_, i) => `p${String(Math.floor(i / 7) +
 const base = (x: Partial<SimOpts> = {}): SimOpts => ({ ...SIM_DEFAULTS, seed: 5, ...x });
 
 describe("simulatore degli intervalli", () => {
-  it("ogni modalità e ogni numero di giocatori arrivano all'inizio dell'intervallo, con 6 carte e 18 uscite", () => {
+  it("ogni modalità e ogni numero di giocatori arrivano all'inizio dell'intervallo, con 4 carte e 8 uscite", () => {
     for (const kind of ["accusa", "amore", "peggiore"] as const) for (const players of [3, 4, 5, 6]) {
       const r = newSim(base({ kind, players }), ids, 1_000_000);
-      expect(r.state.phase, `${kind} ${players}`).toBe("MINI_RUN"); expect(r.state.tower).toHaveLength(6); expect(r.state.mini!.order).toHaveLength(18);
+      expect(r.state.phase, `${kind} ${players}`).toBe("MINI_RUN"); expect(r.state.tower).toHaveLength(4); expect(r.state.mini!.order).toHaveLength(8);
       expect(r.state.mini!.kind).toBe(kind); expect(r.state.playerIds).toHaveLength(players);
     }
   });
@@ -31,8 +31,8 @@ describe("simulatore degli intervalli", () => {
   });
   it("tutti votano (anche il giocatore in automatico): l'intervallo si chiude da solo prima di fine corsa", () => {
     const r = newSim(base({ votes: "presto", forced: [3], autoMe: true, players: 3 }), ids, 0);
-    const s = stepSim(r, r.goAt + 10 * MINI_SLOT_MS);
-    expect(s.state.phase).toBe("MINI_RESULTS"); expect(s.endAt).toBeGreaterThan(r.goAt + 10 * MINI_SLOT_MS);
+    const s = stepSim(r, r.goAt + 5 * MINI_SLOT_MS);
+    expect(s.state.phase).toBe("MINI_RESULTS"); expect(s.endAt).toBeGreaterThan(r.goAt + 5 * MINI_SLOT_MS);
   });
   it("nessun voto: a fine corsa non cade e non vince nessuno", () => {
     const r = newSim(base({ votes: "nessuno" }), ids, 0), s = stepSim(r, r.endAt + 1);
@@ -47,8 +47,8 @@ describe("simulatore degli intervalli", () => {
   });
   it("partenza dal verdetto o dai punti: l'intervallo è già concluso, con l'esito scelto", () => {
     for (const start of ["verdetto", "punti"] as const) {
-      const r = newSim(base({ kind: "peggiore", start, votes: "forzato", forced: [2, 5], autoMe: true, players: 4 }), ids, 0);
-      expect(r.state.phase).toBe("MINI_RESULTS"); expect(r.state.miniResult!.leaders).toEqual([2, 5]); expect(r.state.miniResult!.fallenPositions).toEqual([2, 5]);
+      const r = newSim(base({ kind: "peggiore", start, votes: "forzato", forced: [2, 4], autoMe: true, players: 4 }), ids, 0);
+      expect(r.state.phase).toBe("MINI_RESULTS"); expect(r.state.miniResult!.leaders).toEqual([2, 4]); expect(r.state.miniResult!.fallenPositions).toEqual([2, 4]);
     }
   });
   it("il collegamento riproduce lo scenario", () => {

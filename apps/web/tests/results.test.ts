@@ -26,9 +26,9 @@ describe("riepilogo visivo dei punti", () => {
 
 describe("Storia d'amore: gli innamorati stanno vicini", () => {
   it("partner e vincitore finiscono a meno di 70 px, i vincitori in più si stringono attorno al partner", () => {
-    const f = buildFinale("amore", [1, 5, 3], [], () => 0.5), last = (k: string) => f.figs.find((x) => x.key === k)!.wps.slice().sort((a, b) => a.t - b.t).filter((w) => w.t < 3300 && (w.o ?? 1) === 1).pop()!;
+    const f = buildFinale("amore", [1, 4, 3], [], () => 0.5), last = (k: string) => f.figs.find((x) => x.key === k)!.wps.slice().sort((a, b) => a.t - b.t).filter((w) => w.t < 3300 && (w.o ?? 1) === 1).pop()!;
     const p = last("side");
-    for (const k of ["c1", "c5", "c3"]) { const w = last(k); expect(Math.hypot(w.x - p.x, w.y - p.y), k).toBeLessThan(90); }
+    for (const k of ["c1", "c4", "c3"]) { const w = last(k); expect(Math.hypot(w.x - p.x, w.y - p.y), k).toBeLessThan(90); }
     expect(Math.hypot(last("c1").x - p.x, last("c1").y - p.y)).toBeLessThan(70);
   });
 });

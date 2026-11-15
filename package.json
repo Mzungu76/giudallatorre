@@ -9,7 +9,8 @@
   ],
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc -p packages/game-engine/tsconfig.json --noEmit && tsc -p packages/game-protocol/tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
+    "typecheck": "tsc -p packages/game-engine/tsconfig.json --noEmit && tsc -p packages/game-protocol/tsconfig.json --noEmit && tsc -p packages/ai-lab/tsconfig.json --noEmit && tsc -p worker/tsconfig.json --noEmit && tsc -p apps/web/tsconfig.json --noEmit",
+    "lab": "tsx packages/ai-lab/src/cli.ts",
     "dev": "wrangler dev",
     "e2e": "bash scripts/run-e2e.sh",
     "deploy": "wrangler deploy",

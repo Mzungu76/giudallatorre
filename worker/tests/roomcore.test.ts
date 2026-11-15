@@ -101,7 +101,7 @@ describe("stanza: creazione, accesso e lobby", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta" });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ turnTimerSec: 0, display: true, ageBand: 14 });
+    expect(core.data.options).toEqual({ botEngine: "v2e", turnTimerSec: 0, display: true, ageBand: 14 });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 6 giocatori", () => {
@@ -467,7 +467,7 @@ describe("intervallo a tempo nella stanza", () => {
   it("si apre con «via!» dopo presentazione e 3-2-1; il server lo comunica a tutti, schermo condiviso compreso", () => {
     const r = toRun(3, 61), run = r.core.data.run!;
     expect(r.core.data.game!.phase).toBe("MINI_RUN");
-    expect(run.goAt).toBeGreaterThan(1_000_100 + 8000); expect(run.endAt).toBeGreaterThan(run.goAt + 18 * SLOT);
+    expect(run.goAt).toBeGreaterThan(1_000_100 + 8000); expect(run.endAt).toBeGreaterThan(run.goAt + 8 * SLOT);
     expect(r.core.data.deadline).toBeNull();
     const snap = r.core.snapshot(r.ids[0]!).find((m) => m.msg.t === "view")!.msg as { goAt?: number | null; now?: number };
     expect(snap.goAt).toBe(run.goAt); expect(typeof snap.now).toBe("number");

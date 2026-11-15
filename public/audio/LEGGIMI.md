@@ -4,7 +4,7 @@ Carica qui i file MP3 (minuscolo, senza spazi né accenti).
 
 ## Musica (loop 30-60 s)
 - musica-tema.mp3       lobby, menu, attesa
-- musica-suspense.mp3   voto, verdetto, Terrace
+- musica-suspense.mp3   solo durante il VOTO (turni e intervalli); finito il voto torna musica-tema.mp3. Se manca, resta il tema.
 - musica-finale.mp3     scena finale e risultati
 - jingle-inizio.mp3     stacco 3-5 s, non in loop
 

@@ -1,0 +1,880 @@
+{
+ "versione": 1,
+ "personaggi": [
+  {
+   "id": "p01-i02",
+   "tipi": {
+    "pigro": 2,
+    "spendaccione": 1,
+    "mangione": 2
+   },
+   "temi": {
+    "fumo": 3,
+    "soldi": 1,
+    "pigrizia": 2,
+    "casa": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "ribelle",
+     "vanitoso"
+    ],
+    "temi": [
+     "moda",
+     "notte",
+     "rabbia",
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p01-i04",
+   "tipi": {
+    "ansioso": 2,
+    "nerd": 2,
+    "testardo": 1
+   },
+   "temi": {
+    "tecnologia": 2,
+    "lavoro": 2,
+    "cultura": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico",
+     "pigro"
+    ],
+    "temi": [
+     "lavoro",
+     "cultura",
+     "curiosita"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p01-i06",
+   "tipi": {
+    "saputello": 1,
+    "moralista": 2,
+    "pignolo": 1
+   },
+   "temi": {
+    "scuola": 3,
+    "vecchiaia": 3,
+    "fumo": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "vecchio",
+     "genitore"
+    ],
+    "temi": [
+     "bambini",
+     "scuola",
+     "famiglia",
+     "casa"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p02-i04",
+   "tipi": {
+    "ribelle": 1,
+    "romantico": 1,
+    "nerd": 1
+   },
+   "temi": {
+    "giovinezza": 3,
+    "scuola": 2,
+    "cultura": 2,
+    "famiglia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "drammatico",
+     "giovane"
+    ],
+    "temi": [
+     "cultura",
+     "scuola",
+     "amore",
+     "imbarazzo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p02-i05",
+   "tipi": {
+    "chiacchierone": 3,
+    "saputello": 1
+   },
+   "temi": {
+    "mezzi": 3,
+    "lavoro": 2,
+    "viaggio": 2,
+    "politica": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo",
+     "rabbioso"
+    ],
+    "temi": [
+     "mezzi",
+     "lavoro",
+     "viaggio"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p03-i03",
+   "tipi": {
+    "ansioso": 3,
+    "goffo": 1
+   },
+   "temi": {
+    "scuola": 3,
+    "caos": 3,
+    "lavoro": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "lavoratore",
+     "rabbioso"
+    ],
+    "temi": [
+     "scuola",
+     "bambini",
+     "caos",
+     "lavoro"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p03-i07",
+   "tipi": {
+    "moralista": 3,
+    "pignolo": 2,
+    "arrogante": 1
+   },
+   "temi": {
+    "legge": 3,
+    "lavoro": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello",
+     "rabbioso"
+    ],
+    "temi": [
+     "legge",
+     "lavoro",
+     "politica"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p04-i02",
+   "tipi": {
+    "noioso": 2,
+    "distratto": 1,
+    "artista": 1
+   },
+   "temi": {
+    "arte": 2,
+    "cultura": 1,
+    "vecchiaia": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "vecchio",
+     "pettegolo"
+    ],
+    "temi": [
+     "tecnologia",
+     "curiosita",
+     "lavoro",
+     "cultura"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p04-i03",
+   "tipi": {
+    "pignolo": 2,
+    "moralista": 1,
+    "arrogante": 1
+   },
+   "temi": {
+    "scuola": 3,
+    "cultura": 2,
+    "lavoro": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "saputello",
+     "rabbioso"
+    ],
+    "temi": [
+     "lavoro",
+     "scuola",
+     "cultura"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p04-i06",
+   "tipi": {
+    "furbo": 2,
+    "egoista": 2,
+    "drammatico": 1
+   },
+   "temi": {
+    "spettacolo": 3,
+    "caos": 2,
+    "social": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo",
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro",
+     "spettacolo",
+     "curiosita",
+     "caos"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p05-i01",
+   "tipi": {
+    "furbo": 2,
+    "ipocrita": 1,
+    "mangione": 1
+   },
+   "temi": {
+    "cibo": 3,
+    "lavoro": 2,
+    "truffe": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico",
+     "lavoratore"
+    ],
+    "temi": [
+     "cibo",
+     "viaggio",
+     "cultura",
+     "lavoro"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p05-i02",
+   "tipi": {
+    "rabbioso": 2,
+    "testardo": 2,
+    "maleducato": 1
+   },
+   "temi": {
+    "tecnologia": 3,
+    "gioco": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "nerd",
+     "pigro"
+    ],
+    "temi": [
+     "tecnologia",
+     "notte",
+     "rabbia",
+     "casa"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p05-i04",
+   "tipi": {
+    "distratto": 2,
+    "maleducato": 1
+   },
+   "temi": {
+    "lavoro": 3,
+    "legge": 1,
+    "tecnologia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro",
+     "legge",
+     "notte"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p06-i08",
+   "tipi": {
+    "ansioso": 2,
+    "noioso": 1,
+    "distratto": 1
+   },
+   "temi": {
+    "scuola": 2,
+    "cultura": 2,
+    "salute": 1,
+    "lavoro": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro",
+     "drammatico"
+    ],
+    "temi": [
+     "lavoro",
+     "casa",
+     "salute",
+     "imbarazzo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p06-i09",
+   "tipi": {
+    "impulsivo": 3,
+    "coraggioso": 2,
+    "eccentrico": 1
+   },
+   "temi": {
+    "sport": 3,
+    "social": 3,
+    "tecnologia": 2,
+    "coraggio": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer",
+     "goffo"
+    ],
+    "temi": [
+     "social",
+     "sport",
+     "tecnologia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p06-i10",
+   "tipi": {
+    "goffo": 2,
+    "ipocrita": 1
+   },
+   "temi": {
+    "politica": 3,
+    "soldi": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "pigro",
+     "lavoratore"
+    ],
+    "temi": [
+     "legge",
+     "lavoro",
+     "politica"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p07-i01",
+   "tipi": {
+    "pignolo": 2,
+    "nerd": 2,
+    "saputello": 2
+   },
+   "temi": {
+    "scuola": 3,
+    "giovinezza": 3,
+    "cultura": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "giovane",
+     "rabbioso"
+    ],
+    "temi": [
+     "scuola",
+     "cultura",
+     "imbarazzo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p07-i09",
+   "tipi": {
+    "ambizioso": 3,
+    "arrogante": 1,
+    "coraggioso": 1
+   },
+   "temi": {
+    "lavoro": 3,
+    "carriera": 3,
+    "politica": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "lavoratore",
+     "politico"
+    ],
+    "temi": [
+     "lavoro",
+     "politica",
+     "soldi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p08-i02",
+   "tipi": {
+    "maleducato": 3,
+    "impiccione": 1
+   },
+   "temi": {
+    "imbarazzo": 3,
+    "caos": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo",
+     "giovane"
+    ],
+    "temi": [
+     "imbarazzo",
+     "amore",
+     "scuola"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p08-i07",
+   "tipi": {
+    "dispettoso": 3,
+    "maleducato": 2
+   },
+   "temi": {
+    "spettacolo": 3,
+    "imbarazzo": 3,
+    "social": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo",
+     "lavoratore"
+    ],
+    "temi": [
+     "lavoro",
+     "spettacolo",
+     "curiosita"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p09-i01",
+   "tipi": {
+    "maleducato": 1,
+    "arrogante": 3,
+    "distratto": 2
+   },
+   "temi": {
+    "mezzi": 3,
+    "caos": 3,
+    "vanita": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso",
+     "furbo"
+    ],
+    "temi": [
+     "mezzi",
+     "soldi",
+     "casa",
+     "sport"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p09-i02",
+   "tipi": {
+    "moralista": 2,
+    "rabbioso": 2,
+    "cinico": 2
+   },
+   "temi": {
+    "animali": 3,
+    "ambiente": 1,
+    "casa": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico",
+     "vanitoso"
+    ],
+    "temi": [
+     "animali",
+     "social",
+     "casa"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p10-i02",
+   "tipi": {
+    "vanitoso": 2,
+    "romantico": 1,
+    "influencer": 1
+   },
+   "temi": {
+    "seduzione": 3,
+    "social": 3,
+    "tecnologia": 2,
+    "amore": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "giovane",
+     "drammatico"
+    ],
+    "temi": [
+     "social",
+     "amore",
+     "tecnologia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p10-i03",
+   "tipi": {
+    "ipocrita": 2,
+    "sportivo": 2,
+    "drammatico": 1
+   },
+   "temi": {
+    "sport": 3,
+    "spettacolo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo",
+     "artista"
+    ],
+    "temi": [
+     "spettacolo",
+     "sport",
+     "imbarazzo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p11-i06",
+   "tipi": {
+    "furbo": 2,
+    "inaffidabile": 2,
+    "bugiardo": 1
+   },
+   "temi": {
+    "lavoro": 2,
+    "truffe": 3,
+    "casa": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "lavoratore",
+     "rabbioso"
+    ],
+    "temi": [
+     "lavoro",
+     "casa",
+     "mezzi"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p12-i05",
+   "tipi": {
+    "pignolo": 3,
+    "ansioso": 1
+   },
+   "temi": {
+    "casa": 3,
+    "caos": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "lavoratore"
+    ],
+    "temi": [
+     "casa",
+     "faidate",
+     "rabbia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p12-i06",
+   "tipi": {
+    "distratto": 2,
+    "ingenuo": 1
+   },
+   "temi": {
+    "bambini": 2,
+    "caos": 3,
+    "imbarazzo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "goffo",
+     "drammatico"
+    ],
+    "temi": [
+     "mezzi",
+     "imbarazzo",
+     "corpo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p12-i08",
+   "tipi": {
+    "noioso": 3,
+    "vanitoso": 2,
+    "chiacchierone": 1
+   },
+   "temi": {
+    "viaggio": 3,
+    "amicizia": 2,
+    "casa": 2,
+    "imbarazzo": 2
+   },
+   "vecchie": {
+    "tipo": [
+     "pettegolo",
+     "goffo"
+    ],
+    "temi": [
+     "viaggio",
+     "feste",
+     "imbarazzo",
+     "famiglia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p12-i09",
+   "tipi": {
+    "arrogante": 2,
+    "noioso": 2
+   },
+   "temi": {
+    "cibo": 3,
+    "notte": 1,
+    "imbarazzo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "vanitoso",
+     "drammatico"
+    ],
+    "temi": [
+     "cibo",
+     "alcol",
+     "amore",
+     "notte"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p13-i06",
+   "tipi": {
+    "ansioso": 3,
+    "impulsivo": 1
+   },
+   "temi": {
+    "tecnologia": 3,
+    "lavoro": 3,
+    "caos": 3,
+    "cibo": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "nerd",
+     "goffo"
+    ],
+    "temi": [
+     "tecnologia",
+     "lavoro",
+     "caos",
+     "cibo"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p13-i08",
+   "tipi": {
+    "maleducato": 2,
+    "arrogante": 2,
+    "chiacchierone": 2
+   },
+   "temi": {
+    "cibo": 3,
+    "caos": 2,
+    "lavoro": 1,
+    "rabbia": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "rabbioso",
+     "pettegolo"
+    ],
+    "temi": [
+     "cibo",
+     "lavoro",
+     "mezzi",
+     "caos"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  }
+ ]
+}

@@ -1,4 +1,4 @@
-import { applyAction, createGame, planMiniVote, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction } from "@gdt/game-engine";
+import { applyAction, createGame, planMiniVote, MINI_CARDS, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction } from "@gdt/game-engine";
 import type { Action, BotLevel, GameState, MiniKind } from "@gdt/game-engine";
 
 /**
@@ -48,14 +48,14 @@ export function newSim(o: SimOpts, cardIds: string[], now: number): SimRun {
   const run: SimRun = { state: s, goAt, endAt: goAt + order.length * MINI_SLOT_MS + 900, plan: {}, log: [] };
   // i voti dei bot (e, in automatico, anche del giocatore)
   if (o.votes !== "nessuno") {
-    const mem = newBotMemory(), voters = s.playerIds.filter((p) => p !== SIM_ME || o.autoMe), single = o.forced.length ? o.forced : [1 + Math.floor(rand() * 6)];
+    const mem = newBotMemory(), voters = s.playerIds.filter((p) => p !== SIM_ME || o.autoMe), single = o.forced.length ? o.forced : [1 + Math.floor(rand() * MINI_CARDS)];
     voters.forEach((id, i) => {
       let position: number;
       if (o.votes === "caso") {   // come in partita: il bot guarda le carte man mano che escono e preme dopo il suo tempo di reazione
         const pl = planMiniVote(s, id, o.level, mem, rand); if (!pl) return;
         run.plan[id] = { position: pl.position, at: goAt + pl.slot * MINI_SLOT_MS + pl.delayMs }; return;
       }
-      if (o.votes === "forzato") position = o.forced.length ? o.forced[i % o.forced.length]! : 1 + Math.floor(rand() * 6);
+      if (o.votes === "forzato") position = o.forced.length ? o.forced[i % o.forced.length]! : 1 + Math.floor(rand() * MINI_CARDS);
       else if (o.votes === "presto") position = single[i % single.length]!;
       else position = 1;
       const sl = slotsOf(order, position), k = o.votes === "presto" ? sl[0]! : sl[Math.floor(rand() * sl.length)]!;
@@ -95,7 +95,7 @@ export const SIM_DEFAULTS: SimOpts = { kind: "accusa", players: 4, start: "inizi
 export function optsFromQuery(q: URLSearchParams): SimOpts {
   const kinds: MiniKind[] = ["accusa", "amore", "peggiore"], starts: SimStart[] = ["inizio", "conto", "corsa", "verdetto", "punti"], votes: SimVotes[] = ["caso", "presto", "forzato", "nessuno"];
   const pick = <T,>(v: string | null, all: T[], d: T) => (all as unknown as string[]).includes(v ?? "") ? (v as unknown as T) : d;
-  const forced = (q.get("e") ?? "").split(",").map(Number).filter((x) => Number.isInteger(x) && x >= 1 && x <= 6);
+  const forced = (q.get("e") ?? "").split(",").map(Number).filter((x) => Number.isInteger(x) && x >= 1 && x <= MINI_CARDS);
   return {
     kind: pick(q.get("k"), kinds, SIM_DEFAULTS.kind), start: pick(q.get("p"), starts, SIM_DEFAULTS.start), votes: pick(q.get("v"), votes, SIM_DEFAULTS.votes),
     players: Math.max(3, Math.min(6, Number(q.get("n")) || SIM_DEFAULTS.players)), forced: q.has("e") ? forced : SIM_DEFAULTS.forced, autoMe: q.get("a") === "1",

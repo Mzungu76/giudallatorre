@@ -1,3 +1,4 @@
+import { MINI_CARDS } from "@gdt/game-engine";
 import type { MiniKind } from "@gdt/game-engine";
 
 /**
@@ -6,7 +7,7 @@ import type { MiniKind } from "@gdt/game-engine";
  * Tempi in millisecondi; `TS` rallenta tutto in blocco (le scenette devono essere leggibili, non frettolose).
  */
 export interface WP { t: number; x: number; y: number; s?: number; r?: number; o?: number }
-export interface FigSpec { key: string; /** posizione 1–6 sulla torre, oppure la carta di lato (accusatore / partner) */ who: number | "side"; wps: WP[] }
+export interface FigSpec { key: string; /** posizione 1–4 sulla torre, oppure la carta di lato (accusatore / partner) */ who: number | "side"; wps: WP[] }
 export interface Heart { t: number; x: number; y: number; dx: number; rise: number; fall: number; size: number; dur: number; hue: number }
 export interface Burst { t: number; x: number; y: number; kind: "bam" | "via" }
 /** Macchina da presa: spostamento e ingrandimento della scena (origine al centro della terrazza). */
@@ -15,10 +16,10 @@ export interface Sound { t: number; kind: "stamp" | "whoosh" | "ding" | "tada" |
 export interface Finale { duration: number; figs: FigSpec[]; hearts: Heart[]; bursts: Burst[]; cam: Cam[]; sounds: Sound[] }
 
 export const TS = 1.7;
-/** Dove stanno le sei carte a riposo: due file da tre, davanti al separé. */
+/** Dove stanno le quattro carte a riposo: due file da due, davanti al separé. */
 export const SLOT: Record<number, { x: number; y: number }> = {
-  1: { x: 104, y: 525 }, 2: { x: 186, y: 525 }, 3: { x: 268, y: 525 },
-  4: { x: 104, y: 605 }, 5: { x: 186, y: 605 }, 6: { x: 268, y: 605 },
+  1: { x: 122, y: 525 }, 2: { x: 250, y: 525 },
+  3: { x: 122, y: 605 }, 4: { x: 250, y: 605 },
 };
 /** La carta di lato (accusatore o partner). */
 export const SIDE = { x: 52, y: 575 };
@@ -56,7 +57,7 @@ export function buildFinale(kind: MiniKind, leaders: number[], fallen: number[],
 
 function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () => number): Finale {
   const figs: FigSpec[] = [], hearts: Heart[] = [], bursts: Burst[] = [], sounds: Sound[] = [];
-  const positions = [1, 2, 3, 4, 5, 6];
+  const positions = Array.from({ length: MINI_CARDS }, (_, i) => i + 1);
   const stand = (p: number) => SLOT[p]!;
   const idleFig = (p: number, end: number): FigSpec => ({ key: `c${p}`, who: p, wps: idle(stand(p).x, stand(p).y, 0, end, p) });
   // chi non c'entra con la scena sparisce subito, così si capisce chi sono i protagonisti
@@ -145,7 +146,7 @@ function build0(kind: MiniKind, leaders: number[], fallen: number[], rand: () =>
 
   if (kind === "amore" && leaders.length) {
     // il partner e i vincitori si avvicinano e dal loro abbraccio sgorgano cuori, che cadono giù dalla torre come fontane
-    const W = leaders.slice(0, 6), end = 8200, meet = 1800;
+    const W = leaders.slice(0, 4), end = 8200, meet = 1800;
     const P = { x: 168, y: 556 };
     // gli innamorati si stringono: carte quasi a contatto, inclinate l'una verso l'altra
     const spots = [{ x: 50, y: 2, r: -7 }, { x: -50, y: 2, r: 7 }, { x: 24, y: 52, r: -4 }, { x: -24, y: 52, r: 4 }, { x: 74, y: 40, r: -9 }, { x: -74, y: 40, r: 9 }];
