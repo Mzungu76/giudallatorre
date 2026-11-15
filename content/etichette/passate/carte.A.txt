@@ -24,7 +24,7 @@ p03-i06|vanitoso2 egoista2 influencer1|salute3 social3 lavoro2 tecnologia1
 p03-i07|moralista3 pignolo2 arrogante1|legge3 lavoro1
 p03-i08|pigro1 ipocrita2 sportivo1|sport3 corpo2 fumo3 salute3
 p03-i09|influencer2 vanitoso2 guru2|social3 tecnologia2
-p03-i10|guru2 ribelle1 eccentrico2|natura2 superstizione1 cultura1
+p03-i10|guru2 moralista2 eccentrico1|natura2 superstizione1 cultura1
 p04-i01|vanitoso3|vecchiaia3 fumo3 vanita3 spettacolo1
 p04-i02|noioso2 distratto1 artista1|arte2 cultura1 vecchiaia3
 p04-i03|pignolo2 moralista1 arrogante1|scuola3 cultura2 lavoro1
@@ -50,10 +50,10 @@ p06-i05|vanitoso2 romantico2|amore3 feste3 famiglia1 vanita1
 p06-i06|pettegolo3 impiccione2 influencer1|pettegolezzo3 social3 tecnologia2 segreti1
 p06-i07|saputello2 arrogante2 vanitoso1|spettacolo3 cultura1
 p06-i08|ansioso2 noioso1 distratto1|scuola2 cultura2 salute1 lavoro1
-p06-i09|coraggioso2 impulsivo3 influencer1|sport3 social3 tecnologia2 coraggio3
+p06-i09|impulsivo3 coraggioso2 eccentrico1|sport3 social3 tecnologia2 coraggio3
 p06-i10|goffo2 ipocrita1|politica3 soldi3
 p07-i01|pignolo2 nerd2 saputello2|scuola3 giovinezza3 cultura1
-p07-i02|vanitoso3 infedele1|seduzione3 social3 vanita3
+p07-i02|romantico2 vanitoso2 ingenuo1|seduzione3 social3 amore3 tecnologia1
 p07-i03|rabbioso3 testardo2 maleducato1|vecchiaia3 rabbia3 casa1
 p07-i04|pigro2 festaiolo1 goffo1|alcol3 notte3 pigrizia2
 p07-i05|impiccione3 pettegolo2 pignolo2|lavoro3 casa1 caos1
@@ -61,12 +61,12 @@ p07-i06|furbo3 chiacchierone2 bugiardo1|lavoro3 truffe2 casa2 soldi1
 p07-i07|ribelle3 festaiolo2|musica3 alcol3 feste3 giovinezza1
 p07-i08|vanitoso2 spendaccione2 furbo1|viaggio3 soldi3 tecnologia1 alcol1
 p07-i09|ambizioso3 arrogante1 coraggioso1|lavoro3 carriera3 politica1
-p08-i01|goffo3 ansioso1 ingenuo1|spettacolo3 imbarazzo3
+p08-i01|goffo3 ingenuo1|spettacolo3 imbarazzo3
 p08-i02|maleducato3 impiccione1|imbarazzo3 caos1
 p08-i03|saputello2 pignolo2 vanitoso1|casa3 lavoro2
 p08-i04|pigro2 ribelle1 eccentrico1|natura1 social3 tecnologia2 pigrizia2
 p08-i05|vanitoso3 influencer3|social3 animali3 tecnologia2 vanita3
-p08-i06|genitore2 egoista2 dispettoso1|bambini3 famiglia3 spettacolo1 casa2
+p08-i06|genitore2 distratto2 egoista1|bambini3 famiglia3 spettacolo1 casa2
 p08-i07|dispettoso3 maleducato2|spettacolo3 imbarazzo3 social1
 p08-i09|dispettoso3 rabbioso1|spettacolo3 rabbia1
 p08-i11|goffo2 testardo1 vanitoso1|corpo3 salute3 sport1 imbarazzo2
@@ -91,7 +91,7 @@ p10-i09|sportivo2 vanitoso2 pignolo1|sport3 corpo2 salute3 vanita2
 p11-i01|impiccione3 pettegolo2|casa3 pettegolezzo3 segreti3 vecchiaia3
 p11-i02|rabbioso2 maleducato2 mangione2|cibo3 rabbia3 casa1
 p11-i03|genitore2 mangione3|cibo3 famiglia2 vecchiaia1
-p11-i04|pigro3 noioso1|mezzi3 pigrizia3 musica1
+p11-i04|egoista3 pigro1 maleducato1|mezzi3 pigrizia1 musica1
 p11-i05|ingenuo2 vanitoso1 goffo1|viaggio3 social1 tecnologia1 cultura1
 p11-i06|furbo2 inaffidabile2 bugiardo1|lavoro2 truffe3 casa1
 p11-i07|goffo3 distratto1|cibo3 lavoro3 caos2 imbarazzo2

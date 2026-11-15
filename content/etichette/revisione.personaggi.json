@@ -402,6 +402,35 @@
    "priorita": 1
   },
   {
+   "id": "p06-i09",
+   "tipi": {
+    "impulsivo": 3,
+    "coraggioso": 2,
+    "eccentrico": 1
+   },
+   "temi": {
+    "sport": 3,
+    "social": 3,
+    "tecnologia": 2,
+    "coraggio": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "influencer",
+     "goffo"
+    ],
+    "temi": [
+     "social",
+     "sport",
+     "tecnologia"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
    "id": "p06-i10",
    "tipi": {
     "goffo": 2,
