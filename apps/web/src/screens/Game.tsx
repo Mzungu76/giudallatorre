@@ -155,8 +155,6 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
   const tower = [...view.tower].sort((a, b) => a.position - b.position), ids = tower.map((t) => t.cardId), N = ids.length;
   phaseRef.current = view.phase;
-  useEffect(() => { music.voting(view.phase === "VOTE" || view.phase === "MINI_RUN"); }, [view.phase]);
-  useEffect(() => () => music.voting(false), []);
   const turn = view.turn, phase = view.phase, mine = view.players.find((p) => p.id === me);
   const res = phase === "RESULTS" ? view.lastResult : null;
 
@@ -213,6 +211,10 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
+  // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto, spoglio) fino alla fine della caduta; all'inizio del percorso dei punti torna il sottofondo
+  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (!!res && watched && !FAST && fallDone !== turn);
+  useEffect(() => { music.voting(suspense); }, [suspense]);
+  useEffect(() => () => music.voting(false), []);
   const annullati: string[] = res ? (res.marks?.find((x) => x.effect === "nulli")?.caught ?? []) : [];
   const fellArr = res ? res.fallenPositions ?? [res.fallenPosition] : [];
   const resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;

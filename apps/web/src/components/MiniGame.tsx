@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MiniResult } from "@gdt/game-engine";
+import { music } from "../lib/music.ts";
 import { MINI_CARDS, MINI_COUNTDOWN_MS, MINI_CYCLES, MINI_INTRO_MS, MINI_SLOT_MS } from "@gdt/game-engine";
 import { Disc, FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
@@ -59,6 +60,10 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
   const showStage = post === null || post === "verdict", showFinale = post === "finale";
 
   // suoni: apertura, ogni carta che esce, ultimo giro, verdetto, fine della scenetta
+  // musica del voto: dal 3-2-1 della corsa fino alla fine della scenetta finale; ai punti torna il sottofondo
+  const suspense = (post === null && (t0 >= -MINI_COUNTDOWN_MS || view.phase === "MINI_RESULTS")) || post === "verdict" || post === "finale";
+  useEffect(() => { music.voting(suspense); }, [suspense]);
+  useEffect(() => () => music.voting(false), []);
   const slot = Math.floor(t0 / MINI_SLOT_MS), running = inRun && post === null && t0 >= 0 && t0 < end;
   const lastSlot = useRef(-1);
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
