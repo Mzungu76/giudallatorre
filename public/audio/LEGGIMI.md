@@ -18,3 +18,5 @@ Carica qui i file MP3 (minuscolo, senza spazi né accenti).
 
 Ricorda di annotare l'autore e la licenza di ogni brano in CREDITI.md
 (obbligatorio per Kevin MacLeod e per ogni brano CC-BY).
+
+Peso: i brani lunghi sono a 128 kbps stereo (circa 1 MB al minuto). Per ricodificare: `ffmpeg -i originale.mp3 -c:a libmp3lame -b:a 128k nuovo.mp3`.
