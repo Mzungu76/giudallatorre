@@ -78,7 +78,7 @@ export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "l
 /** Il mini-gioco in corso: la carta pescata (accusatore / protagonista della storia) e l'eventuale accusa. */
 export interface Mini {
   kind: MiniKind; cardId: CardId | null; text: string | null;
-  /** Intervallo a tempo: le posizioni (1..6) delle carte nell'ordine in cui escono dal separé, tre giri completi (18 uscite). */
+  /** Intervallo a tempo: le posizioni (1..4) delle carte nell'ordine in cui escono dal separé, due giri completi (8 uscite). */
   order: number[];
 }
 export interface MiniResult {
