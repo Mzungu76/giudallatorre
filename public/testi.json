@@ -1,5 +1,5 @@
 {
- "versione": 54,
+ "versione": 56,
  "aggiornato": "2026-11-15",
  "testi": {
   "intro.aria": {
@@ -2617,10 +2617,6 @@
    "t": "{data} · {n} giocatori · {pos}° posto · {punti} punti",
    "s": "Statistiche personali"
   },
-  "st.vinta": {
-   "t": "Vittoria",
-   "s": "Statistiche personali"
-  },
   "st.bots": {
    "t": "con bot",
    "s": "Statistiche personali"
@@ -2641,6 +2637,304 @@
    "t": "Le mie statistiche",
    "s": "Home · icone",
    "n": "Icona in Home (nome accessibile)"
+  },
+  "lv.1": {
+   "t": "Passante",
+   "s": "Livelli del giocatore"
+  },
+  "lv.2": {
+   "t": "Curioso",
+   "s": "Livelli del giocatore"
+  },
+  "lv.3": {
+   "t": "Spettatore",
+   "s": "Livelli del giocatore"
+  },
+  "lv.4": {
+   "t": "Sassolino",
+   "s": "Livelli del giocatore"
+  },
+  "lv.5": {
+   "t": "Mattone",
+   "s": "Livelli del giocatore"
+  },
+  "lv.6": {
+   "t": "Muratore",
+   "s": "Livelli del giocatore"
+  },
+  "lv.7": {
+   "t": "Secchio di calce",
+   "s": "Livelli del giocatore"
+  },
+  "lv.8": {
+   "t": "Impalcatura",
+   "s": "Livelli del giocatore"
+  },
+  "lv.9": {
+   "t": "Primo scalino",
+   "s": "Livelli del giocatore"
+  },
+  "lv.10": {
+   "t": "Pianterreno",
+   "s": "Livelli del giocatore"
+  },
+  "lv.11": {
+   "t": "Inquilino",
+   "s": "Livelli del giocatore"
+  },
+  "lv.12": {
+   "t": "Portinaio",
+   "s": "Livelli del giocatore"
+  },
+  "lv.13": {
+   "t": "Ascensorista",
+   "s": "Livelli del giocatore"
+  },
+  "lv.14": {
+   "t": "Finestra aperta",
+   "s": "Livelli del giocatore"
+  },
+  "lv.15": {
+   "t": "Balcone fiorito",
+   "s": "Livelli del giocatore"
+  },
+  "lv.16": {
+   "t": "Pettegolo",
+   "s": "Livelli del giocatore"
+  },
+  "lv.17": {
+   "t": "Giocatore di carte",
+   "s": "Livelli del giocatore"
+  },
+  "lv.18": {
+   "t": "Votante",
+   "s": "Livelli del giocatore"
+  },
+  "lv.19": {
+   "t": "Segnalino",
+   "s": "Livelli del giocatore"
+  },
+  "lv.20": {
+   "t": "Quarto piano",
+   "s": "Livelli del giocatore"
+  },
+  "lv.21": {
+   "t": "Vertigini",
+   "s": "Livelli del giocatore"
+  },
+  "lv.22": {
+   "t": "Colpo d'occhio",
+   "s": "Livelli del giocatore"
+  },
+  "lv.23": {
+   "t": "Buon fiuto",
+   "s": "Livelli del giocatore"
+  },
+  "lv.24": {
+   "t": "Bluffatore",
+   "s": "Livelli del giocatore"
+  },
+  "lv.25": {
+   "t": "Mezza torre",
+   "s": "Livelli del giocatore"
+  },
+  "lv.26": {
+   "t": "Megafonista",
+   "s": "Livelli del giocatore"
+  },
+  "lv.27": {
+   "t": "Doppio gioco",
+   "s": "Livelli del giocatore"
+  },
+  "lv.28": {
+   "t": "Caduta annunciata",
+   "s": "Livelli del giocatore"
+  },
+  "lv.29": {
+   "t": "Non cade!",
+   "s": "Livelli del giocatore"
+  },
+  "lv.30": {
+   "t": "Voti nulli",
+   "s": "Livelli del giocatore"
+  },
+  "lv.31": {
+   "t": "Tiratore scelto",
+   "s": "Livelli del giocatore"
+  },
+  "lv.32": {
+   "t": "Veggente",
+   "s": "Livelli del giocatore"
+  },
+  "lv.33": {
+   "t": "Stratega",
+   "s": "Livelli del giocatore"
+  },
+  "lv.34": {
+   "t": "Fulmine",
+   "s": "Livelli del giocatore"
+  },
+  "lv.35": {
+   "t": "Cima della torre",
+   "s": "Livelli del giocatore"
+  },
+  "lv.36": {
+   "t": "Regista",
+   "s": "Livelli del giocatore"
+  },
+  "lv.37": {
+   "t": "Caduta libera",
+   "s": "Livelli del giocatore"
+  },
+  "lv.38": {
+   "t": "Equilibrista",
+   "s": "Livelli del giocatore"
+  },
+  "lv.39": {
+   "t": "Tra le nuvole",
+   "s": "Livelli del giocatore"
+  },
+  "lv.40": {
+   "t": "Terrazza panoramica",
+   "s": "Livelli del giocatore"
+  },
+  "lv.41": {
+   "t": "Aquila",
+   "s": "Livelli del giocatore"
+  },
+  "lv.42": {
+   "t": "Maestro",
+   "s": "Livelli del giocatore"
+  },
+  "lv.43": {
+   "t": "Cerimoniere",
+   "s": "Livelli del giocatore"
+  },
+  "lv.44": {
+   "t": "Oracolo",
+   "s": "Livelli del giocatore"
+  },
+  "lv.45": {
+   "t": "Campione",
+   "s": "Livelli del giocatore"
+  },
+  "lv.46": {
+   "t": "Stella",
+   "s": "Livelli del giocatore"
+  },
+  "lv.47": {
+   "t": "Tempesta",
+   "s": "Livelli del giocatore"
+  },
+  "lv.48": {
+   "t": "Re della Torre",
+   "s": "Livelli del giocatore"
+  },
+  "lv.49": {
+   "t": "Drago della Torre",
+   "s": "Livelli del giocatore"
+  },
+  "lv.50": {
+   "t": "Leggenda",
+   "s": "Livelli del giocatore"
+  },
+  "st.livello": {
+   "t": "Livello {n}",
+   "s": "Statistiche personali"
+  },
+  "st.xp": {
+   "t": "{xp} XP",
+   "s": "Statistiche personali",
+   "n": "Esperienza totale"
+  },
+  "st.xpprox": {
+   "t": "Ancora {xp} XP per «{titolo}»",
+   "s": "Statistiche personali",
+   "n": "Barra del livello"
+  },
+  "st.massimo": {
+   "t": "Livello massimo: sei una leggenda della Torre!",
+   "s": "Statistiche personali"
+  },
+  "st.livelli": {
+   "t": "Tutti i livelli",
+   "s": "Statistiche personali"
+  },
+  "st.livelli.nota": {
+   "t": "Ogni livello chiede più esperienza del precedente: i primi arrivano presto, gli ultimi si conquistano partita dopo partita.",
+   "s": "Statistiche personali"
+  },
+  "st.sei": {
+   "t": "Sei qui",
+   "s": "Statistiche personali"
+  },
+  "st.richiede": {
+   "t": "{xp} XP",
+   "s": "Statistiche personali"
+  },
+  "st.come": {
+   "t": "Come si guadagna l'esperienza",
+   "s": "Statistiche personali"
+  },
+  "st.xp.partita": {
+   "t": "Partita finita: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.podio": {
+   "t": "Sul podio: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.vittoria": {
+   "t": "Vittoria: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.punti": {
+   "t": "Ogni punto fatto: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.voto": {
+   "t": "Ogni voto dato: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.intuito": {
+   "t": "Carta votata che cade: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.mega": {
+   "t": "Turno da Megafono: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.segn": {
+   "t": "Segnalino a segno: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.mini": {
+   "t": "Intervallo giocato: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.minigiusto": {
+   "t": "Intervallo azzeccato: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.xp.minifast": {
+   "t": "Più veloce nell'intervallo: +{xp}",
+   "s": "Statistiche personali"
+  },
+  "st.graf.punti": {
+   "t": "I tuoi punti, partita per partita",
+   "s": "Statistiche personali"
+  },
+  "st.graf.nota": {
+   "t": "Ultime {n} partite · in oro le vittorie",
+   "s": "Statistiche personali"
+  },
+  "st.graf.vuoto": {
+   "t": "Il grafico compare dopo la prima partita.",
+   "s": "Statistiche personali"
+  },
+  "st.perc": {
+   "t": "Quanto sei preciso",
+   "s": "Statistiche personali"
   }
  }
 }
