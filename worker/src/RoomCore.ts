@@ -8,6 +8,8 @@ import type { RandomBytes } from "./security.ts";
 export interface PlayerRec { id: string; nickname: string; tokenHash: string; isHost: boolean; joinedAt: number; isBot?: boolean; level?: BotLevel; /** Carattere del bot (id di BOT_STYLES), estratto a caso a ogni partita. */ style?: string; /** Personaggio (0–7: colore e segnalino), assegnato a caso tra gli otto quando entra in stanza. */ char?: number; /** Uscito a partita conclusa: resta in classifica ma non conta più come umano presente. */ left?: boolean }
 /** Interruttore di spegnimento della v2 sperimentale: con `false` l'opzione `botEngine` viene ignorata (docs/AI_ROLLBACK.md). */
 export const V2_BOTS_ENABLED = true;
+/** Bot predefiniti delle stanze create da ora: v2 con etichette v2 («v2e»). `false` = tornano i bot di sempre (ai.ts) per le nuove stanze; le stanze già create non cambiano mai motore a metà partita. Vedi docs/AI_ROLLBACK.md. */
+export const NEW_BOTS_DEFAULT = true;
 
 export interface RoomData {
   code: string; createdAt: number; lastActivity: number; stage: RoomStage; finishedAt: number | null;
@@ -93,11 +95,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "attuali"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.debug ? { debug: true, ...(p.botEngine && V2_BOTS_ENABLED ? { botEngine: p.botEngine } : {}) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -263,7 +265,7 @@ export class RoomCore {
     d.game = state; d.seq++; out.persist = true;
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
-    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
+    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine === "v2" || d.options.botEngine === "v2e" ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);

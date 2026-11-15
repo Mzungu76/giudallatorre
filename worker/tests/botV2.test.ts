@@ -18,21 +18,27 @@ function playSolo(core: RoomCore, humanId: string, restartAt?: number) {
   return { core: c, guard, worst };
 }
 
-describe("bot v2 sperimentali (solo stanze di collaudo)", () => {
-  it("di default e in collaudo senza l'opzione: nessuna differenza, bot di sempre", () => {
+describe("bot nuovi (v2 con etichette v2) di default; v2 / attuali solo in collaudo", () => {
+  it("le stanze nuove usano di default i bot nuovi (v2e), anche senza debug; l'opzione esplicita vale solo con debug", () => {
     for (const debug of [false, true]) {
       const c = RoomCore.create("DEFLT", deps(5), 0, { nickname: "Solo", ...(debug ? { debug: true } : {}), bots: { count: 3, level: "hard" } });
-      expect(c.core.data.options.botEngine).toBeUndefined(); expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
+      expect(c.core.data.options.botEngine).toBe("v2e"); expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
     }
+    const a = RoomCore.create("ATTUA", deps(6), 0, { nickname: "Solo", debug: true, botEngine: "attuali", bots: { count: 3, level: "hard" } });
+    expect(a.core.data.options.botEngine).toBe("attuali"); expect(playSolo(a.core, a.playerId).core.data.stage).toBe("FINISHED");
+  });
+  it("kill switch: con NEW_BOTS_DEFAULT spento tornano i bot di sempre (verificato leggendo la costante e il ramo)", async () => {
+    const { NEW_BOTS_DEFAULT, V2_BOTS_ENABLED } = await import("../src/RoomCore.ts");
+    expect(NEW_BOTS_DEFAULT).toBe(true); expect(V2_BOTS_ENABLED).toBe(true);
   });
   it("tempo del tick a 6 giocatori: bot attuali e v2, 5 partite ciascuno (informativo)", () => {
     const worst = (opt: object) => { let w = 0, sum = 0; for (let k = 0; k < 5; k++) { const c = RoomCore.create("TIMEZ", deps(20 + k), 0, { nickname: "Solo", debug: true, ...opt, bots: { count: 5, level: "hard" } }); const r = playSolo(c.core, c.playerId); w = Math.max(w, r.worst); sum += r.worst; } return { w, mean: sum / 5 }; };
-    const a = worst({}), b = worst({ botEngine: "v2" });
+    const a = worst({ botEngine: "attuali" }), b = worst({ botEngine: "v2e" });
     console.log(`tick peggiore (max su 5 partite): bot attuali ${a.w.toFixed(1)} ms, v2 ${b.w.toFixed(1)} ms; media dei massimi ${a.mean.toFixed(1)} / ${b.mean.toFixed(1)}`);
     expect(b.w).toBeLessThan(250);
   });
   it("l'opzione vale solo con debug e solo per il valore previsto", () => {
-    expect(RoomCore.create("NODBG", deps(5), 0, { nickname: "Solo", botEngine: "v2", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBeUndefined();
+    expect(RoomCore.create("NODBG", deps(5), 0, { nickname: "Solo", botEngine: "v2", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBe("v2e");   // senza debug l'opzione è ignorata: vale il predefinito
     expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "v2" }).success).toBe(true);
     expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "x" }).success).toBe(false);
   });
@@ -49,7 +55,7 @@ describe("bot v2 sperimentali (solo stanze di collaudo)", () => {
   it("v2e (v2 con etichette v2): accettata solo con debug, partita completa, la leva globale resta spenta", async () => {
     const { TUNE } = await import("../../packages/game-engine/src/ai-v2/ai.ts");
     expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "v2e" }).success).toBe(true);
-    expect(RoomCore.create("NODB2", deps(5), 0, { nickname: "Solo", botEngine: "v2e", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBeUndefined();
+    expect(RoomCore.create("NODB2", deps(5), 0, { nickname: "Solo", botEngine: "attuali", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBe("v2e");   // senza debug l'opzione è ignorata
     const c = RoomCore.create("V2EXX", deps(9), 0, { nickname: "Solo", debug: true, botEngine: "v2e", bots: { count: 3, level: "hard" } });
     expect(c.core.data.options.botEngine).toBe("v2e");
     expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");

@@ -101,7 +101,7 @@ describe("stanza: creazione, accesso e lobby", () => {
     const { core, playerId, token } = RoomCore.create("ABCDE", deps(), 0, { nickname: "Marta" });
     expect(core.data.players[0]).toMatchObject({ id: playerId, isHost: true });
     expect(JSON.stringify(core.data)).not.toContain(token);
-    expect(core.data.options).toEqual({ turnTimerSec: 0, display: true, ageBand: 14 });
+    expect(core.data.options).toEqual({ botEngine: "v2e", turnTimerSec: 0, display: true, ageBand: 14 });
     expect(core.authenticate(token)).toBe(playerId);
   });
   it("nickname non duplicati (anche con maiuscole e accenti diversi), max 6 giocatori", () => {
