@@ -60,13 +60,14 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
   const showStage = post === null || post === "verdict", showFinale = post === "finale";
 
   // suoni: apertura, ogni carta che esce, ultimo giro, verdetto, fine della scenetta
+  // annuncio dell'intervallo: un suono breve (se il file manca, la fanfara di sempre); finito, parte il tema dell'intervallo (effetto qui sopra a quello del tema: va per primo)
+  useEffect(() => { if (t0 < -MINI_COUNTDOWN_MS && inRun) music.announce("intervallo-jingle.mp3", () => sfx.fanfare(sound)); else sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   // musica del voto: dal 3-2-1 della corsa fino alla fine della scenetta finale; ai punti torna il sottofondo
-  const suspense = (post === null && (t0 >= -MINI_COUNTDOWN_MS || view.phase === "MINI_RESULTS")) || post === "verdict" || post === "finale";
-  useEffect(() => { music.voting(suspense); }, [suspense]);
+  const suspense = post === null || post === "verdict" || post === "finale";   // dal suono d'annuncio ai punti
+  useEffect(() => { music.voting(suspense, `intervallo-${kind}.mp3`); }, [suspense, kind]);
   useEffect(() => () => music.voting(false), []);
   const slot = Math.floor(t0 / MINI_SLOT_MS), running = inRun && post === null && t0 >= 0 && t0 < end;
   const lastSlot = useRef(-1);
-  useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (running && slot !== lastSlot.current) { lastSlot.current = slot; sfx.whoosh(sound); if (slot % MINI_CARDS === 0 && slot > 0) sfx.drum(sound, 0.7); } }, [slot, running, sound]);
   useEffect(() => { if (post === "verdict") sfx.drum(sound, 1.4); if (post === "finale") sfx.tada(sound); if (post === "closing") sfx.drum(sound, 1.2); }, [post]); // eslint-disable-line react-hooks/exhaustive-deps
   const count = inRun && post === null && t0 < 0 && t0 >= -MINI_COUNTDOWN_MS ? Math.ceil(-t0 / 1000) : null, lastCount = useRef<number | null>(null);
