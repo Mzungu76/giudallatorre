@@ -19,6 +19,7 @@ import { LuiPopup, type UiCtl } from "../components/BUi.tsx";
 import type { ChatDto } from "@gdt/game-protocol";
 import Final from "./Final.tsx";
 import { forgetSession } from "../lib/session.ts";
+import { recordView } from "../lib/stats.ts";
 import type { ClientMessage } from "@gdt/game-protocol";
 import type { ReactNode } from "react";
 import type { PlayerView } from "@gdt/game-engine";
@@ -94,6 +95,9 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
 export default function RoomScreen({ code }: { code: string }) {
   const { status, room, view, error, send, chat } = useRoom(code, "player");
   const { sound, setSound } = useAudio();
+  // statistiche personali: registrate nel dispositivo a ogni cambio di fase (turni, intervalli, fine partita); niente va al server
+  const sv = view?.view ?? null, svBots = !!room?.players.some((p) => p.isBot);
+  useEffect(() => { if (sv) void recordView(code, sv, svBots); }, [sv?.phase, sv?.turn, !!sv?.miniResult]); // eslint-disable-line react-hooks/exhaustive-deps
   const [notice, setNotice] = useState<string | null>(null), botsSeen = useRef<Set<string> | null>(null);
   // un giocatore esce a partita in corso e un bot prende il suo posto: lo dico a chi resta
   useEffect(() => {

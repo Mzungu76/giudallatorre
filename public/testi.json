@@ -1,6 +1,6 @@
 {
- "versione": 53,
- "aggiornato": "2026-11-14",
+ "versione": 54,
+ "aggiornato": "2026-11-15",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -2519,6 +2519,128 @@
    "t": "Votare la carta del Megafono è il suo modo di dire «mi piaci».",
    "s": "Fine partita: premio della serata",
    "n": "Battuta per il pubblico 14+"
+  },
+  "st.titolo": {
+   "t": "Le mie statistiche",
+   "s": "Statistiche personali"
+  },
+  "st.nota": {
+   "t": "Restano solo su questo dispositivo: non vengono inviate a nessuno. Se cambi telefono o cancelli i dati del browser, ripartono da zero.",
+   "s": "Statistiche personali",
+   "n": "Titolo e avviso"
+  },
+  "st.vuoto": {
+   "t": "Ancora nessuna partita finita: gioca e torna qui.",
+   "s": "Statistiche personali"
+  },
+  "st.since": {
+   "t": "Dal {data}",
+   "s": "Statistiche personali",
+   "n": "Data della prima partita registrata"
+  },
+  "st.partite": {
+   "t": "Partite",
+   "s": "Statistiche personali"
+  },
+  "st.vittorie": {
+   "t": "Vittorie",
+   "s": "Statistiche personali"
+  },
+  "st.podi": {
+   "t": "Podi",
+   "s": "Statistiche personali"
+  },
+  "st.punti": {
+   "t": "Punti totali",
+   "s": "Statistiche personali"
+  },
+  "st.media": {
+   "t": "Media a partita",
+   "s": "Statistiche personali"
+  },
+  "st.record": {
+   "t": "Miglior punteggio",
+   "s": "Statistiche personali"
+  },
+  "st.voti": {
+   "t": "Voti da Folla",
+   "s": "Statistiche personali"
+  },
+  "st.intuito": {
+   "t": "Carte cadute votate",
+   "s": "Statistiche personali"
+  },
+  "st.cadute": {
+   "t": "Tue carte cadute",
+   "s": "Statistiche personali"
+  },
+  "st.mega": {
+   "t": "Turni da Megafono",
+   "s": "Statistiche personali"
+  },
+  "st.cade": {
+   "t": "Segnalino CADE",
+   "s": "Statistiche personali",
+   "n": "Colpito = la carta è caduta"
+  },
+  "st.noncade": {
+   "t": "Segnalino NON CADE",
+   "s": "Statistiche personali",
+   "n": "Colpito = la carta è rimasta su"
+  },
+  "st.nulli": {
+   "t": "Segnalino VOTI NULLI!",
+   "s": "Statistiche personali",
+   "n": "Colpito = almeno un voto annullato"
+  },
+  "st.annullati": {
+   "t": "Tuoi voti annullati",
+   "s": "Statistiche personali"
+  },
+  "st.minis": {
+   "t": "Intervalli giocati",
+   "s": "Statistiche personali"
+  },
+  "st.miniok": {
+   "t": "Intervalli azzeccati",
+   "s": "Statistiche personali"
+  },
+  "st.minifast": {
+   "t": "Più veloce negli intervalli",
+   "s": "Statistiche personali"
+  },
+  "st.recenti": {
+   "t": "Ultime partite",
+   "s": "Statistiche personali"
+  },
+  "st.riga": {
+   "t": "{data} · {n} giocatori · {pos}° posto · {punti} punti",
+   "s": "Statistiche personali"
+  },
+  "st.vinta": {
+   "t": "Vittoria",
+   "s": "Statistiche personali"
+  },
+  "st.bots": {
+   "t": "con bot",
+   "s": "Statistiche personali"
+  },
+  "st.indietro": {
+   "t": "Indietro",
+   "s": "Statistiche personali"
+  },
+  "st.cancella": {
+   "t": "Cancella le statistiche",
+   "s": "Statistiche personali"
+  },
+  "st.conferma": {
+   "t": "Sicuro? Tocca di nuovo per cancellare tutto",
+   "s": "Statistiche personali"
+  },
+  "ht.stat": {
+   "t": "Le mie statistiche",
+   "s": "Home · icone",
+   "n": "Icona in Home (nome accessibile)"
   }
  }
 }

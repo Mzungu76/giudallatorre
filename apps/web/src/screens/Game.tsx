@@ -149,7 +149,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const charKey = `gdt.char.${room.code}`;
   const [charIntro, setCharIntro] = useState(() => { try { return !FAST && !readOnly && sessionStorage.getItem(charKey) !== "1" && localStorage.getItem("gdt.nochar") !== "1"; } catch { return false; } });
   // «Il gregge»: a inizio partita, dopo il personaggio, l'estrazione della soglia del Lui! (una volta per stanza)
-  const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0);
+  const [climbDone, setClimbDone] = useState(0), [revealDone, setRevealDone] = useState(0), [fallDone, setFallDone] = useState(0), [skip, setSkip] = useState(0), [musicOff, setMusicOff] = useState(0);
   const [banner, setBanner] = useState<{ k: string; title: string; sub: string } | null>(null);
   const [megaIntro, setMegaIntro] = useState(false), megaShown = useRef(-1);
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
@@ -212,7 +212,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
   // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto, spoglio) fino alla fine della caduta; all'inizio del percorso dei punti torna il sottofondo
-  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (!!res && watched && !FAST && fallDone !== turn);
+  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (!!res && watched && !FAST && fallDone !== turn && musicOff !== turn);
   useEffect(() => { music.voting(suspense); }, [suspense]);
   useEffect(() => () => music.voting(false), []);
   const annullati: string[] = res ? (res.marks?.find((x) => x.effect === "nulli")?.caught ?? []) : [];
@@ -327,7 +327,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
           )}
         </div>
       )}
-      {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
+      {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; if (res) { setMusicOff(turn); music.voting(false); } setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
       {showPanel && res && afterStep === "board" && (
         <Standings title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
           rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}
