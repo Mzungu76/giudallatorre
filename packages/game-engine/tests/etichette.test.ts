@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { affinityV2, registerTagsV2 } from "../src/index.ts";
+import { affinityV2, affinityV2m, inferV2, registerTagsV2, tagSimilarity } from "../src/index.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const json = (p: string) => JSON.parse(readFileSync(resolve(root, p), "utf8"));
@@ -45,6 +45,27 @@ describe("etichette v2 (occhi dei bot)", () => {
     const a1 = affinityV2("c1", "x")!, a2 = affinityV2("c2", "x")!;
     expect(a1).toBeCloseTo(5, 5); expect(a2).toBeLessThan(a1); expect(a2).toBeGreaterThan(0);
     expect(affinityV2("c1", "sconosciuta")).toBeNull();
+    registerTagsV2({}, {});
+  });
+  it("affinità morbida: conta le etichette imparentate (più indizi), non supera la coincidenza esatta, e per le frasi libere tace se l'indizio è debole", () => {
+    const P = (t: string, tipi: Record<string, number>, temi: Record<string, number>) => [t, { tipi, temi }] as const;
+    const phrases = Object.fromEntries([
+      P("i più tirchi sono avari con i soldi", { avaro: 3 }, { soldi: 3 }), P("chi nasconde i soldi per non pagare", { avaro: 3, furbo: 1 }, { soldi: 3 }),
+      P("chi spende troppo in vestiti e soldi", { spendaccione: 3 }, { soldi: 3 }), P("i più bravi a fare il pettegolezzo", { pettegolo: 3 }, { pettegolezzo: 3 }),
+      P("chi racconta i segreti degli amici", { pettegolo: 3 }, { pettegolezzo: 2, segreti: 3 }), P("i più vanitosi con lo specchio", { vanitoso: 3 }, { vanita: 3 }),
+    ]);
+    registerTagsV2({ a: { tipi: { avaro: 3 }, temi: {} }, b: { tipi: { pettegolo: 3 }, temi: {} }, c: { tipi: { vanitoso: 3 }, temi: { vanita: 3 } } }, phrases);
+    expect(tagSimilarity("t:avaro", "m:soldi")).toBeGreaterThan(0.5); expect(tagSimilarity("t:avaro", "t:vanitoso")).toBe(0);
+    const ph = "i più tirchi sono avari con i soldi";   // tipo avaro + tema soldi
+    expect(affinityV2("a", ph)).toBeGreaterThan(0);
+    const esattaNoTema = { tipi: { avaro: 3 }, temi: {} };   // carta con solo il tipo: la esatta non vede il tema, la morbida sì
+    registerTagsV2({ x: esattaNoTema, y: { tipi: { vanitoso: 3 }, temi: {} } }, phrases);
+    expect(affinityV2("x", "chi nasconde i soldi per non pagare")!).toBeGreaterThan(0);
+    expect(affinityV2m("x", "i più bravi a fare il pettegolezzo")!).toBe(0);                     // niente parentela: zero
+    expect(affinityV2m("x", "chi nasconde i soldi per non pagare")!).toBeGreaterThanOrEqual(affinityV2("x", "chi nasconde i soldi per non pagare")!);
+    expect(affinityV2m("x", "chi nasconde i soldi per non pagare")!).toBeGreaterThan(affinityV2m("y", "chi nasconde i soldi per non pagare")!);
+    expect(inferV2("parole mai viste zorbo quibli")).toBeNull();                                  // nessun indizio: nessuna etichetta inventata
+    expect(affinityV2m("x", "parole mai viste zorbo quibli")).toBeNull();                          // → il bot si affida alla storia
     registerTagsV2({}, {});
   });
 });

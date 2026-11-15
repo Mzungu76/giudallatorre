@@ -3,12 +3,38 @@ import { affinity as affinityOld } from "../tags.ts";
 /**
  * Etichette v2 («occhi dei bot»): catalogo unico di tipi e temi, con peso 1–3 (quanto l'etichetta è centrale) su carte e frasi.
  * Usate SOLO dal bot v2 e solo con TUNE.labelsV2 = 1 (registro vuoto o leva a 0 → comportamento identico a prima). Non toccano tags.ts.
- * Affinità: per ogni etichetta in comune, base (tipo 3, tema 2) × (peso carta + peso frase) / 6 → due pesi pieni (3+3) valgono come il vecchio punteggio.
+ *
+ * `affinityV2` (esatta): per ogni etichetta in comune, base (tipo 3, tema 2) × (peso carta + peso frase) / 6.
+ * `affinityV2m` (morbida, TUNE.labelsSmooth): conta anche le etichette *imparentate* (es. «avaro» ~ «soldi»), perché le coincidenze esatte sono rare
+ * (con 5 carte a caso, per quasi 4 frasi su 10 nessuna carta ha un'etichetta in comune: il bot non ha alcun indizio). La parentela tra due etichette è il coseno
+ * dei loro profili (in quali frasi e carte compaiono insieme). E per le frasi scritte a mano (senza etichette) deduce le etichette dalle parole, ma solo se
+ * l'indizio è abbastanza forte: meglio nessun indizio che un indizio sbagliato.
  */
 export interface Tag2 { tipi: Record<string, number>; temi: Record<string, number> }
 let CARDS: Record<string, Tag2> = {}, PHRASES: Record<string, Tag2> = {};
-export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<string, Tag2>): void { CARDS = cards; PHRASES = phrases; }
+/** Parentela tra etichette: soglia minima del coseno e quanto pesa rispetto a una coincidenza esatta. */
+export const SMOOTH = { theta: 0.2, beta: 0.6, minDf: 2, minScore: 1.0 };
+const SIM = new Map<string, number>();
+let DF = new Map<string, number>(), CNT = new Map<string, Map<string, number>>(), NDOC = 0;
+
+const feats = (x: Tag2): [string, number][] => [...Object.entries(x.tipi).map(([k, w]) => ["t:" + k, w] as [string, number]), ...Object.entries(x.temi).map(([k, w]) => ["m:" + k, w] as [string, number])];
+const STOP = new Set("sale salgono sulla torre oggi troppo tutto chi che con per una uno degli delle dello nella nelle sono come piu anche questo questa quelli quelle tutti tutte loro suo sua suoi sue sempre molto dopo prima ogni cosa cose essere fare fatto sarebbe primo quando senza dalla alla della".split(" "));
+const stems = (t: string): string[] => [...new Set(t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().split(/[^a-z]+/).filter((w) => w.length >= 4 && !STOP.has(w)).map((w) => w.slice(0, 5)))];
+
+export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<string, Tag2>): void {
+  CARDS = cards; PHRASES = phrases; SIM.clear(); DF = new Map(); CNT = new Map(); NDOC = 0;
+  if (!Object.keys(cards).length) return;
+  // parentela tra etichette: coseno dei profili (in quali frasi/carte compaiono, pesate)
+  const vec = new Map<string, Map<number, number>>(); let i = 0;
+  for (const it of [...Object.values(phrases), ...Object.values(cards)]) { for (const [k, w] of feats(it)) { let m = vec.get(k); if (!m) vec.set(k, (m = new Map())); m.set(i, w / 3); } i++; }
+  const norm = (m: Map<number, number>) => Math.sqrt([...m.values()].reduce((s, x) => s + x * x, 0)), tags = [...vec.keys()];
+  for (const a of tags) for (const b of tags) { if (a === b) continue; const va = vec.get(a)!, vb = vec.get(b)!; let d = 0; for (const [j, w] of va) { const u = vb.get(j); if (u) d += w * u; } const c = d / (norm(va) * norm(vb)); if (c >= SMOOTH.theta) SIM.set(a + "|" + b, c); }
+  // dizionario parole → etichette (dalle frasi etichettate) per le frasi scritte a mano
+  for (const [text, tg] of Object.entries(phrases)) { NDOC++; for (const w of stems(text)) { DF.set(w, (DF.get(w) ?? 0) + 1); let m = CNT.get(w); if (!m) CNT.set(w, (m = new Map())); for (const [t, wt] of feats(tg)) m.set(t, (m.get(t) ?? 0) + wt / 3); } }
+}
 export const hasTagsV2 = (): boolean => Object.keys(CARDS).length > 0;
+/** Parentela (0 se assente o sotto soglia) tra due etichette «t:nome» / «m:nome». Per i test. */
+export const tagSimilarity = (a: string, b: string): number => (a === b ? 1 : SIM.get(a + "|" + b) ?? 0);
 
 export function affinityV2(cardId: string, phraseText: string): number | null {
   const c = CARDS[cardId], p = PHRASES[phraseText];
@@ -16,5 +42,28 @@ export function affinityV2(cardId: string, phraseText: string): number | null {
   let a = 0;
   for (const [t, w] of Object.entries(p.tipi)) { const wc = c.tipi[t]; if (wc) a += 3 * (wc + w) / 6; }
   for (const [t, w] of Object.entries(p.temi)) { const wc = c.temi[t]; if (wc) a += 2 * (wc + w) / 6; }
+  return a;
+}
+
+/** Etichette dedotte dalle parole di una frase nuova; null se l'indizio non è abbastanza forte (parole viste almeno `minDf` volte e punteggio ≥ `minScore`). */
+export function inferV2(text: string): Tag2 | null {
+  const sc = new Map<string, number>();
+  for (const w of stems(text)) { const df = DF.get(w) ?? 0; if (df < SMOOTH.minDf) continue; const m = CNT.get(w)!, tot = [...m.values()].reduce((a, b) => a + b, 0), idf = Math.log(NDOC / df); for (const [t, c] of m) sc.set(t, (sc.get(t) ?? 0) + (c / tot) * idf); }
+  const rk = [...sc.entries()].filter(([, v]) => v >= SMOOTH.minScore).sort((a, b) => b[1] - a[1]);
+  if (!rk.length) return null;
+  const out: Tag2 = { tipi: {}, temi: {} }, top = rk[0]![1];
+  for (const [k, v] of rk.slice(0, 4)) { const w = v >= top * 0.8 ? 2 : 1, name = k.slice(2); if (k[0] === "t") { if (Object.keys(out.tipi).length < 2) out.tipi[name] = w; } else if (Object.keys(out.temi).length < 3) out.temi[name] = w; }
+  return out;
+}
+
+/** Affinità «morbida»: come la esatta, ma conta anche le etichette imparentate (peso `beta` × parentela) e deduce le etichette delle frasi libere. */
+export function affinityV2m(cardId: string, phraseText: string): number | null {
+  const c = CARDS[cardId]; if (!c) return affinityOld(cardId, phraseText);
+  const p = PHRASES[phraseText] ?? inferV2(phraseText); if (!p) return null;
+  let a = 0;
+  for (const [x, wx] of feats(c)) for (const [y, wy] of feats(p)) {
+    const s = x === y ? 1 : SIM.get(x + "|" + y) !== undefined ? SMOOTH.beta * SIM.get(x + "|" + y)! : 0;
+    if (s > 0) a += (x[0] === "t" && y[0] === "t" ? 3 : x[0] === "m" && y[0] === "m" ? 2 : 2.5) * s * (wx + wy) / 6;
+  }
   return a;
 }

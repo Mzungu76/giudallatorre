@@ -61,4 +61,12 @@ describe("bot nuovi (v2 con etichette v2) di default; v2 / attuali solo in colla
     expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
     expect(TUNE.labelsV2).toBe(0);
   });
+  it("v2m (etichette morbide): accettata solo con debug, partita completa, le leve globali restano spente", async () => {
+    const { TUNE } = await import("../../packages/game-engine/src/ai-v2/ai.ts");
+    expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "v2m" }).success).toBe(true);
+    const c = RoomCore.create("V2MXX", deps(11), 0, { nickname: "Solo", debug: true, botEngine: "v2m", bots: { count: 3, level: "hard" } });
+    expect(c.core.data.options.botEngine).toBe("v2m");
+    expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
+    expect(TUNE.labelsV2).toBe(0); expect(TUNE.labelsSmooth).toBe(0);
+  });
 });

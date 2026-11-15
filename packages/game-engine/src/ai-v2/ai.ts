@@ -6,7 +6,7 @@
  */
 import { luiForbidden, luiTokens, megafonoOf, requiredPlayers, tallyMarks } from "../engine.ts";
 import { affinity as affinityOld, phraseTagCount } from "../tags.ts";
-import { affinityV2, hasTagsV2 } from "./tags2.ts";
+import { affinityV2, affinityV2m, hasTagsV2 } from "./tags2.ts";
 import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "../types.ts";
 import { NEUTRAL_STYLE } from "../botstyle.ts";
 import type { BotStyle } from "../botstyle.ts";
@@ -143,11 +143,13 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
 /** Parametri di taratura dei bot (modificabili dai test di taratura). */
 /** v2: con TUNE.labelsV2 = 1 e le etichette v2 registrate (registerTagsV2) la lettura personaggio↔frase usa i pesi; altrimenti è identica ai bot attuali. */
-const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? affinityV2(cardId, text) : affinityOld(cardId, text));
+const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? (TUNE.labelsSmooth ? affinityV2m(cardId, text) : affinityV2(cardId, text)) : affinityOld(cardId, text));
 
-export const TUNE = { labelsV2: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+export const TUNE = { labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 /** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
+/** v2 + etichette v2 «morbide» (parentela tra etichette e frasi libere dedotte): per stanza, come sopra. */
+export function chooseBotActionSmooth(...a: Parameters<typeof chooseBotAction>): ReturnType<typeof chooseBotAction> { const o = TUNE.labelsV2, q = TUNE.labelsSmooth; TUNE.labelsV2 = 1; TUNE.labelsSmooth = 1; try { return chooseBotAction(...a); } finally { TUNE.labelsV2 = o; TUNE.labelsSmooth = q; } }
 export function chooseBotActionLabels(...a: Parameters<typeof chooseBotAction>): ReturnType<typeof chooseBotAction> { const o = TUNE.labelsV2; TUNE.labelsV2 = 1; try { return chooseBotAction(...a); } finally { TUNE.labelsV2 = o; } }
 
 export function chooseBotAction(s: GameState, me: PlayerId, level0: BotLevel, mem: BotMemory, rand: () => number, style: BotStyle = NEUTRAL_STYLE): Action | null {
