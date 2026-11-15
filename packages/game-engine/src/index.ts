@@ -8,6 +8,7 @@ export { checkInvariants } from "./invariants.ts";
 export { shuffle, nextRandom } from "./rng.ts";
 export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";
+export { chooseBotAction as chooseBotActionV2, learnFromResult as learnFromResultV2 } from "./ai-v2/ai.ts";
 export { BOT_ENGINES, DEFAULT_BOT_ENGINE, getBotEngine } from "./bot-engines.ts";
 export type { BotEngine } from "./bot-engines.ts";
 export type { BotStyle } from "./botstyle.ts";

@@ -1,5 +1,6 @@
 import * as production from "./ai.ts";
 import * as baseline from "./ai-baseline/ai.ts";
+import * as v2 from "./ai-v2/ai.ts";
 
 /**
  * Registro dei motori dei bot basati sullo stato (`GameState`). Ogni versione ha un identificativo, così il simulatore e l'AI Laboratory possono
@@ -22,6 +23,11 @@ export const BOT_ENGINES: Record<string, BotEngine> = {
     id: "baseline-1", label: "Baseline AI v1",
     description: "Bot originali (tag Git baseline-ai-v1, commit 6e2f4b1): copia congelata, con parametri propri.",
     chooseAction: baseline.chooseBotAction, planMiniVote: baseline.planMiniVote, newMemory: baseline.newBotMemory, learn: baseline.learnFromResult, tune: baseline.TUNE,
+  },
+  "v2": {
+    id: "v2", label: "Bot v2 (sperimentale)",
+    description: "Copia dei bot attuali con due leve accese (TUNE.markBoost = 1,5, TUNE.adaptFollow = 1); con le leve a 0 decide come i bot attuali. Collegato solo alle stanze di collaudo (?motore=v2).",
+    chooseAction: v2.chooseBotAction as never, planMiniVote: v2.planMiniVote as never, newMemory: v2.newBotMemory as never, learn: v2.learnFromResult as never, tune: v2.TUNE,
   },
   "production": {
     id: "production", label: "Bot in produzione (ai.ts)",
