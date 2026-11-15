@@ -45,3 +45,8 @@ Nella prima stesura della Fase 1 avevo modificato `ai.ts` e `engine.ts` (puntegg
 - Test: 13 nuovi (344 totali): Monte Carlo, fair play per tipo (decisioni invariate se si alterano i dati nascosti), legalità, limite di tempo, ripetibilità, tornei nel laboratorio.
 - Costo: ≈ 3,1–3,5 ms per decisione (bot attuali ≈ 1,7–2,3 ms).
 - Regressioni: nessuna; bot in produzione intoccati. **Non è il motore predefinito**: serve la decisione del proprietario dopo benchmark completi e test con persone.
+
+## Collegamento sperimentale alle stanze di collaudo (2026-11-15)
+- Commit isolato (`git log --oneline -- worker/src/strategicBots.ts`): con `/crea?debug=bot&motore=strategico` i bot di quella stanza usano `strategic-pts-0.1`; senza il parametro il codice nuovo non viene mai eseguito. Interruttore `STRATEGIC_BOTS_ENABLED`; procedura di ritorno e backup in `AI_ROLLBACK.md` (ramo `backup/main-6e2f4b1-prima-dei-bot-strategici`).
+- Test (6 nuovi, 350 totali): default invariato, opzione ignorata senza `debug`, protocollo, partita completa con 3 bot strategici, riavvio della stanza a metà partita, tempo del tick.
+- **Rischio noto, non risolto**: a 6 giocatori il tick più pesante (più bot che decidono insieme, posa del segnalino) misura ≈ 28 ms in locale. Il limite di CPU del Worker (10 ms per richiesta nel piano gratuito secondo `COSTS.md`, da ri-verificare) potrebbe non bastare: per questo l'opzione è solo per il collaudo. Prima di qualsiasi uso più ampio serve ridurre il costo (Fase 10) e misurarlo sul Worker vero.

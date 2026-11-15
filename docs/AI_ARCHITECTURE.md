@@ -71,7 +71,7 @@ Interfaccia comune: `BotEngine` (già in `bot-engines.ts`), con `chooseAction(Ob
 
 ## 7. Piano
 1. Fase 1 (fatta): analisi, baseline, ricerca.
-2. Fase 2 (fatta): `Observation`, `legalActions`, `scoreTurn`, interfaccia `StrategicEngine`, confine di fair play per tipo. **Nessun collegamento a `RoomCore`** finché non c'è un motore che superi i benchmark (Fase 10, su decisione del proprietario).
+2. Fase 2 (fatta): `Observation`, `legalActions`, `scoreTurn`, interfaccia `StrategicEngine`, confine di fair play per tipo. Collegamento a `RoomCore` **solo opt-in e solo nelle stanze di collaudo** (`/crea?debug=bot&motore=strategico`), con ritorno garantito (`AI_ROLLBACK.md`); il predefinito resta quello attuale finché il proprietario non decide altrimenti.
 3. Fase 3 (fatta): laboratorio **minimo** — `packages/ai-lab` (partite con mosse simultanee, tornei ripetibili, IC 95%, confronti appaiati, CSV/JSON, riga di comando `npm run lab`); vedi `AI_LABORATORY.md`. Prime misure in `AI_BENCHMARKS.md` §4.
 4. Fase 4 (fatta): Opponent Model bayesiano per tipi + Prediction Engine (voti, convergenza, caduta); misurati da soli (`AI_BENCHMARKS.md` §5, algoritmi in `AI_ALGORITHMS.md`).
 5. Fase 5 (fatta): Simulation Engine (Monte Carlo, arresto anticipato, limite di tempo) + primo bot `strategic-pts-0.1`/`strategic-win-0.1`, misurati contro i bot attuali (`AI_BENCHMARKS.md` §6).
