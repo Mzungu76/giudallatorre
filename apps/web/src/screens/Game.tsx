@@ -4,6 +4,7 @@ import type { ClientMessage } from "@gdt/game-protocol";
 import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
 import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
+import { music } from "../lib/music.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
 import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
@@ -154,6 +155,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const phaseRef = useRef(view.phase), apiRef = useRef<SceneApi | null>(null), sawPlay = useRef(0), sawVote = useRef(0), prevPhase = useRef<string | null>(null);
   const tower = [...view.tower].sort((a, b) => a.position - b.position), ids = tower.map((t) => t.cardId), N = ids.length;
   phaseRef.current = view.phase;
+  useEffect(() => { music.voting(view.phase === "VOTE" || view.phase === "MINI_RUN"); }, [view.phase]);
+  useEffect(() => () => music.voting(false), []);
   const turn = view.turn, phase = view.phase, mine = view.players.find((p) => p.id === me);
   const res = phase === "RESULTS" ? view.lastResult : null;
 
