@@ -20,10 +20,14 @@ export interface StrategicConfig {
   id: string; label: string; objective: "points" | "win";
   /** Simulazioni per decisione (massimo), minimo prima dell'arresto anticipato e soglia z dell'arresto. */ samples: number; minSamples: number; earlyStopZ: number;
   /** Temperatura della scelta mista (0 = sempre il migliore). Unità: punti (points) o probabilità (win). */ tau: number;
+  /** Bluff: bonus (in punti) per il tipo di segnalino meno atteso dal tavolo (−log della frequenza osservata dei tipi in questa partita). 0 = nessun bluff. */ bluff: number;
+  /** Distribuzione dei tipi di segnalino che il tavolo si aspetta (cade, noncade, nulli): chi se ne discosta guadagna il bonus di bluff. */ expectedMix: [number, number, number];
+  /** Se vero, chi vota stima il tipo del segnalino altrui dalle frequenze viste al tavolo (con `expectedMix` come prior) invece di assumerlo uniforme. */ learnTypes: boolean;
+  /** Temperatura della scelta mista del segnalino (può essere maggiore di `tau`: il segnalino è la scelta che più rivela il bot). */ tauMark: number;
   /** Prior dell'Opponent Model (default: quello stimato dal laboratorio). */ prior?: OpponentPrior;
   /** Incertezza residua del distacco in classifica: √(sigma0² + turniRimasti·sigmaTurn²). */ sigma0: number; sigmaTurn: number;
 }
-export const DEFAULT_STRATEGIC: Omit<StrategicConfig, "id" | "label" | "objective" | "tau"> = { samples: 120, minSamples: 40, earlyStopZ: 3, sigma0: 2, sigmaTurn: 3 };
+export const DEFAULT_STRATEGIC: Omit<StrategicConfig, "id" | "label" | "objective" | "tau"> = { bluff: 0, learnTypes: false, expectedMix: [0.5, 0.25, 0.25], tauMark: 0.05, samples: 120, minSamples: 40, earlyStopZ: 3, sigma0: 2, sigmaTurn: 3 };
 
 interface Mem { opp: OpponentMemory }
 const TYPES = ["cade", "noncade", "nulli"] as const;
@@ -82,7 +86,10 @@ function placeMark(cfg: StrategicConfig, mem: Mem, obs: Observation, ctx: Decisi
   }, { samples: cfg.samples, minSamples: cfg.minSamples, earlyStopZ: cfg.earlyStopZ, ...deadline(ctx) });
   // per ogni (posizione, tipo) vale il mio miglior voto; poi scelta mista tra le 3n combinazioni
   const best = new Map<string, number>(); cands.forEach((k, i) => { const key = `${k.pos}:${k.type}`; best.set(key, Math.max(best.get(key) ?? -Infinity, res.means[i]!)); });
-  const keys = [...best.keys()], pick = keys[softmaxPick(keys.map((k) => best.get(k)!), cfg.tau, ctx.rand)]!, [pos, type] = pick.split(":");
+  // bluff: bonus per il tipo di segnalino che il tavolo si aspetta di meno (frequenze dei tipi già visti in questa partita, con prior 50/25/25)
+  const seen = mem.opp.turns.map((t) => t.markType).filter((t): t is string => !!t), prior0: Record<string, number> = { cade: cfg.expectedMix[0], noncade: cfg.expectedMix[1], nulli: cfg.expectedMix[2] };
+  const surprise = (type: string) => -Math.log(((prior0[type] ?? 0.25) * 2 + seen.filter((t) => t === type).length) / (2 + seen.length));
+  const keys = [...best.keys()], pick = keys[softmaxPick(keys.map((k) => best.get(k)! + cfg.bluff * surprise(k.split(":")[1]!)), cfg.tauMark, ctx.rand)]!, [pos, type] = pick.split(":");
   return { type: "placeMarks", playerId: me, marks: [{ slot: type!, position: Number(pos) }] };
 }
 
@@ -91,7 +98,9 @@ function castVote(cfg: StrategicConfig, mem: Mem, obs: Observation, ctx: Decisio
   const markPos = obs.marks[0]?.position ?? null, knownType = obs.marks[0]?.slot ?? null, forbidden = obs.myForbidden;
   const marg = predictVotes(mem.opp, contextOf(obs), whoOf(obs), { prior: cfg.prior ?? FITTED_PRIOR });
   const cands: number[] = []; for (let v = 1; v <= n; v++) if (v !== forbidden) cands.push(v);
-  const res = evaluateCandidates(cands.length, () => ({ u: others.map(() => ctx.rand()), t: Math.floor(ctx.rand() * 3) }), (c, w: { u: number[]; t: number }) => {
+  // credenza sul tipo del segnalino altrui: uniforme, oppure (learnTypes) frequenze viste al tavolo con `expectedMix` come prior (2 osservazioni di peso)
+  const seen = mem.opp.turns.map((t) => t.markType), belief = cfg.learnTypes ? TYPES.map((ty, i) => (cfg.expectedMix[i]! * 2 + seen.filter((x) => x === ty).length) / (2 + seen.length)) : [1 / 3, 1 / 3, 1 / 3];
+  const res = evaluateCandidates(cands.length, () => ({ u: others.map(() => ctx.rand()), t: sampleFrom(belief, ctx.rand()) - 1 }), (c, w: { u: number[]; t: number }) => {
     const type = knownType ?? TYPES[w.t]!, votes: Record<PlayerId, number> = { [me]: cands[c]! };
     others.forEach((p, j) => { let v = sampleFrom(marg[p]!, w.u[j]!); if (p === mega && type === "nulli" && v === markPos) v = (v % n) + 1; votes[p] = v; });   // il Megafono non vota la carta annullata
     return utility(cfg, obs, scoreTurn(tower, ids, mega, votes, markPos ? [{ slot: type, effect: type, position: markPos }] : [], false).points);
@@ -99,6 +108,9 @@ function castVote(cfg: StrategicConfig, mem: Mem, obs: Observation, ctx: Decisio
   return { type: "vote", playerId: me, position: cands[softmaxPick(res.means, cfg.tau, ctx.rand)]! };
 }
 
+/** Configurazione «massima forza»: nessun bluff, credenza uniforme sul tipo. Contro i bot attuali vince di più, ma gioca quasi sempre CADE sulla propria carta (comportamento prevedibile). */
+export const strategicMax = makeStrategicEngine({ id: "strategic-max-0.1", label: "Strategico 0.1 (massima forza, prevedibile)", objective: "points", tau: 0.05, ...DEFAULT_STRATEGIC });
+
 /** Le due varianti da misurare: stessa previsione e simulazione, obiettivo diverso. */
-export const strategicPts = makeStrategicEngine({ id: "strategic-pts-0.1", label: "Strategico 0.1 (punti attesi)", objective: "points", tau: 0.05, ...DEFAULT_STRATEGIC });
+export const strategicPts = makeStrategicEngine({ id: "strategic-pts-0.1", label: "Strategico 0.1 (punti attesi)", objective: "points", tau: 0.05, ...DEFAULT_STRATEGIC, bluff: 1, expectedMix: [0.4, 0.15, 0.45], tauMark: 0.3, learnTypes: true });
 export const strategicWin = makeStrategicEngine({ id: "strategic-win-0.1", label: "Strategico 0.1 (probabilità di vittoria)", objective: "win", tau: 0.001, ...DEFAULT_STRATEGIC, sigma0: 8, sigmaTurn: 8 });

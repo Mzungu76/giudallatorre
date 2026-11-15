@@ -94,7 +94,7 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "strategic"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "strategic" | "strategic-max"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
@@ -242,7 +242,7 @@ export class RoomCore {
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
         const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995 }) : this.deps.phraseDeck;
         const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, botIds: d.players.filter((p) => p.isBot).map((p) => p.id), mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
-        d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory(); d.strat = d.options.botEngine === "strategic" ? {} : undefined;
+        d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory(); d.strat = d.options.botEngine ? {} : undefined;
         this.scheduleBots(now);
         return this.broadcastGame(out, events);
       }
@@ -265,7 +265,7 @@ export class RoomCore {
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
     if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) learnFromResult(d.botMem, state.tower, state.lastResult);
-    if (state.phase === "RESULTS" && before !== "RESULTS" && d.options.botEngine === "strategic") botLearn(state, d.players.filter((p) => p.isBot).map((p) => p.id), d.strat ??= {});
+    if (state.phase === "RESULTS" && before !== "RESULTS" && d.options.botEngine) botLearn(state, d.players.filter((p) => p.isBot).map((p) => p.id), d.strat ??= {}, d.options.botEngine);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);
@@ -328,7 +328,7 @@ export class RoomCore {
       d.botAt = null; const rand = () => new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296;
       for (const b of d.players.filter((p) => p.isBot)) {
         if (!d.game || d.stage !== "PLAYING") break;
-        const a = d.options.botEngine === "strategic" ? botMove(d.game, b.id, d.strat ??= {}, b.level ?? "hard", rand, styleById(b.style)) : chooseBotAction(d.game, b.id, b.level ?? "medium", d.botMem, rand, styleById(b.style));
+        const a = d.options.botEngine ? botMove(d.game, b.id, d.strat ??= {}, b.level ?? "hard", rand, styleById(b.style), d.options.botEngine) : chooseBotAction(d.game, b.id, b.level ?? "medium", d.botMem, rand, styleById(b.style));
         if (a) { try { out = this.applyGame(out, a, now); } catch (e) { if (!(e instanceof EngineError)) throw e; } }
       }
       this.scheduleBots(now);
@@ -352,7 +352,7 @@ export class RoomCore {
   private scheduleBots(now: number) {
     const d = this.data;
     if (d.stage !== "PLAYING" || !d.game || d.game.phase === "MINI_RUN" || !d.players.some((p) => p.isBot) || this.connected.size === 0) { d.botAt = null; return; }
-    const g = d.game, any = d.players.some((p) => p.isBot && (d.options.botEngine === "strategic" ? botHasMove(g, p.id) : chooseBotAction(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null));
+    const g = d.game, any = d.players.some((p) => p.isBot && (d.options.botEngine ? botHasMove(g, p.id) : chooseBotAction(g, p.id, p.level ?? "medium", d.botMem, () => 0.5) !== null));
     if (!any) { d.botAt = null; return; }
     if (d.botAt === null) d.botAt = now + LIMITS.botMinMs + (new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296) * LIMITS.botJitterMs;
   }

@@ -36,13 +36,14 @@ describe("motore dei bot sperimentale (solo stanze di collaudo)", () => {
   });
   it("il protocollo accetta solo il valore previsto", () => {
     expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "strategic" }).success).toBe(true);
+    expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "strategic-max" }).success).toBe(true);
     expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "altro" }).success).toBe(false);
     expect(createRoomBody.safeParse({ nickname: "Ale" }).success).toBe(true);
   });
   it("con l'opzione: 1 umano + 3 bot strategici giocano una partita completa, imparano e la stanza si può riavviare a metà", () => {
-    for (const restartAt of [undefined, 40]) {
-      const c = RoomCore.create("STRAT", deps(7), 0, { nickname: "Solo", debug: true, botEngine: "strategic", bots: { count: 3, level: "hard" } });
-      expect(c.core.data.options.botEngine).toBe("strategic");
+    for (const [restartAt, eng] of [[undefined, "strategic"], [40, "strategic"], [undefined, "strategic-max"]] as const) {
+      const c = RoomCore.create("STRAT", deps(7), 0, { nickname: "Solo", debug: true, botEngine: eng, bots: { count: 3, level: "hard" } });
+      expect(c.core.data.options.botEngine).toBe(eng);
       const { core, guard } = playSolo(c.core, c.playerId, restartAt ? { restartAt } : {});
       expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(6000);
       const mem = core.data.strat as Record<string, { opp: { turns: unknown[] } }>;

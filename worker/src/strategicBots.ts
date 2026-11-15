@@ -11,7 +11,9 @@ import { STRATEGIC_ENGINES } from "@gdt/strategic-ai";
  */
 /** Interruttore di spegnimento: con `false` l'opzione `botEngine` viene ignorata alla creazione della stanza e i bot sono sempre quelli di sempre. */
 export const STRATEGIC_BOTS_ENABLED = true;
-export const STRATEGIC_BOT_ENGINE = "strategic-pts-0.1";
+/** Opzione di stanza → motore. `strategic` = comportamento vario (bluff); `strategic-max` = massima forza, più prevedibile. */
+export type StrategicChoice = "strategic" | "strategic-max";
+const ENGINE_OF: Record<StrategicChoice, string> = { strategic: "strategic-pts-0.1", "strategic-max": "strategic-max-0.1" };
 /** Tempo massimo (ms) per le simulazioni di una decisione. */
 export const STRATEGIC_BUDGET_MS = 8;
 
@@ -20,13 +22,13 @@ export type StrategicMem = Record<string, unknown>;
 
 export const botHasMove = (g: GameState, id: string): boolean => legalActions(observe(g, id)).length > 0;
 
-export function botMove(g: GameState, id: string, mem: StrategicMem, level: BotLevel, rand: () => number, style: BotStyle): Action | null {
-  const eng = STRATEGIC_ENGINES[STRATEGIC_BOT_ENGINE]!; mem[id] ??= eng.newMemory();
+export function botMove(g: GameState, id: string, mem: StrategicMem, level: BotLevel, rand: () => number, style: BotStyle, choice: StrategicChoice = "strategic"): Action | null {
+  const eng = STRATEGIC_ENGINES[ENGINE_OF[choice]]!; mem[id] ??= eng.newMemory();
   return eng.decide(mem[id] as never, observe(g, id), { rand, level, style, budgetMs: STRATEGIC_BUDGET_MS });
 }
 
 /** A fine turno (fase RESULTS) ogni bot impara dai risultati rivelati. */
-export function botLearn(g: GameState, botIds: readonly string[], mem: StrategicMem): void {
-  const eng = STRATEGIC_ENGINES[STRATEGIC_BOT_ENGINE]!;
+export function botLearn(g: GameState, botIds: readonly string[], mem: StrategicMem, choice: StrategicChoice = "strategic"): void {
+  const eng = STRATEGIC_ENGINES[ENGINE_OF[choice]]!;
   for (const id of botIds) { mem[id] ??= eng.newMemory(); eng.learn(mem[id] as never, observe(g, id)); }
 }

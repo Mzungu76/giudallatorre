@@ -62,9 +62,9 @@ export const productionCrowdPredictor = (level: BotLevel): VotePredictor => ({
 });
 
 /** Opponent Model logit: `adapt = false` usa solo il prior della popolazione; `true` adatta i coefficienti a ogni giocatore con ciò che ha votato nei turni passati. */
-export const logitPredictor = (prior: OpponentPrior = DEFAULT_PRIOR, adapt = true, id = adapt ? "modello-adattivo" : "modello-popolazione", decay = 1, mode: AdaptMode = "types", table = 0): VotePredictor => ({
+export const logitPredictor = (prior: OpponentPrior = DEFAULT_PRIOR, adapt = true, id = adapt ? "modello-adattivo" : "modello-popolazione", decay = 1, mode: AdaptMode = "types", table = 0, floor = 0): VotePredictor => ({
   id, label: adapt ? "Opponent Model (prior + adattamento per giocatore)" : "Opponent Model (solo prior della popolazione)",
-  make: () => { const mem = newOpponentMemory(); return { predict: (ctx, who) => predictVotes(mem, ctx, who, { prior, adapt, decay, mode, table }), learn: (t) => learnTurn(mem, t) }; },
+  make: () => { const mem = newOpponentMemory(); return { predict: (ctx, who) => predictVotes(mem, ctx, who, { prior, adapt, decay, mode, table, floor }), learn: (t) => learnTurn(mem, t) }; },
 });
 
 // ---------- valutazione ----------

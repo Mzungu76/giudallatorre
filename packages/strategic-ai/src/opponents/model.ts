@@ -3,7 +3,7 @@ import type { Observation, PlayerId } from "@gdt/game-engine";
 import { choiceProbs, dot, fitMAP } from "./logit.ts";
 import type { Choice, Fit } from "./logit.ts";
 import { DEFAULT_PRIOR } from "./prior.ts";
-import { defaultTypeGrid, describeTypes, typeLogLiks, typePosterior } from "./types.ts";
+import { alphaOf, defaultTypeGrid, describeTypes, muOf, scaledBeta, typeLogLiks, typePosterior } from "./types.ts";
 import type { OpponentPrior } from "./prior.ts";
 
 /**
@@ -33,6 +33,8 @@ export const learnTurn = (m: OpponentMemory, t: TurnData, cap = 60): void => { m
 export type Role = "crowd" | "mega";
 /** Peso predefinito del tipo di tavolo (κ): moderato. Misurato in docs/AI_BENCHMARKS.md §5: aiuta nei tavoli omogenei, è neutro nei tavoli misti. */
 export const DEFAULT_TABLE_WEIGHT = 4;
+/** Quota uniforme predefinita del prior sui tipi. */
+export const DEFAULT_PRIOR_FLOOR = 0.3;
 
 /** Caratteristiche delle n opzioni (posizioni) per un votante; `ownPos` = posizione della sua carta (null se non nota). */
 export function optionFeatures(ctx: TurnContext, ownPos: number | null): number[][] {
@@ -67,7 +69,8 @@ export function posterior(mem: OpponentMemory, player: PlayerId, role: Role, pri
 
 export interface Who { me: PlayerId; mega: PlayerId; /** Posizione della mia carta, se la so (le carte altrui sono di chiunque tranne me). */ myPos: number | null; players: readonly PlayerId[] }
 export interface PredictOptions { prior?: OpponentPrior; /** Se false si usa il prior della popolazione senza adattare al singolo. */ adapt?: boolean; decay?: number; mode?: AdaptMode;
-  /** Modalità `types`: peso (in «giocatori equivalenti») del tipo di TAVOLO. 0 = ogni giocatore parte dal prior della popolazione; > 0 = parte da un mix tra la popolazione e ciò che si è visto negli altri avversari (un tavolo di principianti o di esperti). */ table?: number }
+  /** Modalità `types`: peso (in «giocatori equivalenti») del tipo di TAVOLO. 0 = ogni giocatore parte dal prior della popolazione; > 0 = parte da un mix tra la popolazione e ciò che si è visto negli altri avversari (un tavolo di principianti o di esperti). */ table?: number;
+  /** Modalità `types`: quota di prior UNIFORME mescolata ai pesi stimati (umiltà verso popolazioni mai viste: i pesi stimati sui bot attuali danno quasi zero a tipi che nei bot non esistono). */ floor?: number }
 
 /**
  * Probabilità che ciascun altro giocatore voti ognuna delle posizioni (indice = posizione − 1). La posizione della carta del votante non è nota:
@@ -77,7 +80,7 @@ export function predictVotes(mem: OpponentMemory, ctx: TurnContext, who: Who, op
   const prior = opts.prior ?? DEFAULT_PRIOR, out: Record<PlayerId, number[]> = {}, n = ctx.n;
   const owners: number[] = []; for (let k = 1; k <= n; k++) if (k !== who.myPos) owners.push(k);
   const base = optionFeatures(ctx, null);
-  const mode = opts.mode ?? "types", grid = prior.types ?? defaultTypeGrid(), kappa = opts.table ?? DEFAULT_TABLE_WEIGHT, others = who.players.filter((q) => q !== who.me);
+  const mode = opts.mode ?? "types", grid0 = prior.types ?? defaultTypeGrid(), fl = opts.floor ?? DEFAULT_PRIOR_FLOOR, grid = { ...grid0, w: grid0.w.map((x) => (1 - fl) * x + fl / grid0.w.length) }, kappa = opts.table ?? DEFAULT_TABLE_WEIGHT, others = who.players.filter((q) => q !== who.me);
   // verosimiglianze dei tipi per ogni avversario (servono anche per stimare il tipo di tavolo)
   const lls = new Map<PlayerId, number[]>(), pops = new Map<PlayerId, number[]>();
   if (opts.adapt !== false && mode === "types") for (const q of others) {
@@ -94,10 +97,13 @@ export function predictVotes(mem: OpponentMemory, ctx: TurnContext, who: Who, op
         const w = grid.w.map((x) => kappa * x); for (const q of others) if (q !== p) pops.get(q)!.forEach((v, i) => { w[i]! += v; });
         const z = w.reduce((a, b) => a + b, 0); tableGrid = { ...grid, w: w.map((v) => v / z) };
       }
-      const post = typePosterior(tableGrid, lls.get(p)!), beta = priorMean(prior, role), E = grid.eps.length;
+      const post = typePosterior(tableGrid, lls.get(p)!), beta = priorMean(prior, role), E = grid.eps.length, muList = muOf(grid), alphaList = alphaOf(grid);
       for (const o of owners) {
         const x = withOwn(o);
-        grid.lambda.forEach((lam, li) => { const sm = choiceProbs(x, beta.map((b) => b * lam)); for (let ei = 0; ei < E; ei++) { const w = post[li * E + ei]! / owners.length, eps = grid.eps[ei]!; if (w < 1e-12) continue; for (let i = 0; i < n; i++) acc[i]! += w * (eps / n + (1 - eps) * sm[i]!); } });
+        grid.lambda.forEach((lam, li) => muList.forEach((mu, mi) => alphaList.forEach((al, ai) => {
+          const sm = choiceProbs(x, scaledBeta(beta, mu, al).map((b) => b * lam));
+          for (let ei = 0; ei < E; ei++) { const w = post[((li * E + ei) * muList.length + mi) * alphaList.length + ai]! / owners.length, eps = grid.eps[ei]!; if (w < 1e-12) continue; for (let i = 0; i < n; i++) acc[i]! += w * (eps / n + (1 - eps) * sm[i]!); }
+        })));
       }
     } else {
       const beta = opts.adapt === false ? priorMean(prior, role) : posterior(mem, p, role, prior, opts.decay ?? 1, mode === "types" ? "scale+coef" : mode).beta;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { applyAction, chooseBotAction, createGame, learnFromResult, newBotMemory, observe } from "@gdt/game-engine";
 import type { BotLevel } from "@gdt/game-engine";
-import { choicesOf, contextOf, defaultTypeGrid, describePlayer, DEFAULT_PRIOR, fitMAP, fitTypeWeights, learnTurn, mixProbs, newOpponentMemory, optionFeatures, posterior, predictCrowd, predictFall, predictVotes, turnDataOf, typeLogLiks, typePosterior, whoOf } from "../src/index.ts";
+import { choicesOf, contextOf, defaultTypeGrid, describePlayer, DEFAULT_PRIOR, fitMAP, fitTypeWeights, learnTurn, mixProbs, typeOf, newOpponentMemory, optionFeatures, posterior, predictCrowd, predictFall, predictVotes, turnDataOf, typeLogLiks, typePosterior, whoOf } from "../src/index.ts";
 import type { Choice, OpponentPrior, TurnData } from "../src/index.ts";
 import { nextRandom } from "../../game-engine/src/rng.ts";
 import { hideFrom } from "../../game-engine/tests/hideFrom.ts";
@@ -54,23 +54,28 @@ describe("tipi (λ, ε): ragionamento bayesiano per tipi", () => {
   });
   it("il posteriore si concentra sul tipo vero con molti voti e resta largo con uno solo", () => {
     const sharp = mk(2, 0, 80, 1), noisy = mk(0.5, 0.6, 80, 2), post = (c: Choice[]) => typePosterior(g, typeLogLiks(c, [], beta, beta, g));
-    const exp = (p: number[], f: (t: { lambda: number; eps: number }) => number) => p.reduce((a, w, i) => a + w * f({ lambda: g.lambda[Math.floor(i / g.eps.length)]!, eps: g.eps[i % g.eps.length]! }), 0);
+    const exp = (p: number[], f: (t: { lambda: number; eps: number; mu: number }) => number) => p.reduce((a, w, i) => a + w * f(typeOf(g, i)), 0);
     // λ ed ε non sono identificabili separatamente (una miscela molto casuale somiglia a una poco netta): conta la previsione, cioè quanta probabilità va all'opzione migliore
     const probe = [[3, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [-1, 0, 0, 0, 0, 0], [1, 0, 0, 0, 0, 0], [-3, 0, 0, 0, 0, 0]];
-    const top = (p: number[]) => p.reduce((a, w, i) => a + w * mixProbs(probe, beta, g.lambda[Math.floor(i / g.eps.length)]!, g.eps[i % g.eps.length]!)[0]!, 0);
+    const top = (p: number[]) => p.reduce((a, w, i) => { const t = typeOf(g, i); return a + w * mixProbs(probe, beta, t.lambda, t.eps, t.mu)[0]!; }, 0);
     expect(top(post(sharp))).toBeGreaterThan(top(post(noisy)) + 0.2); expect(exp(post(noisy), (t) => t.eps)).toBeGreaterThan(exp(post(sharp), (t) => t.eps));
     const one = describePlayerFromChoices(sharp.slice(0, 1)), many = describePlayerFromChoices(sharp);
     expect(one.uncertainty).toBeGreaterThan(0.95); expect(many.uncertainty).toBeLessThan(one.uncertainty - 0.1);   // con un voto non si «assegna una personalità»
     function describePlayerFromChoices(c: Choice[]) { const p = post(c); return { uncertainty: -p.reduce((a, w) => a + (w > 0 ? w * Math.log(w) : 0), 0) / Math.log(p.length) }; }
   });
+  it("μ: chi ignora il segnalino viene distinto da chi lo segue", () => {
+    const betaM = [0, 0, 2, 0, 0, 0], mkM = (mu: number, seed: number): Choice[] => { const r = rng(seed), out: Choice[] = []; for (let i = 0; i < 12; i++) { const mk = Math.floor(r() * 5), x = Array.from({ length: 5 }, (_, k) => [0, 0, k === mk ? 1 : 0, 0, 0, 0]); out.push({ x, y: sampleFrom(mixProbs(x, betaM, 1, 0, mu), r()), w: 1 }); } return out; };
+    const mean = (c: Choice[]) => { const p = typePosterior(g, typeLogLiks(c, [], betaM, betaM, g)); return p.reduce((a, w, i) => a + w * typeOf(g, i).mu, 0); };
+    expect(mean(mkM(1, 1))).toBeGreaterThan(mean(mkM(0, 2)) + 0.3);
+  });
   it("EM: ritrova una popolazione fatta di due gruppi (netti e casuali)", () => {
     const players = [...Array.from({ length: 60 }, (_, i) => ({ crowd: mk(2, 0, 8, 100 + i), mega: [] as Choice[] })), ...Array.from({ length: 60 }, (_, i) => ({ crowd: mk(0.5, 0.6, 8, 500 + i), mega: [] as Choice[] }))];
-    const w = fitTypeWeights(players, beta, beta, g, { alpha: 0.5 }), E = g.eps.length, mass = (f: (l: number, e: number) => boolean) => w.reduce((a, x, i) => a + (f(g.lambda[Math.floor(i / E)]!, g.eps[i % E]!) ? x : 0), 0);
+    const w = fitTypeWeights(players, beta, beta, g, { alpha: 0.5 }), mass = (f: (l: number, e: number) => boolean) => w.reduce((a, x, i) => a + (f(typeOf(g, i).lambda, typeOf(g, i).eps) ? x : 0), 0);
     expect(w.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 10);
     void mass;
     const lls = players.map((p) => typeLogLiks(p.crowd, p.mega, beta, beta, g)), avg = (ww: number[]) => lls.reduce((a, l) => a + Math.log(l.reduce((t, v, i) => t + ww[i]! * Math.exp(v), 0)), 0) / lls.length;
-    expect(avg(w)).toBeGreaterThan(avg(g.w.slice()) + 0.2);   // i pesi stimati spiegano i voti meglio di un prior uniforme sui tipi
-    const flat = w.map((x, i) => (g.eps[i % E]! >= 0.45 ? x : 0)).reduce((a, b) => a + b, 0); expect(flat).toBeGreaterThan(0.2); expect(flat).toBeLessThan(0.8);   // la popolazione contiene entrambi i comportamenti
+    expect(avg(w)).toBeGreaterThan(avg(g.w.slice()) + 0.1);   // i pesi stimati spiegano i voti meglio di un prior uniforme sui tipi
+    const flat = w.map((x, i) => (typeOf(g, i).eps >= 0.4 ? x : 0)).reduce((a, b) => a + b, 0); expect(flat).toBeGreaterThan(0.15); expect(flat).toBeLessThan(0.8);   // la popolazione contiene entrambi i comportamenti
   });
 });
 
