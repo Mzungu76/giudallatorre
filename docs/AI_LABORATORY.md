@@ -12,7 +12,7 @@ npm run lab -- --games 1000 --seed 1000 --name prova \
   --compare baseline-1 production --out lab-out/prova    # 4 giocatori: 2 con baseline-1, 2 con production
 npm run lab -- --config lab-out/prova/config.json --out lab-out/ripetuta   # ripete l'esperimento: stesse partite, stessa impronta
 ```
-Il partecipante si scrive `motore:livello[:carattere]`: motore = id di `BOT_ENGINES` (`baseline-1`, `production`) o di un motore strategico (`random-legal-1`); livello = `easy|medium|hard`; carattere = id di `BOT_STYLES`, `random` (uno a caso, distinto tra i posti come nelle stanze) o assente (neutro).
+Il partecipante si scrive `motore:livello[:carattere]`: motore = id di `BOT_ENGINES` (`baseline-1`, `production`) o di un motore strategico (`random-legal-1`, `strategic-pts-0.1`, `strategic-win-0.1`); livello = `easy|medium|hard`; carattere = id di `BOT_STYLES`, `random` (uno a caso, distinto tra i posti come nelle stanze) o assente (neutro).
 
 Opzioni: `--games`, `--players` (default = numero di partecipanti), `--seed`, `--lineup fixed|pool`, `--mini random|off` (intervallo a metà partita), `--tune motore.parametro=valore` (ripetibile), `--compare A B`, `--out cartella`.
 

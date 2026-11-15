@@ -36,3 +36,12 @@ Nella prima stesura della Fase 1 avevo modificato `ai.ts` e `engine.ts` (puntegg
 - Misure (`AI_BENCHMARKS.md` §5): il modello prevede il voto degli altri molto meglio del modello di folla dei bot attuali (5 giocatori: −1,358 contro −1,544 nats/voto, accuratezza 47,5% contro 32,7%); l'adattamento al singolo aggiunge un guadagno piccolo ma crescente col turno; convergenza ben calibrata. Limite: tavolo di soli Facili previsto peggio del caso.
 - Test: 25 nuovi (331 totali). Un test di equivalenza ha rivelato una discrepanza (κ predefinito diverso tra valutazione offline e modello in partita), corretta nel test.
 - Regressioni: nessuna.
+
+## Fase 5 — Simulation Engine e primo bot strategico (2026-11-15)
+- `packages/strategic-ai/src/sim/montecarlo.ts`: Monte Carlo con numeri casuali comuni, arresto anticipato, limite di tempo, scelta mista (softmax).
+- `packages/strategic-ai/src/engines/strategic.ts`: motori `strategic-pts-0.1` e `strategic-win-0.1` (solo dall'`Observation`), registrati in `STRATEGIC_ENGINES`; **non collegati alle stanze**.
+- Misure (`AI_BENCHMARKS.md` §6, semi nuovi, 1.000 partite): `strategic-pts-0.1` batte i bot attuali Difficili a 3, 4, 5 e 6 giocatori (4 giocatori: +4,22 ± 0,29 punti, +21,5 ± 2,8 pp di vittorie), anche con prior scritto a mano (+2,46 punti) e contro avversari mai visti. `strategic-win-0.1` batte i bot attuali ma non la variante «punti».
+- Taratura: la temperatura della scelta mista è risultata decisiva (τ ≥ 0,8 peggio dei bot attuali); un primo difetto mio (τ della variante «vittoria» troppo alta) è stato trovato e corretto con misure.
+- Test: 13 nuovi (344 totali): Monte Carlo, fair play per tipo (decisioni invariate se si alterano i dati nascosti), legalità, limite di tempo, ripetibilità, tornei nel laboratorio.
+- Costo: ≈ 3,1–3,5 ms per decisione (bot attuali ≈ 1,7–2,3 ms).
+- Regressioni: nessuna; bot in produzione intoccati. **Non è il motore predefinito**: serve la decisione del proprietario dopo benchmark completi e test con persone.

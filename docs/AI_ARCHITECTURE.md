@@ -1,6 +1,6 @@
 # AI_ARCHITECTURE — analisi dell'esistente e architettura proposta
 
-Stato: **Fasi 1 (analisi, baseline), 2 (osservazione e confine di fair play) e 3 (laboratorio minimo) e 4 (Opponent Model e previsione dei voti) completate; il motore strategico vero e proprio non è ancora implementato.** I bot in produzione non sono stati modificati. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
+Stato: **Fasi 1 (analisi, baseline), 2 (osservazione e confine di fair play) e 3 (laboratorio minimo) 4 (Opponent Model e previsione dei voti) e 5 (simulazione e primo bot) completate; mancano livelli, personalità, memoria tra partite, pannello, benchmark completi e integrazione.** I bot in produzione non sono stati modificati. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
 
 ## 1. Architettura attuale
 | Elemento | File | Note |
@@ -74,5 +74,6 @@ Interfaccia comune: `BotEngine` (già in `bot-engines.ts`), con `chooseAction(Ob
 2. Fase 2 (fatta): `Observation`, `legalActions`, `scoreTurn`, interfaccia `StrategicEngine`, confine di fair play per tipo. **Nessun collegamento a `RoomCore`** finché non c'è un motore che superi i benchmark (Fase 10, su decisione del proprietario).
 3. Fase 3 (fatta): laboratorio **minimo** — `packages/ai-lab` (partite con mosse simultanee, tornei ripetibili, IC 95%, confronti appaiati, CSV/JSON, riga di comando `npm run lab`); vedi `AI_LABORATORY.md`. Prime misure in `AI_BENCHMARKS.md` §4.
 4. Fase 4 (fatta): Opponent Model bayesiano per tipi + Prediction Engine (voti, convergenza, caduta); misurati da soli (`AI_BENCHMARKS.md` §5, algoritmi in `AI_ALGORITHMS.md`).
-5. Fasi 5–7: Simulation (rollout e probabilità di vittoria) → Evaluator/Ability → livelli e personalità → memoria tra partite; ogni componente misurato da solo.
+5. Fase 5 (fatta): Simulation Engine (Monte Carlo, arresto anticipato, limite di tempo) + primo bot `strategic-pts-0.1`/`strategic-win-0.1`, misurati contro i bot attuali (`AI_BENCHMARKS.md` §6).
+6. Fasi 6–7: livelli (Facile/Medio/Difficile come livelli cognitivi), personalità, intervallo, Ability Evaluator, memoria tra partite; ogni componente misurato da solo.
 5. Fasi 8–10: pannello del laboratorio, benchmark completi (≥ 1.000 partite per confronto), ottimizzazione e integrazione, `AI_PERFORMANCE.md`.

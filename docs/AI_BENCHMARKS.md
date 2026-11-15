@@ -90,5 +90,41 @@ Costo: `predictVotes` 0,4–2,2 ms (3–8 giocatori), `predictFall` ≈ 1 ms (40
 
 **Cosa NON dimostra**: né prestazioni migliori in partita (qui si misura solo la previsione, componente isolato), né nulla sulle persone. Il valore del modello si vedrà quando le sue previsioni guideranno le decisioni (Fasi 5–6) e si confronteranno con la base di riferimento di §4.
 
-## 6. Ancora da misurare (Fase 5 in poi)
+## 6. Fase 5: il primo bot nuovo contro i bot attuali
+Bot: `strategic-pts-0.1` (Opponent Model + simulazione Monte Carlo + scelta mista; obiettivo «punti attesi») e `strategic-win-0.1` (stesso, obiettivo «probabilità di vittoria»). Frase e carta da giocare con la stessa euristica di affinità dei bot attuali: **il contributo misurato è quello di previsione + simulazione** nelle scelte di segnalino e voto. Parametri tarati su un seme (1000) con 400 partite; **tutti i risultati qui sotto su semi mai usati nella taratura** (777000, 888000), 1.000 partite per confronto, bot contro bot, confronto appaiato, IC 95%. Livello dichiarato «hard» per tutti; i livelli del bot nuovo non sono ancora implementati (Fase 6).
+
+**Contro i bot attuali Difficili (`production:hard`)**
+
+| Tavolo | Vittorie del bot nuovo (contro attuali) | Punti nuovo − attuale | Vittorie nuovo − attuale |
+|---|---|---|---|
+| 3 giocatori (1 nuovo, 2 attuali) | 38,2% (31%) | +1,28 ± 0,34 | +7,3 ± 4,5 pp |
+| 4 giocatori (2 contro 2) | 35,8% (14,2%) | **+4,22 ± 0,29** | **+21,5 ± 2,8 pp** |
+| 5 giocatori (1 nuovo, 4 attuali) | 35,0% (16,3%) | +3,01 ± 0,28 | +18,8 ± 3,7 pp |
+| 6 giocatori (3 contro 3) | 28,4% (4,9%) | +9,23 ± 0,34 | +23,5 ± 1,5 pp |
+
+**Altri avversari e tavoli (4 giocatori salvo dove indicato)**
+
+| Avversari | Punti nuovo − avversario | Vittorie nuovo − avversario |
+|---|---|---|
+| attuali Medi | +7,99 ± 0,32 | +33,8 ± 2,3 pp |
+| attuali Facili | +11,37 ± 0,32 | +43,3 ± 1,6 pp |
+| attuali Difficili con caratteri a caso | +5,00 ± 0,31 | +23,5 ± 2,7 pp |
+| casuale tra le azioni legali (mai visto in addestramento) | +12,73 ± 0,32 | +47,3 ± 1,0 pp |
+| tavolo misto a 6 (2 nuovi, 2 Difficili, 1 Medio, 1 Facile) | +12,39 ± 0,35 | +33,4 ± 1,9 pp |
+
+**Varianti**
+- Obiettivo «vittoria» contro gli attuali Difficili (4 giocatori): +1,50 ± 0,36 punti, +13,8 ± 3,0 pp — **meglio dei bot attuali ma peggio della variante «punti»**: nello scontro diretto «punti» − «vittoria» fa +3,23 ± 0,32 punti e +6,0 ± 3,1 pp. L'idea di privilegiare la probabilità di vittoria, con la stima semplice usata qui (distacco di punteggio con incertezza fissa), **non ha dimostrato un vantaggio** rispetto ai punti attesi; si ritenta con un modello migliore delle future.
+- Temperatura della scelta mista (variante «punti», 400 partite): τ = 0 … 0,06 equivalenti (+4,0 punti, +16 pp); τ = 0,3 → +2,5 punti; τ = 0,8 → **peggio dei bot attuali** (−2,0 punti). Fissata τ = 0,05: un poco di casualità (non prevedibilità) a costo praticamente nullo.
+- Prior dell'Opponent Model scritto a mano (non stimato sui bot attuali), 4 giocatori, 1.000 partite: **+2,46 ± 0,29 punti, +14,1 ± 3,0 pp** contro +4,28 ± 0,30 punti, +19,8 ± 2,8 pp con il prior stimato. Quindi **la maggior parte del vantaggio non dipende dall'aver addestrato il modello sui bot attuali**, ma una parte (~1,8 punti) sì.
+
+**Costo**: ≈ 3,1–3,5 ms per decisione a 4–6 giocatori contro ≈ 1,7–2,3 ms dei bot attuali (media su tutte le fasi; il picco è nella posa del segnalino). Il limite di tempo per decisione è supportato (`budgetMs`) e verificato da test; l'impatto sul limite di CPU del Worker va misurato nella Fase 10.
+
+**Come leggere questi numeri (limiti)**
+1. **Bot contro bot, stesso modello di percezione**: il bot nuovo usa le stesse etichette dei bot attuali e il suo modello è stato stimato sulle loro partite. Un vantaggio sui bot attuali non implica un vantaggio contro persone: gli umani si comportano in modo diverso (potrebbe aiutare l'adattamento al singolo, potrebbe danneggiare un prior sbagliato).
+2. **Avversari non adattivi**: i bot attuali non reagiscono al bot nuovo. Non è ancora misurata la sfruttabilità (un avversario che impari le sue abitudini): Fase 9.
+3. **Vantaggio non uniforme**: a 3 giocatori il guadagno è modesto (+7 pp).
+4. Il bot nuovo non gioca ancora l'intervallo (mini-gioco): vota a caso (Fase 6).
+5. Il criterio di accettazione «dimostra miglioramenti rispetto alla baseline» è soddisfatto **solo contro i bot, non contro le persone**; non è soddisfatto il criterio sui test con giocatori umani.
+
+## 7. Ancora da misurare (Fase 6 in poi)
 Differenze per personalità/carattere, popolazione eterogenea, precisione delle previsioni, sfruttabilità, strategie dominanti, e confronti con giocatori umani.

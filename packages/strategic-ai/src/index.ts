@@ -10,3 +10,8 @@ export type { TypeGrid } from "./opponents/types.ts";
 export { describePlayer } from "./opponents/model.ts";
 export { fitMAP, choiceProbs, meanLogLik, softmax } from "./opponents/logit.ts";
 export type { Choice, Fit } from "./opponents/logit.ts";
+export { makeStrategicEngine, strategicPts, strategicWin, DEFAULT_STRATEGIC } from "./engines/strategic.ts";
+export type { StrategicConfig } from "./engines/strategic.ts";
+export { evaluateCandidates, sampleFrom, softmaxPick, phi } from "./sim/montecarlo.ts";
+export type { McOptions, McResult } from "./sim/montecarlo.ts";
+export { FITTED_PRIOR } from "./opponents/prior.ts";

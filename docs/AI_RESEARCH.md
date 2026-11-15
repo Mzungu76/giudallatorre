@@ -87,4 +87,5 @@ Principio guida (dal prompt, §18): **partire dalla soluzione più semplice**; o
 - Baseline congelata e registro versioni: `src/ai-baseline/ai.ts`, `src/bot-engines.ts`.
 - Confronto versioni (precursore del laboratorio): `tools/analysis/engine-compare.ts`.
 - S2/S4 (opponent model bayesiano per tipi, risposta quantale) e previsione dei voti: `packages/strategic-ai/src/opponents/` (Fase 4; `AI_ALGORITHMS.md`, misure in `AI_BENCHMARKS.md` §5). Scelta: ragionamento per tipi (Albrecht & Stone) con griglia (λ, ε) e pesi di popolazione stimati con EM; coefficienti liberi per giocatore misurati e scartati come predefiniti (troppo pochi dati per partita).
-- S1, S3, S5, S6, S7: **non ancora implementati**.
+- S5/S6 (simulazione di turni a mosse simultanee, scelta mista): `packages/strategic-ai/src/sim/` e `engines/strategic.ts` (Fase 5). Il turno è trattato come gioco a mosse simultanee con campionamento dei voti dal modello, non come albero sequenziale; regret matching/Exp3 non implementati (la scelta mista è una risposta quantale), da confrontare in Fase 9. S1 (probabilità di vittoria) è stato provato in forma semplice e non ha battuto i punti attesi.
+- S3 (livelli come gerarchia cognitiva), S7: **non ancora implementati**.

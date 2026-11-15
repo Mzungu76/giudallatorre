@@ -5,6 +5,7 @@
  * (`npm run lab -- fit-prior`, file prior.fitted.json) e può essere ristimato quando ci saranno dati di giocatori umani. Non è mai la verità sui giocatori: è il punto di partenza.
  */
 import type { TypeGrid } from "./types.ts";
+import fitted from "./prior.fitted.json";
 
 export interface OpponentPrior {
   version: 1;
@@ -21,3 +22,6 @@ export const DEFAULT_PRIOR: OpponentPrior = {
   version: 1, features: ["aff", "top", "mark", "own", "first", "last"],
   crowd: [0.3, 0, 0.8, 0.4, 0, 0], mega: [0.3, 0, 0.5, 0.8, 0, 0], sigma: [0.2, 0.2, 0.3, 0.3, 0.2, 0.2], lambdaSigma: 0.5,
 };
+
+/** Prior stimato dal laboratorio sui bot attuali (vedi docs/AI_ALGORITHMS.md §3). */
+export const FITTED_PRIOR = fitted as unknown as OpponentPrior;
