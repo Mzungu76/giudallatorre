@@ -1,0 +1,405 @@
+F001|drammatico1 inaffidabile1|viaggio3
+F002|pettegolo3 ipocrita2|pettegolezzo3 amicizia1
+F003|noioso2 maleducato1|viaggio1 natura2
+F004|pettegolo3 inaffidabile1|segreti3 pettegolezzo2
+F005|furbo3 avaro1|soldi3 amicizia2 fiducia2 truffe1
+F006|codardo3 egoista2|coraggio3 casa1
+F007|furbo2 ipocrita1|truffe3 soldi2 legge1
+F008|drammatico2 goffo1|natura3 viaggio2
+F009|influencer3 nerd1|tecnologia3 social2
+F010|genitore3 distratto1|famiglia3 bambini3
+F011|pigro3 egoista1|casa3 amicizia2
+F012|noioso2 ansioso1 chiacchierone1|imbarazzo2 caos1
+F013|pigro2 maleducato2 goffo1|casa3
+F014|infedele3 bugiardo2|tradimento3 amore3 bugie1
+F015|inaffidabile2 festaiolo1 goffo1|amore2 feste3 imbarazzo2
+F016|mangione3 maleducato2|morte3 cibo3 imbarazzo1
+F017|pigro2 goffo2 ansioso1|viaggio1 caos1 coraggio1
+F018|maleducato2 mangione1 noioso1|cibo3 feste1
+F019|ingenuo2 codardo1 coraggioso1|spettacolo3 coraggio2
+F020|vanitoso3 arrogante2|vanita3
+F021|codardo3 ipocrita1|legge3 coraggio2 fiducia2
+F022|ipocrita2 codardo2|imbarazzo3 amicizia2 fiducia1
+F023|egoista3 codardo1|fiducia2 coraggio1
+F024|testardo3 vanitoso1|vanita2 gioco2 sport1
+F025|arrogante3 vanitoso2|vanita3
+F026|drammatico2 rabbioso1|rabbia2
+F027|avaro3|soldi3
+F028|ruffiano3 ipocrita1|lavoro1 carriera1
+F029|vanitoso3 arrogante1|vanita3
+F030|drammatico3|rabbia1
+F031|bugiardo3|bugie3
+F032|ipocrita3 bugiardo1|bugie2 fiducia2
+F033|noioso2 maleducato2|
+F034|ipocrita3|bugie2 fiducia2
+F035|furbo3 ruffiano1|carriera1 lavoro1
+F036|arrogante3 rabbioso1|rabbia2
+F037|inaffidabile3|fiducia3
+F038|maleducato2 noioso1|amicizia1
+F039|testardo3|rabbia1
+F040|mangione3|cibo3
+F041|moralista2 religioso2 ipocrita1|religione2
+F042|pignolo3 saputello1|vanita1
+F043|vanitoso3 ipocrita2|vanita3 soldi2 fiducia1
+F044|vanitoso2 ipocrita2|vanita3
+F045|vanitoso1 festaiolo1|amicizia2 feste1
+F046|maleducato2 ingenuo1|bugie1 fiducia1 imbarazzo2
+F047|romantico2 ruffiano1|amore2
+F048|vanitoso3 chiacchierone2 egoista2|vanita3
+F049|maleducato3 arrogante1|
+F050|saputello3 arrogante1|vanita1
+F051|saputello2 testardo3 arrogante1|rabbia1
+F052|cinico2 rabbioso2|rabbia2
+F053|inaffidabile2 bugiardo1 maleducato1|social3 tecnologia1 bugie1
+F054|saputello3 vanitoso2 arrogante1|cultura1 vanita3
+F055|vanitoso3 egoista3|vanita3
+F056|mangione3 religioso1 ipocrita1|religione3 cibo3
+F057|pigro3|pigrizia3
+F058|vanitoso3|vanita3 corpo1
+F059|chiacchierone2 maleducato2|feste1 caos1
+F060|inaffidabile3 distratto1|fiducia1
+F061|pigro1 distratto2 goffo1|caos3 casa2
+F062|saputello3|cultura1 vanita2
+F063|impiccione3 pettegolo1|pettegolezzo2 segreti2
+F064|pettegolo3|pettegolezzo3
+F065|invidioso3|rabbia1 vanita1
+F066|geloso3|amore3 fiducia1
+F067|vendicativo3 rabbioso1|rabbia3
+F068|avaro3|soldi3
+F069|noioso3|
+F070|chiacchierone3 pettegolo1|pettegolezzo1
+F071|dispettoso3 vendicativo1|rabbia1
+F072|furbo3|truffe1 soldi1
+F073|egoista3|fiducia1
+F074|rabbioso2 testardo2|rabbia3
+F075|rabbioso3|rabbia3
+F076|cinico3|fiducia1
+F077|ingenuo3|truffe1
+F078|pigro3|lavoro2 pigrizia3
+F079|maleducato3|
+F080|rabbioso2 drammatico2|rabbia2
+F081|distratto3 goffo1|caos1
+F082|drammatico3|spettacolo2
+F083|pignolo3 saputello2 noioso1|cultura1
+F084|vanitoso3 egoista2|vanita3 corpo1
+F085|furbo3 ruffiano1|carriera1
+F086|arrogante2 maleducato2|
+F087|codardo3|coraggio3
+F088|vendicativo3|rabbia3
+F089|distratto3|caos1
+F090|distratto3 goffo1|caos1
+F091|pignolo2 geloso1 arrogante1|fiducia1
+F092|viziato3 egoista1 drammatico1|famiglia1 soldi1
+F093|romantico3 ruffiano1|amore3
+F094|pignolo3|
+F095|viziato2 drammatico2|
+F096|complottista3|superstizione3 politica1
+F097|complottista2 ansioso1|superstizione3
+F098|ansioso3 drammatico1|salute1
+F099|impulsivo3|rabbia1 coraggio1
+F100|arrogante3 rabbioso1|lavoro1 rabbia1 politica1
+F101|avaro2 egoista2 furbo1|soldi3 amicizia1
+F102|arrogante3 vanitoso1|vanita2
+F103|drammatico3|rabbia1
+F104|moralista2 saputello2 arrogante1|cultura1
+F105|testardo3 moralista1|legge1
+F106|moralista3 religioso2|religione2
+F107|bugiardo3 vanitoso2|bugie3 vanita2
+F108|inaffidabile3 pigro1|fiducia2
+F109|maleducato3 arrogante1|
+F110|inaffidabile3 bugiardo1|fiducia3 bugie1
+F111|drammatico2 rabbioso2|rabbia2
+F112|pettegolo3 ipocrita1|pettegolezzo3
+F113|pigro3 drammatico1|lavoro1 pigrizia3
+F114|testardo3 arrogante2|vanita1
+F115|saputello3 impiccione1|
+F116|maleducato2 dispettoso2|spettacolo3
+F117|noioso3 chiacchierone2|
+F118|ipocrita3 ruffiano2 furbo1|fiducia2
+F119|egoista2 inaffidabile2 avaro1|fiducia2 amicizia1
+F120|arrogante2 saputello2 furbo1|vanita2
+F121|maleducato3|tecnologia2 social1
+F122|vanitoso2 chiacchierone1|vanita1
+F123|testardo3 arrogante1|
+F124|cinico2 saputello1|
+F125|viziato3 egoista1|
+F126|egoista2 codardo2 bugiardo1|fiducia2 bugie1
+F127|chiacchierone3 maleducato1|
+F128|bugiardo3 codardo1|bugie3
+F129|maleducato3 arrogante2|cibo1
+F130|vanitoso3 drammatico1|vanita3
+F131|moralista3 ipocrita1|
+F132|bugiardo3 vanitoso2|bugie3 vanita2
+F133|avaro3|soldi3 amicizia1
+F134|viziato3 arrogante1|
+F135|ruffiano3 ipocrita2 arrogante1|lavoro3 carriera2
+F136|ingenuo1 goffo2|superstizione3
+F137|pettegolo3 impiccione2|pettegolezzo3 segreti2
+F138|influencer3 vanitoso1|social3 tecnologia1
+F139|maleducato3 furbo1|
+F140|vanitoso2 arrogante2|lavoro1 vanita2
+F141|testardo1 egoista1|sport3 legge1
+F142|pignolo2 ansioso1|gioco1
+F143|pigro1 distratto1|
+F144|drammatico3 egoista1|
+F145|ipocrita3 ruffiano1|fiducia1
+F146|furbo2 egoista2|fiducia2
+F147|bugiardo3|bugie3
+F148|arrogante2 testardo2|vanita1
+F149|distratto1 pigro1|scuola3 amicizia1
+F150|arrogante3 maleducato1|lavoro3 carriera1
+F151|maleducato3 chiacchierone1|casa3
+F152|maleducato3 egoista1|casa2 cibo1
+F153|infedele2 egoista2|amore3 tradimento1
+F154|furbo3 avaro1|soldi3 lavoro2 truffe1
+F155|egoista3|sport3 amicizia1
+F156|impulsivo2 distratto1|mezzi3 viaggio1
+F157|goffo3|cibo3 casa1
+F158|distratto2 inaffidabile1|bambini3 fiducia1
+F159|bugiardo2 codardo2|legge3 bugie2
+F160|noioso2 pignolo1|scuola3 cultura1
+F161|ipocrita1 egoista1|amore3 amicizia1
+F162|goffo2 pigro1|viaggio2 natura2
+F163|drammatico2 viziato2|natura3 viaggio1
+F164|distratto3|feste2
+F165|noioso2 pigro1|feste3 imbarazzo1
+F166|egoista1 mangione3|cibo3 rabbia1
+F167|avaro3|soldi3 cibo1
+F168|codardo2 egoista2|fiducia1
+F169|impulsivo2 rabbioso2|rabbia3
+F170|distratto3 goffo1|caos1
+F171|furbo3 testardo1|gioco3
+F172|dispettoso2 chiacchierone2|segreti3 feste1
+F173|pigro3 codardo1|natura3 coraggio1 pigrizia2
+F174|drammatico2 rabbioso1|viaggio3 rabbia2
+F175|goffo2 codardo2 bugiardo1|imbarazzo2 bugie2
+F176|distratto2 pigro1|cibo1 caos2 feste1
+F177|drammatico3|rabbia1
+F178|avaro3 furbo1|soldi3 cibo1
+F179|maleducato3 egoista2|vecchiaia3
+F180|egoista3|mezzi3
+F181|avaro3|soldi3 amicizia2
+F182|furbo1 inaffidabile3 avaro1|soldi3
+F183|pigro3 egoista1|casa3 pigrizia3
+F184|maleducato2 chiacchierone2|viaggio2 natura1
+F185|testardo2 furbo1|gioco3
+F186|rabbioso3 arrogante1|legge3 mezzi1
+F187|maleducato3 furbo1|
+F188|ambizioso3 infedele1 egoista1|carriera3 amicizia3 tradimento2
+F189|avaro3 egoista2|famiglia3 soldi3 morte2
+F190|codardo3 egoista2 bugiardo1|legge2 bugie2 fiducia2
+F191|codardo3 infedele1|amore3
+F192|infedele3|amore3 amicizia3 tradimento3
+F193|egoista2 inaffidabile2|morte3 amicizia2 sport2
+F194|maleducato2 goffo1|morte3 imbarazzo3
+F195|maleducato2 impulsivo1|morte2 imbarazzo2
+F196|pigro3|religione3 pigrizia1
+F197|religioso1 ipocrita1|religione3
+F198|bugiardo3 infedele1|amore3 bugie3
+F199|rabbioso1 maleducato1|legge3
+F200|infedele3|amore3 tradimento3 seduzione1
+F201|festaiolo2 infedele1|feste3 notte3 seduzione2
+F202|infedele3 egoista1|amicizia3 tradimento3 notte3
+F203|festaiolo3 impulsivo2|alcol3 feste3 imbarazzo2
+F204|chiacchierone3 impulsivo1|alcol3 segreti3
+F205|festaiolo2 impulsivo3|feste3 imbarazzo3 alcol2
+F206|avaro2 furbo1|soldi3
+F207|arrogante3 testardo1|vanita2
+F208|vanitoso3 arrogante1|lavoro2 vanita3
+F209|vanitoso2 ingenuo1|vanita2
+F210|arrogante2 vanitoso1|mezzi3 vanita1
+F211|vanitoso2 arrogante1|cibo3 vanita2
+F212|vanitoso3 arrogante1|seduzione3 vanita3 amore1
+F213|vanitoso2 ingenuo2|vecchiaia3 vanita3 corpo1
+F214|drammatico3 ansioso2|fiducia1
+F215|viziato2 arrogante2 ambizioso1|lavoro1 vanita1
+F216|vanitoso2 ingenuo1|spettacolo2 vanita2
+F217|saputello3 vanitoso2|arte3 cultura2
+F218|artista2 vanitoso2 arrogante2|arte2 cultura1 vanita2
+F219|arrogante3 ribelle1|legge2
+F220|pigro3 ingenuo1|corpo3 salute2 sport1 pigrizia2
+F221|ingenuo3 avaro1|soldi3
+F222|vanitoso3 chiacchierone2|vanita2 politica1
+F223|festaiolo2 vanitoso2|feste3
+F224|testardo3 arrogante1|caos2
+F225|arrogante3 vanitoso2|vanita3
+F226|pigro3 viziato1|lavoro3 soldi1 pigrizia3
+F227|ingenuo2 arrogante2|truffe3 soldi1
+F228|festaiolo2 impulsivo1|alcol3 salute1
+F229|ruffiano2 vanitoso2|lavoro3 carriera2
+F230|pigro3 egoista2 viziato1|lavoro3 pigrizia3
+F231|egoista2 vanitoso2|fiducia1
+F232|arrogante3 saputello2|
+F233|arrogante2 complottista1 saputello2|politica1 cultura1
+F234|ipocrita3 bugiardo1|bugie2 fiducia2
+F235|ipocrita3 vanitoso1|vanita2
+F236|ipocrita3 vanitoso1|vanita2 bugie1
+F237|ipocrita2 furbo2 ruffiano1|fiducia2
+F238|pignolo2 ipocrita2 moralista1|
+F239|ipocrita2 furbo1|rabbia1
+F240|egoista2 furbo1 spendaccione1|soldi3
+F241|codardo3 vanitoso1|coraggio3
+F242|saputello2 impiccione2 ipocrita1|amicizia1
+F243|pigro3 sportivo1 ipocrita1|sport3 pigrizia3
+F244|romantico2 ipocrita2|amore3
+F245|religioso2 ipocrita3|religione3
+F246|ipocrita3|salute3 corpo2
+F247|egoista2 inaffidabile2|fiducia2
+F248|ipocrita3 bugiardo1|soldi1 fiducia3
+F249|furbo2 pigro2 inaffidabile1|lavoro1
+F250|egoista3|fiducia1
+F251|infedele3 ipocrita1|tradimento3 fiducia3
+F252|ipocrita3 furbo2 ruffiano1|fiducia2
+F253|egoista3 avaro1|fiducia1
+F254|furbo3 egoista2|fiducia2
+F255|furbo3 bugiardo2 ipocrita1|fiducia3 bugie2
+F256|furbo3 ipocrita2|fiducia3 segreti1
+F257|furbo3 ambizioso2|fiducia1
+F258|codardo3|coraggio3
+F259|ambizioso3 furbo1|carriera3 lavoro2
+F260|ipocrita2 furbo2 infedele1|fiducia3 tradimento1
+F261|vendicativo2 arrogante2 egoista1|rabbia2
+F262|moralista3 religioso3|religione3
+F263|infedele3|amore3 tradimento3
+F264|infedele2 festaiolo2|seduzione3 amore2 notte1
+F265|festaiolo2 infedele1|seduzione3 notte2
+F266|festaiolo2 impulsivo1|alcol2 fumo1 notte2
+F267|maleducato3 arrogante1|imbarazzo3 seduzione1
+F268|impiccione2 pettegolo1|seduzione2 segreti1
+F269|festaiolo3|seduzione2 alcol2 notte2
+F270|festaiolo2 impulsivo1|alcol3 feste2
+F271|ambizioso1 furbo2 infedele1|amore3 soldi3
+F272|pettegolo3 ipocrita2|pettegolezzo3 amicizia3
+F273|furbo3 egoista2 arrogante1|lavoro3 carriera2
+F274|infedele3 drammatico2 egoista1|tradimento3 amore3 bugie1
+F275|infedele2 festaiolo1|seduzione3 amore3
+F276|avaro2 furbo2 bugiardo2|soldi3 bugie2
+F277|ipocrita3 drammatico2|morte3 imbarazzo1
+F278|vanitoso3 bugiardo1|seduzione3 vanita3
+F279|ipocrita3 furbo1|tradimento3 fiducia3
+F280|vanitoso3 viziato2|soldi3 famiglia3 vanita3
+F281|festaiolo2 infedele1 impulsivo1|seduzione3 feste3
+F282|infedele3 bugiardo3|tradimento3 bugie3
+F283|festaiolo3 impulsivo2|seduzione3 alcol3 notte3
+F284|romantico1 impulsivo2 infedele1|amore3 alcol1 notte3
+F285|impulsivo1 chiacchierone2|alcol3 segreti3
+F286|infedele3 egoista1|tradimento3 amicizia3 seduzione3
+F287|infedele2 impulsivo2|seduzione3 amore2
+F288|ambizioso3 furbo2 ipocrita1|carriera3 tradimento3
+F289|infedele3 egoista2|amicizia3 amore3 tradimento3
+F290|bugiardo3 avaro2|legge3 soldi3 bugie3
+F291|furbo2 egoista2 ipocrita2|segreti3 soldi3 tradimento2 amicizia3
+F292|egoista2 maleducato2|morte3 viaggio3
+F293|maleducato2 rabbioso3|morte3 rabbia3
+F294|egoista3 avaro2|soldi3 amicizia3 fiducia3
+F295|geloso3 drammatico3|amore3 imbarazzo2
+F296|furbo3 arrogante1|soldi3 legge3 vanita1
+F297|furbo3 avaro2|famiglia3 soldi3 morte1
+F298|avaro3 rabbioso1|soldi3 rabbia2
+F299|furbo3 egoista3 avaro1|amicizia3 soldi3
+F300|egoista3 inaffidabile1|amicizia3 alcol3
+F301|politico2 furbo2 ipocrita1|politica3
+F302|furbo3 ruffiano1|amicizia3 fiducia3
+F303|ipocrita2 pettegolo2 maleducato1|morte3 pettegolezzo2
+F304|codardo1 pigro1|amore3 tradimento3
+F305|egoista3|fiducia3
+F306|ambizioso3 infedele1 furbo1|carriera3 seduzione3 lavoro3
+F307|infedele3|amore3 amicizia3 tradimento3
+F308|infedele3|amore3 feste3 tradimento3
+F309|infedele3|amore3 notte3 tradimento3
+F310|festaiolo2 infedele1|feste3 seduzione3 notte3
+F311|bugiardo3 infedele1|amicizia3 amore3 bugie3
+F312|goffo3 distratto2|social3 tecnologia3 imbarazzo3
+F313|impulsivo3 festaiolo2|gioco3 imbarazzo3 corpo3
+F314|bugiardo3 vanitoso1|seduzione3 bugie3
+F315|infedele2 festaiolo2|famiglia3 alcol3 seduzione3
+F316|avaro3 egoista2|famiglia3 soldi3 morte3
+F317|ipocrita2 vendicativo2|lavoro3 carriera1
+F318|infedele2 maleducato2|morte3 seduzione3
+F319|viziato3 arrogante2 pigro1|lavoro3 soldi3
+F320|viziato2 arrogante3|soldi3 vanita1
+F321|furbo2 cinico3 ipocrita1|fiducia3 bugie1
+F322|arrogante3 testardo2|vanita1
+F323|drammatico3 pigro1|rabbia1 politica1
+F324|vanitoso3|seduzione3 vanita3
+F325|infedele3 ipocrita1|tradimento3 viaggio3 amore3
+F326|infedele2 ipocrita2|tradimento3 bugie2
+F327|impulsivo1 ingenuo1|seduzione3 amore2
+F328|infedele2 ipocrita3|amore3 tradimento3 bugie1
+F329|ipocrita3 moralista1|segreti3 bugie1
+F330|religioso2 ipocrita3|religione3
+F331|spendaccione2 egoista2|lavoro3 soldi3
+F332|impulsivo1 chiacchierone2|alcol3 segreti2
+F333|ipocrita3 moralista1|seduzione2 bugie1
+F334|infedele3 ipocrita2|amore3 tradimento3
+F335|ipocrita3 furbo1|bugie3 segreti1
+F336|furbo3 bugiardo2|truffe3 soldi2
+F337|pigro3|lavoro3 pigrizia3
+F338|vanitoso3 bugiardo1 arrogante1|vanita3
+F339|maleducato2 chiacchierone2 testardo1|
+F340|maleducato2 rabbioso2|rabbia2
+F341|viziato3 arrogante2|
+F342|moralista3 ipocrita1|religione1
+F343|vanitoso3|vanita3 moda1 corpo1
+F344|spendaccione3|soldi3
+F345|rabbioso3 impulsivo1|rabbia3
+F346|ipocrita3|fiducia2
+F347|geloso3|amore3
+F348|egoista3 furbo1|amicizia3 fiducia2
+F349|inaffidabile3 egoista2|amicizia3 fiducia3
+F350|egoista2 avaro1 inaffidabile2|soldi3 fiducia3
+F351|drammatico2 moralista1|famiglia1
+F352|pettegolo3 ipocrita2|pettegolezzo3 amicizia3
+F353|drammatico2 viziato2|amicizia1 feste3
+F354|maleducato3 egoista1|feste3 casa1
+F355|saputello3 maleducato2|imbarazzo2
+F356|distratto3 egoista1|amicizia1
+F357|avaro2 maleducato2|feste3 casa1
+F358|vanitoso2 egoista2|vanita2
+F359|maleducato2|casa3 tecnologia3
+F360|inaffidabile3|amore3 seduzione1
+F361|ingenuo2 impulsivo1|amore3
+F362|drammatico2 ipocrita1|amore3
+F363|egoista3 inaffidabile2|amicizia3 rabbia1
+F364|furbo2 vanitoso1|seduzione3 amore2
+F365|pigro3 drammatico2|lavoro3 pigrizia2
+F366|ipocrita3 bugiardo1|alcol3 bugie2
+F367|furbo2 avaro1|amicizia3 cibo3 soldi2
+F368|pigro2 egoista2 inaffidabile1|lavoro3 scuola1
+F369|furbo3 egoista3|lavoro3 carriera2
+F370|distratto3 inaffidabile1|lavoro1 fiducia1
+F371|goffo3 distratto2|social3 tecnologia3 imbarazzo3
+F372|maleducato3 inaffidabile1|social3 tecnologia3 amicizia1
+F373|codardo3 egoista1|fiducia1
+F374|egoista2 infedele1 impulsivo1|amicizia3 amore3
+F375|pettegolo3 inaffidabile1|segreti3 fiducia3 pettegolezzo3
+F376|distratto2 inaffidabile2|soldi3 fiducia3
+F377|avaro2 rabbioso1|soldi3 cibo3
+F378|goffo2 noioso3|feste3 imbarazzo1
+F379|maleducato3|feste3
+F380|ingenuo3|truffe3 social3 tecnologia3 soldi2
+F381|egoista2 testardo2 vendicativo1|amicizia1 rabbia2
+F382|maleducato2 inaffidabile2|feste1 social1
+F383|codardo3 egoista2|amore3 fiducia2
+F384|egoista3 bugiardo1 avaro1|soldi3 fiducia3 tecnologia1
+F385|egoista3|amore3 feste2
+F386|infedele3 impulsivo1|amore3 tradimento3
+F387|furbo3 egoista3 bugiardo1|lavoro3 carriera2 fiducia2
+F388|bugiardo3 ambizioso2|lavoro3 carriera3 bugie3
+F389|egoista2 ambizioso1 furbo1|sport2 lavoro1 tradimento3 soldi1
+F390|goffo3 distratto1 ipocrita1|lavoro3 imbarazzo3 pettegolezzo2
+F391|arrogante3 vanitoso1|vanita2
+F392|vanitoso3 ingenuo1|vanita3 amicizia1
+F393|drammatico3 egoista2|salute1
+F394|viziato2 arrogante2|vanita1
+F395|saputello3 ingenuo2|cultura2 tecnologia3 social2
+F396|ingenuo1 cinico2|amore3 soldi3
+F397|arrogante2 vanitoso2 drammatico1|lavoro3
+F398|geloso3 arrogante1|amore3
+F399|ipocrita3 ruffiano2|amicizia3 fiducia3
+F400|ingenuo1 vanitoso1|vanita1
+F401|inaffidabile2 ipocrita2|amicizia3 fiducia2
+F402|inaffidabile3 bugiardo2|fiducia3 bugie2
+F403|ipocrita2 viziato1|fiducia2
+F404|romantico2 inaffidabile2|amore3
+F405|egoista2 ipocrita2 testardo1|amore3 fiducia2
