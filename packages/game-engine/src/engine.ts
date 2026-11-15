@@ -1,6 +1,6 @@
 import { EngineError } from "./types.ts";
 import { MINI_KINDS } from "./types.ts";
-import type { Action, CardId, GameConfig, GameEvent, GameState, LuiEffect, LuiSlot, LuiSpec, MarkOutcome, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
+import type { Action, CardId, GameConfig, GameEvent, GameState, LuiSlot, LuiSpec, MiniKind, MiniResult, PhraseCard, PlayerId, ScoreLine, TowerSlot, TurnResult } from "./types.ts";
 import { randomInt, shuffle } from "./rng.ts";
 import { pickAward } from "./awards.ts";
 
@@ -197,43 +197,28 @@ function revealTower(s: GameState, events: GameEvent[]) {
   s.phase = "SUSPECT"; events.push({ type: "towerRevealed", positions: s.tower.length });
 }
 
-/**
- * Gioco base «Cade / Non cade»: punti di un turno. UNICA fonte del punteggio: la usano `resolve()` (turno vero) e i bot (turni ipotetici),
- * così le regole non vengono duplicate. `tower` può avere i proprietari nascosti (`ownerId: null`): allora non si assegna il +2 della carta.
- * Funzione pura. `votes` deve contenere il voto di tutti i giocatori. `withLines = false` (i bot, che ne chiamano migliaia a decisione) salta il dettaglio delle voci.
- */
-export function scoreTurn(tower: TowerSlot[], playerIds: PlayerId[], mega: PlayerId, votes: Record<PlayerId, number>, marks: { slot: LuiSlot; effect: string; position: number }[], withLines = true) {
-  const positions: number[] = []; for (const t of tower) positions.push(t.position);
-  const T = tallyMarks(positions, votes, marks), { annulled, fallen } = T;
-  const slots: TowerSlot[] = []; for (const f of fallen) slots.push(tower.find((t) => t.position === f)!);
-  const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
-  for (const p of playerIds) { points[p] = 0; if (withLines) lines[p] = []; }
-  // voto giusto (voto valido) e carta caduta (anche quella del Megafono)
-  for (const p of playerIds) if (!annulled.includes(p) && fallen.includes(votes[p]!)) give(points, withLines ? lines : null, p, 2, "voto", votes[p]!);
-  for (const sl of slots) if (sl.ownerId !== null) give(points, withLines ? lines : null, sl.ownerId, 2, "carta", sl.position);
-  // segnalini: CADE +4 se cade, NON CADE +2 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
-  const outs: MarkOutcome[] = [];
-  for (const m of marks) {
-    const fell = fallen.includes(m.position), voters: PlayerId[] = [];
-    for (const p of playerIds) if (p !== mega && !annulled.includes(p) && votes[p] === m.position) voters.push(p);
-    if (m.effect === "nulli") { const caught = annulled.slice(); outs.push({ slot: m.slot, effect: "nulli", position: m.position, hit: caught.length > 0, voters: [], caught }); continue; }
-    const effect: LuiEffect = m.effect === "cade" ? "cade" : "noncade", hit = effect === "cade" ? fell : !fell, pts = effect === "cade" ? 4 : 2;
-    if (hit) { give(points, withLines ? lines : null, mega, pts, "lui", m.position, voters.length); for (const p of voters) give(points, withLines ? lines : null, p, pts, "lui-folla", m.position); }
-    else if (withLines) lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: m.position });
-    outs.push({ slot: m.slot, effect, position: m.position, hit, voters });
-  }
-  return { T, slots, points, lines, outs };
-}
-function give(points: Record<PlayerId, number>, lines: Record<PlayerId, ScoreLine[]> | null, p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number): void {
-  points[p]! += pts; if (lines) lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n });
-}
-
 /** Gioco base «Cade / Non cade»: conteggio, chi cade, punti. */
 function resolve(s: GameState, events: GameEvent[]) {
   const mega = megafonoOf(s), megaVote = s.votes[mega]!, marks = (s.marks ?? []).map((m) => ({ ...m, effect: luiTokens(s).find((x) => x.slot === m.slot)?.effect ?? "nulli" }));
   const votes = Object.fromEntries(s.playerIds.map((p) => [p, s.votes[p]!]));
-  const { T, slots, points, lines, outs } = scoreTurn(s.tower, s.playerIds, mega, votes, marks), { tie, fallen } = T;
+  const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), { annulled, tie, fallen } = T;
   const counts: Record<number, number> = Object.fromEntries(Object.entries(T.counts).filter(([, v]) => v > 0));
+  const slots = fallen.map((f) => s.tower.find((t) => t.position === f)!);
+  const points: Record<PlayerId, number> = {}, lines: Record<PlayerId, ScoreLine[]> = {};
+  for (const p of s.playerIds) { points[p] = 0; lines[p] = []; }
+  const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
+  // voto giusto (voto valido) e carta caduta (anche quella del Megafono)
+  for (const p of s.playerIds) if (!annulled.includes(p) && fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
+  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
+  // segnalini: CADE +4 se cade, NON CADE +2 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
+  const outs = marks.map((m) => {
+    const fell = fallen.includes(m.position), voters = s.playerIds.filter((p) => p !== mega && !annulled.includes(p) && s.votes[p] === m.position);
+    if (m.effect === "nulli") { const caught = annulled.slice(); return { slot: m.slot, effect: m.effect, position: m.position, hit: caught.length > 0, voters: [], caught }; }
+    const hit = m.effect === "cade" ? fell : !fell, pts = m.effect === "cade" ? 4 : 2;
+    if (hit) { give(mega, pts, "lui", m.position, voters.length); for (const p of voters) give(p, pts, "lui-folla", m.position); }
+    else lines[mega]!.push({ kind: "lui-mancato", pts: 0, pos: m.position });
+    return { slot: m.slot, effect: m.effect, position: m.position, hit, voters };
+  });
   for (const p of s.playerIds) s.scores[p]! += points[p]!;
   const result: TurnResult = { turn: s.turnNumber, megafonoId: mega, votes, counts, tie, fallenPosition: fallen[0] ?? 0,
     fallenCardId: slots[0]?.cardId ?? "", fallenOwnerId: slots[0]?.ownerId ?? null, fallenPositions: fallen, fallenCardIds: slots.map((x) => x.cardId), fallenOwnerIds: slots.map((x) => x.ownerId),

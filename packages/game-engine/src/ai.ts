@@ -1,4 +1,4 @@
-import { luiForbidden, luiTokens, megafonoOf, requiredPlayers, scoreTurn, tallyMarks } from "./engine.ts";
+import { luiForbidden, luiTokens, megafonoOf, requiredPlayers, tallyMarks } from "./engine.ts";
 import { affinity, phraseTagCount } from "./tags.ts";
 import type { Action, CardId, GameState, LuiSpec, LuiToken, PlayerId, TurnResult } from "./types.ts";
 import { NEUTRAL_STYLE } from "./botstyle.ts";
@@ -43,21 +43,13 @@ function propSample(s: GameState, p: number[], skip: PlayerId[], rand: () => num
 const CNC_TYPES = ["cade", "noncade", "nulli"] as const;
 type Mark = { effect: string; position: number };
 /** Punti di un turno «Cade / Non cade» per il Megafono e media della Folla (senza le carte degli altri, che il Megafono non conosce). */
-/** La Torre come la vede `me`: dei proprietari delle carte conosce solo il proprio (gli altri restano `null`, nessun +2 della carta). */
-const ownersFor = (() => {
-  let last: { tower: GameState["tower"]; me: PlayerId; out: GameState["tower"] } | null = null;   // le simulazioni chiamano migliaia di volte con la stessa Torre
-  return (s: GameState, me: PlayerId) => (last && last.tower === s.tower && last.me === me ? last.out : (last = { tower: s.tower, me, out: s.tower.map((t) => ({ ...t, ownerId: t.ownerId === me ? me : null })) }).out);
-})();
-/**
- * Punteggio ipotetico di un turno per il Megafono (`m`) e media della Folla (`f`): passa dal motore (`scoreTurn`), unica fonte delle regole.
- * Unica eccezione, esplicita e tarata: il NON CADE a segno vale `TUNE.noncadeEv`/1 dei suoi punti reali (vedi TUNE). Con `noncadeEv = 1` coincide col motore.
- */
-export function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, marks: Mark[]) {
-  const r = scoreTurn(ownersFor(s, mega), s.playerIds, mega, votes, marks.map((m) => ({ slot: m.effect, effect: m.effect, position: m.position })), false);
-  const folla = s.playerIds.filter((p) => p !== mega), cut = 1 - TUNE.noncadeEv;
-  let m = r.points[mega]!, f = folla.reduce((a, p) => a + r.points[p]!, 0);
-  if (cut !== 0) for (const o of r.outs) if (o.effect === "noncade" && o.hit) { m -= 2 * cut; f -= 2 * cut * o.voters.length; }
-  return { m, f: f / Math.max(1, folla.length), T: r.T };
+function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, marks: Mark[]) {
+  const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), own = s.tower.find((t) => t.ownerId === mega)?.position;
+  let m = T.fallen.includes(votes[mega]!) ? 2 : 0; if (own && T.fallen.includes(own)) m += 2;
+  let f = 0; const folla = s.playerIds.filter((p) => p !== mega);
+  for (const mk of marks) { if (mk.effect === "nulli") continue; const ok = mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position), pts = mk.effect === "cade" ? 4 : 1; if (ok) { m += pts; f += pts * folla.filter((p) => votes[p] === mk.position).length; } }
+  for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
+  return { m, f: f / Math.max(1, folla.length), T };
 }
 /** «Cade / Non cade», il Megafono: per ogni carta e segnalino, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
 /** Quanto un bot sa leggere i bluff e quanto ne fa: dipende dal livello (facile non legge né bluffa, difficile al massimo). */
@@ -94,7 +86,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
     const marks = (s.marks ?? []).map((m) => ({ effect: m.slot, position: m.position })), nul = luiForbidden(s, me), smp = propSample(s, p, [me], rand);
     for (let mv = 1; mv <= n; mv++) vals.push(mv === nul ? -1e9 : smp.reduce((a, v) => { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); return a + r.m - r.f; }, 0) / smp.length);
   } else {
-    const pos = (s.marks ?? []).map((m) => m.position), mine = ownersFor(s, me), smp = propSample(s, p, [me, mega], rand);
+    const pos = (s.marks ?? []).map((m) => m.position), own = s.tower.find((t) => t.ownerId === me)?.position, smp = propSample(s, p, [me, mega], rand);
     // i segnalini possibili sulla carta segnata, pesati con quanto è plausibile che il Megafono li abbia posati lì (leggere il bluff)
     const combos: Mark[][] = pos.length ? CNC_TYPES.map((t) => [{ effect: t, position: pos[0]! }]) : [];
     let wc = combos.map(() => 1);
@@ -110,8 +102,10 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
         const nul = marks.find((m) => m.effect === "nulli")?.position; let e = 0;
         for (const v of smp) {
           let mv = sampleOne(p, rand); if (mv === nul) mv = (mv % n) + 1;
-          const votes = { ...v, [mega]: mv, [me]: k };
-          e += scoreTurn(mine, s.playerIds, mega, votes, marks.map((m) => ({ slot: m.effect, effect: m.effect, position: m.position })), false).points[me]!;   // punti miei dal motore
+          const votes = { ...v, [mega]: mv, [me]: k }, T = tallyMarks(s.tower.map((t) => t.position), votes, marks), valid = k !== nul;
+          if (valid && T.fallen.includes(k)) e += 2; if (own && T.fallen.includes(own)) e += 2;
+          const mk = marks.find((m) => m.position === k);
+          if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 2;
         }
         ev += wcc[ci]! * e / smp.length; wz += wcc[ci]!;
       });
@@ -126,14 +120,8 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
   return { type: "vote", playerId: me, position: pickProb(mixed, rand) + 1 };
 }
 const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b) => a + b, 0); let u = rand() * z; for (let k = 0; k < w.length; k++) { u -= w[k]!; if (u <= 0) return k; } return w.length - 1; };
-/**
- * Parametri di taratura dei bot (modificabili dai test di taratura).
- * `noncadeEv`: peso del NON CADE nelle scelte del Megafono (0.5 = come nella Baseline AI, dove per un errore valeva +1 invece di +2; 1 = valore reale delle regole).
- * Il valore storico resta il predefinito perché nel confronto con la baseline (tools/analysis/engine-compare.ts, 2.000 partite, Difficile, 4 giocatori) il valore
- * "corretto" 1 peggiora i bot di 0,75 ± 0,19 punti a partita e di 7 ± 2 punti percentuali di vittorie. Ipotesi (da verificare nel laboratorio): compensa una stima
- * troppo ottimista di quanti voti prende la carta segnata. Vedi docs/AI_BENCHMARKS.md.
- */
-export const TUNE = { noncadeEv: 0.5, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+/** Parametri di taratura dei bot (modificabili dai test di taratura). */
+export const TUNE = { tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 export function chooseBotAction(s: GameState, me: PlayerId, level0: BotLevel, mem: BotMemory, rand: () => number, style: BotStyle = NEUTRAL_STYLE): Action | null {
   // le sviste: il facile sbaglia spesso (a caso 6 volte su 10, il resto come un medio che non legge i bluff), il medio ogni tanto, il difficile mai

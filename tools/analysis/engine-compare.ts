@@ -1,5 +1,5 @@
 // Confronto testa a testa tra due versioni dei bot (registro BOT_ENGINES) con mazzi ed etichette reali.
-// Uso: GAMES=1000 PLAYERS=4 LEVEL=hard A=baseline-1 B=legacy-1.1 npx tsx tools/analysis/engine-compare.ts
+// Uso: GAMES=1000 PLAYERS=4 LEVEL=hard A=baseline-1 B=production npx tsx tools/analysis/engine-compare.ts
 // Metà dei posti gioca con A, metà con B; i posti ruotano a ogni partita. Stampa vittorie (parità divise), punti medi e intervalli di confidenza al 95%
 // calcolati sulla differenza per partita (stesso tavolo, stesso seme). È il precursore dell'AI Laboratory (docs/AI_BENCHMARKS.md).
 import { applyAction, buildPhraseDeck, createGame, DEFAULT_AGE_BAND, getBotEngine } from "../../packages/game-engine/src/index.ts";
@@ -8,7 +8,7 @@ import { nextRandom } from "../../packages/game-engine/src/rng.ts";
 import { ACCUSE_DECK, CONFESSIONS, DECK, PHRASE_POOL } from "../../worker/src/content.ts"; // registra anche le etichette
 
 const GAMES = Number(process.env.GAMES ?? 200), N = Number(process.env.PLAYERS ?? 4), LEVEL = (process.env.LEVEL ?? "hard") as BotLevel;
-const A = getBotEngine(process.env.A ?? "baseline-1"), B = getBotEngine(process.env.B ?? "legacy-1.1");
+const A = getBotEngine(process.env.A ?? "baseline-1"), B = getBotEngine(process.env.B ?? "production");
 // Parametri di taratura per versione: TUNE_A_noncadeEv=1 oppure TUNE_B_noncadeEv=0.75 (sovrascrivono TUNE di quella versione, solo in questo processo)
 for (const [k, v] of Object.entries(process.env)) { const m = /^TUNE_([AB])_(.+)$/.exec(k); if (m) (m[1] === "A" ? A : B).tune[m[2]!] = Number(v); }
 const tuneNote = [A, B].map((e, i) => `${i ? "B" : "A"}:${Object.entries(e.tune).filter(([k]) => process.env[`TUNE_${i ? "B" : "A"}_${k}`] !== undefined).map(([k, v]) => `${k}=${v}`).join(",") || "predefiniti"}`).join(" ");

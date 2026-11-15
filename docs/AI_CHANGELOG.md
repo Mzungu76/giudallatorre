@@ -1,16 +1,24 @@
 # AI_CHANGELOG — versioni dei bot
 
-Regola: ogni versione ha identificativo, data, configurazione, benchmark, regressioni e descrizione. Il predefinito (`DEFAULT_BOT_ENGINE` in `packages/game-engine/src/bot-engines.ts`) cambia solo dopo benchmark e test di regressione.
+Regole:
+- **I bot in produzione (`ai.ts`, `bot.ts`, `botstyle.ts`) non si toccano** finché un motore nuovo non ha dimostrato, con benchmark e test di regressione, di essere migliore **e** il proprietario non decide il cambio. Se il motore nuovo non riesce, il comportamento in partita resta quello originale. Un test (`tests/protectedFiles.test.ts`) controlla l'impronta dei file.
+- Ogni versione ha identificativo, data, configurazione, benchmark, regressioni e descrizione.
 
 ## baseline-1 — Baseline AI v1 (2026-11-15, congelata)
-- Origine: commit `6e2f4b1`, tag Git `baseline-ai-v1`. File `packages/game-engine/src/ai-baseline/ai.ts` (impronta SHA-256 controllata da test).
-- Configurazione: `TUNE` originale (copia indipendente). Valuta il NON CADE come +1 nelle scelte del Megafono.
+- Origine: commit `6e2f4b1`, tag Git `baseline-ai-v1` (il tag è solo locale: il push dei tag è stato rifiutato dal container; il commit di riferimento è `6e2f4b1`). File `packages/game-engine/src/ai-baseline/ai.ts`, impronta SHA-256 controllata da test; il corpo coincide con `ai.ts` (stesso codice, solo gli import cambiano).
+- Configurazione: `TUNE` originale (copia indipendente).
 - Risultati: riferimento di tutti i confronti (`AI_BENCHMARKS.md`).
-- Regressioni: —.
 
-## legacy-1.1 — bot in produzione (2026-11-15, predefinito)
-- Stessa logica di baseline-1; **decisioni identiche** (test di regressione su partite intere).
-- Cambiamenti: il punteggio ipotetico passa da `scoreTurn` (unica fonte delle regole, `engine.ts`); il +1 storico del NON CADE è ora il parametro esplicito `TUNE.noncadeEv = 0.5`.
-- Misure: portare `noncadeEv` a 1 (valore «giusto») peggiora i bot di 0,75 ± 0,19 punti/partita e 7,1 ± 2,2 pp di vittorie (4 giocatori, Difficile, 2.000 partite): non adottato.
-- Costo: ≈ +0,4 ms per decisione (≈ ×1,3, ambiente di sviluppo).
-- Regressioni: nessuna rilevata (273 test verdi, typecheck pulito).
+## production — bot in produzione (predefinito, invariato)
+- È `ai.ts` così com'era al commit `6e2f4b1`. Nessuna modifica in nessuna fase finora.
+- Registro: `BOT_ENGINES["production"]`, `DEFAULT_BOT_ENGINE = "production"` (`packages/game-engine/src/bot-engines.ts`). Il Worker non usa il registro: chiama ancora `chooseBotAction` direttamente.
+
+## Fase 1 — esperimento ritirato (legacy-1.1)
+Nella prima stesura della Fase 1 avevo modificato `ai.ts` e `engine.ts` (punteggio dei bot spostato su `scoreTurn`, con peso del NON CADE regolabile). Il comportamento in partita era identico (test), ma per direttiva del proprietario i bot in produzione devono restare **intoccati**: **ripristinati i file originali**. Resta la misura (`AI_BENCHMARKS.md` §2): valutare il NON CADE al valore reale peggiora i bot. `scoreTurn` vive ora in un file nuovo (`scoring.ts`) usato solo dal motore nuovo; `engine.ts` non è modificato.
+
+## Fase 2 — Observation e confine di fair play (2026-11-15)
+- `packages/game-engine/src/observation.ts`: `Observation`, `observe(stato, giocatore)`, `legalActions(osservazione)`, `isLegal`. Additivo: nessun file esistente cambia salvo `index.ts` (solo export aggiunti).
+- `packages/game-engine/src/scoring.ts`: `scoreTurn` (punteggio di turni ipotetici), con test di equivalenza con `resolve()` su centinaia di turni reali.
+- `packages/strategic-ai/`: nuovo pacchetto con l'interfaccia `StrategicEngine`, un agente di riferimento «casuale tra le azioni legali» e il registro. **Non collegato alle stanze.**
+- Test nuovi: osservazione senza informazioni nascoste (stessa alterazione di `fairplay.test.ts`), legalità, confine di import, impronte dei file protetti. 281 test passati.
+- Regressioni: nessuna. Comportamento dei bot in partita: identico per costruzione (file non modificati).

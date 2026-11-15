@@ -1,6 +1,6 @@
 # AI_ARCHITECTURE — analisi dell'esistente e architettura proposta
 
-Stato: **Fase 1 (analisi) completata; la proposta non è ancora implementata** salvo dove indicato. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
+Stato: **Fasi 1 (analisi, baseline) e 2 (osservazione e confine di fair play) completate; il motore strategico vero e proprio non è ancora implementato.** I bot in produzione non sono stati modificati. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
 
 ## 1. Architettura attuale
 | Elemento | File | Note |
@@ -25,7 +25,7 @@ Flusso di una partita: PROCLAIM (Megafono sceglie la frase) → PLAY (tutti gioc
 2. **Nessun opponent model**: tratta tutti gli avversari come «il gruppo» definito dalle etichette.
 3. **Livelli poco distinti** (differiscono per rumore/svista, non per ragionamento): Medio ≈ Difficile secondo `BOTS.md` (da verificare).
 4. **Fair play per convenzione**: `chooseBotAction` riceve il `GameState` completo; solo `fairplay.test.ts` impedisce di leggere dati nascosti. Proposta: tipo `Observation` costruito da `viewFor`, così il dato nascosto non è proprio accessibile.
-5. **Punteggio duplicato** in `ai.ts` (risolto in Fase 1: ora passa da `scoreTurn`).
+5. **Punteggio duplicato** in `ai.ts` (`cncPoints` rifà il calcolo di `resolve()`, e dà al NON CADE +1 invece di +2). **Non corretto di proposito**: la correzione peggiora i bot (`AI_BENCHMARKS.md` §2) e i bot in produzione restano intoccati. Il motore nuovo userà `scoreTurn`.
 6. **Tetto CPU** (10 ms/richiesta nel piano gratuito, da ri-verificare) per qualunque ricerca nel Worker.
 7. **Tetto di percezione**: la qualità dipende dalle etichette; senza dati umani non si sa quanto siano fedeli.
 
@@ -38,10 +38,17 @@ Tocca la funzione più sensibile del gioco online (decisioni dei bot in stanza).
 
 ## 5. Fase 1: ciò che esiste ora
 - `src/ai-baseline/ai.ts`: **Baseline AI v1**, copia fedele del codice al commit `6e2f4b1` (tag Git `baseline-ai-v1`), solo i percorsi di import cambiati. Il test verifica l'impronta SHA-256 del file.
-- `src/bot-engines.ts`: registro `BOT_ENGINES` (`baseline-1`, `legacy-1.1`), `DEFAULT_BOT_ENGINE = "legacy-1.1"`, `getBotEngine(id)`. **Non ancora collegato a `RoomCore`** (il Worker usa ancora `chooseBotAction` direttamente: nessun cambiamento in produzione).
-- `engine.ts` → `scoreTurn`: unica funzione dei punti di un turno, usata da `resolve()` e dai bot.
+- `src/bot-engines.ts`: registro `BOT_ENGINES` (`baseline-1`, `production`), `DEFAULT_BOT_ENGINE = "production"`, `getBotEngine(id)`. **Non collegato a `RoomCore`** (il Worker usa ancora `chooseBotAction` direttamente).
+- **I bot in produzione sono intoccati** (`ai.ts`, `bot.ts`, `botstyle.ts`, e anche `engine.ts`): impronte SHA-256 controllate da `tests/protectedFiles.test.ts`. Regola del proprietario: se il motore nuovo non riesce, il comportamento resta quello originale.
 - `tools/analysis/engine-compare.ts`: confronto testa a testa tra versioni con IC.
-- Regola: un motore nuovo diventa predefinito solo dopo benchmark e regressioni verdi (`AI_BENCHMARKS.md`).
+- Regola: un motore nuovo diventa predefinito solo dopo benchmark, regressioni verdi e decisione esplicita del proprietario.
+
+## 5b. Fase 2: confine di fair play
+- **`Observation`** (`src/observation.ts`): ciò che un giocatore seduto al tavolo può sapere = ciò che riceve il client (`viewFor`) + la carta che ha giocato (`myCard`) + la storia pubblica dei turni conclusi (`history`). Non contiene mani altrui, carte coperte, voti segreti, proprietari prima dello spoglio, segnalino altrui, ordine dei mazzi né seme.
+- **`legalActions(osservazione)`**: le azioni legali calcolate senza accesso allo stato; verificate contro il motore (ogni azione legale è accettata, ogni azione dei bot in produzione è legale).
+- **`scoreTurn`** (`src/scoring.ts`): punti di turni *ipotetici*, necessari a un motore che simula. È una **seconda implementazione** dei punti di `resolve()`: `engine.ts` non si è toccato, quindi l'equivalenza è garantita da un test su centinaia di turni reali (`scoring.equivalence.test.ts`). Quando il motore nuovo verrà adottato, `resolve()` potrà usare `scoreTurn` (una sola fonte), con tutti i test.
+- **`packages/strategic-ai`**: interfaccia `StrategicEngine` (`decide(memoria, osservazione, contesto)`), contesto con generatore casuale esterno e budget di tempo, agente di riferimento casuale. Il confine è imposto da un test: `src/` può importare da `@gdt/game-engine` solo nomi consentiti (mai lo stato completo né `applyAction`/`createGame`/`viewFor`).
+- I test di fair play usano la stessa alterazione delle informazioni nascoste di `fairplay.test.ts` (`tests/hideFrom.ts`): `observe(alterato) == observe(reale)`, con controllo di efficacia.
 
 ## 6. Architettura proposta (da implementare)
 Pacchetti: `packages/strategic-ai` (motore), `packages/ai-lab` (simulatore, tornei, benchmark, esportazione), pannello nella web app (come `/intervalli`, protetto da `?debug`).
@@ -63,8 +70,8 @@ Pacchetti: `packages/strategic-ai` (motore), `packages/ai-lab` (simulatore, torn
 Interfaccia comune: `BotEngine` (già in `bot-engines.ts`), con `chooseAction(Observation|GameState, …)` e budget di tempo. Ogni versione ha id, data, configurazione, risultati e regressioni in `AI_CHANGELOG.md`.
 
 ## 7. Piano
-1. Fase 1 (fatta): analisi, baseline, punteggio unico, ricerca. 
-2. Fase 2: `Observation`, test di fair play per tipo; interfaccia `BotEngine` v2; collegamento facoltativo a `RoomCore` per versione.
+1. Fase 1 (fatta): analisi, baseline, ricerca.
+2. Fase 2 (fatta): `Observation`, `legalActions`, `scoreTurn`, interfaccia `StrategicEngine`, confine di fair play per tipo. **Nessun collegamento a `RoomCore`** finché non c'è un motore che superi i benchmark (Fase 10, su decisione del proprietario).
 3. Fase 3: laboratorio **minimo** (tornei, IC, CSV/JSON) — serve per misurare tutto il resto.
 4. Fasi 4–7: Opponent Model → Prediction → rollout/vittoria → livelli e personalità → memoria; ogni componente misurato da solo.
 5. Fasi 8–10: pannello del laboratorio, benchmark completi (≥ 1.000 partite per confronto), ottimizzazione e integrazione, `AI_PERFORMANCE.md`.

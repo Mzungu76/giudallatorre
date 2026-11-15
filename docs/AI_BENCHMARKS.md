@@ -1,14 +1,15 @@
 # AI_BENCHMARKS — misure e confronti
 
-Metodo comune: `tools/analysis/engine-compare.ts`. Mazzo reale (120 personaggi, mazzo frasi per fascia d'età, etichette reali), intervallo (mini-gioco) attivo, partite complete. Metà dei posti gioca con la versione A, metà con la B, e i posti ruotano a ogni partita; i seed sono fissi (`1000 + k`), quindi **ripetibile**: `GAMES=2000 PLAYERS=4 LEVEL=hard A=baseline-1 B=legacy-1.1 npx tsx tools/analysis/engine-compare.ts`. Gli intervalli di confidenza (IC 95%) sono calcolati sulla differenza per partita (A−B). Parità in testa divise tra i pari merito.
+Metodo comune: `tools/analysis/engine-compare.ts`. Mazzo reale (120 personaggi, mazzo frasi per fascia d'età, etichette reali), intervallo (mini-gioco) attivo, partite complete. Metà dei posti gioca con la versione A, metà con la B, e i posti ruotano a ogni partita; i seed sono fissi (`1000 + k`), quindi **ripetibile**: `GAMES=2000 PLAYERS=4 LEVEL=hard A=baseline-1 B=production npx tsx tools/analysis/engine-compare.ts`. Il confronto fra versioni (`A`, `B`) usa gli id di `BOT_ENGINES`; `TUNE_A_<nome>=…` / `TUNE_B_<nome>=…` sovrascrivono un parametro della versione solo in quel processo. Gli intervalli di confidenza (IC 95%) sono calcolati sulla differenza per partita (A−B). Parità in testa divise tra i pari merito.
 
-## 1. Stato dei test (Fase 1)
-- Prima delle modifiche: 261 test passati, 2 saltati (taratura manuale), typecheck pulito.
-- Dopo: 273 passati, 2 saltati; typecheck pulito. I test della Fase 1 sono in `packages/game-engine/tests/scoringSource.test.ts`.
-- **Regressione di comportamento**: con i parametri predefiniti, `legacy-1.1` (bot in produzione) prende le *stesse* decisioni di `baseline-1` in partite intere da 3, 4, 5, 6 giocatori, con tutti e tre i livelli (test dedicato). Il test «Il bot difficile batte tre bot facili» stampa gli stessi numeri di prima (45,7% di vittorie, 15,12 contro 11,44 punti).
+## 1. Stato dei test
+- Inizio Fase 1: 261 test passati, 2 saltati (taratura manuale), typecheck pulito.
+- Dopo la Fase 2: **281 passati**, 2 saltati; typecheck pulito; `npm run e2e` passa in locale; `npm run e2e:ui` 6 volte su 6 in locale. I bot in produzione e `engine.ts` sono identici all'originale (impronte controllate da `protectedFiles.test.ts`).
+- Il test «Il bot difficile batte tre bot facili» stampa gli stessi numeri di sempre (45,7% di vittorie, 15,12 contro 11,44 punti).
+- **CI della PR #35 (corsa del primo commit)**: fallito `e2e:ui` («classifica finale» non raggiunta in 240 s, a fronte dei 52 s normali). Lo stesso commit era passato nella corsa su `push`; riprodotto 0 volte su 6 in locale; nello storico delle ultime 30 corse è l'unico fallimento. Il test usa una scelta casuale dei voti e non coinvolge i bot né il punteggio. Valutazione: blocco intermittente del test UI, non causato da queste modifiche; la corsa del commit successivo lo conferma o lo smentisce (vedi PR).
 
 ## 2. Scoperta: il valore «corretto» del NON CADE peggiora i bot
-`cncPoints` (valutazione ipotetica del Megafono) dava al NON CADE a segno **+1** invece di +2 (le regole e `resolve()` dicono +2). Ho riportato il punteggio al motore (`scoreTurn`) e l'ho confrontato con la baseline.
+`cncPoints` (valutazione ipotetica del Megafono) dà al NON CADE a segno **+1** invece di +2 (le regole e `resolve()` dicono +2). Per misurare l'effetto ho creato una variante *temporanea* con il punteggio preso dal motore e un parametro `noncadeEv` (peso del NON CADE) e l'ho confrontata con la baseline. **La variante è stata ritirata**: i bot in produzione restano intoccati; i numeri sotto restano come misura, riproducibile in laboratorio quando il motore nuovo avrà una variante equivalente.
 
 **Baseline (A, valore storico) contro valore «corretto» 1,0 (B)**, livello Difficile, 2.000 partite:
 
@@ -29,19 +30,19 @@ Metodo comune: `tools/analysis/engine-compare.ts`. Mazzo reale (120 personaggi, 
 | 0,75 | +0,21 ± 0,18 | +3,1 ± 2,2 |
 | 1 | +0,75 ± 0,19 | +7,1 ± 2,2 |
 
-Lettura: fra 0 e 0,5 non c'è differenza rilevabile; salendo verso 1 i bot peggiorano in modo netto. **Il valore storico non è dimostrato ottimale, ma il valore «giusto» sulle regole è peggiore.** Ipotesi non verificata: la stima della probabilità che il gruppo voti la carta segnata è troppo ottimista, e sottovalutare il NON CADE compensa l'errore; la causa vera va cercata con il laboratorio. Decisione: **parametro esplicito `TUNE.noncadeEv = 0.5`**, nessun cambio di comportamento in produzione.
+Lettura: fra 0 e 0,5 non c'è differenza rilevabile; salendo verso 1 i bot peggiorano in modo netto. **Il valore storico non è dimostrato ottimale, ma il valore «giusto» sulle regole è peggiore.** Ipotesi non verificata: la stima della probabilità che il gruppo voti la carta segnata è troppo ottimista, e sottovalutare il NON CADE compensa l'errore; la causa vera va cercata con il laboratorio. Decisione: **nessun cambio ai bot in produzione** (variante ritirata, `ai.ts` intatto).
 
 *(Nota di metodo: con motori identici la differenza A−B non è esattamente zero, perché i posti A e B sono giocatori diversi nello stesso tavolo; vale zero in media.)*
 
 ## 3. Costo di calcolo
-Misura con `tsx` (sviluppo), 60 partite da 6 giocatori, Difficile, 5.432 decisioni:
+Misura con `tsx` (sviluppo), 60 partite da 6 giocatori, Difficile, 5.432 decisioni, sulla variante temporanea (ritirata):
 
 | Versione | ms per decisione (media) |
 |---|---|
-| baseline-1 | ≈ 1,4–1,6 |
-| legacy-1.1 (con `scoreTurn`) | ≈ 1,9–2,0 (prima dell'ottimizzazione 2,3–2,7) |
+| bot in produzione (= baseline-1) | ≈ 1,4–1,6 |
+| variante con punteggio da `scoreTurn` | ≈ 1,9–2,0 (prima dell'ottimizzazione 2,3–2,7) |
 
-Il passaggio dal motore costa ≈ +0,4 ms a decisione (circa ×1,3). Non è stata misurata la coda (decisione peggiore) né il costo nel runtime Worker: da fare in `AI_PERFORMANCE.md` (Fase 10). Il limite di 10 ms di CPU per richiesta (COSTS.md) va ri-verificato.
+Indicazione per il motore nuovo: valutare i turni con `scoreTurn` (anche con `withLines = false`) costa ≈ +0,4 ms a decisione (circa ×1,3) rispetto al calcolo inline. Non è stata misurata la coda (decisione peggiore) né il costo nel runtime Worker: da fare in `AI_PERFORMANCE.md` (Fase 10). Il limite di 10 ms di CPU per richiesta (COSTS.md) va ri-verificato.
 
 ## 4. Ancora da misurare (Fase 4 in poi)
 Facile/Medio/Difficile tra loro (BOTS.md afferma «Medio e Difficile si equivalgono tra bot»: **non verificato qui**), differenze per personalità, popolazione eterogenea, previsione dei voti, esposizione a strategie dominanti, e confronti con giocatori umani.

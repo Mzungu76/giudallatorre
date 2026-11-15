@@ -82,7 +82,8 @@ Principio guida (dal prompt, §18): **partire dalla soluzione più semplice**; o
 
 ## Riferimenti alle implementazioni (aggiornato a ogni fase)
 - Valutazione a un passo, softmax/QRE: `packages/game-engine/src/ai.ts` (`cncPlace`, `cncVote`, `TUNE`).
-- Punteggio unico: `packages/game-engine/src/engine.ts` (`scoreTurn`).
+- Punteggio di turni ipotetici (per S1, S5, S6): `packages/game-engine/src/scoring.ts` (`scoreTurn`, equivalente a `resolve()` per test).
+- Osservazione e azioni legali (confine di fair play): `src/observation.ts`; interfaccia dei motori: `packages/strategic-ai/src/api.ts`.
 - Baseline congelata e registro versioni: `src/ai-baseline/ai.ts`, `src/bot-engines.ts`.
 - Confronto versioni (precursore del laboratorio): `tools/analysis/engine-compare.ts`.
 - Tutto il resto (S1–S7): **non ancora implementato**.

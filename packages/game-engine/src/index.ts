@@ -1,12 +1,15 @@
 export * from "./types.ts";
-export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, miniAtsFor, MIN_PLAYERS, MAX_PLAYERS, MINI_CARDS, MINI_CYCLES, MINI_SLOT_MS, MINI_INTRO_MS, MINI_COUNTDOWN_MS, MINI_PTS, MINI_FAST_PTS, luiTokens, luiForbidden, cncPool, tallyMarks, scoreTurn, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
+export { createGame, applyAction, megafonoOf, requiredPlayers, roundsFor, miniAtsFor, MIN_PLAYERS, MAX_PLAYERS, MINI_CARDS, MINI_CYCLES, MINI_SLOT_MS, MINI_INTRO_MS, MINI_COUNTDOWN_MS, MINI_PTS, MINI_FAST_PTS, luiTokens, luiForbidden, cncPool, tallyMarks, GOLDEN_GOAL_MAX_TURNS, MAX_PHRASE_CHARS } from "./engine.ts";
+export { scoreTurn } from "./scoring.ts";
+export { observe, legalActions, isLegal } from "./observation.ts";
+export type { Observation } from "./observation.ts";
 export { viewFor } from "./views.ts";
 export type { PlayerView } from "./views.ts";
 export { suggestAction } from "./bot.ts";
 export { simulateGame } from "./sim.ts";
 export { checkInvariants } from "./invariants.ts";
 export { shuffle, nextRandom } from "./rng.ts";
-export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS, cncPoints } from "./ai.ts";
+export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
 export { BOT_ENGINES, DEFAULT_BOT_ENGINE, getBotEngine } from "./bot-engines.ts";
 export type { BotEngine } from "./bot-engines.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";

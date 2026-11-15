@@ -1,7 +1,7 @@
 /**
  * BASELINE AI v1 — COPIA CONGELATA, NON MODIFICARE.
  * Riproduce i bot così com'erano al commit 6e2f4b1 (tag Git `baseline-ai-v1`), compresa la valutazione di `cncPoints`
- * che dà al NON CADE +1 invece di +2 (non è detto sia un errore da correggere: vedi TUNE.noncadeEv in ../ai.ts). Serve da riferimento per i confronti nel simulatore e nell'AI Laboratory.
+ * che dà al NON CADE +1 invece di +2 (misurato: correggerla peggiora i bot, vedi docs/AI_BENCHMARKS.md). Serve da riferimento per i confronti nel simulatore e nell'AI Laboratory.
  * Dipende dal motore delle regole (`tallyMarks`, `luiForbidden`…) e dalle etichette (`affinity`): se cambiano le regole, va rivalutata.
  * Le uniche differenze rispetto all'originale sono i percorsi di import.
  */
