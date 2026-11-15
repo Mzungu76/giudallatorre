@@ -1,5 +1,5 @@
 {
- "versione": 56,
+ "versione": 57,
  "aggiornato": "2026-11-15",
  "testi": {
   "intro.aria": {
@@ -2524,11 +2524,6 @@
    "t": "Le mie statistiche",
    "s": "Statistiche personali"
   },
-  "st.nota": {
-   "t": "Restano solo su questo dispositivo: non vengono inviate a nessuno. Se cambi telefono o cancelli i dati del browser, ripartono da zero.",
-   "s": "Statistiche personali",
-   "n": "Titolo e avviso"
-  },
   "st.vuoto": {
    "t": "Ancora nessuna partita finita: gioca e torna qui.",
    "s": "Statistiche personali"
@@ -2858,10 +2853,6 @@
   },
   "st.livelli": {
    "t": "Tutti i livelli",
-   "s": "Statistiche personali"
-  },
-  "st.livelli.nota": {
-   "t": "Ogni livello chiede più esperienza del precedente: i primi arrivano presto, gli ultimi si conquistano partita dopo partita.",
    "s": "Statistiche personali"
   },
   "st.sei": {

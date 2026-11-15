@@ -136,7 +136,6 @@ export default function Stats() {
 
             <section className="st-card" data-testid="st-livelli">
               <h3>{t("st.livelli")}</h3>
-              <p className="st-nota">{t("st.livelli.nota")}</p>
               <div className="lv-grid">
                 {Array.from({ length: MAX_LEVEL }, (_, i) => i + 1).map((n) => {
                   const done = L ? n <= L.level : false, here = L?.level === n;
@@ -162,7 +161,6 @@ export default function Stats() {
             <p className="st-since">{ts("st.since", { data: fmtDate(s.since) })}</p>
           </>
         )}
-        <p className="st-nota">{t("st.nota")}</p>
         <div className="st-btns">
           <Btn kind="pap" onClick={() => navigate("/")} testId="st-indietro">{t("st.indietro")}</Btn>
           <Btn kind="red" onClick={clear} testId="st-cancella">{ask ? t("st.conferma") : t("st.cancella")}</Btn>
