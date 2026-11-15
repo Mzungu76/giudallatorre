@@ -1,0 +1,1206 @@
+{
+ "versione": 1,
+ "seme": 20261115,
+ "casi": [
+  {
+   "id": "c001",
+   "frase": "F155",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior compagno di squadra.",
+   "carte": [
+    "p06-i06",
+    "p09-i06",
+    "p02-i07",
+    "p12-i08",
+    "p01-i08"
+   ]
+  },
+  {
+   "id": "c002",
+   "frase": "F013",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior coinquilino.",
+   "carte": [
+    "p06-i09",
+    "p07-i03",
+    "p03-i07",
+    "p03-i01",
+    "p04-i01"
+   ]
+  },
+  {
+   "id": "c003",
+   "frase": "F244",
+   "testo": "Oggi salgono sulla torre i più romantici solo a San Valentino.",
+   "carte": [
+    "p03-i08",
+    "p08-i11",
+    "p13-i04",
+    "p12-i04",
+    "p04-i08"
+   ]
+  },
+  {
+   "id": "c004",
+   "frase": "F360",
+   "testo": "Oggi salgono sulla torre quelli che spariscono dopo il primo appuntamento.",
+   "carte": [
+    "p12-i01",
+    "p06-i09",
+    "p13-i08",
+    "p01-i04",
+    "p07-i01"
+   ]
+  },
+  {
+   "id": "c005",
+   "frase": "F393",
+   "testo": "Oggi sale sulla torre chi è convinto che il suo problema sia il più grave.",
+   "carte": [
+    "p02-i07",
+    "p04-i10",
+    "p13-i09",
+    "p03-i08",
+    "p11-i07"
+   ]
+  },
+  {
+   "id": "c006",
+   "frase": "F368",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior compagno in un lavoro di gruppo.",
+   "carte": [
+    "p06-i07",
+    "p01-i03",
+    "p11-i02",
+    "p10-i06",
+    "p13-i03"
+   ]
+  },
+  {
+   "id": "c007",
+   "frase": "F339",
+   "testo": "Oggi salgono sulla torre i più rompiscatole.",
+   "carte": [
+    "p02-i05",
+    "p08-i11",
+    "p02-i01",
+    "p08-i09",
+    "p04-i01"
+   ]
+  },
+  {
+   "id": "c008",
+   "frase": "F310",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a sparire in camera a metà festa.",
+   "carte": [
+    "p13-i05",
+    "p09-i06",
+    "p04-i05",
+    "p01-i03",
+    "p04-i06"
+   ]
+  },
+  {
+   "id": "c009",
+   "frase": "F083",
+   "testo": "Oggi salgono sulla torre i più pedanti.",
+   "carte": [
+    "p02-i09",
+    "p07-i02",
+    "p07-i03",
+    "p12-i07",
+    "p06-i03"
+   ]
+  },
+  {
+   "id": "c010",
+   "frase": "F181",
+   "testo": "Oggi sale sulla torre chi non ti presterebbe mai un euro.",
+   "carte": [
+    "p07-i02",
+    "p14-i05",
+    "p02-i04",
+    "p03-i03",
+    "p06-i08"
+   ]
+  },
+  {
+   "id": "c011",
+   "frase": "F091",
+   "testo": "Oggi salgono sulla torre i più maniaci del controllo.",
+   "carte": [
+    "p09-i07",
+    "p07-i09",
+    "p01-i03",
+    "p05-i07",
+    "p04-i04"
+   ]
+  },
+  {
+   "id": "c012",
+   "frase": "F358",
+   "testo": "Oggi salgono sulla torre quelli che raccontano la tua storia come fosse la loro.",
+   "carte": [
+    "p02-i07",
+    "p11-i03",
+    "p13-i04",
+    "p01-i04",
+    "p08-i04"
+   ]
+  },
+  {
+   "id": "c013",
+   "frase": "F402",
+   "testo": "Oggi salgono sulla torre i più generosi con le promesse.",
+   "carte": [
+    "p02-i07",
+    "p08-i01",
+    "p06-i03",
+    "p10-i02",
+    "p04-i02"
+   ]
+  },
+  {
+   "id": "c014",
+   "frase": "F232",
+   "testo": "Oggi sale sulla torre chi è convinto che la sua opinione sia un fatto.",
+   "carte": [
+    "p08-i06",
+    "p10-i03",
+    "p09-i08",
+    "p05-i09",
+    "p10-i07"
+   ]
+  },
+  {
+   "id": "c015",
+   "frase": "F322",
+   "testo": "Oggi sale sulla torre chi è convinto di non dover mai chiedere scusa.",
+   "carte": [
+    "p08-i01",
+    "p01-i01",
+    "p11-i06",
+    "p12-i04",
+    "p09-i05"
+   ]
+  },
+  {
+   "id": "c016",
+   "frase": "F099",
+   "testo": "Oggi salgono sulla torre i più impulsivi.",
+   "carte": [
+    "p04-i04",
+    "p06-i09",
+    "p04-i06",
+    "p12-i02",
+    "p01-i02"
+   ]
+  },
+  {
+   "id": "c017",
+   "frase": "F380",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a cadere in una truffa online.",
+   "carte": [
+    "p08-i01",
+    "p05-i07",
+    "p11-i07",
+    "p02-i04",
+    "p07-i04"
+   ]
+  },
+  {
+   "id": "c018",
+   "frase": "F049",
+   "testo": "Oggi salgono sulla torre quelli che non salutano mai per primi.",
+   "carte": [
+    "p04-i08",
+    "p10-i07",
+    "p03-i08",
+    "p01-i07",
+    "p04-i04"
+   ]
+  },
+  {
+   "id": "c019",
+   "frase": "F024",
+   "testo": "Oggi sale sulla torre chi non ammette mai di aver perso.",
+   "carte": [
+    "p04-i04",
+    "p04-i09",
+    "p10-i07",
+    "p10-i06",
+    "p02-i03"
+   ]
+  },
+  {
+   "id": "c020",
+   "frase": "F123",
+   "testo": "Oggi salgono sulla torre quelli che vogliono sempre l’ultima parola.",
+   "carte": [
+    "p04-i10",
+    "p10-i09",
+    "p06-i01",
+    "p13-i08",
+    "p12-i08"
+   ]
+  },
+  {
+   "id": "c021",
+   "frase": "F265",
+   "testo": "Oggi salgono sulla torre i più lussuriosi.",
+   "carte": [
+    "p05-i03",
+    "p03-i03",
+    "p13-i01",
+    "p03-i07",
+    "p02-i02"
+   ]
+  },
+  {
+   "id": "c022",
+   "frase": "F350",
+   "testo": "Oggi salgono sulla torre quelli che ti chiedono soldi in prestito e poi fanno finta di niente.",
+   "carte": [
+    "p13-i07",
+    "p05-i09",
+    "p03-i05",
+    "p05-i02",
+    "p01-i09"
+   ]
+  },
+  {
+   "id": "c023",
+   "frase": "F096",
+   "testo": "Oggi salgono sulla torre i più complottisti.",
+   "carte": [
+    "p08-i01",
+    "p04-i01",
+    "p07-i08",
+    "p10-i07",
+    "p14-i03"
+   ]
+  },
+  {
+   "id": "c024",
+   "frase": "F077",
+   "testo": "Oggi salgono sulla torre i più ingenui.",
+   "carte": [
+    "p01-i08",
+    "p08-i07",
+    "p07-i05",
+    "p06-i10",
+    "p07-i08"
+   ]
+  },
+  {
+   "id": "c025",
+   "frase": "F041",
+   "testo": "Oggi salgono sulla torre i più santarellini.",
+   "carte": [
+    "p11-i06",
+    "p09-i04",
+    "p03-i02",
+    "p14-i03",
+    "p08-i07"
+   ]
+  },
+  {
+   "id": "c026",
+   "frase": "F279",
+   "testo": "Oggi salgono sulla torre quelli che ti sorridono e poi ti pugnalano alle spalle.",
+   "carte": [
+    "p13-i01",
+    "p03-i03",
+    "p09-i05",
+    "p05-i08",
+    "p07-i03"
+   ]
+  },
+  {
+   "id": "c027",
+   "frase": "F254",
+   "testo": "Oggi salgono sulla torre i più approfittatori.",
+   "carte": [
+    "p09-i02",
+    "p05-i08",
+    "p01-i07",
+    "p11-i04",
+    "p11-i07"
+   ]
+  },
+  {
+   "id": "c028",
+   "frase": "F082",
+   "testo": "Oggi salgono sulla torre i più teatrali.",
+   "carte": [
+    "p11-i07",
+    "p01-i08",
+    "p09-i04",
+    "p09-i09",
+    "p11-i01"
+   ]
+  },
+  {
+   "id": "c029",
+   "frase": "F263",
+   "testo": "Oggi salgono sulla torre i più infedeli.",
+   "carte": [
+    "p05-i07",
+    "p09-i08",
+    "p04-i02",
+    "p03-i02",
+    "p06-i04"
+   ]
+  },
+  {
+   "id": "c030",
+   "frase": "F400",
+   "testo": "Oggi salgono sulla torre i più maturi a parole.",
+   "carte": [
+    "p13-i01",
+    "p07-i06",
+    "p05-i04",
+    "p02-i04",
+    "p01-i06"
+   ]
+  },
+  {
+   "id": "c031",
+   "frase": "F365",
+   "testo": "Oggi salgono sulla torre quelli che si lamentano del lavoro e non si licenziano mai.",
+   "carte": [
+    "p04-i05",
+    "p08-i06",
+    "p08-i02",
+    "p11-i04",
+    "p08-i11"
+   ]
+  },
+  {
+   "id": "c032",
+   "frase": "F173",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo ad arrendersi in montagna.",
+   "carte": [
+    "p12-i07",
+    "p09-i09",
+    "p07-i06",
+    "p14-i04",
+    "p01-i09"
+   ]
+  },
+  {
+   "id": "c033",
+   "frase": "F175",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a rompere qualcosa e far finta di niente.",
+   "carte": [
+    "p07-i03",
+    "p05-i08",
+    "p10-i09",
+    "p01-i09",
+    "p12-i04"
+   ]
+  },
+  {
+   "id": "c034",
+   "frase": "F071",
+   "testo": "Oggi salgono sulla torre i più dispettosi.",
+   "carte": [
+    "p10-i09",
+    "p08-i05",
+    "p05-i01",
+    "p04-i05",
+    "p08-i02"
+   ]
+  },
+  {
+   "id": "c035",
+   "frase": "F187",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a rubare il posto in fila.",
+   "carte": [
+    "p03-i05",
+    "p14-i05",
+    "p02-i02",
+    "p06-i08",
+    "p11-i04"
+   ]
+  },
+  {
+   "id": "c036",
+   "frase": "F237",
+   "testo": "Oggi salgono sulla torre i più gentili solo per interesse.",
+   "carte": [
+    "p05-i09",
+    "p01-i06",
+    "p02-i03",
+    "p04-i05",
+    "p03-i05"
+   ]
+  },
+  {
+   "id": "c037",
+   "frase": "F188",
+   "testo": "Oggi sale sulla torre chi tradirebbe un amico per fare carriera.",
+   "carte": [
+    "p06-i01",
+    "p01-i06",
+    "p04-i02",
+    "p13-i08",
+    "p03-i10"
+   ]
+  },
+  {
+   "id": "c038",
+   "frase": "F391",
+   "testo": "Oggi sale sulla torre chi è convinto di essere più furbo di tutti.",
+   "carte": [
+    "p11-i06",
+    "p09-i08",
+    "p05-i05",
+    "p14-i02",
+    "p01-i07"
+   ]
+  },
+  {
+   "id": "c039",
+   "frase": "F090",
+   "testo": "Oggi salgono sulla torre i più distratti.",
+   "carte": [
+    "p11-i04",
+    "p02-i08",
+    "p12-i07",
+    "p03-i10",
+    "p03-i01"
+   ]
+  },
+  {
+   "id": "c040",
+   "frase": "F389",
+   "testo": "Oggi sale sulla torre chi tradirebbe la squadra per un premio.",
+   "carte": [
+    "p14-i03",
+    "p07-i04",
+    "p07-i06",
+    "p08-i11",
+    "p02-i05"
+   ]
+  },
+  {
+   "id": "c041",
+   "frase": "F023",
+   "testo": "Oggi sale sulla torre chi pensa solo a salvare sé stesso.",
+   "carte": [
+    "p04-i01",
+    "p09-i08",
+    "p05-i02",
+    "p02-i05",
+    "p02-i04"
+   ]
+  },
+  {
+   "id": "c042",
+   "frase": "F313",
+   "testo": "Oggi sale sulla torre chi si spoglierebbe per una scommessa.",
+   "carte": [
+    "p08-i05",
+    "p04-i09",
+    "p11-i07",
+    "p06-i06",
+    "p06-i08"
+   ]
+  },
+  {
+   "id": "c043",
+   "frase": "F218",
+   "testo": "Oggi sale sulla torre chi è convinto di essere un genio incompreso.",
+   "carte": [
+    "p03-i02",
+    "p06-i04",
+    "p12-i03",
+    "p06-i01",
+    "p08-i01"
+   ]
+  },
+  {
+   "id": "c044",
+   "frase": "F005",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a fregare un amico per soldi.",
+   "carte": [
+    "p03-i09",
+    "p08-i09",
+    "p10-i08",
+    "p05-i06",
+    "p02-i05"
+   ]
+  },
+  {
+   "id": "c045",
+   "frase": "F185",
+   "testo": "Oggi sale sulla torre chi vorresti meno in squadra a un gioco da tavolo.",
+   "carte": [
+    "p02-i08",
+    "p12-i05",
+    "p04-i04",
+    "p07-i04",
+    "p06-i10"
+   ]
+  },
+  {
+   "id": "c046",
+   "frase": "F285",
+   "testo": "Oggi salgono sulla torre quelli che dopo il terzo bicchiere dicono la verità.",
+   "carte": [
+    "p09-i01",
+    "p14-i03",
+    "p10-i01",
+    "p12-i04",
+    "p11-i01"
+   ]
+  },
+  {
+   "id": "c047",
+   "frase": "F154",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior socio in affari.",
+   "carte": [
+    "p09-i03",
+    "p03-i02",
+    "p09-i04",
+    "p06-i10",
+    "p10-i04"
+   ]
+  },
+  {
+   "id": "c048",
+   "frase": "F167",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a lamentarsi del conto.",
+   "carte": [
+    "p02-i06",
+    "p05-i02",
+    "p02-i03",
+    "p13-i08",
+    "p05-i04"
+   ]
+  },
+  {
+   "id": "c049",
+   "frase": "F305",
+   "testo": "Oggi sale sulla torre chi ignorerebbe una persona in difficoltà.",
+   "carte": [
+    "p02-i06",
+    "p07-i04",
+    "p08-i01",
+    "p07-i08",
+    "p06-i04"
+   ]
+  },
+  {
+   "id": "c050",
+   "frase": "F396",
+   "testo": "Oggi sale sulla torre chi è convinto che l’amore si compri.",
+   "carte": [
+    "p04-i05",
+    "p03-i10",
+    "p13-i04",
+    "p13-i06",
+    "p05-i09"
+   ]
+  },
+  {
+   "id": "c051",
+   "frase": "F195",
+   "testo": "Oggi sale sulla torre chi farebbe una battuta durante il minuto di silenzio.",
+   "carte": [
+    "p10-i08",
+    "p01-i03",
+    "p03-i07",
+    "p01-i02",
+    "p02-i05"
+   ]
+  },
+  {
+   "id": "c052",
+   "frase": "F394",
+   "testo": "Oggi sale sulla torre chi è convinto di meritare sempre la prima fila.",
+   "carte": [
+    "p14-i03",
+    "p07-i01",
+    "p09-i09",
+    "p07-i06",
+    "p13-i06"
+   ]
+  },
+  {
+   "id": "c053",
+   "frase": "F045",
+   "testo": "Oggi sale sulla torre il più simpatico.",
+   "carte": [
+    "p11-i07",
+    "p01-i07",
+    "p09-i05",
+    "p14-i02",
+    "p13-i04"
+   ]
+  },
+  {
+   "id": "c054",
+   "frase": "F108",
+   "testo": "Oggi salgono sulla torre quelli che arrivano sempre in ritardo.",
+   "carte": [
+    "p05-i09",
+    "p10-i03",
+    "p14-i05",
+    "p08-i04",
+    "p03-i03"
+   ]
+  },
+  {
+   "id": "c055",
+   "frase": "F050",
+   "testo": "Oggi salgono sulla torre quelli che dicono sempre “io l’avevo detto”.",
+   "carte": [
+    "p06-i04",
+    "p08-i04",
+    "p11-i04",
+    "p05-i09",
+    "p03-i02"
+   ]
+  },
+  {
+   "id": "c056",
+   "frase": "F018",
+   "testo": "Oggi sale sulla torre chi non inviteresti mai a cena.",
+   "carte": [
+    "p03-i01",
+    "p06-i01",
+    "p08-i06",
+    "p01-i06",
+    "p13-i05"
+   ]
+  },
+  {
+   "id": "c057",
+   "frase": "F209",
+   "testo": "Oggi sale sulla torre chi è convinto di essere simpatico.",
+   "carte": [
+    "p14-i03",
+    "p07-i07",
+    "p11-i04",
+    "p12-i05",
+    "p10-i06"
+   ]
+  },
+  {
+   "id": "c058",
+   "frase": "F328",
+   "testo": "Oggi salgono sulla torre i più fedeli, ma solo a parole.",
+   "carte": [
+    "p04-i06",
+    "p12-i08",
+    "p12-i09",
+    "p14-i04",
+    "p11-i07"
+   ]
+  },
+  {
+   "id": "c059",
+   "frase": "F388",
+   "testo": "Oggi sale sulla torre chi mentirebbe nel curriculum.",
+   "carte": [
+    "p10-i09",
+    "p02-i01",
+    "p14-i02",
+    "p10-i06",
+    "p01-i05"
+   ]
+  },
+  {
+   "id": "c060",
+   "frase": "F228",
+   "testo": "Oggi sale sulla torre chi è convinto di poter bere senza conseguenze.",
+   "carte": [
+    "p08-i04",
+    "p02-i08",
+    "p13-i03",
+    "p10-i04",
+    "p02-i03"
+   ]
+  },
+  {
+   "id": "c061",
+   "frase": "F326",
+   "testo": "Oggi sale sulla torre chi è convinto di non aver mai tradito nessuno.",
+   "carte": [
+    "p07-i09",
+    "p12-i02",
+    "p08-i05",
+    "p01-i07",
+    "p04-i05"
+   ]
+  },
+  {
+   "id": "c062",
+   "frase": "F230",
+   "testo": "Oggi sale sulla torre chi è convinto che il lavoro lo debbano fare gli altri.",
+   "carte": [
+    "p03-i03",
+    "p06-i10",
+    "p02-i06",
+    "p06-i09",
+    "p02-i09"
+   ]
+  },
+  {
+   "id": "c063",
+   "frase": "F178",
+   "testo": "Oggi sale sulla torre chi non pagherebbe mai il conto.",
+   "carte": [
+    "p05-i03",
+    "p11-i01",
+    "p03-i03",
+    "p13-i07",
+    "p07-i03"
+   ]
+  },
+  {
+   "id": "c064",
+   "frase": "F276",
+   "testo": "Oggi salgono sulla torre quelli che fingono di essere al verde per non pagare.",
+   "carte": [
+    "p02-i06",
+    "p01-i04",
+    "p12-i08",
+    "p10-i05",
+    "p05-i04"
+   ]
+  },
+  {
+   "id": "c065",
+   "frase": "F064",
+   "testo": "Oggi salgono sulla torre i più pettegoli.",
+   "carte": [
+    "p03-i07",
+    "p08-i01",
+    "p02-i03",
+    "p13-i04",
+    "p12-i03"
+   ]
+  },
+  {
+   "id": "c066",
+   "frase": "F121",
+   "testo": "Oggi salgono sulla torre quelli che guardano il telefono mentre gli altri parlano.",
+   "carte": [
+    "p03-i07",
+    "p13-i09",
+    "p04-i10",
+    "p12-i07",
+    "p08-i07"
+   ]
+  },
+  {
+   "id": "c067",
+   "frase": "F058",
+   "testo": "Oggi salgono sulla torre i più vanitosi.",
+   "carte": [
+    "p07-i04",
+    "p09-i06",
+    "p09-i04",
+    "p10-i08",
+    "p06-i04"
+   ]
+  },
+  {
+   "id": "c068",
+   "frase": "F399",
+   "testo": "Oggi salgono sulla torre i più amici di tutti, finché serve.",
+   "carte": [
+    "p05-i08",
+    "p10-i07",
+    "p07-i01",
+    "p13-i05",
+    "p07-i08"
+   ]
+  },
+  {
+   "id": "c069",
+   "frase": "F159",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior testimone in un processo.",
+   "carte": [
+    "p13-i06",
+    "p06-i09",
+    "p14-i05",
+    "p03-i08",
+    "p11-i05"
+   ]
+  },
+  {
+   "id": "c070",
+   "frase": "F317",
+   "testo": "Oggi sale sulla torre chi festeggerebbe di nascosto la fine del contratto del capo.",
+   "carte": [
+    "p02-i08",
+    "p08-i05",
+    "p10-i04",
+    "p01-i03",
+    "p02-i06"
+   ]
+  },
+  {
+   "id": "c071",
+   "frase": "F130",
+   "testo": "Oggi salgono sulla torre quelli che si mettono sempre al centro dell’attenzione.",
+   "carte": [
+    "p09-i07",
+    "p11-i06",
+    "p09-i03",
+    "p08-i01",
+    "p07-i03"
+   ]
+  },
+  {
+   "id": "c072",
+   "frase": "F364",
+   "testo": "Oggi salgono sulla torre quelli che fanno gli indifferenti per sembrare interessanti.",
+   "carte": [
+    "p02-i04",
+    "p04-i03",
+    "p10-i05",
+    "p12-i05",
+    "p06-i08"
+   ]
+  },
+  {
+   "id": "c073",
+   "frase": "F180",
+   "testo": "Oggi sale sulla torre chi ti lascerebbe a piedi sotto la pioggia.",
+   "carte": [
+    "p11-i03",
+    "p04-i03",
+    "p09-i01",
+    "p10-i09",
+    "p03-i02"
+   ]
+  },
+  {
+   "id": "c074",
+   "frase": "F001",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior compagno di viaggio.",
+   "carte": [
+    "p03-i10",
+    "p10-i07",
+    "p04-i06",
+    "p12-i02",
+    "p12-i09"
+   ]
+  },
+  {
+   "id": "c075",
+   "frase": "F012",
+   "testo": "Oggi sale sulla torre chi vorresti meno accanto in un ascensore bloccato.",
+   "carte": [
+    "p14-i02",
+    "p07-i03",
+    "p02-i08",
+    "p02-i04",
+    "p07-i06"
+   ]
+  },
+  {
+   "id": "c076",
+   "frase": "F135",
+   "testo": "Oggi salgono sulla torre quelli che sono servili con i capi e prepotenti con gli altri.",
+   "carte": [
+    "p09-i09",
+    "p05-i09",
+    "p09-i02",
+    "p12-i08",
+    "p05-i02"
+   ]
+  },
+  {
+   "id": "c077",
+   "frase": "F069",
+   "testo": "Oggi salgono sulla torre i più noiosi.",
+   "carte": [
+    "p14-i04",
+    "p01-i03",
+    "p13-i03",
+    "p12-i05",
+    "p13-i04"
+   ]
+  },
+  {
+   "id": "c078",
+   "frase": "F160",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior insegnante.",
+   "carte": [
+    "p08-i09",
+    "p04-i02",
+    "p02-i01",
+    "p11-i05",
+    "p04-i04"
+   ]
+  },
+  {
+   "id": "c079",
+   "frase": "F149",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior compagno di banco.",
+   "carte": [
+    "p03-i07",
+    "p08-i05",
+    "p02-i04",
+    "p07-i08",
+    "p12-i06"
+   ]
+  },
+  {
+   "id": "c080",
+   "frase": "F078",
+   "testo": "Oggi salgono sulla torre i più scansafatiche.",
+   "carte": [
+    "p03-i03",
+    "p01-i06",
+    "p08-i11",
+    "p13-i03",
+    "p01-i05"
+   ]
+  },
+  {
+   "id": "c081",
+   "frase": "F297",
+   "testo": "Oggi sale sulla torre chi farebbe il furbo con un’eredità.",
+   "carte": [
+    "p09-i01",
+    "p10-i08",
+    "p13-i05",
+    "p08-i04",
+    "p08-i07"
+   ]
+  },
+  {
+   "id": "c082",
+   "frase": "F080",
+   "testo": "Oggi salgono sulla torre i più brontoloni.",
+   "carte": [
+    "p04-i08",
+    "p05-i05",
+    "p02-i02",
+    "p08-i09",
+    "p07-i05"
+   ]
+  },
+  {
+   "id": "c083",
+   "frase": "F162",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior compagno di tenda.",
+   "carte": [
+    "p08-i02",
+    "p12-i07",
+    "p13-i07",
+    "p14-i03",
+    "p05-i07"
+   ]
+  },
+  {
+   "id": "c084",
+   "frase": "F079",
+   "testo": "Oggi salgono sulla torre i più maleducati.",
+   "carte": [
+    "p09-i08",
+    "p01-i06",
+    "p06-i10",
+    "p04-i09",
+    "p08-i07"
+   ]
+  },
+  {
+   "id": "c085",
+   "frase": "F277",
+   "testo": "Oggi salgono sulla torre quelli che vanno ai funerali solo per fare scena.",
+   "carte": [
+    "p11-i01",
+    "p11-i06",
+    "p10-i05",
+    "p07-i03",
+    "p02-i08"
+   ]
+  },
+  {
+   "id": "c086",
+   "frase": "F278",
+   "testo": "Oggi salgono sulla torre quelli che si vantano delle proprie conquiste.",
+   "carte": [
+    "p07-i08",
+    "p01-i05",
+    "p11-i03",
+    "p06-i07",
+    "p07-i09"
+   ]
+  },
+  {
+   "id": "c087",
+   "frase": "F085",
+   "testo": "Oggi salgono sulla torre i più opportunisti.",
+   "carte": [
+    "p10-i07",
+    "p09-i05",
+    "p04-i02",
+    "p13-i03",
+    "p08-i01"
+   ]
+  },
+  {
+   "id": "c088",
+   "frase": "F169",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a perdere la pazienza in fila.",
+   "carte": [
+    "p01-i05",
+    "p13-i09",
+    "p03-i03",
+    "p14-i03",
+    "p04-i02"
+   ]
+  },
+  {
+   "id": "c089",
+   "frase": "F271",
+   "testo": "Oggi salgono sulla torre quelli che stanno con qualcuno solo per i soldi.",
+   "carte": [
+    "p05-i02",
+    "p06-i03",
+    "p09-i01",
+    "p13-i03",
+    "p04-i04"
+   ]
+  },
+  {
+   "id": "c090",
+   "frase": "F191",
+   "testo": "Oggi sale sulla torre chi lascerebbe il partner con un messaggio.",
+   "carte": [
+    "p05-i08",
+    "p12-i04",
+    "p01-i06",
+    "p07-i09",
+    "p01-i05"
+   ]
+  },
+  {
+   "id": "c091",
+   "frase": "F063",
+   "testo": "Oggi salgono sulla torre i più impiccioni.",
+   "carte": [
+    "p10-i08",
+    "p02-i09",
+    "p09-i05",
+    "p12-i06",
+    "p04-i09"
+   ]
+  },
+  {
+   "id": "c092",
+   "frase": "F258",
+   "testo": "Oggi salgono sulla torre i più vigliacchi.",
+   "carte": [
+    "p13-i02",
+    "p09-i07",
+    "p01-i02",
+    "p11-i06",
+    "p12-i03"
+   ]
+  },
+  {
+   "id": "c093",
+   "frase": "F236",
+   "testo": "Oggi salgono sulla torre i più bravi a fare i bravi.",
+   "carte": [
+    "p04-i10",
+    "p05-i09",
+    "p12-i07",
+    "p02-i06",
+    "p06-i01"
+   ]
+  },
+  {
+   "id": "c094",
+   "frase": "F190",
+   "testo": "Oggi sale sulla torre chi darebbe la colpa a un innocente pur di salvarsi.",
+   "carte": [
+    "p11-i05",
+    "p06-i05",
+    "p01-i07",
+    "p07-i06",
+    "p01-i06"
+   ]
+  },
+  {
+   "id": "c095",
+   "frase": "F311",
+   "testo": "Oggi sale sulla torre chi direbbe “è solo un’amicizia” senza che lo sia.",
+   "carte": [
+    "p10-i04",
+    "p07-i03",
+    "p12-i05",
+    "p08-i06",
+    "p14-i03"
+   ]
+  },
+  {
+   "id": "c096",
+   "frase": "F150",
+   "testo": "Oggi sale sulla torre chi sarebbe il peggior capo.",
+   "carte": [
+    "p13-i01",
+    "p01-i03",
+    "p03-i10",
+    "p13-i05",
+    "p12-i05"
+   ]
+  },
+  {
+   "id": "c097",
+   "frase": "F280",
+   "testo": "Oggi salgono sulla torre quelli che si fanno belli con i soldi dei genitori.",
+   "carte": [
+    "p01-i07",
+    "p03-i03",
+    "p06-i08",
+    "p06-i01",
+    "p10-i05"
+   ]
+  },
+  {
+   "id": "c098",
+   "frase": "F293",
+   "testo": "Oggi sale sulla torre chi sarebbe il primo a litigare al funerale.",
+   "carte": [
+    "p10-i05",
+    "p09-i06",
+    "p06-i01",
+    "p10-i01",
+    "p02-i02"
+   ]
+  },
+  {
+   "id": "c099",
+   "frase": "F057",
+   "testo": "Oggi salgono sulla torre i più pigri.",
+   "carte": [
+    "p07-i05",
+    "p04-i01",
+    "p03-i03",
+    "p02-i09",
+    "p08-i11"
+   ]
+  },
+  {
+   "id": "c100",
+   "frase": "F304",
+   "testo": "Oggi sale sulla torre chi perdonerebbe un tradimento per comodità.",
+   "carte": [
+    "p04-i02",
+    "p12-i08",
+    "p07-i04",
+    "p07-i03",
+    "p06-i05"
+   ]
+  }
+ ]
+}
