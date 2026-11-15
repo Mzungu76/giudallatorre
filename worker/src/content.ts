@@ -1,10 +1,12 @@
 import manifest from "../../public/cards/manifest.json";
 import frasi from "../../content/frasi-megafono.json";
 import confessioni from "../../content/confessioni.json";
-import { buildPhraseDeck, parseAge, registerTags } from "@gdt/game-engine";
+import { buildPhraseDeck, parseAge, registerTags, registerTagsV2, fullPhrase } from "@gdt/game-engine";
 import type { PhraseCard, PhraseFamily, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import tagsCards from "../../content/tags-personaggi.json";
 import tagsPhrases from "../../content/tags-frasi.json";
+import etPersonaggi from "../../content/etichette/personaggi.v2.json";
+import etFrasi from "../../content/etichette/frasi.v2.json";
 import accuse from "../../content/accuse.json";
 
 /** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
@@ -26,3 +28,10 @@ registerTags(tagsCards as Record<string, { tipo: string[]; temi: string[] }>, {
   ...(tagsPhrases as Record<string, { tipo: string[]; temi: string[] }>),
   ...Object.fromEntries((accuse as { testo: string; tipo: string[]; temi: string[] }[]).map((a) => [a.testo, { tipo: a.tipo, temi: a.temi }])),
 });
+
+/** Etichette v2 (solo per il bot v2, leva TUNE.labelsV2): per testo completo della frase, in entrambe le forme del verbo. Vedi docs/ETICHETTE_V2.md. */
+type T2 = { tipi: Record<string, number>; temi: Record<string, number> };
+const frasiV2 = (etFrasi as { frasi: Record<string, T2> }).frasi;
+registerTagsV2((etPersonaggi as { personaggi: Record<string, T2> }).personaggi, Object.fromEntries(PHRASE_POOL.flatMap((f) => {
+  const t = frasiV2[f.id]; return t ? [[fullPhrase(f), t]] : [];
+})));

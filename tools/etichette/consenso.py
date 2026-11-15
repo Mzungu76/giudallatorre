@@ -35,3 +35,30 @@ json.dump({"versione": 1, "frasi": rev}, open(f"{R}/content/etichette/revisione.
 from collections import Counter
 print(len(out), "frasi;", len(rev), "da rivedere;", Counter(f for r in rev for f in r["motivi"]))
 print("tipi usati:", len({k for v in out.values() for k in v["tipi"]}), "/", len(T), " temi usati:", len({k for v in out.values() for k in v["temi"]}), "/", len(M))
+
+# ---- carte ----
+oldc = json.load(open(f"{R}/content/tags-personaggi.json"))
+cards = {}; crev = []
+for l in open(f"{R}/content/etichette/passate/carte.A.txt"):
+    l = l.strip()
+    if not l: continue
+    i, t, m = l.split("|")
+    tipi = dict(parse(x) for x in t.split()); temi = dict(parse(x) for x in m.split())
+    o = oldc.get(i, {"tipo": [], "temi": []})
+    ot = [x for x in o["tipo"] if x in T]; om = [x for x in o["temi"] if x in M]
+    flags = []
+    if not tipi: flags.append("vuota")
+    if ot and not (set(ot) & set(tipi)): flags.append("tipo-diverso")
+    if om and not (set(om) & set(temi)): flags.append("tema-diverso")
+    cards[i] = {"tipi": tipi, "temi": temi}
+    if flags: crev.append({"id": i, "tipi": tipi, "temi": temi, "vecchie": o, "motivi": flags, "priorita": len(flags)})
+if "p13-i01" in cards: cards["p14-i01"] = cards["p13-i01"]  # duplicato (manifest: duplicate_of)
+crev.sort(key=lambda r: -r["priorita"])
+json.dump({"versione": 1, "personaggi": cards}, open(f"{R}/content/etichette/personaggi.v2.json", "w"), ensure_ascii=False, separators=(",", ":"))
+json.dump({"versione": 1, "personaggi": crev}, open(f"{R}/content/etichette/revisione.personaggi.json", "w"), ensure_ascii=False, indent=1)
+print(len(cards), "carte;", len(crev), "da rivedere")
+# copertura incrociata: tipi/temi usati su un solo lato
+ft = {k for v in out.values() for k in v["tipi"]}; ct = {k for v in cards.values() for k in v["tipi"]}
+fm = {k for v in out.values() for k in v["temi"]}; cm = {k for v in cards.values() for k in v["temi"]}
+print("tipi solo frasi:", sorted(ft - ct), "| solo carte:", sorted(ct - ft))
+print("temi solo frasi:", sorted(fm - cm), "| solo carte:", sorted(cm - fm))
