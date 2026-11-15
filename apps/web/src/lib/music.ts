@@ -37,7 +37,7 @@ export const music = {
   announce(file: string, onMissing?: () => void) {
     if (bg === null || missing.has(file)) { if (bg !== null) onMissing?.(); return; }
     try {
-      const a = new Audio(`/audio/${file}`); a.volume = 0.6;
+      const a = new Audio(`/audio/${file}`); a.volume = Math.min(1, base * 1.1);   // il 10% sopra la musica (segue il cursore del volume), non di più
       const done = () => { window.clearTimeout(jingleTimer); if (jingleOn) { jingleOn = false; this.apply(); } };
       a.addEventListener("ended", done, { once: true });
       a.addEventListener("error", () => { missing.add(file); done(); onMissing?.(); }, { once: true });

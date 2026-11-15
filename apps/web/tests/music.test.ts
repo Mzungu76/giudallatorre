@@ -37,7 +37,8 @@ describe("musica del voto", () => {
   it("intervallo: suono d'annuncio, poi il tema di quell'intervallo fino ai punti; se un file manca si scala (tema intervallo → suspense → sottofondo)", async () => {
     const { music } = await import("../src/lib/music.ts");
     music.play("musica-tema.mp3");
-    music.announce("intervallo-jingle.mp3"); music.voting(true, "intervallo-amore.mp3");
+    music.level(0.5); music.announce("intervallo-jingle.mp3"); music.voting(true, "intervallo-amore.mp3");
+    expect(FakeAudio.all.find((x) => x.src.endsWith("intervallo-jingle.mp3"))!.volume).toBeCloseTo(0.55, 5);   // +10% rispetto alla musica
     expect(playing()).toContain("intervallo-jingle.mp3"); expect(playing()).not.toContain("intervallo-amore.mp3");   // durante il suono il tema non parte (il sottofondo sfuma)
     FakeAudio.all.find((a) => a.src.endsWith("intervallo-jingle.mp3"))!.fire("ended");
     expect(playing()).toContain("intervallo-amore.mp3"); expect(playing()).not.toContain("musica-tema.mp3");
