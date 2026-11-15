@@ -5,6 +5,7 @@ import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 import { loadDb, resetStats, summary } from "../lib/stats.ts";
 import type { GameRec } from "../lib/stats.ts";
+import GameIcon from "../components/GameIcon.tsx";
 import { ICONS, MAX_LEVEL, TIER_COLORS, XP, levelFor, tierOf, xpFor, xpOf } from "../lib/livelli.ts";
 
 const fmtDate = (ms: number) => new Date(ms).toLocaleDateString("it-IT", { day: "numeric", month: "short", year: "numeric" });
@@ -14,7 +15,7 @@ const lvName = (n: number) => ts(`lv.${n}` as TestoKey);
 function Tile({ id, icon, color, label, value, sub }: { id: string; icon: string; color: string; label: string; value: string | number; sub?: string }) {
   return (
     <div className="st-box" style={{ "--c": color } as CSSProperties} data-testid={`st-${id}`}>
-      <i aria-hidden="true">{icon}</i>
+      <i aria-hidden="true"><GameIcon name={icon} size={26} /></i>
       <div><b>{value}</b><span>{label}</span>{sub ? <small>{sub}</small> : null}</div>
     </div>
   );
@@ -55,7 +56,7 @@ function Ring({ value, color }: { value: number | null; color: string }) {
 function Bar({ icon, label, value, color }: { icon: string; label: string; value: number | null; color: string }) {
   return (
     <div className="st-bar">
-      <span><i aria-hidden="true">{icon}</i>{label}</span>
+      <span><i aria-hidden="true"><GameIcon name={icon} size={20} /></i>{label}</span>
       <div><u style={{ width: `${value ?? 0}%`, background: color }} /></div>
       <b>{pc(value)}</b>
     </div>
@@ -76,7 +77,7 @@ export default function Stats() {
         <h2>{t("st.titolo")}</h2>
         {s && L && (
           <section className="st-hero" style={{ "--tc": tc } as CSSProperties} data-testid="st-livello">
-            <div className="st-badge" aria-hidden="true"><span>{ICONS[L.level - 1]}</span></div>
+            <div className="st-badge" aria-hidden="true"><span><GameIcon name={ICONS[L.level - 1]!} size={56} /></span></div>
             <div className="st-hero-t">
               <small>{ts("st.livello", { n: L.level })}</small>
               <b>{lvName(L.level)}</b>
@@ -89,22 +90,22 @@ export default function Stats() {
         {s && (
           <>
             <div className="st-grid">
-              <Tile id="partite" icon="🎮" color="#5b7cfa" label={ts("st.partite")} value={s.games} />
-              <Tile id="vittorie" icon="🏆" color="#ffc72c" label={ts("st.vittorie")} value={s.wins} sub={pc(s.winRate)} />
-              <Tile id="podi" icon="🥇" color="#ff9f45" label={ts("st.podi")} value={s.podiums} />
-              <Tile id="punti" icon="⭐" color="#e8505b" label={ts("st.punti")} value={s.points} />
-              <Tile id="media" icon="📈" color="#14a3a1" label={ts("st.media")} value={s.avg === null ? "–" : String(s.avg).replace(".", ",")} />
-              <Tile id="record" icon="🚀" color="#8e6bd8" label={ts("st.record")} value={s.best} />
-              <Tile id="voti" icon="🗳️" color="#5b7cfa" label={ts("st.voti")} value={s.votes} />
-              <Tile id="intuito" icon="🎯" color="#e8505b" label={ts("st.intuito")} value={pc(s.voteRate)} />
-              <Tile id="cadute" icon="📉" color="#ff9f45" label={ts("st.cadute")} value={s.cardFell} />
-              <Tile id="mega" icon="📣" color="#ffc72c" label={ts("st.mega")} value={s.megaTurns} />
-              <Tile id="annullati" icon="🚫" color="#8e6bd8" label={ts("st.annullati")} value={s.caught} />
-              <Tile id="minis" icon="🎬" color="#14a3a1" label={ts("st.minis")} value={s.minis} />
-              <Tile id="minifast" icon="⚡" color="#e8505b" label={ts("st.minifast")} value={s.miniFast} />
-              <Tile id="cade" icon="⬇️" color="#5b7cfa" label={ts("st.cade")} value={s.cade} sub={pc(s.cadeRate)} />
-              <Tile id="noncade" icon="🛡️" color="#14a3a1" label={ts("st.noncade")} value={s.noncade} sub={pc(s.noncadeRate)} />
-              <Tile id="nulli" icon="✋" color="#ff9f45" label={ts("st.nulli")} value={s.nulli} sub={pc(s.nulliRate)} />
+              <Tile id="partite" icon="gioco" color="#5b7cfa" label={ts("st.partite")} value={s.games} />
+              <Tile id="vittorie" icon="coppa" color="#ffc72c" label={ts("st.vittorie")} value={s.wins} sub={pc(s.winRate)} />
+              <Tile id="podi" icon="medaglia" color="#ff9f45" label={ts("st.podi")} value={s.podiums} />
+              <Tile id="punti" icon="stella" color="#e8505b" label={ts("st.punti")} value={s.points} />
+              <Tile id="media" icon="crescita" color="#14a3a1" label={ts("st.media")} value={s.avg === null ? "–" : String(s.avg).replace(".", ",")} />
+              <Tile id="record" icon="razzo" color="#8e6bd8" label={ts("st.record")} value={s.best} />
+              <Tile id="voti" icon="urna" color="#5b7cfa" label={ts("st.voti")} value={s.votes} />
+              <Tile id="intuito" icon="bersaglio" color="#e8505b" label={ts("st.intuito")} value={pc(s.voteRate)} />
+              <Tile id="cadute" icon="caduta" color="#ff9f45" label={ts("st.cadute")} value={s.cardFell} />
+              <Tile id="mega" icon="megafono" color="#ffc72c" label={ts("st.mega")} value={s.megaTurns} />
+              <Tile id="annullati" icon="divieto" color="#8e6bd8" label={ts("st.annullati")} value={s.caught} />
+              <Tile id="minis" icon="ciak" color="#14a3a1" label={ts("st.minis")} value={s.minis} />
+              <Tile id="minifast" icon="fulmine" color="#e8505b" label={ts("st.minifast")} value={s.miniFast} />
+              <Tile id="cade" icon="freccia" color="#5b7cfa" label={ts("st.cade")} value={s.cade} sub={pc(s.cadeRate)} />
+              <Tile id="noncade" icon="scudo" color="#14a3a1" label={ts("st.noncade")} value={s.noncade} sub={pc(s.noncadeRate)} />
+              <Tile id="nulli" icon="mano" color="#ff9f45" label={ts("st.nulli")} value={s.nulli} sub={pc(s.nulliRate)} />
             </div>
 
             <section className="st-card" data-testid="st-grafici">
@@ -115,11 +116,11 @@ export default function Stats() {
 
             <section className="st-card">
               <h3>{t("st.perc")}</h3>
-              <Bar icon="🎯" label={ts("st.intuito")} value={s.voteRate} color="#e8505b" />
-              <Bar icon="⬇️" label={ts("st.cade")} value={s.cadeRate} color="#5b7cfa" />
-              <Bar icon="🛡️" label={ts("st.noncade")} value={s.noncadeRate} color="#14a3a1" />
-              <Bar icon="✋" label={ts("st.nulli")} value={s.nulliRate} color="#ff9f45" />
-              <Bar icon="🎬" label={ts("st.miniok")} value={s.miniRate} color="#8e6bd8" />
+              <Bar icon="bersaglio" label={ts("st.intuito")} value={s.voteRate} color="#e8505b" />
+              <Bar icon="freccia" label={ts("st.cade")} value={s.cadeRate} color="#5b7cfa" />
+              <Bar icon="scudo" label={ts("st.noncade")} value={s.noncadeRate} color="#14a3a1" />
+              <Bar icon="mano" label={ts("st.nulli")} value={s.nulliRate} color="#ff9f45" />
+              <Bar icon="ciak" label={ts("st.miniok")} value={s.miniRate} color="#8e6bd8" />
             </section>
 
             {s.recent.length > 0 && (
@@ -127,7 +128,7 @@ export default function Stats() {
                 <h3>{t("st.recenti")}</h3>
                 <ul className="st-list" data-testid="st-recenti">
                   {s.recent.slice(0, 8).map((g) => (
-                    <li key={g.id} className={g.won ? "won" : ""}><i aria-hidden="true">{g.rank === 1 ? "🏆" : g.rank === 2 ? "🥈" : g.rank === 3 ? "🥉" : "🎮"}</i>
+                    <li key={g.id} className={g.won ? "won" : ""}><i aria-hidden="true"><GameIcon name={g.rank === 1 ? "coppa" : g.rank === 2 ? "argento" : g.rank === 3 ? "bronzo" : "gioco"} size={24} /></i>
                       <span>{ts("st.riga", { data: fmtDate(g.at), n: g.players, pos: g.rank, punti: g.score })}{g.bots ? ` · ${ts("st.bots")}` : ""}</span></li>
                   ))}
                 </ul>
@@ -141,7 +142,7 @@ export default function Stats() {
                   const done = L ? n <= L.level : false, here = L?.level === n;
                   return (
                     <div key={n} className={`lv${done ? " on" : ""}${here ? " here" : ""}`} style={{ "--tc": TIER_COLORS[tierOf(n)] } as CSSProperties} data-testid={`lv-${n}`}>
-                      <i aria-hidden="true">{ICONS[n - 1]}</i>
+                      <i aria-hidden="true"><GameIcon name={ICONS[n - 1]!} size={34} /></i>
                       <b>{n}</b><span>{lvName(n)}</span><small>{here ? ts("st.sei") : ts("st.richiede", { xp: xpFor(n) })}</small>
                     </div>
                   );

@@ -18,13 +18,13 @@ export function xpOf(t: Totals): number {
 /** XP totali necessari per raggiungere il livello `n` (1 = 0). */
 export const xpFor = (n: number): number => (n <= 1 ? 0 : Math.round((40 * (n - 1) ** 1.5) / 10) * 10);
 
-/** Un'icona a tema per ogni livello (dalle fondamenta alla leggenda della Torre). */
+/** Un'icona disegnata per ogni livello (nomi in `components/GameIcon.tsx`): dalle fondamenta alla leggenda della Torre. */
 export const ICONS: readonly string[] = [
-  "🚶", "👀", "🍿", "🪨", "🧱", "🔨", "🪣", "🏗️", "🪜", "🚪",
-  "🔑", "🛎️", "🛗", "🪟", "🌺", "🗣️", "🃏", "🗳️", "📍", "🏢",
-  "😵‍💫", "🎯", "👃", "🎭", "🏰", "📣", "♟️", "📉", "🛡️", "🚫",
-  "🏹", "🔮", "🧠", "⚡", "🗼", "🎬", "🪂", "🤹", "☁️", "🌇",
-  "🦅", "🥋", "🎩", "🧿", "🏆", "⭐", "🌩️", "👑", "🐉", "🌟",
+  "passante", "curioso", "spettatore", "sassolino", "mattone", "muratore", "secchio", "impalcatura", "scala", "porta",
+  "chiave", "campanello", "ascensore", "finestra", "balcone", "pettegolo", "carte", "urna", "spillo", "palazzo",
+  "vertigini", "bersaglio", "fiuto", "maschere", "castello", "megafono", "pedina", "caduta", "scudo", "divieto",
+  "arco", "sfera", "cervello", "fulmine", "torre", "ciak", "paracadute", "equilibrista", "nuvola", "terrazza",
+  "aquila", "maestro", "cilindro", "occhio", "coppa", "stella", "tempesta", "corona", "drago", "leggenda",
 ];
 /** Cinque fasce da dieci livelli, ognuna col suo colore. */
 export const TIER_COLORS = ["#c98f5a", "#14a3a1", "#5b7cfa", "#e8505b", "#ffc72c"] as const;

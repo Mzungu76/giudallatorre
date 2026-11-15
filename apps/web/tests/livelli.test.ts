@@ -2,13 +2,14 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { emptyDb } from "../src/lib/stats.ts";
+import { ART } from "../src/components/GameIcon.tsx";
 import { ICONS, MAX_LEVEL, XP, levelFor, tierOf, xpFor, xpOf } from "../src/lib/livelli.ts";
 
 const testi = JSON.parse(readFileSync(join(import.meta.dirname, "../../../public/testi.json"), "utf8")).testi as Record<string, { t: string }>;
 
 describe("livelli del giocatore", () => {
   it("50 livelli, ognuno con icona (tutte diverse) e titolo nei testi", () => {
-    expect(MAX_LEVEL).toBe(50); expect(ICONS).toHaveLength(50); expect(new Set(ICONS).size).toBe(50);
+    expect(MAX_LEVEL).toBe(50); expect(ICONS).toHaveLength(50); expect(new Set(ICONS).size).toBe(50); for (const n of ICONS) expect(ART[n], `icona ${n}`).toBeTruthy();
     for (let n = 1; n <= 50; n++) expect(testi[`lv.${n}`]?.t.length, `lv.${n}`).toBeGreaterThan(2);
     expect(new Set(Array.from({ length: 50 }, (_, i) => testi[`lv.${i + 1}`]!.t)).size).toBe(50);
   });
