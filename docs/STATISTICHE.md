@@ -22,3 +22,10 @@ Le partite con bot contano come le altre (sono segnate «con bot» nello storico
 
 ## Limiti
 Nessuna sincronizzazione tra dispositivi, nessuna esportazione (si può aggiungere). I testi sono in `public/testi.json` (chiavi `st.*`).
+
+## Livelli (50)
+Il livello si calcola dai contatori già salvati (`apps/web/src/lib/livelli.ts`): niente dati in più, e chi ha già giocato trova subito il suo livello.
+- **Esperienza (XP)**: partita finita +25, sul podio +15, vittoria +25, ogni punto +1, ogni voto da Folla +1, carta votata che cade +4, turno da Megafono +6, segnalino a segno +10, intervallo giocato +5, azzeccato +10, più veloce +15. Una partita vinta vale circa 100 XP.
+- **Soglie**: XP per il livello *n* = 40 × (n−1)^1,5, arrotondato a 10 (livello 2 = 40 XP, 10 ≈ 1.140, 25 ≈ 5.060, 50 ≈ 13.720). Il passaggio da un livello al successivo costa sempre di più (da 40 XP a oltre 400 XP).
+- **Titoli** (`lv.1`…`lv.50` in `public/testi.json`) e **icone** (emoji, in `ICONS`): cinque fasce da dieci livelli, ognuna col suo colore: Fondamenta (1–10), Salita (11–20), Vertigine (21–30), Cima (31–40), Leggenda (41–50).
+- Per cambiare le regole basta modificare `XP` e `xpFor` in `livelli.ts`; il test `livelli.test.ts` controlla 50 livelli, icone e titoli distinti, crescita non lineare.
