@@ -1,0 +1,49 @@
+import { describe, expect, it } from "vitest";
+import { suggestAction } from "@gdt/game-engine";
+import type { GameState } from "@gdt/game-engine";
+import { createRoomBody } from "@gdt/game-protocol";
+import { RoomCore } from "../src/RoomCore.ts";
+import { deps } from "./helpers.ts";
+
+function playSolo(core: RoomCore, humanId: string, restartAt?: number) {
+  let now = 0, guard = 0, c = core, worst = 0;
+  core.onConnect(humanId, 0); core.handle(humanId, { t: "start" }, 0);
+  while (c.data.stage === "PLAYING" && guard++ < 6000) {
+    const g = c.data.game as GameState, a = suggestAction(g, humanId, Math.random);
+    if (a) { const { playerId: _p, ...action } = a as Record<string, unknown>; c.handle(humanId, { t: "act", action } as never, now); }
+    else if (g.phase === "RESULTS" || g.phase === "MINI_RESULTS") c.handle(humanId, { t: "act", action: { type: "advance" } }, now);
+    now += 1500; const t0 = performance.now(); c.tick(now); worst = Math.max(worst, performance.now() - t0);
+    if (restartAt === guard) { c = new RoomCore(JSON.parse(JSON.stringify(c.data)), deps(9)); c.onConnect(humanId, now); }
+  }
+  return { core: c, guard, worst };
+}
+
+describe("bot v2 sperimentali (solo stanze di collaudo)", () => {
+  it("di default e in collaudo senza l'opzione: nessuna differenza, bot di sempre", () => {
+    for (const debug of [false, true]) {
+      const c = RoomCore.create("DEFLT", deps(5), 0, { nickname: "Solo", ...(debug ? { debug: true } : {}), bots: { count: 3, level: "hard" } });
+      expect(c.core.data.options.botEngine).toBeUndefined(); expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
+    }
+  });
+  it("tempo del tick a 6 giocatori: bot attuali e v2, 5 partite ciascuno (informativo)", () => {
+    const worst = (opt: object) => { let w = 0, sum = 0; for (let k = 0; k < 5; k++) { const c = RoomCore.create("TIMEZ", deps(20 + k), 0, { nickname: "Solo", debug: true, ...opt, bots: { count: 5, level: "hard" } }); const r = playSolo(c.core, c.playerId); w = Math.max(w, r.worst); sum += r.worst; } return { w, mean: sum / 5 }; };
+    const a = worst({}), b = worst({ botEngine: "v2" });
+    console.log(`tick peggiore (max su 5 partite): bot attuali ${a.w.toFixed(1)} ms, v2 ${b.w.toFixed(1)} ms; media dei massimi ${a.mean.toFixed(1)} / ${b.mean.toFixed(1)}`);
+    expect(b.w).toBeLessThan(250);
+  });
+  it("l'opzione vale solo con debug e solo per il valore previsto", () => {
+    expect(RoomCore.create("NODBG", deps(5), 0, { nickname: "Solo", botEngine: "v2", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBeUndefined();
+    expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "v2" }).success).toBe(true);
+    expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "x" }).success).toBe(false);
+  });
+  it("con l'opzione: partita completa con bot v2, anche con riavvio a metà; memoria serializzabile; tempo del tick contenuto", () => {
+    for (const [restartAt, bots] of [[undefined, 3], [40, 3], [undefined, 5]] as const) {
+      const c = RoomCore.create("V2XXX", deps(7), 0, { nickname: "Solo", debug: true, botEngine: "v2", bots: { count: bots, level: "hard" } });
+      expect(c.core.data.options.botEngine).toBe("v2");
+      const { core, guard, worst } = playSolo(c.core, c.playerId, restartAt);
+      expect(core.data.stage).toBe("FINISHED"); expect(guard).toBeLessThan(6000); expect(worst).toBeLessThan(100);
+      expect(Object.keys((core.data.botMem as { follow?: object }).follow ?? {}).length).toBeGreaterThan(0);   // ha imparato quanto ognuno segue il segnalino
+      if (bots === 5) console.log(`tick peggiore con bot v2 a 6 giocatori: ${worst.toFixed(1)} ms`);
+    }
+  });
+});
