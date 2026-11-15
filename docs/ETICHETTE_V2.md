@@ -22,6 +22,15 @@ Etichettatura: le carte sono state guardate una a una sulle illustrazioni; le fr
 ## Come le usa il bot (solo v2, spento di default)
 `packages/game-engine/src/ai-v2/tags2.ts`: affinità = per ogni etichetta in comune, base (tipo 3, tema 2) × (peso carta + peso frase)/6. Leva `TUNE.labelsV2` (0 = come i bot attuali, **valore predefinito**). Le frasi senza etichette v2 (accuse del mini-gioco, confessioni, frasi nuove) usano il vecchio sistema. `ai.ts`, `tags.ts`, `bot.ts`, `botstyle.ts` non sono toccati (test di impronta).
 
+## Revisione del proprietario (risultati)
+- Campione di 30 (15 frasi + 15 carte, a caso): frasi 15/15 giuste; carte 11/15 giuste, 2 dubbie, 2 sbagliate.
+- 24 carte dubbie: 11 giuste, 3 dubbie, 10 sbagliate → corrette 13 carte. Errore tipico: leggevo gli oggetti, non la storia del personaggio.
+- Rilettura «per storia» delle altre 76 carte (passata B, `passate/carte.B.txt`): 28 aggiornate. Verifica a campione su 20: 16 giuste, 4 dubbie, 0 sbagliate; 6 carte affinate in base alle note.
+- Totale carte viste dal proprietario: 83 su 119 (70%) (campioni e dubbie); le altre sono state rilette da me con il metodo corretto.
+
+## Provare le etichette con persone: `?motore=v2e`
+Nella stanza di collaudo: `/crea?debug=bot&motore=v2e` = bot v2 + etichette v2 (`chooseBotActionV2E` accende `TUNE.labelsV2` solo durante la chiamata, per stanza). Confronto: `?motore=v2` (v2 con etichette vecchie) e `/crea?debug=bot` (bot attuali). Solo con `debug`; kill switch `V2_BOTS_ENABLED` in `RoomCore.ts` (docs/AI_ROLLBACK.md).
+
 ## Cosa sappiamo e cosa no (onestà)
 - **Bot contro bot, 600 partite, 4 giocatori difficili (2 v2 + 2 attuali)**: vantaggio di v2 sugli attuali 2,51 ± 0,36 punti con `labelsV2=0` e 2,08 ± 0,40 con `labelsV2=1`. Cioè le nuove etichette **non migliorano** il risultato in laboratorio, anzi lo riducono un po'. È atteso: in laboratorio la «folla» sono i bot attuali, che votano con le etichette *vecchie*; prevedere la loro folla con etichette diverse non può aiutare. **Il laboratorio non può dire se le nuove etichette descrivono meglio gli umani.** Per questo la leva resta spenta.
 - La qualità vera si misura solo così: (a) la tua revisione di un campione e dei dubbi, (b) un test con persone su link di prova. Passo successivo proposto: aggiungere alla stanza di collaudo una scelta `?etichette=v2` e confrontare con tester quanto i bot «capiscono» chi cade.

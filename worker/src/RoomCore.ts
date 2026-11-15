@@ -1,4 +1,4 @@
-import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, learnFromResultV2, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, learnFromResultV2, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -93,7 +93,7 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
@@ -263,7 +263,7 @@ export class RoomCore {
     d.game = state; d.seq++; out.persist = true;
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
-    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine === "v2" ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
+    if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);
@@ -347,7 +347,7 @@ export class RoomCore {
     return { ...out, alarmAt: this.nextAlarm() };
   }
   /** Funzione di scelta dei bot: quella di sempre, salvo nelle stanze di collaudo create con `motore=v2`. */
-  private botChoice() { return this.data.options.botEngine === "v2" ? chooseBotActionV2 : chooseBotAction; }
+  private botChoice() { const e = this.data.options.botEngine; return e === "v2e" ? chooseBotActionV2E : e === "v2" ? chooseBotActionV2 : chooseBotAction; }
   /** Programma la prossima azione dei bot se ce n'è almeno una disponibile (ritardo umano: 0,9–2 s). */
   private scheduleBots(now: number) {
     const d = this.data;

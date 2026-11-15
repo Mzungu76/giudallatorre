@@ -46,4 +46,13 @@ describe("bot v2 sperimentali (solo stanze di collaudo)", () => {
       if (bots === 5) console.log(`tick peggiore con bot v2 a 6 giocatori: ${worst.toFixed(1)} ms`);
     }
   });
+  it("v2e (v2 con etichette v2): accettata solo con debug, partita completa, la leva globale resta spenta", async () => {
+    const { TUNE } = await import("../../packages/game-engine/src/ai-v2/ai.ts");
+    expect(createRoomBody.safeParse({ nickname: "Ale", debug: true, botEngine: "v2e" }).success).toBe(true);
+    expect(RoomCore.create("NODB2", deps(5), 0, { nickname: "Solo", botEngine: "v2e", bots: { count: 3, level: "hard" } }).core.data.options.botEngine).toBeUndefined();
+    const c = RoomCore.create("V2EXX", deps(9), 0, { nickname: "Solo", debug: true, botEngine: "v2e", bots: { count: 3, level: "hard" } });
+    expect(c.core.data.options.botEngine).toBe("v2e");
+    expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
+    expect(TUNE.labelsV2).toBe(0);
+  });
 });

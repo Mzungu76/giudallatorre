@@ -5,3 +5,7 @@
 - **Interruttore**: `V2_BOTS_ENABLED = false` in `worker/src/RoomCore.ts` fa ignorare l'opzione.
 - **Annullare il collegamento**: `git revert` del commit «Bot v2 sperimentali nelle stanze di collaudo» (isolato: tocca solo Worker, protocollo e form di creazione).
 - **Backup**: ramo `backup/main-6e2f4b1-prima-dei-bot-strategici` = `main` prima di tutto il lavoro sui bot.
+
+
+## Etichette v2 e opzione `v2e`
+`botEngine: "v2e"` (solo con `debug`) usa il bot v2 con le etichette v2. Spegnimento: `V2_BOTS_ENABLED = false` in `worker/src/RoomCore.ts` (ignora `v2` e `v2e`). Le etichette v2 sono dati in `content/etichette/` e non toccano `ai.ts` né `tags.ts`.

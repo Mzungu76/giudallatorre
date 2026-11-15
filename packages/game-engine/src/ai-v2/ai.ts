@@ -147,6 +147,9 @@ const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2
 
 export const TUNE = { labelsV2: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
+/** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
+export function chooseBotActionLabels(...a: Parameters<typeof chooseBotAction>): ReturnType<typeof chooseBotAction> { const o = TUNE.labelsV2; TUNE.labelsV2 = 1; try { return chooseBotAction(...a); } finally { TUNE.labelsV2 = o; } }
+
 export function chooseBotAction(s: GameState, me: PlayerId, level0: BotLevel, mem: BotMemory, rand: () => number, style: BotStyle = NEUTRAL_STYLE): Action | null {
   // le sviste: il facile sbaglia spesso (a caso 6 volte su 10, il resto come un medio che non legge i bluff), il medio ogni tanto, il difficile mai
   const lapse = level0 === "easy" ? TUNE.easyLapse : level0 === "medium" ? TUNE.mediumLapse : 0, level: BotLevel = rand() < lapse ? "easy" : level0 === "easy" ? "medium" : level0, sk = SKILL[level0], st = style;
