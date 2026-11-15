@@ -4,7 +4,9 @@ Carica qui i file MP3 (minuscolo, senza spazi né accenti).
 
 ## Musica (loop 30-60 s)
 - musica-tema.mp3       lobby, menu, attesa
-- musica-suspense.mp3   suspense del voto: parte appena le carte hanno finito di salire sulla torre e dura fino alla fine della caduta della carta (poi, sul percorso dei punti, torna musica-tema.mp3). Nei minigiochi: dal 3-2-1 alla fine della scenetta finale. Se il file manca, resta il tema.
+- musica-suspense.mp3   suspense del voto: parte appena le carte hanno finito di salire sulla torre e dura fino alla fine della caduta della carta (poi, sul percorso dei punti, torna musica-tema.mp3). Se il file manca, resta il tema.
+- intervallo-jingle.mp3   suono breve (non in loop) all'annuncio dell'intervallo; finito, parte il tema dell'intervallo
+- intervallo-accusa.mp3  intervallo-amore.mp3  intervallo-peggiore.mp3   tema (loop) di ciascun intervallo, fino ai punti; se manca, suona musica-suspense.mp3
 - musica-finale.mp3     scena finale e risultati
 - jingle-inizio.mp3     stacco 3-5 s, non in loop
 
@@ -16,3 +18,5 @@ Carica qui i file MP3 (minuscolo, senza spazi né accenti).
 
 Ricorda di annotare l'autore e la licenza di ogni brano in CREDITI.md
 (obbligatorio per Kevin MacLeod e per ogni brano CC-BY).
+
+Peso: i brani lunghi sono a 128 kbps stereo (circa 1 MB al minuto). Per ricodificare: `ffmpeg -i originale.mp3 -c:a libmp3lame -b:a 128k nuovo.mp3`.

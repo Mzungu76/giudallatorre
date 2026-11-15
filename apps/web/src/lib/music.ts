@@ -3,7 +3,8 @@
 let el: HTMLAudioElement | null = null, key = "", timer = 0, duckTimer = 0, wanted = false, armed = false, base = 0.15;
 // Musica del voto: durante il voto (turni e intervalli) suona VOTE_FILE al posto del brano di sottofondo. Se il file non c'è ancora, resta il brano di sottofondo.
 const VOTE_FILE = "musica-suspense.mp3";
-let bg: string | null = null, voting = false; const missing = new Set<string>();
+// Intervalli: un suono breve all'annuncio (`announce`), poi il tema di quell'intervallo (`voting(true, file)`) fino ai punti. Se un file manca si scala: tema dell'intervallo → musica del voto → sottofondo.
+let bg: string | null = null, voting = false, voteFile: string | null = null, jingleOn = false, jingleTimer = 0; const missing = new Set<string>();
 
 function fadeTo(target: number, ms = 1200, then?: () => void) {
   window.clearInterval(timer);
@@ -31,16 +32,31 @@ export const music = {
     bg = bgFile; this.apply();
   },
   /** Il voto è in corso (voto dei turni o dell'intervallo): suona la musica del voto, finito torna il sottofondo. */
-  voting(on: boolean) { if (voting === on) return; voting = on; this.apply(); },
+  voting(on: boolean, file: string | null = null) { if (voting === on && voteFile === file) return; voting = on; voteFile = on ? file : null; if (!on) this.endJingle(); this.apply(); },
+  /** Suono breve all'annuncio dell'intervallo: la musica tace e, alla fine del suono (o se il file manca o dopo 15 s), parte il tema. `onMissing`: cosa fare se il file non c'è. */
+  announce(file: string, onMissing?: () => void) {
+    if (bg === null || missing.has(file)) { if (bg !== null) onMissing?.(); return; }
+    try {
+      const a = new Audio(`/audio/${file}`); a.volume = Math.min(1, base * 1.1);   // il 10% sopra la musica (segue il cursore del volume), non di più
+      const done = () => { window.clearTimeout(jingleTimer); if (jingleOn) { jingleOn = false; this.apply(); } };
+      a.addEventListener("ended", done, { once: true });
+      a.addEventListener("error", () => { missing.add(file); done(); onMissing?.(); }, { once: true });
+      jingleOn = true; window.clearTimeout(jingleTimer); jingleTimer = window.setTimeout(done, 15000);
+      void a.play().catch(() => done());
+      this.apply();
+    } catch { jingleOn = false; onMissing?.(); }
+  },
+  endJingle() { window.clearTimeout(jingleTimer); jingleOn = false; },
   apply() {
     try {
-      const file = bg === null ? null : voting && !missing.has(VOTE_FILE) ? VOTE_FILE : bg;
+      const vf = voteFile && !missing.has(voteFile) ? voteFile : !missing.has(VOTE_FILE) ? VOTE_FILE : bg;
+      const file = bg === null || jingleOn ? null : voting ? vf : bg;
       wanted = file !== null;
       if (file === null) { fadeTo(0, 800, () => { if (!wanted) el?.pause(); }); return; }
       if (!el || key !== file) {
         el?.pause();
         const a = new Audio(`/audio/${file}`); a.loop = true; a.preload = "auto"; a.volume = 0; key = file; el = a;
-        if (file === VOTE_FILE) a.addEventListener("error", () => { missing.add(VOTE_FILE); if (el === a) this.apply(); }, { once: true });   // file assente: resta il sottofondo
+        if (file !== bg) a.addEventListener("error", () => { missing.add(file); if (el === a) this.apply(); }, { once: true });   // file assente: si scala al successivo
       }
       retryOnTouch(); // rete di sicurezza: se il browser blocca o ritarda l'avvio, il primo tocco la fa partire
       void el.play().then(() => { if (wanted) fadeTo(base); }).catch(() => undefined);
