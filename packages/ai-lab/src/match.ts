@@ -15,6 +15,7 @@ export interface SeatResult {
 export interface GameRow { game: number; seed: number; players: number; turns: number; golden: boolean; problems: string[]; seats: SeatResult[] }
 
 export interface PlayOptions {
+  /** Chiamata a ogni turno concluso (fase RESULTS), con lo stato completo: serve agli strumenti di analisi del laboratorio, non ai giocatori. */ onResults?: (s: GameState) => void;
   /** Intervallo (mini-gioco) a metà partita: "random" (come in gioco) o false. */ miniGame?: "random" | false;
   /** true (default): un'azione illegale o una partita bloccata lanciano un errore; false: la partita finisce segnata con un problema. */ strict?: boolean;
 }
@@ -37,7 +38,7 @@ export function playGame(seats: readonly AgentSpec[], game: number, seed: number
   let guard = 0;
   while (s.phase !== "GAME_OVER") {
     if (++guard > 8000) { if (strict) throw new Error(`partita ${game} (seme ${seed}) non termina`); problems.push("non termina"); break; }
-    if (s.phase === "RESULTS") { agents.forEach((a, i) => a.learn(s, ids[i]!)); s = applyAction(s, { type: "advance" }).state; continue; }
+    if (s.phase === "RESULTS") { opts.onResults?.(s); agents.forEach((a, i) => a.learn(s, ids[i]!)); s = applyAction(s, { type: "advance" }).state; continue; }
     if (s.phase === "MINI_RESULTS") { s = applyAction(s, { type: "advance" }).state; continue; }
     const snapshot = s, acts: { i: number; a: Action }[] = [];
     for (let i = 0; i < n; i++) {

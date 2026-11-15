@@ -28,3 +28,11 @@ Nella prima stesura della Fase 1 avevo modificato `ai.ts` e `engine.ts` (puntegg
 - Test: 25 nuovi (ripetibilità, rotazione dei posti, simultaneità, confine osservazione, ripristino dei parametri, esportazione, statistica). Un test ha trovato e fatto correggere un difetto del laboratorio stesso (parametri non ripristinati se il torneo veniva rifiutato a metà).
 - Prime misure (bot attuali, 1.000 partite per confronto): Difficile > Medio > Facile in modo netto (`AI_BENCHMARKS.md` §4); baseline e produzione alla pari.
 - Regressioni: nessuna; bot in produzione intoccati.
+
+## Fase 4 — Opponent Model e previsione dei voti (2026-11-15)
+- `packages/strategic-ai/src/opponents/`: logit multinomiale con prior e stima MAP (`logit.ts`), tipi (λ, ε) con EM e posteriore bayesiano (`types.ts`), modello per giocatore, tipo di tavolo, previsione dei voti, della convergenza e della caduta (`model.ts`), prior della popolazione (`prior.ts`, `prior.fitted.json`). Solo codice nuovo: bot in produzione intoccati; nulla è collegato alle stanze.
+- `packages/ai-lab`: raccolta dei turni conclusi, ri-riproduzione offline dei predittori, confronti appaiati, calibrazione della convergenza, stima del prior (`npm run lab -- predict-eval | fit-prior`); aggancio opzionale `onResults` in `playGame`.
+- `game-engine/src/index.ts`: esportato `crowdProbs` (sola aggiunta, per confrontare il modello di folla dei bot attuali).
+- Misure (`AI_BENCHMARKS.md` §5): il modello prevede il voto degli altri molto meglio del modello di folla dei bot attuali (5 giocatori: −1,358 contro −1,544 nats/voto, accuratezza 47,5% contro 32,7%); l'adattamento al singolo aggiunge un guadagno piccolo ma crescente col turno; convergenza ben calibrata. Limite: tavolo di soli Facili previsto peggio del caso.
+- Test: 25 nuovi (331 totali). Un test di equivalenza ha rivelato una discrepanza (κ predefinito diverso tra valutazione offline e modello in partita), corretta nel test.
+- Regressioni: nessuna.

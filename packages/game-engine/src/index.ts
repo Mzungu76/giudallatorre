@@ -9,7 +9,7 @@ export { suggestAction } from "./bot.ts";
 export { simulateGame } from "./sim.ts";
 export { checkInvariants } from "./invariants.ts";
 export { shuffle, nextRandom } from "./rng.ts";
-export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
+export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS, crowdProbs } from "./ai.ts";
 export { BOT_ENGINES, DEFAULT_BOT_ENGINE, getBotEngine } from "./bot-engines.ts";
 export type { BotEngine } from "./bot-engines.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";

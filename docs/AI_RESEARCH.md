@@ -86,4 +86,5 @@ Principio guida (dal prompt, §18): **partire dalla soluzione più semplice**; o
 - Osservazione e azioni legali (confine di fair play): `src/observation.ts`; interfaccia dei motori: `packages/strategic-ai/src/api.ts`.
 - Baseline congelata e registro versioni: `src/ai-baseline/ai.ts`, `src/bot-engines.ts`.
 - Confronto versioni (precursore del laboratorio): `tools/analysis/engine-compare.ts`.
-- Tutto il resto (S1–S7): **non ancora implementato**.
+- S2/S4 (opponent model bayesiano per tipi, risposta quantale) e previsione dei voti: `packages/strategic-ai/src/opponents/` (Fase 4; `AI_ALGORITHMS.md`, misure in `AI_BENCHMARKS.md` §5). Scelta: ragionamento per tipi (Albrecht & Stone) con griglia (λ, ε) e pesi di popolazione stimati con EM; coefficienti liberi per giocatore misurati e scartati come predefiniti (troppo pochi dati per partita).
+- S1, S3, S5, S6, S7: **non ancora implementati**.

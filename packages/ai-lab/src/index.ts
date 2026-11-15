@@ -5,5 +5,8 @@ export type { GameRow, SeatResult, LabContent, PlayOptions } from "./match.ts";
 export { runTournament, validateConfig, lineupFor, summarize, compareGroups, byParticipant, byLevel, byEngine, byStyle, byPlayers, bySeat, LAB_VERSION } from "./tournament.ts";
 export type { TournamentConfig, TournamentResult, Summary, RunOptions } from "./tournament.ts";
 export { gamesCsv, summaryCsv, summaryTables, resultsJson, formatReport, csvCell } from "./export.ts";
+export { collectLogs, evaluate, compareEval, summarizeEval, convergenceCalibration, turnDataFromState, uniformPredictor, productionCrowdPredictor, logitPredictor } from "./predictionEval.ts";
+export type { GameLog, VotePredictor, Evaluation, Obs } from "./predictionEval.ts";
+export { fitPrior, pooledChoices } from "./fitPrior.ts";
 export { meanCI, wilson, pairedDiff, gamesNeeded, hashString } from "./stats.ts";
 export type { MeanCI } from "./stats.ts";

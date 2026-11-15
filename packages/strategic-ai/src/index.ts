@@ -1,3 +1,12 @@
 export type { DecisionContext, StrategicEngine } from "./api.ts";
 export { randomLegal } from "./engines/randomLegal.ts";
 export { STRATEGIC_ENGINES, getStrategicEngine } from "./registry.ts";
+export { DEFAULT_PRIOR } from "./opponents/prior.ts";
+export type { OpponentPrior } from "./opponents/prior.ts";
+export { DEFAULT_TABLE_WEIGHT, FEATURES, D, newOpponentMemory, learnTurn, optionFeatures, choicesOf, posterior, predictVotes, predictCrowd, predictFall, contextOf, whoOf, turnDataOf, priorMean } from "./opponents/model.ts";
+export type { TurnContext, TurnData, OpponentMemory, Role, Who, PredictOptions, AdaptMode } from "./opponents/model.ts";
+export { defaultTypeGrid, fitTypeWeights, typeLogLiks, typePosterior, describeTypes, mixProbs, typeOf } from "./opponents/types.ts";
+export type { TypeGrid } from "./opponents/types.ts";
+export { describePlayer } from "./opponents/model.ts";
+export { fitMAP, choiceProbs, meanLogLik, softmax } from "./opponents/logit.ts";
+export type { Choice, Fit } from "./opponents/logit.ts";

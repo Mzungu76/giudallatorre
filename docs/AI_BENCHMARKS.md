@@ -64,5 +64,31 @@ Lettura:
 - **Limite di validità**: sono bot contro bot, con lo stesso modello di percezione (etichette): non dicono nulla sulla forza contro persone.
 - Questi numeri sono la **base di riferimento** per i motori nuovi: un motore nuovo di livello Difficile dovrà batterli, con IC, in tutti e tre i confronti di formazione (contro `production:hard`, `production:medium`, popolazione mista).
 
-## 5. Ancora da misurare (Fase 4 in poi)
+## 5. Fase 4: previsione del voto degli avversari
+Metodo: `npm run lab -- predict-eval` (vedi `AI_LABORATORY.md`). Si giocano partite con una popolazione di bot attuali (3 Difficili, 3 Medi, 3 Facili nel gruppo, caratteri a caso, estratti a ogni partita), si registrano i turni conclusi e li si ri-riproduce offline: per ogni osservatore e turno il predittore vede solo ciò che l'osservatore sapeva al voto e prevede i voti **degli altri**. Metrica: log-verosimiglianza media per voto (nats; più alta = meglio; il caso = ln(1/n)) e accuratezza. **Prior addestrato su partite diverse** (seme 31337, 1.500 partite) da quelle di prova (seme 424242); un test garantisce che la valutazione offline coincida con ciò che l'agente fa in partita.
+
+| Scenario (partite) | Caso | Folla dei bot attuali (hard) | Prior di popolazione | **Modello (tipi + tavolo)** | Accuratezza | Modello − popolazione |
+|---|---|---|---|---|---|---|
+| 3 giocatori misti (800) | −1,099 | −1,184 | −0,969 | **−0,946** | 57,5% (caso 33,3%) | +0,0225 |
+| 5 giocatori misti (800) | −1,609 | −1,544 | −1,375 | **−1,358** | 47,5% (caso 20%) | +0,0174 |
+| 6 giocatori misti (800) | −1,792 | −1,717 | −1,547 | **−1,522** | 43,9% (caso 16,7%) | +0,0246 |
+| 8 giocatori misti (300) | −2,079 | −2,006 | −1,820 | **−1,784** | 38,5% (caso 12,5%) | +0,0360 |
+| 5 giocatori, tutti Difficili (800) | −1,609 | −1,293 | −0,973 | **−0,918** | 76,1% (caso 20%) | +0,0550 |
+| 5 giocatori, tutti Facili (800) | −1,609 | −1,706 | −1,678 | **−1,649** | 26,3% (caso 20%) | +0,0293 |
+
+(Tutte le differenze tra colonne sono «rilevabili», IC 95% ben lontano dallo zero; vedi i limiti sugli intervalli in `AI_ALGORITHMS.md` §8.)
+
+Letture:
+1. **Il grosso del guadagno viene dal modello di popolazione**: prevede il voto molto meglio del modello di folla che i bot attuali usano di nascosto (`crowdProbs`), che ignora il segnalino e tratta tutti allo stesso modo (5 giocatori: −1,375 contro −1,544; accuratezza 47,5% contro 32,7%). Il modello vecchio è addirittura peggiore del caso a 3 giocatori e con tavoli di soli Facili.
+2. **L'adattamento al singolo giocatore vale di meno ma è reale e cresce col turno** (5 giocatori, modello − popolazione: turno 1 +0,001 non rilevabile, turno 2 +0,012, turno 3 +0,016, turno 4 +0,024, turno 5 +0,032). Con più giocatori ci sono più turni e più voti da cui imparare (8 giocatori: +0,054 all'ultimo turno).
+3. **Confronto tra le modalità di adattamento** (5 giocatori misti, rispetto al solo prior): coefficienti liberi +0,0012; solo scala λ +0,0115; scala + coefficienti +0,0116; **tipi (λ, ε)** +0,0188; tipi + tavolo (κ=4) +0,0174. I coefficienti liberi imparano troppo poco da ≤ 7 voti; i tipi sono più efficienti. Il tipo di tavolo aiuta nei tavoli omogenei (tutti Difficili: tipi +0,044 → +0,055; tutti Facili +0,021 → +0,029) e costa poco nei misti (−0,001): κ = 4 è un compromesso.
+4. **Per livello del votante** (5 giocatori misti, modello − popolazione): Facili +0,027, Difficili +0,036, Medi −0,011 (i Medi sono il centro del prior: l'adattamento aggiunge solo rumore).
+5. **Dipendenze tra decisioni**: la convergenza prevista coincide con quella osservata (5 giocatori: P(≥ 2 altri sulla stessa carta) 89,7% prevista, 89,8% osservata; ≥ 3: 33,0% / 33,0%; ≥ 4: 6,3% / 6,2%; 8 giocatori: 99,4/99,4, 67,6/68,9, 31,3/31,5).
+6. **Limite**: un tavolo di soli Facili resta previsto peggio del caso (−1,649 contro −1,609): vedi `AI_ALGORITHMS.md` §8.
+
+Costo: `predictVotes` 0,4–2,2 ms (3–8 giocatori), `predictFall` ≈ 1 ms (400 campioni).
+
+**Cosa NON dimostra**: né prestazioni migliori in partita (qui si misura solo la previsione, componente isolato), né nulla sulle persone. Il valore del modello si vedrà quando le sue previsioni guideranno le decisioni (Fasi 5–6) e si confronteranno con la base di riferimento di §4.
+
+## 6. Ancora da misurare (Fase 5 in poi)
 Differenze per personalità/carattere, popolazione eterogenea, precisione delle previsioni, sfruttabilità, strategie dominanti, e confronti con giocatori umani.

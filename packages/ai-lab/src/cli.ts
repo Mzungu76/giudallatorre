@@ -13,6 +13,7 @@ import { compareGroups, runTournament } from "./tournament.ts";
 import type { TournamentConfig } from "./tournament.ts";
 import { formatReport, gamesCsv, resultsJson, summaryCsv, summaryTables } from "./export.ts";
 import type { LabContent } from "./match.ts";
+import { fitPriorCmd, predictEvalCmd } from "./predictCli.ts";
 
 export const realContent: LabContent = {
   deck: DECK, accuseDeck: ACCUSE_DECK,
@@ -37,6 +38,10 @@ function main() {
     console.log("Motori strategici (osservazione):"); for (const e of Object.values(STRATEGIC_ENGINES)) console.log(`  ${e.id.padEnd(16)} ${e.label}`);
     return;
   }
+  const cmd = process.argv[2] && !process.argv[2].startsWith("--") ? process.argv[2] : "tournament";
+  if (cmd === "fit-prior") return fitPriorCmd(args, realContent);
+  if (cmd === "predict-eval") return predictEvalCmd(args, realContent);
+  if (cmd !== "tournament") throw new Error(`comando sconosciuto: ${cmd} (tournament, predict-eval, fit-prior)`);
   let cfg: TournamentConfig;
   if (args.config) cfg = JSON.parse(readFileSync(args.config[0]!, "utf8")) as TournamentConfig;
   else {

@@ -53,6 +53,13 @@ Non ancora presenti (fasi 4–9): accuratezza delle previsioni, diversità delle
 2. Motore strategico: implementare `StrategicEngine` (`packages/strategic-ai/src/api.ts`) e registrarlo in `registry.ts`. Deve decidere solo da `Observation`; il test di confine controlla gli import.
 3. Documentare la versione in `AI_CHANGELOG.md`; confrontarla con `baseline-1` con ≥ 1.000 partite per confronto.
 
+## Valutazione dei predittori (Fase 4)
+```bash
+npm run lab -- fit-prior --games 1500 [--mode types]     # stima il prior dai bot attuali (addestramento + validazione su partite diverse) → prior.fitted.json
+npm run lab -- predict-eval --games 800 --players 5 [--participants a,b,c] [--prior file] [--out cartella]
+```
+`predict-eval` gioca partite con un gruppo di partecipanti (predefinito: 3 Difficili, 3 Medi, 3 Facili, caratteri a caso, formazione a gruppo), poi ri-riproduce i turni con vari predittori (uniforme, modello di folla dei bot attuali, prior di popolazione, varianti adattive) e stampa log-verosimiglianza e accuratezza per voto, differenze appaiate, adattamento per turno, per livello del votante e per ruolo, e la calibrazione della convergenza. Risultati in `AI_BENCHMARKS.md` §5.
+
 ## Cosa manca (tabella di marcia)
 | Fase | Elemento |
 |---|---|
