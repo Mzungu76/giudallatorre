@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { MINI_CYCLES, MINI_SLOT_MS, viewFor } from "@gdt/game-engine";
+import { MINI_CARDS, MINI_CYCLES, MINI_SLOT_MS, viewFor } from "@gdt/game-engine";
 import type { BotLevel, MiniKind } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
 import MiniGame from "../components/MiniGame.tsx";
@@ -79,7 +79,7 @@ export default function Simulator() {
         <Field label="Giocatori"><Seg value={opts.players} items={[3, 4, 5, 6].map((x) => [x, String(x)] as [number, string])} onChange={(v) => set({ players: v }, !!run)} /></Field>
         <Field label="Voti dei bot"><Seg value={opts.votes} items={VOTES} onChange={(v) => set({ votes: v }, !!run)} /></Field>
         {(opts.votes === "forzato" || opts.votes === "presto") && (
-          <Field label="Carte che vincono / cadono (più carte = parità)"><div className="sim-seg">{[1, 2, 3, 4, 5, 6].map((c) => <button key={c} type="button" className={opts.forced.includes(c) ? "on" : ""} onClick={() => toggleForced(c)}>{c}</button>)}</div></Field>
+          <Field label="Carte che vincono / cadono (più carte = parità)"><div className="sim-seg">{Array.from({ length: MINI_CARDS }, (_, i) => i + 1).map((c) => <button key={c} type="button" className={opts.forced.includes(c) ? "on" : ""} onClick={() => toggleForced(c)}>{c}</button>)}</div></Field>
         )}
         <Field label="Il tuo voto"><Seg value={opts.autoMe ? 1 : 0} items={[[0, "Premo io «QUESTO!»"], [1, "In automatico"]]} onChange={(v) => set({ autoMe: v === 1 }, !!run)} /></Field>
         <Field label="Bot"><Seg value={opts.level} items={[["easy", "Facili"], ["medium", "Medi"], ["hard", "Difficili"]] as [BotLevel, string][]} onChange={(v) => set({ level: v }, !!run)} /></Field>
@@ -90,7 +90,7 @@ export default function Simulator() {
           <div className="sim-live" data-testid="sim-live">
             <b>Cosa succede</b>
             <p>Fase: <u>{run.state.phase}</u>{run.state.phase === "MINI_RUN" && (t0 < 0 ? ` · via tra ${(-t0 / 1000).toFixed(1)} s` : ` · ${(t0 / 1000).toFixed(1)} s dal via · carta in scena: ${slot < order.length ? order[slot] : "—"} · giro ${Math.min(MINI_CYCLES, Math.floor(slot / 6) + 1)}/${MINI_CYCLES}`)}</p>
-            <p>Ordine di uscita: {order.map((c, i) => <span key={i} className={i === slot && t0 >= 0 ? "cur" : ""}>{c}{(i + 1) % 6 ? " " : " | "}</span>)}</p>
+            <p>Ordine di uscita: {order.map((c, i) => <span key={i} className={i === slot && t0 >= 0 ? "cur" : ""}>{c}{(i + 1) % MINI_CARDS ? " " : " | "}</span>)}</p>
             <p>Voti previsti dei bot: {Object.keys(run.plan).length ? Object.entries(run.plan).map(([id, v]) => `${nm(id)} → carta ${v.position} tra ${Math.max(0, (v.at - now) / 1000).toFixed(1)} s`).join(" · ") : "—"}</p>
             <p>Voti arrivati: {run.log.length ? run.log.map((l) => `${nm(l.who)} → ${l.position}`).join(" · ") : "nessuno"}</p>
             {res && <p>Esito: in testa {res.leaders.length ? res.leaders.join(", ") : "nessuna"} · {res.kind === "amore" ? "vincono" : "cadono"} {res.fallenPositions.length ? res.fallenPositions.join(", ") : res.kind === "amore" && res.leaders.length ? res.leaders.join(", ") : "nessuna"} · il più veloce: {res.fastest ? nm(res.fastest) : "—"} · punti: {Object.entries(res.points).map(([id, p]) => `${nm(id)} ${p}`).join(", ")}</p>}

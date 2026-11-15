@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { MiniResult } from "@gdt/game-engine";
-import { MINI_COUNTDOWN_MS, MINI_CYCLES, MINI_INTRO_MS, MINI_SLOT_MS } from "@gdt/game-engine";
+import { MINI_CARDS, MINI_COUNTDOWN_MS, MINI_CYCLES, MINI_INTRO_MS, MINI_SLOT_MS } from "@gdt/game-engine";
 import { Disc, FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import Standings from "./Standings.tsx";
@@ -62,7 +62,7 @@ export default function MiniGame({ room, view, goAt, send, readOnly, sound, ui, 
   const slot = Math.floor(t0 / MINI_SLOT_MS), running = inRun && post === null && t0 >= 0 && t0 < end;
   const lastSlot = useRef(-1);
   useEffect(() => { sfx.fanfare(sound); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { if (running && slot !== lastSlot.current) { lastSlot.current = slot; sfx.whoosh(sound); if (slot % 6 === 0 && slot > 0) sfx.drum(sound, 0.7); } }, [slot, running, sound]);
+  useEffect(() => { if (running && slot !== lastSlot.current) { lastSlot.current = slot; sfx.whoosh(sound); if (slot % MINI_CARDS === 0 && slot > 0) sfx.drum(sound, 0.7); } }, [slot, running, sound]);
   useEffect(() => { if (post === "verdict") sfx.drum(sound, 1.4); if (post === "finale") sfx.tada(sound); if (post === "closing") sfx.drum(sound, 1.2); }, [post]); // eslint-disable-line react-hooks/exhaustive-deps
   const count = inRun && post === null && t0 < 0 && t0 >= -MINI_COUNTDOWN_MS ? Math.ceil(-t0 / 1000) : null, lastCount = useRef<number | null>(null);
   useEffect(() => { if (count !== null && count !== lastCount.current) { lastCount.current = count; sfx.tap(sound, 440 + (3 - count) * 110); } }, [count, sound]);
@@ -82,7 +82,7 @@ type People = ReturnType<typeof usePeople>;
 interface RunProps extends Pick<GameProps, "view" | "send" | "readOnly" | "sound"> {
   people: People; info: ReturnType<typeof miniInfo>; t0: number; end: number; running: boolean; order: number[]; go: number; post: Post; introShut: boolean; count: number | null; slot: number;
 }
-/** La corsa: palco con il separé, le carte che escono (3 s l'una, 3 giri), conto dei giri e pulsante «QUESTO!». */
+/** La corsa: palco con il separé, le carte che escono (3 s l'una, 2 giri), conto dei giri e pulsante «QUESTO!». */
 function Run({ view, send, readOnly, sound, people, info, t0, end, running, order, go, post, introShut, count, slot }: RunProps) {
   const mini = view.mini!, me = view.viewerId;
   const cast = useCast(view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId)), side = useCast([mini.cardId])[0] ?? null;

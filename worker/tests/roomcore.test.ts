@@ -467,7 +467,7 @@ describe("intervallo a tempo nella stanza", () => {
   it("si apre con «via!» dopo presentazione e 3-2-1; il server lo comunica a tutti, schermo condiviso compreso", () => {
     const r = toRun(3, 61), run = r.core.data.run!;
     expect(r.core.data.game!.phase).toBe("MINI_RUN");
-    expect(run.goAt).toBeGreaterThan(1_000_100 + 8000); expect(run.endAt).toBeGreaterThan(run.goAt + 18 * SLOT);
+    expect(run.goAt).toBeGreaterThan(1_000_100 + 8000); expect(run.endAt).toBeGreaterThan(run.goAt + 8 * SLOT);
     expect(r.core.data.deadline).toBeNull();
     const snap = r.core.snapshot(r.ids[0]!).find((m) => m.msg.t === "view")!.msg as { goAt?: number | null; now?: number };
     expect(snap.goAt).toBe(run.goAt); expect(typeof snap.now).toBe("number");

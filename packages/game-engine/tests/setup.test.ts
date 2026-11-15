@@ -27,7 +27,7 @@ describe("preparazione della partita", () => {
     expect([3, 4, 5, 6, 7, 8].map((n) => start(n).totalTurns)).toEqual([6, 4, 5, 6, 7, 8]);
   });
   it("intervalli: 1 fino a 5 giocatori (a metà), 2 da 6 a 8 (a un terzo e a due terzi)", () => {
-    expect([3, 4, 5, 6, 7, 8].map(miniAtsFor)).toEqual([[3], [2], [2], [2, 4], [2, 4], [2, 5]]);
+    expect([3, 4, 5, 6, 7, 8].map(miniAtsFor)).toEqual([[3], [2], [2], [3], [3], [4]]);
   });
   it("è deterministico a parità di seed e diverso con seed diversi", () => {
     const a = start(5), b = start(5), c = start(5, { seed: 7 });

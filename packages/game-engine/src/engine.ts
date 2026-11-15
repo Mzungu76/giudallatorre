@@ -6,7 +6,7 @@ import { pickAward } from "./awards.ts";
 
 export const MIN_PLAYERS = 3, MAX_PLAYERS = 8;
 /** Intervallo a tempo: 6 carte escono dal separé una alla volta (3 s l'una), tre giri completi. Il server dà il «via» dopo la presentazione (sipario, regole: MINI_INTRO_MS) e il conto alla rovescia. */
-export const MINI_CARDS = 6, MINI_CYCLES = 3, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 9000, MINI_COUNTDOWN_MS = 3000;
+export const MINI_CARDS = 4, MINI_CYCLES = 2, MINI_SLOT_MS = 3000, MINI_INTRO_MS = 9000, MINI_COUNTDOWN_MS = 3000;
 /** Punti dell'intervallo: uguali per le tre modalità. */
 export const MINI_PTS = 2, MINI_FAST_PTS = 4;
 /** Gioco base «Cade / Non cade»: i tre segnalini, sempre tutti a disposizione del Megafono, che ne posa uno per turno. */
@@ -37,10 +37,9 @@ export const MAX_PHRASE_CHARS = 80;
 export const GOLDEN_GOAL_MAX_TURNS = 30;
 /** 3 giocatori: 2 giri di Megafono a testa (6 turni); da 4 a 8: 1 giro, cioè tanti turni quanti sono i giocatori. */
 export const roundsFor = (n: number) => (n === 3 ? 2 : 1);
-/** Turni dopo cui c'è un intervallo (mini-gioco): 1 fino a 5 giocatori (a metà), 2 da 6 a 8 (a un terzo e a due terzi). */
+/** Turni dopo cui c'è un intervallo (mini-gioco): sempre uno solo, a metà partita, con qualsiasi numero di giocatori. (Prima da 6 a 8 giocatori erano due.) */
 export function miniAtsFor(n: number): number[] {
-  const total = n * roundsFor(n);
-  return n <= 5 ? [Math.floor(total / 2)] : [Math.floor(total / 3), Math.floor((2 * total) / 3)];
+  return [Math.floor((n * roundsFor(n)) / 2)];
 }
 const miniList = (s: GameState): number[] => s.miniAts ?? (s.miniAt !== undefined ? [s.miniAt] : []);
 const minisDone = (s: GameState): number => s.minisDone ?? (s.miniDone ? 1 : 0);
@@ -265,7 +264,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
 // ---------- mini-giochi di metà partita ----------
 const GENERIC_ACCUSE = "Mi ha rubato il panino al prosciutto!";
 
-/** Intervallo a tempo: si pescano i 6 personaggi dal mazzo (uguali per tutti, di nessuno), più la carta dell'accusatore / del partner, e si stabilisce l'ordine di uscita dal separé. Le mani non si toccano durante la corsa: si rinnovano alla fine (endMini). */
+/** Intervallo a tempo: si pescano i 4 personaggi dal mazzo (uguali per tutti, di nessuno), più la carta dell'accusatore / del partner, e si stabilisce l'ordine di uscita dal separé. Le mani non si toccano durante la corsa: si rinnovano alla fine (endMini). */
 function startMini(s: GameState, events: GameEvent[]) {
   // a caso fra i mini-giochi non ancora usciti in questa partita (con due intervalli non si ripete lo stesso)
   const fresh = MINI_KINDS.filter((k) => !(s.miniKinds ?? []).includes(k)), pool = fresh.length ? fresh : MINI_KINDS;
@@ -275,7 +274,7 @@ function startMini(s: GameState, events: GameEvent[]) {
   const cardId = kind === "peggiore" ? null : draw(s);
   const deck = s.accuseDeck ?? [];
   const text = kind === "accusa" ? (deck.length ? deck[randomInt(deck.length, s)]! : GENERIC_ACCUSE) : null;
-  // tre giri completi, ognuno in ordine nuovo e senza ripetere subito l'ultima carta del giro prima
+  // due giri completi, ognuno in ordine nuovo e senza ripetere subito l'ultima carta del giro prima
   const positions = s.tower.map((t) => t.position), order: number[] = [];
   for (let c = 0; c < MINI_CYCLES; c++) {
     let cyc = shuffle(positions, s);
