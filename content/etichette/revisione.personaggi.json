@@ -32,6 +32,34 @@
    "priorita": 1
   },
   {
+   "id": "p01-i04",
+   "tipi": {
+    "ansioso": 2,
+    "nerd": 2,
+    "testardo": 1
+   },
+   "temi": {
+    "tecnologia": 2,
+    "lavoro": 2,
+    "cultura": 1
+   },
+   "vecchie": {
+    "tipo": [
+     "eccentrico",
+     "pigro"
+    ],
+    "temi": [
+     "lavoro",
+     "cultura",
+     "curiosita"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
    "id": "p01-i06",
    "tipi": {
     "saputello": 1,
@@ -281,6 +309,34 @@
      "viaggio",
      "cultura",
      "lavoro"
+    ]
+   },
+   "motivi": [
+    "tipo-diverso"
+   ],
+   "priorita": 1
+  },
+  {
+   "id": "p05-i02",
+   "tipi": {
+    "rabbioso": 2,
+    "testardo": 2,
+    "maleducato": 1
+   },
+   "temi": {
+    "tecnologia": 3,
+    "gioco": 3
+   },
+   "vecchie": {
+    "tipo": [
+     "nerd",
+     "pigro"
+    ],
+    "temi": [
+     "tecnologia",
+     "notte",
+     "rabbia",
+     "casa"
     ]
    },
    "motivi": [
