@@ -233,8 +233,9 @@
   {
    "id": "p04-i06",
    "tipi": {
-    "vanitoso": 2,
-    "drammatico": 2
+    "furbo": 2,
+    "egoista": 2,
+    "drammatico": 1
    },
    "temi": {
     "spettacolo": 3,
@@ -420,35 +421,6 @@
      "scuola",
      "cultura",
      "imbarazzo"
-    ]
-   },
-   "motivi": [
-    "tipo-diverso"
-   ],
-   "priorita": 1
-  },
-  {
-   "id": "p07-i05",
-   "tipi": {
-    "ansioso": 1,
-    "goffo": 1,
-    "impiccione": 1
-   },
-   "temi": {
-    "lavoro": 3,
-    "casa": 1,
-    "caos": 1
-   },
-   "vecchie": {
-    "tipo": [
-     "lavoratore",
-     "pettegolo"
-    ],
-    "temi": [
-     "lavoro",
-     "casa",
-     "viaggio",
-     "curiosita"
     ]
    },
    "motivi": [

@@ -30,9 +30,9 @@ p04-i02|nerd1 noioso1 artista2|arte3 cultura3 vecchiaia2
 p04-i03|pignolo2 moralista1 arrogante1|scuola3 cultura2 lavoro1
 p04-i04|vanitoso2 ambizioso2 furbo1|lavoro2 moda3 carriera2 vanita2
 p04-i05|vanitoso2 festaiolo2|spettacolo3 gioco2
-p04-i06|vanitoso2 drammatico2|spettacolo3 caos2 social1
+p04-i06|furbo2 egoista2 drammatico1|spettacolo3 caos2 social1
 p04-i08|nerd3 influencer1|tecnologia3 social3
-p04-i09|artista3 vanitoso2 eccentrico1|arte3 vecchiaia3 vanita3
+p04-i09|artista3 ingenuo2 eccentrico1|arte3 vecchiaia3 vanita3
 p04-i10|guru3 eccentrico1|superstizione3 religione1 tecnologia1 natura1
 p05-i01|pignolo1 artista1 mangione1|cibo3 lavoro2 cultura1
 p05-i02|testardo2 rabbioso1 nerd1|tecnologia3 gioco3 lavoro1
@@ -56,7 +56,7 @@ p07-i01|moralista1 pignolo2 ansioso1|scuola3 giovinezza3 cultura1
 p07-i02|vanitoso3 infedele1 influencer1|seduzione3 social3 tecnologia2 vanita3
 p07-i03|rabbioso3 testardo2 maleducato1|vecchiaia3 rabbia3 casa1
 p07-i04|pigro2 festaiolo1 goffo1|alcol3 notte3 pigrizia2
-p07-i05|ansioso1 goffo1 impiccione1|lavoro3 casa1 caos1
+p07-i05|impiccione3 pettegolo2 pignolo2|lavoro3 casa1 caos1
 p07-i06|furbo3 chiacchierone2 bugiardo1|lavoro3 truffe2 casa2 soldi1
 p07-i07|ribelle3 festaiolo2|musica3 alcol3 feste3 giovinezza1
 p07-i08|vanitoso2 spendaccione2 festaiolo1|viaggio3 soldi3 tecnologia2 alcol1
@@ -107,7 +107,7 @@ p12-i09|cinico2 arrogante1 noioso1|cibo3 notte1 imbarazzo1
 p13-i01|maleducato2 rabbioso1 genitore1|musica3 casa3 bambini2 caos2
 p13-i02|furbo1 bugiardo2 pigro1|lavoro3 tecnologia3 bugie2 imbarazzo2
 p13-i03|vanitoso1 genitore1 sportivo1|animali3 natura2 salute1
-p13-i04|ipocrita1 egoista2 guru1|mezzi3 caos3 tecnologia2
+p13-i04|egoista3 cinico1 guru1|mezzi3 caos3 tecnologia2
 p13-i05|complottista3 ansioso2 testardo1|superstizione3 segreti3 politica2
 p13-i06|ansioso3 impulsivo1|tecnologia3 lavoro3 caos3 cibo1
 p13-i07|pigro2 noioso1 drammatico1|lavoro3 pigrizia3
