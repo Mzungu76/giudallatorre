@@ -44,5 +44,25 @@ Misura con `tsx` (sviluppo), 60 partite da 6 giocatori, Difficile, 5.432 decisio
 
 Indicazione per il motore nuovo: valutare i turni con `scoreTurn` (anche con `withLines = false`) costa ≈ +0,4 ms a decisione (circa ×1,3) rispetto al calcolo inline. Non è stata misurata la coda (decisione peggiore) né il costo nel runtime Worker: da fare in `AI_PERFORMANCE.md` (Fase 10). Il limite di 10 ms di CPU per richiesta (COSTS.md) va ri-verificato.
 
-## 4. Ancora da misurare (Fase 4 in poi)
-Facile/Medio/Difficile tra loro (BOTS.md afferma «Medio e Difficile si equivalgono tra bot»: **non verificato qui**), differenze per personalità, popolazione eterogenea, previsione dei voti, esposizione a strategie dominanti, e confronti con giocatori umani.
+## 4. Prime misure con l'AI Laboratory (Fase 3): i livelli dei bot attuali
+Metodo: `npm run lab` (vedi `AI_LABORATORY.md`), motore `production` (= bot attuali), 1.000 partite per confronto, seme 1000, mazzi ed etichette reali, mosse simultanee, intervallo attivo. Due posti per livello nello stesso tavolo, posti rimescolati. Confronto appaiato per partita, IC 95%.
+
+| Confronto | Giocatori | Punti A−B | Quota vittorie A−B (pp) | Posizione A−B |
+|---|---|---|---|---|
+| Difficile − Medio | 4 | **+3,69 ± 0,32** | **+20,6 ± 2,8** | −0,75 ± 0,07 |
+| Medio − Facile | 4 | **+2,03 ± 0,32** | **+11,3 ± 3,0** | −0,42 ± 0,07 |
+| Difficile − Facile | 4 | **+6,38 ± 0,37** | **+29,7 ± 2,5** | −1,14 ± 0,06 |
+| Difficile − Medio | 6 | **+6,98 ± 0,33** | **+22,3 ± 1,5** | −1,65 ± 0,08 |
+| baseline-1 − production (stesso codice) | 4 | +0,09 ± 0,26 (nessuna differenza) | +1,8 ± 3,1 (nessuna) | −0,01 ± 0,07 |
+
+Quote di vittoria assolute (4 giocatori, 2 contro 2): Difficile 35,3% contro Medio 14,7%; Medio 30,6% contro Facile 19,4%; Difficile 39,9% contro Facile 10,2%. Con 6 giocatori Difficile 27,8% contro Medio 5,5% (il caso sarebbe 16,7%).
+
+Lettura:
+- **I tre livelli sono distinti in modo misurabile** (bot contro bot). Questo **smentisce** la frase di `BOTS.md` «Medio e Difficile si equivalgono tra bot», scritta su una versione precedente della taratura: oggi la differenza Difficile−Medio è grande. `BOTS.md` non è stato modificato (è documentazione del prodotto: da aggiornare per decisione del proprietario).
+- Il controllo A/A (stesso codice, due nomi) dà zero: il laboratorio non inventa differenze.
+- Costo: ≈ 0,6–0,8 ms per decisione a 4 giocatori (Difficile 0,7–0,8 ms; Facile 0,2 ms), ≈ 1,0–1,3 ms a 6, misurati in sviluppo.
+- **Limite di validità**: sono bot contro bot, con lo stesso modello di percezione (etichette): non dicono nulla sulla forza contro persone.
+- Questi numeri sono la **base di riferimento** per i motori nuovi: un motore nuovo di livello Difficile dovrà batterli, con IC, in tutti e tre i confronti di formazione (contro `production:hard`, `production:medium`, popolazione mista).
+
+## 5. Ancora da misurare (Fase 4 in poi)
+Differenze per personalità/carattere, popolazione eterogenea, precisione delle previsioni, sfruttabilità, strategie dominanti, e confronti con giocatori umani.

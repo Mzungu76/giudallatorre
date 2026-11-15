@@ -1,0 +1,9 @@
+export { parseSpec, specKey, makeAgent, LEVELS } from "./agents.ts";
+export type { AgentSpec, Agent } from "./agents.ts";
+export { playGame } from "./match.ts";
+export type { GameRow, SeatResult, LabContent, PlayOptions } from "./match.ts";
+export { runTournament, validateConfig, lineupFor, summarize, compareGroups, byParticipant, byLevel, byEngine, byStyle, byPlayers, bySeat, LAB_VERSION } from "./tournament.ts";
+export type { TournamentConfig, TournamentResult, Summary, RunOptions } from "./tournament.ts";
+export { gamesCsv, summaryCsv, summaryTables, resultsJson, formatReport, csvCell } from "./export.ts";
+export { meanCI, wilson, pairedDiff, gamesNeeded, hashString } from "./stats.ts";
+export type { MeanCI } from "./stats.ts";

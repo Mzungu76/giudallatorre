@@ -22,3 +22,9 @@ Nella prima stesura della Fase 1 avevo modificato `ai.ts` e `engine.ts` (puntegg
 - `packages/strategic-ai/`: nuovo pacchetto con l'interfaccia `StrategicEngine`, un agente di riferimento «casuale tra le azioni legali» e il registro. **Non collegato alle stanze.**
 - Test nuovi: osservazione senza informazioni nascoste (stessa alterazione di `fairplay.test.ts`), legalità, confine di import, impronte dei file protetti. 281 test passati.
 - Regressioni: nessuna. Comportamento dei bot in partita: identico per costruzione (file non modificati).
+
+## Fase 3 — AI Laboratory minimo (2026-11-15)
+- Nuovo pacchetto `packages/ai-lab` (additivo; nessun file dei bot o del motore modificato): partite con mosse simultanee, tornei ripetibili da seme, formazioni fisse o a gruppo, parametri di taratura temporanei per versione, statistiche (media, IC 95%, differenze appaiate, Wilson, dimensione del campione), esportazione CSV/JSON con impronta dei risultati, riga di comando `npm run lab`.
+- Test: 25 nuovi (ripetibilità, rotazione dei posti, simultaneità, confine osservazione, ripristino dei parametri, esportazione, statistica). Un test ha trovato e fatto correggere un difetto del laboratorio stesso (parametri non ripristinati se il torneo veniva rifiutato a metà).
+- Prime misure (bot attuali, 1.000 partite per confronto): Difficile > Medio > Facile in modo netto (`AI_BENCHMARKS.md` §4); baseline e produzione alla pari.
+- Regressioni: nessuna; bot in produzione intoccati.

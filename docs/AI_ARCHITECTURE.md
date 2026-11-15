@@ -1,6 +1,6 @@
 # AI_ARCHITECTURE — analisi dell'esistente e architettura proposta
 
-Stato: **Fasi 1 (analisi, baseline) e 2 (osservazione e confine di fair play) completate; il motore strategico vero e proprio non è ancora implementato.** I bot in produzione non sono stati modificati. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
+Stato: **Fasi 1 (analisi, baseline), 2 (osservazione e confine di fair play) e 3 (laboratorio minimo) completate; il motore strategico vero e proprio non è ancora implementato.** I bot in produzione non sono stati modificati. Per le regole: `GAME_RULES.md` (fa fede il codice di `engine.ts`).
 
 ## 1. Architettura attuale
 | Elemento | File | Note |
@@ -72,6 +72,6 @@ Interfaccia comune: `BotEngine` (già in `bot-engines.ts`), con `chooseAction(Ob
 ## 7. Piano
 1. Fase 1 (fatta): analisi, baseline, ricerca.
 2. Fase 2 (fatta): `Observation`, `legalActions`, `scoreTurn`, interfaccia `StrategicEngine`, confine di fair play per tipo. **Nessun collegamento a `RoomCore`** finché non c'è un motore che superi i benchmark (Fase 10, su decisione del proprietario).
-3. Fase 3: laboratorio **minimo** (tornei, IC, CSV/JSON) — serve per misurare tutto il resto.
+3. Fase 3 (fatta): laboratorio **minimo** — `packages/ai-lab` (partite con mosse simultanee, tornei ripetibili, IC 95%, confronti appaiati, CSV/JSON, riga di comando `npm run lab`); vedi `AI_LABORATORY.md`. Prime misure in `AI_BENCHMARKS.md` §4.
 4. Fasi 4–7: Opponent Model → Prediction → rollout/vittoria → livelli e personalità → memoria; ogni componente misurato da solo.
 5. Fasi 8–10: pannello del laboratorio, benchmark completi (≥ 1.000 partite per confronto), ottimizzazione e integrazione, `AI_PERFORMANCE.md`.
