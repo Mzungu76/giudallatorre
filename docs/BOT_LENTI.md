@@ -38,6 +38,24 @@ Il gusto (salienza, posizione, ripetizione, buffo, propria carta) si somma ai **
 
 Lettura: i bot attuali, tra loro, votano **tutti la stessa carta in 7 turni su 10, quasi sempre quella col segnalino**: è l'equilibrio razionale del punteggio (seguire il segnalino rende), non un errore, ma è molto meno vario di un tavolo di persone. La varietà costa forza: con la dose predefinita v2o resta alla pari dei bot attuali; con dosi più alte il costo sale. La dose giusta non si trova in laboratorio (la «folla» sono altri bot): va decisa con le partite vere e con più giudici.
 
+## Il segnalino del Megafono: prevedibilità (feedback della prima partita)
+Osservazione del proprietario: «il Lui sulla carta più adatta, e se ce ne sono due o tre adatte, su una con VOTI NULLI!». Misura sui bot (4 uguali, Difficili, 400 partite): **CADE 62%, NON CADE 7%, VOTI NULLI! 31% per i bot attuali; con v2o prima delle modifiche CADE 45%, NON CADE 4%, NULLI 50%.** Il motivo è un equilibrio razionale: se tutti seguono il segnalino, annullare i voti sulla carta più votata toglie punti a tutti, quindi il calcolo lo sceglie; il valore di NON CADE nel calcolo è basso (+1 invece di +2: scelta storica dei bot attuali, che in laboratorio dava punti).
+
+Modifiche in v2o (leve in `TUNE`):
+- **Abitudini personali**: ogni bot ha una preferenza stabile per un tipo di segnalino (`prefCade/prefNon/prefNul`, ±1 punto atteso) e per la carta più ovvia o la trappola (`obv`).
+- **Varietà rispetto al tavolo**: a ogni tavolo si ricorda come sono stati usati i segnalini (`mem.placed`); chi posa lo vara rispetto a ciò che gli altri si aspettano: `−varyPts × (quota del tipo − 1/3)`; chi vota legge le abitudini del tavolo (`habitPow`). Nota: in una partita ogni giocatore posa 1–2 volte, quindi la varietà si misura **tra giocatori**, non dentro lo stesso.
+- **Scelta meno netta** (`placeTemp`).
+
+| Impostazione | CADE / NON CADE / NULLI | Segnalino sulla carta più adatta | Punti vs bot attuali |
+|---|---|---|---|
+| bot attuali | 62% / 7% / 31% | 32% | — |
+| v2o senza abitudini | 45% / 4% / 50% | 35% | −0,1 ± 0,5 |
+| v2o (`placeTemp` 1,5, `varyPts` 5) — **predefinito** | 42% / 15% / 42% | 42% | −1,4 ± 0,5 (600 partite) |
+| v2o (`varyPts` 3) | 48% / 7% / 45% | 43% | −0,8 ± 0,6 |
+| v2o (`varyPts` 6) | 43% / 17% / 41% | 42% | −1,0 ± 0,6 |
+
+(Il valore reale di NON CADE nel calcolo, `noncadePtsLens`, resta 1: portarlo a 2 non faceva giocare molto di più NON CADE e costava circa 0,8 punti.) La varietà costa forza: è una scelta di progetto da fare provando con persone. «Segnalino sulla carta più adatta» è la quota di turni in cui il segnalino sta sulla carta con più affinità secondo le etichette (con 4 carte, a caso, il 25%).
+
 ## Cosa non c'è ancora
 - **Canale stereotipi** (tabella riga per riga, rivista dal proprietario, con tetto): previsto in un secondo passo, non attivo.
 - **Calibrazione sulle persone** (quanto è larga la popolazione di lenti, quanto pesa ogni bias): i valori sono ipotesi.

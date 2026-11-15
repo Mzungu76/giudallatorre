@@ -21,11 +21,12 @@ export const BOT_LEVELS = ["easy", "medium", "hard"] as const;
 export type BotLevel = (typeof BOT_LEVELS)[number];
 
 /** Memoria della stanza: quante volte ogni personaggio è stato mostrato e quante è caduto. Serializzabile. */
-export interface BotMemory { shown: Record<CardId, number>; fell: Record<CardId, number>; turns: number; /** v2o: le carte cadute l'ultimo turno. */ last?: CardId[]; /** v2: per ogni giocatore, voti dati (n) e quanti sulla carta col segnalino (m). */ follow?: Record<string, { n: number; m: number }> }
+export interface BotMemory { shown: Record<CardId, number>; fell: Record<CardId, number>; turns: number; /** v2o: le carte cadute l'ultimo turno e, per ogni Megafono, quante volte ha usato ogni tipo di segnalino (le sue abitudini). */ last?: CardId[]; placed?: Record<string, { cade: number; noncade: number; nulli: number }>; /** v2: per ogni giocatore, voti dati (n) e quanti sulla carta col segnalino (m). */ follow?: Record<string, { n: number; m: number }> }
 export const newBotMemory = (): BotMemory => ({ shown: {}, fell: {}, turns: 0 });
 export function learnFromResult(mem: BotMemory, tower: { cardId: CardId }[], result: TurnResult): void {
   for (const t of tower) mem.shown[t.cardId] = (mem.shown[t.cardId] ?? 0) + 1;
   for (const c of result.fallenCardIds ?? [result.fallenCardId]) mem.fell[c] = (mem.fell[c] ?? 0) + 1; mem.turns += 1; mem.last = (result.fallenCardIds ?? [result.fallenCardId]).slice();
+  { const m0 = result.marks?.[0]; if (m0 && (m0.effect === 'cade' || m0.effect === 'noncade' || m0.effect === 'nulli')) { mem.placed ??= {}; const q = (mem.placed[result.megafonoId] ??= { cade: 0, noncade: 0, nulli: 0 }); q[m0.effect]++; } }
   const mk = result.marks?.[0];   // v2: chi ha votato la carta col segnalino (tutto è già stato rivelato)
   if (mk) { mem.follow ??= {}; for (const [pid, v] of Object.entries(result.votes ?? {})) { if (pid === result.megafonoId) continue; const f = (mem.follow[pid] ??= { n: 0, m: 0 }); f.n++; if (v === mk.position) f.m++; } }
 }
@@ -55,6 +56,10 @@ export function crowdProbs(s: GameState, mem: BotMemory, level: BotLevel, lens?:
 /** v2o: il contesto della decisione in corso (lente del bot, lenti immaginate negli altri, loro stime). null = bot v2 normali. */
 interface LensCtx { lens: Lens; pool: Lens[]; pp?: number[][] }
 let CUR: LensCtx | null = null;
+/** Come si sono usati finora i segnalini a questo tavolo (di tutti i Megafono): le abitudini che chi gioca ha potuto osservare. */
+function tableUse(mem: BotMemory): { cade: number; noncade: number; nulli: number } {
+  const t = { cade: 0, noncade: 0, nulli: 0 }; for (const q of Object.values(mem.placed ?? {})) { t.cade += q.cade; t.noncade += q.noncade; t.nulli += q.nulli; } return t;
+}
 /** Gli sguardi indipendenti dalla frase (salienza, posizione, ripetizione, buffo, propria carta) per ogni carta della torre. */
 function tasteOf(s: GameState, mem: BotMemory, lens: Lens, me: PlayerId | null): number[] {
   const n = s.tower.length, prof = s.tower.map((t) => cardProfile(t.cardId)), last = new Set(mem.last ?? []);
@@ -99,7 +104,7 @@ function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>
   const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), own = s.tower.find((t) => t.ownerId === mega)?.position;
   let m = T.fallen.includes(votes[mega]!) ? 2 : 0; if (own && T.fallen.includes(own)) m += 2;
   let f = 0; const folla = s.playerIds.filter((p) => p !== mega);
-  for (const mk of marks) { if (mk.effect === "nulli") continue; const ok = mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position), pts = mk.effect === "cade" ? 4 : 1; if (ok) { m += pts; f += pts * folla.filter((p) => votes[p] === mk.position).length; } }
+  for (const mk of marks) { if (mk.effect === "nulli") continue; const ok = mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position), pts = mk.effect === "cade" ? 4 : CUR ? TUNE.noncadePtsLens : 1; if (ok) { m += pts; f += pts * folla.filter((p) => votes[p] === mk.position).length; } }
   for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
   return { m, f: f / Math.max(1, folla.length), T };
 }
@@ -124,7 +129,14 @@ function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, r
     best += (st.risk - 0.5) * (ta === "cade" ? 0.5 : ta === "noncade" ? -0.25 : 0);
     cands.push({ marks, ev: best, pos: a, type: ta });
   }
-  const tau = level === "hard" ? TUNE.cncTempHard : TUNE.propTempMed;
+  const tau = (level === "hard" ? TUNE.cncTempHard : TUNE.propTempMed) * (CUR ? TUNE.placeTemp : 1);
+  if (CUR) {   // v2o: le abitudini del Megafono (tipo preferito, carta ovvia o trappola) e la voglia di non essere prevedibile (variare rispetto a ciò che ha già fatto)
+    const L = CUR.lens, pL = crowdProbs(s, mem, level, L), obvious = pL.indexOf(Math.max(...pL)) + 1, used = tableUse(mem), tot = used.cade + used.noncade + used.nulli;
+    for (const c of cands) {
+      c.ev += c.type === "cade" ? L.prefCade : c.type === "noncade" ? L.prefNon : L.prefNul; if (c.pos === obvious) c.ev += L.obv;
+      if (tot >= 2) c.ev -= TUNE.varyPts * ((used[c.type as "cade" | "noncade" | "nulli"] / tot) - 1 / 3);   // a questo tavolo si è giocato così: chi legge se lo aspetta, quindi vario
+    }
+  }
   // bluff: si preferisce la scelta che gli osservatori più probabilmente leggono male (il tipo vero ha poca probabilità nella loro convinzione), a costo di un po' di valore
   const lam = TUNE.bluffLambda * sk.bluff * st.bluff;
   if (lam > 0) for (const c of cands) { const bel = typeBelief((t) => cands.find((x) => x.pos === c.pos && x.type === t)!.ev, TUNE.cncTempHard, 0.4, 1); c.ev += lam * -Math.log(bel[CNC_TYPES.indexOf(c.type as (typeof CNC_TYPES)[number])]! + 0.05); }
@@ -147,6 +159,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
       const sPub = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) }, smM = propSample(s, CUR ? othersP(s, mem, level, p, undefined, rand, me) : p, [mega], rand), evAt = (type: string) => { let best = -Infinity; for (let mv = 1; mv <= n; mv++) { if (type === "nulli" && mv === pos[0]) continue; let ev = 0; for (const v of smM) { const r = cncPoints(sPub, mega, { ...v, [mega]: mv }, [{ effect: type, position: pos[0]! }]); ev += r.m - r.f; } best = Math.max(best, ev / smM.length); } return best; };
       const evs = Object.fromEntries(CNC_TYPES.map((t) => [t, evAt(t)]));
       wc = typeBelief((t) => evs[t]!, TUNE.cncTempHard, st.susp, CUR ? Math.min(1, sk.depth + CUR.lens.trans) : sk.depth).map((x) => x * CNC_TYPES.length);
+      if (CUR) { const h = tableUse(mem), tot = h.cade + h.noncade + h.nulli; if (tot >= 2) wc = wc.map((x, i) => x * Math.pow((((h[CNC_TYPES[i]!] ?? 0) + 1) / (tot + 3)) * 3, TUNE.habitPow)); }   // v2o: so come ha giocato in passato questo Megafono
     }
     const fear = 1 + 0.4 * (st.susp - 0.5), wcc = wc.map((x, i) => (CNC_TYPES[i] === "nulli" ? x * fear : x));
     for (let k = 1; k <= n; k++) {
@@ -180,7 +193,7 @@ const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b
 /** v2: con TUNE.labelsV2 = 1 e le etichette v2 registrate (registerTagsV2) la lettura personaggio↔frase usa i pesi; altrimenti è identica ai bot attuali. */
 const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? (TUNE.labelsSmooth ? affinityV2m(cardId, text) : affinityV2(cardId, text)) : affinityOld(cardId, text));
 
-export const TUNE = { lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+export const TUNE = { noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 /** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
 /** v2 + etichette v2 «morbide» (parentela tra etichette e frasi libere dedotte): per stanza, come sopra. */

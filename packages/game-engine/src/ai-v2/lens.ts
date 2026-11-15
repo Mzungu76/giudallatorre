@@ -18,6 +18,7 @@ export interface Lens {
   /** Gusto per il buffo: attrazione per le carte caricaturali, a prescindere dalla frase. */ fun: number;
   /** Illusione di trasparenza: si crede più bravo a leggere il bluff (si somma alla profondità). */ trans: number;
   /** Falso consenso: quanto immagina gli altri simili a sé (0 = li immagina come la media). */ proj: number;
+  /** Abitudini da Megafono (in punti attesi): tipo di segnalino preferito, e gusto per la carta più ovvia (+) o per la trappola (−). */ prefCade: number; prefNon: number; prefNul: number; obv: number;
   seed: number;
 }
 export const LENS_KEYS = ["reach", "sal", "posG", "rho", "halo", "markGain", "own", "angle", "fun", "trans", "proj"] as const;
@@ -33,7 +34,7 @@ export function drawLens(r: () => number, seed = 0): Lens {
   const k = r(), posKind: PosKind = k < 0.4 ? "none" : k < 0.6 ? "first" : k < 0.8 ? "last" : "center";
   return {
     reach: 0.2 + 0.6 * r(), sal: 0.6 * r(), posKind, posG: 0.1 + 0.3 * r(), rho: (r() - 0.5) * 0.8, halo: 0.4 * r(),
-    markGain: 0.4 + 1.2 * r(), own: 0.2 + 0.9 * r(), angle: 0.5 * r(), fun: 0.5 * r(), trans: 0.35 * r(), proj: 0.5 * r(), seed: Math.floor(r() * 1e9),
+    markGain: 0.4 + 1.2 * r(), own: 0.2 + 0.9 * r(), angle: 0.5 * r(), fun: 0.5 * r(), trans: 0.35 * r(), proj: 0.5 * r(), prefCade: (r() - 0.5) * 2, prefNon: (r() - 0.5) * 2, prefNul: (r() - 0.5) * 2, obv: (r() - 0.5) * 1.6, seed: Math.floor(r() * 1e9),
   };
 }
 /** La lente di un bot: stabile per tutta la partita. */
