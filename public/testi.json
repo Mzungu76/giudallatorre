@@ -1,5 +1,5 @@
 {
- "versione": 64,
+ "versione": 65,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3010,6 +3010,119 @@
   "sc.uvb.p": {
    "t": "Umani e bot, pari e patta",
    "s": "Fine partita · luoghi comuni"
+  },
+  "flash.titolo": {
+   "t": "Flash",
+   "s": "Flash"
+  },
+  "flash.oggi": {
+   "t": "La Torre del giorno",
+   "s": "Flash"
+  },
+  "flash.altra": {
+   "t": "Un'altra Torre",
+   "s": "Flash"
+  },
+  "flash.dice": {
+   "t": "{nome} dice:",
+   "s": "Flash"
+  },
+  "flash.scegli": {
+   "t": "Tocca la carta che pensi cada",
+   "s": "Flash"
+  },
+  "flash.vota": {
+   "t": "Vota la {n}",
+   "s": "Flash"
+  },
+  "flash.carta": {
+   "t": "Carta {n}",
+   "s": "Flash"
+  },
+  "flash.coperto": {
+   "t": "Segnalino coperto",
+   "s": "Flash"
+  },
+  "flash.k.cade": {
+   "t": "CADE!",
+   "s": "Flash"
+  },
+  "flash.k.noncade": {
+   "t": "NON CADE!",
+   "s": "Flash"
+  },
+  "flash.k.nulli": {
+   "t": "VOTI NULLI!",
+   "s": "Flash"
+  },
+  "flash.r.giusto": {
+   "t": "Voto giusto",
+   "s": "Flash"
+  },
+  "flash.r.annullato": {
+   "t": "Voto annullato",
+   "s": "Flash"
+  },
+  "flash.r.salva": {
+   "t": "Carta rimasta su",
+   "s": "Flash"
+  },
+  "flash.pt": {
+   "t": "+{n}",
+   "s": "Flash"
+  },
+  "flash.punti": {
+   "t": "punti",
+   "s": "Flash"
+  },
+  "flash.totale": {
+   "t": "Totale",
+   "s": "Flash"
+  },
+  "flash.serie": {
+   "t": "Serie",
+   "s": "Flash"
+  },
+  "flash.prossima": {
+   "t": "Prossima Torre tra {t}",
+   "s": "Flash"
+  },
+  "flash.condividi": {
+   "t": "Condividi",
+   "s": "Flash"
+  },
+  "flash.copiato": {
+   "t": "Copiato!",
+   "s": "Flash"
+  },
+  "flash.ancora": {
+   "t": "Un'altra Flash",
+   "s": "Flash"
+  },
+  "flash.home": {
+   "t": "Torna alla home",
+   "s": "Flash"
+  },
+  "flash.share.t": {
+   "t": "Flash n.{n} {cella} · {pts} punti",
+   "s": "Flash",
+   "n": "Testo da condividere (solo testo)"
+  },
+  "flash.share.serie": {
+   "t": "Serie: {n} giorni 🔥",
+   "s": "Flash"
+  },
+  "flash.carico": {
+   "t": "Preparo la Torre…",
+   "s": "Flash"
+  },
+  "flash.errore": {
+   "t": "Non riesco a caricare la Flash.",
+   "s": "Flash"
+  },
+  "flash.riprova": {
+   "t": "Riprova",
+   "s": "Flash"
   }
  }
 }

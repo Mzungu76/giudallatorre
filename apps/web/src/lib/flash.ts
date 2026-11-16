@@ -1,0 +1,52 @@
+import { ts } from "./testi.ts";
+
+/** «Flash»: un solo turno già pronto (frase, carte, segnalino), si vota e si vede l'esito. I punti si accumulano sul dispositivo (mai inviati). */
+export interface Esito { pts: number; cadute: number[]; voti: Record<string, number>; segnalino: { effetto: string; riuscito: boolean }; annullati: number }
+export interface Torre { v: 1; n: number; carte: { pos: number; id: string }[]; frase: string; megafono: string; segnalino: number; esiti: Record<number, Esito> }
+export interface Indice { inizio: string; giorni: number }
+export interface FlashDay { n: number; pts: number; cella: string }   // n = numero della Torre del giorno
+export interface FlashDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; oggi: { day: string; k: number }; giorni: Record<string, FlashDay> }
+
+const KEY = "gdt.flash", STEP = 37, MAX_DAYS = 60;
+export const emptyFlash = (): FlashDb => ({ v: 1, totale: 0, giocati: 0, migliore: 0, serie: 0, record: 0, ultimo: "", oggi: { day: "", k: 0 }, giorni: {} });
+
+/** Giorno locale «AAAA-MM-GG». */
+export const dayId = (d: Date = new Date()): string => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const utc = (id: string): number => { const [y, m, d] = id.split("-").map(Number); return Date.UTC(y!, m! - 1, d!); };
+export const daysBetween = (a: string, b: string): number => Math.round((utc(b) - utc(a)) / 86_400_000);
+/** Quale Torre è «del giorno» (si ripete dopo `giorni` giorni) e quale è la k-esima giocata nello stesso giorno (k = 0: la Torre del giorno, uguale per tutti). */
+export const torreIndex = (idx: Indice, day: string, k = 0): number => { const d = daysBetween(idx.inizio, day), N = idx.giorni; return (((d % N) + N) % N + k * STEP) % N; };
+/** Numero della Torre del giorno, da mostrare e condividere (parte da 1). */
+export const numeroDelGiorno = (idx: Indice, day: string): number => Math.max(1, daysBetween(idx.inizio, day) + 1);
+
+/** Carica (con ripiego se l'archivio non c'è o è guasto). */
+export function loadFlash(): FlashDb { try { const x = JSON.parse(localStorage.getItem(KEY) ?? "null") as FlashDb | null; return x?.v === 1 ? { ...emptyFlash(), ...x } : emptyFlash(); } catch { return emptyFlash(); } }
+export function saveFlash(db: FlashDb): void { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* vale per questa visita */ } }
+
+/** Quante Flash ha già giocato oggi (per sapere quale Torre proporre). */
+export const playedToday = (db: FlashDb, day: string): number => (db.oggi.day === day ? db.oggi.k : 0);
+
+/** Cella a emoji di un esito: 🟩 voto giusto, 🟥 voto annullato, ⬛ carta votata rimasta su; poi come si scopriva il segnalino (🔻 CADE, 🧱 NON CADE, 🛑 VOTI NULLI!). */
+export function cella(t: Torre, voto: number): string {
+  const e = t.esiti[voto]!, annullato = e.segnalino.effetto === "nulli" && voto === t.segnalino;
+  return (annullato ? "🟥" : e.cadute.includes(voto) ? "🟩" : "⬛") + ({ cade: "🔻", noncade: "🧱", nulli: "🛑" } as Record<string, string>)[e.segnalino.effetto];
+}
+
+/** Registra una Flash giocata: punti, serie di giorni (conta solo la Torre del giorno) e riepilogo del giorno. Funzione pura: restituisce il nuovo archivio. */
+export function registra(db: FlashDb, day: string, numero: number, k: number, t: Torre, voto: number): FlashDb {
+  const e = t.esiti[voto]!, x: FlashDb = { ...db, giorni: { ...db.giorni }, oggi: { day, k: k + 1 } };
+  x.totale += e.pts; x.giocati += 1; x.migliore = Math.max(x.migliore, e.pts);
+  if (k === 0) {
+    x.giorni[day] = { n: numero, pts: e.pts, cella: cella(t, voto) };
+    if (x.ultimo !== day) { x.serie = x.ultimo && daysBetween(x.ultimo, day) === 1 ? x.serie + 1 : 1; x.ultimo = day; x.record = Math.max(x.record, x.serie); }
+    const keys = Object.keys(x.giorni).sort(); for (const old of keys.slice(0, Math.max(0, keys.length - MAX_DAYS))) delete x.giorni[old];
+  }
+  return x;
+}
+
+/** Testo da condividere (solo testo: si incolla ovunque). */
+export const testoDaCondividere = (numero: number, cellaTxt: string, pts: number, serie: number, url: string): string =>
+  [ts("flash.share.t", { n: numero, cella: cellaTxt, pts }), serie > 1 ? ts("flash.share.serie", { n: serie }) : "", url].filter(Boolean).join("\n");
+
+/** Secondi alla prossima Torre del giorno (mezzanotte locale). */
+export const secondiAMezzanotte = (now: Date = new Date()): number => { const m = new Date(now); m.setHours(24, 0, 0, 0); return Math.max(0, Math.round((m.getTime() - now.getTime()) / 1000)); };

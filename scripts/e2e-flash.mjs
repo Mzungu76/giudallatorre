@@ -1,0 +1,20 @@
+// Prova di Flash nel browser: Home → Flash → voto → segnalino e punti → «un'altra Flash». Uso: BASE=http://127.0.0.1:8787 SHOTS=cartella node scripts/e2e-flash.mjs
+import { createRequire } from "node:module";
+const { chromium } = createRequire(import.meta.url)("playwright");
+const BASE = process.env.BASE ?? "http://127.0.0.1:8787", SHOTS = process.env.SHOTS ?? "";
+let fails = 0; const check = (n, ok, d = "") => { console.log(`  ${ok ? "ok  " : "FAIL"} ${n} ${ok ? "" : d}`); if (!ok) fails++; };
+const b = await chromium.launch(), ctx = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 }), p = await ctx.newPage(), errs = [];
+p.on("pageerror", (e) => errs.push(String(e)));
+const shot = async (n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}.png` }); };
+const vis = async (id, ms = 8000) => p.waitForSelector(`[data-testid="${id}"]`, { state: "visible", timeout: ms }).then(() => true).catch(() => false);
+await p.goto(BASE + "/"); check("la Home ha il pulsante Flash", await vis("go-flash")); await shot("20-home");
+await p.click('[data-testid="go-flash"]'); check("si apre Flash con 4 carte", await vis("flash-card-4") && await vis("flash-frase")); await shot("21-flash-voto");
+check("il voto è disabilitato finché non scegli", await p.isDisabled('[data-testid="flash-vota"]'));
+await p.click('[data-testid="flash-card-2"]'); await p.click('[data-testid="flash-vota"]');
+check("il segnalino si scopre", await vis("flash-segnalino", 6000)); await shot("22-flash-segnalino");
+check("compare il risultato con i punti", await vis("flash-risultato", 8000)); await shot("23-flash-risultato");
+const pt = await p.textContent('[data-testid="flash-punti"]'); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
+await p.click('[data-testid="flash-ancora"]'); check("«un'altra Flash» porta un'altra Torre", await vis("flash-card-1") && (await p.textContent(".fl-t"))?.includes("Un'altra"));
+await p.reload(); await p.click('[data-testid="flash-back"]').catch(() => {});
+check("nessun errore JS", errs.length === 0, errs.join(" | "));
+await b.close(); console.log(fails ? `${fails} controlli falliti` : "Tutti i controlli superati"); process.exit(fails ? 1 : 0);
