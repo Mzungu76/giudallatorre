@@ -85,3 +85,13 @@ Con l'intervallo a 4 carte e 2 giri, `planMiniVote` doveva usare `MINI_CYCLES` i
 ## Cautela contro i VOTI NULLI! (feedback: «boccaloni sul segnalino»)
 Misura (4 bot Difficili, 40 partite, `tools/analysis/lui-boccaloni.ts`): con v2m la Folla vota la carta col segnalino **81%** dei turni con CADE e **76%** con VOTI NULLI! (a caso sarebbe 25%); il Megafono con CADE vota la stessa carta il 92%. È di nuovo l'equilibrio razionale (seguire il segnalino rende), ma è prevedibile: chi mette VOTI NULLI! sulla carta più probabile li frega.
 Leva `TUNE.nulFear` (solo v2o, 0 = com'era): moltiplica per (1 + nulFear) il peso che la Folla dà a «è VOTI NULLI!». Con `nulFear` 3 la Folla segue il segnalino nel 48–60% dei turni invece del 61–77%. Con il valore di default (2) in laboratorio v2o perde circa 0,7 punti a partita (11,7 contro 12,4, dentro il margine d'errore di ±0,6). Per spegnerla: `nulFear: 0`.
+
+### Quanto rende davvero VOTI NULLI! al Megafono (100 partite, 4 bot Difficili)
+Vantaggio medio per turno (punti del Megafono meno la media della Folla), `tools/analysis/lui-boccaloni.ts`:
+
+| Motore | CADE | VOTI NULLI! | NON CADE |
+|---|---|---|---|
+| v2m | +2,69 (47% dei turni) | **+3,08** (48%) | +0,44 (5%) |
+| v2o | +2,97 (31%) | +2,37 (43%) | +1,51 (26%) |
+
+Il segnalino ai bot è già conveniente: il calcolo dei bot massimizza «punti miei meno media Folla», e i voti annullati tolgono +2 a chi li aveva dati. Il vantaggio però esiste finché la Folla segue la carta segnata (81% con v2m); con una Folla che la evita (v2o con `nulFear`) scende sotto CADE. Una regola «+4 al Megafono» fissa sui VOTI NULLI! lo farebbe dominare (riesce il 93% delle volte): da non fare senza prova. Variante da provare in laboratorio se serve: bonus per voto annullato (+1 o +2), che premia chi legge la folla e non dà niente se nessuno ha seguito il segnalino.
