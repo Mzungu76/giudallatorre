@@ -1,6 +1,9 @@
 // Musica di sottofondo: un loop da file MP3 in public/audio/, con dissolvenza in entrata e in uscita.
 // Il browser blocca l'audio finché l'utente non tocca la pagina: se parte troppo presto, riprova al primo tocco.
 let el: HTMLAudioElement | null = null, key = "", timer = 0, duckTimer = 0, wanted = false, armed = false, base = 0.15;
+// Alcuni brani suonano più piano di altri: un fattore per file (1 = il volume scelto dall'utente; segue il cursore del volume, mai oltre il massimo).
+const GAIN: Record<string, number> = { "musica-finale.mp3": 1.2 };
+const lvl = (): number => Math.min(1, base * (GAIN[key] ?? 1));
 // Musica del voto: durante il voto (turni e intervalli) suona VOTE_FILE al posto del brano di sottofondo. Se il file non c'è ancora, resta il brano di sottofondo.
 const VOTE_FILE = "musica-suspense.mp3";
 // Intervalli: un suono breve all'annuncio (`announce`), poi il tema di quell'intervallo (`voting(true, file)`) fino ai punti. Se un file manca si scala: tema dell'intervallo → musica del voto → sottofondo.
@@ -22,7 +25,7 @@ function retryOnTouch() {
   if (armed) return; armed = true;
   const go = () => {
     if (!wanted || !el) return;
-    void el.play().then(() => { fadeTo(base); armed = false; EVENTS.forEach((e) => document.removeEventListener(e, go, true)); }).catch(() => undefined);
+    void el.play().then(() => { fadeTo(lvl()); armed = false; EVENTS.forEach((e) => document.removeEventListener(e, go, true)); }).catch(() => undefined);
   };
   EVENTS.forEach((e) => document.addEventListener(e, go, true));
 }
@@ -62,16 +65,16 @@ export const music = {
         if (file !== bg) a.addEventListener("error", () => { missing.add(file); if (el === a) this.apply(); }, { once: true });   // file assente: si scala al successivo
       }
       retryOnTouch(); // rete di sicurezza: se il browser blocca o ritarda l'avvio, il primo tocco la fa partire
-      void el.play().then(() => { if (wanted) fadeTo(base); }).catch(() => undefined);
+      void el.play().then(() => { if (wanted) fadeTo(lvl()); }).catch(() => undefined);
     } catch { /* audio non disponibile: l'app funziona lo stesso */ }
   },
   /** Volume della musica (0–1), scelto dall'utente. */
-  level(v: number) { base = v; if (wanted && el && !el.paused) fadeTo(base, 800); },
+  level(v: number) { base = v; if (wanted && el && !el.paused) fadeTo(lvl(), 800); },
   /** Abbassa un attimo la musica mentre suona un effetto importante, poi la riporta su. */
   duck(ms: number) {
     if (!wanted || !el || el.paused) return;
     window.clearTimeout(duckTimer);
-    fadeTo(base * 0.3, 150);
-    duckTimer = window.setTimeout(() => fadeTo(base, 700), ms);
+    fadeTo(lvl() * 0.3, 150);
+    duckTimer = window.setTimeout(() => fadeTo(lvl(), 700), ms);
   },
 };
