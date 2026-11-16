@@ -1,4 +1,5 @@
 import { ts } from "./testi.ts";
+import { stereoGame } from "./stereo.ts";
 /** «Torre del giorno»: un solo turno già pronto (frase, carte, segnalino), si vota e si vede l'esito. I punti si accumulano sul dispositivo (mai inviati). */
 import { applyAction } from "@gdt/game-engine";
 import type { GameState, TurnResult } from "@gdt/game-engine";
@@ -6,7 +7,7 @@ export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string
 /** `date`: i giorni con una Torre pronta (il server dà solo quelli già pubblicati); `riserva`: quante Torri di scorta per le altre partite dello stesso giorno. */
 export interface Indice { inizio: string; date: string[]; riserva: number }
 /** Riepilogo di una Torre del giorno giocata (n = numero della Torre). I campi dopo `cella` servono a ridisegnare la cartolina da condividere. */
-export interface TorreDay { n: number; pts: number; cella: string; frase?: string; carte?: { pos: number; id: string }[]; voto?: number; cadute?: number[]; seg?: { pos: number; effetto: string } }
+export interface TorreDay { n: number; pts: number; cella: string; frase?: string; carte?: { pos: number; id: string }[]; voto?: number; cadute?: number[]; seg?: { pos: number; effetto: string }; /** Pregiudiziometro del turno (0–100), se la Torre ha le statistiche. */ pct?: number }
 export interface TorreDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; /** Ultimo giorno in cui ha aperto la Torre del giorno (per evidenziare quella nuova). */ visto: string; giorni: Record<string, TorreDay> }
 
 const KEY = "gdt.torre", STEP = 37, MAX_DAYS = 60;
@@ -50,16 +51,21 @@ export function registra(db: TorreDb, day: string, numero: number, r: TurnResult
   const pts = r.points[me] ?? 0, x: TorreDb = { ...db, giorni: { ...db.giorni } };
   x.totale += pts; x.giocati += 1; x.migliore = Math.max(x.migliore, pts);
   {
-    x.giorni[day] = { n: numero, pts, cella: cella(r, me), ...(torre ? { frase: torre.stato.phrase?.text ?? "", carte: torre.stato.tower.map((c) => ({ pos: c.position, id: c.cardId })).sort((a, b) => a.pos - b.pos), voto: r.votes[me]!, cadute: r.fallenPositions ?? [r.fallenPosition], seg: { pos: r.marks![0]!.position, effetto: r.marks![0]!.effect } } : {}) };
+    x.giorni[day] = { n: numero, pts, cella: cella(r, me), ...(torre ? { frase: torre.stato.phrase?.text ?? "", carte: torre.stato.tower.map((c) => ({ pos: c.position, id: c.cardId })).sort((a, b) => a.pos - b.pos), voto: r.votes[me]!, cadute: r.fallenPositions ?? [r.fallenPosition], seg: { pos: r.marks![0]!.position, effetto: r.marks![0]!.effect }, ...(stereoGame(torre.stereo?.[r.votes[me]!])?.pct !== undefined ? { pct: stereoGame(torre.stereo?.[r.votes[me]!])!.pct } : {}) } : {}) };
     if (x.ultimo !== day) { x.serie = x.ultimo && daysBetween(x.ultimo, day) === 1 ? x.serie + 1 : 1; x.ultimo = day; x.record = Math.max(x.record, x.serie); }
     const keys = Object.keys(x.giorni).sort(); for (const old of keys.slice(0, Math.max(0, keys.length - MAX_DAYS))) delete x.giorni[old];
   }
   return x;
 }
 
+/** La frase per le condivisioni social: «Oggi sale sulla torre chi…» diventa «Oggi buttiamo dalla torre chi…». Le frasi di altra forma restano come sono. */
+export function fraseSocial(frase: string): string {
+  const m = frase.match(/^\S+\s+(?:sale|salgono)\s+sulla\s+torre\s+(.+)$/s);
+  return m ? ts("torre.c.buttiamo", { resto: m[1]! }) : frase;
+}
 /** Testo da condividere (solo testo: si incolla ovunque). */
-export const testoDaCondividere = (numero: number, cellaTxt: string, pts: number, serie: number, url: string): string =>
-  [ts("torre.share.t", { n: numero, cella: cellaTxt, pts }), serie > 1 ? ts("torre.share.serie", { n: serie }) : "", url].filter(Boolean).join("\n");
+export const testoDaCondividere = (numero: number, cellaTxt: string, pts: number, serie: number, url: string, frase?: string): string =>
+  [frase ? fraseSocial(frase) : "", ts("torre.share.t", { n: numero, cella: cellaTxt, pts }), serie > 1 ? ts("torre.share.serie", { n: serie }) : "", url].filter(Boolean).join("\n");
 
 /** Secondi alla prossima Torre del giorno (00:01 di Roma; nei due giorni dell'ora legale può sbagliare di un'ora). */
 export const secondiAllaProssima = (now: number = Date.now()): number => {

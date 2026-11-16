@@ -1,5 +1,5 @@
 {
- "versione": 77,
+ "versione": 78,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3182,6 +3182,16 @@
    "t": "AAAAHHH!",
    "s": "Torre del giorno",
    "n": "Cartolina: il grido della carta che cade"
+  },
+  "torre.c.buttiamo": {
+   "t": "Oggi buttiamo dalla torre {resto}",
+   "s": "Torre del giorno",
+   "n": "Frase per i social: sostituisce «Oggi sale sulla torre…»"
+  },
+  "torre.c.pregiudizio": {
+   "t": "Pregiudiziometro",
+   "s": "Torre del giorno",
+   "n": "Cartolina: il tachimetro dei luoghi comuni"
   }
  }
 }

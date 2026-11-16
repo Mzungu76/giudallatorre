@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { TurnResult } from "@gdt/game-engine";
-import { cella, dayId, daysBetween, emptyTorre, numeroDelGiorno, nuovaTorre, registra, risolvi, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../src/lib/torre.ts";
+import { cella, dayId, fraseSocial, daysBetween, emptyTorre, numeroDelGiorno, nuovaTorre, registra, risolvi, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../src/lib/torre.ts";
 import type { Indice, Torre } from "../src/lib/torre.ts";
 
 const idx: Indice = { inizio: "2026-11-16", date: ["2026-11-16", "2026-11-17", "2026-11-18"], riserva: 5 };
@@ -39,6 +39,12 @@ describe("Torre del giorno: punti, serie e testo", () => {
     expect(registra(db, "2026-11-16", 1, b, "me")).toBe(db);   // di nuovo lo stesso giorno: niente punti in più
     db = registra(db, "2026-11-17", 2, b, "me"); expect(db.totale).toBe(8); expect(db.serie).toBe(2); expect(db.record).toBe(2); expect(db.giocati).toBe(2);
     db = registra(db, "2026-11-20", 5, a, "me"); expect(db.serie).toBe(1); expect(db.record).toBe(2); expect(db.migliore).toBe(6);
+  });
+  it("la frase per i social: «Oggi buttiamo dalla torre…»; le frasi di altra forma restano", () => {
+    expect(fraseSocial("Oggi sale sulla torre chi si metterebbe con l'ex di un amico.")).toBe("Oggi buttiamo dalla torre chi si metterebbe con l'ex di un amico.");
+    expect(fraseSocial("Oggi salgono sulla torre quelli che ti chiedono soldi.")).toBe("Oggi buttiamo dalla torre quelli che ti chiedono soldi.");
+    expect(fraseSocial("Ammetto di aver letto i messaggi di un altro.")).toBe("Ammetto di aver letto i messaggi di un altro.");
+    expect(testoDaCondividere(5, "🟩🔻", 6, 3, "https://x.it/torre", "Oggi sale sulla torre chi ride per primo.").split("\n")).toEqual(["Oggi buttiamo dalla torre chi ride per primo.", "Torre n.5 🟩🔻 · 6 punti", "Serie: 3 giorni 🔥", "https://x.it/torre"]);
   });
   it("testo da condividere: una riga, la serie solo se c'è, e il link", () => {
     const a = testoDaCondividere(5, "🟩🔻", 6, 1, "https://x.it/flash"), b = testoDaCondividere(5, "🟩🔻", 6, 3, "https://x.it/flash");

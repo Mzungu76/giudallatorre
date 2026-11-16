@@ -49,7 +49,7 @@ export default function Torre() {
   const stereo = r && torre ? torre.stereo?.[r.votes[torre.umano]!] : undefined;   // le stesse statistiche del turno di una partita normale
   if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
   if (rec) return (
-    <Stage bg="sky" testId="torre-fine"><TorreFinale day={day} rec={rec} serie={db.serie} totale={db.totale} secondi={secondiAllaProssima(now)} testo={testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`)} sound={sound} onHome={() => navigate("/")} /></Stage>
+    <Stage bg="sky" testId="torre-fine"><TorreFinale day={day} rec={rec} serie={db.serie} totale={db.totale} secondi={secondiAllaProssima(now)} testo={testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`, rec.frase)} sound={sound} onHome={() => navigate("/")} /></Stage>
   );
   if (splash) return <Stage bg="sky" testId="torre-splash"><ModeSplash kind="torre" sound={sound} onDone={() => setSplash(false)} /></Stage>;
   if (!torre || !room || !view || !ready) return (

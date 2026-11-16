@@ -1,12 +1,13 @@
 import { cardFull, loadCards } from "./cards.ts";
 import { ts } from "./testi.ts";
+import { fraseSocial } from "./torre.ts";
 import type { TorreDay } from "./torre.ts";
 
 /** La cartolina da condividere: un'immagine verticale (1080×1350) disegnata sul telefono, senza nomi né dati personali. */
 export const CARTOLINA_W = 1080, CARTOLINA_H = 1350;
 export interface CartolinaDati { giorno: string; rec: TorreDay; verdetto: string; serie: number; totale: number; indirizzo: string }
 
-const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffc72c", TEAL = "#14a3a1";
+const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffc72c", TEAL = "#14a3a1", VIOLA = "#8e6bd8";
 const img = (src: string): Promise<HTMLImageElement | null> => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
 type Ctx = CanvasRenderingContext2D;
 /** Rettangolo con angoli tondi (senza `roundRect`, che i telefoni più vecchi non hanno). */
@@ -39,13 +40,15 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   titolo(c, ts("torre.c.titolo").toUpperCase(), W / 2, 130, 112);
   rr(c, 150, 160, W - 300, 70, 8); c.fillStyle = NAVY; c.fill();
   c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.sotto", { n: r.n, data: dataLunga(d.giorno) }), W / 2, 211);
-  // la frase del Megafono
-  c.font = "800 42px Nunito, system-ui, sans-serif"; const righe = spezza(c, ts("torre.c.frase", { f: r.frase ?? "" }), W - 260, 3), hb = 40 + righe.length * 52;
-  rr(c, 80, 252, W - 160, hb, 28); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
-  c.fillStyle = NAVY; c.textAlign = "center"; righe.forEach((l, i) => c.fillText(l, W / 2, 252 + 34 + 52 * (i + 1) - 14));
+  // la frase del Megafono, riscritta per i social («Oggi buttiamo dalla torre…»); si rimpicciolisce per stare in 2 righe (3 al minimo)
+  const frase = ts("torre.c.frase", { f: fraseSocial(r.frase ?? "") }); let righe: string[] = [], lh = 52;
+  for (const px of [42, 38, 34]) { c.font = `800 ${px}px Nunito, system-ui, sans-serif`; lh = Math.round(px * 1.24); righe = spezza(c, frase, W - 200, px === 34 ? 3 : 2); if (!righe[righe.length - 1]!.endsWith("…")) break; }
+  const hb = 32 + righe.length * lh;
+  rr(c, 80, 250, W - 160, hb, 28); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
+  c.fillStyle = NAVY; c.textAlign = "center"; righe.forEach((l, i) => c.fillText(l, W / 2, 250 + 24 + lh * (i + 1) - 10));
   // la torre, le carte rimaste in cima e quelle che cadono
   const carte = r.carte ?? [], rimaste = carte.filter((k) => !r.cadute?.includes(k.pos)), cadute = carte.filter((k) => r.cadute?.includes(k.pos));
-  const ty = 660, tw = 430, torre = await img("/scene/tower_pop.webp"), imgs = new Map(await Promise.all(carte.map(async (k) => [k.pos, await img(cardFull(k.id))] as const)));
+  const ty = 610, tw = 430, torre = await img("/scene/tower_pop.webp"), imgs = new Map(await Promise.all(carte.map(async (k) => [k.pos, await img(cardFull(k.id))] as const)));
   const carta = (k: { pos: number; id: string }, cx: number, cy: number, w: number, h: number, rot: number, cadendo: boolean) => {
     const mia = r.voto === k.pos; c.save(); c.translate(cx, cy); c.rotate((rot * Math.PI) / 180); c.globalAlpha = cadendo ? 0.92 : 1;
     c.shadowColor = "#13224a99"; c.shadowOffsetX = 5; c.shadowOffsetY = 7; rr(c, -w / 2, -h / 2, w, h, 16); c.fillStyle = "#fff"; c.fill(); c.shadowColor = "transparent";
@@ -58,17 +61,17 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   };
   // quelle rimaste: in piedi sulla cima della torre, una accanto all'altra (i merli le coprono in basso)
   const n = rimaste.length, w0 = n > 3 ? 158 : 178, h0 = Math.round(w0 * 1.4), span = n > 3 ? 330 : n === 3 ? 270 : 190;
-  rimaste.forEach((k, i) => carta(k, W / 2 + (n === 1 ? 0 : -span / 2 + (span * i) / (n - 1)), 600 + (i % 2 ? 8 : 0), w0, h0, n === 1 ? -2 : -6 + (12 * i) / (n - 1), false));
+  rimaste.forEach((k, i) => carta(k, W / 2 + (n === 1 ? 0 : -span / 2 + (span * i) / (n - 1)), 548 + (i % 2 ? 8 : 0), w0, h0, n === 1 ? -2 : -6 + (12 * i) / (n - 1), false));
   if (torre) {   // la torre davanti: le carte spuntano da dietro i merli; la base sfuma, così non resta un taglio netto
-    const sc = tw / torre.width, oc = document.createElement("canvas"); oc.width = tw; oc.height = 300; const o = oc.getContext("2d")!;
-    o.drawImage(torre, 0, 0, torre.width, 300 / sc, 0, 0, tw, 300); o.globalCompositeOperation = "destination-out";
-    const m = o.createLinearGradient(0, 215, 0, 300); m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(1, "rgba(0,0,0,1)"); o.fillStyle = m; o.fillRect(0, 215, tw, 85);
+    const sc = tw / torre.width, oc = document.createElement("canvas"); oc.width = tw; oc.height = 290; const o = oc.getContext("2d")!;
+    o.drawImage(torre, 0, 0, torre.width, 290 / sc, 0, 0, tw, 290); o.globalCompositeOperation = "destination-out";
+    const m = o.createLinearGradient(0, 205, 0, 290); m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(1, "rgba(0,0,0,1)"); o.fillStyle = m; o.fillRect(0, 205, tw, 85);
     c.drawImage(oc, (W - tw) / 2, ty);
   }
   // quella che cade: di fianco alla torre, in picchiata, con le righe della velocità e il grido
   const cw2 = cadute.length > 1 ? 150 : 176, ch2 = Math.round(cw2 * 1.4);
   cadute.forEach((k, i) => {
-    const cx = 840 + i * 96, cy = 790 + i * 86, rot = 17 + i * 10, dx = Math.sin((rot * Math.PI) / 180), dy = Math.cos((rot * Math.PI) / 180);
+    const cx = 840 + i * 96, cy = 735 + i * 80, rot = 17 + i * 10, dx = Math.sin((rot * Math.PI) / 180), dy = Math.cos((rot * Math.PI) / 180);
     c.save(); c.strokeStyle = "#ffffffe6"; c.lineWidth = 9; c.lineCap = "round";
     for (let m = -1; m <= 1; m++) { const bx = cx + m * 52 - dx * (ch2 / 2 + 40), by0 = cy - dy * (ch2 / 2 + 40); c.beginPath(); c.moveTo(bx, by0); c.lineTo(bx - dx * 90, by0 - dy * 90); c.stroke(); }
     c.restore();
@@ -79,8 +82,8 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
       c.fillStyle = RED; c.font = "400 46px Anton, Impact, sans-serif"; c.textAlign = "center"; c.lineJoin = "round"; c.lineWidth = 8; c.strokeStyle = NAVY; const g = ts("torre.c.aaah"); c.strokeText(g, 0, 16); c.fillText(g, 0, 16); c.restore();
     }
   });
-  // punti: medaglia con stella, e il giudizio su un nastro con le stelline
-  const mx = 215, my = 1088;
+  // punti: medaglia con stella
+  const mx = 205, my = 1058;
   c.save(); c.translate(mx, my); c.shadowColor = "#13224a88"; c.shadowOffsetX = 6; c.shadowOffsetY = 8;
   c.beginPath(); for (let a = 0; a < 40; a++) { const rad = a % 2 ? 112 : 128, an = (a * Math.PI) / 20 - Math.PI / 2; c.lineTo(Math.cos(an) * rad, Math.sin(an) * rad); } c.closePath();
   const gr = c.createLinearGradient(0, -128, 0, 128); gr.addColorStop(0, "#fff0a0"); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, "#e89a00"); c.fillStyle = gr; c.fill(); c.shadowColor = "transparent"; c.lineWidth = 8; c.strokeStyle = NAVY; c.lineJoin = "round"; c.stroke();
@@ -89,18 +92,27 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 118px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 0, 26);
   rr(c, -78, 52, 156, 44, 10); c.fillStyle = NAVY; c.fill(); c.fillStyle = "#fff"; c.font = "400 30px Anton, Impact, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 0, 85);
   c.restore();
-  c.save(); c.translate(705, 1062); c.rotate((-3 * Math.PI) / 180);
-  let px = 96; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 500 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; }
-  const bw = Math.min(600, c.measureText(vt).width + 90), bh = px + 46;
-  c.beginPath(); c.moveTo(-bw / 2 - 26, -bh / 2); c.lineTo(-bw / 2, -bh / 2 + 8); c.lineTo(bw / 2, -bh / 2 + 8); c.lineTo(bw / 2 + 26, -bh / 2); c.lineTo(bw / 2 + 12, 0); c.lineTo(bw / 2 + 26, bh / 2); c.lineTo(bw / 2, bh / 2 - 8); c.lineTo(-bw / 2, bh / 2 - 8); c.lineTo(-bw / 2 - 26, bh / 2); c.lineTo(-bw / 2 - 12, 0); c.closePath();
+  // il giudizio sui punti, su un nastro
+  c.save(); c.translate(690, 962); c.rotate((-3 * Math.PI) / 180);
+  let px = 84; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 480 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; }
+  const bw = Math.min(560, c.measureText(vt).width + 80), bh = px + 40;
+  c.beginPath(); c.moveTo(-bw / 2 - 24, -bh / 2); c.lineTo(-bw / 2, -bh / 2 + 8); c.lineTo(bw / 2, -bh / 2 + 8); c.lineTo(bw / 2 + 24, -bh / 2); c.lineTo(bw / 2 + 11, 0); c.lineTo(bw / 2 + 24, bh / 2); c.lineTo(bw / 2, bh / 2 - 8); c.lineTo(-bw / 2, bh / 2 - 8); c.lineTo(-bw / 2 - 24, bh / 2); c.lineTo(-bw / 2 - 11, 0); c.closePath();
   c.shadowColor = "#13224a88"; c.shadowOffsetX = 5; c.shadowOffsetY = 7; c.fillStyle = RED; c.fill(); c.shadowColor = "transparent"; c.lineWidth = 7; c.lineJoin = "round"; c.strokeStyle = NAVY; c.stroke();
   c.fillStyle = "#fff"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(vt, 0, 4); c.textBaseline = "alphabetic"; c.restore();
-  const stelle = r.pts <= 0 ? 0 : r.pts <= 2 ? 1 : r.pts <= 5 ? 2 : 3;   // quante stelline accese: come il giudizio
-  for (let k = 0; k < 3; k++) {
-    c.save(); c.translate(705 + (k - 1) * 84, 1166); c.beginPath();
-    for (let a = 0; a < 10; a++) { const rad = a % 2 ? 17 : 40, an = (a * Math.PI) / 5 - Math.PI / 2; c.lineTo(Math.cos(an) * rad, Math.sin(an) * rad); }
-    c.closePath(); c.fillStyle = k < stelle ? GOLD : "#ffffff55"; c.fill(); c.lineWidth = 6; c.lineJoin = "round"; c.strokeStyle = NAVY; c.stroke(); c.restore();
+  // il pregiudiziometro del turno (lo stesso tachimetro della pagina delle statistiche)
+  if (r.pct !== undefined) {
+    const pc = r.pct, f = pc < 15 ? 0 : pc < 35 ? 1 : pc < 60 ? 2 : 3, gx = 512, gy = 1170, R = 100, SEG = [[0, 0.15, "#4aa63a"], [0.15, 0.35, "#f4c20d"], [0.35, 0.6, "#f08a1c"], [0.6, 1, "#e5382b"]] as const;
+    rr(c, 366, 1034, 644, 168, 22); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 7; c.strokeStyle = NAVY; c.stroke();
+    c.lineCap = "round"; c.strokeStyle = NAVY; c.lineWidth = 40; c.beginPath(); c.arc(gx, gy, R, Math.PI, 2 * Math.PI); c.stroke(); c.lineCap = "butt";
+    for (const [a, b, col] of SEG) { c.strokeStyle = col; c.lineWidth = 26; c.beginPath(); c.arc(gx, gy, R, Math.PI + a * Math.PI, Math.PI + b * Math.PI); c.stroke(); }
+    const an = Math.PI + (pc / 100) * Math.PI; c.strokeStyle = NAVY; c.lineWidth = 9; c.lineCap = "round"; c.beginPath(); c.moveTo(gx, gy); c.lineTo(gx + Math.cos(an) * (R - 8), gy + Math.sin(an) * (R - 8)); c.stroke();
+    c.beginPath(); c.arc(gx, gy, 13, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 5; c.stroke();
+    c.textAlign = "left"; c.fillStyle = VIOLA; c.font = "400 32px Anton, Impact, sans-serif"; c.fillText(ts("torre.c.pregiudizio").toUpperCase(), 650, 1084);
+    c.fillStyle = NAVY; c.font = "400 76px Anton, Impact, sans-serif"; c.fillText(`${pc}%`, 650, 1160);
+    let tp = 30; const lab = ts(`sc.f${f}` as "sc.f0").toUpperCase(); c.font = `400 ${tp}px Anton, Impact, sans-serif`; const lr = spezza(c, lab, 190, 2); while (lr.some((l) => c.measureText(l).width > 190) && tp > 20) { tp -= 2; c.font = `400 ${tp}px Anton, Impact, sans-serif`; }
+    c.fillStyle = RED; lr.forEach((l, i) => c.fillText(l, 810, 1124 + i * (tp + 6) + (lr.length === 1 ? 20 : 0)));
   }
+  c.textAlign = "center"; c.lineCap = "butt";
   // serie e totale
   const by = 1216; rr(c, 70, by, W - 140, 74, 37); c.fillStyle = NAVY; c.fill();
   c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 52);
