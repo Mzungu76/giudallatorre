@@ -42,7 +42,6 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
   useEffect(() => {
     if (FAST) return undefined;
     const at = (ms: number, fn: () => void) => { timers.current.push(setTimeout(fn, ms)); };
-    if (!instant) sfx.segnapunti(sound);   // inizio del percorso segnapunti: il jingle
     at(1200, () => { setPh(1); sfx.whoosh(sound); });
     geo.forEach((g) => at(1200 + g.climbS * 1000, () => setArr((a) => [...a, g.r])));
     at(climbEnd, () => setPh(2));
@@ -91,14 +90,14 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       )}
       {done && !readOnly && (
         <div className="pp bsheet finsheet" onClick={(e) => e.stopPropagation()}>
-          {onShare && <button className="bt mus fin-share" disabled={sharing} onClick={onShare} data-testid="share-final"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 10.6l6.8-4M8.6 13.4l6.8 4" /></svg>{sharing ? tx("fin.cond.carico") : tx("fin.condividi")}</button>}
           <div className="bcrow">
+            {onShare && <button className="bib big" disabled={sharing} onClick={onShare} aria-label={sharing ? txs("fin.cond.carico") : txs("fin.condividi")} title={txs("fin.condividi")} data-testid="share-final" style={sharing ? { opacity: 0.55 } : undefined}><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#13224a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 10.6l6.8-4M8.6 13.4l6.8 4" /></svg></button>}
             {ui && <>
               <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("fin.chat", { n: ui.unread }) : txs("fin.chat0")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
               <button className="bib big" onClick={ui.rank} aria-label={txs("fin.classifica")} data-testid="standings-btn">🏆</button>
             </>}
             <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">{tx("fin.esci")}</button>
-            <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>{tx("fin.nuova")}</button>
+            <button className="bt mus" style={{ fontSize: onShare ? 16 : 18 }} onClick={onNew}>{tx("fin.nuova")}</button>
           </div>
         </div>
       )}

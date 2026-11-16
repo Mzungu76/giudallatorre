@@ -9,7 +9,7 @@ Carica qui i file MP3 (minuscolo, senza spazi né accenti).
 - intervallo-accusa.mp3  intervallo-amore.mp3  intervallo-peggiore.mp3   tema (loop) di ciascun intervallo, fino alla scenetta finale (esclusa: da lì torna musica-tema.mp3); se manca, suona musica-suspense.mp3
 - musica-finale.mp3     (loop) dalla pagina delle statistiche («Luoghi comuni») in poi: classifica finale e tutto ciò che segue; se manca resta musica-tema.mp3
 - musica-fart.mp3       (breve, circa 3 s, non in loop) la pernacchia: suona nel momento preciso in cui la carta caduta tocca i materassi; se manca, niente
-- musica-segnapunti.mp3 (breve, jingle, non in loop) all'inizio del percorso segnapunti, cioè la classifica con la scalata (del turno, dopo gli intervalli e quella finale); se manca, niente
+- musica-segnapunti.mp3 (file tolto) il collegamento resta in `sfx.segnapunti` (apps/web/src/lib/sfx.ts) ma oggi nessuna schermata lo usa
 - jingle-inizio.mp3     stacco 3-5 s, non in loop
 
 ## Effetti (sostituiscono quelli sintetici di apps/web/src/lib/sfx.ts)

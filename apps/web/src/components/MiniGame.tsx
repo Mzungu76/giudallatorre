@@ -163,7 +163,6 @@ function Finale({ res, view, readOnly, sound, onDone, done }: { res: MiniResult;
 
 /** Dopo il sipario di chiusura: lo stesso riepilogo dei turni normali («Com'è andata» + «Punti del turno»), poi la classifica. */
 function End({ view, readOnly, sound, ui, people, res, isHost, step, onStep, onResume, closing }: Pick<GameProps, "view" | "send" | "readOnly" | "sound" | "ui"> & { people: People; res: MiniResult; isHost: boolean; step: Post; onStep: (p: Post) => void; onResume: () => void; closing: boolean }) {
-  useEffect(() => { if (step === "board" && !readOnly && !FAST) sfx.segnapunti(sound); }, [step]); // eslint-disable-line react-hooks/exhaustive-deps   // inizio del percorso segnapunti
   const kind = res.kind, info = miniInfo(kind), me = view.viewerId;
   const ids = useMemo(() => view.tower.slice().sort((a, b) => a.position - b.position).map((x) => x.cardId), [view.tower]);
   const toks: VoteTok[] = useMemo(() => Object.entries(res.votes).map(([id, p]) => ({ p, c: people.get(id).color, mega: false, id })), [res, people]);

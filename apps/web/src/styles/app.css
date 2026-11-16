@@ -1481,4 +1481,3 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .tf-next{font:800 12px Nunito;color:#fff;text-shadow:0 2px 0 var(--navy)}
 .tf-home{background:none;border:0;font:800 13px Nunito;text-decoration:underline;color:#fff;text-shadow:0 1px 0 var(--navy);padding:4px}
 .sc-plate{fill:var(--navy);stroke:#fff;stroke-width:2.5}.sc-plate-t{fill:#fff;font:400 16px Anton,Impact,sans-serif}
-.fin-share{width:100%;font-size:19px;padding:10px 6px;margin-bottom:8px;gap:10px}.fin-share:disabled{opacity:.7}

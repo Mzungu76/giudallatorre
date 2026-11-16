@@ -55,7 +55,7 @@ export function precarica(files: string[]) { const c = ctx(); if (!c) return; fo
 export const sfx = {
   /** Il momento in cui la carta caduta tocca i materassi: la pernacchia (public/audio/musica-fart.mp3). */
   fart(on: boolean) { shot(on, "musica-fart.mp3", 3200); },
-  /** Inizio del percorso dei punti: il jingle (public/audio/musica-segnapunti.mp3). */
+  /** Collegamento pronto, oggi non usato: suona public/audio/musica-segnapunti.mp3 se c'è (il file è stato tolto). */
   segnapunti(on: boolean) { shot(on, "musica-segnapunti.mp3", 3000); },
   whoosh(on: boolean) { if (!on) return; preload(); if (!sample("whoosh", 1)) synth.whoosh(on); },
   tap(on: boolean, freq = 520) { if (!on) return; preload(); if (!sample("tap", Math.min(2, Math.max(0.5, freq / 520)))) synth.tap(on, freq); },
