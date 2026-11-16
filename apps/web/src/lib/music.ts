@@ -4,7 +4,7 @@ let el: HTMLAudioElement | null = null, key = "", timer = 0, duckTimer = 0, want
 // Musica del voto: durante il voto (turni e intervalli) suona VOTE_FILE al posto del brano di sottofondo. Se il file non c'è ancora, resta il brano di sottofondo.
 const VOTE_FILE = "musica-suspense.mp3";
 // Intervalli: un suono breve all'annuncio (`announce`), poi il tema di quell'intervallo (`voting(true, file)`) fino ai punti. Se un file manca si scala: tema dell'intervallo → musica del voto → sottofondo.
-let bg: string | null = null, voting = false, voteFile: string | null = null, jingleOn = false, jingleTimer = 0; const missing = new Set<string>();
+let bg: string | null = null, over: string | null = null, voting = false, voteFile: string | null = null, jingleOn = false, jingleTimer = 0; const missing = new Set<string>();
 
 function fadeTo(target: number, ms = 1200, then?: () => void) {
   window.clearInterval(timer);
@@ -31,6 +31,8 @@ export const music = {
   play(bgFile: string | null) {
     bg = bgFile; this.apply();
   },
+  /** Cambia il tema principale in una parte dell'app (es. «musica-finale.mp3» dalle statistiche in poi); `null` torna al tema di sempre. Se il file manca resta il tema di sempre. */
+  theme(file: string | null) { if (over === file) return; over = file; this.apply(); },
   /** Il voto è in corso (voto dei turni o dell'intervallo): suona la musica del voto, finito torna il sottofondo. */
   voting(on: boolean, file: string | null = null) { if (voting === on && voteFile === file) return; voting = on; voteFile = on ? file : null; if (!on) this.endJingle(); this.apply(); },
   /** Suono breve all'annuncio dell'intervallo: la musica tace e, alla fine del suono (o se il file manca o dopo 15 s), parte il tema. `onMissing`: cosa fare se il file non c'è. */
@@ -49,8 +51,9 @@ export const music = {
   endJingle() { window.clearTimeout(jingleTimer); jingleOn = false; },
   apply() {
     try {
-      const vf = voteFile && !missing.has(voteFile) ? voteFile : !missing.has(VOTE_FILE) ? VOTE_FILE : bg;
-      const file = bg === null || jingleOn ? null : voting ? vf : bg;
+      const eff = bg === null ? null : over && !missing.has(over) ? over : bg;   // tema principale (o quello della scena)
+      const vf = voteFile && !missing.has(voteFile) ? voteFile : !missing.has(VOTE_FILE) ? VOTE_FILE : eff;
+      const file = bg === null || jingleOn ? null : voting ? vf : eff;
       wanted = file !== null;
       if (file === null) { fadeTo(0, 800, () => { if (!wanted) el?.pause(); }); return; }
       if (!el || key !== file) {

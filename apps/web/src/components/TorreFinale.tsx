@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
-import { disegnaCartolina } from "../lib/cartolina.ts";
+import { dataLunga, disegnaCartolina } from "../lib/cartolina.ts";
 import type { TorreDay } from "../lib/torre.ts";
 
 const clock = (s: number) => `${String(Math.floor(s / 3600)).padStart(2, "0")}:${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
@@ -14,7 +14,7 @@ export default function TorreFinale({ day, rec, serie, totale, secondi, testo, s
   const [blob, setBlob] = useState<Blob | null>(null), [url, setUrl] = useState<string | null>(null), [msg, setMsg] = useState("");
   useEffect(() => {
     let on = true, u: string | null = null;
-    disegnaCartolina({ giorno: day, rec, verdetto: ts(`torre.v${fascia(rec.pts)}` as "torre.v0"), serie, totale, indirizzo: location.host + "/torre" })
+    disegnaCartolina({ giorno: day, rec, sotto: ts("torre.c.sotto", { n: rec.n, data: dataLunga(day) }), verdetto: ts(`torre.v${fascia(rec.pts)}` as "torre.v0"), banda: ts(serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: serie, totale }), indirizzo: location.host + "/torre" })
       .then((b) => { if (!on) return; u = URL.createObjectURL(b); setBlob(b); setUrl(u); if (!FAST) { sfx.stamp(sound); if (rec.pts > 0) sfx.fanfare(sound); } }).catch(() => { if (on) setMsg(ts("torre.errore")); });
     return () => { on = false; if (u) URL.revokeObjectURL(u); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

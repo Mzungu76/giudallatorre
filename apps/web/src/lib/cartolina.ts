@@ -5,14 +5,15 @@ import type { TorreDay } from "./torre.ts";
 
 /** La cartolina da condividere: un'immagine verticale (1080×1350) disegnata sul telefono, senza nomi né dati personali. */
 export const CARTOLINA_W = 1080, CARTOLINA_H = 1350;
-export interface CartolinaDati { giorno: string; rec: TorreDay; verdetto: string; serie: number; totale: number; indirizzo: string }
+/** `sotto`: la striscia sotto il titolo; `verdetto`: il nastro rosso; `banda`: la riga in fondo (serie, punteggio…). I testi li prepara chi chiama. */
+export interface CartolinaDati { giorno: string; rec: TorreDay; sotto: string; verdetto: string; banda: string; indirizzo: string }
 
 const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffc72c", TEAL = "#14a3a1", VIOLA = "#8e6bd8";
 const img = (src: string): Promise<HTMLImageElement | null> => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
 type Ctx = CanvasRenderingContext2D;
 /** Rettangolo con angoli tondi (senza `roundRect`, che i telefoni più vecchi non hanno). */
 const rr = (c: Ctx, x: number, y: number, w: number, h: number, r: number) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
-const dataLunga = (g: string): string => new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(g + "T12:00:00Z")).toUpperCase();
+export const dataLunga = (g: string): string => new Intl.DateTimeFormat("it-IT", { day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(g + "T12:00:00Z")).toUpperCase();
 /** Testo spezzato in righe che stanno in `max` pixel (al massimo `righe`; l'ultima si chiude con «…»). */
 export function spezza(c: Ctx, testo: string, max: number, righe: number): string[] {
   const out: string[] = []; let cur = "";
@@ -39,7 +40,7 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   // titolo e striscia
   titolo(c, ts("torre.c.titolo").toUpperCase(), W / 2, 130, 112);
   rr(c, 150, 160, W - 300, 70, 8); c.fillStyle = NAVY; c.fill();
-  c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.sotto", { n: r.n, data: dataLunga(d.giorno) }), W / 2, 211);
+  c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(d.sotto, W / 2, 211);
   // la frase del Megafono, riscritta per i social («Oggi buttiamo dalla torre…»); si rimpicciolisce per stare in 2 righe (3 al minimo)
   const frase = ts("torre.c.frase", { f: fraseSocial(r.frase ?? "") }); let righe: string[] = [], lh = 52;
   for (const px of [42, 38, 34]) { c.font = `800 ${px}px Nunito, system-ui, sans-serif`; lh = Math.round(px * 1.24); righe = spezza(c, frase, W - 200, px === 34 ? 3 : 2); if (!righe[righe.length - 1]!.endsWith("…")) break; }
@@ -109,14 +110,23 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
     c.beginPath(); c.arc(gx, gy, 13, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 5; c.stroke();
     c.textAlign = "left"; c.fillStyle = VIOLA; c.font = "400 32px Anton, Impact, sans-serif"; c.fillText(ts("torre.c.pregiudizio").toUpperCase(), 650, 1084);
     c.fillStyle = NAVY; c.font = "400 76px Anton, Impact, sans-serif"; c.fillText(`${pc}%`, 650, 1160);
-    let tp = 30; const lab = ts(`sc.f${f}` as "sc.f0").toUpperCase(); c.font = `400 ${tp}px Anton, Impact, sans-serif`; const lr = spezza(c, lab, 190, 2); while (lr.some((l) => c.measureText(l).width > 190) && tp > 20) { tp -= 2; c.font = `400 ${tp}px Anton, Impact, sans-serif`; }
-    c.fillStyle = RED; lr.forEach((l, i) => c.fillText(l, 810, 1124 + i * (tp + 6) + (lr.length === 1 ? 20 : 0)));
+    let tp = 30; const lab = ts(`sc.f${f}` as "sc.f0").toUpperCase(); c.font = `400 ${tp}px Anton, Impact, sans-serif`; const lr = spezza(c, lab, 180, 2); while (lr.some((l) => c.measureText(l).width > 180) && tp > 20) { tp -= 2; c.font = `400 ${tp}px Anton, Impact, sans-serif`; }
+    c.fillStyle = RED; lr.forEach((l, i) => c.fillText(l, 822, 1124 + i * (tp + 6) + (lr.length === 1 ? 20 : 0)));
   }
   c.textAlign = "center"; c.lineCap = "butt";
   // serie e totale
   const by = 1216; rr(c, 70, by, W - 140, 74, 37); c.fillStyle = NAVY; c.fill();
-  c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 52);
+  c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.fillText(d.banda, W / 2, by + 52);
   // invito
   c.fillStyle = "#fff"; c.font = "800 31px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 28); c.shadowColor = "transparent";
   return new Promise((ok, no) => cv.toBlob((b) => (b ? ok(b) : no(new Error("immagine non creata"))), "image/png"));
+}
+
+/** Disegna la cartolina e la manda: foglio di condivisione con l'immagine (se il telefono lo permette), altrimenti solo il testo; senza foglio la salva e copia il testo. */
+export async function condividiCartolina(d: CartolinaDati, testo: string, nome: string): Promise<"condiviso" | "annullato" | "salvato"> {
+  const blob = await disegnaCartolina(d), file = new File([blob], nome, { type: "image/png" });
+  try { if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file], text: testo }); return "condiviso"; } if (navigator.share) { await navigator.share({ text: testo }); return "condiviso"; } } catch { return "annullato"; }
+  const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+  try { await navigator.clipboard.writeText(testo); } catch { /* solo l'immagine */ }
+  return "salvato";
 }

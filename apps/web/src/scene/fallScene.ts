@@ -7,7 +7,7 @@ import { profileShaft, profileBack, profileFront, profLayout } from "./draw.ts";
 
 
 export interface ResultCue { fallPositions: number[]; seed: number }
-export interface SceneOptions { cardIds: string[]; sound: () => boolean; reduced: boolean; }
+export interface SceneOptions { cardIds: string[]; sound: () => boolean; reduced: boolean; /** Il momento preciso in cui la carta caduta tocca i materassi. */ onImpact?: () => void; }
 export interface SceneApi {
   setSelected(pos: number | null): void;
   setLui(l: { pos: number; kind: "CADE" | "NON_CADE" | null } | null): void;
@@ -213,7 +213,7 @@ const snd={wind(){if(!on())return;ac();const n=noise(TF+.2),fl=AC.createBiquadFi
   CONF.forEach(c=>{const q=d2-c.dl;if(q<0||q>2.6){c.e.setAttribute('opacity','0');return}const x=196+c.vx*q,y=MT_-30+c.vy*q+.5*800*q*q;c.e.setAttribute('opacity',String(1-sm(1.9,2.6,q)));c.e.setAttribute('transform',`translate(${x} ${y}) rotate(${c.rs*q})`)});
   const op=$('ops');op.style.opacity=(t>.12&&t<.8)?1:0;op.style.top=((c.y-cm.cy)*cm.s-120)+'px';op.style.left='62%';op.style.transform=`scale(${back((t-.12)/.2)*(1-sm(.6,.8,t))}) rotate(${Math.sin(t*30)*3}deg)`}
 }
-  const EVENTS:any[]=[[T_FALL+TS,()=>snd.wind()],[T_FALL+TI,()=>{snd.thud();snd.boing(1,200)}],[T_FALL+TI+.55,()=>snd.boing(.6,260)],[T_FALL+TI+.89,()=>snd.boing(.35,320)],[T_FALL+TI+1.0,()=>snd.cheer()]];
+  const EVENTS:any[]=[[T_FALL+TS,()=>snd.wind()],[T_FALL+TI,()=>{snd.thud();snd.boing(1,200);if(opts.onImpact)opts.onImpact()}],[T_FALL+TI+.55,()=>snd.boing(.6,260)],[T_FALL+TI+.89,()=>snd.boing(.35,320)],[T_FALL+TI+1.0,()=>snd.cheer()]];
   fc=CH[0];f=ch[1];
   render(-1);
   const api:SceneApi={

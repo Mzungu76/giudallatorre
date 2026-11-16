@@ -1,5 +1,5 @@
 {
- "versione": 78,
+ "versione": 79,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3192,6 +3192,42 @@
    "t": "Pregiudiziometro",
    "s": "Torre del giorno",
    "n": "Cartolina: il tachimetro dei luoghi comuni"
+  },
+  "fin.condividi": {
+   "t": "Condividi",
+   "s": "Fine partita"
+  },
+  "fin.cond.carico": {
+   "t": "Preparo la cartolina…",
+   "s": "Fine partita"
+  },
+  "share.sotto.partita": {
+   "t": "La partita · {data}",
+   "s": "Condivisione della partita"
+  },
+  "share.sotto.flash": {
+   "t": "Flash · {data}",
+   "s": "Condivisione della partita"
+  },
+  "share.v.vinto": {
+   "t": "Hai vinto!",
+   "s": "Condivisione della partita"
+  },
+  "share.v.podio": {
+   "t": "Sul podio!",
+   "s": "Condivisione della partita"
+  },
+  "share.v.altri": {
+   "t": "Alla prossima!",
+   "s": "Condivisione della partita"
+  },
+  "share.banda": {
+   "t": "{punti} punti · {posto}° posto su {tot}",
+   "s": "Condivisione della partita"
+  },
+  "share.t": {
+   "t": "Ho fatto {punti} punti: {posto}° posto su {tot}. Giù dalla Torre!",
+   "s": "Condivisione della partita"
   }
  }
 }

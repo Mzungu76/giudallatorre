@@ -13,7 +13,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone }: { /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing }: { /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST || instant ? 3 : 0), [inst, setInst] = useState(!!(FAST || instant)), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -90,6 +90,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       )}
       {done && !readOnly && (
         <div className="pp bsheet finsheet" onClick={(e) => e.stopPropagation()}>
+          {onShare && <button className="bt mus fin-share" disabled={sharing} onClick={onShare} data-testid="share-final"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 10.6l6.8-4M8.6 13.4l6.8 4" /></svg>{sharing ? tx("fin.cond.carico") : tx("fin.condividi")}</button>}
           <div className="bcrow">
             {ui && <>
               <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("fin.chat", { n: ui.unread }) : txs("fin.chat0")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>

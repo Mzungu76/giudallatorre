@@ -5,6 +5,8 @@ import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
 import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import { music } from "../lib/music.ts";
+import { sfx } from "../lib/sfx.ts";
+import { salvaUltimo } from "../lib/ultimoTurno.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
 import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
@@ -216,10 +218,19 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
-  // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto, spoglio) fino alla fine della caduta; all'inizio del percorso dei punti torna il sottofondo
-  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (!!res && watched && !FAST && fallDone !== turn && musicOff !== turn);
+  // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto) fino alla fine dello spoglio; dall'animazione della caduta torna il tema principale
+  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (revealing && musicOff !== turn);
   useEffect(() => { music.voting(suspense); }, [suspense]);
   useEffect(() => () => music.voting(false), []);
+  // inizio del percorso dei punti: il jingle (una volta per turno visto)
+  const jingleTurn = useRef(0);
+  useEffect(() => { if (showPanel && !!res && afterStep === "points" && !FAST && watched && jingleTurn.current !== turn) { jingleTurn.current = turn; sfx.segnapunti(sound); } }, [showPanel, !!res, afterStep, turn]); // eslint-disable-line react-hooks/exhaustive-deps
+  // l'ultimo turno visto: serve alla cartolina da condividere dalla classifica finale
+  useEffect(() => {
+    const rr = res; if (!rr || readOnly || !view.tower.length) return;
+    const mk = rr.marks?.[0], voto = rr.votes[me]; if (voto === undefined) return;
+    salvaUltimo(room.code, { frase: view.phrase && "text" in view.phrase ? view.phrase.text ?? "" : "", carte: view.tower.map((t) => ({ pos: t.position, id: t.cardId })).sort((a, b) => a.pos - b.pos), voto, cadute: rr.fallenPositions ?? [rr.fallenPosition], ...(mk ? { seg: { pos: mk.position, effetto: mk.effect } } : {}), pts: rr.points[me] ?? 0 });
+  }, [res?.turn]); // eslint-disable-line react-hooks/exhaustive-deps
   const annullati: string[] = res ? (res.marks?.find((x) => x.effect === "nulli")?.caught ?? []) : [];
   const fellArr = res ? res.fallenPositions ?? [res.fallenPosition] : [];
   const resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;

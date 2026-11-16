@@ -13,6 +13,7 @@ import type { TorreDb, Indice, Torre } from "../lib/torre.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
 import ModeSplash from "../components/ModeSplash.tsx";
+import { music } from "../lib/music.ts";
 import StereoScene from "../components/StereoScene.tsx";
 import TorreFinale from "../components/TorreFinale.tsx";
 import { Plancia } from "./Room.tsx";
@@ -31,6 +32,7 @@ export default function Torre() {
   }, [idx, day]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (giaGiocata) { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb(nd); } }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => { music.theme(fine || giaGiocata ? "musica-finale.mp3" : null); return () => music.theme(null); }, [fine, giaGiocata]);   // dalle statistiche in poi: la musica del finale
   const numero = idx ? numeroDelGiorno(idx, day) : 1;
   const room = useMemo<RoomMsg | null>(() => torre && ({ t: "room", seq: 1, code: "FLASH", stage: "PLAYING", you: torre.umano, hostId: torre.umano, options: { ageBand: DEFAULT_AGE_BAND, turnTimerSec: 0, display: false },
     players: torre.giocatori.map((g) => ({ id: g.id, nickname: g.nickname, isHost: g.id === torre.umano, connected: true, char: g.char, ...(g.isBot ? { isBot: true, level: "hard" as const } : {}) })) }), [torre]);
