@@ -28,7 +28,7 @@ import type { TestoKey } from "../lib/testi.ts";
 import { MegaIcon } from "../components/MegaIcon.tsx";
 
 /** Su schermi larghi la partita sta al centro di una plancia con codice a sinistra e giocatori a destra. */
-function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | null; children: ReactNode }) {
+export function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | null; children: ReactNode }) {
   const list = view ? view.players.map((p) => ({ id: p.id, name: p.name, score: p.score })) : room.players.map((p) => ({ id: p.id, name: p.nickname, score: null as number | null }));
   return (
     <div className="plancia">

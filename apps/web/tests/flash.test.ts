@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { cella, daysBetween, emptyFlash, numeroDelGiorno, registra, secondiAMezzanotte, testoDaCondividere, torreIndex } from "../src/lib/flash.ts";
+import type { TurnResult } from "@gdt/game-engine";
+import { cella, daysBetween, emptyFlash, numeroDelGiorno, registra, risolvi, secondiAMezzanotte, testoDaCondividere, torreIndex } from "../src/lib/flash.ts";
 import type { Indice, Torre } from "../src/lib/flash.ts";
 
 const idx: Indice = { inizio: "2026-11-16", giorni: 120 };
-const torre = (eff: string, seg: number, cadute: number[], pts: Record<number, number>): Torre => ({ v: 1, n: 0, carte: [1, 2, 3, 4].map((p) => ({ pos: p, id: "c" + p })), frase: "f", megafono: "Ada", segnalino: seg,
-  esiti: Object.fromEntries([1, 2, 3, 4].map((v) => [v, { pts: pts[v] ?? 0, cadute, voti: { a: 1, b: 2, c: 3, d: v }, segnalino: { effetto: eff, riuscito: true }, annullati: eff === "nulli" ? 1 : 0 }])) });
+/** Risultato finto di un turno: segnalino, carte cadute, voti e punti del giocatore «me». */
+const res = (eff: string, seg: number, cadute: number[], voto: number, pts: number, caught: string[] = []): TurnResult => ({ marks: [{ slot: eff, effect: eff, position: seg, hit: true, voters: [], caught }], fallenPositions: cadute, fallenPosition: cadute[0]!, votes: { me: voto }, points: { me: pts } } as unknown as TurnResult);
 
 describe("Flash: giorno e Torre", () => {
   it("la Torre del giorno cambia ogni giorno, si ripete dopo l'ultima e le altre del giorno sono diverse", () => {
@@ -20,15 +21,15 @@ describe("Flash: giorno e Torre", () => {
 
 describe("Flash: punti, serie e testo", () => {
   it("cella a emoji: voto giusto, annullato, carta rimasta su", () => {
-    expect(cella(torre("cade", 2, [2], {}), 2)).toBe("🟩🔻"); expect(cella(torre("cade", 2, [2], {}), 3)).toBe("⬛🔻");
-    expect(cella(torre("nulli", 2, [3], {}), 2)).toBe("🟥🛑"); expect(cella(torre("nulli", 2, [3], {}), 3)).toBe("🟩🛑"); expect(cella(torre("noncade", 1, [3], {}), 1)).toBe("⬛🧱");
+    expect(cella(res("cade", 2, [2], 2, 6), "me")).toBe("🟩🔻"); expect(cella(res("cade", 2, [2], 3, 0), "me")).toBe("⬛🔻");
+    expect(cella(res("nulli", 2, [3], 2, 0, ["me"]), "me")).toBe("🟥🛑"); expect(cella(res("nulli", 2, [3], 3, 2), "me")).toBe("🟩🛑"); expect(cella(res("noncade", 1, [3], 1, 0), "me")).toBe("⬛🧱");
   });
   it("i punti si sommano; la serie conta solo la Torre del giorno nei giorni di fila", () => {
-    const t = torre("cade", 2, [2], { 2: 6, 3: 2 });
-    let db = registra(emptyFlash(), "2026-11-16", 1, 0, t, 2); expect(db.totale).toBe(6); expect(db.serie).toBe(1); expect(db.giorni["2026-11-16"]!.cella).toBe("🟩🔻");
-    db = registra(db, "2026-11-16", 1, 1, t, 3); expect(db.totale).toBe(8); expect(db.serie).toBe(1); expect(db.giocati).toBe(2); expect(db.oggi).toEqual({ day: "2026-11-16", k: 2 });
-    db = registra(db, "2026-11-17", 2, 0, t, 2); expect(db.serie).toBe(2); expect(db.record).toBe(2);
-    db = registra(db, "2026-11-20", 5, 0, t, 2); expect(db.serie).toBe(1); expect(db.record).toBe(2); expect(db.migliore).toBe(6);
+    const a = res("cade", 2, [2], 2, 6), b = res("cade", 2, [2], 3, 2);
+    let db = registra(emptyFlash(), "2026-11-16", 1, 0, a, "me"); expect(db.totale).toBe(6); expect(db.serie).toBe(1); expect(db.giorni["2026-11-16"]!.cella).toBe("🟩🔻");
+    db = registra(db, "2026-11-16", 1, 1, b, "me"); expect(db.totale).toBe(8); expect(db.serie).toBe(1); expect(db.giocati).toBe(2); expect(db.oggi).toEqual({ day: "2026-11-16", k: 2 });
+    db = registra(db, "2026-11-17", 2, 0, a, "me"); expect(db.serie).toBe(2); expect(db.record).toBe(2);
+    db = registra(db, "2026-11-20", 5, 0, a, "me"); expect(db.serie).toBe(1); expect(db.record).toBe(2); expect(db.migliore).toBe(6);
   });
   it("testo da condividere: una riga, la serie solo se c'è, e il link", () => {
     const a = testoDaCondividere(5, "🟩🔻", 6, 1, "https://x.it/flash"), b = testoDaCondividere(5, "🟩🔻", 6, 3, "https://x.it/flash");
@@ -38,17 +39,18 @@ describe("Flash: punti, serie e testo", () => {
 
 describe("Flash: le Torri generate (public/oggi)", () => {
   const dir = join(import.meta.dirname, "../../../public/oggi"), indice = JSON.parse(readFileSync(join(dir, "indice.json"), "utf8")) as Indice;
-  it("ci sono tutte, ognuna con 4 carte, un segnalino su una carta e l'esito per ogni voto", () => {
+  const torri = (): Torre[] => Array.from({ length: indice.giorni }, (_, i) => JSON.parse(readFileSync(join(dir, `${i}.json`), "utf8")) as Torre);
+  it("ci sono tutte, ognuna in fase di voto con 4 carte, un segnalino e manca solo il voto del giocatore", () => {
     expect(readdirSync(dir).filter((f) => /^\d+\.json$/.test(f)).length).toBe(indice.giorni);
-    for (let i = 0; i < indice.giorni; i++) {
-      const t = JSON.parse(readFileSync(join(dir, `${i}.json`), "utf8")) as Torre, pos = t.carte.map((c) => c.pos);
-      expect(pos).toEqual([1, 2, 3, 4]); expect(pos).toContain(t.segnalino); expect(t.frase.length).toBeGreaterThan(10);
-      for (const v of pos) { const e = t.esiti[v]!; expect(e, `Torre ${i}, voto ${v}`).toBeTruthy(); expect(e.voti).toBeTruthy(); expect(Object.values(e.voti)).toContain(v); expect(e.cadute.length).toBeGreaterThan(0); }
+    for (const [i, t] of torri().entries()) {
+      const s = t.stato; expect(s.phase, `Torre ${i}`).toBe("VOTE"); expect(s.tower.map((c) => c.position).sort()).toEqual([1, 2, 3, 4]); expect(s.marks).toHaveLength(1); expect(s.phrase!.text.length).toBeGreaterThan(10);
+      expect(Object.keys(s.votes).sort()).toEqual(s.playerIds.filter((p) => p !== t.umano).sort()); expect(s.megafonoIndex === s.playerIds.indexOf(t.umano)).toBe(false);
     }
   });
-  it("sono davvero un dilemma: in ogni Torre i voti non rendono tutti uguale", () => {
-    let piatte = 0;
-    for (let i = 0; i < indice.giorni; i++) { const t = JSON.parse(readFileSync(join(dir, `${i}.json`), "utf8")) as Torre; if (new Set(Object.values(t.esiti).map((e) => e.pts)).size < 2) piatte++; }
-    expect(piatte).toBe(0);
+  it("ogni voto si risolve col motore, ed è un dilemma: i voti non rendono tutti uguale", () => {
+    for (const [i, t] of torri().entries()) {
+      const pts = [1, 2, 3, 4].map((v) => risolvi(t, v).risultato.points[t.umano]!);
+      expect(new Set(pts).size, `Torre ${i}: punti ${pts}`).toBeGreaterThan(1);
+    }
   });
 });

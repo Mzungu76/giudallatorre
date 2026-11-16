@@ -1,5 +1,5 @@
 {
- "versione": 65,
+ "versione": 66,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3021,50 +3021,6 @@
   },
   "flash.altra": {
    "t": "Un'altra Torre",
-   "s": "Flash"
-  },
-  "flash.dice": {
-   "t": "{nome} dice:",
-   "s": "Flash"
-  },
-  "flash.scegli": {
-   "t": "Tocca la carta che pensi cada",
-   "s": "Flash"
-  },
-  "flash.vota": {
-   "t": "Vota la {n}",
-   "s": "Flash"
-  },
-  "flash.carta": {
-   "t": "Carta {n}",
-   "s": "Flash"
-  },
-  "flash.coperto": {
-   "t": "Segnalino coperto",
-   "s": "Flash"
-  },
-  "flash.k.cade": {
-   "t": "CADE!",
-   "s": "Flash"
-  },
-  "flash.k.noncade": {
-   "t": "NON CADE!",
-   "s": "Flash"
-  },
-  "flash.k.nulli": {
-   "t": "VOTI NULLI!",
-   "s": "Flash"
-  },
-  "flash.r.giusto": {
-   "t": "Voto giusto",
-   "s": "Flash"
-  },
-  "flash.r.annullato": {
-   "t": "Voto annullato",
-   "s": "Flash"
-  },
-  "flash.r.salva": {
-   "t": "Carta rimasta su",
    "s": "Flash"
   },
   "flash.pt": {

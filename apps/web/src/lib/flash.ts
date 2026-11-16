@@ -1,8 +1,8 @@
 import { ts } from "./testi.ts";
-
 /** «Flash»: un solo turno già pronto (frase, carte, segnalino), si vota e si vede l'esito. I punti si accumulano sul dispositivo (mai inviati). */
-export interface Esito { pts: number; cadute: number[]; voti: Record<string, number>; segnalino: { effetto: string; riuscito: boolean }; annullati: number }
-export interface Torre { v: 1; n: number; carte: { pos: number; id: string }[]; frase: string; megafono: string; segnalino: number; esiti: Record<number, Esito> }
+import { applyAction } from "@gdt/game-engine";
+import type { GameState, TurnResult } from "@gdt/game-engine";
+export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string; nickname: string; char: number; isBot: boolean }[]; stato: GameState }
 export interface Indice { inizio: string; giorni: number }
 export interface FlashDay { n: number; pts: number; cella: string }   // n = numero della Torre del giorno
 export interface FlashDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; oggi: { day: string; k: number }; giorni: Record<string, FlashDay> }
@@ -26,18 +26,23 @@ export function saveFlash(db: FlashDb): void { try { localStorage.setItem(KEY, J
 /** Quante Flash ha già giocato oggi (per sapere quale Torre proporre). */
 export const playedToday = (db: FlashDb, day: string): number => (db.oggi.day === day ? db.oggi.k : 0);
 
-/** Cella a emoji di un esito: 🟩 voto giusto, 🟥 voto annullato, ⬛ carta votata rimasta su; poi come si scopriva il segnalino (🔻 CADE, 🧱 NON CADE, 🛑 VOTI NULLI!). */
-export function cella(t: Torre, voto: number): string {
-  const e = t.esiti[voto]!, annullato = e.segnalino.effetto === "nulli" && voto === t.segnalino;
-  return (annullato ? "🟥" : e.cadute.includes(voto) ? "🟩" : "⬛") + ({ cade: "🔻", noncade: "🧱", nulli: "🛑" } as Record<string, string>)[e.segnalino.effetto];
+/** Applica il voto del giocatore allo stato della Torre (mancava solo il suo): lo stato dopo il conteggio e il risultato del turno. */
+export function risolvi(t: Torre, posizione: number): { stato: GameState; risultato: TurnResult } {
+  const stato = applyAction(t.stato, { type: "vote", playerId: t.umano, position: posizione }).state;
+  return { stato, risultato: stato.lastResult! };
+}
+/** Cella a emoji: 🟩 voto giusto, 🟥 voto annullato, ⬛ carta votata rimasta su; poi come si scopriva il segnalino (🔻 CADE, 🧱 NON CADE, 🛑 VOTI NULLI!). */
+export function cella(r: TurnResult, me: string): string {
+  const m = r.marks![0]!, annullato = m.caught?.includes(me) ?? false, cadute = r.fallenPositions ?? [r.fallenPosition];
+  return (annullato ? "🟥" : cadute.includes(r.votes[me]!) ? "🟩" : "⬛") + ({ cade: "🔻", noncade: "🧱", nulli: "🛑" } as Record<string, string>)[m.effect];
 }
 
 /** Registra una Flash giocata: punti, serie di giorni (conta solo la Torre del giorno) e riepilogo del giorno. Funzione pura: restituisce il nuovo archivio. */
-export function registra(db: FlashDb, day: string, numero: number, k: number, t: Torre, voto: number): FlashDb {
-  const e = t.esiti[voto]!, x: FlashDb = { ...db, giorni: { ...db.giorni }, oggi: { day, k: k + 1 } };
-  x.totale += e.pts; x.giocati += 1; x.migliore = Math.max(x.migliore, e.pts);
+export function registra(db: FlashDb, day: string, numero: number, k: number, r: TurnResult, me: string): FlashDb {
+  const pts = r.points[me] ?? 0, x: FlashDb = { ...db, giorni: { ...db.giorni }, oggi: { day, k: k + 1 } };
+  x.totale += pts; x.giocati += 1; x.migliore = Math.max(x.migliore, pts);
   if (k === 0) {
-    x.giorni[day] = { n: numero, pts: e.pts, cella: cella(t, voto) };
+    x.giorni[day] = { n: numero, pts, cella: cella(r, me) };
     if (x.ultimo !== day) { x.serie = x.ultimo && daysBetween(x.ultimo, day) === 1 ? x.serie + 1 : 1; x.ultimo = day; x.record = Math.max(x.record, x.serie); }
     const keys = Object.keys(x.giorni).sort(); for (const old of keys.slice(0, Math.max(0, keys.length - MAX_DAYS))) delete x.giorni[old];
   }
