@@ -1428,5 +1428,12 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .sc-val{fill:none;stroke:#8e6bd8;stroke-width:17;stroke-linecap:butt;transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1)}
 .sc-mid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 26%}
 .sc-mid b{font:400 52px/1 Anton;color:var(--navy)}.sc-mid span{font:800 11px/1.15 Nunito;color:var(--navy);margin-top:2px}
-.sc-top{width:min(420px,100%);display:flex;flex-direction:column;gap:6px;z-index:3}.sc-top h4{font:400 16px/1 Anton;text-transform:uppercase;margin:4px 0 0;color:#fff;text-shadow:0 2px 0 var(--navy);letter-spacing:.06em}
-.sc-chip{display:flex;justify-content:space-between;gap:8px;background:#fff;border:3px solid var(--navy);border-radius:10px;box-shadow:3px 4px 0 var(--navy);padding:6px 10px;font:800 14px Nunito;color:var(--navy);animation:awRise .6s both}.sc-chip b{font:400 15px/1 Anton;white-space:nowrap}
+
+.sc-blk{width:min(420px,100%);background:#fff;border:3px solid var(--navy);border-radius:12px;box-shadow:4px 5px 0 var(--navy);padding:8px 12px;z-index:3;color:var(--navy);animation:awRise .6s .9s both;flex:none}
+.sc-blk h4{font:400 15px/1 Anton;text-transform:uppercase;letter-spacing:.06em;margin:0 0 6px;color:#8e6bd8}
+.sc-lc-k{font:400 26px/1.05 Anton;text-transform:uppercase}.sc-lc small{font:800 13px Nunito;opacity:.7}
+.sc-lan{animation-delay:1.2s}.sc-lan-r{display:flex;gap:12px;align-items:center}.sc-lan-r img{width:68px;border:2px solid var(--navy);border-radius:7px;flex:none;background:#fff}
+.sc-lan-r b{display:block;font:400 19px/1.1 Anton;text-transform:uppercase}.sc-lan-r q{display:block;font:800 14px/1.25 Nunito;margin-top:3px;quotes:"«" "»"}
+.sc-uvb{animation-delay:1.5s}.sc-uv{display:grid;grid-template-columns:62px 1fr 46px;gap:8px;align-items:center;margin:4px 0;font:800 13px Nunito}.sc-uv b{font:400 18px/1 Anton;text-align:right}
+.sc-bar{height:14px;border:2.5px solid var(--navy);border-radius:99px;overflow:hidden;background:#eef1f7}.sc-bar u{display:block;height:100%;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}.sc-u{background:#8e6bd8}.sc-b{background:#14a3a1}
+.sc-ring{width:min(190px,48vw)}.sc-mid b{font-size:42px}

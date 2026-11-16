@@ -3,13 +3,14 @@ import type { GameState } from "@gdt/game-engine";
 import GameIcon from "./GameIcon.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
-import { stereoGame } from "../lib/stereo.ts";
+import { stereoGame, stereoGruppi } from "../lib/stereo.ts";
+import { cardFull, useCards } from "../lib/cards.ts";
 
 const R = 54, C = 2 * Math.PI * R;
 
 /** Dopo il premio della serata e prima della scalata: quanto hanno pesato i luoghi comuni in QUESTA partita (voti di tutti, nessun nome). Stima della stanza. */
-export default function StereoScene({ stereo, sound, readOnly, onDone }: { stereo: GameState["stereo"] | null | undefined; sound: boolean; readOnly?: boolean; onDone: () => void }) {
-  const g = stereoGame(stereo), [on, setOn] = useState(false), [shown, setShown] = useState(0), tm = useRef<ReturnType<typeof setTimeout> | null>(null);
+export default function StereoScene({ stereo, isBot, sound, readOnly, onDone }: { stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean; readOnly?: boolean; onDone: () => void }) {
+  useCards(); const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), [on, setOn] = useState(false), [shown, setShown] = useState(0), tm = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     sfx.drum(sound, 1);
     const a = setTimeout(() => { setOn(true); sfx.stamp(sound); }, 450);
@@ -35,10 +36,17 @@ export default function StereoScene({ stereo, sound, readOnly, onDone }: { stere
               </svg>
               <div className="sc-mid"><b data-testid="stereo-pct">{shown}%</b><span>{t("sp.partita")}</span></div>
             </div>
-            {g.top.length > 0 && (
-              <div className="sc-top">
-                <h4>{t("sp.piu")}</h4>
-                {g.top.map((x, i) => <div className="sc-chip" key={x.k} style={{ animationDelay: `${0.9 + i * 0.18}s` }} data-testid="stereo-top"><span>{x.k}</span><b>{ts("sp.voti", { n: x.n })}</b></div>)}
+            {g.top[0] && <div className="sc-blk sc-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="sc-lc-k">{g.top[0].k}</div><small>{g.top[0].n === 1 ? ts("sp.voto1") : ts("sp.voti", { n: g.top[0].n })}</small></div>}
+            {g.lancio && (
+              <div className="sc-blk sc-lan" data-testid="stereo-lancio">
+                <h4>{t("sc.lancio")}</h4>
+                <div className="sc-lan-r"><img src={cardFull(g.lancio.cardId)} alt="" draggable={false} /><div><b>{ts("sc.lancio.voti", { ruolo: g.lancio.ruolo, n: g.lancio.n })}</b><q>{g.lancio.text}</q></div></div>
+              </div>
+            )}
+            {(gr.umani !== null || gr.bot !== null) && (
+              <div className="sc-blk sc-uvb" data-testid="stereo-uvb">
+                <h4>{t("sc.uvb")}</h4>
+                {([["sc.umani", gr.umani, "sc-u"], ["sc.bot", gr.bot, "sc-b"]] as const).filter(([, v]) => v !== null).map(([k, v, c]) => <div className="sc-uv" key={k}><span>{t(k)}</span><div className="sc-bar"><u className={c} style={{ width: on ? `${v}%` : 0 }} /></div><b>{v}%</b></div>)}
               </div>
             )}
           </>

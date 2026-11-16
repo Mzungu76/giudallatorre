@@ -152,10 +152,12 @@ export function stereoExplain(cardId: string, text: string): { s: number; base: 
 export const isStereoVote = (e: { s: number; base: number; causa?: string | null } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
 
 /** Per un turno: quali voti sono «per luogo comune» e quanto sarebbe stato per caso (quota delle carte in torre che il luogo comune spiega). Null se la frase non ha etichette. */
-export function stereoVoteFlags(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>): { voti: Record<string, boolean>; caso: number; cause: Record<string, number> } | null {
+export function stereoVoteFlags(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>): { voti: Record<string, boolean>; caso: number; cause: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null } | null {
   const byPos: Record<number, string | boolean> = {}; let k = 0;
   for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const f = isStereoVote(e); byPos[t.position] = f ? e.causa ?? true : false; if (f) k++; }
-  const voti: Record<string, boolean> = {}, cause: Record<string, number> = {};
-  for (const [pid, pos] of Object.entries(votes)) { const c = byPos[pos]; voti[pid] = !!c; if (typeof c === "string") cause[c] = (cause[c] ?? 0) + 1; }
-  return { voti, caso: tower.length ? k / tower.length : 0, cause };
+  const voti: Record<string, boolean> = {}, cause: Record<string, number> = {}, perPos: Record<number, number> = {};
+  for (const [pid, pos] of Object.entries(votes)) { const c = byPos[pos]; voti[pid] = !!c; if (typeof c === "string") { cause[c] = (cause[c] ?? 0) + 1; perPos[pos] = (perPos[pos] ?? 0) + 1; } }
+  let lancio: { pos: number; n: number; causa: string } | null = null;   // la carta che il luogo comune ha colpito di più in questo turno
+  for (const [pos, n] of Object.entries(perPos)) if (!lancio || n > lancio.n) lancio = { pos: Number(pos), n, causa: byPos[Number(pos)] as string };
+  return { voti, caso: tower.length ? k / tower.length : 0, cause, lancio };
 }

@@ -266,6 +266,7 @@ export class RoomCore {
     r.stereo = f; const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
     for (const [pid, flag] of Object.entries(f.voti)) { t.n[pid] = (t.n[pid] ?? 0) + 1; if (flag) t.s[pid] = (t.s[pid] ?? 0) + 1; }
     t.c += f.caso; t.turni++;
+    if (f.lancio && f.lancio.n >= 2 && f.lancio.n > (t.lancio?.n ?? 0)) { const c = state.tower.find((x) => x.position === f.lancio!.pos); if (c) t.lancio = { cardId: c.cardId, causa: f.lancio.causa, n: f.lancio.n, text }; }
   }
   private applyGame(out: Outbox, action: Action, now: number): Outbox {
     const d = this.data, before = d.game!.phase;

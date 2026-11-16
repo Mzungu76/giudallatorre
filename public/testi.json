@@ -1,5 +1,5 @@
 {
- "versione": 62,
+ "versione": 63,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -2951,12 +2951,36 @@
    "t": "dei voti di questa partita",
    "s": "Fine partita · luoghi comuni"
   },
-  "sp.piu": {
-   "t": "I più presenti",
-   "s": "Fine partita · luoghi comuni"
-  },
   "sp.voti": {
    "t": "{n} voti",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.top": {
+   "t": "Il luogo comune della partita",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.lancio": {
+   "t": "Il miglior lancio dalla Torre",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.lancio.voti": {
+   "t": "{ruolo}: {n} voti per",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb": {
+   "t": "Umani contro bot",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.umani": {
+   "t": "Umani",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.bot": {
+   "t": "Bot",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.voto1": {
+   "t": "1 voto",
    "s": "Fine partita · luoghi comuni"
   }
  }
