@@ -59,6 +59,7 @@ while (Date.now() - t0 < 240_000) {
 }
 check("classifica finale su tutti i telefoni", (await Promise.all(pages.map((p) => vis(p, "final")))).every(Boolean)); await shot(A, "12-finale");
 check("tutti e 3 hanno fatto il Megafono 2 volte (6 turni)", turns >= 5, `turni avanzati: ${turns}`);
+{ const t1 = Date.now(); while (Date.now() - t1 < 30_000 && !(await vis(D, "final"))) await sleep(500); }   // con le animazioni vere lo schermo condiviso passa da solo dal premio alla classifica
 check("lo schermo condiviso mostra la classifica", await vis(D, "final")); await shot(D, "13-schermo-finale");
 check("nessun errore JavaScript nelle pagine", [...pages, D].every((p) => p.errors.length === 0), JSON.stringify([...pages, D].map((p) => p.errors)));
 await browser.close();

@@ -10,12 +10,12 @@ export const toneOf = (age: number | undefined): "b6" | "b14" | "b18" => (age !=
 
 /** Scena del premio della serata: busta che dondola → timbro, vincitore, numero che lo motiva e battuta. Un tocco passa alla classifica. */
 export default function AwardScene({ award, winner, age, sound, readOnly, onDone }: { award: Award; winner: { name: string; color: string }; age?: number; sound: boolean; readOnly?: boolean; onDone: () => void }) {
-  const { H } = useStage(), [open, setOpen] = useState(false), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { H } = useStage(), [open, setOpen] = useState(false), timer = useRef<ReturnType<typeof setTimeout> | null>(null), next = useRef<ReturnType<typeof setTimeout> | null>(null);
   const reveal = () => { if (open) return; setOpen(true); sfx.stamp(sound); setTimeout(() => sfx.fanfare(sound), 500); };
   useEffect(() => {
     sfx.drum(sound, 1.2);
-    if (readOnly) timer.current = setTimeout(reveal, 4000); // schermo condiviso: nessuno tocca, si apre da sola
-    return () => { if (timer.current) clearTimeout(timer.current); };
+    if (readOnly) { timer.current = setTimeout(reveal, 4000); next.current = setTimeout(onDone, 14000); }   // schermo condiviso: nessuno tocca, si apre da sola e dopo qualche secondo passa alla classifica
+    return () => { if (timer.current) clearTimeout(timer.current); if (next.current) clearTimeout(next.current); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const vars = { n: award.n, of: award.of }, tone = toneOf(age), id = award.id;
   const cw = Math.round(Math.max(118, Math.min(176, H * 0.2)));
