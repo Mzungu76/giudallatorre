@@ -56,8 +56,14 @@ Modifiche in v2o (leve in `TUNE`):
 
 (Il valore reale di NON CADE nel calcolo, `noncadePtsLens`, resta 1: portarlo a 2 non faceva giocare molto di più NON CADE e costava circa 0,8 punti.) La varietà costa forza: è una scelta di progetto da fare provando con persone. «Segnalino sulla carta più adatta» è la quota di turni in cui il segnalino sta sulla carta con più affinità secondo le etichette (con 4 carte, a caso, il 25%).
 
+## Canale dei luoghi comuni (ruoli e mestieri)
+File: `content/etichette/stereotipi.json` (voce per voce, con nota). Una carta che ha il tipo `ruolo` (politico, religioso, influencer, nerd, sportivo, artista, guru, complottista, genitore, ambizioso, festaiolo, ribelle) viene letta da chi ha quel pregiudizio anche come `tratto` (es. politico → ipocrita 3, bugiardo 2, furbo 2).
+- **Perimetro deliberato**: solo ruoli, mestieri e sottoculture. **Niente corpo, età, sesso, origine o gruppi di persone**: un test (`etichette.test.ts`) lo impedisce (elenco chiuso dei ruoli ammessi). Le etichette delle carte restano quelle esistenti.
+- **Come agisce**: ogni lente ha `stereo` (0–0,8) e, per ogni coppia ruolo→tratto, un'estrazione fissa per (bot, carta): ha quel luogo comune oppure no. Se lo ha, il tratto si aggiunge alla carta con peso `forza × stereo × 0,8`, con **tetto 2 per carta** (`STEREO_CAP`): nessuna carta attira voti solo per i pregiudizi. Gli altri sono immaginati con lenti pure con pregiudizi, quindi il bot sa che esistono anche negli altri.
+- **Interruttore**: `TUNE.stereoOn` (1 = acceso, solo nei bot v2o). Per togliere un luogo comune: cancellare la riga dal JSON.
+- **Verifica** (800 partite, 4 bot v2o): con/senza canale, la dispersione dei tassi di caduta tra le carte resta 5% → 5%: il canale sposta qualche carta di qualche punto (es. guru/moralista/eccentrico 22% → 32%, pignolo/nerd 24% → 30%) ma non concentra i voti su poche carte.
+
 ## Cosa non c'è ancora
-- **Canale stereotipi** (tabella riga per riga, rivista dal proprietario, con tetto): previsto in un secondo passo, non attivo.
 - **Calibrazione sulle persone** (quanto è larga la popolazione di lenti, quanto pesa ogni bias): i valori sono ipotesi.
 - La preferenza per la propria carta per il Megafono non esiste (non gioca carte).
 

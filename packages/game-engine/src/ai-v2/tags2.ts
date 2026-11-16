@@ -39,6 +39,22 @@ export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<stri
   // dizionario parole → etichette (dalle frasi etichettate) per le frasi scritte a mano
   for (const [text, tg] of Object.entries(phrases)) { NDOC++; for (const w of stems(text)) { DF.set(w, (DF.get(w) ?? 0) + 1); let m = CNT.get(w); if (!m) CNT.set(w, (m = new Map())); for (const [t, wt] of feats(tg)) m.set(t, (m.get(t) ?? 0) + wt / 3); } }
 }
+/** Luoghi comuni su ruoli e mestieri (content/etichette/stereotipi.json): `ruolo` (un tipo della carta) → `tratto` (un tipo), con forza 1–3. */
+export interface Stereo { ruolo: string; tratto: string; forza: number }
+const STEREO = new Map<string, [string, number][]>();
+/** Tetto: un luogo comune non può aggiungere a una carta più di questo peso totale (nessuna carta attira voti solo per i pregiudizi). */
+export const STEREO_CAP = 2;
+export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = "t:" + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
+/** I tratti che questa lente aggiunge a una carta per luogo comune: solo alcuni dei luoghi comuni (a caso ma fissi per lente e carta), pesati dalla forza e dal pregiudizio del bot, con tetto. */
+export function stereoTags(cardId: string, lens: Lens): [string, number][] {
+  const c = CARDS[cardId]; if (!c || lens.stereo <= 0) return [];
+  const out: [string, number][] = []; let tot = 0;
+  for (const ruolo of Object.keys(c.tipi)) for (const [tratto, f] of STEREO.get("t:" + ruolo) ?? []) {
+    if ((hash32(`${lens.seed}|${cardId}|${ruolo}|${tratto}`) % 1000) / 1000 >= lens.stereo) continue;   // questo bot non ha quel luogo comune
+    const w = Math.min(STEREO_CAP - tot, f * lens.stereo * 0.8); if (w <= 0.05) continue; out.push([tratto, w]); tot += w;
+  }
+  return out;
+}
 export const hasTagsV2 = (): boolean => Object.keys(CARDS).length > 0;
 /** Parentela (0 se assente o sotto soglia) tra due etichette «t:nome» / «m:nome». Per i test. */
 export const tagSimilarity = (a: string, b: string): number => (a === b ? 1 : SIM.get(a + "|" + b) ?? 0);
@@ -92,6 +108,7 @@ export function affinityLens(cardId: string, phraseText: string, lens: Lens): nu
   const c = CARDS[cardId]; if (!c) return affinityOld(cardId, phraseText);
   const p = PHRASES[phraseText] ?? inferV2(phraseText); if (!p) return null;
   const cf = feats(c), ang = angleOf(cardId, lens.seed, lens.angle); if (ang) cf.push(ang);
+  for (const st of stereoTags(cardId, lens)) cf.push(st);   // i luoghi comuni del bot sul ruolo della carta
   let a = 0;
   for (const [x, wx] of cf) for (const [y, wy] of feats(p)) {
     const q = SIM.get(x + "|" + y), s = x === y ? 1 : q !== undefined ? lens.reach * q : 0;

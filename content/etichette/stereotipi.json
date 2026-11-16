@@ -1,0 +1,25 @@
+{
+ "versione": 1,
+ "nota": "Luoghi comuni su RUOLI, MESTIERI e SOTTOCULTURE (non su corpo, età, sesso, origine o gruppi di persone): una carta con il tipo `ruolo` viene letta, da chi ha quel pregiudizio, anche come `tratto`. Usati solo dai bot v2o (?motore=v2o). Ogni bot ne ha una parte, con forza diversa; l'effetto per carta ha un tetto (vedi tags2.ts, STEREO_CAP). Si rivede riga per riga: togli una riga e quel luogo comune sparisce.",
+ "voci": [
+  { "ruolo": "politico", "tratto": "ipocrita", "forza": 3, "nota": "dice una cosa e ne fa un'altra" },
+  { "ruolo": "politico", "tratto": "bugiardo", "forza": 2, "nota": "promette e non mantiene" },
+  { "ruolo": "politico", "tratto": "furbo", "forza": 2, "nota": "sa come cavarsela" },
+  { "ruolo": "religioso", "tratto": "moralista", "forza": 2, "nota": "fa la predica" },
+  { "ruolo": "religioso", "tratto": "ipocrita", "forza": 1, "nota": "predica bene e razzola male" },
+  { "ruolo": "influencer", "tratto": "vanitoso", "forza": 3, "nota": "vive per l'immagine" },
+  { "ruolo": "nerd", "tratto": "saputello", "forza": 2, "nota": "sa tutto di una cosa e te la spiega" },
+  { "ruolo": "sportivo", "tratto": "vanitoso", "forza": 1, "nota": "cura molto la forma e la mostra" },
+  { "ruolo": "artista", "tratto": "eccentrico", "forza": 2, "nota": "fuori dagli schemi" },
+  { "ruolo": "artista", "tratto": "vanitoso", "forza": 1, "nota": "si crede un genio" },
+  { "ruolo": "guru", "tratto": "furbo", "forza": 2, "nota": "vende certezze" },
+  { "ruolo": "guru", "tratto": "bugiardo", "forza": 1, "nota": "promette miracoli" },
+  { "ruolo": "complottista", "tratto": "ansioso", "forza": 2, "nota": "vede pericoli ovunque" },
+  { "ruolo": "genitore", "tratto": "ansioso", "forza": 2, "nota": "si preoccupa per tutto" },
+  { "ruolo": "genitore", "tratto": "moralista", "forza": 1, "nota": "fa la predica ai figli" },
+  { "ruolo": "ambizioso", "tratto": "furbo", "forza": 2, "nota": "sa muoversi" },
+  { "ruolo": "ambizioso", "tratto": "egoista", "forza": 1, "nota": "pensa alla propria carriera" },
+  { "ruolo": "festaiolo", "tratto": "inaffidabile", "forza": 2, "nota": "alle feste c'è, il giorno dopo no" },
+  { "ruolo": "ribelle", "tratto": "maleducato", "forza": 1, "nota": "non rispetta le regole" }
+ ]
+}

@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { affinityV2, affinityV2m, inferV2, registerTagsV2, tagSimilarity } from "../src/index.ts";
+import { affinityV2, affinityV2m, inferV2, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
+import { drawLens, mulberry } from "../src/ai-v2/lens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const json = (p: string) => JSON.parse(readFileSync(resolve(root, p), "utf8"));
@@ -67,5 +68,19 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(inferV2("parole mai viste zorbo quibli")).toBeNull();                                  // nessun indizio: nessuna etichetta inventata
     expect(affinityV2m("x", "parole mai viste zorbo quibli")).toBeNull();                          // → il bot si affida alla storia
     registerTagsV2({}, {});
+  });
+  it("tabella dei luoghi comuni: solo ruoli, mestieri e sottoculture (mai corpo, età, sesso, origine), tutte etichette del catalogo, forza 1–3", () => {
+    const voci = json("content/etichette/stereotipi.json").voci as { ruolo: string; tratto: string; forza: number; nota: string }[];
+    const RUOLI = new Set(["politico", "religioso", "influencer", "nerd", "sportivo", "artista", "guru", "complottista", "genitore", "ambizioso", "festaiolo", "ribelle"]);
+    expect(voci.length).toBeGreaterThan(5);
+    for (const v of voci) { expect(RUOLI.has(v.ruolo), `ruolo non ammesso: ${v.ruolo}`).toBe(true); expect(T.has(v.ruolo) && T.has(v.tratto), `${v.ruolo}→${v.tratto}`).toBe(true); expect([1, 2, 3]).toContain(v.forza); expect(v.nota.length).toBeGreaterThan(3); }
+  });
+  it("canale dei luoghi comuni: agisce solo se il bot li ha, con tetto per carta, e spegnibile", () => {
+    registerTagsV2({ pol: { tipi: { politico: 3 }, temi: {} }, ord: { tipi: { avaro: 3 }, temi: {} } }, { "frase": { tipi: { ipocrita: 3 }, temi: {} }, "altra": { tipi: { vanitoso: 3 }, temi: {} } });
+    registerStereotypes([{ ruolo: "politico", tratto: "ipocrita", forza: 3 }, { ruolo: "politico", tratto: "bugiardo", forza: 3 }, { ruolo: "politico", tratto: "furbo", forza: 3 }]);
+    const base = drawLens(mulberry(3)), con = { ...base, stereo: 0.8, angle: 0, halo: 0 }, senza = { ...base, stereo: 0, angle: 0, halo: 0 };
+    expect(stereoTags("pol", senza)).toEqual([]); expect(stereoTags("ord", con)).toEqual([]);                         // senza pregiudizio, o carta senza quel ruolo: nulla
+    const tot = (l: typeof con) => stereoTags("pol", l).reduce((a, [, w]) => a + w, 0); expect(tot(con)).toBeLessThanOrEqual(STEREO_CAP + 1e-9);   // tetto
+    registerStereotypes([]); registerTagsV2({}, {});
   });
 });

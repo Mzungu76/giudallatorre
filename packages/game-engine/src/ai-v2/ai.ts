@@ -193,7 +193,7 @@ const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b
 /** v2: con TUNE.labelsV2 = 1 e le etichette v2 registrate (registerTagsV2) la lettura personaggio↔frase usa i pesi; altrimenti è identica ai bot attuali. */
 const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? (TUNE.labelsSmooth ? affinityV2m(cardId, text) : affinityV2(cardId, text)) : affinityOld(cardId, text));
 
-export const TUNE = { noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+export const TUNE = { stereoOn: 1, noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 /** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
 /** v2 + etichette v2 «morbide» (parentela tra etichette e frasi libere dedotte): per stanza, come sopra. */
@@ -201,8 +201,8 @@ export function chooseBotActionSmooth(...a: Parameters<typeof chooseBotAction>):
 /** v2o («occhi diversi»): v2m + la lente del bot, i bias e la previsione degli altri con lenti diverse. Per stanza, come sopra. */
 export function chooseBotActionLens(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, style: BotStyle = NEUTRAL_STYLE): Action | null {
   const o = TUNE.labelsV2, q = TUNE.labelsSmooth, prev = CUR; TUNE.labelsV2 = 1; TUNE.labelsSmooth = 1;
-  const lens = lensFor(me, s.playerIds), r = mulberry(Math.floor(rand() * 4294967296));
-  CUR = { lens, pool: Array.from({ length: 6 }, () => imagineOther(r, lens)) };
+  const lens0 = lensFor(me, s.playerIds), lens = { ...lens0, stereo: lens0.stereo * TUNE.stereoOn }, r = mulberry(Math.floor(rand() * 4294967296));
+  CUR = { lens, pool: Array.from({ length: 6 }, () => { const l = imagineOther(r, lens); return { ...l, stereo: l.stereo * TUNE.stereoOn }; }) };
   try { return chooseBotAction(s, me, level, mem, rand, style); } finally { CUR = prev; TUNE.labelsV2 = o; TUNE.labelsSmooth = q; }
 }
 export function chooseBotActionLabels(...a: Parameters<typeof chooseBotAction>): ReturnType<typeof chooseBotAction> { const o = TUNE.labelsV2; TUNE.labelsV2 = 1; try { return chooseBotAction(...a); } finally { TUNE.labelsV2 = o; } }
