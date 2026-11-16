@@ -145,7 +145,7 @@ export function stereoExplain(cardId: string, text: string): { s: number; base: 
   let s = 0, best = 0, causa: string | null = null;
   for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
     const wp = p.tipi[tratto.slice(2)]; if (!wp) continue; const v = 3 * (f + wp) / 6; s += v;
-    if (v > best) { best = v; const nome = cue[0] === "a" ? LOOKNAME.get(cue.slice(2)) ?? cue.slice(2) : cue.slice(2); causa = `${nome} → ${tratto.slice(2)}`; }
+    if (v > best && cue[0] !== "t") { best = v; const nome = cue[0] === "a" ? LOOKNAME.get(cue.slice(2)) ?? cue.slice(2) : cue.slice(2); causa = `${nome} → ${tratto.slice(2)}`; }
   }
   return { s, base: affinityV2(cardId, text) ?? 0, causa };
 }

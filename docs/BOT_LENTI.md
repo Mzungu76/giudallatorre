@@ -81,3 +81,7 @@ Modifiche in v2o (leve in `TUNE`):
 
 ## Nota collegata (intervalli)
 Con l'intervallo a 4 carte e 2 giri, `planMiniVote` doveva usare `MINI_CYCLES` invece del 3 fisso: corretto nei bot v2 (`TUNE.miniFix`, predefinito 1). Il file `ai.ts` dei bot «attuali» (protetto) conserva il 3: vota comunque, con tempi un po' diversi dal previsto.
+
+## Cautela contro i VOTI NULLI! (feedback: «boccaloni sul segnalino»)
+Misura (4 bot Difficili, 40 partite, `tools/analysis/lui-boccaloni.ts`): con v2m la Folla vota la carta col segnalino **81%** dei turni con CADE e **76%** con VOTI NULLI! (a caso sarebbe 25%); il Megafono con CADE vota la stessa carta il 92%. È di nuovo l'equilibrio razionale (seguire il segnalino rende), ma è prevedibile: chi mette VOTI NULLI! sulla carta più probabile li frega.
+Leva `TUNE.nulFear` (solo v2o, 0 = com'era): moltiplica per (1 + nulFear) il peso che la Folla dà a «è VOTI NULLI!». Con `nulFear` 3 la Folla segue il segnalino nel 48–60% dei turni invece del 61–77%. Con il valore di default (2) in laboratorio v2o perde circa 0,7 punti a partita (11,7 contro 12,4, dentro il margine d'errore di ±0,6). Per spegnerla: `nulFear: 0`.
