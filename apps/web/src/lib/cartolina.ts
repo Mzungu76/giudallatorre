@@ -40,33 +40,47 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   rr(c, 150, 160, W - 300, 70, 8); c.fillStyle = NAVY; c.fill();
   c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.sotto", { n: r.n, data: dataLunga(d.giorno) }), W / 2, 211);
   // la frase del Megafono
-  c.font = "800 44px Nunito, system-ui, sans-serif"; const righe = spezza(c, ts("torre.c.frase", { f: r.frase ?? "" }), W - 260, 3), hb = 44 + righe.length * 56;
-  rr(c, 80, 262, W - 160, hb, 28); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
-  c.fillStyle = NAVY; c.textAlign = "center"; righe.forEach((l, i) => c.fillText(l, W / 2, 262 + 38 + 56 * (i + 1) - 14));
-  // le quattro carte
-  const carte = r.carte ?? [], cw = 232, ch = 326, gap = 14, x0 = (W - (4 * cw + 3 * gap)) / 2, y0 = 262 + hb + 44;
-  const imgs = await Promise.all(carte.map((k) => img(cardFull(k.id))));
-  carte.forEach((k, i) => {
-    const caduta = r.cadute?.includes(k.pos), mia = r.voto === k.pos, cx = x0 + i * (cw + gap) + cw / 2, cy = y0 + ch / 2 + (caduta ? 34 : 0);
-    c.save(); c.translate(cx, cy); c.rotate(((caduta ? 9 : (i % 2 ? 2 : -2)) * Math.PI) / 180); c.globalAlpha = caduta ? 0.62 : 1;
-    c.shadowColor = "#13224a99"; c.shadowOffsetX = 6; c.shadowOffsetY = 8; rr(c, -cw / 2, -ch / 2, cw, ch, 18); c.fillStyle = "#fff"; c.fill(); c.shadowColor = "transparent";
-    const im = imgs[i]; if (im) { c.save(); rr(c, -cw / 2 + 8, -ch / 2 + 8, cw - 16, ch - 16, 12); c.clip(); const s = Math.max((cw - 16) / im.width, (ch - 16) / im.height); c.drawImage(im, -im.width * s / 2, -im.height * s / 2, im.width * s, im.height * s); c.restore(); }
-    if (mia) { rr(c, -cw / 2 - 6, -ch / 2 - 6, cw + 12, ch + 12, 22); c.lineWidth = 12; c.strokeStyle = GOLD; c.stroke(); }
-    c.beginPath(); c.arc(-cw / 2 + 30, -ch / 2 + 30, 26, 0, Math.PI * 2); c.fillStyle = GOLD; c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = NAVY; c.font = "400 32px Anton, Impact, sans-serif"; c.fillText(String(k.pos), -cw / 2 + 30, -ch / 2 + 42);
-    if (r.seg?.pos === k.pos) { c.save(); c.rotate((-9 * Math.PI) / 180); const t = ts(`torre.k.${r.seg.effetto}` as "torre.k.cade"); c.font = "400 46px Anton, Impact, sans-serif"; const w = c.measureText(t).width + 36; rr(c, -w / 2, -4, w, 66, 6); c.fillStyle = r.seg.effetto === "nulli" ? RED : r.seg.effetto === "noncade" ? TEAL : GOLD; c.fill(); c.lineWidth = 6; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = r.seg.effetto === "cade" ? NAVY : "#fff"; c.fillText(t, 0, 46); c.restore(); }
+  c.font = "800 42px Nunito, system-ui, sans-serif"; const righe = spezza(c, ts("torre.c.frase", { f: r.frase ?? "" }), W - 260, 3), hb = 40 + righe.length * 52;
+  rr(c, 80, 252, W - 160, hb, 28); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
+  c.fillStyle = NAVY; c.textAlign = "center"; righe.forEach((l, i) => c.fillText(l, W / 2, 252 + 34 + 52 * (i + 1) - 14));
+  // la torre, le carte rimaste in cima e quelle che cadono
+  const carte = r.carte ?? [], rimaste = carte.filter((k) => !r.cadute?.includes(k.pos)), cadute = carte.filter((k) => r.cadute?.includes(k.pos));
+  const ty = 660, tw = 430, torre = await img("/scene/tower_pop.webp"), imgs = new Map(await Promise.all(carte.map(async (k) => [k.pos, await img(cardFull(k.id))] as const)));
+  const carta = (k: { pos: number; id: string }, cx: number, cy: number, w: number, h: number, rot: number, cadendo: boolean) => {
+    const mia = r.voto === k.pos; c.save(); c.translate(cx, cy); c.rotate((rot * Math.PI) / 180); c.globalAlpha = cadendo ? 0.92 : 1;
+    c.shadowColor = "#13224a99"; c.shadowOffsetX = 5; c.shadowOffsetY = 7; rr(c, -w / 2, -h / 2, w, h, 16); c.fillStyle = "#fff"; c.fill(); c.shadowColor = "transparent";
+    const im = imgs.get(k.pos); if (im) { c.save(); rr(c, -w / 2 + 7, -h / 2 + 7, w - 14, h - 14, 10); c.clip(); const sc = Math.max((w - 14) / im.width, (h - 14) / im.height); c.drawImage(im, -im.width * sc / 2, -im.height * sc / 2, im.width * sc, im.height * sc); c.restore(); }
+    if (mia) { rr(c, -w / 2 - 6, -h / 2 - 6, w + 12, h + 12, 20); c.lineWidth = 11; c.strokeStyle = GOLD; c.stroke(); }
+    c.beginPath(); c.arc(-w / 2 + 26, -h / 2 + 26, 23, 0, Math.PI * 2); c.fillStyle = GOLD; c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = NAVY; c.font = "400 29px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(String(k.pos), -w / 2 + 26, -h / 2 + 37);
+    if (r.seg?.pos === k.pos) { c.save(); c.rotate((-9 * Math.PI) / 180); const t = ts(`torre.k.${r.seg.effetto}` as "torre.k.cade"); let f = 42; c.font = `400 ${f}px Anton, Impact, sans-serif`; while (c.measureText(t).width > w + 24 && f > 24) { f -= 2; c.font = `400 ${f}px Anton, Impact, sans-serif`; } const tw2 = c.measureText(t).width + 28; rr(c, -tw2 / 2, -4, tw2, f + 22, 6); c.fillStyle = r.seg.effetto === "nulli" ? RED : r.seg.effetto === "noncade" ? TEAL : GOLD; c.fill(); c.lineWidth = 6; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = r.seg.effetto === "cade" ? NAVY : "#fff"; c.fillText(t, 0, f + 12); c.restore(); }
+    if (mia) { const yy = cadendo ? h / 2 + 34 : -h / 2 - 30; c.fillStyle = TEAL; rr(c, -42, yy - 22, 84, 44, 22); c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = "#fff"; c.font = "400 28px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.tu"), 0, yy + 10); }
     c.restore();
-    if (mia) { c.fillStyle = TEAL; rr(c, cx - 44, y0 + ch + 38, 88, 44, 22); c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = "#fff"; c.font = "400 30px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.tu"), cx, y0 + ch + 71); }
+  };
+  // quelle che cadono: inclinate, con le righe del vento
+  cadute.forEach((k, i) => {
+    const cx = 900 + i * 36, cy = 640 + i * 150, rot = 19 + i * 8, dx = Math.sin((rot * Math.PI) / 180), dy = Math.cos((rot * Math.PI) / 180);
+    c.save(); c.strokeStyle = "#ffffffd9"; c.lineWidth = 9; c.lineCap = "round"; for (let m = 0; m < 3; m++) { const bx = cx - 80 + m * 46 - dx * 105, by0 = cy - 140 - dy * 105; if (by0 - dy * 70 < 252 + hb + 10) continue; c.beginPath(); c.moveTo(bx, by0); c.lineTo(bx - dx * 70, by0 - dy * 70); c.stroke(); } c.restore();
+    carta(k, cx, cy, 190, 266, rot, true);
   });
+  // quelle rimaste in cima, a ventaglio sulla torre
+  const n = rimaste.length, w0 = 178, h0 = 250, span = cadute.length ? 330 : 400, cx0 = cadute.length ? W / 2 - 70 : W / 2;
+  rimaste.forEach((k, i) => carta(k, cx0 + (n === 1 ? 0 : -span / 2 + (span * i) / (n - 1)), 590 + (i % 2 ? 10 : 0), w0, h0, n === 1 ? -2 : -7 + (14 * i) / (n - 1), false));
+  if (torre) {   // la base della torre sfuma, così non resta un taglio netto
+    const sc = tw / torre.width, oc = document.createElement("canvas"); oc.width = tw; oc.height = 300; const o = oc.getContext("2d")!;
+    o.drawImage(torre, 0, 0, torre.width, 300 / sc, 0, 0, tw, 300); o.globalCompositeOperation = "destination-out";
+    const m = o.createLinearGradient(0, 215, 0, 300); m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(1, "rgba(0,0,0,1)"); o.fillStyle = m; o.fillRect(0, 215, tw, 85);
+    c.drawImage(oc, (W - tw) / 2, ty);
+  }   // la torre davanti: le carte spuntano da dietro i merli
   // punti, giudizio, emoji
-  const py = y0 + ch + 100;
-  rr(c, 70, py, 380, 240, 26); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
-  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 170px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 260, py + 166); c.font = "800 36px Nunito, system-ui, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 260, py + 214);
-  c.save(); c.translate(760, py + 82); c.rotate((-4 * Math.PI) / 180); let px = 96; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 560 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; } titolo(c, vt, 0, 0, px, RED); c.restore();
-  c.font = "84px sans-serif"; c.textAlign = "center"; c.fillText([...r.cella].join("  "), 760, py + 190);
+  const py = 990;
+  rr(c, 70, py, 360, 206, 26); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
+  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 130px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 250, py + 138); c.font = "800 32px Nunito, system-ui, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 250, py + 184);
+  c.save(); c.translate(745, py + 80); c.rotate((-4 * Math.PI) / 180); let px = 92; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 560 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; } titolo(c, vt, 0, 0, px, RED); c.restore();
+  c.font = "78px sans-serif"; c.textAlign = "center"; c.fillText([...r.cella].join("  "), 745, py + 184);
   // serie e totale
-  const by = py + 266; rr(c, 70, by, W - 140, 86, 43); c.fillStyle = NAVY; c.fill();
-  c.fillStyle = "#fff"; c.font = "400 44px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 59);
+  const by = py + 226; rr(c, 70, by, W - 140, 74, 37); c.fillStyle = NAVY; c.fill();
+  c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 52);
   // invito
-  c.fillStyle = "#fff"; c.font = "800 34px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 30); c.shadowColor = "transparent";
+  c.fillStyle = "#fff"; c.font = "800 31px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 28); c.shadowColor = "transparent";
   return new Promise((ok, no) => cv.toBlob((b) => (b ? ok(b) : no(new Error("immagine non creata"))), "image/png"));
 }
