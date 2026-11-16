@@ -22,5 +22,5 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
     return <AwardScene award={award} winner={{ name: w.name, color: w.color }} age={room.options.ageBand} sound={sound} readOnly={readOnly} onDone={() => { try { sessionStorage.setItem(awKey, "1"); } catch { /* niente memoria: vale per questa visita */ } setSeen(true); }} />;
   }
   const [sp, setSp] = useState(false), hasSt = !!view.stereo?.turni;
-  return <>{sp && <StereoPanel stereo={view.stereo} players={rows.map((r) => ({ id: r.id, name: r.name, color: r.color }))} onClose={() => setSp(false)} />}<FinalScene onStereo={!readOnly && hasSt ? () => setSp(true) : undefined} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }} /></>;
+  return <>{sp && <StereoPanel stereo={view.stereo} onClose={() => setSp(false)} />}<FinalScene onStereo={!readOnly && hasSt ? () => setSp(true) : undefined} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }} /></>;
 }

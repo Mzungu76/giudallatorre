@@ -263,7 +263,7 @@ export class RoomCore {
   private markStereo(state: GameState): void {
     const r = state.lastResult, text = state.phrase?.text; if (!r || !text) return;
     const f = stereoVoteFlags(state.tower, text, r.votes); if (!f) return;
-    r.stereo = f; const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0 });
+    r.stereo = f; const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
     for (const [pid, flag] of Object.entries(f.voti)) { t.n[pid] = (t.n[pid] ?? 0) + 1; if (flag) t.s[pid] = (t.s[pid] ?? 0) + 1; }
     t.c += f.caso; t.turni++;
   }

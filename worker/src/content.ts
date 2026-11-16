@@ -41,5 +41,5 @@ registerTagsV2((etPersonaggi as { personaggi: Record<string, T2> }).personaggi, 
 
 /** Luoghi comuni su ruoli e mestieri per i bot v2o (revisionati dal proprietario): content/etichette/stereotipi.json. */
 registerRoles((ruoliJson as { ruoli: { id: string; temi: string[] }[] }).ruoli, (ruoliJson as { carte: Record<string, string[]> }).carte);
-registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte);
+registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte, Object.fromEntries((aspettoJson as { aspetti: { id: string; nome: string }[] }).aspetti.map((a) => [a.id, a.nome])));
 registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "aspetto" | "tipo" }[] }).voci);

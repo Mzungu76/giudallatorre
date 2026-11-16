@@ -1414,3 +1414,9 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .sp-bar{grid-column:1/3;grid-row:2;height:12px;border:2.5px solid #13224a;border-radius:99px;background:#fff;overflow:hidden}.sp-bar u{display:block;height:100%;background:#8e6bd8}
 .sp-row small{grid-column:1/3;grid-row:3;font-size:11.5px;opacity:.7}.sp-caso{font:400 16px/1 Anton;margin:4px 0 0;text-transform:uppercase}
 .sp .sp-name,.sp .sp-row b,.sp .sp-row small,.sp .sp-sub,.sp .sp-caso{color:#13224a}
+
+.sp-big{display:flex;align-items:baseline;gap:8px}.sp-big b{font:400 44px/1 Anton;color:#8e6bd8}.sp-big span{font-size:14px;color:#13224a}
+.sp-row2{display:flex;justify-content:space-between;align-items:baseline;color:#13224a;font-size:14px}.sp-row2 b{font:400 20px/1 Anton}
+.sp-bar2 u{background:#aab3c5}.sp h4{font:400 16px/1 Anton;text-transform:uppercase;margin:6px 0 0;color:#13224a}
+.sp-top{display:flex;justify-content:space-between;gap:8px;background:#fff;border:2px solid #13224a;border-radius:10px;padding:6px 10px;font-size:14px;color:#13224a}.sp-top b{font:400 16px/1 Anton;white-space:nowrap}
+.sp-q{font-weight:800;font-size:15px;color:#13224a;margin:6px 0 0}

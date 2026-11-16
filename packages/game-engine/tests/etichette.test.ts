@@ -105,7 +105,7 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(isStereoVote(stereoExplain("vero", "i più bugiardi"))).toBe(false);      // la carta ha davvero quel tratto
     expect(isStereoVote(stereoExplain("neutra", "i più bugiardi"))).toBe(false);    // niente luogo comune
     const f = stereoVoteFlags([{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], "i più bugiardi", { a: 1, b: 2, c: 1 })!;
-    expect(f.voti).toEqual({ a: true, b: false, c: true }); expect(f.caso).toBeCloseTo(1 / 3, 5);
+    expect(f.voti).toEqual({ a: true, b: false, c: true }); expect(f.caso).toBeCloseTo(1 / 3, 5); expect(f.cause).toEqual({ "politico → bugiardo": 2 });
     expect(stereoVoteFlags([{ cardId: "pol", position: 1 }], "frase mai vista zorbo", { a: 1 })).toBeNull();   // frase senza etichette: nessun dato
     registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });

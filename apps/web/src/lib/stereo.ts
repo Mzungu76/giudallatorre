@@ -1,9 +1,10 @@
 import type { GameState } from "@gdt/game-engine";
 
-export interface StereoRow { id: string; n: number; s: number; pct: number }
-/** Le righe del pannello «Luoghi comuni»: per giocatore, voti contati, voti per luogo comune e percentuale; dal più al meno; + quanto sarebbe stato per caso (media). */
-export function stereoRows(st: GameState["stereo"] | null | undefined, ids: readonly string[]): { rows: StereoRow[]; caso: number | null } {
-  if (!st || !st.turni) return { rows: [], caso: null };
-  const rows = ids.filter((id) => (st.n[id] ?? 0) > 0).map((id) => ({ id, n: st.n[id]!, s: st.s[id] ?? 0, pct: Math.round(((st.s[id] ?? 0) / st.n[id]!) * 100) })).sort((a, b) => b.pct - a.pct || b.n - a.n);
-  return { rows, caso: Math.round((st.c / st.turni) * 100) };
+export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number }[] }
+/** Il pannello «Luoghi comuni» è della PARTITA, non dei giocatori: quanta parte dei voti di tutti si spiega con un luogo comune, quanto sarebbe stato per caso e quali luoghi comuni hanno pesato di più. */
+export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3): StereoGame | null {
+  if (!st || !st.turni) return null;
+  const n = Object.values(st.n).reduce((a, b) => a + b, 0); if (!n) return null;
+  const s = Object.values(st.s).reduce((a, b) => a + b, 0), top = Object.entries(st.cause ?? {}).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, max).map(([k, v]) => ({ k, n: v }));
+  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top };
 }

@@ -1,5 +1,5 @@
 {
- "versione": 58,
+ "versione": 59,
  "aggiornato": "2026-11-15",
  "testi": {
   "intro.aria": {
@@ -2932,19 +2932,15 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sp.sotto": {
-   "t": "Voti guidati da un luogo comune",
+   "t": "Quanto hanno pesato in questa partita",
    "s": "Fine partita · luoghi comuni"
   },
   "sp.vuoto": {
    "t": "Nessun dato in questa partita",
    "s": "Fine partita · luoghi comuni"
   },
-  "sp.riga": {
-   "t": "{s} su {n} voti",
-   "s": "Fine partita · luoghi comuni"
-  },
   "sp.caso": {
-   "t": "A caso: {pct}%",
+   "t": "A caso",
    "s": "Fine partita · luoghi comuni",
    "n": "Quota che si avrebbe votando a caso"
   },
@@ -2959,6 +2955,23 @@
   "st.acaso": {
    "t": "a caso: {pct}%",
    "s": "Statistiche personali"
+  },
+  "sp.partita": {
+   "t": "dei voti di questa partita",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.piu": {
+   "t": "I più presenti",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.voti": {
+   "t": "{n} voti",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.domanda": {
+   "t": "Quali ti hanno guidato?",
+   "s": "Fine partita · luoghi comuni",
+   "n": "Spunto di riflessione: si può togliere"
   }
  }
 }

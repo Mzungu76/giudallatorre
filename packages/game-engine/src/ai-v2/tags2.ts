@@ -64,7 +64,8 @@ export function registerRoles(ruoli: { id: string; temi: string[] }[], carte: Re
 }
 /** Asse dell'aspetto scelto (content/etichette/aspetto.json): abbigliamento e accessori di ogni carta. Serve solo ai luoghi comuni. */
 const CARDLOOKS = new Map<string, string[]>();
-export function registerLooks(carte: Record<string, string[]>): void { CARDLOOKS.clear(); for (const [c, a] of Object.entries(carte)) CARDLOOKS.set(c, a); }
+const LOOKNAME = new Map<string, string>();
+export function registerLooks(carte: Record<string, string[]>, nomi: Record<string, string> = {}): void { CARDLOOKS.clear(); LOOKNAME.clear(); for (const [c, a] of Object.entries(carte)) CARDLOOKS.set(c, a); for (const [k, v] of Object.entries(nomi)) LOOKNAME.set(k, v); }
 /** Etichette della carta per le letture «morbide»: le sue, più i temi di contesto dei suoi ruoli (peso 2) se non li ha già. */
 function cardFeats(cardId: string): [string, number][] {
   const f = feats(CARDS[cardId]!), have = new Set(f.map(([k]) => k));
@@ -138,18 +139,23 @@ export function affinityLens(cardId: string, phraseText: string, lens: Lens): nu
  * e quanto la spiegano le etichette della carta (`base`). Il voto è «per luogo comune» se il luogo comune da solo basta a spiegarlo (`s > 0` e `s ≥ base`): la carta
  * ha il ruolo o l'aspetto che fa pensare a quel tratto, ma di suo non c'entra con la frase. È una stima, non una prova delle intenzioni di chi ha votato.
  */
-export function stereoExplain(cardId: string, text: string): { s: number; base: number } | null {
+export function stereoExplain(cardId: string, text: string): { s: number; base: number; causa: string | null } | null {
   const c = CARDS[cardId], p = PHRASES[text] ?? inferV2(text); if (!c || !p) return null;
   const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x), ...(CARDLOOKS.get(cardId) ?? []).map((x) => "a:" + x)];
-  let s = 0; for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) { const wp = p.tipi[tratto.slice(2)]; if (wp) s += 3 * (f + wp) / 6; }
-  return { s, base: affinityV2(cardId, text) ?? 0 };
+  let s = 0, best = 0, causa: string | null = null;
+  for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
+    const wp = p.tipi[tratto.slice(2)]; if (!wp) continue; const v = 3 * (f + wp) / 6; s += v;
+    if (v > best) { best = v; const nome = cue[0] === "a" ? LOOKNAME.get(cue.slice(2)) ?? cue.slice(2) : cue.slice(2); causa = `${nome} → ${tratto.slice(2)}`; }
+  }
+  return { s, base: affinityV2(cardId, text) ?? 0, causa };
 }
-export const isStereoVote = (e: { s: number; base: number } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
+export const isStereoVote = (e: { s: number; base: number; causa?: string | null } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
 
 /** Per un turno: quali voti sono «per luogo comune» e quanto sarebbe stato per caso (quota delle carte in torre che il luogo comune spiega). Null se la frase non ha etichette. */
-export function stereoVoteFlags(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>): { voti: Record<string, boolean>; caso: number } | null {
-  const byPos: Record<number, boolean> = {}; let k = 0;
-  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const f = isStereoVote(e); byPos[t.position] = f; if (f) k++; }
-  const voti: Record<string, boolean> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = !!byPos[pos];
-  return { voti, caso: tower.length ? k / tower.length : 0 };
+export function stereoVoteFlags(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>): { voti: Record<string, boolean>; caso: number; cause: Record<string, number> } | null {
+  const byPos: Record<number, string | boolean> = {}; let k = 0;
+  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const f = isStereoVote(e); byPos[t.position] = f ? e.causa ?? true : false; if (f) k++; }
+  const voti: Record<string, boolean> = {}, cause: Record<string, number> = {};
+  for (const [pid, pos] of Object.entries(votes)) { const c = byPos[pos]; voti[pid] = !!c; if (typeof c === "string") cause[c] = (cause[c] ?? 0) + 1; }
+  return { voti, caso: tower.length ? k / tower.length : 0, cause };
 }

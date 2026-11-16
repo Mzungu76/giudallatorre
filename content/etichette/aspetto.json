@@ -4,95 +4,118 @@
  "aspetti": [
   {
    "id": "occhiali",
-   "def": "Occhiali da vista"
+   "def": "Occhiali da vista",
+   "nome": "occhiali"
   },
   {
    "id": "occhiali_sole",
-   "def": "Occhiali da sole"
+   "def": "Occhiali da sole",
+   "nome": "occhiali da sole"
   },
   {
    "id": "completo",
-   "def": "Giacca e cravatta, tailleur"
+   "def": "Giacca e cravatta, tailleur",
+   "nome": "giacca e cravatta"
   },
   {
    "id": "catena_oro",
-   "def": "Catene e collane vistose, d'oro"
+   "def": "Catene e collane vistose, d'oro",
+   "nome": "catene d'oro"
   },
   {
    "id": "cappellino",
-   "def": "Cappellino da baseball"
+   "def": "Cappellino da baseball",
+   "nome": "cappellino"
   },
   {
    "id": "berretto",
-   "def": "Berretto di lana"
+   "def": "Berretto di lana",
+   "nome": "berretto"
   },
   {
    "id": "divisa",
-   "def": "Divisa o abiti da lavoro (cuoco, sanitario, toga, tonaca, sicurezza)"
+   "def": "Divisa o abiti da lavoro (cuoco, sanitario, toga, tonaca, sicurezza)",
+   "nome": "divisa"
   },
   {
    "id": "abito_elegante",
-   "def": "Abito da sera o da cerimonia"
+   "def": "Abito da sera o da cerimonia",
+   "nome": "abito elegante"
   },
   {
    "id": "abbigliamento_sportivo",
-   "def": "Tuta, canotta, pantaloncini, costume da gara"
+   "def": "Tuta, canotta, pantaloncini, costume da gara",
+   "nome": "tuta"
   },
   {
    "id": "cuffie",
-   "def": "Cuffie o auricolari"
+   "def": "Cuffie o auricolari",
+   "nome": "cuffie"
   },
   {
    "id": "sandali",
-   "def": "Sandali, anche con i calzini"
+   "def": "Sandali, anche con i calzini",
+   "nome": "sandali"
   },
   {
    "id": "camicia_hawaiana",
-   "def": "Camicia a fiori da vacanza"
+   "def": "Camicia a fiori da vacanza",
+   "nome": "camicia hawaiana"
   },
   {
    "id": "giacca_pelle",
-   "def": "Giubbotto di pelle"
+   "def": "Giubbotto di pelle",
+   "nome": "giubbotto di pelle"
   },
   {
    "id": "borchie",
-   "def": "Borchie e stivali da punk"
+   "def": "Borchie e stivali da punk",
+   "nome": "borchie"
   },
   {
    "id": "fascia_corona",
-   "def": "Fascia di concorso e corona"
+   "def": "Fascia di concorso e corona",
+   "nome": "fascia e corona"
   },
   {
    "id": "pantofole",
-   "def": "Pantofole"
+   "def": "Pantofole",
+   "nome": "pantofole"
   },
   {
    "id": "collana",
-   "def": "Collane etniche o spirituali"
+   "def": "Collane etniche o spirituali",
+   "nome": "collane spirituali"
   },
   {
    "id": "cappello_stagnola",
-   "def": "Cappello di stagnola"
+   "def": "Cappello di stagnola",
+   "nome": "cappello di stagnola"
   },
   {
    "id": "casco",
-   "def": "Casco da moto o da bici"
+   "def": "Casco da moto o da bici",
+   "nome": "casco"
   },
   {
    "id": "maschera",
-   "def": "Maschera sul volto"
+   "def": "Maschera sul volto",
+   "nome": "maschera"
   },
   {
    "id": "capelli_colorati",
-   "def": "Capelli colorati o cresta"
+   "def": "Capelli colorati o cresta",
+   "nome": "capelli colorati"
   },
   {
    "id": "sciarpa",
-   "def": "Sciarpa o foulard"
+   "def": "Sciarpa o foulard",
+   "nome": "sciarpa"
   },
   {
    "id": "cravatta",
-   "def": "Cravatta"
+   "def": "Cravatta",
+   "nome": "cravatta"
   }
  ],
  "carte": {

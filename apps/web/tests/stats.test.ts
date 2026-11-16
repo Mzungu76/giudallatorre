@@ -43,7 +43,7 @@ describe("statistiche personali (nel dispositivo)", () => {
     expect(s.voteRate).toBe(100); expect(s.winRate).toBeNull(); expect(s.avg).toBeNull();
   });
   it("luoghi comuni: voti dati, voti per luogo comune e quota per caso si accumulano turno per turno (anche il Megafono)", () => {
-    const db = emptyDb(1), st = (turn: number, voti: Record<string, boolean>) => res({ turn, stereo: { voti, caso: 0.25 } });
+    const db = emptyDb(1), st = (turn: number, voti: Record<string, boolean>) => res({ turn, stereo: { voti, caso: 0.25, cause: {} } });
     observe(db, "ABCDE", view({ viewerId: "p2", lastResult: st(1, { p1: false, p2: true, p3: false }) }), false, 10);
     observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: true, p2: false }) }), false, 11);
     observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: true, p2: false }) }), false, 12);   // ricarica: non si conta due volte
