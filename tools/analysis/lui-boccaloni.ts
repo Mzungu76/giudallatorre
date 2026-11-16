@@ -4,6 +4,7 @@ import { TUNE } from "../../packages/game-engine/src/ai-v2/ai.ts";
 import { realContent } from "../../packages/ai-lab/src/cli.ts";
 const games = Number(process.argv[2] ?? 60), engines = process.argv.slice(3).length ? process.argv.slice(3) : ["v2m", "v2o"];
 if (process.env.NULFEAR) TUNE.nulFear = Number(process.env.NULFEAR);
+if (process.env.HARM) TUNE.harm = Number(process.env.HARM);
 for (const eng of engines) {
   const T: Record<string, { n: number; megaOn: number; folla: number; follaOn: number; ok: number; mp: number; fp: number }> = {};
   for (let g = 0; g < games; g++) {

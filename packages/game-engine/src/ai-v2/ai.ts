@@ -108,6 +108,23 @@ function cncPoints(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>
   for (const p of folla) if (votes[p] !== marks.find((x) => x.effect === "nulli")?.position && T.fallen.includes(votes[p]!)) f += 2;
   return { m, f: f / Math.max(1, folla.length), T };
 }
+/** Punti di tutti in uno scenario (regole vere: voto giusto +2, carta tua +2, CADE +4, NON CADE +2). Le carte altrui sono sconosciute: lo scenario le conta solo se `s` le dichiara. */
+function ptsAll(s: GameState, mega: PlayerId, votes: Record<PlayerId, number>, marks: Mark[]): Record<PlayerId, number> {
+  const T = tallyMarks(s.tower.map((t) => t.position), votes, marks), nul = marks.find((m) => m.effect === "nulli")?.position, out: Record<PlayerId, number> = {};
+  for (const p of s.playerIds) {
+    let x = 0; const v = votes[p]!, own = s.tower.find((t) => t.ownerId === p)?.position;
+    if (v !== nul && T.fallen.includes(v)) x += 2; if (own && T.fallen.includes(own)) x += 2;
+    for (const mk of marks) { if (mk.effect === "nulli") continue; if (!(mk.effect === "cade" ? T.fallen.includes(mk.position) : !T.fallen.includes(mk.position))) continue; const pts = mk.effect === "cade" ? 4 : 2; if (p === mega) x += pts; else if (v === mk.position && v !== nul) x += pts; }
+    out[p] = x;
+  }
+  return out;
+}
+/** Quanto pesa danneggiare ciascun avversario: chi è davanti a me pesa di più (fino a 2,5×), chi è indietro meno (0,5×); il Megafono ha un peso in più perché guadagna per il ruolo. */
+function harmWeights(s: GameState, me: PlayerId, mega: PlayerId): Record<PlayerId, number> {
+  const w: Record<PlayerId, number> = {}; for (const p of s.playerIds) if (p !== me) w[p] = 1 + Math.max(-0.5, Math.min(1.5, ((s.scores[p] ?? 0) - (s.scores[me] ?? 0)) / 8)) + (p === mega ? 0.5 : 0);
+  return w;
+}
+const harmMean = (pa: Record<PlayerId, number>, w: Record<PlayerId, number>): number => { const ks = Object.keys(w); return ks.reduce((a, k) => a + w[k]! * (pa[k] ?? 0), 0) / Math.max(1, ks.length); };
 /** «Cade / Non cade», il Megafono: per ogni carta e segnalino, il valore medio (vantaggio sulla Folla) sui voti simulati, con il proprio voto migliore. */
 /** Quanto un bot sa leggere i bluff e quanto ne fa: dipende dal livello (facile non legge né bluffa, difficile al massimo). */
 const SKILL = { easy: { depth: 0, bluff: 0 }, medium: { depth: 0.5, bluff: 0.5 }, hard: { depth: 1, bluff: 1 } } as const;
@@ -120,11 +137,12 @@ export function typeBelief(evOf: (type: string) => number, tau: number, susp: nu
 }
 function cncPlace(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, rand: () => number, sk: Skill, st: BotStyle): Action {
   const p = crowdProbs(s, mem, level), n = s.tower.length, smp = propSample(s, CUR ? othersP(s, mem, level, p, undefined, rand, me) : p, [me], rand), cands: { marks: Mark[]; ev: number; pos: number; type: string }[] = [], smpAt: Record<number, Record<PlayerId, number>[]> = {};
+  const HW = CUR && TUNE.harm > 0 ? harmWeights(s, me, me) : null, sPubM = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) };   // danneggiare gli avversari (soprattutto chi mi precede) entra nell'obiettivo
   for (let a = 1; a <= n; a++) for (const ta of CNC_TYPES) {
     const marks = [{ effect: ta, position: a }], nul = marks.find((x) => x.effect === "nulli")?.position;
     let best = -Infinity;
     const sm = CUR ? (smpAt[a] ??= propSample(s, othersP(s, mem, level, p, a, rand, me), [me], rand)) : TUNE.markBoost ? (smpAt[a] ??= propSample(s, (pid) => withMark(p, a, boostFor(mem, pid)), [me], rand)) : smp;   // v2: il voto degli altri dipende da dove metto il segnalino
-    for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of sm) { const r = cncPoints(s, me, { ...v, [me]: mv }, marks); ev += r.m - r.f; } best = Math.max(best, ev / sm.length); }
+    for (let mv = 1; mv <= n; mv++) { if (mv === nul) continue; let ev = 0; for (const v of sm) { const vv = { ...v, [me]: mv }, r = cncPoints(s, me, vv, marks); ev += r.m - r.f; if (HW) ev -= TUNE.harm * (harmMean(ptsAll(sPubM, me, vv, marks), HW) - r.f); } best = Math.max(best, ev / sm.length); }
     // il gusto del rischio: il temerario ama il CADE (+4), il prudente il NON CADE (punti più sicuri)
     best += (st.risk - 0.5) * (ta === "cade" ? 0.5 : ta === "noncade" ? -0.25 : 0);
     cands.push({ marks, ev: best, pos: a, type: ta });
@@ -161,6 +179,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
       wc = typeBelief((t) => evs[t]!, TUNE.cncTempHard, st.susp, CUR ? Math.min(1, sk.depth + CUR.lens.trans) : sk.depth).map((x) => x * CNC_TYPES.length);
       if (CUR) { const h = tableUse(mem), tot = h.cade + h.noncade + h.nulli; if (tot >= 2) wc = wc.map((x, i) => x * Math.pow((((h[CNC_TYPES[i]!] ?? 0) + 1) / (tot + 3)) * 3, TUNE.habitPow)); }   // v2o: so come ha giocato in passato questo Megafono
     }
+    const HWV = CUR && TUNE.harm > 0 ? harmWeights(s, me, mega) : null, pubV = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) };
     const fear = 1 + 0.4 * (st.susp - 0.5), wcc = wc.map((x, i) => (CNC_TYPES[i] === "nulli" ? x * fear * (1 + (CUR ? TUNE.nulFear : 0)) : x));   // nulFear: quanto la Folla teme la trappola dei VOTI NULLI! (0 = come prima)
     for (let k = 1; k <= n; k++) {
       let ev = 0, wz = 0;
@@ -172,6 +191,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
           if (valid && T.fallen.includes(k)) e += 2; if (own && T.fallen.includes(own)) e += 2;
           const mk = marks.find((m) => m.position === k);
           if (valid && mk?.effect === "cade" && T.fallen.includes(k)) e += 4; if (valid && mk?.effect === "noncade" && !T.fallen.includes(k)) e += 2;
+          if (HWV) e -= TUNE.harm * harmMean(ptsAll(pubV, mega, votes, marks), HWV);   // quanto guadagnano gli altri in questo scenario (Megafono e chi mi precede pesano di più)
         }
         ev += wcc[ci]! * e / smp.length; wz += wcc[ci]!;
       });
@@ -193,7 +213,7 @@ const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b
 /** v2: con TUNE.labelsV2 = 1 e le etichette v2 registrate (registerTagsV2) la lettura personaggio↔frase usa i pesi; altrimenti è identica ai bot attuali. */
 const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? (TUNE.labelsSmooth ? affinityV2m(cardId, text) : affinityV2(cardId, text)) : affinityOld(cardId, text));
 
-export const TUNE = { nulFear: 2, stereoOn: 1, noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+export const TUNE = { harm: 0.5, nulFear: 2, stereoOn: 1, noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 /** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
 /** v2 + etichette v2 «morbide» (parentela tra etichette e frasi libere dedotte): per stanza, come sopra. */
