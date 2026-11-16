@@ -177,6 +177,7 @@ function cncVote(s: GameState, me: PlayerId, level: BotLevel, mem: BotMemory, ra
       const sPub = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) }, smM = propSample(s, CUR ? othersP(s, mem, level, p, undefined, rand, me) : p, [mega], rand), evAt = (type: string) => { let best = -Infinity; for (let mv = 1; mv <= n; mv++) { if (type === "nulli" && mv === pos[0]) continue; let ev = 0; for (const v of smM) { const r = cncPoints(sPub, mega, { ...v, [mega]: mv }, [{ effect: type, position: pos[0]! }]); ev += r.m - r.f; } best = Math.max(best, ev / smM.length); } return best; };
       const evs = Object.fromEntries(CNC_TYPES.map((t) => [t, evAt(t)]));
       wc = typeBelief((t) => evs[t]!, TUNE.cncTempHard, st.susp, CUR ? Math.min(1, sk.depth + CUR.lens.trans) : sk.depth).map((x) => x * CNC_TYPES.length);
+      if (CUR && TUNE.beliefMix > 0) wc = wc.map((x) => (1 - TUNE.beliefMix) * x + TUNE.beliefMix);   // chi vota non è sicuro di capire il Megafono: mescola ciò che crede con «uno su tre» (il rischio VOTI NULLI! c'è sempre)
       if (CUR) { const h = tableUse(mem), tot = h.cade + h.noncade + h.nulli; if (tot >= 2) wc = wc.map((x, i) => x * Math.pow((((h[CNC_TYPES[i]!] ?? 0) + 1) / (tot + 3)) * 3, TUNE.habitPow)); }   // v2o: so come ha giocato in passato questo Megafono
     }
     const HWV = CUR && TUNE.harm > 0 ? harmWeights(s, me, mega) : null, pubV = { ...s, tower: s.tower.map((t) => ({ ...t, ownerId: null })) };
@@ -213,7 +214,7 @@ const pickProb = (w: number[], rand: () => number) => { const z = w.reduce((a, b
 /** v2: con TUNE.labelsV2 = 1 e le etichette v2 registrate (registerTagsV2) la lettura personaggio↔frase usa i pesi; altrimenti è identica ai bot attuali. */
 const affinity = (cardId: string, text: string): number | null => (TUNE.labelsV2 && hasTagsV2() ? (TUNE.labelsSmooth ? affinityV2m(cardId, text) : affinityV2(cardId, text)) : affinityOld(cardId, text));
 
-export const TUNE = { harm: 0.5, nulFear: 2, stereoOn: 1, noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
+export const TUNE = { beliefMix: 0.3, harm: 0.5, nulFear: 2, stereoOn: 1, noncadePtsLens: 1, placeTemp: 1.5, varyPts: 5, habitPow: 0.7, lensPts: 1.5, lensTemp: 4, miniFix: 1, labelsV2: 0, labelsSmooth: 0, markBoost: 1.5, adaptFollow: 1, tempHard: 1.6, hardNoise: 0.12, medNoise: 1.0, propTempMed: 1.2, propVoteTempMed: 0.6, propSamples: 36, cncTempHard: 0.3, cncVoteTempHard: 0.12, bluffLambda: 0.5, easyLapse: 0.6, mediumLapse: 0.2 };
 
 /** v2 con etichette v2 («occhi dei bot»): come chooseBotAction ma con TUNE.labelsV2 = 1 solo durante la chiamata (sincrona), quindi per stanza e non globale. */
 /** v2 + etichette v2 «morbide» (parentela tra etichette e frasi libere dedotte): per stanza, come sopra. */

@@ -20,13 +20,13 @@ export const luiTokens = (_s?: GameState): LuiSpec[] => cncPool();
  * cade solo lei, altrimenti cadono tutte (il voto del Megafono non ha ruolo speciale). Funzione pura, la usano il motore e i bot.
  */
 export function tallyMarks(positions: number[], votes: Record<PlayerId, number>, marks: { effect?: string; position: number }[]) {
-  const nul = marks.find((m) => m.effect === "nulli")?.position ?? -1, cade = marks.find((m) => m.effect === "cade")?.position ?? -1;
+  const nul = marks.find((m) => m.effect === "nulli")?.position ?? -1;
   const counts: Record<number, number> = Object.fromEntries(positions.map((p) => [p, 0]));
   const annulled = Object.keys(votes).filter((p) => votes[p] === nul);
   for (const [p, v] of Object.entries(votes)) if (v !== nul) counts[v] = (counts[v] ?? 0) + 1;
   const top = Math.max(...Object.values(counts)), leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top).sort((x, y) => x - y);
-  const tie = leaders.length > 1, cadeTie = tie && leaders.includes(cade), fallen = top === 0 ? [] : cadeTie ? [cade] : leaders;
-  return { counts, annulled, tie, cadeTie, fallen };
+  const tie = leaders.length > 1, fallen = top === 0 ? [] : leaders;   // pareggio: cadono tutte le carte pari, anche se una ha CADE
+  return { counts, annulled, tie, cadeTie: false, fallen };
 }
 
 /** Il Megafono non può votare la carta su cui ha posato VOTI NULLI!. Restituisce quella posizione (o null). */
