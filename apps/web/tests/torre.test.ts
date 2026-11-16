@@ -17,12 +17,9 @@ describe("Torre del giorno: giorno e Torre", () => {
     expect(dayId(Date.parse("2026-07-16T22:01:00Z"))).toBe("2026-07-17");   // estate: 00:01 con ora legale
     expect(daysBetween("2026-12-31", "2027-01-01")).toBe(1); expect(numeroDelGiorno(idx, "2026-11-16")).toBe(1); expect(numeroDelGiorno(idx, "2026-11-20")).toBe(5);
   });
-  it("la Torre del giorno è quella della data (o l'ultima pubblicata); le altre dello stesso giorno sono diverse e sempre le stesse", () => {
+  it("la Torre del giorno è quella della data (o l'ultima pubblicata); senza nessuna, una di riserva", () => {
     expect(torreUrl(idx, "2026-11-17")).toBe("/oggi/2026-11-17.json"); expect(torreUrl(idx, "2026-11-25")).toBe("/oggi/2026-11-18.json");
     expect(torreUrl({ ...idx, date: [] }, "2026-11-17")).toMatch(/^\/oggi\/riserva\/\d\.json$/);
-    const altre = [1, 2, 3, 4, 5, 6].map((k) => torreUrl(idx, "2026-11-18", k)); expect(altre).toEqual([1, 2, 3, 4, 5, 6].map((k) => torreUrl(idx, "2026-11-18", k)));
-    expect(altre.every((u) => u !== "/oggi/2026-11-18.json" && u !== "/oggi/2026-11-19.json")).toBe(true);   // mai quella del giorno né una futura
-    expect(new Set(altre).size).toBeGreaterThan(2);
   });
   it("«Nuova!» finché non si apre la Torre di oggi", () => {
     const db = emptyTorre(); expect(nuovaTorre(db, "2026-11-16")).toBe(true); const v = segnaVista(db, "2026-11-16");
@@ -36,12 +33,12 @@ describe("Torre del giorno: punti, serie e testo", () => {
     expect(cella(res("cade", 2, [2], 2, 6), "me")).toBe("🟩🔻"); expect(cella(res("cade", 2, [2], 3, 0), "me")).toBe("⬛🔻");
     expect(cella(res("nulli", 2, [3], 2, 0, ["me"]), "me")).toBe("🟥🛑"); expect(cella(res("nulli", 2, [3], 3, 2), "me")).toBe("🟩🛑"); expect(cella(res("noncade", 1, [3], 1, 0), "me")).toBe("⬛🧱");
   });
-  it("i punti si sommano; la serie conta solo la Torre del giorno nei giorni di fila", () => {
+  it("i punti si sommano giorno per giorno; la serie conta i giorni di fila; la Torre di un giorno si registra una volta sola", () => {
     const a = res("cade", 2, [2], 2, 6), b = res("cade", 2, [2], 3, 2);
-    let db = registra(emptyTorre(), "2026-11-16", 1, 0, a, "me"); expect(db.totale).toBe(6); expect(db.serie).toBe(1); expect(db.giorni["2026-11-16"]!.cella).toBe("🟩🔻");
-    db = registra(db, "2026-11-16", 1, 1, b, "me"); expect(db.totale).toBe(8); expect(db.serie).toBe(1); expect(db.giocati).toBe(2); expect(db.oggi).toEqual({ day: "2026-11-16", k: 2 });
-    db = registra(db, "2026-11-17", 2, 0, a, "me"); expect(db.serie).toBe(2); expect(db.record).toBe(2);
-    db = registra(db, "2026-11-20", 5, 0, a, "me"); expect(db.serie).toBe(1); expect(db.record).toBe(2); expect(db.migliore).toBe(6);
+    let db = registra(emptyTorre(), "2026-11-16", 1, a, "me"); expect(db.totale).toBe(6); expect(db.serie).toBe(1); expect(db.giorni["2026-11-16"]!.cella).toBe("🟩🔻");
+    expect(registra(db, "2026-11-16", 1, b, "me")).toBe(db);   // di nuovo lo stesso giorno: niente punti in più
+    db = registra(db, "2026-11-17", 2, b, "me"); expect(db.totale).toBe(8); expect(db.serie).toBe(2); expect(db.record).toBe(2); expect(db.giocati).toBe(2);
+    db = registra(db, "2026-11-20", 5, a, "me"); expect(db.serie).toBe(1); expect(db.record).toBe(2); expect(db.migliore).toBe(6);
   });
   it("testo da condividere: una riga, la serie solo se c'è, e il link", () => {
     const a = testoDaCondividere(5, "🟩🔻", 6, 1, "https://x.it/flash"), b = testoDaCondividere(5, "🟩🔻", 6, 3, "https://x.it/flash");

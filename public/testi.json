@@ -1,5 +1,5 @@
 {
- "versione": 69,
+ "versione": 70,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3019,10 +3019,6 @@
    "t": "La Torre del giorno",
    "s": "Torre del giorno"
   },
-  "torre.altra": {
-   "t": "Un'altra Torre",
-   "s": "Torre del giorno"
-  },
   "torre.pt": {
    "t": "+{n}",
    "s": "Torre del giorno"
@@ -3049,10 +3045,6 @@
   },
   "torre.copiato": {
    "t": "Copiato!",
-   "s": "Torre del giorno"
-  },
-  "torre.ancora": {
-   "t": "Un'altra Torre",
    "s": "Torre del giorno"
   },
   "torre.home": {

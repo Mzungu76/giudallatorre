@@ -8,7 +8,7 @@ import { useCards } from "../lib/cards.ts";
 import { PersonaProvider } from "../components/Persona.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t } from "../lib/testi.ts";
-import { cella, dayId, loadTorre, numeroDelGiorno, playedToday, registra, saveTorre, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../lib/torre.ts";
+import { cella, dayId, loadTorre, numeroDelGiorno, registra, saveTorre, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../lib/torre.ts";
 import type { TorreDb, Indice, Torre } from "../lib/torre.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
@@ -19,15 +19,16 @@ const clock = (s: number) => `${String(Math.floor(s / 3600)).padStart(2, "0")}:$
 /** «Torre del giorno»: un solo turno già pronto, con le schermate di gioco di sempre (voto, segnalino, caduta, punti); poi il riepilogo. Una stanza finta, tutta sul dispositivo. */
 export default function Torre() {
   const { sound } = useAudio(), ready = useCards(), day = useMemo(() => dayId(), []), now = useNow(1000);
-  const [db, setDb] = useState<TorreDb>(loadTorre), [k, setK] = useState(() => playedToday(loadTorre(), day));
+  const [db, setDb] = useState<TorreDb>(loadTorre), [giaGiocata] = useState(() => loadTorre().giorni[day]);   // già giocata oggi all'apertura: si vede solo il risultato
   const [idx, setIdx] = useState<Indice | null>(null), [torre, setTorre] = useState<Torre | null>(null), [err, setErr] = useState(0);
   const [stato, setStato] = useState<GameState | null>(null), [fine, setFine] = useState(false), [copied, setCopied] = useState(false), done = useRef(false);
   useEffect(() => { let on = true; setIdx(null); fetch("/oggi/indice.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Indice) => { if (on) setIdx(x); }).catch(() => { if (on) setErr((e) => e + 1); }); return () => { on = false; }; }, [err]);
   useEffect(() => {
-    if (!idx) return; let on = true; setTorre(null); setStato(null); setFine(false); setCopied(false); done.current = false;
-    fetch(torreUrl(idx, day, k)).then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Torre) => { if (on) { setTorre(x); setStato(x.stato); if (k === 0) { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb((o) => ({ ...o, visto: nd.visto })); } } }).catch(() => { if (on) setErr((e) => e + 1); });
+    if (!idx || giaGiocata) return; let on = true; setTorre(null); setStato(null); setFine(false); setCopied(false); done.current = false;
+    fetch(torreUrl(idx, day)).then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Torre) => { if (on) { setTorre(x); setStato(x.stato); { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb((o) => ({ ...o, visto: nd.visto })); } } }).catch(() => { if (on) setErr((e) => e + 1); });
     return () => { on = false; };
-  }, [idx, k, day]);
+  }, [idx, day]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (giaGiocata) { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb(nd); } }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const numero = idx ? numeroDelGiorno(idx, day) : 1;
   const room = useMemo<RoomMsg | null>(() => torre && ({ t: "room", seq: 1, code: "FLASH", stage: "PLAYING", you: torre.umano, hostId: torre.umano, options: { ageBand: DEFAULT_AGE_BAND, turnTimerSec: 0, display: false },
@@ -40,36 +41,34 @@ export default function Torre() {
     const a = m.action;
     if (a.type === "vote" && stato.phase === "VOTE") {
       const next = applyAction(stato, { type: "vote", playerId: torre.umano, position: a.position }).state; setStato(next);
-      if (next.lastResult && !done.current) { done.current = true; const nd = registra(db, day, numero, k, next.lastResult, torre.umano); setDb(nd); saveTorre(nd); }
+      if (next.lastResult && !done.current) { done.current = true; const nd = registra(db, day, numero, next.lastResult, torre.umano); setDb(nd); saveTorre(nd); }
     } else if (a.type === "advance" && stato.phase === "RESULTS") { setFine(true); if ((r?.points[torre.umano] ?? 0) > 0) sfx.fanfare(sound); }
   };
+  const rec = giaGiocata ?? (fine && r && torre ? { n: numero, pts: r.points[torre.umano] ?? 0, cella: cella(r, torre.umano) } : null);
   const share = async () => {
-    if (!torre || !r) return;
-    const text = testoDaCondividere(numero, cella(r, torre.umano), r.points[torre.umano] ?? 0, db.serie, `${location.origin}/torre`);
+    if (!rec) return;
+    const text = testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`);
     try { if (navigator.share) { await navigator.share({ text }); return; } } catch { /* annullato: si copia */ }
     try { await navigator.clipboard.writeText(text); setCopied(true); } catch { /* niente appunti */ }
   };
 
+  if (rec) return (
+    <Stage bg="sky" testId="torre-fine">
+      <div className="fl">
+        <div className="fl-top"><div className="fl-t">{t("torre.oggi")}<small>{t("torre.titolo")} n.{rec.n}</small></div></div>
+        <div className="fl-res" data-testid="torre-risultato">
+          <div className="fl-pt"><b data-testid="torre-punti">{t("torre.pt", { n: rec.pts })}</b><span>{t("torre.punti")}</span></div>
+          <div className="fl-st"><span><b>{db.totale}</b>{t("torre.totale")}</span><span><b>{db.serie}</b>{t("torre.serie")}</span></div>
+          <div className="fl-next">{t("torre.prossima", { t: clock(secondiAllaProssima(now)) })}</div>
+          <div className="fl-row"><Btn onClick={share} testId="torre-condividi">{copied ? t("torre.copiato") : t("torre.condividi")}</Btn></div>
+          <button className="fl-home" onClick={() => navigate("/")} data-testid="torre-home">{t("torre.home")}</button>
+        </div>
+      </div>
+    </Stage>
+  );
   if (!torre || !room || !view || !ready) return (
     <Stage bg="sky" testId="torre-wait"><div className="center-msg">{err > 0 ? <><h2>{t("torre.errore")}</h2><Btn kind="pap" onClick={() => setErr(0)}>{t("torre.riprova")}</Btn></> : <h2>{t("torre.carico")}</h2>}</div></Stage>
   );
-  if (fine && r) {
-    const pts = r.points[torre.umano] ?? 0;
-    return (
-      <Stage bg="sky" testId="torre-fine">
-        <div className="fl">
-          <div className="fl-top"><div className="fl-t">{k === 0 ? t("torre.oggi") : t("torre.altra")}<small>{t("torre.titolo")} n.{numero}</small></div></div>
-          <div className="fl-res" data-testid="torre-risultato">
-            <div className="fl-pt"><b data-testid="torre-punti">{t("torre.pt", { n: pts })}</b><span>{t("torre.punti")}</span></div>
-            <div className="fl-st"><span><b>{db.totale}</b>{t("torre.totale")}</span><span><b>{db.serie}</b>{t("torre.serie")}</span></div>
-            <div className="fl-next">{t("torre.prossima", { t: clock(secondiAllaProssima(now)) })}</div>
-            <div className="fl-row"><Btn onClick={share} testId="torre-condividi">{copied ? t("torre.copiato") : t("torre.condividi")}</Btn><Btn kind="pap" onClick={() => setK(k + 1)} testId="torre-ancora">{t("torre.ancora")}</Btn></div>
-            <button className="fl-home" onClick={() => navigate("/")} data-testid="torre-home">{t("torre.home")}</button>
-          </div>
-        </div>
-      </Stage>
-    );
-  }
   return (
     <PersonaProvider players={room.players}>
       <Plancia room={room} view={view}>

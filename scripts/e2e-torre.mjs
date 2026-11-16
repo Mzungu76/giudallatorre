@@ -24,7 +24,7 @@ for (let t0 = Date.now(); Date.now() - t0 < 90_000 && !fine; ) {
 }
 check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("a fine turno compare il riepilogo della Torre", fine); await shot("23-torre-risultato");
 const pt = await p.textContent('[data-testid="torre-punti"]').catch(() => null); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
-await p.click('[data-testid="torre-ancora"]'); check("«un'altra Torre» porta un'altra Torre", await vis("confirm-vote", 15_000) || await vis("hand", 100) || await p.locator(".stage").first().isVisible());
+await p.goto(BASE + "/torre"); check("riaperta nello stesso giorno: si vede il risultato, non si rivota", await vis("torre-risultato") && !(await vis("confirm-vote", 800)));
 await p.goto(BASE + "/"); check("aperta la Torre, «Nuova!» sparisce", !(await vis("torre-nuova", 1500)));
 check("nessun errore JS", errs.length === 0, errs.join(" | "));
 await b.close(); console.log(fails ? `${fails} controlli falliti` : "Tutti i controlli superati"); process.exit(fails ? 1 : 0);

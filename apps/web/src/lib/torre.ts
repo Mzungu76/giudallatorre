@@ -6,22 +6,20 @@ export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string
 /** `date`: i giorni con una Torre pronta (il server dà solo quelli già pubblicati); `riserva`: quante Torri di scorta per le altre partite dello stesso giorno. */
 export interface Indice { inizio: string; date: string[]; riserva: number }
 export interface TorreDay { n: number; pts: number; cella: string }   // n = numero della Torre del giorno
-export interface TorreDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; /** Ultimo giorno in cui ha aperto la Torre del giorno (per evidenziare quella nuova). */ visto: string; oggi: { day: string; k: number }; giorni: Record<string, TorreDay> }
+export interface TorreDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; /** Ultimo giorno in cui ha aperto la Torre del giorno (per evidenziare quella nuova). */ visto: string; giorni: Record<string, TorreDay> }
 
 const KEY = "gdt.torre", STEP = 37, MAX_DAYS = 60;
-export const emptyTorre = (): TorreDb => ({ v: 1, totale: 0, giocati: 0, migliore: 0, serie: 0, record: 0, ultimo: "", visto: "", oggi: { day: "", k: 0 }, giorni: {} });
+export const emptyTorre = (): TorreDb => ({ v: 1, totale: 0, giocati: 0, migliore: 0, serie: 0, record: 0, ultimo: "", visto: "", giorni: {} });
 
 /** Giorno di gioco «AAAA-MM-GG»: la data di Roma un minuto fa, così la nuova Torre compare a mezzanotte e un minuto, uguale per tutti ovunque siano. */
 export const dayId = (now: number = Date.now()): string => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Rome" }).format(new Date(now - 60_000));
 const utc = (id: string): number => { const [y, m, d] = id.split("-").map(Number); return Date.UTC(y!, m! - 1, d!); };
 export const daysBetween = (a: string, b: string): number => Math.round((utc(b) - utc(a)) / 86_400_000);
 const hash = (t: string): number => { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
-/** Quale file leggere. k = 0: la Torre del giorno (l'ultima pubblicata fino a oggi); k > 0: un'altra Torre, tra le passate e la riserva, sempre la stessa per lo stesso giorno e numero. */
-export function torreUrl(idx: Indice, day: string, k = 0): string {
-  const passate = idx.date.filter((d) => d < day);
-  if (k === 0) { const oggi = idx.date.filter((d) => d <= day).pop(); return oggi ? `/oggi/${oggi}.json` : `/oggi/riserva/${hash(day) % Math.max(1, idx.riserva)}.json`; }
-  const pool = [...passate.map((d) => `/oggi/${d}.json`), ...Array.from({ length: idx.riserva }, (_, i) => `/oggi/riserva/${i}.json`)];
-  return pool[hash(`${day}#${k}`) % Math.max(1, pool.length)]!;
+/** Quale file leggere: la Torre del giorno (l'ultima pubblicata fino a oggi; se non ce n'è nessuna, una di riserva). */
+export function torreUrl(idx: Indice, day: string): string {
+  const oggi = idx.date.filter((d) => d <= day).pop();
+  return oggi ? `/oggi/${oggi}.json` : `/oggi/riserva/${hash(day) % Math.max(1, idx.riserva)}.json`;
 }
 /** C'è una Torre del giorno che non ha ancora aperto? */
 export const nuovaTorre = (db: TorreDb, day: string): boolean => db.visto !== day;
@@ -33,8 +31,6 @@ export const numeroDelGiorno = (idx: Indice, day: string): number => Math.max(1,
 export function loadTorre(): TorreDb { try { const x = JSON.parse(localStorage.getItem(KEY) ?? "null") as TorreDb | null; return x?.v === 1 ? { ...emptyTorre(), ...x } : emptyTorre(); } catch { return emptyTorre(); } }
 export function saveTorre(db: TorreDb): void { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch { /* vale per questa visita */ } }
 
-/** Quante Torri ha già giocato oggi (per sapere quale Torre proporre). */
-export const playedToday = (db: TorreDb, day: string): number => (db.oggi.day === day ? db.oggi.k : 0);
 
 /** Applica il voto del giocatore allo stato della Torre (mancava solo il suo): lo stato dopo il conteggio e il risultato del turno. */
 export function risolvi(t: Torre, posizione: number): { stato: GameState; risultato: TurnResult } {
@@ -47,11 +43,12 @@ export function cella(r: TurnResult, me: string): string {
   return (annullato ? "🟥" : cadute.includes(r.votes[me]!) ? "🟩" : "⬛") + ({ cade: "🔻", noncade: "🧱", nulli: "🛑" } as Record<string, string>)[m.effect];
 }
 
-/** Registra una Torre giocata: punti, serie di giorni (conta solo la Torre del giorno) e riepilogo del giorno. Funzione pura: restituisce il nuovo archivio. */
-export function registra(db: TorreDb, day: string, numero: number, k: number, r: TurnResult, me: string): TorreDb {
-  const pts = r.points[me] ?? 0, x: TorreDb = { ...db, giorni: { ...db.giorni }, oggi: { day, k: k + 1 } };
+/** Registra la Torre del giorno giocata: punti, serie di giorni e riepilogo del giorno. Funzione pura: restituisce il nuovo archivio. */
+export function registra(db: TorreDb, day: string, numero: number, r: TurnResult, me: string): TorreDb {
+  if (db.giorni[day]) return db;   // la Torre del giorno si gioca una volta sola
+  const pts = r.points[me] ?? 0, x: TorreDb = { ...db, giorni: { ...db.giorni } };
   x.totale += pts; x.giocati += 1; x.migliore = Math.max(x.migliore, pts);
-  if (k === 0) {
+  {
     x.giorni[day] = { n: numero, pts, cella: cella(r, me) };
     if (x.ultimo !== day) { x.serie = x.ultimo && daysBetween(x.ultimo, day) === 1 ? x.serie + 1 : 1; x.ultimo = day; x.record = Math.max(x.record, x.serie); }
     const keys = Object.keys(x.giorni).sort(); for (const old of keys.slice(0, Math.max(0, keys.length - MAX_DAYS))) delete x.giorni[old];
