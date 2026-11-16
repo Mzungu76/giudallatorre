@@ -132,3 +132,24 @@ export function affinityLens(cardId: string, phraseText: string, lens: Lens): nu
   }
   return a + (lens.halo * a * a) / 8;
 }
+
+/**
+ * «Voto per luogo comune»: per una carta e una frase, quanto la tabella dei luoghi comuni (intera, senza i gusti di un bot) spiega la scelta di quella carta (`s`)
+ * e quanto la spiegano le etichette della carta (`base`). Il voto è «per luogo comune» se il luogo comune da solo basta a spiegarlo (`s > 0` e `s ≥ base`): la carta
+ * ha il ruolo o l'aspetto che fa pensare a quel tratto, ma di suo non c'entra con la frase. È una stima, non una prova delle intenzioni di chi ha votato.
+ */
+export function stereoExplain(cardId: string, text: string): { s: number; base: number } | null {
+  const c = CARDS[cardId], p = PHRASES[text] ?? inferV2(text); if (!c || !p) return null;
+  const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x), ...(CARDLOOKS.get(cardId) ?? []).map((x) => "a:" + x)];
+  let s = 0; for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) { const wp = p.tipi[tratto.slice(2)]; if (wp) s += 3 * (f + wp) / 6; }
+  return { s, base: affinityV2(cardId, text) ?? 0 };
+}
+export const isStereoVote = (e: { s: number; base: number } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
+
+/** Per un turno: quali voti sono «per luogo comune» e quanto sarebbe stato per caso (quota delle carte in torre che il luogo comune spiega). Null se la frase non ha etichette. */
+export function stereoVoteFlags(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>): { voti: Record<string, boolean>; caso: number } | null {
+  const byPos: Record<number, boolean> = {}; let k = 0;
+  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const f = isStereoVote(e); byPos[t.position] = f; if (f) k++; }
+  const voti: Record<string, boolean> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = !!byPos[pos];
+  return { voti, caso: tower.length ? k / tower.length : 0 };
+}

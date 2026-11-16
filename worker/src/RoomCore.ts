@@ -1,4 +1,4 @@
-import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -259,6 +259,14 @@ export class RoomCore {
     }
   }
 
+  /** Segna sul risultato del turno quali voti sono «per luogo comune» e aggiorna il conteggio della partita (stima: docs/BOT_LENTI.md). Solo dopo il voto: nessuna informazione utile prima. */
+  private markStereo(state: GameState): void {
+    const r = state.lastResult, text = state.phrase?.text; if (!r || !text) return;
+    const f = stereoVoteFlags(state.tower, text, r.votes); if (!f) return;
+    r.stereo = f; const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0 });
+    for (const [pid, flag] of Object.entries(f.voti)) { t.n[pid] = (t.n[pid] ?? 0) + 1; if (flag) t.s[pid] = (t.s[pid] ?? 0) + 1; }
+    t.c += f.caso; t.turni++;
+  }
   private applyGame(out: Outbox, action: Action, now: number): Outbox {
     const d = this.data, before = d.game!.phase;
     const { state, events } = applyAction(d.game!, action);
@@ -266,6 +274,7 @@ export class RoomCore {
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;
     if (state.phase === "RESULTS" && before !== "RESULTS" && state.lastResult) (d.options.botEngine === "v2" || d.options.botEngine === "v2e" || d.options.botEngine === "v2m" || d.options.botEngine === "v2o" ? learnFromResultV2 : learnFromResult)(d.botMem, state.tower, state.lastResult);
+    if (state.phase === "RESULTS" && before !== "RESULTS") this.markStereo(state);
     this.scheduleBots(now);
     if (state.phase === "GAME_OVER") { d.stage = "FINISHED"; d.finishedAt = now; d.deadline = null; }
     else if (state.phase !== before) this.armDeadline(now);

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { affinityV2, affinityV2m, inferV2, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
+import { isStereoVote, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
 import { drawLens, mulberry } from "../src/ai-v2/lens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -95,5 +95,18 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(stereoTags("pol", senza)).toEqual([]); expect(stereoTags("ord", con)).toEqual([]);                         // senza pregiudizio, o carta senza quel ruolo: nulla
     const tot = (l: typeof con) => stereoTags("pol", l).reduce((a, [, w]) => a + w, 0); expect(tot(con)).toBeLessThanOrEqual(STEREO_CAP + 1e-9);   // tetto
     registerStereotypes([]); registerTagsV2({}, {});
+  });
+  it("voto per luogo comune: conta solo se il ruolo/aspetto spiega la carta e le sue etichette no; il caso è la quota di carte così", () => {
+    registerTagsV2({ pol: { tipi: { avaro: 3 }, temi: {} }, vero: { tipi: { bugiardo: 3 }, temi: {} }, neutra: { tipi: { goffo: 3 }, temi: {} } },
+      { "i più bugiardi": { tipi: { bugiardo: 3 }, temi: { bugie: 3 } } });
+    registerRoles([{ id: "politico", temi: ["politica"] }], { pol: ["politico"] });
+    registerStereotypes([{ ruolo: "politico", tratto: "bugiardo", forza: 3, asse: "ruolo" }]);
+    expect(isStereoVote(stereoExplain("pol", "i più bugiardi"))).toBe(true);        // il politico: solo il ruolo fa pensare «bugiardo»
+    expect(isStereoVote(stereoExplain("vero", "i più bugiardi"))).toBe(false);      // la carta ha davvero quel tratto
+    expect(isStereoVote(stereoExplain("neutra", "i più bugiardi"))).toBe(false);    // niente luogo comune
+    const f = stereoVoteFlags([{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], "i più bugiardi", { a: 1, b: 2, c: 1 })!;
+    expect(f.voti).toEqual({ a: true, b: false, c: true }); expect(f.caso).toBeCloseTo(1 / 3, 5);
+    expect(stereoVoteFlags([{ cardId: "pol", position: 1 }], "frase mai vista zorbo", { a: 1 })).toBeNull();   // frase senza etichette: nessun dato
+    registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });
 });

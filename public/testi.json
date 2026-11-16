@@ -1,5 +1,5 @@
 {
- "versione": 57,
+ "versione": 58,
  "aggiornato": "2026-11-15",
  "testi": {
   "intro.aria": {
@@ -2925,6 +2925,39 @@
   },
   "st.perc": {
    "t": "Quanto sei preciso",
+   "s": "Statistiche personali"
+  },
+  "sp.titolo": {
+   "t": "Luoghi comuni",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.sotto": {
+   "t": "Voti guidati da un luogo comune",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.vuoto": {
+   "t": "Nessun dato in questa partita",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.riga": {
+   "t": "{s} su {n} voti",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.caso": {
+   "t": "A caso: {pct}%",
+   "s": "Fine partita · luoghi comuni",
+   "n": "Quota che si avrebbe votando a caso"
+  },
+  "sp.chiudi": {
+   "t": "Chiudi",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "st.luoghi": {
+   "t": "Voti per luogo comune",
+   "s": "Statistiche personali"
+  },
+  "st.acaso": {
+   "t": "a caso: {pct}%",
    "s": "Statistiche personali"
   }
  }

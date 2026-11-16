@@ -66,6 +66,15 @@ Modifiche in v2o (leve in `TUNE`):
 - **Interruttore**: `TUNE.stereoOn` (1 = acceso, solo bot v2o). Per togliere un luogo comune basta cancellare la riga.
 - **Verifica** (800 partite, 4 bot v2o): la dispersione dei tassi di caduta tra le carte resta 5% → 5%. Alcune carte si spostano di 8–12 punti (guru/moralista/eccentrico 19% → 31%, pignolo/moralista/arrogante 25% → 34%), ma i voti non si concentrano su poche carte.
 
+## Asse dell'aspetto scelto
+`content/etichette/aspetto.json`: 23 voci di **abbigliamento e accessori** (occhiali, completo, catena d'oro, cappellino, divisa, cuffie, sandali, camicia hawaiana, borchie, fascia e corona…) su **74 carte su 120**: sono fatti visibili che una persona sceglie di indossare. **Mai corpo, età, sesso, origine** (test di perimetro). 38 voci di luogo comune ("aspetto" → tratto, es. occhiali → saputello 2; completo → ambizioso 2, ipocrita 1; cuffie → distratto 2) in `stereotipi.json`, asse `aspetto`. Il cappuccio non ha una lettura «sospetta»: è un luogo comune con troppe implicazioni.
+
+## «Voti per luogo comune» (statistica di partita e personale)
+**Definizione** (`stereoExplain`, `ai-v2/tags2.ts`): per una carta e una frase, `s` = quanto la tabella intera dei luoghi comuni (ruoli, aspetto) spiega la scelta di quella carta; `base` = quanto la spiegano le etichette della carta. Un voto è **«per luogo comune»** se `s > 0` e `s ≥ base`: la carta ha il ruolo o l'aspetto che fa pensare a quel tratto, ma di suo non c'entra con la frase. È una **stima, non una prova delle intenzioni** di chi ha votato. La frase deve avere etichette (o essere dedotta con indizio forte): altrimenti il turno non conta.
+- **Riferimento «a caso»**: quota delle carte in torre che il luogo comune spiega (cosa si avrebbe votando a caso). Serve per leggere la percentuale: 25% è tanto se a caso sarebbe il 5%.
+- **Dove**: la stanza (`RoomCore.markStereo`) lo calcola **dopo il voto** (nessuna informazione utile prima) e lo mette su `lastResult.stereo` e nel conteggio della partita (`GameState.stereo`), quindi nella vista. A fine partita il bottone con le maschere apre il pannello «Luoghi comuni» (tutti i giocatori, bot compresi, con la quota a caso). Nelle statistiche personali c'è la tessera «Voti per luogo comune» (percentuale e a caso), salvata solo nel dispositivo.
+- **Misura sui bot** (400 partite, 4 bot Difficili uguali): bot attuali 14,8% (a caso 12,6%); v2 13,4% (12,9%); v2m 18,5% (16,7%); **v2o 21,9% (a caso 20,2%)**. I bot v2o hanno un «a caso» più alto perché giocano carte che i loro luoghi comuni associano alla frase: quindi in torre ce ne sono di più; ma tra le carte disponibili non vanno oltre il caso di più di 2 punti. Il luogo comune dei bot è un'inclinazione leggera, non una regola.
+
 ## Cosa non c'è ancora
 - **Calibrazione sulle persone** (quanto è larga la popolazione di lenti, quanto pesa ogni bias): i valori sono ipotesi.
 - La preferenza per la propria carta per il Megafono non esiste (non gioca carte).

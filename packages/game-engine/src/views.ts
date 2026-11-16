@@ -21,6 +21,8 @@ export interface PlayerView {
   /** Tutti i voti, solo da RESULTS in poi. */
   votes: Record<PlayerId, number> | null;
   lastResult: TurnResult | null;
+  /** I «voti per luogo comune» della partita fin qui (stima, messa dalla stanza), se disponibile. */
+  stereo?: GameState["stereo"] | null;
   /** Mini-gioco di metà partita in corso (carta pescata e accusa, se c'è) e, a fine voto, il risultato. */
   mini: { kind: MiniKind; cardId: CardId | null; text: string | null; order: number[] } | null;
   miniResult: MiniResult | null;
@@ -51,6 +53,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed && !inMini ? s.lastResult : null,
+    stereo: revealed ? s.stereo ?? null : null,
     mini: inMini && s.mini ? { ...s.mini, order: s.mini.order.slice() } : null, miniResult: s.phase === "MINI_RESULTS" ? s.miniResult ?? null : null,
     winners: s.winners, award: s.phase === "GAME_OVER" ? s.award ?? null : null, goldenGoal: s.goldenGoal,
     round: Math.ceil(s.turnNumber / s.playerIds.length), rounds: s.rounds, roundEnd: s.phase === "RESULTS" && s.turnNumber % s.playerIds.length === 0,

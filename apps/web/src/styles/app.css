@@ -1405,3 +1405,12 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .lv.here{outline:4px solid #e8505b;outline-offset:1px;transform:scale(1.04)}
 .st-xp{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;font-size:12.5px}
 .st-btns{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+
+/* ===== Luoghi comuni (fine partita) ===== */
+.sp{display:flex;flex-direction:column;gap:8px;max-height:86%;overflow-y:auto}
+.sp h3{display:flex;align-items:center;gap:8px;margin:0}.sp-sub{font-size:13px;margin:0;opacity:.8}
+.sp-row{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center}
+.sp-name{display:flex;align-items:center;gap:6px;font-weight:800;font-size:15px;grid-column:1;grid-row:1}.sp-row b{font:400 20px/1 Anton;grid-column:2;grid-row:1}
+.sp-bar{grid-column:1/3;grid-row:2;height:12px;border:2.5px solid #13224a;border-radius:99px;background:#fff;overflow:hidden}.sp-bar u{display:block;height:100%;background:#8e6bd8}
+.sp-row small{grid-column:1/3;grid-row:3;font-size:11.5px;opacity:.7}.sp-caso{font:400 16px/1 Anton;margin:4px 0 0;text-transform:uppercase}
+.sp .sp-name,.sp .sp-row b,.sp .sp-row small,.sp .sp-sub,.sp .sp-caso{color:#13224a}

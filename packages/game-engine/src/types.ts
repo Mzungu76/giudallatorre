@@ -71,6 +71,8 @@ export interface TurnResult {
   tieBreak: boolean;
   /** Il segnalino posato e com'è andata. */
   marks: MarkOutcome[];
+  /** Messo dalla stanza (non dal motore): quali voti sono «per luogo comune» e quanto sarebbe stato per caso. Assente se la frase non ha etichette. */
+  stereo?: { voti: Record<PlayerId, boolean>; caso: number };
 }
 
 export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-folla" | "mini-giusto" | "mini-veloce"; pts: number; pos: number; n?: number }
@@ -149,6 +151,8 @@ export interface GameState {
   botIds?: PlayerId[];
   /** Premio della serata, assegnato quando la partita finisce. */
   award?: Award | null;
+  /** Messo dalla stanza: conteggio dei «voti per luogo comune» della partita (per giocatore: voti validi `n` e per luogo comune `s`; `c` = somma di quanto sarebbe stato per caso; `turni` = turni contati). */
+  stereo?: { n: Record<PlayerId, number>; s: Record<PlayerId, number>; c: number; turni: number };
   /** Spareggio a oltranza: si gioca un turno alla volta finché un giocatore ha più punti di tutti gli altri. */
   goldenGoal: boolean;
   goldenTurns: number;

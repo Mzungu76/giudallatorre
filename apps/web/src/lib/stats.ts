@@ -12,12 +12,14 @@ export interface Totals {
   /** Turni da Megafono, segnalini usati e quanti hanno colpito; quante volte i tuoi voti sono stati annullati (VOTI NULLI!). */
   megaTurns: number; cade: number; cadeHit: number; noncade: number; noncadeHit: number; nulli: number; nulliHit: number; caught: number;
   minis: number; miniVotes: number; miniHits: number; miniFast: number;
+  /** Voti dati e, tra questi, quanti «per luogo comune» (stima della stanza); `stereoC` = somma di quanto sarebbe stato per caso. */
+  stereoN: number; stereoS: number; stereoC: number;
 }
 export interface GameRec { id: string; at: number; players: number; bots: boolean; score: number; rank: number; won: boolean }
 export interface Db { v: 1; since: number; totals: Totals; games: GameRec[]; seen: string[]; cur: { code: string; key: string; lastTurn: number; done: boolean } | null }
 
 export const MAX_GAMES = 30, MAX_SEEN = 400;
-const ZERO: Totals = { games: 0, wins: 0, podiums: 0, points: 0, best: 0, turns: 0, votes: 0, voteHits: 0, cardFell: 0, megaTurns: 0, cade: 0, cadeHit: 0, noncade: 0, noncadeHit: 0, nulli: 0, nulliHit: 0, caught: 0, minis: 0, miniVotes: 0, miniHits: 0, miniFast: 0 };
+const ZERO: Totals = { games: 0, wins: 0, podiums: 0, points: 0, best: 0, turns: 0, votes: 0, voteHits: 0, cardFell: 0, megaTurns: 0, cade: 0, cadeHit: 0, noncade: 0, noncadeHit: 0, nulli: 0, nulliHit: 0, caught: 0, minis: 0, miniVotes: 0, miniHits: 0, miniFast: 0, stereoN: 0, stereoS: 0, stereoC: 0 };
 export const emptyDb = (now = Date.now()): Db => ({ v: 1, since: now, totals: { ...ZERO }, games: [], seen: [], cur: null });
 
 /** Aggiorna `db` guardando la vista del giocatore. Restituisce true se è cambiato qualcosa. Funzione pura (niente archivio): si prova nei test. */
@@ -35,6 +37,7 @@ export function observe(db: Db, code: string, view: PlayerView, bots: boolean, n
     T.turns++;
     const mega = r.megafonoId === me, fallen = r.fallenPositions ?? [r.fallenPosition];
     if (r.fallenOwnerIds?.includes(me)) T.cardFell++;
+    { const f = r.stereo?.voti[me]; if (f !== undefined) { T.stereoN++; if (f) T.stereoS++; T.stereoC += r.stereo!.caso; } }
     if (mega) {
       T.megaTurns++;
       for (const m of r.marks ?? []) { if (m.effect === "cade") { T.cade++; if (m.hit) T.cadeHit++; } else if (m.effect === "noncade") { T.noncade++; if (m.hit) T.noncadeHit++; } else { T.nulli++; if (m.hit) T.nulliHit++; } }
@@ -66,6 +69,7 @@ export function summary(db: Db) {
     games: T.games, wins: T.wins, winRate: pct(T.wins, T.games), podiums: T.podiums, points: T.points, best: T.best, avg: T.games ? Math.round((T.points / T.games) * 10) / 10 : null,
     votes: T.votes, voteRate: pct(T.voteHits, T.votes), cardFell: T.cardFell, megaTurns: T.megaTurns,
     cade: T.cade, cadeRate: pct(T.cadeHit, T.cade), noncade: T.noncade, noncadeRate: pct(T.noncadeHit, T.noncade), nulli: T.nulli, nulliRate: pct(T.nulliHit, T.nulli), caught: T.caught,
+    stereoN: T.stereoN, stereoRate: pct(T.stereoS, T.stereoN), stereoCaso: pct(T.stereoC, T.stereoN),
     minis: T.minis, miniRate: pct(T.miniHits, T.miniVotes), miniFast: T.miniFast, recent: db.games, since: db.since,
   };
 }
