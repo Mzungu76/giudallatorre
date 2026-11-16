@@ -1,4 +1,3 @@
-import GameIcon from "./GameIcon.tsx";
 import { Who } from "./Persona.tsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PtIcon } from "./Pt.tsx";
@@ -14,7 +13,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, onStereo }: { /** Apre il pannello «Luoghi comuni» (se la partita ha i dati). */ onStereo?: (() => void) | undefined; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew }: { rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST ? 3 : 0), [inst, setInst] = useState(FAST), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -95,7 +94,6 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
               <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("fin.chat", { n: ui.unread }) : txs("fin.chat0")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
               <button className="bib big" onClick={ui.rank} aria-label={txs("fin.classifica")} data-testid="standings-btn">🏆</button>
             </>}
-            {onStereo && <button className="bt pap sm" onClick={(e) => { e.stopPropagation(); onStereo(); }} data-testid="stereo-btn"><GameIcon name="maschere" size={20} /> {tx("sp.titolo")}</button>}
             <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">{tx("fin.esci")}</button>
             <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>{tx("fin.nuova")}</button>
           </div>
