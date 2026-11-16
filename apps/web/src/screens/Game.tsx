@@ -137,6 +137,9 @@ const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; peop
 );
 
 
+/** Flash: passa subito al finale (nessuna classifica del turno). */
+function FlashAvanza({ onGo }: { onGo: () => void }) { useEffect(() => { onGo(); }, []); return null; }   // eslint-disable-line react-hooks/exhaustive-deps
+
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
   const stage = useStage(), { H, dy } = stage, [shift, setShift] = useState({ dy: 0, sc: 1 });
   const people = usePeople(room), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
@@ -179,6 +182,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const showFallScene = !!res && watched && !revealing && !FAST;
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
   const afterStep = after.turn === turn ? after.step : "points";
+  // Flash: dopo lo spoglio niente classifica del turno: chi può far proseguire (host o Megafono) passa subito al finale di partita
+  const flashAvanti = !!room.options.flash && !readOnly && (isMega || isHost || megaBot);
   // chi ha visto spoglio e caduta non rivede i punti: dopo la caduta si passa da soli alla classifica (subito se ha saltato l'animazione)
   const skippedAt = useRef(0), seenAll = !!res && watched && !FAST;
   useEffect(() => {
@@ -328,7 +333,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
         </div>
       )}
       {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; if (res) { setMusicOff(turn); music.voting(false); } setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
-      {showPanel && res && afterStep === "board" && (
+      {showPanel && res && afterStep === "board" && flashAvanti && <FlashAvanza onGo={() => act({ t: "act", action: { type: "advance" } })} />}
+      {showPanel && res && afterStep === "board" && !flashAvanti && (
         <Standings title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
           rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}
           action={!readOnly && (isMega || isHost || megaBot) ? { label: view.turn >= view.totalTurns ? txs("g.az.finale") : view.roundEnd ? txs("g.az.giro") : txs("g.az.turno"), onClick: () => act({ t: "act", action: { type: "advance" } }) } : { wait: readOnly ? txs("g.az.wait.ro") : txs("g.az.wait") }} />

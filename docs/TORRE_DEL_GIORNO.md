@@ -1,6 +1,6 @@
 # Torre del giorno
 
-Modalità da solo: un turno già pronto (frase, 4 carte, segnalino piazzato in modo interessante, voti dei bot nascosti). Si vota e si vede il risultato; i punti e la serie di giorni restano sul telefono. **La Torre del giorno è una sola** (e si gioca una volta sola: se la riapri vedi il tuo risultato). Per più partite brevi c'è Flash.
+Modalità da solo: un turno già pronto (frase, 4 carte, segnalino piazzato in modo interessante, voti dei bot nascosti). Una piccola intro animata, poi si vota e si vede il risultato; poi le **statistiche dei luoghi comuni** (la stessa pagina delle partite normali, calcolata in anticipo per ognuno dei 4 voti perché le etichette restano sul server) e la **pagina finale** (punti che salgono, giudizio, emoji, serie e ultimi 7 giorni, condivisione). I punti e la serie di giorni restano sul telefono. **La Torre del giorno è una sola** (e si gioca una volta sola: se la riapri vedi il tuo risultato). Per più partite brevi c'è Flash.
 
 ## Quando nasce e quando si vede
 - **Preparazione**: ogni giorno alle **23:50 (ora di Roma)** la GitHub Action `Torre del giorno` (`.github/workflows/torre-del-giorno.yml`) esegue `npx tsx tools/oggi/genera.ts --prepara 3`: crea i file mancanti per oggi e i 3 giorni dopo (`public/oggi/AAAA-MM-GG.json`), li salva nel repository e, se ci sono i segreti Cloudflare, pubblica il gioco. Il seme viene dalla data: stesso giorno, stessa Torre.

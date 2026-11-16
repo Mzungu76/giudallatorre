@@ -60,6 +60,9 @@ describe("Torre del giorno: le Torri generate (public/oggi)", () => {
       expect(Object.keys(s.votes).sort()).toEqual(s.playerIds.filter((p) => p !== t.umano).sort()); expect(s.megafonoIndex === s.playerIds.indexOf(t.umano)).toBe(false);
     }
   });
+  it("ogni Torre porta le statistiche dei luoghi comuni per ognuno dei 4 voti (come in una partita normale)", () => {
+    for (const [nome, t] of torri()) for (const v of [1, 2, 3, 4]) { const st = t.stereo?.[v]; expect(st, `${nome} voto ${v}`).toBeTruthy(); expect(st!.turni).toBe(1); expect(Object.keys(st!.n).sort()).toEqual([...t.stato.playerIds].sort()); }
+  });
   it("ogni voto si risolve col motore, ed è un dilemma: i voti non rendono tutti uguale", () => {
     for (const [nome, t] of torri()) {
       const pts = [1, 2, 3, 4].map((v) => risolvi(t, v).risultato.points[t.umano]!);

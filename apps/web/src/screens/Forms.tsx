@@ -43,14 +43,14 @@ export function CreateScreen() {
   const solo = /[?&]solo=1/.test(location.search), flash = /[?&]flash=1/.test(location.search), [mega, setMega] = useState<"host" | "random">("random");
   const [step, setStep] = useState(0), [nick, setNick] = useState(lastNickname()), [char, setChar] = useState(() => Math.floor(Math.random() * 8));
   const [bots, setBots] = useState(solo ? 3 : 0), [level, setLevel] = useState<BotLevel>("medium");
-  const [age, setAge] = useState<Age>(14), [timer, setTimer] = useState<Timer>(0);
+  const [age, setAge] = useState<Age>(14), [timer, setTimer] = useState<Timer>(/[?&]flash=1/.test(location.search) ? 30 : 0);
   const [busy, setBusy] = useState(false), [err, setErr] = useState<string | null>(null);
   const LAST = 1, titles = ["fm.w.chi", "fm.w.ultimi"] as const;
   async function submit(e: FormEvent) {
     e.preventDefault(); if (busy) return;
     if (step < LAST) { if (step === 0 && !nick.trim()) return; setStep(step + 1); return; }
     setBusy(true); setErr(null);
-    try { const s = await createRoom(nick, { count: bots, level }, { char, ageBand: age, turnTimerSec: flash ? 0 : timer, ...(flash ? { flash: true, flashMega: mega } : {}), ...(/[?&]debug=bot/.test(location.search) ? { debug: true, ...(/[?&]motore=attuali/.test(location.search) ? { botEngine: "attuali" as const } : /[?&]motore=v2o/.test(location.search) ? { botEngine: "v2o" as const } : /[?&]motore=v2m/.test(location.search) ? { botEngine: "v2m" as const } : /[?&]motore=v2e/.test(location.search) ? { botEngine: "v2e" as const } : /[?&]motore=v2/.test(location.search) ? { botEngine: "v2" as const } : {}) } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
+    try { const s = await createRoom(nick, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(flash ? { flash: true, flashMega: mega } : {}), ...(/[?&]debug=bot/.test(location.search) ? { debug: true, ...(/[?&]motore=attuali/.test(location.search) ? { botEngine: "attuali" as const } : /[?&]motore=v2o/.test(location.search) ? { botEngine: "v2o" as const } : /[?&]motore=v2m/.test(location.search) ? { botEngine: "v2m" as const } : /[?&]motore=v2e/.test(location.search) ? { botEngine: "v2e" as const } : /[?&]motore=v2/.test(location.search) ? { botEngine: "v2" as const } : {}) } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
     catch (x) { setErr(errText(x)); setBusy(false); }
   }
   const back = () => (step > 0 ? setStep(step - 1) : navigate("/"));
@@ -84,11 +84,10 @@ export function CreateScreen() {
             </div>
             <div className="fld sec sB"><span className="lb">{t("fm.w.pubblico")}</span>
               <div className="wchips g2">{AGES.map((a) => <button key={a} type="button" className={`wchip${age === a ? " on" : ""}`} onClick={() => setAge(a)} data-testid={`age-${a}`}>{t(`room.age.${a}` as TestoKey)}</button>)}</div></div>
-            {flash ? (
-              <div className="fld sec sC" data-testid="mega-box"><span className="lb">{t("fm.w.mega")}</span>
-                <div className="wchips g2">{(["host", "random"] as const).map((k) => <button key={k} type="button" className={`wchip${mega === k ? " on" : ""}`} onClick={() => setMega(k)} data-testid={`mega-${k}`}>{t(k === "host" ? "fm.mega.io" : "fm.mega.caso")}</button>)}</div></div>
-            ) : <div className="fld sec sC"><span className="lb">{t("fm.w.timer")}</span>
-              <div className="wchips g5">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>}
+            <div className="fld sec sC"><span className="lb">{t("fm.w.timer")}</span>
+              <div className="wchips g5">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
+            {flash && <div className="fld sec sD" data-testid="mega-box"><span className="lb">{t("fm.w.mega")}</span>
+              <div className="wchips g2">{(["host", "random"] as const).map((k) => <button key={k} type="button" className={`wchip${mega === k ? " on" : ""}`} onClick={() => setMega(k)} data-testid={`mega-${k}`}>{t(k === "host" ? "fm.mega.io" : "fm.mega.caso")}</button>)}</div></div>}
           </>}
         </div>
         <div className="fbot">

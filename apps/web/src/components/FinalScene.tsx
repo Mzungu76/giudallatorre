@@ -13,9 +13,9 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew }: { rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone }: { /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
-  const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST ? 3 : 0), [inst, setInst] = useState(FAST), [arr, setArr] = useState<number[]>([]);
+  const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST || instant ? 3 : 0), [inst, setInst] = useState(!!(FAST || instant)), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const gy = H - 112 - (N > 3 ? Math.ceil(N / 2) : N) * 37, Y0 = 74;
   const k = Math.min(0.72, (gy - Y0) / 712), tl = 186 - 252 * k, bodyW = 222 * k, cx0 = tl + 249 * k, platY = Y0 + 122 * k, matTop = Y0 + 628 * k;
@@ -51,6 +51,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const shared = W > 1, done = ph === 3;
+  useEffect(() => { if (done && !instant) onDone?.(); }, [done]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="fin" data-testid="final" onClick={() => { if (!done) finish(); }}>
       <div className="stbd-sky" /><div className="stbd-rays" />

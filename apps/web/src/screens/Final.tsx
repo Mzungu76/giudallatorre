@@ -17,6 +17,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
   // Premio della serata prima della scalata: una volta per partita (e per scheda), mai nei test veloci
   const awKey = `gdt.award.${room.code}`, award = view.award;
   const [seen, setSeen] = useState(() => { if (FAST || !award) return true; try { return sessionStorage.getItem(awKey) === "1"; } catch { return false; } });
+  const flash = !!room.options.flash, [fst, setFst] = useState<"final" | "stats" | "fine">("final");   // Flash: prima la classifica finale, poi le statistiche del turno, poi di nuovo la classifica (senza scalata)
   const stKey = `gdt.stereo.${room.code}`;   // poi i «luoghi comuni» della partita (sempre, anche senza dati); gli stati vanno SEMPRE prima di ogni ritorno anticipato (altrimenti React perde il conto degli hook e la schermata si svuota)
   const [stSeen, setStSeen] = useState(() => { if (FAST || room.options.flash) return true; try { return sessionStorage.getItem(stKey) === "1"; } catch { return false; } });
   if (!seen && award) {
@@ -24,5 +25,6 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
     return <AwardScene award={award} winner={{ name: w.name, color: w.color }} age={room.options.ageBand} sound={sound} readOnly={readOnly} onDone={() => { try { sessionStorage.setItem(awKey, "1"); } catch { /* niente memoria: vale per questa visita */ } setSeen(true); }} />;
   }
   if (!stSeen) return <StereoScene stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} readOnly={readOnly} onDone={() => { try { sessionStorage.setItem(stKey, "1"); } catch { /* vale per questa visita */ } setStSeen(true); }} />;
-  return <FinalScene rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }} />;
+  if (flash && fst === "stats") return <StereoScene stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} readOnly={readOnly} onDone={() => setFst("fine")} />;
+  return <FinalScene instant={flash && fst === "fine"} onDone={flash && fst === "final" ? () => { setTimeout(() => setFst("stats"), FAST ? 0 : 2500); } : undefined} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }} />;
 }

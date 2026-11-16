@@ -10,19 +10,20 @@ const shot = async (n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}
 const vis = async (id, ms = 8000) => p.waitForSelector(`[data-testid="${id}"]`, { state: "visible", timeout: ms }).then(() => true).catch(() => false);
 await p.goto(BASE + "/"); check("la Home ha il pulsante Torre del giorno", await vis("go-torre")); await shot("20-home");
 check("sul pulsante compare «Nuova!» prima di aprirla", await vis("torre-nuova"));
-await p.click('[data-testid="go-torre"]');
+await p.click('[data-testid="go-torre"]'); await p.waitForTimeout(1100); await shot("22-splash"); check("si vede l'intro animata della Torre del giorno", await vis("mode-splash", 500));
 const step = async () => {
   const has = async (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false), tap = (id) => p.click(`[data-testid="${id}"]`, { timeout: 4000 });
   if (await has("torre-fine")) return "fine";
   if (await has("confirm-vote")) { if (!globalThis.__ph) { globalThis.__ph = 1; globalThis.__phrase = await has("phrase"); await shot("21a-flash-frase"); } await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await tap("zoom-action"); await tap("confirm-vote"); return "voto"; }
+  if (await has("stereo-next")) { if (!statsVista) { await p.waitForTimeout(2600); await shot("24-stats"); } statsVista = true; await tap("stereo-next"); return "stats"; }
   for (const id of ["reveal-throw", "skip", "points-continue", "advance", "standings-action"]) if (await has(id)) { await tap(id); return id; }
   return "";
 };
-let voted = false, fine = false;
+let voted = false, fine = false, statsVista = false;
 for (let t0 = Date.now(); Date.now() - t0 < 90_000 && !fine; ) {
   const r = await step().catch(() => ""); if (r === "voto") { voted = true; await shot("21-flash-voto"); } if (r === "fine") fine = true; if (!r) await p.waitForTimeout(250);
 }
-check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("a fine turno compare il riepilogo della Torre", fine); await shot("23-torre-risultato");
+check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("dopo il turno compaiono le statistiche dei luoghi comuni, come nell'app base", statsVista); check("poi la pagina finale della Torre", fine); await p.waitForTimeout(3500); await shot("23-torre-risultato");
 const pt = await p.textContent('[data-testid="torre-punti"]').catch(() => null); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
 await p.goto(BASE + "/torre"); check("riaperta nello stesso giorno: si vede il risultato, non si rivota", await vis("torre-risultato") && !(await vis("confirm-vote", 800)));
 await p.goto(BASE + "/"); check("aperta la Torre, «Nuova!» sparisce", !(await vis("torre-nuova", 1500)));

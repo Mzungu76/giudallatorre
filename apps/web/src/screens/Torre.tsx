@@ -7,24 +7,25 @@ import { useAudio } from "../lib/audio.ts";
 import { useCards } from "../lib/cards.ts";
 import { PersonaProvider } from "../components/Persona.tsx";
 import { sfx } from "../lib/sfx.ts";
-import { t } from "../lib/testi.ts";
+import { t, ts } from "../lib/testi.ts";
 import { cella, dayId, loadTorre, numeroDelGiorno, registra, saveTorre, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../lib/torre.ts";
 import type { TorreDb, Indice, Torre } from "../lib/torre.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
+import ModeSplash from "../components/ModeSplash.tsx";
+import StereoScene from "../components/StereoScene.tsx";
+import TorreFinale from "../components/TorreFinale.tsx";
 import { Plancia } from "./Room.tsx";
-
-const clock = (s: number) => `${String(Math.floor(s / 3600)).padStart(2, "0")}:${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
 /** «Torre del giorno»: un solo turno già pronto, con le schermate di gioco di sempre (voto, segnalino, caduta, punti); poi il riepilogo. Una stanza finta, tutta sul dispositivo. */
 export default function Torre() {
   const { sound } = useAudio(), ready = useCards(), day = useMemo(() => dayId(), []), now = useNow(1000);
-  const [db, setDb] = useState<TorreDb>(loadTorre), [giaGiocata] = useState(() => loadTorre().giorni[day]);   // già giocata oggi all'apertura: si vede solo il risultato
+  const [db, setDb] = useState<TorreDb>(loadTorre), [giaGiocata] = useState(() => loadTorre().giorni[day]), [splash, setSplash] = useState(() => !loadTorre().giorni[day]);   // già giocata oggi all'apertura: si vede solo il risultato
   const [idx, setIdx] = useState<Indice | null>(null), [torre, setTorre] = useState<Torre | null>(null), [err, setErr] = useState(0);
-  const [stato, setStato] = useState<GameState | null>(null), [fine, setFine] = useState(false), [copied, setCopied] = useState(false), done = useRef(false);
+  const [stato, setStato] = useState<GameState | null>(null), [fine, setFine] = useState(false), [stats, setStats] = useState(false), [copied, setCopied] = useState(false), done = useRef(false);
   useEffect(() => { let on = true; setIdx(null); fetch("/oggi/indice.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Indice) => { if (on) setIdx(x); }).catch(() => { if (on) setErr((e) => e + 1); }); return () => { on = false; }; }, [err]);
   useEffect(() => {
-    if (!idx || giaGiocata) return; let on = true; setTorre(null); setStato(null); setFine(false); setCopied(false); done.current = false;
+    if (!idx || giaGiocata) return; let on = true; setTorre(null); setStato(null); setFine(false); setStats(false); setCopied(false); done.current = false;
     fetch(torreUrl(idx, day)).then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Torre) => { if (on) { setTorre(x); setStato(x.stato); { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb((o) => ({ ...o, visto: nd.visto })); } } }).catch(() => { if (on) setErr((e) => e + 1); });
     return () => { on = false; };
   }, [idx, day]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -42,7 +43,7 @@ export default function Torre() {
     if (a.type === "vote" && stato.phase === "VOTE") {
       const next = applyAction(stato, { type: "vote", playerId: torre.umano, position: a.position }).state; setStato(next);
       if (next.lastResult && !done.current) { done.current = true; const nd = registra(db, day, numero, next.lastResult, torre.umano); setDb(nd); saveTorre(nd); }
-    } else if (a.type === "advance" && stato.phase === "RESULTS") { setFine(true); if ((r?.points[torre.umano] ?? 0) > 0) sfx.fanfare(sound); }
+    } else if (a.type === "advance" && stato.phase === "RESULTS") setFine(true);
   };
   const rec = giaGiocata ?? (fine && r && torre ? { n: numero, pts: r.points[torre.umano] ?? 0, cella: cella(r, torre.umano) } : null);
   const share = async () => {
@@ -52,20 +53,12 @@ export default function Torre() {
     try { await navigator.clipboard.writeText(text); setCopied(true); } catch { /* niente appunti */ }
   };
 
+  const stereo = r && torre ? torre.stereo?.[r.votes[torre.umano]!] : undefined;   // le stesse statistiche del turno di una partita normale
+  if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
   if (rec) return (
-    <Stage bg="sky" testId="torre-fine">
-      <div className="fl">
-        <div className="fl-top"><div className="fl-t">{t("torre.oggi")}<small>{t("torre.titolo")} n.{rec.n}</small></div></div>
-        <div className="fl-res" data-testid="torre-risultato">
-          <div className="fl-pt"><b data-testid="torre-punti">{t("torre.pt", { n: rec.pts })}</b><span>{t("torre.punti")}</span></div>
-          <div className="fl-st"><span><b>{db.totale}</b>{t("torre.totale")}</span><span><b>{db.serie}</b>{t("torre.serie")}</span></div>
-          <div className="fl-next">{t("torre.prossima", { t: clock(secondiAllaProssima(now)) })}</div>
-          <div className="fl-row"><Btn onClick={share} testId="torre-condividi">{copied ? t("torre.copiato") : t("torre.condividi")}</Btn></div>
-          <button className="fl-home" onClick={() => navigate("/")} data-testid="torre-home">{t("torre.home")}</button>
-        </div>
-      </div>
-    </Stage>
+    <Stage bg="sky" testId="torre-fine"><TorreFinale n={rec.n} pts={rec.pts} cella={rec.cella} serie={db.serie} totale={db.totale} giorni={db.giorni} day={day} secondi={secondiAllaProssima(now)} copied={copied} sound={sound} onShare={share} onHome={() => navigate("/")} /></Stage>
   );
+  if (splash) return <Stage bg="sky" testId="torre-splash"><ModeSplash kind="torre" sound={sound} onDone={() => setSplash(false)} /></Stage>;
   if (!torre || !room || !view || !ready) return (
     <Stage bg="sky" testId="torre-wait"><div className="center-msg">{err > 0 ? <><h2>{t("torre.errore")}</h2><Btn kind="pap" onClick={() => setErr(0)}>{t("torre.riprova")}</Btn></> : <h2>{t("torre.carico")}</h2>}</div></Stage>
   );

@@ -2,7 +2,7 @@ import { ts } from "./testi.ts";
 /** «Torre del giorno»: un solo turno già pronto (frase, carte, segnalino), si vota e si vede l'esito. I punti si accumulano sul dispositivo (mai inviati). */
 import { applyAction } from "@gdt/game-engine";
 import type { GameState, TurnResult } from "@gdt/game-engine";
-export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string; nickname: string; char: number; isBot: boolean }[]; stato: GameState }
+export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string; nickname: string; char: number; isBot: boolean }[]; stato: GameState; /** Statistiche dei luoghi comuni per ogni voto possibile (come in una partita normale). */ stereo?: Record<number, NonNullable<GameState["stereo"]>> }
 /** `date`: i giorni con una Torre pronta (il server dà solo quelli già pubblicati); `riserva`: quante Torri di scorta per le altre partite dello stesso giorno. */
 export interface Indice { inizio: string; date: string[]; riserva: number }
 export interface TorreDay { n: number; pts: number; cella: string }   // n = numero della Torre del giorno

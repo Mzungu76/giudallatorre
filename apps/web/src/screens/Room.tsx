@@ -6,6 +6,7 @@ import { useRoom } from "../hooks/useRoom.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Qr from "../components/Qr.tsx";
 import Game from "./Game.tsx";
+import { FlashSplash } from "../components/ModeSplash.tsx";
 import MiniGame from "../components/MiniGame.tsx";
 import ChatPanel, { useChatState } from "../components/Chat.tsx";
 import { useAudio } from "../lib/audio.ts";
@@ -141,6 +142,7 @@ export default function RoomScreen({ code }: { code: string }) {
     <Stage bg="sky" testId="game">
       {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} goAt={view.goAtLocal} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
       {overlays}
+      {room.options.flash && <FlashSplash code={code} sound={sound} />}
       {manual && pv && ((h) => h ? <><HintBubble onClose={() => setManual(false)}>{h.text}</HintBubble><HintPointer targets={h.targets} /></> : null)(hintFor(pv))}
       {reconnecting && <div className="banner-conn">{tx("room.riconnessione")}</div>}
       <Toast text={error ?? notice} />

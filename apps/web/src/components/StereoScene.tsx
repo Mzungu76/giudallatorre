@@ -13,7 +13,7 @@ const arc = (a: number, b: number, r: number) => `M ${pt(a, r)} A ${r} ${r} 0 0 
 const fascia = (pct: number) => (pct < 15 ? 0 : pct < 35 ? 1 : pct < 60 ? 2 : 3);
 
 /** Dopo il premio della serata e prima della scalata: i luoghi comuni di QUESTA partita, giocati come un quiz da bar (voti di tutti, nessun nome). Stima della stanza. */
-export default function StereoScene({ stereo, isBot, sound, readOnly, onDone }: { stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean; readOnly?: boolean; onDone: () => void }) {
+export default function StereoScene({ stereo, isBot, sound, readOnly, onDone, label }: { /** Testo del pulsante (default: «Vai alla classifica»). */ label?: string; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean; readOnly?: boolean; onDone: () => void }) {
   useCards(); const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), [on, setOn] = useState(false), [shown, setShown] = useState(0), tm = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => {
     sfx.drum(sound, 1);
@@ -59,7 +59,7 @@ export default function StereoScene({ stereo, isBot, sound, readOnly, onDone }: 
             )}
           </>
         )}
-        <button className="bt mus aw-btn" onClick={onDone} data-testid="stereo-next">{t("aw.avanti")}</button>
+        <button className="bt mus aw-btn" onClick={onDone} data-testid="stereo-next">{label ?? t("aw.avanti")}</button>
       </div>
     </div>
   );

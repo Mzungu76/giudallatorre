@@ -1,5 +1,5 @@
 {
- "versione": 70,
+ "versione": 72,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3031,10 +3031,6 @@
    "t": "Totale",
    "s": "Torre del giorno"
   },
-  "torre.serie": {
-   "t": "Serie",
-   "s": "Torre del giorno"
-  },
   "torre.prossima": {
    "t": "Prossima Torre tra {t}",
    "s": "Torre del giorno"
@@ -3101,6 +3097,50 @@
    "t": "Nuova!",
    "s": "Home",
    "n": "Compare sul pulsante finché non apri la Torre del giorno di oggi"
+  },
+  "splash.flash.t": {
+   "t": "Flash",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.flash.s": {
+   "t": "Un solo turno. Chi cade?",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.torre.t": {
+   "t": "La Torre del giorno",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.torre.s": {
+   "t": "Una Torre per tutti. Una sola occasione.",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "torre.punteggio": {
+   "t": "Punteggio di oggi",
+   "s": "Torre del giorno"
+  },
+  "torre.v0": {
+   "t": "Giù anche tu!",
+   "s": "Torre del giorno"
+  },
+  "torre.v1": {
+   "t": "Mezzo colpo!",
+   "s": "Torre del giorno"
+  },
+  "torre.v2": {
+   "t": "Occhio fino!",
+   "s": "Torre del giorno"
+  },
+  "torre.v3": {
+   "t": "Cecchino della Torre!",
+   "s": "Torre del giorno"
+  },
+  "torre.stats": {
+   "t": "Il tuo punteggio",
+   "s": "Torre del giorno"
+  },
+  "torre.fila": {
+   "t": "giorni di fila",
+   "s": "Torre del giorno"
   }
  }
 }
