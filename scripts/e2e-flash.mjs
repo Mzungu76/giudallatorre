@@ -13,7 +13,7 @@ await p.click('[data-testid="go-flash"]');
 const step = async () => {
   const has = async (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false), tap = (id) => p.click(`[data-testid="${id}"]`, { timeout: 4000 });
   if (await has("flash-fine")) return "fine";
-  if (await has("confirm-vote")) { await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await tap("zoom-action"); await tap("confirm-vote"); return "voto"; }
+  if (await has("confirm-vote")) { if (!globalThis.__ph) { globalThis.__ph = 1; globalThis.__phrase = await has("phrase"); await shot("21a-flash-frase"); } await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await p.waitForSelector('[data-testid="zoom"]'); await tap("zoom-action"); await tap("confirm-vote"); return "voto"; }
   for (const id of ["reveal-throw", "skip", "points-continue", "advance", "standings-action"]) if (await has(id)) { await tap(id); return id; }
   return "";
 };
@@ -21,7 +21,7 @@ let voted = false, fine = false;
 for (let t0 = Date.now(); Date.now() - t0 < 90_000 && !fine; ) {
   const r = await step().catch(() => ""); if (r === "voto") { voted = true; await shot("21-flash-voto"); } if (r === "fine") fine = true; if (!r) await p.waitForTimeout(250);
 }
-check("si vota con le schermate di gioco di sempre", voted); check("a fine turno compare il riepilogo di Flash", fine); await shot("23-flash-risultato");
+check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("a fine turno compare il riepilogo di Flash", fine); await shot("23-flash-risultato");
 const pt = await p.textContent('[data-testid="flash-punti"]').catch(() => null); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
 await p.click('[data-testid="flash-ancora"]'); check("«un'altra Flash» porta un'altra Torre", await vis("confirm-vote", 15_000) || await vis("hand", 100) || await p.locator(".stage").first().isVisible());
 await p.reload(); await p.click('[data-testid="flash-back"]').catch(() => {});
