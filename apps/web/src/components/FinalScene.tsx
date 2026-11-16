@@ -94,8 +94,8 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
             {ui && <>
               <button className="bib big" onClick={ui.chat} aria-label={ui.unread ? txs("fin.chat", { n: ui.unread }) : txs("fin.chat0")} data-testid="chat-open">💬{ui.unread > 0 && <i data-testid="chat-unread">{ui.unread > 9 ? "9+" : ui.unread}</i>}</button>
               <button className="bib big" onClick={ui.rank} aria-label={txs("fin.classifica")} data-testid="standings-btn">🏆</button>
-              {onStereo && <button className="bib big" onClick={(e) => { e.stopPropagation(); onStereo(); }} aria-label={txs("sp.titolo")} data-testid="stereo-btn"><GameIcon name="maschere" size={26} /></button>}
             </>}
+            {onStereo && <button className="bt pap sm" onClick={(e) => { e.stopPropagation(); onStereo(); }} data-testid="stereo-btn"><GameIcon name="maschere" size={20} /> {tx("sp.titolo")}</button>}
             <button className="bt pap sm" onClick={onLeave} data-testid="leave-final">{tx("fin.esci")}</button>
             <button className="bt mus" style={{ fontSize: 18 }} onClick={onNew}>{tx("fin.nuova")}</button>
           </div>
