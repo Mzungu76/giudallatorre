@@ -2,7 +2,7 @@
 // Il browser blocca l'audio finché l'utente non tocca la pagina: se parte troppo presto, riprova al primo tocco.
 let el: HTMLAudioElement | null = null, key = "", timer = 0, duckTimer = 0, wanted = false, armed = false, base = 0.15;
 // Alcuni brani suonano più piano di altri: un fattore per file (1 = il volume scelto dall'utente; segue il cursore del volume, mai oltre il massimo).
-const GAIN: Record<string, number> = { "musica-finale.mp3": 1.2 };
+const GAIN: Record<string, number> = { "musica-finale.mp3": 1.5 };
 const lvl = (): number => Math.min(1, base * (GAIN[key] ?? 1));
 // Musica del voto: durante il voto (turni e intervalli) suona VOTE_FILE al posto del brano di sottofondo. Se il file non c'è ancora, resta il brano di sottofondo.
 const VOTE_FILE = "musica-suspense.mp3";
