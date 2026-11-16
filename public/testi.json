@@ -1,5 +1,5 @@
 {
- "versione": 66,
+ "versione": 68,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3011,74 +3011,99 @@
    "t": "Umani e bot, pari e patta",
    "s": "Fine partita · luoghi comuni"
   },
-  "flash.titolo": {
-   "t": "Flash",
-   "s": "Flash"
+  "torre.titolo": {
+   "t": "Torre",
+   "s": "Torre del giorno"
   },
-  "flash.oggi": {
+  "torre.oggi": {
    "t": "La Torre del giorno",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.altra": {
+  "torre.altra": {
    "t": "Un'altra Torre",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.pt": {
+  "torre.pt": {
    "t": "+{n}",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.punti": {
+  "torre.punti": {
    "t": "punti",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.totale": {
+  "torre.totale": {
    "t": "Totale",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.serie": {
+  "torre.serie": {
    "t": "Serie",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.prossima": {
+  "torre.prossima": {
    "t": "Prossima Torre tra {t}",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.condividi": {
+  "torre.condividi": {
    "t": "Condividi",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.copiato": {
+  "torre.copiato": {
    "t": "Copiato!",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.ancora": {
-   "t": "Un'altra Flash",
-   "s": "Flash"
+  "torre.ancora": {
+   "t": "Un'altra Torre",
+   "s": "Torre del giorno"
   },
-  "flash.home": {
+  "torre.home": {
    "t": "Torna alla home",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.share.t": {
-   "t": "Flash n.{n} {cella} · {pts} punti",
-   "s": "Flash",
+  "torre.share.t": {
+   "t": "Torre n.{n} {cella} · {pts} punti",
+   "s": "Torre del giorno",
    "n": "Testo da condividere (solo testo)"
   },
-  "flash.share.serie": {
+  "torre.share.serie": {
    "t": "Serie: {n} giorni 🔥",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.carico": {
+  "torre.carico": {
    "t": "Preparo la Torre…",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.errore": {
+  "torre.errore": {
    "t": "Non riesco a caricare la Flash.",
-   "s": "Flash"
+   "s": "Torre del giorno"
   },
-  "flash.riprova": {
+  "torre.riprova": {
    "t": "Riprova",
-   "s": "Flash"
+   "s": "Torre del giorno"
+  },
+  "home.flash": {
+   "t": "Flash",
+   "s": "Home",
+   "n": "Partita di un solo turno, con amici o bot"
+  },
+  "home.torre": {
+   "t": "Torre del giorno",
+   "s": "Home"
+  },
+  "fm.flash.sopra": {
+   "t": "Flash · un solo turno",
+   "s": "Crea partita"
+  },
+  "fm.w.mega": {
+   "t": "Chi fa il Megafono",
+   "s": "Crea partita"
+  },
+  "fm.mega.io": {
+   "t": "Io",
+   "s": "Crea partita"
+  },
+  "fm.mega.caso": {
+   "t": "A caso",
+   "s": "Crea partita"
   }
  }
 }

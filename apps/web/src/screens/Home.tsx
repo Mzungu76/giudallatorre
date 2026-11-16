@@ -18,7 +18,10 @@ export default function Home() {
       <div className="home-btns">
         <Btn onClick={() => navigate("/crea")} testId="go-create">{t("home.crea")}</Btn>
         <Btn kind="red" onClick={() => navigate("/entra")} testId="go-join">{t("home.entra")}</Btn>
-        <Btn kind="pap" onClick={() => navigate("/flash")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-flash">⚡ {t("flash.titolo")}</Btn>
+        <div className="seg">
+          <Btn kind="pap" onClick={() => navigate("/crea?flash=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-flash">⚡ {t("home.flash")}</Btn>
+          <Btn kind="pap" onClick={() => navigate("/torre")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-torre">🗼 {t("home.torre")}</Btn>
+        </div>
         <div className="seg">
           <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-solo">{t("home.solo")}</Btn>
           <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-how">{t("home.come")}</Btn>

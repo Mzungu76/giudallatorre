@@ -30,6 +30,8 @@ export interface GameConfig {
   miniGame?: false | "random" | MiniKind;
   /** Elenco delle accuse (testi) per il mini-gioco Accusa. */
   accuseDeck?: string[];
+  /** Partita «Flash»: un solo turno (nessun intervallo, nessuno spareggio, nessun premio della serata). */
+  flash?: boolean;
 }
 
 export interface TowerSlot { position: number; cardId: CardId; ownerId: PlayerId | null }
@@ -154,6 +156,8 @@ export interface GameState {
   /** Messo dalla stanza: conteggio dei «voti per luogo comune» della partita (per giocatore: voti validi `n` e per luogo comune `s`; `c` = somma di quanto sarebbe stato per caso; `turni` = turni contati). */
   stereo?: { n: Record<PlayerId, number>; s: Record<PlayerId, number>; c: number; turni: number; /** Quali luoghi comuni (es. «politico → bugiardo») hanno guidato più voti nella partita. */ cause: Record<string, number>; /** «Il miglior lancio dalla Torre»: il turno in cui un luogo comune ha colpito una carta con più voti. */ lancio?: { cardId: string; causa: string; n: number; text: string } };
   /** Spareggio a oltranza: si gioca un turno alla volta finché un giocatore ha più punti di tutti gli altri. */
+  /** Partita «Flash»: finisce dopo il primo turno (senza spareggio né premio). */
+  flash?: boolean;
   goldenGoal: boolean;
   goldenTurns: number;
   /** Mini-gioco di metà partita (campi assenti nelle partite salvate prima: nessun mini-gioco). */

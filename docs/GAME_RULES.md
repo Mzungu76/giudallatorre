@@ -127,3 +127,9 @@ Chi ha visto spoglio e caduta non rivede i punti: finita la scena si passa da so
 - **Chiusura**: la scenetta finale porta direttamente ai punti e alla classifica; il sipario si chiude solo alla fine («E ORA… TORNIAMO ALLA PARTITA!», ~2 s), quando l'host preme «Riprendiamo la partita».
 - **Bot**: votano come persone (`planMiniVote`): guardano le carte man mano che escono, le giudicano con un po' di sfocatura (più alta ai livelli bassi), premono al primo giro solo se evidente, altrimenti dopo aver visto tutte le carte; tempo di reazione 0,65–2,75 s (più lungo ai livelli bassi, più corto se impulsivi); a volte sono troppo tardi. Usano solo informazioni pubbliche.
 - **Riepilogo punti**: sulle carte restano solo le frecce (e i cuori nella Storia d'amore); i punti sono nei chip in basso, due per riga.
+
+## Flash (partita di un solo turno)
+Si crea da «⚡ Flash» in home (o `/crea?flash=1`), con amici invitati col codice e/o con i bot (che giocano come nel gioco vero). **Un solo turno, senza scelte di frase e carte**: la frase e le carte sulla Torre si assegnano da sole (a caso). Chi crea decide se il Megafono è lui oppure uno **a caso**. Il Megafono posa il segnalino, tutti votano, si vede il risultato. Vince chi ha più punti nel turno (parità = vittoria condivisa); niente intervallo, niente spareggio, niente premio della serata né pagina dei luoghi comuni. Nel motore: `GameConfig.flash`, `GameState.flash`, opzioni della stanza `flash` e `flashMega` ("host" | "random").
+
+## Torre del giorno
+Modalità da solo, sul telefono (nessuna stanza): un turno già pronto (`public/oggi/*.json`, generato con `tools/oggi/genera.ts`) con frase, 4 carte, segnalino posato e voti dei bot nascosti. Si vota, si vede il risultato, i punti si sommano sul dispositivo. La prima Torre di ogni giorno è la stessa per tutti (si sceglie dalla data) e fa crescere la serie di giorni; le altre dello stesso giorno sono altre Torri.

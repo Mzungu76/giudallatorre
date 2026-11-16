@@ -65,12 +65,12 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: config.flash ? 1 : roundsFor(n), totalTurns: config.flash ? 1 : n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, tower: [], votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, history: [], botIds: (config.botIds ?? []).filter((b) => ids.includes(b)), award: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null,
+    ...(config.flash ? { flash: true } : {}), miniGame: config.flash ? false : config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null,
   };
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
@@ -243,14 +243,14 @@ function endTurn(s: GameState, events: GameEvent[]) {
   }
   s.megafonoTurns[mega]! += 1;
   events.push({ type: "turnEnded", turn: s.turnNumber });
-  if (s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
+  if (s.flash || s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
     // fine dei giri regolari: vince chi ha più punti; se più giocatori sono in testa si gioca a oltranza ("Golden goal")
     const best = Math.max(...Object.values(s.scores)), leaders = s.playerIds.filter((p) => s.scores[p] === best);
-    if (leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {
+    if (!s.flash && leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {
       s.goldenGoal = true; s.goldenTurns += 1; s.totalTurns += 1;
       events.push({ type: "goldenGoal", leaders });
     } else {
-      s.winners = leaders; s.phase = "GAME_OVER"; s.award = pickAward({ playerIds: s.playerIds, scores: s.scores, history: s.history ?? [], botIds: s.botIds }, s);
+      s.winners = leaders; s.phase = "GAME_OVER"; s.award = s.flash ? null : pickAward({ playerIds: s.playerIds, scores: s.scores, history: s.history ?? [], botIds: s.botIds }, s);
       s.tower = []; s.played = {}; s.votes = {}; s.marks = null;
       events.push({ type: "gameOver", winners: s.winners });
       return;

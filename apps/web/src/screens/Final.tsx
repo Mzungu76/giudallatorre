@@ -18,7 +18,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
   const awKey = `gdt.award.${room.code}`, award = view.award;
   const [seen, setSeen] = useState(() => { if (FAST || !award) return true; try { return sessionStorage.getItem(awKey) === "1"; } catch { return false; } });
   const stKey = `gdt.stereo.${room.code}`;   // poi i «luoghi comuni» della partita (sempre, anche senza dati); gli stati vanno SEMPRE prima di ogni ritorno anticipato (altrimenti React perde il conto degli hook e la schermata si svuota)
-  const [stSeen, setStSeen] = useState(() => { if (FAST) return true; try { return sessionStorage.getItem(stKey) === "1"; } catch { return false; } });
+  const [stSeen, setStSeen] = useState(() => { if (FAST || room.options.flash) return true; try { return sessionStorage.getItem(stKey) === "1"; } catch { return false; } });
   if (!seen && award) {
     const w = people.get(award.winnerId);
     return <AwardScene award={award} winner={{ name: w.name, color: w.color }} age={room.options.ageBand} sound={sound} readOnly={readOnly} onDone={() => { try { sessionStorage.setItem(awKey, "1"); } catch { /* niente memoria: vale per questa visita */ } setSeen(true); }} />;

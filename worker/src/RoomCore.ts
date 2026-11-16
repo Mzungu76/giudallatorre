@@ -97,11 +97,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "v2m" | "v2o" | "attuali"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "v2m" | "v2o" | "attuali"; flash?: boolean; flashMega?: "host" | "random"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (deps.defaultBotEngine === "v2o" ? "v2o" as const : NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.flash ? { flash: true, flashMega: p.flashMega ?? "random" } : {}), ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (deps.defaultBotEngine === "v2o" ? "v2o" as const : NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -244,7 +244,8 @@ export class RoomCore {
         const pool = this.deps.phrasePool;
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
         const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995 }) : this.deps.phraseDeck;
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, botIds: d.players.filter((p) => p.isBot).map((p) => p.id), mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [] });
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, botIds: d.players.filter((p) => p.isBot).map((p) => p.id), mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [], ...(d.options.flash ? { flash: true, ...(d.options.flashMega === "host" ? { firstMegafonoIndex: Math.max(0, d.players.findIndex((p) => p.isHost)) } : {}) } : {}) });
+        { const a = this.autoFlash(state); events.push(...a.events); Object.assign(state, a.state); }
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
         return this.broadcastGame(out, events);
@@ -270,9 +271,22 @@ export class RoomCore {
     t.c += f.caso; t.turni++;
     if (f.lancio && f.lancio.n >= 2 && f.lancio.n > (t.lancio?.n ?? 0)) { const c = state.tower.find((x) => x.position === f.lancio!.pos); if (c) t.lancio = { cardId: c.cardId, causa: f.lancio.causa, n: f.lancio.n, text }; }
   }
+  /** Flash: frase e carte sulla torre si assegnano da sole (nessuna scelta): si vota e basta. Il Megafono (umano o bot) posa poi il segnalino. */
+  private autoFlash(state: GameState): { state: GameState; events: GameEvent[] } {
+    if (!state.flash) return { state, events: [] };
+    let s = state; const events: GameEvent[] = [], pick = (n: number) => Math.floor((new DataView(this.deps.rng(4).buffer).getUint32(0) / 4294967296) * n);
+    for (let g = 0; g < 20 && (s.phase === "PROCLAIM" || s.phase === "PLAY"); g++) {
+      const acts: Action[] = s.phase === "PROCLAIM"
+        ? [{ type: "choosePhrase", playerId: megafonoOf(s), mode: "card", index: s.proclaim!.phrases.length > 1 ? pick(s.proclaim!.phrases.length) : 0 }]
+        : s.playerIds.filter((p) => s.played[p] === undefined).map((p) => ({ type: "playCard" as const, playerId: p, cardId: s.hands[p]![pick(s.hands[p]!.length)]! }));
+      if (!acts.length) break;
+      for (const a of acts) { const r = applyAction(s, a); s = r.state; events.push(...r.events); }
+    }
+    return { state: s, events };
+  }
   private applyGame(out: Outbox, action: Action, now: number): Outbox {
     const d = this.data, before = d.game!.phase;
-    const { state, events } = applyAction(d.game!, action);
+    const r0 = applyAction(d.game!, action), a0 = this.autoFlash(r0.state), state = a0.state, events = [...r0.events, ...a0.events];
     d.game = state; d.seq++; out.persist = true;
     if (state.phase === "MINI_RUN" && before !== "MINI_RUN") this.startRun(now);
     else if (state.phase !== "MINI_RUN" && d.run) d.run = null;

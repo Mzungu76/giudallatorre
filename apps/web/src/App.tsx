@@ -7,10 +7,10 @@ import RoomScreen from "./screens/Room.tsx";
 import DisplayScreen from "./screens/Display.tsx";
 import Simulator from "./screens/Simulator.tsx";
 import Stats from "./screens/Stats.tsx";
-import Flash from "./screens/Flash.tsx";
+import Torre from "./screens/Torre.tsx";
 import StandingsDemo, { TieDemo, FinalDemo, CharDemo, TerraceDemo, MiniDemo } from "./screens/StandingsDemo.tsx";
 
-type Route = { name: "flash" } | { name: "sim" } | { name: "stats" } | { name: "home" } | { name: "create" } | { name: "join"; code: string } | { name: "room"; code: string } | { name: "display"; code: string };
+type Route = { name: "torre" } | { name: "sim" } | { name: "stats" } | { name: "home" } | { name: "create" } | { name: "join"; code: string } | { name: "room"; code: string } | { name: "display"; code: string };
 function parse(): Route {
   const p = location.pathname, q = new URLSearchParams(location.search);
   let m: RegExpMatchArray | null;
@@ -18,7 +18,7 @@ function parse(): Route {
   if ((m = p.match(/^\/schermo\/([A-Za-z0-9]{5})$/))) return { name: "display", code: m[1]!.toUpperCase() };
   if (p === "/crea") return { name: "create" };
   if (p === "/statistiche") return { name: "stats" };
-  if (p === "/flash" || p === "/oggi") return { name: "flash" };
+  if (p === "/torre" || p === "/oggi") return { name: "torre" };
   if (p === "/intervalli" || p === "/fuoriprogramma") return { name: "sim" };
   if (p === "/entra") return { name: "join", code: (q.get("c") ?? "").toUpperCase().slice(0, 5) };
   return { name: "home" };
@@ -39,7 +39,7 @@ export default function App() {
   switch (route.name) {
     case "sim": return <Simulator />;
     case "stats": return <Stats />;
-    case "flash": return <Flash />;
+    case "torre": return <Torre />;
     case "create": return <CreateScreen />;
     case "join": return <JoinScreen initialCode={route.code} />;
     case "room": return <RoomScreen key={route.code} code={route.code} />;
