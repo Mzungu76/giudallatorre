@@ -42,6 +42,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
   useEffect(() => {
     if (FAST) return undefined;
     const at = (ms: number, fn: () => void) => { timers.current.push(setTimeout(fn, ms)); };
+    if (!instant) sfx.segnapunti(sound);   // inizio del percorso segnapunti: il jingle
     at(1200, () => { setPh(1); sfx.whoosh(sound); });
     geo.forEach((g) => at(1200 + g.climbS * 1000, () => setArr((a) => [...a, g.r])));
     at(climbEnd, () => setPh(2));

@@ -222,9 +222,9 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (revealing && musicOff !== turn);
   useEffect(() => { music.voting(suspense); }, [suspense]);
   useEffect(() => () => music.voting(false), []);
-  // inizio del percorso dei punti: il jingle (una volta per turno visto)
+  // inizio del percorso segnapunti (la classifica con la scalata): il jingle, una volta per turno
   const jingleTurn = useRef(0);
-  useEffect(() => { if (showPanel && !!res && afterStep === "points" && !FAST && watched && jingleTurn.current !== turn) { jingleTurn.current = turn; sfx.segnapunti(sound); } }, [showPanel, !!res, afterStep, turn]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (showPanel && !!res && afterStep === "board" && !flashAvanti && !readOnly && !FAST && jingleTurn.current !== turn) { jingleTurn.current = turn; sfx.segnapunti(sound); } }, [showPanel, !!res, afterStep, turn]); // eslint-disable-line react-hooks/exhaustive-deps
   // l'ultimo turno visto: serve alla cartolina da condividere dalla classifica finale
   useEffect(() => {
     const rr = res; if (!rr || readOnly || !view.tower.length) return;
