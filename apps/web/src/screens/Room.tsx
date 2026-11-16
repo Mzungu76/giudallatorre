@@ -142,7 +142,7 @@ export default function RoomScreen({ code }: { code: string }) {
     <Stage bg="sky" testId="game">
       {view.view.phase === "GAME_OVER" ? <Final room={room} view={view.view} sound={sound} ui={ui} send={send} /> : (view.view.phase.startsWith("MINI") ? <MiniGame room={room} view={view.view} deadline={view.deadline} goAt={view.goAtLocal} send={send} sound={sound} ui={ui} /> : <Game room={room} view={view.view} deadline={view.deadline} send={send} sound={sound} ui={ui} />)}
       {overlays}
-      {room.options.flash && <FlashSplash code={code} sound={sound} />}
+      {room.options.flash && <FlashSplash code={code} sound={sound} mega={room.players.find((p) => p.id === view.view.megafonoId)?.nickname} />}
       {manual && pv && ((h) => h ? <><HintBubble onClose={() => setManual(false)}>{h.text}</HintBubble><HintPointer targets={h.targets} /></> : null)(hintFor(pv))}
       {reconnecting && <div className="banner-conn">{tx("room.riconnessione")}</div>}
       <Toast text={error ?? notice} />

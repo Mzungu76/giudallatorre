@@ -40,6 +40,7 @@ describe("partita Flash: un solo turno", () => {
   it("«Io faccio il Megafono»: l'host posa il segnalino; «a caso»: il Megafono varia da una stanza all'altra", () => {
     const m = (mega: "host" | "random", i: number) => { const c = RoomCore.create("FLSH" + i, deps(40 + i), 0, { nickname: "Io", flash: true, flashMega: mega, bots: { count: 3, level: "hard" } }); c.core.onConnect(c.playerId, 0); c.core.handle(c.playerId, { t: "start" }, 0); const g = c.core.data.game as GameState; return g.playerIds[g.megafonoIndex] === c.playerId; };
     for (let i = 0; i < 8; i++) expect(m("host", i)).toBe(true);
-    const caso = Array.from({ length: 24 }, (_, i) => m("random", i)); expect(caso.some(Boolean) && caso.some((x) => !x)).toBe(true);
+    const caso = Array.from({ length: 160 }, (_, i) => m("random", 100 + i)), quota = caso.filter(Boolean).length / caso.length;
+    expect(quota).toBeGreaterThan(0.12); expect(quota).toBeLessThan(0.4);   // con 4 giocatori l'host è Megafono circa 1 volta su 4
   });
 });

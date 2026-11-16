@@ -1,4 +1,4 @@
-import { applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { pregiudizioTurno, applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -265,10 +265,13 @@ export class RoomCore {
   /** Segna sul risultato del turno quali voti sono «per luogo comune» e aggiorna il conteggio della partita (stima: docs/BOT_LENTI.md). Solo dopo il voto: nessuna informazione utile prima. */
   private markStereo(state: GameState): void {
     const r = state.lastResult, text = state.phrase?.text; if (!r || !text) return;
-    const f = stereoVoteFlags(state.tower, text, r.votes); if (!f) return;
-    r.stereo = f; const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
-    for (const [pid, flag] of Object.entries(f.voti)) { t.n[pid] = (t.n[pid] ?? 0) + 1; if (flag) t.s[pid] = (t.s[pid] ?? 0) + 1; }
-    t.c += f.caso; t.turni++;
+    const f = stereoVoteFlags(state.tower, text, r.votes), g = pregiudizioTurno(state.tower, text, r.votes, r.marks?.[0]?.position); if (!f || !g) return;
+    r.stereo = { ...f, forza: g.voti, ...(g.lui !== null ? { lui: g.lui } : {}), caso: g.caso };
+    const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
+    // ogni voto è un giudizio a occhio (mai zero); anche il segnalino del Megafono lo è
+    for (const [pid, p] of Object.entries(g.voti)) { t.n[pid] = (t.n[pid] ?? 0) + 1; t.s[pid] = (t.s[pid] ?? 0) + p; }
+    if (g.lui !== null) { t.n[r.megafonoId] = (t.n[r.megafonoId] ?? 0) + 1; t.s[r.megafonoId] = (t.s[r.megafonoId] ?? 0) + g.lui; }
+    t.c += g.caso; t.turni++;
     if (f.lancio && f.lancio.n >= 2 && f.lancio.n > (t.lancio?.n ?? 0)) { const c = state.tower.find((x) => x.position === f.lancio!.pos); if (c) t.lancio = { cardId: c.cardId, causa: f.lancio.causa, n: f.lancio.n, text }; }
   }
   /** Flash: frase e carte sulla torre si assegnano da sole (nessuna scelta): si vota e basta. Il Megafono (umano o bot) posa poi il segnalino. */

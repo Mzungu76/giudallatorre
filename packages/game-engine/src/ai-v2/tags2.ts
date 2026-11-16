@@ -161,3 +161,21 @@ export function stereoVoteFlags(tower: { cardId: string; position: number }[], t
   for (const [pos, n] of Object.entries(perPos)) if (!lancio || n > lancio.n) lancio = { pos: Number(pos), n, causa: byPos[Number(pos)] as string };
   return { voti, caso: tower.length ? k / tower.length : 0, cause, lancio };
 }
+
+/**
+ * Il pregiudiziometro. Ogni voto, e ogni segnalino piazzato, è un giudizio a occhio su una faccia e un ruolo: quindi non scende mai a zero.
+ * Parte da `PREGIUDIZIO_BASE` (giudicare dall'aspetto, comunque) e sale con quanto la carta e la frase sono associate dalle etichette
+ * (luoghi comuni su ruolo e aspetto, o tratti della carta): `1 − e^(−v/3)` con v = la forza dell'associazione (mediana 2, forte oltre 4).
+ */
+export const PREGIUDIZIO_BASE = 0.35;
+export function pregiudizio(cardId: string, text: string): number | null {
+  const e = stereoExplain(cardId, text); if (!e) return null;
+  return PREGIUDIZIO_BASE + (1 - PREGIUDIZIO_BASE) * (1 - Math.exp(-Math.max(e.s, e.base) / 3));
+}
+/** Per un turno: il pregiudizio di ogni voto (0–1), quello del segnalino piazzato dal Megafono e la media su tutte le carte in torre («quanto verrebbe a caso»). Null se la frase non ha etichette. */
+export function pregiudizioTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, markPos?: number): { voti: Record<string, number>; lui: number | null; caso: number } | null {
+  const by: Record<number, number> = {}; let sum = 0;
+  for (const t of tower) { const p = pregiudizio(t.cardId, text); if (p === null) return null; by[t.position] = p; sum += p; }
+  const voti: Record<string, number> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = by[pos] ?? PREGIUDIZIO_BASE;
+  return { voti, lui: markPos !== undefined && by[markPos] !== undefined ? by[markPos]! : null, caso: tower.length ? sum / tower.length : PREGIUDIZIO_BASE };
+}

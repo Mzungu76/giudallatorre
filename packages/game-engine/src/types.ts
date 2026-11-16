@@ -74,7 +74,7 @@ export interface TurnResult {
   /** Il segnalino posato e com'è andata. */
   marks: MarkOutcome[];
   /** Messo dalla stanza (non dal motore): quali voti sono «per luogo comune» e quanto sarebbe stato per caso. Assente se la frase non ha etichette. */
-  stereo?: { voti: Record<PlayerId, boolean>; caso: number; cause: Record<string, number>; lancio?: { pos: number; n: number; causa: string } | null };
+  stereo?: { voti: Record<PlayerId, boolean>; /** Il pregiudizio (0–1) di ogni voto: mai zero, vedi `pregiudizio`. */ forza?: Record<PlayerId, number>; /** Il pregiudizio del segnalino piazzato dal Megafono. */ lui?: number; caso: number; cause: Record<string, number>; lancio?: { pos: number; n: number; causa: string } | null };
 }
 
 export interface ScoreLine { kind: "voto" | "carta" | "lui" | "lui-mancato" | "lui-folla" | "mini-giusto" | "mini-veloce"; pts: number; pos: number; n?: number }

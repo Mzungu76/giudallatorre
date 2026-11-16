@@ -37,7 +37,7 @@ export function observe(db: Db, code: string, view: PlayerView, bots: boolean, n
     T.turns++;
     const mega = r.megafonoId === me, fallen = r.fallenPositions ?? [r.fallenPosition];
     if (r.fallenOwnerIds?.includes(me)) T.cardFell++;
-    { const f = r.stereo?.voti[me]; if (f !== undefined) { T.stereoN++; if (f) T.stereoS++; T.stereoC += r.stereo!.caso; } }
+    { const st = r.stereo; if (st) { const fv = st.forza?.[me]; if (fv !== undefined) { T.stereoN++; T.stereoS += fv; T.stereoC += st.caso; } if (mega && st.lui !== undefined) { T.stereoN++; T.stereoS += st.lui; T.stereoC += st.caso; } } }   // ogni voto e ogni segnalino è un giudizio a occhio: mai zero
     if (mega) {
       T.megaTurns++;
       for (const m of r.marks ?? []) { if (m.effect === "cade") { T.cade++; if (m.hit) T.cadeHit++; } else if (m.effect === "noncade") { T.noncade++; if (m.hit) T.noncadeHit++; } else { T.nulli++; if (m.hit) T.nulliHit++; } }

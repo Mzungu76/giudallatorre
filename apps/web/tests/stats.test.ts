@@ -42,12 +42,14 @@ describe("statistiche personali (nel dispositivo)", () => {
     observe(db, "ABCDE", view({ viewerId: "p2", lastResult: res({}) }), false, 10); const s = summary(db);
     expect(s.voteRate).toBe(100); expect(s.winRate).toBeNull(); expect(s.avg).toBeNull();
   });
-  it("luoghi comuni: voti dati, voti per luogo comune e quota per caso si accumulano turno per turno (anche il Megafono)", () => {
-    const db = emptyDb(1), st = (turn: number, voti: Record<string, boolean>) => res({ turn, stereo: { voti, caso: 0.25, cause: {} } });
-    observe(db, "ABCDE", view({ viewerId: "p2", lastResult: st(1, { p1: false, p2: true, p3: false }) }), false, 10);
-    observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: true, p2: false }) }), false, 11);
-    observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: true, p2: false }) }), false, 12);   // ricarica: non si conta due volte
-    const s = summary(db); expect(db.totals).toMatchObject({ stereoN: 2, stereoS: 1, stereoC: 0.5 }); expect(s.stereoRate).toBe(50); expect(s.stereoCaso).toBe(25);
+  it("pregiudiziometro personale: ogni voto (e il segnalino del Megafono) pesa, mai zero; si accumula turno per turno", () => {
+    const db = emptyDb(1), st = (turn: number, forza: Record<string, number>, lui?: number) => res({ turn, stereo: { voti: {}, forza, caso: 0.5, cause: {}, ...(lui !== undefined ? { lui } : {}) } });
+    observe(db, "ABCDE", view({ viewerId: "p2", lastResult: st(1, { p1: 0.35, p2: 0.8, p3: 0.5 }) }), false, 10);
+    observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: 0.6, p2: 0.4 }) }), false, 11);
+    observe(db, "ABCDE", view({ viewerId: "p2", turn: 2, lastResult: st(2, { p1: 0.6, p2: 0.4 }) }), false, 12);   // ricarica: non si conta due volte
+    expect(db.totals.stereoN).toBe(2); expect(db.totals.stereoS).toBeCloseTo(1.2, 5); expect(db.totals.stereoC).toBeCloseTo(1, 5);
+    const mega = emptyDb(1); observe(mega, "ABCDE", view({ viewerId: "p1", lastResult: res({ megafonoId: "p1", stereo: { voti: {}, forza: { p1: 0.5, p2: 0.9 }, lui: 0.7, caso: 0.5, cause: {} } }) }), false, 10);
+    expect(mega.totals.stereoN).toBe(2); expect(mega.totals.stereoS).toBeCloseTo(1.2, 5);   // il voto e il segnalino del Megafono
     const db2 = emptyDb(1); observe(db2, "ABCDE", view({ viewerId: "p2", lastResult: res({}) }), false, 10); expect(db2.totals.stereoN).toBe(0);   // frase senza dati: niente
   });
 });

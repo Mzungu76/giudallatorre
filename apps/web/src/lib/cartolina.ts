@@ -1,5 +1,6 @@
 import { cardFull, loadCards } from "./cards.ts";
 import { ts } from "./testi.ts";
+import { fasciaPregiudizio, SEG_PREGIUDIZIO } from "./stereo.ts";
 import { fraseSocial } from "./torre.ts";
 import type { TorreDay } from "./torre.ts";
 
@@ -102,7 +103,7 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   c.fillStyle = "#fff"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(vt, 0, 4); c.textBaseline = "alphabetic"; c.restore();
   // il pregiudiziometro del turno (lo stesso tachimetro della pagina delle statistiche)
   if (r.pct !== undefined) {
-    const pc = r.pct, f = pc < 15 ? 0 : pc < 35 ? 1 : pc < 60 ? 2 : 3, gx = 512, gy = 1170, R = 100, SEG = [[0, 0.15, "#4aa63a"], [0.15, 0.35, "#f4c20d"], [0.35, 0.6, "#f08a1c"], [0.6, 1, "#e5382b"]] as const;
+    const pc = r.pct, f = fasciaPregiudizio(pc), gx = 512, gy = 1170, R = 100, SEG = SEG_PREGIUDIZIO.map((x) => [x.a, x.b, x.c] as const);
     rr(c, 366, 1034, 644, 168, 22); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 7; c.strokeStyle = NAVY; c.stroke();
     c.lineCap = "round"; c.strokeStyle = NAVY; c.lineWidth = 40; c.beginPath(); c.arc(gx, gy, R, Math.PI, 2 * Math.PI); c.stroke(); c.lineCap = "butt";
     for (const [a, b, col] of SEG) { c.strokeStyle = col; c.lineWidth = 26; c.beginPath(); c.arc(gx, gy, R, Math.PI + a * Math.PI, Math.PI + b * Math.PI); c.stroke(); }

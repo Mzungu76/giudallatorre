@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { isStereoVote, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
+import { isStereoVote, pregiudizioTurno, PREGIUDIZIO_BASE, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
 import { drawLens, mulberry } from "../src/ai-v2/lens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -107,6 +107,12 @@ describe("etichette v2 (occhi dei bot)", () => {
     const f = stereoVoteFlags([{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], "i più bugiardi", { a: 1, b: 2, c: 1 })!;
     expect(f.voti).toEqual({ a: true, b: false, c: true }); expect(f.caso).toBeCloseTo(1 / 3, 5); expect(f.cause).toEqual({ "politico → bugiardo": 2 });
     expect(stereoVoteFlags([{ cardId: "pol", position: 1 }], "frase mai vista zorbo", { a: 1 })).toBeNull();   // frase senza etichette: nessun dato
+    // il pregiudiziometro: ogni voto è un giudizio a occhio, quindi mai zero; sale con l'associazione; anche il segnalino conta
+    const tw = [{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], g = pregiudizioTurno(tw, "i più bugiardi", { a: 1, b: 2, c: 3 }, 3)!;
+    expect(g.voti.c).toBeCloseTo(PREGIUDIZIO_BASE, 5);                          // nessun legame con la frase: comunque il giudizio a occhio di base
+    expect(g.voti.a).toBeGreaterThan(g.voti.c!); expect(g.voti.b).toBeGreaterThan(g.voti.c!); expect(Math.max(...Object.values(g.voti))).toBeLessThan(1);
+    expect(Object.values(g.voti).every((x) => x >= PREGIUDIZIO_BASE)).toBe(true); expect(g.lui).toBeCloseTo(PREGIUDIZIO_BASE, 5); expect(g.caso).toBeGreaterThan(PREGIUDIZIO_BASE);
+    expect(pregiudizioTurno(tw, "i più bugiardi", { a: 1 })!.lui).toBeNull(); expect(pregiudizioTurno(tw, "frase mai vista zorbo", { a: 1 })).toBeNull();
     registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });
 });

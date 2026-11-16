@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { FAST } from "../ui.tsx";
 import { sfx } from "../lib/sfx.ts";
-import { t } from "../lib/testi.ts";
+import { t, ts } from "../lib/testi.ts";
 
 /** Piccola intro animata di una modalità (Flash, Torre del giorno): titolo che si stampa su un cielo a raggi; passa da sola o con un tocco. */
-export default function ModeSplash({ kind, sound, onDone }: { kind: "flash" | "torre"; sound: boolean; onDone: () => void }) {
+export default function ModeSplash({ kind, sound, onDone, extra }: { kind: "flash" | "torre"; sound: boolean; onDone: () => void; /** Una riga in più sotto il sottotitolo (Flash: chi è il Megafono). */ extra?: string }) {
   useEffect(() => {
     if (FAST) { onDone(); return undefined; }
     sfx.drum(sound, 0.8); const a = setTimeout(() => sfx.stamp(sound), 650), b = setTimeout(onDone, 2300);
@@ -18,14 +18,15 @@ export default function ModeSplash({ kind, sound, onDone }: { kind: "flash" | "t
         <div className="spl-ico" aria-hidden="true">{kind === "flash" ? "⚡" : <img src="/scene/tower_pop.webp" alt="" draggable={false} />}</div>
         <div className="spl-t">{t(kind === "flash" ? "splash.flash.t" : "splash.torre.t")}</div>
         <div className="spl-s">{t(kind === "flash" ? "splash.flash.s" : "splash.torre.s")}</div>
+        {extra && <div className="spl-s spl-x" data-testid="splash-mega">{extra}</div>}
       </div>
     </div>
   );
 }
 
 /** Flash: l'intro compare una volta sola, all'inizio della partita (per scheda). */
-export function FlashSplash({ code, sound }: { code: string; sound: boolean }) {
+export function FlashSplash({ code, sound, mega }: { code: string; sound: boolean; mega?: string }) {
   const key = `gdt.splash.${code}`, [on, setOn] = useState(() => { try { return sessionStorage.getItem(key) !== "1"; } catch { return true; } });
   if (!on) return null;
-  return <ModeSplash kind="flash" sound={sound} onDone={() => { try { sessionStorage.setItem(key, "1"); } catch { /* vale per questa visita */ } setOn(false); }} />;
+  return <ModeSplash kind="flash" sound={sound} extra={mega ? ts("splash.flash.mega", { nome: mega }) : undefined} onDone={() => { try { sessionStorage.setItem(key, "1"); } catch { /* vale per questa visita */ } setOn(false); }} />;
 }

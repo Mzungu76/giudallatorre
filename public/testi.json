@@ -1,5 +1,5 @@
 {
- "versione": 79,
+ "versione": 80,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3228,6 +3228,11 @@
   "share.t": {
    "t": "Ho fatto {punti} punti: {posto}° posto su {tot}. Giù dalla Torre!",
    "s": "Condivisione della partita"
+  },
+  "splash.flash.mega": {
+   "t": "Megafono: {nome}",
+   "s": "Intro Flash e Torre del giorno",
+   "n": "Nell'intro di Flash: chi è il Megafono (scelto dall'host o a caso)"
   }
  }
 }

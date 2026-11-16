@@ -4,7 +4,7 @@
 //      npx tsx tools/oggi/genera.ts --indice           riscrive public/oggi/indice.json
 // Il giocatore è la Folla; il Megafono e gli altri due sono bot v2o Difficili. Il seme viene dalla data: stesso giorno = stessa Torre.
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
-import { applyAction, buildPhraseDeck, createGame, DEFAULT_AGE_BAND, megafonoOf, nextRandom, stereoVoteFlags } from "../../packages/game-engine/src/index.ts";
+import { applyAction, buildPhraseDeck, createGame, DEFAULT_AGE_BAND, megafonoOf, nextRandom, pregiudizioTurno, stereoVoteFlags } from "../../packages/game-engine/src/index.ts";
 import type { Action, GameState } from "../../packages/game-engine/src/index.ts";
 import { makeAgent, resolveStyles } from "../../packages/ai-lab/src/agents.ts";
 import { ACCUSE_DECK, CONFESSIONS, DECK, PHRASE_POOL } from "../../worker/src/content.ts";
@@ -39,9 +39,10 @@ function giorno(n: number, seed: number): Giorno {
     const esiti: Record<number, { pts: number }> = {}, stereo: Record<number, NonNullable<GameState["stereo"]>> = {};
     for (const v of pos) {
       const fin = applyAction(pre, { type: "vote", playerId: HUMAN, position: v }).state, r = fin.lastResult!; esiti[v] = { pts: r.points[HUMAN]! };
-      const f = stereoVoteFlags(pre.tower, pre.phrase!.text, r.votes);   // come RoomCore.markStereo
-      if (f) { const st: NonNullable<GameState["stereo"]> = { n: {}, s: {}, c: f.caso, turni: 1, cause: { ...f.cause } };
-        for (const [pid, flag] of Object.entries(f.voti)) { st.n[pid] = 1; st.s[pid] = flag ? 1 : 0; }
+      const f = stereoVoteFlags(pre.tower, pre.phrase!.text, r.votes), g = pregiudizioTurno(pre.tower, pre.phrase!.text, r.votes, r.marks?.[0]?.position);   // come RoomCore.markStereo
+      if (f && g) { const st: NonNullable<GameState["stereo"]> = { n: {}, s: {}, c: g.caso, turni: 1, cause: { ...f.cause } };
+        for (const [pid, p] of Object.entries(g.voti)) { st.n[pid] = 1; st.s[pid] = p; }
+        if (g.lui !== null) { st.n[mega] += 1; st.s[mega] += g.lui; }
         if (f.lancio && f.lancio.n >= 2) { const c = pre.tower.find((x) => x.position === f.lancio!.pos); if (c) st.lancio = { cardId: c.cardId, causa: f.lancio.causa, n: f.lancio.n, text: pre.phrase!.text }; }
         stereo[v] = st; }
     }

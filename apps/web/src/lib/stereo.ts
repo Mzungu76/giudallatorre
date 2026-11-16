@@ -19,3 +19,7 @@ export function stereoGruppi(st: GameState["stereo"] | null | undefined, isBot: 
   const q = (g: number[]) => (g[1] ? Math.round((g[0]! / g[1]!) * 100) : null);
   return { umani: q(acc.u), bot: q(acc.b) };
 }
+
+/** Le fasce del pregiudiziometro: ogni voto è già un giudizio a occhio, quindi il tachimetro parte da circa il 35% e le fasce stanno nella parte alta. */
+export const SEG_PREGIUDIZIO = [{ a: 0, b: 0.5, c: "#4aa63a" }, { a: 0.5, b: 0.65, c: "#f4c20d" }, { a: 0.65, b: 0.8, c: "#f08a1c" }, { a: 0.8, b: 1, c: "#e5382b" }] as const;
+export const fasciaPregiudizio = (pct: number): 0 | 1 | 2 | 3 => (pct < 50 ? 0 : pct < 65 ? 1 : pct < 80 ? 2 : 3);
