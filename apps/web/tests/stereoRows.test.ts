@@ -11,7 +11,7 @@ describe("pannello luoghi comuni: dati della partita", () => {
   it("umani contro bot e miglior lancio", () => {
     const st = { n: { a: 4, b: 4, c: 8 }, s: { a: 2, b: 2, c: 2 }, c: 1, turni: 4, cause: {}, lancio: { cardId: "x", causa: "politico → bugiardo", n: 5, text: "frase" } };
     expect(stereoGruppi(st, (id) => id === "c")).toEqual({ umani: 50, bot: 25 });
-    expect(stereoGruppi(st, () => false)).toEqual({ umani: 33, bot: null });
+    expect(stereoGruppi(st, () => false)).toEqual({ umani: 38, bot: null });
     expect(stereoGame(st)!.lancio).toEqual({ cardId: "x", ruolo: "Politico", n: 5, text: "frase" }); expect(ruoloDi("occhiali → saputello")).toBe("Occhiali");
   });
 });
