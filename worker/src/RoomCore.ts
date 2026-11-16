@@ -39,6 +39,8 @@ export interface Deps {
   /** Mazzo già pronto (prove e strumenti). Se c'è la riserva sotto, all'avvio il mazzo si costruisce da quella, filtrato per età. */
   phraseDeck: PhraseCard[];
   phrasePool?: PoolPhrase[]; confessions?: PoolConfession[];
+  /** Motore dei bot delle stanze normali al posto di v2e: solo "v2o" (la copia di anteprima lo imposta con la variabile BOT_ENGINE_DEFAULT; il gioco vero no). */
+  defaultBotEngine?: string;
 }
 
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
@@ -99,7 +101,7 @@ export class RoomCore {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (deps.defaultBotEngine === "v2o" ? "v2o" as const : NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);

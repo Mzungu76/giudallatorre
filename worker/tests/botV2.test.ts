@@ -19,6 +19,11 @@ function playSolo(core: RoomCore, humanId: string, restartAt?: number) {
 }
 
 describe("bot nuovi (v2 con etichette v2) di default; v2 / attuali solo in collaudo", () => {
+  it("la copia di anteprima (BOT_ENGINE_DEFAULT=v2o) gioca con v2o; senza la variabile resta v2e", () => {
+    const c = RoomCore.create("PREVW", { ...deps(7), defaultBotEngine: "v2o" }, 0, { nickname: "Solo", bots: { count: 3, level: "hard" } });
+    expect(c.core.data.options.botEngine).toBe("v2o"); expect(playSolo(c.core, c.playerId).core.data.stage).toBe("FINISHED");
+    expect(RoomCore.create("PREV2", { ...deps(7), defaultBotEngine: "altro" }, 0, { nickname: "Solo" }).core.data.options.botEngine).toBe("v2e");
+  });
   it("le stanze nuove usano di default i bot nuovi (v2e), anche senza debug; l'opzione esplicita vale solo con debug", () => {
     for (const debug of [false, true]) {
       const c = RoomCore.create("DEFLT", deps(5), 0, { nickname: "Solo", ...(debug ? { debug: true } : {}), bots: { count: 3, level: "hard" } });

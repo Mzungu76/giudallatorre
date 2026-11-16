@@ -16,3 +16,6 @@ Dal commit «Bot nuovi di default» le **stanze create da ora** usano i bot v2 c
 - **Confronto in collaudo**: `/crea?debug=bot&motore=attuali` (bot di sempre), `&motore=v2` (v2, etichette vecchie), `&motore=v2e` (nuovi).
 - **Ripristino completo del codice**: `git revert` del commit «Bot nuovi di default»; `ai.ts`, `bot.ts`, `botstyle.ts`, `tags.ts` non sono stati toccati (test di impronta `protectedFiles.test.ts`).
 - Le etichette v2 sono dati (`content/etichette/`): si correggono con `tools/etichette/applica.py` senza toccare il codice.
+
+## Anteprima con i bot v2o
+La copia di anteprima (`.github/workflows/anteprima.yml`) passa `--var BOT_ENGINE_DEFAULT:v2o`: le sue stanze normali usano v2o. Il gioco vero non ha la variabile e resta su v2e. Per tornare a v2e nell'anteprima basta togliere `--var …` dal workflow.
