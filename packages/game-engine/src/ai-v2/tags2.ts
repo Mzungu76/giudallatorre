@@ -40,20 +40,33 @@ export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<stri
   for (const [text, tg] of Object.entries(phrases)) { NDOC++; for (const w of stems(text)) { DF.set(w, (DF.get(w) ?? 0) + 1); let m = CNT.get(w); if (!m) CNT.set(w, (m = new Map())); for (const [t, wt] of feats(tg)) m.set(t, (m.get(t) ?? 0) + wt / 3); } }
 }
 /** Luoghi comuni su ruoli e mestieri (content/etichette/stereotipi.json): `ruolo` (un tipo della carta) → `tratto` (un tipo), con forza 1–3. */
-export interface Stereo { ruolo: string; tratto: string; forza: number }
+export interface Stereo { ruolo: string; tratto: string; forza: number; /** «ruolo» (asse dei ruoli, ruoli.json) oppure «tipo» (un tipo della carta). */ asse?: "ruolo" | "tipo" }
 const STEREO = new Map<string, [string, number][]>();
 /** Tetto: un luogo comune non può aggiungere a una carta più di questo peso totale (nessuna carta attira voti solo per i pregiudizi). */
 export const STEREO_CAP = 2;
-export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = "t:" + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
+export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = (v.asse === "ruolo" ? "r:" : "t:") + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
 /** I tratti che questa lente aggiunge a una carta per luogo comune: solo alcuni dei luoghi comuni (a caso ma fissi per lente e carta), pesati dalla forza e dal pregiudizio del bot, con tetto. */
 export function stereoTags(cardId: string, lens: Lens): [string, number][] {
   const c = CARDS[cardId]; if (!c || lens.stereo <= 0) return [];
   const out: [string, number][] = []; let tot = 0;
-  for (const ruolo of Object.keys(c.tipi)) for (const [tratto, f] of STEREO.get("t:" + ruolo) ?? []) {
+  const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x)];
+  for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
+    const ruolo = cue;
     if ((hash32(`${lens.seed}|${cardId}|${ruolo}|${tratto}`) % 1000) / 1000 >= lens.stereo) continue;   // questo bot non ha quel luogo comune
     const w = Math.min(STEREO_CAP - tot, f * lens.stereo * 0.8); if (w <= 0.05) continue; out.push([tratto, w]); tot += w;
   }
   return out;
+}
+/** Asse dei ruoli (content/etichette/ruoli.json): ruoli di ogni carta e temi di contesto che ogni ruolo porta con sé. */
+const CARDROLES = new Map<string, string[]>(), ROLETEMI = new Map<string, string[]>();
+export function registerRoles(ruoli: { id: string; temi: string[] }[], carte: Record<string, string[]>): void {
+  CARDROLES.clear(); ROLETEMI.clear(); for (const r of ruoli) ROLETEMI.set(r.id, r.temi); for (const [c, rs] of Object.entries(carte)) CARDROLES.set(c, rs);
+}
+/** Etichette della carta per le letture «morbide»: le sue, più i temi di contesto dei suoi ruoli (peso 2) se non li ha già. */
+function cardFeats(cardId: string): [string, number][] {
+  const f = feats(CARDS[cardId]!), have = new Set(f.map(([k]) => k));
+  for (const r of CARDROLES.get(cardId) ?? []) for (const t of ROLETEMI.get(r) ?? []) if (!have.has("m:" + t)) { f.push(["m:" + t, 2]); have.add("m:" + t); }
+  return f;
 }
 export const hasTagsV2 = (): boolean => Object.keys(CARDS).length > 0;
 /** Parentela (0 se assente o sotto soglia) tra due etichette «t:nome» / «m:nome». Per i test. */
@@ -84,7 +97,7 @@ export function affinityV2m(cardId: string, phraseText: string): number | null {
   const c = CARDS[cardId]; if (!c) return affinityOld(cardId, phraseText);
   const p = PHRASES[phraseText] ?? inferV2(phraseText); if (!p) return null;
   let a = 0;
-  for (const [x, wx] of feats(c)) for (const [y, wy] of feats(p)) {
+  for (const [x, wx] of cardFeats(cardId)) for (const [y, wy] of feats(p)) {
     const s = x === y ? 1 : SIM.get(x + "|" + y) !== undefined ? SMOOTH.beta * SIM.get(x + "|" + y)! : 0;
     if (s > 0) a += (x[0] === "t" && y[0] === "t" ? 3 : x[0] === "m" && y[0] === "m" ? 2 : 2.5) * s * (wx + wy) / 6;
   }
@@ -107,7 +120,7 @@ export function angleOf(cardId: string, seed: number, prob: number): [string, nu
 export function affinityLens(cardId: string, phraseText: string, lens: Lens): number | null {
   const c = CARDS[cardId]; if (!c) return affinityOld(cardId, phraseText);
   const p = PHRASES[phraseText] ?? inferV2(phraseText); if (!p) return null;
-  const cf = feats(c), ang = angleOf(cardId, lens.seed, lens.angle); if (ang) cf.push(ang);
+  const cf = cardFeats(cardId), ang = angleOf(cardId, lens.seed, lens.angle); if (ang) cf.push(ang);
   for (const st of stereoTags(cardId, lens)) cf.push(st);   // i luoghi comuni del bot sul ruolo della carta
   let a = 0;
   for (const [x, wx] of cf) for (const [y, wy] of feats(p)) {

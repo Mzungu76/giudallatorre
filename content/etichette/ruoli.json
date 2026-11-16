@@ -1,0 +1,565 @@
+{
+ "versione": 1,
+ "nota": "Asse dei RUOLI/MESTIERI/SOTTOCULTURE: fatti visibili sulla carta (divisa, strumenti, scena), non giudizi. `temi` = contesto che il ruolo porta con sé (usato dai bot v2m e v2o).",
+ "ruoli": [
+  {
+   "id": "politico",
+   "def": "Fa politica o amministra: comizi, cartelli, mazzette, municipio",
+   "temi": [
+    "politica"
+   ]
+  },
+  {
+   "id": "religioso",
+   "def": "Uomo di chiesa o monaco",
+   "temi": [
+    "religione"
+   ]
+  },
+  {
+   "id": "insegnante",
+   "def": "Insegna o spiega davanti a una classe",
+   "temi": [
+    "scuola",
+    "cultura"
+   ]
+  },
+  {
+   "id": "studente",
+   "def": "Va a scuola o all'università: zaino, quaderni, libri",
+   "temi": [
+    "scuola",
+    "giovinezza"
+   ]
+  },
+  {
+   "id": "sanitario",
+   "def": "Lavora in ospedale: divisa, stetoscopio",
+   "temi": [
+    "salute",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "giudice",
+   "def": "Giudice: toga, martelletto",
+   "temi": [
+    "legge"
+   ]
+  },
+  {
+   "id": "cuoco",
+   "def": "Cucina di mestiere: cappello, pentole",
+   "temi": [
+    "cibo",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "tassista",
+   "def": "Guida un taxi",
+   "temi": [
+    "mezzi",
+    "viaggio",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "ciclista",
+   "def": "In bici su strada",
+   "temi": [
+    "mezzi",
+    "sport"
+   ]
+  },
+  {
+   "id": "meccanico",
+   "def": "Ripara auto",
+   "temi": [
+    "mezzi",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "corriere",
+   "def": "Consegna pacchi o posta",
+   "temi": [
+    "lavoro"
+   ]
+  },
+  {
+   "id": "venditore",
+   "def": "Vende porta a porta o al banco",
+   "temi": [
+    "lavoro",
+    "soldi"
+   ]
+  },
+  {
+   "id": "guardia",
+   "def": "Guardia giurata, sicurezza",
+   "temi": [
+    "legge",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "hacker",
+   "def": "Computer, cappuccio, maschera anonima",
+   "temi": [
+    "tecnologia",
+    "segreti"
+   ]
+  },
+  {
+   "id": "giornalista",
+   "def": "Microfono, telecamera, giornale",
+   "temi": [
+    "cultura",
+    "spettacolo"
+   ]
+  },
+  {
+   "id": "comico",
+   "def": "Fa ridere su un palco",
+   "temi": [
+    "spettacolo"
+   ]
+  },
+  {
+   "id": "artista",
+   "def": "Dipinge, fotografa, crea",
+   "temi": [
+    "arte"
+   ]
+  },
+  {
+   "id": "musicista",
+   "def": "Suona o canta",
+   "temi": [
+    "musica",
+    "spettacolo"
+   ]
+  },
+  {
+   "id": "rapper",
+   "def": "Rap, catene, microfono",
+   "temi": [
+    "musica"
+   ]
+  },
+  {
+   "id": "punk",
+   "def": "Sottocultura punk: creste, borchie",
+   "temi": [
+    "musica",
+    "caos"
+   ]
+  },
+  {
+   "id": "hippie",
+   "def": "Sottocultura hippie: pace e amore",
+   "temi": [
+    "natura"
+   ]
+  },
+  {
+   "id": "turista",
+   "def": "In vacanza: cappello, macchina fotografica, valigia",
+   "temi": [
+    "viaggio"
+   ]
+  },
+  {
+   "id": "istruttore",
+   "def": "Personal trainer, istruttore di palestra o yoga",
+   "temi": [
+    "sport",
+    "corpo",
+    "salute"
+   ]
+  },
+  {
+   "id": "influencer",
+   "def": "Vive di social: telefono, treppiede, prodotti",
+   "temi": [
+    "social",
+    "tecnologia"
+   ]
+  },
+  {
+   "id": "guru",
+   "def": "Maestro spirituale o motivatore",
+   "temi": [
+    "superstizione"
+   ]
+  },
+  {
+   "id": "manager",
+   "def": "Affari e carriera: giacca, valigetta",
+   "temi": [
+    "lavoro",
+    "carriera",
+    "soldi"
+   ]
+  },
+  {
+   "id": "impiegato",
+   "def": "Lavoro d'ufficio",
+   "temi": [
+    "lavoro"
+   ]
+  },
+  {
+   "id": "trader",
+   "def": "Finanza, criptovalute, monitor di borsa",
+   "temi": [
+    "soldi",
+    "tecnologia"
+   ]
+  },
+  {
+   "id": "nerd",
+   "def": "Computer, giochi da tavolo, fumetti, invenzioni",
+   "temi": [
+    "tecnologia",
+    "gioco"
+   ]
+  },
+  {
+   "id": "attivista",
+   "def": "Protesta o fa campagne: cartelli, striscioni",
+   "temi": [
+    "ambiente",
+    "politica"
+   ]
+  },
+  {
+   "id": "genitore",
+   "def": "Padre o madre con i figli",
+   "temi": [
+    "famiglia",
+    "bambini"
+   ]
+  },
+  {
+   "id": "presentatore",
+   "def": "Conduce o partecipa a un programma tv",
+   "temi": [
+    "spettacolo"
+   ]
+  },
+  {
+   "id": "scienziato",
+   "def": "Professore o ricercatore: lavagne, formule",
+   "temi": [
+    "cultura",
+    "scuola"
+   ]
+  },
+  {
+   "id": "atleta",
+   "def": "Corre, si allena, combatte",
+   "temi": [
+    "sport",
+    "corpo"
+   ]
+  },
+  {
+   "id": "mago",
+   "def": "Cartomante, indovino, mago",
+   "temi": [
+    "superstizione",
+    "soldi"
+   ]
+  },
+  {
+   "id": "reginetta",
+   "def": "Concorso di bellezza: fascia e corona",
+   "temi": [
+    "spettacolo",
+    "vanita"
+   ]
+  },
+  {
+   "id": "architetto",
+   "def": "Progetta: planimetrie, cantieri",
+   "temi": [
+    "casa",
+    "lavoro"
+   ]
+  },
+  {
+   "id": "bibliotecario",
+   "def": "Biblioteca: scaffali, libri",
+   "temi": [
+    "cultura"
+   ]
+  }
+ ],
+ "carte": {
+  "p01-i01": [
+   "politico"
+  ],
+  "p01-i03": [
+   "influencer"
+  ],
+  "p01-i04": [
+   "nerd"
+  ],
+  "p01-i05": [
+   "insegnante"
+  ],
+  "p01-i06": [
+   "insegnante"
+  ],
+  "p01-i07": [
+   "studente"
+  ],
+  "p01-i08": [
+   "istruttore"
+  ],
+  "p01-i09": [
+   "attivista"
+  ],
+  "p02-i01": [
+   "religioso",
+   "influencer"
+  ],
+  "p02-i02": [
+   "influencer"
+  ],
+  "p02-i04": [
+   "studente"
+  ],
+  "p02-i05": [
+   "tassista"
+  ],
+  "p02-i07": [
+   "musicista"
+  ],
+  "p02-i08": [
+   "manager"
+  ],
+  "p02-i09": [
+   "attivista"
+  ],
+  "p03-i01": [
+   "impiegato"
+  ],
+  "p03-i02": [
+   "turista"
+  ],
+  "p03-i03": [
+   "insegnante"
+  ],
+  "p03-i06": [
+   "sanitario"
+  ],
+  "p03-i07": [
+   "giudice"
+  ],
+  "p03-i08": [
+   "istruttore"
+  ],
+  "p03-i09": [
+   "influencer",
+   "guru"
+  ],
+  "p03-i10": [
+   "hippie"
+  ],
+  "p04-i01": [
+   "reginetta"
+  ],
+  "p04-i02": [
+   "artista"
+  ],
+  "p04-i03": [
+   "insegnante"
+  ],
+  "p04-i04": [
+   "manager"
+  ],
+  "p04-i05": [
+   "presentatore"
+  ],
+  "p04-i06": [
+   "giornalista"
+  ],
+  "p04-i08": [
+   "nerd"
+  ],
+  "p04-i09": [
+   "artista"
+  ],
+  "p04-i10": [
+   "guru"
+  ],
+  "p05-i01": [
+   "cuoco"
+  ],
+  "p05-i02": [
+   "nerd"
+  ],
+  "p05-i03": [
+   "nerd"
+  ],
+  "p05-i04": [
+   "guardia"
+  ],
+  "p05-i05": [
+   "rapper"
+  ],
+  "p05-i06": [
+   "hacker"
+  ],
+  "p05-i07": [
+   "cuoco"
+  ],
+  "p05-i08": [
+   "genitore"
+  ],
+  "p05-i09": [
+   "politico"
+  ],
+  "p06-i01": [
+   "influencer"
+  ],
+  "p06-i03": [
+   "hacker"
+  ],
+  "p06-i04": [
+   "impiegato"
+  ],
+  "p06-i06": [
+   "giornalista"
+  ],
+  "p06-i07": [
+   "presentatore"
+  ],
+  "p06-i08": [
+   "scienziato"
+  ],
+  "p06-i09": [
+   "atleta"
+  ],
+  "p06-i10": [
+   "politico"
+  ],
+  "p07-i01": [
+   "studente"
+  ],
+  "p07-i05": [
+   "corriere"
+  ],
+  "p07-i06": [
+   "venditore"
+  ],
+  "p07-i07": [
+   "punk"
+  ],
+  "p07-i08": [
+   "turista"
+  ],
+  "p07-i09": [
+   "manager"
+  ],
+  "p08-i01": [
+   "comico"
+  ],
+  "p08-i03": [
+   "architetto"
+  ],
+  "p08-i05": [
+   "influencer"
+  ],
+  "p08-i06": [
+   "genitore"
+  ],
+  "p08-i07": [
+   "giornalista"
+  ],
+  "p08-i09": [
+   "comico"
+  ],
+  "p08-i11": [
+   "istruttore"
+  ],
+  "p09-i02": [
+   "attivista"
+  ],
+  "p09-i03": [
+   "bibliotecario"
+  ],
+  "p09-i05": [
+   "nerd"
+  ],
+  "p09-i06": [
+   "politico"
+  ],
+  "p09-i07": [
+   "musicista"
+  ],
+  "p09-i08": [
+   "trader"
+  ],
+  "p09-i09": [
+   "atleta"
+  ],
+  "p10-i01": [
+   "ciclista"
+  ],
+  "p10-i03": [
+   "atleta"
+  ],
+  "p10-i04": [
+   "religioso"
+  ],
+  "p10-i06": [
+   "mago"
+  ],
+  "p10-i07": [
+   "musicista"
+  ],
+  "p10-i09": [
+   "atleta"
+  ],
+  "p11-i05": [
+   "turista"
+  ],
+  "p11-i06": [
+   "corriere"
+  ],
+  "p11-i07": [
+   "cuoco"
+  ],
+  "p12-i01": [
+   "meccanico"
+  ],
+  "p12-i02": [
+   "manager"
+  ],
+  "p12-i03": [
+   "scienziato"
+  ],
+  "p13-i01": [
+   "genitore"
+  ],
+  "p13-i02": [
+   "impiegato"
+  ],
+  "p13-i06": [
+   "impiegato"
+  ],
+  "p13-i07": [
+   "impiegato"
+  ],
+  "p14-i05": [
+   "atleta"
+  ],
+  "p14-i01": [
+   "genitore"
+  ]
+ }
+}

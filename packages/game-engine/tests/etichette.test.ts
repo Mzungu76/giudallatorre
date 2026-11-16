@@ -70,10 +70,19 @@ describe("etichette v2 (occhi dei bot)", () => {
     registerTagsV2({}, {});
   });
   it("tabella dei luoghi comuni: solo ruoli, mestieri e sottoculture (mai corpo, età, sesso, origine), tutte etichette del catalogo, forza 1–3", () => {
-    const voci = json("content/etichette/stereotipi.json").voci as { ruolo: string; tratto: string; forza: number; nota: string }[];
-    const RUOLI = new Set(["politico", "religioso", "influencer", "nerd", "sportivo", "artista", "guru", "complottista", "genitore", "ambizioso", "festaiolo", "ribelle"]);
-    expect(voci.length).toBeGreaterThan(5);
-    for (const v of voci) { expect(RUOLI.has(v.ruolo), `ruolo non ammesso: ${v.ruolo}`).toBe(true); expect(T.has(v.ruolo) && T.has(v.tratto), `${v.ruolo}→${v.tratto}`).toBe(true); expect([1, 2, 3]).toContain(v.forza); expect(v.nota.length).toBeGreaterThan(3); }
+    const voci = json("content/etichette/stereotipi.json").voci as { asse: "ruolo" | "tipo"; ruolo: string; tratto: string; forza: number; nota: string }[];
+    const ruoli = json("content/etichette/ruoli.json") as { ruoli: { id: string; def: string; temi: string[] }[]; carte: Record<string, string[]> };
+    const R = new Set(ruoli.ruoli.map((r) => r.id)), TIPI_RUOLO = new Set(["ambizioso", "festaiolo", "ribelle", "complottista"]);
+    const VIETATI = /(anzian|vecchi|pension|nonn|obes|grass|sovrappeso|magr|donn|uomo|maschi|femmin|stranier|immigrat|africa|asiat|cines|orient|ebre|musulman|gay|disabil)/i;
+    expect(voci.length).toBeGreaterThan(30);
+    for (const v of voci) {
+      expect(v.asse === "ruolo" ? R.has(v.ruolo) : TIPI_RUOLO.has(v.ruolo), `ruolo non ammesso: ${v.asse}:${v.ruolo}`).toBe(true);
+      expect(VIETATI.test(v.ruolo) || VIETATI.test(v.tratto), `categoria vietata: ${v.ruolo}→${v.tratto}`).toBe(false);
+      expect(T.has(v.tratto), `tratto fuori catalogo: ${v.tratto}`).toBe(true); expect([1, 2, 3]).toContain(v.forza); expect(v.nota.length).toBeGreaterThan(3);
+    }
+    for (const r of ruoli.ruoli) { expect(VIETATI.test(r.id), `ruolo vietato: ${r.id}`).toBe(false); expect(r.def.length).toBeGreaterThan(5); for (const t of r.temi) expect(M.has(t), `tema ${t} di ${r.id}`).toBe(true); }
+    for (const [c, rs] of Object.entries(ruoli.carte)) { expect(deck.includes(c) || c === "p14-i01", c).toBe(true); for (const r of rs) expect(R.has(r), `${c}: ${r}`).toBe(true); }
+    expect(Object.keys(ruoli.carte).length).toBeGreaterThan(70);   // copertura: oltre il 60% delle carte ha un ruolo
   });
   it("canale dei luoghi comuni: agisce solo se il bot li ha, con tetto per carta, e spegnibile", () => {
     registerTagsV2({ pol: { tipi: { politico: 3 }, temi: {} }, ord: { tipi: { avaro: 3 }, temi: {} } }, { "frase": { tipi: { ipocrita: 3 }, temi: {} }, "altra": { tipi: { vanitoso: 3 }, temi: {} } });

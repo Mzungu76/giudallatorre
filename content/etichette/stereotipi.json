@@ -1,25 +1,496 @@
 {
- "versione": 1,
- "nota": "Luoghi comuni su RUOLI, MESTIERI e SOTTOCULTURE (non su corpo, età, sesso, origine o gruppi di persone): una carta con il tipo `ruolo` viene letta, da chi ha quel pregiudizio, anche come `tratto`. Usati solo dai bot v2o (?motore=v2o). Ogni bot ne ha una parte, con forza diversa; l'effetto per carta ha un tetto (vedi tags2.ts, STEREO_CAP). Si rivede riga per riga: togli una riga e quel luogo comune sparisce.",
+ "versione": 2,
+ "nota": "Luoghi comuni su RUOLI, MESTIERI e SOTTOCULTURE (non su corpo, età, sesso, origine o gruppi di persone): una carta con il `ruolo` (asse «ruolo», content/etichette/ruoli.json) o con il tipo (asse «tipo») viene letta, da chi ha quel pregiudizio, anche come `tratto`. Usati solo dai bot v2o (?motore=v2o). Ogni bot ne ha una parte, con forza diversa; l'effetto per carta ha un tetto (tags2.ts, STEREO_CAP). Si rivede riga per riga: togli una riga e quel luogo comune sparisce.",
  "voci": [
-  { "ruolo": "politico", "tratto": "ipocrita", "forza": 3, "nota": "dice una cosa e ne fa un'altra" },
-  { "ruolo": "politico", "tratto": "bugiardo", "forza": 2, "nota": "promette e non mantiene" },
-  { "ruolo": "politico", "tratto": "furbo", "forza": 2, "nota": "sa come cavarsela" },
-  { "ruolo": "religioso", "tratto": "moralista", "forza": 2, "nota": "fa la predica" },
-  { "ruolo": "religioso", "tratto": "ipocrita", "forza": 1, "nota": "predica bene e razzola male" },
-  { "ruolo": "influencer", "tratto": "vanitoso", "forza": 3, "nota": "vive per l'immagine" },
-  { "ruolo": "nerd", "tratto": "saputello", "forza": 2, "nota": "sa tutto di una cosa e te la spiega" },
-  { "ruolo": "sportivo", "tratto": "vanitoso", "forza": 1, "nota": "cura molto la forma e la mostra" },
-  { "ruolo": "artista", "tratto": "eccentrico", "forza": 2, "nota": "fuori dagli schemi" },
-  { "ruolo": "artista", "tratto": "vanitoso", "forza": 1, "nota": "si crede un genio" },
-  { "ruolo": "guru", "tratto": "furbo", "forza": 2, "nota": "vende certezze" },
-  { "ruolo": "guru", "tratto": "bugiardo", "forza": 1, "nota": "promette miracoli" },
-  { "ruolo": "complottista", "tratto": "ansioso", "forza": 2, "nota": "vede pericoli ovunque" },
-  { "ruolo": "genitore", "tratto": "ansioso", "forza": 2, "nota": "si preoccupa per tutto" },
-  { "ruolo": "genitore", "tratto": "moralista", "forza": 1, "nota": "fa la predica ai figli" },
-  { "ruolo": "ambizioso", "tratto": "furbo", "forza": 2, "nota": "sa muoversi" },
-  { "ruolo": "ambizioso", "tratto": "egoista", "forza": 1, "nota": "pensa alla propria carriera" },
-  { "ruolo": "festaiolo", "tratto": "inaffidabile", "forza": 2, "nota": "alle feste c'è, il giorno dopo no" },
-  { "ruolo": "ribelle", "tratto": "maleducato", "forza": 1, "nota": "non rispetta le regole" }
+  {
+   "asse": "ruolo",
+   "ruolo": "politico",
+   "tratto": "ipocrita",
+   "forza": 3,
+   "nota": "dice una cosa e ne fa un'altra"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "politico",
+   "tratto": "bugiardo",
+   "forza": 2,
+   "nota": "promette e non mantiene"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "politico",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "sa come cavarsela"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "religioso",
+   "tratto": "moralista",
+   "forza": 2,
+   "nota": "fa la predica"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "religioso",
+   "tratto": "ipocrita",
+   "forza": 1,
+   "nota": "predica bene e razzola male"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "insegnante",
+   "tratto": "pignolo",
+   "forza": 2,
+   "nota": "corregge tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "insegnante",
+   "tratto": "saputello",
+   "forza": 2,
+   "nota": "deve spiegare ogni cosa"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "studente",
+   "tratto": "ansioso",
+   "forza": 1,
+   "nota": "vive di verifiche"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "studente",
+   "tratto": "pigro",
+   "forza": 1,
+   "nota": "studia all'ultimo"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "giudice",
+   "tratto": "moralista",
+   "forza": 2,
+   "nota": "severo, giudica"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "giudice",
+   "tratto": "arrogante",
+   "forza": 1,
+   "nota": "ha l'ultima parola"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "cuoco",
+   "tratto": "rabbioso",
+   "forza": 1,
+   "nota": "in cucina si urla"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "tassista",
+   "tratto": "chiacchierone",
+   "forza": 2,
+   "nota": "ha un'opinione su tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "tassista",
+   "tratto": "rabbioso",
+   "forza": 1,
+   "nota": "il traffico lo esaspera"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "ciclista",
+   "tratto": "maleducato",
+   "forza": 1,
+   "nota": "non rispetta i semafori"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "ciclista",
+   "tratto": "rabbioso",
+   "forza": 1,
+   "nota": "litiga con le auto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "meccanico",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "il preventivo cresce"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "venditore",
+   "tratto": "furbo",
+   "forza": 3,
+   "nota": "sa venderti di tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "venditore",
+   "tratto": "chiacchierone",
+   "forza": 2,
+   "nota": "non smette di parlare"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "venditore",
+   "tratto": "bugiardo",
+   "forza": 1,
+   "nota": "promette l'impossibile"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "hacker",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "sa dove guardare"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "hacker",
+   "tratto": "ribelle",
+   "forza": 1,
+   "nota": "contro le regole"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "giornalista",
+   "tratto": "impiccione",
+   "forza": 2,
+   "nota": "fa domande"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "giornalista",
+   "tratto": "pettegolo",
+   "forza": 1,
+   "nota": "vive di notizie"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "comico",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "ha un altro modo di vedere"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "artista",
+   "tratto": "eccentrico",
+   "forza": 2,
+   "nota": "fuori dagli schemi"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "artista",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "si crede un genio"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "musicista",
+   "tratto": "ribelle",
+   "forza": 2,
+   "nota": "vita da palco"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "musicista",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "ama gli applausi"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "musicista",
+   "tratto": "festaiolo",
+   "forza": 1,
+   "nota": "dopo il concerto si fa festa"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "rapper",
+   "tratto": "vanitoso",
+   "forza": 2,
+   "nota": "catene e sicurezza"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "rapper",
+   "tratto": "maleducato",
+   "forza": 1,
+   "nota": "parole dure"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "punk",
+   "tratto": "ribelle",
+   "forza": 3,
+   "nota": "contro tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "punk",
+   "tratto": "maleducato",
+   "forza": 2,
+   "nota": "non si adegua"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "hippie",
+   "tratto": "ingenuo",
+   "forza": 2,
+   "nota": "pace e amore"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "hippie",
+   "tratto": "pigro",
+   "forza": 1,
+   "nota": "senza fretta"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "turista",
+   "tratto": "ingenuo",
+   "forza": 2,
+   "nota": "si fida del primo che passa"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "turista",
+   "tratto": "goffo",
+   "forza": 1,
+   "nota": "si perde sempre"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "istruttore",
+   "tratto": "vanitoso",
+   "forza": 2,
+   "nota": "si guarda allo specchio"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "influencer",
+   "tratto": "vanitoso",
+   "forza": 3,
+   "nota": "vive per l'immagine"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "guru",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "vende certezze"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "guru",
+   "tratto": "bugiardo",
+   "forza": 1,
+   "nota": "promette miracoli"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "manager",
+   "tratto": "ambizioso",
+   "forza": 2,
+   "nota": "sempre in carriera"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "manager",
+   "tratto": "furbo",
+   "forza": 1,
+   "nota": "sa muoversi"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "manager",
+   "tratto": "egoista",
+   "forza": 1,
+   "nota": "pensa ai propri numeri"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "impiegato",
+   "tratto": "noioso",
+   "forza": 2,
+   "nota": "routine d'ufficio"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "impiegato",
+   "tratto": "pigro",
+   "forza": 1,
+   "nota": "aspetta la pausa caffè"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "trader",
+   "tratto": "avaro",
+   "forza": 2,
+   "nota": "pensa ai soldi"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "trader",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "fiuto per l'affare"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "nerd",
+   "tratto": "saputello",
+   "forza": 2,
+   "nota": "sa tutto di una cosa e te la spiega"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "attivista",
+   "tratto": "moralista",
+   "forza": 3,
+   "nota": "ha sempre ragione"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "attivista",
+   "tratto": "rabbioso",
+   "forza": 1,
+   "nota": "si arrabbia per la causa"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "genitore",
+   "tratto": "ansioso",
+   "forza": 2,
+   "nota": "si preoccupa per tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "genitore",
+   "tratto": "moralista",
+   "forza": 1,
+   "nota": "fa la predica ai figli"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "presentatore",
+   "tratto": "vanitoso",
+   "forza": 2,
+   "nota": "ama la luce dei riflettori"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "presentatore",
+   "tratto": "chiacchierone",
+   "forza": 1,
+   "nota": "parla a raffica"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "scienziato",
+   "tratto": "distratto",
+   "forza": 2,
+   "nota": "pensa ad altro"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "scienziato",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "idee strane"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "atleta",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "cura la forma e la mostra"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "mago",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "promette di vedere il futuro"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "mago",
+   "tratto": "bugiardo",
+   "forza": 2,
+   "nota": "illusioni"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "reginetta",
+   "tratto": "vanitoso",
+   "forza": 3,
+   "nota": "corona e fascia"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "architetto",
+   "tratto": "pignolo",
+   "forza": 2,
+   "nota": "misura tutto"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "bibliotecario",
+   "tratto": "noioso",
+   "forza": 1,
+   "nota": "silenzio, prego"
+  },
+  {
+   "asse": "ruolo",
+   "ruolo": "bibliotecario",
+   "tratto": "pignolo",
+   "forza": 1,
+   "nota": "tutto in ordine alfabetico"
+  },
+  {
+   "asse": "tipo",
+   "ruolo": "ambizioso",
+   "tratto": "furbo",
+   "forza": 2,
+   "nota": "sa muoversi"
+  },
+  {
+   "asse": "tipo",
+   "ruolo": "ambizioso",
+   "tratto": "egoista",
+   "forza": 1,
+   "nota": "pensa alla propria carriera"
+  },
+  {
+   "asse": "tipo",
+   "ruolo": "festaiolo",
+   "tratto": "inaffidabile",
+   "forza": 2,
+   "nota": "alle feste c'è, il giorno dopo no"
+  },
+  {
+   "asse": "tipo",
+   "ruolo": "ribelle",
+   "tratto": "maleducato",
+   "forza": 1,
+   "nota": "non rispetta le regole"
+  },
+  {
+   "asse": "tipo",
+   "ruolo": "complottista",
+   "tratto": "ansioso",
+   "forza": 2,
+   "nota": "vede pericoli ovunque"
+  }
  ]
 }
