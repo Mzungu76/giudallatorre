@@ -1,0 +1,51 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ruoli, aspetto e luoghi comuni</title>
+<style>:root{--bg:#fff7e6;--fg:#2b1d0e;--card:#fff;--line:#e5d3b3;--acc:#c2410c;--ok:#15803d;--no:#b91c1c}
+@media (prefers-color-scheme:dark){:root{--bg:#1d1409;--fg:#f4e6cf;--card:#2a1d0f;--line:#4a3820;--acc:#fb923c;--ok:#4ade80;--no:#f87171}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,sans-serif;padding:12px;max-width:900px;margin-inline:auto}
+button,select,input{font:inherit;color:inherit}button{border:1px solid var(--line);background:transparent;border-radius:8px;padding:.4em .8em;cursor:pointer;min-height:38px}
+.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;z-index:5;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line)}
+.tab.on{background:var(--acc);color:#fff;border-color:var(--acc)}.dl{background:var(--ok);color:#fff;border:0;margin-left:auto}
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0}h3{margin:.2em 0 .4em;font-size:1.05rem}h4{margin:.8em 0 .2em;font-size:.95rem;opacity:.8}
+.v{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;padding:4px 0;border-top:1px dashed var(--line)}.v.off{opacity:.4;text-decoration:line-through}
+.v select,.v input[type=text]{background:transparent;border:1px solid var(--line);border-radius:6px;padding:4px;min-height:34px}.v input[type=text]{grid-column:1/-1;width:100%}.m{opacity:.7;font-size:.85rem}
+.c{display:flex;gap:10px}.c img{width:92px;height:138px;object-fit:cover;border-radius:8px;flex:none}.chip{display:inline-flex;gap:4px;align-items:center;border:1px solid var(--line);border-radius:99px;padding:.15em .6em;margin:2px;background:var(--acc);color:#fff;border-color:var(--acc);cursor:pointer}
+.chip.a{background:var(--ok);border-color:var(--ok)}.add{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}.add input{min-width:140px}</style></head><body>
+<div class="bar"><b>Ruoli, aspetto e luoghi comuni</b><button class="tab on" id="t1">Luoghi comuni</button><button class="tab" id="t2">Carte</button><span class="m" id="cnt"></span><button class="dl" id="dl">Scarica le modifiche</button></div>
+<p class="m">Luoghi comuni su <b>ruoli e mestieri</b> e su <b>aspetto scelto</b> (abbigliamento, accessori). Qui si toglie, si cambia la forza (1 = leggero, 3 = forte) o si aggiunge. Nelle carte si correggono ruoli e aspetto assegnati. Niente è pubblicato finché non mi mandi il file scaricato. Perimetro: mai corpo, età, sesso, origine.</p>
+<div id="p1"></div><div id="p2" style="display:none"></div>
+<script>
+const D=__DATI__;let S;try{S=JSON.parse(localStorage.getItem("stereo1")||"null")}catch(e){}
+if(!S)S={voci:D.voci.map(v=>({...v,on:true})),ruoli:Object.fromEntries(D.carte.map(c=>[c.id,[...c.ruoli]])),aspetto:Object.fromEntries(D.carte.map(c=>[c.id,[...c.aspetto]]))};
+const sv=()=>{try{localStorage.setItem("stereo1",JSON.stringify(S))}catch(e){}};
+const nomeAsp=id=>(D.aspetti.find(a=>a.id===id)||{}).nome||id;
+const e=(t,p={},...k)=>{const n=document.createElement(t);Object.assign(n,p);k.forEach(x=>n.append(x));return n};
+function chiave(v){return v.asse+":"+v.ruolo}
+function drawVoci(){const root=document.getElementById("p1");root.innerHTML="";
+ const gruppi=new Map();S.voci.forEach((v,i)=>{const k=chiave(v);if(!gruppi.has(k))gruppi.set(k,[]);gruppi.get(k).push(i)});
+ [["ruolo","Ruoli e mestieri"],["aspetto","Aspetto scelto"],["tipo","Tipi con ruolo (carattere)"]].forEach(([asse,tit])=>{
+  root.append(e("h3",{textContent:tit}));
+  [...gruppi.entries()].filter(([k])=>k.startsWith(asse+":")).forEach(([k,ix])=>{const nome=asse==="aspetto"?nomeAsp(k.slice(asse.length+1)):k.slice(asse.length+1);
+   const b=e("div",{className:"box"});b.append(e("b",{textContent:nome}));
+   ix.forEach(i=>{const v=S.voci[i],r=e("div",{className:"v"+(v.on?"":" off")});
+    const cb=e("input",{type:"checkbox",checked:v.on});cb.onchange=()=>{v.on=cb.checked;sv();drawVoci()};
+    const tr=e("select");D.tipi.forEach(t=>tr.append(e("option",{value:t,textContent:t,selected:t===v.tratto})));tr.onchange=()=>{v.tratto=tr.value;sv()};
+    const f=e("select");[1,2,3].forEach(n=>f.append(e("option",{value:n,textContent:"forza "+n,selected:n===v.forza})));f.onchange=()=>{v.forza=+f.value;sv()};
+    const nt=e("input",{type:"text",value:v.nota||""});nt.onchange=()=>{v.nota=nt.value;sv()};
+    r.append(cb,tr,f,nt);b.append(r)});
+   const add=e("div",{className:"add"});const tr=e("select");D.tipi.forEach(t=>tr.append(e("option",{value:t,textContent:t})));const f=e("select");[1,2,3].forEach(n=>f.append(e("option",{value:n,textContent:"forza "+n,selected:n===2})));
+   const nt=e("input",{type:"text",placeholder:"nota breve"});const bt=e("button",{textContent:"+ aggiungi tratto"});
+   bt.onclick=()=>{S.voci.push({asse,ruolo:k.slice(asse.length+1),tratto:tr.value,forza:+f.value,nota:nt.value||"—",on:true});sv();drawVoci()};add.append(tr,f,nt,bt);b.append(add);root.append(b)})})}
+function chipBox(card,key,cat,labelOf,cls){const box=e("div");(S[key][card.id]||[]).forEach(id=>{const c=e("span",{className:"chip "+cls,textContent:labelOf(id)+" ✕"});c.onclick=()=>{S[key][card.id]=S[key][card.id].filter(x=>x!==id);sv();drawCarte()};box.append(c)});
+ const sel=e("select");sel.append(e("option",{value:"",textContent:"+ aggiungi…"}));cat.filter(x=>!(S[key][card.id]||[]).includes(x.id)).forEach(x=>sel.append(e("option",{value:x.id,textContent:labelOf(x.id)})));
+ sel.onchange=()=>{if(!sel.value)return;(S[key][card.id]??=[]).push(sel.value);sv();drawCarte()};box.append(sel);return box}
+function drawCarte(){const root=document.getElementById("p2");root.innerHTML="";
+ D.carte.forEach(c=>{const b=e("div",{className:"box c"});b.append(e("img",{src:c.img,alt:c.id}));const d=e("div",{style:"flex:1"});
+  d.append(e("b",{textContent:c.id}),e("div",{className:"m",textContent:"tipi: "+Object.keys(c.tipi).join(", ")+" · temi: "+Object.keys(c.temi).join(", ")}));
+  d.append(e("h4",{textContent:"Ruoli e mestieri"}),chipBox(c,"ruoli",D.ruoli,id=>id,""));d.append(e("h4",{textContent:"Aspetto scelto"}),chipBox(c,"aspetto",D.aspetti,nomeAsp,"a"));b.append(d);root.append(b)})}
+function conta(){document.getElementById("cnt").textContent=S.voci.filter(v=>v.on).length+" voci attive"}
+const show=n=>{document.getElementById("p1").style.display=n===1?"":"none";document.getElementById("p2").style.display=n===2?"":"none";t1.classList.toggle("on",n===1);t2.classList.toggle("on",n===2);if(n===2)drawCarte()};
+t1.onclick=()=>show(1);t2.onclick=()=>show(2);drawVoci();conta();
+document.getElementById("dl").onclick=()=>{const out={tipo:"stereotipi",voci:S.voci.filter(v=>v.on).map(({on,...v})=>v),ruoli:S.ruoli,aspetto:S.aspetto};
+ const a=e("a",{href:URL.createObjectURL(new Blob([JSON.stringify(out,null,1)],{type:"application/json"})),download:"stereotipi-rivisti.json"});a.click()};
+setInterval(conta,500);
+</script></body></html>
