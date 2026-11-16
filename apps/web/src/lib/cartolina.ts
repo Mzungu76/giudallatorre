@@ -56,29 +56,53 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
     if (mia) { const yy = cadendo ? h / 2 + 34 : -h / 2 - 30; c.fillStyle = TEAL; rr(c, -42, yy - 22, 84, 44, 22); c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = "#fff"; c.font = "400 28px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.tu"), 0, yy + 10); }
     c.restore();
   };
-  // quelle che cadono: inclinate, con le righe del vento
-  cadute.forEach((k, i) => {
-    const cx = 900 + i * 36, cy = 640 + i * 150, rot = 19 + i * 8, dx = Math.sin((rot * Math.PI) / 180), dy = Math.cos((rot * Math.PI) / 180);
-    c.save(); c.strokeStyle = "#ffffffd9"; c.lineWidth = 9; c.lineCap = "round"; for (let m = 0; m < 3; m++) { const bx = cx - 80 + m * 46 - dx * 105, by0 = cy - 140 - dy * 105; if (by0 - dy * 70 < 252 + hb + 10) continue; c.beginPath(); c.moveTo(bx, by0); c.lineTo(bx - dx * 70, by0 - dy * 70); c.stroke(); } c.restore();
-    carta(k, cx, cy, 190, 266, rot, true);
-  });
-  // quelle rimaste in cima, a ventaglio sulla torre
-  const n = rimaste.length, w0 = 178, h0 = 250, span = cadute.length ? 330 : 400, cx0 = cadute.length ? W / 2 - 70 : W / 2;
-  rimaste.forEach((k, i) => carta(k, cx0 + (n === 1 ? 0 : -span / 2 + (span * i) / (n - 1)), 590 + (i % 2 ? 10 : 0), w0, h0, n === 1 ? -2 : -7 + (14 * i) / (n - 1), false));
-  if (torre) {   // la base della torre sfuma, così non resta un taglio netto
+  // quelle rimaste: in piedi sulla cima della torre, una accanto all'altra (i merli le coprono in basso)
+  const n = rimaste.length, w0 = n > 3 ? 158 : 178, h0 = Math.round(w0 * 1.4), span = n > 3 ? 330 : n === 3 ? 270 : 190;
+  rimaste.forEach((k, i) => carta(k, W / 2 + (n === 1 ? 0 : -span / 2 + (span * i) / (n - 1)), 600 + (i % 2 ? 8 : 0), w0, h0, n === 1 ? -2 : -6 + (12 * i) / (n - 1), false));
+  if (torre) {   // la torre davanti: le carte spuntano da dietro i merli; la base sfuma, così non resta un taglio netto
     const sc = tw / torre.width, oc = document.createElement("canvas"); oc.width = tw; oc.height = 300; const o = oc.getContext("2d")!;
     o.drawImage(torre, 0, 0, torre.width, 300 / sc, 0, 0, tw, 300); o.globalCompositeOperation = "destination-out";
     const m = o.createLinearGradient(0, 215, 0, 300); m.addColorStop(0, "rgba(0,0,0,0)"); m.addColorStop(1, "rgba(0,0,0,1)"); o.fillStyle = m; o.fillRect(0, 215, tw, 85);
     c.drawImage(oc, (W - tw) / 2, ty);
-  }   // la torre davanti: le carte spuntano da dietro i merli
-  // punti, giudizio, emoji
-  const py = 990;
-  rr(c, 70, py, 360, 206, 26); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
-  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 130px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 250, py + 138); c.font = "800 32px Nunito, system-ui, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 250, py + 184);
-  c.save(); c.translate(745, py + 80); c.rotate((-4 * Math.PI) / 180); let px = 92; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 560 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; } titolo(c, vt, 0, 0, px, RED); c.restore();
-  c.font = "78px sans-serif"; c.textAlign = "center"; c.fillText([...r.cella].join("  "), 745, py + 184);
+  }
+  // quella che cade: di fianco alla torre, in picchiata, con le righe della velocità e il grido
+  const cw2 = cadute.length > 1 ? 150 : 176, ch2 = Math.round(cw2 * 1.4);
+  cadute.forEach((k, i) => {
+    const cx = 840 + i * 96, cy = 790 + i * 86, rot = 17 + i * 10, dx = Math.sin((rot * Math.PI) / 180), dy = Math.cos((rot * Math.PI) / 180);
+    c.save(); c.strokeStyle = "#ffffffe6"; c.lineWidth = 9; c.lineCap = "round";
+    for (let m = -1; m <= 1; m++) { const bx = cx + m * 52 - dx * (ch2 / 2 + 40), by0 = cy - dy * (ch2 / 2 + 40); c.beginPath(); c.moveTo(bx, by0); c.lineTo(bx - dx * 90, by0 - dy * 90); c.stroke(); }
+    c.restore();
+    carta(k, cx, cy, cw2, ch2, rot, true);
+    if (i === 0) {   // «AAAAHHH!» in uno scoppio giallo
+      const gx = cx + 24, gy = cy - ch2 / 2 - 96; c.save(); c.translate(gx, gy); c.rotate((8 * Math.PI) / 180);
+      c.beginPath(); for (let a = 0; a < 20; a++) { const rad = a % 2 ? 62 : 92, an = (a * Math.PI) / 10; c.lineTo(Math.cos(an) * rad * 1.35, Math.sin(an) * rad * 0.8); } c.closePath(); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 7; c.strokeStyle = NAVY; c.stroke();
+      c.fillStyle = RED; c.font = "400 46px Anton, Impact, sans-serif"; c.textAlign = "center"; c.lineJoin = "round"; c.lineWidth = 8; c.strokeStyle = NAVY; const g = ts("torre.c.aaah"); c.strokeText(g, 0, 16); c.fillText(g, 0, 16); c.restore();
+    }
+  });
+  // punti: medaglia con stella, e il giudizio su un nastro con le stelline
+  const mx = 215, my = 1088;
+  c.save(); c.translate(mx, my); c.shadowColor = "#13224a88"; c.shadowOffsetX = 6; c.shadowOffsetY = 8;
+  c.beginPath(); for (let a = 0; a < 40; a++) { const rad = a % 2 ? 112 : 128, an = (a * Math.PI) / 20 - Math.PI / 2; c.lineTo(Math.cos(an) * rad, Math.sin(an) * rad); } c.closePath();
+  const gr = c.createLinearGradient(0, -128, 0, 128); gr.addColorStop(0, "#fff0a0"); gr.addColorStop(0.5, GOLD); gr.addColorStop(1, "#e89a00"); c.fillStyle = gr; c.fill(); c.shadowColor = "transparent"; c.lineWidth = 8; c.strokeStyle = NAVY; c.lineJoin = "round"; c.stroke();
+  c.beginPath(); c.arc(0, 0, 94, 0, Math.PI * 2); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 6; c.stroke();
+  c.beginPath(); c.arc(0, 0, 80, 0, Math.PI * 2); c.lineWidth = 3; c.strokeStyle = "#13224a40"; c.stroke();
+  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 118px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 0, 26);
+  rr(c, -78, 52, 156, 44, 10); c.fillStyle = NAVY; c.fill(); c.fillStyle = "#fff"; c.font = "400 30px Anton, Impact, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 0, 85);
+  c.restore();
+  c.save(); c.translate(705, 1062); c.rotate((-3 * Math.PI) / 180);
+  let px = 96; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 500 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; }
+  const bw = Math.min(600, c.measureText(vt).width + 90), bh = px + 46;
+  c.beginPath(); c.moveTo(-bw / 2 - 26, -bh / 2); c.lineTo(-bw / 2, -bh / 2 + 8); c.lineTo(bw / 2, -bh / 2 + 8); c.lineTo(bw / 2 + 26, -bh / 2); c.lineTo(bw / 2 + 12, 0); c.lineTo(bw / 2 + 26, bh / 2); c.lineTo(bw / 2, bh / 2 - 8); c.lineTo(-bw / 2, bh / 2 - 8); c.lineTo(-bw / 2 - 26, bh / 2); c.lineTo(-bw / 2 - 12, 0); c.closePath();
+  c.shadowColor = "#13224a88"; c.shadowOffsetX = 5; c.shadowOffsetY = 7; c.fillStyle = RED; c.fill(); c.shadowColor = "transparent"; c.lineWidth = 7; c.lineJoin = "round"; c.strokeStyle = NAVY; c.stroke();
+  c.fillStyle = "#fff"; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(vt, 0, 4); c.textBaseline = "alphabetic"; c.restore();
+  const stelle = r.pts <= 0 ? 0 : r.pts <= 2 ? 1 : r.pts <= 5 ? 2 : 3;   // quante stelline accese: come il giudizio
+  for (let k = 0; k < 3; k++) {
+    c.save(); c.translate(705 + (k - 1) * 84, 1166); c.beginPath();
+    for (let a = 0; a < 10; a++) { const rad = a % 2 ? 17 : 40, an = (a * Math.PI) / 5 - Math.PI / 2; c.lineTo(Math.cos(an) * rad, Math.sin(an) * rad); }
+    c.closePath(); c.fillStyle = k < stelle ? GOLD : "#ffffff55"; c.fill(); c.lineWidth = 6; c.lineJoin = "round"; c.strokeStyle = NAVY; c.stroke(); c.restore();
+  }
   // serie e totale
-  const by = py + 226; rr(c, 70, by, W - 140, 74, 37); c.fillStyle = NAVY; c.fill();
+  const by = 1216; rr(c, 70, by, W - 140, 74, 37); c.fillStyle = NAVY; c.fill();
   c.fillStyle = "#fff"; c.font = "400 38px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 52);
   // invito
   c.fillStyle = "#fff"; c.font = "800 31px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 28); c.shadowColor = "transparent";

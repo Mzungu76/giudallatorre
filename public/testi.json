@@ -1,5 +1,5 @@
 {
- "versione": 76,
+ "versione": 77,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3177,6 +3177,11 @@
    "t": "🔥 1 giorno · Totale {totale}",
    "s": "Torre del giorno",
    "n": "Cartolina da condividere, prima Torre della serie"
+  },
+  "torre.c.aaah": {
+   "t": "AAAAHHH!",
+   "s": "Torre del giorno",
+   "n": "Cartolina: il grido della carta che cade"
   }
  }
 }
