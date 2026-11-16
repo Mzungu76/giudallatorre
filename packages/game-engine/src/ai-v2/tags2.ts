@@ -40,16 +40,16 @@ export function registerTagsV2(cards: Record<string, Tag2>, phrases: Record<stri
   for (const [text, tg] of Object.entries(phrases)) { NDOC++; for (const w of stems(text)) { DF.set(w, (DF.get(w) ?? 0) + 1); let m = CNT.get(w); if (!m) CNT.set(w, (m = new Map())); for (const [t, wt] of feats(tg)) m.set(t, (m.get(t) ?? 0) + wt / 3); } }
 }
 /** Luoghi comuni su ruoli e mestieri (content/etichette/stereotipi.json): `ruolo` (un tipo della carta) → `tratto` (un tipo), con forza 1–3. */
-export interface Stereo { ruolo: string; tratto: string; forza: number; /** «ruolo» (asse dei ruoli, ruoli.json) oppure «tipo» (un tipo della carta). */ asse?: "ruolo" | "tipo" }
+export interface Stereo { ruolo: string; tratto: string; forza: number; /** «ruolo» (asse dei ruoli, ruoli.json) oppure «tipo» (un tipo della carta). */ asse?: "ruolo" | "aspetto" | "tipo" }
 const STEREO = new Map<string, [string, number][]>();
 /** Tetto: un luogo comune non può aggiungere a una carta più di questo peso totale (nessuna carta attira voti solo per i pregiudizi). */
 export const STEREO_CAP = 2;
-export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = (v.asse === "ruolo" ? "r:" : "t:") + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
+export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = (v.asse === "ruolo" ? "r:" : v.asse === "aspetto" ? "a:" : "t:") + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
 /** I tratti che questa lente aggiunge a una carta per luogo comune: solo alcuni dei luoghi comuni (a caso ma fissi per lente e carta), pesati dalla forza e dal pregiudizio del bot, con tetto. */
 export function stereoTags(cardId: string, lens: Lens): [string, number][] {
   const c = CARDS[cardId]; if (!c || lens.stereo <= 0) return [];
   const out: [string, number][] = []; let tot = 0;
-  const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x)];
+  const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x), ...(CARDLOOKS.get(cardId) ?? []).map((x) => "a:" + x)];
   for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
     const ruolo = cue;
     if ((hash32(`${lens.seed}|${cardId}|${ruolo}|${tratto}`) % 1000) / 1000 >= lens.stereo) continue;   // questo bot non ha quel luogo comune
@@ -62,6 +62,9 @@ const CARDROLES = new Map<string, string[]>(), ROLETEMI = new Map<string, string
 export function registerRoles(ruoli: { id: string; temi: string[] }[], carte: Record<string, string[]>): void {
   CARDROLES.clear(); ROLETEMI.clear(); for (const r of ruoli) ROLETEMI.set(r.id, r.temi); for (const [c, rs] of Object.entries(carte)) CARDROLES.set(c, rs);
 }
+/** Asse dell'aspetto scelto (content/etichette/aspetto.json): abbigliamento e accessori di ogni carta. Serve solo ai luoghi comuni. */
+const CARDLOOKS = new Map<string, string[]>();
+export function registerLooks(carte: Record<string, string[]>): void { CARDLOOKS.clear(); for (const [c, a] of Object.entries(carte)) CARDLOOKS.set(c, a); }
 /** Etichette della carta per le letture «morbide»: le sue, più i temi di contesto dei suoi ruoli (peso 2) se non li ha già. */
 function cardFeats(cardId: string): [string, number][] {
   const f = feats(CARDS[cardId]!), have = new Set(f.map(([k]) => k));

@@ -1,5 +1,5 @@
 {
- "versione": 2,
+ "versione": 3,
  "nota": "Luoghi comuni su RUOLI, MESTIERI e SOTTOCULTURE (non su corpo, età, sesso, origine o gruppi di persone): una carta con il `ruolo` (asse «ruolo», content/etichette/ruoli.json) o con il tipo (asse «tipo») viene letta, da chi ha quel pregiudizio, anche come `tratto`. Usati solo dai bot v2o (?motore=v2o). Ogni bot ne ha una parte, con forza diversa; l'effetto per carta ha un tetto (tags2.ts, STEREO_CAP). Si rivede riga per riga: togli una riga e quel luogo comune sparisce.",
  "voci": [
   {
@@ -491,6 +491,272 @@
    "tratto": "ansioso",
    "forza": 2,
    "nota": "vede pericoli ovunque"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "occhiali",
+   "tratto": "saputello",
+   "forza": 2,
+   "nota": "occhiali = secchione"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "occhiali",
+   "tratto": "noioso",
+   "forza": 1,
+   "nota": "seriosi"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "occhiali_sole",
+   "tratto": "arrogante",
+   "forza": 2,
+   "nota": "si dà un tono"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "occhiali_sole",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "fa lo splendido"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "completo",
+   "tratto": "ambizioso",
+   "forza": 2,
+   "nota": "punta in alto"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "completo",
+   "tratto": "ipocrita",
+   "forza": 1,
+   "nota": "sorriso di circostanza"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "completo",
+   "tratto": "furbo",
+   "forza": 1,
+   "nota": "sa come muoversi"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cravatta",
+   "tratto": "ambizioso",
+   "forza": 1,
+   "nota": "giacca e cravatta"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "catena_oro",
+   "tratto": "vanitoso",
+   "forza": 2,
+   "nota": "ostenta"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "catena_oro",
+   "tratto": "spendaccione",
+   "forza": 1,
+   "nota": "i soldi si vedono"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cappellino",
+   "tratto": "impulsivo",
+   "forza": 1,
+   "nota": "un po' sbruffone"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cappellino",
+   "tratto": "ribelle",
+   "forza": 1,
+   "nota": "non si adegua"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "berretto",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "alternativo"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "berretto",
+   "tratto": "ribelle",
+   "forza": 1,
+   "nota": "fuori dal coro"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "divisa",
+   "tratto": "pignolo",
+   "forza": 1,
+   "nota": "ci tiene alle regole"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "abito_elegante",
+   "tratto": "vanitoso",
+   "forza": 2,
+   "nota": "si mette in mostra"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "abbigliamento_sportivo",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "mostra la forma"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cuffie",
+   "tratto": "distratto",
+   "forza": 2,
+   "nota": "in un altro mondo"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cuffie",
+   "tratto": "maleducato",
+   "forza": 1,
+   "nota": "non ascolta gli altri"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "sandali",
+   "tratto": "goffo",
+   "forza": 1,
+   "nota": "sandali e calzini"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "sandali",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "fuori moda"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "camicia_hawaiana",
+   "tratto": "festaiolo",
+   "forza": 2,
+   "nota": "modalità vacanza"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "camicia_hawaiana",
+   "tratto": "ingenuo",
+   "forza": 1,
+   "nota": "turista"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "giacca_pelle",
+   "tratto": "ribelle",
+   "forza": 2,
+   "nota": "un po' fuorilegge"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "borchie",
+   "tratto": "ribelle",
+   "forza": 2,
+   "nota": "contro tutto"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "borchie",
+   "tratto": "maleducato",
+   "forza": 1,
+   "nota": "non si adegua"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "fascia_corona",
+   "tratto": "vanitoso",
+   "forza": 3,
+   "nota": "si sente una regina"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "pantofole",
+   "tratto": "pigro",
+   "forza": 2,
+   "nota": "non ha voglia di uscire"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "collana",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "spirituale a modo suo"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "collana",
+   "tratto": "ingenuo",
+   "forza": 1,
+   "nota": "ci crede"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cappello_stagnola",
+   "tratto": "ansioso",
+   "forza": 2,
+   "nota": "vede complotti ovunque"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "cappello_stagnola",
+   "tratto": "ingenuo",
+   "forza": 1,
+   "nota": "ci crede davvero"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "casco",
+   "tratto": "impulsivo",
+   "forza": 1,
+   "nota": "corre"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "maschera",
+   "tratto": "furbo",
+   "forza": 1,
+   "nota": "nasconde qualcosa"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "maschera",
+   "tratto": "bugiardo",
+   "forza": 1,
+   "nota": "non si mostra"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "capelli_colorati",
+   "tratto": "ribelle",
+   "forza": 2,
+   "nota": "fuori dagli schemi"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "capelli_colorati",
+   "tratto": "eccentrico",
+   "forza": 1,
+   "nota": "vistoso"
+  },
+  {
+   "asse": "aspetto",
+   "ruolo": "sciarpa",
+   "tratto": "vanitoso",
+   "forza": 1,
+   "nota": "cura l'immagine"
   }
  ]
 }

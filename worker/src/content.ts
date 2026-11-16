@@ -1,13 +1,14 @@
 import manifest from "../../public/cards/manifest.json";
 import frasi from "../../content/frasi-megafono.json";
 import confessioni from "../../content/confessioni.json";
-import { buildPhraseDeck, parseAge, registerTags, registerTagsV2, registerStereotypes, registerRoles, fullPhrase } from "@gdt/game-engine";
+import { buildPhraseDeck, parseAge, registerTags, registerTagsV2, registerStereotypes, registerRoles, registerLooks, fullPhrase } from "@gdt/game-engine";
 import type { PhraseCard, PhraseFamily, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import tagsCards from "../../content/tags-personaggi.json";
 import tagsPhrases from "../../content/tags-frasi.json";
 import etPersonaggi from "../../content/etichette/personaggi.v2.json";
 import etFrasi from "../../content/etichette/frasi.v2.json";
 import ruoliJson from "../../content/etichette/ruoli.json";
+import aspettoJson from "../../content/etichette/aspetto.json";
 import stereotipi from "../../content/etichette/stereotipi.json";
 import accuse from "../../content/accuse.json";
 
@@ -40,4 +41,5 @@ registerTagsV2((etPersonaggi as { personaggi: Record<string, T2> }).personaggi, 
 
 /** Luoghi comuni su ruoli e mestieri per i bot v2o (revisionati dal proprietario): content/etichette/stereotipi.json. */
 registerRoles((ruoliJson as { ruoli: { id: string; temi: string[] }[] }).ruoli, (ruoliJson as { carte: Record<string, string[]> }).carte);
-registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "tipo" }[] }).voci);
+registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte);
+registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "aspetto" | "tipo" }[] }).voci);
