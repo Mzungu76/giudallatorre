@@ -2,6 +2,7 @@ import { createRoomBody, joinRoomBody, roomCodeSchema, ROOM_CODE_ALPHABET, ROOM_
 import { GameRoom } from "./GameRoom.ts";
 import type { Env } from "./GameRoom.ts";
 import { KeyedLimiter, cryptoBytes } from "./security.ts";
+import { torreDelGiorno } from "./torre.ts";
 
 export { GameRoom };
 
@@ -39,6 +40,7 @@ async function handle(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url), ip = request.headers.get("cf-connecting-ip") ?? "local", now = Date.now();
     const path = url.pathname;
     if (path === "/api/health") return reply({ ok: true });
+    if (path.startsWith("/oggi/")) return torreDelGiorno(request, env, path, now);
 
     if (path === "/api/rooms" && request.method === "POST") {
       if (!createLimit.allow(ip, now)) return reply({ error: "RATE_LIMIT" }, 429);

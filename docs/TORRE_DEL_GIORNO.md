@@ -1,0 +1,18 @@
+# Torre del giorno
+
+Modalità da solo: un turno già pronto (frase, 4 carte, segnalino piazzato in modo interessante, voti dei bot nascosti). Si vota e si vede il risultato; i punti e la serie di giorni restano sul telefono. La prima Torre di ogni giorno è la stessa per tutti; le altre dello stesso giorno pescano tra le passate e la riserva.
+
+## Quando nasce e quando si vede
+- **Preparazione**: ogni giorno alle **23:50 (ora di Roma)** la GitHub Action `Torre del giorno` (`.github/workflows/torre-del-giorno.yml`) esegue `npx tsx tools/oggi/genera.ts --prepara 3`: crea i file mancanti per oggi e i 3 giorni dopo (`public/oggi/AAAA-MM-GG.json`), li salva nel repository e, se ci sono i segreti Cloudflare, pubblica il gioco. Il seme viene dalla data: stesso giorno, stessa Torre.
+- **Pubblicazione**: alle **00:01 (ora di Roma)**. Prima di allora il Worker (`worker/src/torre.ts`) non fa vedere né il file del giorno né la data nell'elenco (`/oggi/indice.json`). L'app usa la data di Roma un minuto fa (`dayId` in `apps/web/src/lib/torre.ts`), quindi cambia per tutti nello stesso momento.
+- **Nuova!**: sul pulsante «Torre del giorno» della home compare finché il giocatore non ha aperto la Torre di oggi (`visto` nell'archivio locale `gdt.torre`).
+- Se la Torre di un giorno manca (il compito non è girato), l'app usa l'ultima pubblicata.
+
+## Comandi
+- `npx tsx tools/oggi/genera.ts --prepara 3` — come fa la Action.
+- `npx tsx tools/oggi/genera.ts --riserva 40` — una tantum: Torri di scorta (`public/oggi/riserva/N.json`).
+- `npx tsx tools/oggi/genera.ts --indice` — riscrive `public/oggi/indice.json`.
+- Provare dal PC la Torre di un giorno: `npm test` controlla che ogni Torre sia valida e un dilemma (`apps/web/tests/torre.test.ts`).
+
+## Notifiche (non ancora fatte)
+Servirebbe l'invio di notifiche push (VAPID, registrazione dei telefoni e un compito che le invii all'ora scelta) e un interruttore nelle impostazioni. Il piano gratuito di Cloudflare limita il calcolo per richiesta: da valutare prima di costruirle.

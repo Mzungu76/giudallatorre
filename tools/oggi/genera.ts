@@ -1,21 +1,27 @@
-// Genera «La Torre del giorno»: un solo turno già pronto (carte sulla torre, frase, segnalino piazzato in modo interessante) e l'esito per ognuno dei 4 voti possibili.
-// Uso: npx tsx tools/oggi/genera.ts [giorni=120] [inizio=2026-11-16]   → public/oggi/indice.json + public/oggi/<n>.json
-// Il giocatore è la Folla (p2); il Megafono (p1) e gli altri due (p3, p4) sono bot v2o Difficili. Tutto è deterministico (stesso seme = stessa Torre).
-import { mkdirSync, writeFileSync } from "node:fs";
+// Genera la Torre del giorno: un solo turno già pronto (carte sulla torre, frase, segnalino piazzato in modo interessante, voti dei bot nascosti).
+// Uso: npx tsx tools/oggi/genera.ts --prepara 3        prepara oggi e i prossimi 3 giorni (data di Roma) se mancano: public/oggi/AAAA-MM-GG.json
+//      npx tsx tools/oggi/genera.ts --riserva 40       (una tantum) riserva di Torri per le altre partite dello stesso giorno: public/oggi/riserva/N.json
+//      npx tsx tools/oggi/genera.ts --indice           riscrive public/oggi/indice.json
+// Il giocatore è la Folla; il Megafono e gli altri due sono bot v2o Difficili. Il seme viene dalla data: stesso giorno = stessa Torre.
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { applyAction, buildPhraseDeck, createGame, DEFAULT_AGE_BAND, megafonoOf, nextRandom } from "../../packages/game-engine/src/index.ts";
 import type { Action, GameState } from "../../packages/game-engine/src/index.ts";
 import { makeAgent, resolveStyles } from "../../packages/ai-lab/src/agents.ts";
 import { ACCUSE_DECK, CONFESSIONS, DECK, PHRASE_POOL } from "../../worker/src/content.ts";
 
-const N = Number(process.argv[2] ?? 120), START = process.argv[3] ?? "2026-11-16", OUT = "public/oggi";
+const OUT = "public/oggi", INIZIO = "2026-11-16";
+const arg = (k: string) => { const i = process.argv.indexOf("--" + k); return i < 0 ? null : process.argv[i + 1] ?? ""; };
+const romeDay = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Rome" }).format(d);
+const addDays = (day: string, n: number) => { const [y, m, dd] = day.split("-").map(Number); return new Date(Date.UTC(y!, m! - 1, dd! + n, 12)).toISOString().slice(0, 10); };
+const hash = (t: string) => { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h | 0; };
 const stream = (seed: number) => { let r = seed | 0; return () => { const x = nextRandom(r); r = x.state; return x.value; }; };
 const SEATS = [{ engine: "v2o", level: "hard" as const }, { engine: "v2o", level: "hard" as const }, { engine: "v2o", level: "hard" as const }, { engine: "v2o", level: "hard" as const }];
 const IDS = ["p1", "p2", "p3", "p4"], TYPES = ["cade", "nulli", "noncade"] as const;
 /** Una Torre = lo stato del motore al momento del voto (frase, carte sulla torre, segnalino posato, voti dei bot già dati): l'app lo mostra con le schermate di gioco di sempre e applica il voto del giocatore. */
 export interface Giorno { v: 2; n: number; umano: string; giocatori: { id: string; nickname: string; char: number; isBot: boolean }[]; stato: GameState }
 
-function giorno(n: number): Giorno {
-  const seed = 9100 + n * 7919, rand = stream(seed ^ 0x9e3779b9), shared = new Map(), styles = resolveStyles(SEATS, stream(seed ^ 0xc2b2ae35)), agents = SEATS.map((s, i) => makeAgent(s, styles[i]!, shared));
+function giorno(n: number, seed: number): Giorno {
+  const rand = stream(seed ^ 0x9e3779b9), shared = new Map(), styles = resolveStyles(SEATS, stream(seed ^ 0xc2b2ae35)), agents = SEATS.map((s, i) => makeAgent(s, styles[i]!, shared));
   let s: GameState = createGame({ players: IDS.map((id, i) => ({ id, name: "P" + (i + 1) })), seed, deck: DECK, phraseDeck: buildPhraseDeck(PHRASE_POOL!, CONFESSIONS, { age: DEFAULT_AGE_BAND, seed: seed ^ 0x5bd1e995, confessions: false }), miniGame: false, accuseDeck: ACCUSE_DECK }).state;
   for (let g = 0; s.phase !== "SUSPECT" && g < 40; g++) {   // frase e carte sulla torre: tutti decidono dallo stesso stato e poi si applica
     const snap = s; for (let i = 0; i < 4; i++) { const a = agents[i]!.decide(snap, IDS[i]!, rand); if (a) s = applyAction(s, a).state; }
@@ -45,7 +51,15 @@ function giorno(n: number): Giorno {
   return best!.g;
 }
 
-mkdirSync(OUT, { recursive: true });
-for (let n = 0; n < N; n++) { const g = giorno(n); writeFileSync(`${OUT}/${n}.json`, JSON.stringify(g)); if (n % 10 === 0) console.log(`giorno ${n}/${N}`); }
-writeFileSync(`${OUT}/indice.json`, JSON.stringify({ inizio: START, giorni: N }) + "\n");
-console.log(`fatto: ${N} Torri in ${OUT}`);
+const indice = () => {
+  mkdirSync(OUT, { recursive: true });
+  const date = readdirSync(OUT).filter((f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).map((f) => f.slice(0, 10)).sort();
+  const riserva = existsSync(`${OUT}/riserva`) ? readdirSync(`${OUT}/riserva`).filter((f) => /^\d+\.json$/.test(f)).length : 0;
+  writeFileSync(`${OUT}/indice.json`, JSON.stringify({ inizio: INIZIO, date, riserva }) + "\n"); console.log(`indice: ${date.length} giorni, riserva ${riserva}`);
+};
+if (arg("riserva") !== null) { const N = Number(arg("riserva")); mkdirSync(`${OUT}/riserva`, { recursive: true }); for (let n = 0; n < N; n++) writeFileSync(`${OUT}/riserva/${n}.json`, JSON.stringify(giorno(n, 9100 + n * 7919))); indice(); }
+else if (arg("prepara") !== null) {
+  const oggi = romeDay(new Date()), N = Number(arg("prepara") || 3); mkdirSync(OUT, { recursive: true }); let nuove = 0;
+  for (let k = 0; k <= N; k++) { const day = addDays(oggi, k), f = `${OUT}/${day}.json`; if (existsSync(f)) continue; writeFileSync(f, JSON.stringify(giorno(Math.max(1, Math.round((Date.parse(day) - Date.parse(INIZIO)) / 86_400_000) + 1), hash("torre-" + day)))); console.log("preparata", day); nuove++; }
+  console.log(nuove ? `preparate ${nuove} Torri` : "niente da preparare"); indice();
+} else indice();

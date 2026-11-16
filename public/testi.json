@@ -1,5 +1,5 @@
 {
- "versione": 68,
+ "versione": 69,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3104,6 +3104,11 @@
   "fm.mega.caso": {
    "t": "A caso",
    "s": "Crea partita"
+  },
+  "home.torre.nuova": {
+   "t": "Nuova!",
+   "s": "Home",
+   "n": "Compare sul pulsante finché non apri la Torre del giorno di oggi"
   }
  }
 }

@@ -9,6 +9,7 @@ await ctx.addInitScript(() => { try { localStorage.setItem("gdt.intro", "1"); lo
 const shot = async (n) => { if (SHOTS) await p.screenshot({ path: `${SHOTS}/${n}.png` }); };
 const vis = async (id, ms = 8000) => p.waitForSelector(`[data-testid="${id}"]`, { state: "visible", timeout: ms }).then(() => true).catch(() => false);
 await p.goto(BASE + "/"); check("la Home ha il pulsante Torre del giorno", await vis("go-torre")); await shot("20-home");
+check("sul pulsante compare «Nuova!» prima di aprirla", await vis("torre-nuova"));
 await p.click('[data-testid="go-torre"]');
 const step = async () => {
   const has = async (id) => p.locator(`[data-testid="${id}"]`).first().isVisible().catch(() => false), tap = (id) => p.click(`[data-testid="${id}"]`, { timeout: 4000 });
@@ -24,6 +25,6 @@ for (let t0 = Date.now(); Date.now() - t0 < 90_000 && !fine; ) {
 check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("a fine turno compare il riepilogo della Torre", fine); await shot("23-torre-risultato");
 const pt = await p.textContent('[data-testid="torre-punti"]').catch(() => null); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
 await p.click('[data-testid="torre-ancora"]'); check("«un'altra Torre» porta un'altra Torre", await vis("confirm-vote", 15_000) || await vis("hand", 100) || await p.locator(".stage").first().isVisible());
-await p.reload(); await p.click('[data-testid="torre-back"]').catch(() => {});
+await p.goto(BASE + "/"); check("aperta la Torre, «Nuova!» sparisce", !(await vis("torre-nuova", 1500)));
 check("nessun errore JS", errs.length === 0, errs.join(" | "));
 await b.close(); console.log(fails ? `${fails} controlli falliti` : "Tutti i controlli superati"); process.exit(fails ? 1 : 0);

@@ -1453,3 +1453,8 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .fl-st{display:flex;gap:28px;font:800 13px Nunito}.fl-st span{display:flex;flex-direction:column;align-items:center}.fl-st b{font:400 28px/1 Anton}
 .fl-next{font:800 12px Nunito;opacity:.7}.fl-row{display:flex;gap:8px;width:100%}.fl-row .bt{flex:1;font-size:15px;padding:9px 6px}
 .fl-home{background:none;border:0;font:800 13px Nunito;text-decoration:underline;color:var(--navy);padding:4px}
+
+.home-btns .bt{position:relative}
+.tnew{position:absolute;right:-6px;top:-13px;background:var(--red);color:#fff;font:400 12px/1 Anton;font-style:normal;letter-spacing:.06em;text-transform:uppercase;border:2.5px solid var(--navy);border-radius:99px;padding:3px 8px;box-shadow:2px 3px 0 var(--navy);transform:rotate(8deg);animation:tnewP 1.4s ease-in-out infinite}
+@keyframes tnewP{50%{transform:rotate(8deg) scale(1.14)}}
+.home-btns .bt.tn{overflow:visible}.home-btns .bt.tn::after{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);display:none}

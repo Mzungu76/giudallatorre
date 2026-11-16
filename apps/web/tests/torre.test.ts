@@ -2,21 +2,33 @@ import { describe, expect, it } from "vitest";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { TurnResult } from "@gdt/game-engine";
-import { cella, daysBetween, emptyTorre, numeroDelGiorno, registra, risolvi, secondiAMezzanotte, testoDaCondividere, torreIndex } from "../src/lib/torre.ts";
+import { cella, dayId, daysBetween, emptyTorre, numeroDelGiorno, nuovaTorre, registra, risolvi, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../src/lib/torre.ts";
 import type { Indice, Torre } from "../src/lib/torre.ts";
 
-const idx: Indice = { inizio: "2026-11-16", giorni: 120 };
+const idx: Indice = { inizio: "2026-11-16", date: ["2026-11-16", "2026-11-17", "2026-11-18"], riserva: 5 };
 /** Risultato finto di un turno: segnalino, carte cadute, voti e punti del giocatore «me». */
 const res = (eff: string, seg: number, cadute: number[], voto: number, pts: number, caught: string[] = []): TurnResult => ({ marks: [{ slot: eff, effect: eff, position: seg, hit: true, voters: [], caught }], fallenPositions: cadute, fallenPosition: cadute[0]!, votes: { me: voto }, points: { me: pts } } as unknown as TurnResult);
 
 describe("Torre del giorno: giorno e Torre", () => {
-  it("la Torre del giorno cambia ogni giorno, si ripete dopo l'ultima e le altre del giorno sono diverse", () => {
-    expect(daysBetween("2026-11-16", "2026-11-17")).toBe(1); expect(daysBetween("2026-12-31", "2027-01-01")).toBe(1);
-    expect(torreIndex(idx, "2026-11-16")).toBe(0); expect(torreIndex(idx, "2026-11-17")).toBe(1); expect(torreIndex(idx, "2027-03-16")).toBe(0); expect(torreIndex(idx, "2026-11-10")).toBe(114);
-    const k = new Set([0, 1, 2, 3, 4, 5].map((i) => torreIndex(idx, "2026-11-20", i))); expect(k.size).toBe(6);
-    expect(numeroDelGiorno(idx, "2026-11-16")).toBe(1); expect(numeroDelGiorno(idx, "2026-11-20")).toBe(5);
+  it("il giorno è la data di Roma un minuto fa: la nuova Torre compare a 00:01, uguale ovunque", () => {
+    expect(dayId(Date.parse("2026-11-16T22:59:30Z"))).toBe("2026-11-16");   // 23:59:30 a Roma (inverno)
+    expect(dayId(Date.parse("2026-11-16T23:00:30Z"))).toBe("2026-11-16");   // 00:00:30: ancora ieri
+    expect(dayId(Date.parse("2026-11-16T23:01:00Z"))).toBe("2026-11-17");   // 00:01:00
+    expect(dayId(Date.parse("2026-07-16T22:01:00Z"))).toBe("2026-07-17");   // estate: 00:01 con ora legale
+    expect(daysBetween("2026-12-31", "2027-01-01")).toBe(1); expect(numeroDelGiorno(idx, "2026-11-16")).toBe(1); expect(numeroDelGiorno(idx, "2026-11-20")).toBe(5);
   });
-  it("mezzanotte: secondi che restano nel giorno", () => { expect(secondiAMezzanotte(new Date(2026, 10, 16, 23, 59, 0))).toBe(60); expect(secondiAMezzanotte(new Date(2026, 10, 16, 0, 0, 0))).toBe(86400); });
+  it("la Torre del giorno è quella della data (o l'ultima pubblicata); le altre dello stesso giorno sono diverse e sempre le stesse", () => {
+    expect(torreUrl(idx, "2026-11-17")).toBe("/oggi/2026-11-17.json"); expect(torreUrl(idx, "2026-11-25")).toBe("/oggi/2026-11-18.json");
+    expect(torreUrl({ ...idx, date: [] }, "2026-11-17")).toMatch(/^\/oggi\/riserva\/\d\.json$/);
+    const altre = [1, 2, 3, 4, 5, 6].map((k) => torreUrl(idx, "2026-11-18", k)); expect(altre).toEqual([1, 2, 3, 4, 5, 6].map((k) => torreUrl(idx, "2026-11-18", k)));
+    expect(altre.every((u) => u !== "/oggi/2026-11-18.json" && u !== "/oggi/2026-11-19.json")).toBe(true);   // mai quella del giorno né una futura
+    expect(new Set(altre).size).toBeGreaterThan(2);
+  });
+  it("«Nuova!» finché non si apre la Torre di oggi", () => {
+    const db = emptyTorre(); expect(nuovaTorre(db, "2026-11-16")).toBe(true); const v = segnaVista(db, "2026-11-16");
+    expect(nuovaTorre(v, "2026-11-16")).toBe(false); expect(nuovaTorre(v, "2026-11-17")).toBe(true);
+  });
+  it("secondi alla prossima Torre (00:01 di Roma)", () => { expect(secondiAllaProssima(Date.parse("2026-11-16T22:59:00Z"))).toBe(120); expect(secondiAllaProssima(Date.parse("2026-11-16T23:01:00Z"))).toBe(86_400); });
 });
 
 describe("Torre del giorno: punti, serie e testo", () => {
@@ -39,18 +51,22 @@ describe("Torre del giorno: punti, serie e testo", () => {
 
 describe("Torre del giorno: le Torri generate (public/oggi)", () => {
   const dir = join(import.meta.dirname, "../../../public/oggi"), indice = JSON.parse(readFileSync(join(dir, "indice.json"), "utf8")) as Indice;
-  const torri = (): Torre[] => Array.from({ length: indice.giorni }, (_, i) => JSON.parse(readFileSync(join(dir, `${i}.json`), "utf8")) as Torre);
-  it("ci sono tutte, ognuna in fase di voto con 4 carte, un segnalino e manca solo il voto del giocatore", () => {
-    expect(readdirSync(dir).filter((f) => /^\d+\.json$/.test(f)).length).toBe(indice.giorni);
-    for (const [i, t] of torri().entries()) {
-      const s = t.stato; expect(s.phase, `Torre ${i}`).toBe("VOTE"); expect(s.tower.map((c) => c.position).sort()).toEqual([1, 2, 3, 4]); expect(s.marks).toHaveLength(1); expect(s.phrase!.text.length).toBeGreaterThan(10);
+  const file = (u: string) => JSON.parse(readFileSync(join(dir, u), "utf8")) as Torre;
+  const torri = (): [string, Torre][] => [...indice.date.map((d) => [d, file(`${d}.json`)] as [string, Torre]), ...Array.from({ length: indice.riserva }, (_, i) => [`riserva/${i}`, file(`riserva/${i}.json`)] as [string, Torre])];
+  it("l'indice elenca i file che ci sono, in ordine, e ci sono almeno oggi e i prossimi giorni", () => {
+    expect(readdirSync(dir).filter((f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f)).map((f) => f.slice(0, 10)).sort()).toEqual(indice.date); expect([...indice.date].sort()).toEqual(indice.date);
+    expect(indice.date.length).toBeGreaterThanOrEqual(4); expect(readdirSync(join(dir, "riserva")).length).toBe(indice.riserva);
+  });
+  it("ogni Torre è in fase di voto con 4 carte, un segnalino e manca solo il voto del giocatore", () => {
+    for (const [nome, t] of torri()) {
+      const s = t.stato; expect(s.phase, nome).toBe("VOTE"); expect(s.tower.map((c) => c.position).sort()).toEqual([1, 2, 3, 4]); expect(s.marks).toHaveLength(1); expect(s.phrase!.text.length).toBeGreaterThan(10);
       expect(Object.keys(s.votes).sort()).toEqual(s.playerIds.filter((p) => p !== t.umano).sort()); expect(s.megafonoIndex === s.playerIds.indexOf(t.umano)).toBe(false);
     }
   });
   it("ogni voto si risolve col motore, ed è un dilemma: i voti non rendono tutti uguale", () => {
-    for (const [i, t] of torri().entries()) {
+    for (const [nome, t] of torri()) {
       const pts = [1, 2, 3, 4].map((v) => risolvi(t, v).risultato.points[t.umano]!);
-      expect(new Set(pts).size, `Torre ${i}: punti ${pts}`).toBeGreaterThan(1);
+      expect(new Set(pts).size, `${nome}: punti ${pts}`).toBeGreaterThan(1);
     }
   });
 });

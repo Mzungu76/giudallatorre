@@ -8,7 +8,7 @@ import { useCards } from "../lib/cards.ts";
 import { PersonaProvider } from "../components/Persona.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t } from "../lib/testi.ts";
-import { cella, dayId, loadTorre, numeroDelGiorno, playedToday, registra, saveTorre, secondiAMezzanotte, testoDaCondividere, torreIndex } from "../lib/torre.ts";
+import { cella, dayId, loadTorre, numeroDelGiorno, playedToday, registra, saveTorre, secondiAllaProssima, segnaVista, testoDaCondividere, torreUrl } from "../lib/torre.ts";
 import type { TorreDb, Indice, Torre } from "../lib/torre.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
@@ -25,7 +25,7 @@ export default function Torre() {
   useEffect(() => { let on = true; setIdx(null); fetch("/oggi/indice.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Indice) => { if (on) setIdx(x); }).catch(() => { if (on) setErr((e) => e + 1); }); return () => { on = false; }; }, [err]);
   useEffect(() => {
     if (!idx) return; let on = true; setTorre(null); setStato(null); setFine(false); setCopied(false); done.current = false;
-    fetch(`/oggi/${torreIndex(idx, day, k)}.json`).then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Torre) => { if (on) { setTorre(x); setStato(x.stato); } }).catch(() => { if (on) setErr((e) => e + 1); });
+    fetch(torreUrl(idx, day, k)).then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Torre) => { if (on) { setTorre(x); setStato(x.stato); if (k === 0) { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb((o) => ({ ...o, visto: nd.visto })); } } }).catch(() => { if (on) setErr((e) => e + 1); });
     return () => { on = false; };
   }, [idx, k, day]);
 
@@ -62,7 +62,7 @@ export default function Torre() {
           <div className="fl-res" data-testid="torre-risultato">
             <div className="fl-pt"><b data-testid="torre-punti">{t("torre.pt", { n: pts })}</b><span>{t("torre.punti")}</span></div>
             <div className="fl-st"><span><b>{db.totale}</b>{t("torre.totale")}</span><span><b>{db.serie}</b>{t("torre.serie")}</span></div>
-            <div className="fl-next">{t("torre.prossima", { t: clock(secondiAMezzanotte(new Date(now))) })}</div>
+            <div className="fl-next">{t("torre.prossima", { t: clock(secondiAllaProssima(now)) })}</div>
             <div className="fl-row"><Btn onClick={share} testId="torre-condividi">{copied ? t("torre.copiato") : t("torre.condividi")}</Btn><Btn kind="pap" onClick={() => setK(k + 1)} testId="torre-ancora">{t("torre.ancora")}</Btn></div>
             <button className="fl-home" onClick={() => navigate("/")} data-testid="torre-home">{t("torre.home")}</button>
           </div>
