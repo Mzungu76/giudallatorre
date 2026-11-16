@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pagella della serata · mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#13224a;--red:#e8362b;--mus:#ffc72c;--teal:#14a3a1;--vio:#8e6bd8;--paper:#f6f2ea;--bg:#e9edf5;--ink:#13224a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:700 14px Nunito,system-ui,sans-serif;color:var(--ink)}
+h1{font:400 30px Anton;margin:22px 16px 4px;text-transform:uppercase}
+.lead{margin:0 16px 18px;max-width:760px}
+.grid{display:flex;flex-wrap:wrap;gap:26px;padding:0 16px 40px;align-items:flex-start}
+.item{width:300px}.item h2{font:400 18px Anton;text-transform:uppercase;margin:0 0 2px}.item p{margin:0 0 10px;font-size:13px;opacity:.8}
+.ph{width:300px;height:620px;border:6px solid var(--navy);border-radius:30px;overflow:hidden;position:relative;background:#fff;box-shadow:6px 7px 0 var(--navy)}
+.sky{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 38%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg)}
+.dim{position:absolute;inset:0;background:linear-gradient(#0000,#1b4f8c88)}
+.col{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 12px}
+.t{font:400 24px/1 Anton;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy);text-transform:uppercase;letter-spacing:.03em;text-align:center}
+.k{display:inline-block;font:400 11px Anton;letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:2px 9px}
+.stamp{transform:rotate(-4deg);text-align:center}.stamp b{display:block;font:400 28px/1 Anton;color:var(--red);text-shadow:2px 2px 0 var(--navy);-webkit-text-stroke:1px var(--navy);text-transform:uppercase;margin-top:3px}
+.card{width:74px;height:104px;border:3px solid #fff;border-radius:8px;box-shadow:3px 4px 0 var(--navy);display:grid;place-items:center;font-size:40px;flex:none}
+.box{background:#fff;border:3px solid var(--navy);border-radius:11px;box-shadow:3px 4px 0 var(--navy);padding:6px 9px;width:100%}
+.box h4{font:400 12px/1 Anton;text-transform:uppercase;letter-spacing:.06em;color:var(--vio);margin:0 0 4px}
+.btn{width:100%;background:linear-gradient(#ffd75a,#f2a900);border:3px solid var(--navy);border-radius:12px;box-shadow:0 4px 0 var(--navy);font:400 17px Anton;text-transform:uppercase;text-align:center;padding:9px;color:var(--navy);flex:none}
+.btn.alt{background:#fff;font-size:14px;padding:6px}
+.row{display:flex;gap:8px;width:100%}.row .btn{flex:1}
+.rk{display:flex;justify-content:space-between;font:800 12px Nunito;padding:2px 0;border-bottom:1.5px dashed #13224a33}.rk:last-child{border:0}
+.gauge{width:150px;height:80px;position:relative;flex:none}
+.gauge svg{width:100%;display:block}
+.note{font-size:11px;opacity:.7;text-align:center;color:#fff;text-shadow:0 1px 0 var(--navy)}
+/* chat */
+.chatbg{position:absolute;inset:0;background:#d9e5d3}
+.bub{background:#fff;border-radius:12px 12px 12px 3px;padding:8px 10px;margin:8px 10px;max-width:82%;box-shadow:0 1px 0 #0002;font:700 13px/1.35 Nunito;white-space:pre-line}
+.bub.me{margin-left:auto;background:#dcf8c6;border-radius:12px 12px 3px 12px}
+.bar{position:absolute;left:0;right:0;top:0;background:#1f7a62;color:#fff;padding:12px;font:800 14px Nunito}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:4px solid var(--navy);border-radius:18px 18px 0 0;padding:12px;display:flex;flex-direction:column;gap:8px}
+.sheet h3{font:400 17px Anton;margin:0;text-transform:uppercase}
+.mono{font:700 15px/1.4 ui-monospace,Menlo,monospace;background:#f1f3f8;border:2px solid var(--navy);border-radius:10px;padding:8px;white-space:pre-line}
+.tog{display:flex;align-items:center;gap:8px;font:800 12px Nunito}.sw{width:34px;height:20px;border-radius:99px;background:var(--teal);border:2.5px solid var(--navy);position:relative;flex:none}.sw:after{content:"";position:absolute;right:2px;top:1px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--navy)}.sw.off{background:#cfd5e3}.sw.off:after{right:auto;left:2px}
+.sticker{border:3px solid var(--navy);border-radius:12px;box-shadow:3px 4px 0 var(--navy);padding:6px 8px;display:flex;gap:8px;align-items:center;width:100%;background:#fff}
+.sticker .em{font-size:30px;flex:none}.sticker b{display:block;font:400 14px/1.05 Anton;text-transform:uppercase}.sticker small{font:700 11px Nunito;opacity:.75}
+.og{border:3px solid var(--navy);border-radius:12px;overflow:hidden;background:#fff;margin:6px 10px;width:230px}
+.og .im{height:104px;background:repeating-conic-gradient(from 0deg at 50% 60%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg);display:grid;place-items:center;font:400 30px Anton;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy)}
+.og .tx{padding:6px 9px;font:800 12px/1.3 Nunito}.og .tx small{display:block;opacity:.65;font-weight:700}
+.bubq{background:#fff;border:3px solid var(--navy);border-radius:12px;padding:8px 10px;font:800 14px/1.3 Nunito;position:relative;width:100%}
+.bubq:after{content:"";position:absolute;left:34px;bottom:-12px;border:9px solid transparent;border-top-color:var(--navy)}
+.fall{position:relative;height:150px;width:100%}
+.fall .card{position:absolute;left:50%;top:6px;margin-left:-37px;transform:rotate(-14deg)}
+.fall .ground{position:absolute;left:10%;right:10%;bottom:6px;height:8px;background:var(--navy);border-radius:4px}
+.fall .ghost{position:absolute;left:50%;top:50px;margin-left:-37px;transform:rotate(20deg);opacity:.35}
+.nulli{position:absolute;right:6px;top:70px;transform:rotate(8deg);background:var(--red);color:#fff;font:400 20px Anton;border:3px solid var(--navy);padding:2px 9px;box-shadow:3px 3px 0 var(--navy)}
+.legend{font:700 11px Nunito;opacity:.75;text-align:center}
+.tag{position:absolute;top:8px;right:8px;background:var(--mus);border:2px solid var(--navy);border-radius:99px;padding:1px 8px;font:800 10px Nunito;z-index:5}
+
+.gauge{position:relative;width:210px;flex:none}.gauge svg{width:100%;display:block}
+.gnum{font:400 40px/1 Anton;color:#fff;text-shadow:3px 3px 0 var(--navy);text-align:center;margin-top:2px}
+.gsub{font:800 12px Nunito;color:#fff;text-shadow:0 2px 0 var(--navy);text-align:center}
+.plate{display:inline-block;background:var(--navy);color:#fff;font:400 13px Anton;letter-spacing:.06em;padding:3px 10px;border-radius:6px;border:2px solid #fff;text-transform:uppercase}
+.tile{background:#fff;border:3px solid var(--navy);border-radius:12px;box-shadow:3px 4px 0 var(--navy);padding:7px 10px;width:100%}
+.tile h4{font:400 12px/1 Anton;text-transform:uppercase;letter-spacing:.06em;color:var(--vio);margin:0 0 4px;display:flex;justify-content:space-between;align-items:center}
+.tile h4 i{font-style:normal;background:#eef1f7;border:2px solid var(--navy);border-radius:50%;width:18px;height:18px;display:grid;place-items:center;font:800 11px Nunito;color:var(--navy)}
+.big{font:400 26px/1 Anton;text-transform:uppercase}.small{font:800 11px/1.3 Nunito;opacity:.8}
+.cmp{display:grid;grid-template-columns:58px 1fr 34px;gap:6px;align-items:center;font:800 11px Nunito;margin-top:3px}
+.gbar{height:11px;border:2.5px solid var(--navy);border-radius:99px;background:#eef1f7;overflow:hidden}.gbar u{display:block;height:100%}
+.badge{position:relative;background:linear-gradient(135deg,#ffd75a,#f2a900);border:3px solid var(--navy);border-radius:16px;box-shadow:4px 5px 0 var(--navy);padding:10px 10px 10px 74px;width:100%;min-height:84px}
+.badge .ico{position:absolute;left:8px;top:50%;transform:translateY(-50%) rotate(-8deg);width:56px;height:56px;border-radius:50%;background:#fff;border:3px solid var(--navy);display:grid;place-items:center;font-size:32px}
+.badge .k{background:var(--red)}
+.badge b{display:block;font:400 22px/1.05 Anton;text-transform:uppercase;margin-top:4px}
+.badge small{display:block;font:800 11px/1.3 Nunito;margin-top:2px}
+.tgt{display:flex;gap:8px;align-items:center}.tgt .cardmini{width:42px;height:58px;border:2.5px solid var(--navy);border-radius:6px;background:#2f7be0;display:grid;place-items:center;font-size:24px;flex:none;transform:rotate(-5deg)}
+.dots{display:flex;gap:6px;justify-content:center}.dots i{width:10px;height:10px;border-radius:50%;background:#fff8;border:2px solid var(--navy)}.dots i.on{background:var(--mus)}
+.big-card{background:#fff;border:3px solid var(--navy);border-radius:16px;box-shadow:5px 6px 0 var(--navy);padding:14px 12px;width:100%;display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center}
+.x{font:400 54px/1 Anton}.lead2{font:800 13px/1.35 Nunito}
+.how{position:absolute;inset:0;background:var(--paper);overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:8px}
+.how h3{font:400 22px/1 Anton;text-transform:uppercase;margin:0}.how h5{font:400 15px/1 Anton;text-transform:uppercase;margin:6px 0 2px;color:var(--vio)}
+.how p{margin:0;font:700 12px/1.4 Nunito}.how .src{font:700 10.5px/1.35 Nunito;opacity:.7}
+.note{font:700 10.5px/1.3 Nunito;color:#fff;text-shadow:0 1px 0 var(--navy);text-align:center}
+.cap{font:800 12px Nunito;opacity:.7;text-align:center}
+.col>*{flex-shrink:0}.ph .gauge{height:auto}.gauge.s{width:150px}.ph .col .gnum.s{font-size:32px}
+</style>
+</head>
+<body>
+<h1>Pagella della serata</h1>
+<p class="lead">Due impostazioni della pagina di fine partita (prima della classifica finale). Tutto è della <b>partita</b>, mai del singolo giocatore. Numeri e nomi sono di esempio; carte segnaposto.</p>
+
+<h1 style="font-size:22px">A · Una pagina sola</h1>
+<div class="grid">
+
+<div class="item"><h2>A1 · Pagella completa</h2><p>Tutto in una schermata: tachimetro in alto, due cartelli, il badge dell'abbaglio.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col" style="gap:7px">
+  <div class="t" style="font-size:22px">Pagella della serata</div>
+  <div class="gauge s"><svg viewBox="0 0 200 142"><path d="M 20.0 100.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#13224a" stroke-width="30" stroke-linecap="round"/><path d="M 20.0 100.0 A 80 80 0 0 1 100.0 20.0" fill="none" stroke="#4aa63a" stroke-width="20"/><path d="M 100.0 20.0 A 80 80 0 0 1 136.3 28.7" fill="none" stroke="#f4c20d" stroke-width="20"/><path d="M 136.3 28.7 A 80 80 0 0 1 164.7 53.0" fill="none" stroke="#f08a1c" stroke-width="20"/><path d="M 164.7 53.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#e5382b" stroke-width="20"/><g transform="rotate(32.400000000000006 100 100)"><line x1="100" y1="100" x2="100" y2="34" stroke="#13224a" stroke-width="7" stroke-linecap="round"/></g><circle cx="100" cy="100" r="9" fill="#fff" stroke="#13224a" stroke-width="5"/><rect x="34" y="112" width="132" height="26" rx="7" fill="#13224a" stroke="#fff" stroke-width="2.5"/><text x="100" y="130" text-anchor="middle" fill="#fff" font-family="Anton" font-size="15" textLength="116" lengthAdjust="spacingAndGlyphs">GIUDIZIO A OCCHIO</text></svg></div>
+  <div class="gnum s">68%</div><div class="gsub">Giudici da bar</div>
+  <div class="row" style="gap:7px">
+    <div class="tile"><h4>Luoghi comuni <i>?</i></h4><div class="big">2,3× il caso</div><div class="small">«politico → bugiardo» 4 voti</div></div>
+    <div class="tile"><h4>Bersaglio <i>?</i></h4><div class="tgt"><div class="cardmini">🧢</div><div><div class="big" style="font-size:18px">Tuta</div><div class="small">4 frasi negative su 4</div></div></div></div>
+  </div>
+  <div class="badge"><div class="ico">🐑</div><span class="k">L'abbaglio della serata</span><b>Effetto pecora</b><small>7 voti su 10 sulla carta che poi è caduta (a caso: 4 su 10)</small></div>
+  <div class="tile"><h4>Umani contro bot</h4>
+    <div class="cmp"><span>🧑 Umani</span><div class="gbar"><u style="width:72%;background:#8e6bd8"></u></div><b>72%</b></div>
+    <div class="cmp"><span>🤖 Bot</span><div class="gbar"><u style="width:61%;background:#14a3a1"></u></div><b>61%</b></div></div>
+  <div style="flex:1"></div>
+  <div class="btn">Vai alla classifica</div>
+</div></div></div>
+
+<div class="item"><h2>A2 · Serata «pulita»</h2><p>Pochi dati o nessun effetto chiaro: lo diciamo, come un complimento.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col" style="gap:7px">
+  <div class="t" style="font-size:22px">Pagella della serata</div>
+  <div class="gauge s"><svg viewBox="0 0 200 142"><path d="M 20.0 100.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#13224a" stroke-width="30" stroke-linecap="round"/><path d="M 20.0 100.0 A 80 80 0 0 1 100.0 20.0" fill="none" stroke="#4aa63a" stroke-width="20"/><path d="M 100.0 20.0 A 80 80 0 0 1 136.3 28.7" fill="none" stroke="#f4c20d" stroke-width="20"/><path d="M 136.3 28.7 A 80 80 0 0 1 164.7 53.0" fill="none" stroke="#f08a1c" stroke-width="20"/><path d="M 164.7 53.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#e5382b" stroke-width="20"/><g transform="rotate(-10.799999999999997 100 100)"><line x1="100" y1="100" x2="100" y2="34" stroke="#13224a" stroke-width="7" stroke-linecap="round"/></g><circle cx="100" cy="100" r="9" fill="#fff" stroke="#13224a" stroke-width="5"/><rect x="34" y="112" width="132" height="26" rx="7" fill="#13224a" stroke="#fff" stroke-width="2.5"/><text x="100" y="130" text-anchor="middle" fill="#fff" font-family="Anton" font-size="15" textLength="116" lengthAdjust="spacingAndGlyphs">GIUDIZIO A OCCHIO</text></svg></div>
+  <div class="gnum s">44%</div><div class="gsub">Mente aperta!</div>
+  <div class="row" style="gap:7px">
+    <div class="tile"><h4>Luoghi comuni <i>?</i></h4><div class="big">Come il caso</div><div class="small">nessun cliché in evidenza</div></div>
+    <div class="tile"><h4>Bersaglio <i>?</i></h4><div class="big" style="font-size:18px">Nessuno</div><div class="small">frasi negative ben distribuite</div></div>
+  </div>
+  <div class="badge" style="background:linear-gradient(135deg,#bff0c0,#4aa63a)"><div class="ico">😇</div><span class="k" style="background:var(--navy)">Abbagli</span><b>Nessuno evidente</b><small>Stasera nessuna scorciatoia della mente ha pesato più del caso. Bravi!</small></div>
+  <div style="flex:1"></div>
+  <div class="note">Le misure compaiono solo con abbastanza voti: sotto la soglia scriviamo «servono più turni».</div>
+  <div class="btn">Vai alla classifica</div>
+</div></div></div>
+
+<div class="item"><h2>A3 · «?» Come lo misuriamo</h2><p>Si apre dal punto interrogativo: definizioni, termini di paragone, fonti, limiti.</p>
+<div class="ph"><div class="how">
+  <h3>Come lo misuriamo</h3>
+  <p>È un gioco, non un test psicologico. Le misure riguardano la partita, mai la persona.</p>
+  <h5>Giudizio a occhio</h5><p>Ogni voto (e ogni segnalino) parte dall'aspetto: almeno il 35%. Sale quanto più carta e frase sono legate da ruolo, aspetto o tratti.</p>
+  <h5>Luoghi comuni · stereotipo</h5><p>Voti spiegati dal ruolo o dall'aspetto più che dai tratti della carta. Lo confrontiamo con quanto uscirebbe votando a caso tra le carte di quel turno.</p><p class="src">Allport, 1954 · Fiske e altri, 2002</p>
+  <h5>Bersaglio · pregiudizio</h5><p>Una categoria che riceve quasi solo frasi negative. Serve almeno 3 volte e molto più del caso.</p>
+  <h5>Abbagli · bias cognitivi</h5><p>🐑 Effetto pecora (Asch, 1951) · 📣 Effetto Megafono (autorità) · 🥇 Primo della fila (Murdock, 1962) · 🪞 Tutti la pensano come me (Ross, 1977). Mostriamo solo il più marcato, con almeno 8 casi.</p>
+  <h5>Limiti</h5><p>Le etichette di carte e frasi sono scritte da noi: le stiamo validando con i giocatori. Con pochi voti i numeri ballano.</p>
+  <div style="flex:1"></div><div class="btn alt">Chiudi</div>
+</div></div></div>
+
+</div>
+
+<h1 style="font-size:22px">B · A cartellini (uno per schermata)</h1>
+<div class="grid">
+
+<div class="item"><h2>B1 · Il tachimetro</h2><p>Si sfoglia: un risultato alla volta, più grande e più scenico, con i pallini in fondo.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col">
+  <div class="t" style="font-size:22px">Pagella della serata</div><div class="note" style="font-size:12px">1 di 4</div>
+  <div style="height:20px"></div><div class="gauge"><svg viewBox="0 0 200 142"><path d="M 20.0 100.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#13224a" stroke-width="30" stroke-linecap="round"/><path d="M 20.0 100.0 A 80 80 0 0 1 100.0 20.0" fill="none" stroke="#4aa63a" stroke-width="20"/><path d="M 100.0 20.0 A 80 80 0 0 1 136.3 28.7" fill="none" stroke="#f4c20d" stroke-width="20"/><path d="M 136.3 28.7 A 80 80 0 0 1 164.7 53.0" fill="none" stroke="#f08a1c" stroke-width="20"/><path d="M 164.7 53.0 A 80 80 0 0 1 180.0 100.0" fill="none" stroke="#e5382b" stroke-width="20"/><g transform="rotate(32.400000000000006 100 100)"><line x1="100" y1="100" x2="100" y2="34" stroke="#13224a" stroke-width="7" stroke-linecap="round"/></g><circle cx="100" cy="100" r="9" fill="#fff" stroke="#13224a" stroke-width="5"/><rect x="34" y="112" width="132" height="26" rx="7" fill="#13224a" stroke="#fff" stroke-width="2.5"/><text x="100" y="130" text-anchor="middle" fill="#fff" font-family="Anton" font-size="15" textLength="116" lengthAdjust="spacingAndGlyphs">GIUDIZIO A OCCHIO</text></svg></div>
+  <div class="gnum" style="font-size:60px">68%</div><div class="gsub" style="font-size:14px">dei voti dati a occhio</div>
+  <div class="stamp" style="margin-top:10px"><b style="font-size:30px">Giudici da bar</b></div>
+  <div style="flex:1"></div><div class="dots"><i class="on"></i><i></i><i></i><i></i></div>
+  <div class="btn">Avanti</div>
+</div></div></div>
+
+<div class="item"><h2>B2 · Luoghi comuni</h2><p>Il cliché più presente, con il confronto col caso disegnato.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col">
+  <div class="t" style="font-size:22px">Luoghi comuni</div><div class="note" style="font-size:12px">2 di 4</div>
+  <div class="big-card"><div class="x">2,3×</div><div class="lead2">i voti spiegati da un luogo comune,<br>rispetto a votare a caso</div>
+    <div class="cmp" style="width:100%"><span>Stasera</span><div class="gbar"><u style="width:46%;background:#8e6bd8"></u></div><b>46%</b></div>
+    <div class="cmp" style="width:100%"><span>A caso</span><div class="gbar"><u style="width:20%;background:#aab3c5"></u></div><b>20%</b></div></div>
+  <div class="big-card" style="background:var(--mus)"><span class="k">Il più presente</span><div class="big">Politico → bugiardo</div><div class="small">4 voti</div></div>
+  <div style="flex:1"></div><div class="dots"><i></i><i class="on"></i><i></i><i></i></div>
+  <div class="btn">Avanti</div>
+</div></div></div>
+
+<div class="item"><h2>B3 · Il bersaglio</h2><p>La categoria che ha preso quasi solo frasi negative (se c'è).</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col">
+  <div class="t" style="font-size:22px">Il bersaglio della serata</div><div class="note" style="font-size:12px">3 di 4</div>
+  <div style="display:flex;gap:8px;margin-top:8px"><div class="card" style="background:#2f7be0;transform:rotate(-8deg)">🧢</div><div class="card" style="background:#4aa63a;transform:rotate(6deg)">🏃</div></div>
+  <div class="big-card"><div class="big">Chi ha la tuta</div><div class="lead2">4 frasi negative su 4<br><span class="small">(tra tutte le carte: 1 su 3)</span></div></div>
+  <div class="bubq" style="font-size:12px">«Il più pigro» · «Chi non restituisce i soldi» · «Il più tirchio» · «Chi copia agli esami»</div>
+  <div style="flex:1"></div><div class="dots"><i></i><i></i><i class="on"></i><i></i></div>
+  <div class="btn">Avanti</div>
+</div></div></div>
+
+<div class="item"><h2>B4 · L'abbaglio</h2><p>Il badge grande, da cartolina, con la battuta.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div><div class="col">
+  <div class="t" style="font-size:22px">L'abbaglio della serata</div><div class="note" style="font-size:12px">4 di 4</div>
+  <div style="font-size:110px;line-height:1;filter:drop-shadow(4px 5px 0 #13224a);margin-top:14px">🐑</div>
+  <div class="stamp"><b style="font-size:40px">Effetto pecora!</b></div>
+  <div class="big-card"><div class="lead2">7 voti su 10 sono finiti sulla carta che poi è caduta.<br><span class="small">Votando a caso: 4 su 10.</span></div><div class="small">Altri abbagli: 📣 Megafono 5/10 · 🥇 Primo della fila 3/10</div></div>
+  <div style="flex:1"></div><div class="dots"><i></i><i></i><i></i><i class="on"></i></div>
+  <div class="btn">Vai alla classifica</div>
+</div></div></div>
+
+</div></body></html>
