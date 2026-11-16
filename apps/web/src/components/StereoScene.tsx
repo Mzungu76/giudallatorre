@@ -21,7 +21,6 @@ export default function StereoScene({ stereo, sound, readOnly, onDone }: { stere
     const step = (now: number) => { const k = Math.min(1, (now - t0) / 1300); setShown(Math.round(g.pct * (1 - (1 - k) ** 3))); if (k < 1) raf = requestAnimationFrame(step); };
     raf = requestAnimationFrame(step); return () => cancelAnimationFrame(raf);
   }, [on]); // eslint-disable-line react-hooks/exhaustive-deps
-  const ang = g ? (g.caso / 100) * 2 * Math.PI - Math.PI / 2 : 0, verdict = !g ? null : g.pct > g.caso + 8 ? "sc.v1" : g.pct < g.caso - 8 ? "sc.v3" : "sc.v2";
   return (
     <div className="aw sc" data-testid="stereo-scene">
       <div className="stbd-sky" /><div className="stbd-rays" />
@@ -33,12 +32,9 @@ export default function StereoScene({ stereo, sound, readOnly, onDone }: { stere
               <svg viewBox="0 0 140 140" aria-hidden="true">
                 <circle cx="70" cy="70" r={R} className="sc-out" /><circle cx="70" cy="70" r={R} className="sc-trk" />
                 <circle cx="70" cy="70" r={R} className="sc-val" strokeDasharray={C} strokeDashoffset={on ? C * (1 - g.pct / 100) : C} transform="rotate(-90 70 70)" />
-                <line className="sc-tick" x1={70 + (R - 13) * Math.cos(ang)} y1={70 + (R - 13) * Math.sin(ang)} x2={70 + (R + 13) * Math.cos(ang)} y2={70 + (R + 13) * Math.sin(ang)} />
               </svg>
               <div className="sc-mid"><b data-testid="stereo-pct">{shown}%</b><span>{t("sp.partita")}</span></div>
             </div>
-            <div className="sc-leg"><span><i className="sc-d1" />{t("sp.titolo")} <b>{g.pct}%</b></span><span><i className="sc-d2" />{t("sp.caso")} <b data-testid="stereo-caso">{g.caso}%</b></span></div>
-            {verdict && on && <div className="aw-stamp sc-v" data-testid="stereo-verdict"><span className="aw-k">{t(verdict)}</span></div>}
             {g.top.length > 0 && (
               <div className="sc-top">
                 <h4>{t("sp.piu")}</h4>

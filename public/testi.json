@@ -1,5 +1,5 @@
 {
- "versione": 61,
+ "versione": 62,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -2939,11 +2939,6 @@
    "t": "Nessun dato in questa partita",
    "s": "Fine partita · luoghi comuni"
   },
-  "sp.caso": {
-   "t": "A caso",
-   "s": "Fine partita · luoghi comuni",
-   "n": "Quota che si avrebbe votando a caso"
-  },
   "st.luoghi": {
    "t": "Voti per luogo comune",
    "s": "Statistiche personali"
@@ -2962,18 +2957,6 @@
   },
   "sp.voti": {
    "t": "{n} voti",
-   "s": "Fine partita · luoghi comuni"
-  },
-  "sc.v1": {
-   "t": "Più del caso",
-   "s": "Fine partita · luoghi comuni"
-  },
-  "sc.v2": {
-   "t": "Come il caso",
-   "s": "Fine partita · luoghi comuni"
-  },
-  "sc.v3": {
-   "t": "Meno del caso",
    "s": "Fine partita · luoghi comuni"
   }
  }
