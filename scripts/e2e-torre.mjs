@@ -23,8 +23,10 @@ let voted = false, fine = false, statsVista = false;
 for (let t0 = Date.now(); Date.now() - t0 < 90_000 && !fine; ) {
   const r = await step().catch(() => ""); if (r === "voto") { voted = true; await shot("21-flash-voto"); } if (r === "fine") fine = true; if (!r) await p.waitForTimeout(250);
 }
-check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("dopo il turno compaiono le statistiche dei luoghi comuni, come nell'app base", statsVista); check("poi la pagina finale della Torre", fine); await p.waitForTimeout(3500); await shot("23-torre-risultato");
-const pt = await p.textContent('[data-testid="torre-punti"]').catch(() => null); check("i punti sono scritti", /^\+\d+$/.test(pt ?? ""), pt ?? "");
+check("la frase del Megafono è sullo schermo mentre si vota", !!globalThis.__phrase); check("si vota con le schermate di gioco di sempre", voted); check("dopo il turno compaiono le statistiche dei luoghi comuni, come nell'app base", statsVista); check("poi la pagina finale della Torre", fine); check("la cartolina da condividere è un'immagine 1080×1350", await p.waitForSelector('[data-testid="torre-cartolina"]', { timeout: 8000 }).then(() => true).catch(() => false) && (await p.evaluate(() => { const i = document.querySelector('[data-testid="torre-cartolina"]'); return i && i.naturalWidth === 1080 && i.naturalHeight === 1350; })));
+await p.waitForTimeout(800); await shot("23-torre-risultato");
+if (process.env.SHOTS) { const src = await p.getAttribute('[data-testid="torre-cartolina"]', "src"); const b64 = await p.evaluate(async (u) => { const r = await fetch(u); const b = await r.blob(); return await new Promise((ok) => { const f = new FileReader(); f.onload = () => ok(String(f.result).split(",")[1]); f.readAsDataURL(b); }); }, src); (await import("node:fs")).writeFileSync(process.env.SHOTS + "/cartolina.png", Buffer.from(b64, "base64")); }
+
 await p.goto(BASE + "/torre"); check("riaperta nello stesso giorno: si vede il risultato, non si rivota", await vis("torre-risultato") && !(await vis("confirm-vote", 800)));
 await p.goto(BASE + "/"); check("aperta la Torre, «Nuova!» sparisce", !(await vis("torre-nuova", 1500)));
 check("nessun errore JS", errs.length === 0, errs.join(" | "));

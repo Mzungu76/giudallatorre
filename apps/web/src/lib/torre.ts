@@ -5,7 +5,8 @@ import type { GameState, TurnResult } from "@gdt/game-engine";
 export interface Torre { v: 2; n: number; umano: string; giocatori: { id: string; nickname: string; char: number; isBot: boolean }[]; stato: GameState; /** Statistiche dei luoghi comuni per ogni voto possibile (come in una partita normale). */ stereo?: Record<number, NonNullable<GameState["stereo"]>> }
 /** `date`: i giorni con una Torre pronta (il server dà solo quelli già pubblicati); `riserva`: quante Torri di scorta per le altre partite dello stesso giorno. */
 export interface Indice { inizio: string; date: string[]; riserva: number }
-export interface TorreDay { n: number; pts: number; cella: string }   // n = numero della Torre del giorno
+/** Riepilogo di una Torre del giorno giocata (n = numero della Torre). I campi dopo `cella` servono a ridisegnare la cartolina da condividere. */
+export interface TorreDay { n: number; pts: number; cella: string; frase?: string; carte?: { pos: number; id: string }[]; voto?: number; cadute?: number[]; seg?: { pos: number; effetto: string } }
 export interface TorreDb { v: 1; totale: number; giocati: number; migliore: number; serie: number; record: number; ultimo: string; /** Ultimo giorno in cui ha aperto la Torre del giorno (per evidenziare quella nuova). */ visto: string; giorni: Record<string, TorreDay> }
 
 const KEY = "gdt.torre", STEP = 37, MAX_DAYS = 60;
@@ -44,12 +45,12 @@ export function cella(r: TurnResult, me: string): string {
 }
 
 /** Registra la Torre del giorno giocata: punti, serie di giorni e riepilogo del giorno. Funzione pura: restituisce il nuovo archivio. */
-export function registra(db: TorreDb, day: string, numero: number, r: TurnResult, me: string): TorreDb {
+export function registra(db: TorreDb, day: string, numero: number, r: TurnResult, me: string, torre?: Torre): TorreDb {
   if (db.giorni[day]) return db;   // la Torre del giorno si gioca una volta sola
   const pts = r.points[me] ?? 0, x: TorreDb = { ...db, giorni: { ...db.giorni } };
   x.totale += pts; x.giocati += 1; x.migliore = Math.max(x.migliore, pts);
   {
-    x.giorni[day] = { n: numero, pts, cella: cella(r, me) };
+    x.giorni[day] = { n: numero, pts, cella: cella(r, me), ...(torre ? { frase: torre.stato.phrase?.text ?? "", carte: torre.stato.tower.map((c) => ({ pos: c.position, id: c.cardId })).sort((a, b) => a.pos - b.pos), voto: r.votes[me]!, cadute: r.fallenPositions ?? [r.fallenPosition], seg: { pos: r.marks![0]!.position, effetto: r.marks![0]!.effect } } : {}) };
     if (x.ultimo !== day) { x.serie = x.ultimo && daysBetween(x.ultimo, day) === 1 ? x.serie + 1 : 1; x.ultimo = day; x.record = Math.max(x.record, x.serie); }
     const keys = Object.keys(x.giorni).sort(); for (const old of keys.slice(0, Math.max(0, keys.length - MAX_DAYS))) delete x.giorni[old];
   }

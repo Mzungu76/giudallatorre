@@ -42,21 +42,14 @@ export default function Torre() {
     const a = m.action;
     if (a.type === "vote" && stato.phase === "VOTE") {
       const next = applyAction(stato, { type: "vote", playerId: torre.umano, position: a.position }).state; setStato(next);
-      if (next.lastResult && !done.current) { done.current = true; const nd = registra(db, day, numero, next.lastResult, torre.umano); setDb(nd); saveTorre(nd); }
+      if (next.lastResult && !done.current) { done.current = true; const nd = registra(db, day, numero, next.lastResult, torre.umano, torre); setDb(nd); saveTorre(nd); }
     } else if (a.type === "advance" && stato.phase === "RESULTS") setFine(true);
   };
-  const rec = giaGiocata ?? (fine && r && torre ? { n: numero, pts: r.points[torre.umano] ?? 0, cella: cella(r, torre.umano) } : null);
-  const share = async () => {
-    if (!rec) return;
-    const text = testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`);
-    try { if (navigator.share) { await navigator.share({ text }); return; } } catch { /* annullato: si copia */ }
-    try { await navigator.clipboard.writeText(text); setCopied(true); } catch { /* niente appunti */ }
-  };
-
+  const rec = giaGiocata ?? (fine && r && torre ? db.giorni[day] ?? { n: numero, pts: r.points[torre.umano] ?? 0, cella: cella(r, torre.umano) } : null);
   const stereo = r && torre ? torre.stereo?.[r.votes[torre.umano]!] : undefined;   // le stesse statistiche del turno di una partita normale
   if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
   if (rec) return (
-    <Stage bg="sky" testId="torre-fine"><TorreFinale n={rec.n} pts={rec.pts} cella={rec.cella} serie={db.serie} totale={db.totale} giorni={db.giorni} day={day} secondi={secondiAllaProssima(now)} copied={copied} sound={sound} onShare={share} onHome={() => navigate("/")} /></Stage>
+    <Stage bg="sky" testId="torre-fine"><TorreFinale day={day} rec={rec} serie={db.serie} totale={db.totale} secondi={secondiAllaProssima(now)} testo={testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`)} sound={sound} onHome={() => navigate("/")} /></Stage>
   );
   if (splash) return <Stage bg="sky" testId="torre-splash"><ModeSplash kind="torre" sound={sound} onDone={() => setSplash(false)} /></Stage>;
   if (!torre || !room || !view || !ready) return (
