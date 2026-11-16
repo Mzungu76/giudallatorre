@@ -1,5 +1,5 @@
 {
- "versione": 63,
+ "versione": 64,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -2932,7 +2932,7 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sp.sotto": {
-   "t": "Quanto hanno pesato in questa partita",
+   "t": "Chi ha giudicato dalla copertina?",
    "s": "Fine partita · luoghi comuni"
   },
   "sp.vuoto": {
@@ -2948,7 +2948,7 @@
    "s": "Statistiche personali"
   },
   "sp.partita": {
-   "t": "dei voti di questa partita",
+   "t": "dei voti dati a occhio",
    "s": "Fine partita · luoghi comuni"
   },
   "sp.voti": {
@@ -2972,15 +2972,43 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.umani": {
-   "t": "Umani",
+   "t": "🧑 Umani",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.bot": {
-   "t": "Bot",
+   "t": "🤖 Bot",
    "s": "Fine partita · luoghi comuni"
   },
   "sp.voto1": {
    "t": "1 voto",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f0": {
+   "t": "Mente aperta!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f1": {
+   "t": "Qualche occhiata storta",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f2": {
+   "t": "Giudici da bar",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f3": {
+   "t": "Tribunale della copertina",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.u": {
+   "t": "Gli umani giudicano più dei bot!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.b": {
+   "t": "I bot hanno più pregiudizi di voi!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.p": {
+   "t": "Umani e bot, pari e patta",
    "s": "Fine partita · luoghi comuni"
   }
  }
