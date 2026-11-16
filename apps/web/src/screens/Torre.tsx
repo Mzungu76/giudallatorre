@@ -14,6 +14,7 @@ import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
 import ModeSplash from "../components/ModeSplash.tsx";
 import { music } from "../lib/music.ts";
+import { condividiRotocalco, datiRotocalco } from "../lib/rotocalco.ts";
 import StereoScene from "../components/StereoScene.tsx";
 import TorreFinale from "../components/TorreFinale.tsx";
 import { Plancia } from "./Room.tsx";
@@ -33,6 +34,7 @@ export default function Torre() {
   useEffect(() => { if (giaGiocata) { const nd = segnaVista(loadTorre(), day); saveTorre(nd); setDb(nd); } }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { music.theme(fine || giaGiocata ? "musica-finale.mp3" : null); return () => music.theme(null); }, [fine, giaGiocata]);   // dalle statistiche in poi: la musica del finale
+  const [cop, setCop] = useState(false);
   const numero = idx ? numeroDelGiorno(idx, day) : 1;
   const room = useMemo<RoomMsg | null>(() => torre && ({ t: "room", seq: 1, code: "FLASH", stage: "PLAYING", you: torre.umano, hostId: torre.umano, options: { ageBand: DEFAULT_AGE_BAND, turnTimerSec: 0, display: false },
     players: torre.giocatori.map((g) => ({ id: g.id, nickname: g.nickname, isHost: g.id === torre.umano, connected: true, char: g.char, ...(g.isBot ? { isBot: true, level: "hard" as const } : {}) })) }), [torre]);
@@ -49,7 +51,8 @@ export default function Torre() {
   };
   const rec = giaGiocata ?? (fine && r && torre ? db.giorni[day] ?? { n: numero, pts: r.points[torre.umano] ?? 0, cella: cella(r, torre.umano) } : null);
   const stereo = r && torre ? torre.stereo?.[r.votes[torre.umano]!] : undefined;   // le stesse statistiche del turno di una partita normale
-  if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
+  const copertina = async () => { if (cop || !torre || !r) return; setCop(true); try { const dd = datiRotocalco(stereo, torre.stato.tower.find((c) => c.position === r.votes[torre.umano])?.cardId, day, location.host); if (dd) await condividiRotocalco(dd, `copertina-${day}.png`); } catch { /* niente copertina */ } setCop(false); };
+  if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene onShare={copertina} sharing={cop} stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
   if (rec) return (
     <Stage bg="sky" testId="torre-fine"><TorreFinale day={day} rec={rec} serie={db.serie} totale={db.totale} secondi={secondiAllaProssima(now)} testo={testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`, rec.frase)} sound={sound} onHome={() => navigate("/")} /></Stage>
   );

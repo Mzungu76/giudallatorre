@@ -1,5 +1,5 @@
 {
- "versione": 80,
+ "versione": 82,
  "aggiornato": "2026-11-16",
  "testi": {
   "intro.aria": {
@@ -3233,6 +3233,85 @@
    "t": "Megafono: {nome}",
    "s": "Intro Flash e Torre del giorno",
    "n": "Nell'intro di Flash: chi è il Megafono (scelto dall'host o a caso)"
+  },
+  "rot.testata": {
+   "t": "IL GIORNALE DELLA TORRE",
+   "s": "Copertina rotocalco"
+  },
+  "rot.fondato": {
+   "t": "Fondato oggi",
+   "s": "Copertina rotocalco"
+  },
+  "rot.prezzo": {
+   "t": "Prezzo: un pregiudizio",
+   "s": "Copertina rotocalco"
+  },
+  "rot.esclusivo": {
+   "t": "Esclusivo",
+   "s": "Copertina rotocalco"
+  },
+  "rot.titolo": {
+   "t": "È un {tratto}",
+   "s": "Copertina rotocalco",
+   "n": "Titolo-sentenza (il tratto del luogo comune più forte)"
+  },
+  "rot.sotto": {
+   "t": "{ruolo} = {tratto}: il luogo comune più votato!",
+   "s": "Copertina rotocalco",
+   "n": "Riga sotto il titolo"
+  },
+  "rot.sotto.coda": {
+   "t": "il luogo comune più votato!",
+   "s": "Copertina rotocalco",
+   "n": "Parte bianca della riga sotto il titolo"
+  },
+  "rot.titolo.vuoto": {
+   "t": "Giudicati dalla copertina",
+   "s": "Copertina rotocalco",
+   "n": "Titolo quando non c'è un luogo comune in evidenza"
+  },
+  "rot.sotto.vuoto": {
+   "t": "Nessun luogo comune in evidenza: si vota a occhio!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.0": {
+   "t": "{tratto}!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello (una a caso per serata)"
+  },
+  "rot.nota.1": {
+   "t": "sì,\n{tratto}!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.2": {
+   "t": "100%\n{tratto}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.3": {
+   "t": "chiaramente\n{tratto}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.4": {
+   "t": "{tratto},\nlo so!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.vuota": {
+   "t": "lo dice\nla faccia!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello senza luogo comune"
+  },
+  "rot.url": {
+   "t": "{url}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.condividi": {
+   "t": "Condividi la copertina",
+   "s": "Copertina rotocalco",
+   "n": "Pulsante nella pagina delle statistiche"
+  },
+  "rot.cond.carico": {
+   "t": "Preparo la copertina…",
+   "s": "Copertina rotocalco"
   }
  }
 }

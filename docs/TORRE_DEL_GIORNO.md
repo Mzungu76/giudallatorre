@@ -16,3 +16,6 @@ Modalità da solo: un turno già pronto (frase, 4 carte, segnalino piazzato in m
 
 ## Notifiche (non ancora fatte)
 Servirebbe l'invio di notifiche push (VAPID, registrazione dei telefoni e un compito che le invii all'ora scelta) e un interruttore nelle impostazioni. Il piano gratuito di Cloudflare limita il calcolo per richiesta: da valutare prima di costruirle.
+
+## Copertina rotocalco
+Dalla pagina delle statistiche («Luoghi comuni») il pulsante **Condividi la copertina** disegna sul telefono un'immagine 1080×1350 in stile giornale scandalistico: la carta del «miglior lancio» a figura intera in bianco e nero con retino (mai ritagliata: lo sfondo è la stessa carta ingrandita), il titolo **«È un {tratto}»**, la scritta a pennarello con freccia verso il personaggio (cambia da una serata all'altra: 5 formule + una senza luogo comune) e la riga **«{Ruolo} = {tratto}: il luogo comune più votato!»**. Senza «miglior lancio» (pochi voti) la copertina dice «Giudicati dalla copertina» con la carta votata. I testi sono in `public/testi.json` (`rot.*`), il disegno in `apps/web/src/lib/rotocalco.ts`.

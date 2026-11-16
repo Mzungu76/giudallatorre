@@ -10,7 +10,7 @@ export const CARTOLINA_W = 1080, CARTOLINA_H = 1350;
 export interface CartolinaDati { giorno: string; rec: TorreDay; sotto: string; verdetto: string; banda: string; indirizzo: string }
 
 const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffc72c", TEAL = "#14a3a1", VIOLA = "#8e6bd8";
-const img = (src: string): Promise<HTMLImageElement | null> => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
+export const img = (src: string): Promise<HTMLImageElement | null> => new Promise((ok) => { const i = new Image(); i.onload = () => ok(i); i.onerror = () => ok(null); i.src = src; });
 type Ctx = CanvasRenderingContext2D;
 /** Rettangolo con angoli tondi (senza `roundRect`, che i telefoni più vecchi non hanno). */
 const rr = (c: Ctx, x: number, y: number, w: number, h: number, r: number) => { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); };
@@ -124,8 +124,10 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
 }
 
 /** Disegna la cartolina e la manda: foglio di condivisione con l'immagine (se il telefono lo permette), altrimenti solo il testo; senza foglio la salva e copia il testo. */
-export async function condividiCartolina(d: CartolinaDati, testo: string, nome: string): Promise<"condiviso" | "annullato" | "salvato"> {
-  const blob = await disegnaCartolina(d), file = new File([blob], nome, { type: "image/png" });
+export async function condividiCartolina(d: CartolinaDati, testo: string, nome: string): Promise<"condiviso" | "annullato" | "salvato"> { return condividiImmagine(await disegnaCartolina(d), testo, nome); }
+/** Manda un'immagine già disegnata: foglio di condivisione con il file (se il telefono lo permette), altrimenti solo il testo; senza foglio la salva e copia il testo. */
+export async function condividiImmagine(blob: Blob, testo: string, nome: string): Promise<"condiviso" | "annullato" | "salvato"> {
+  const file = new File([blob], nome, { type: "image/png" });
   try { if (navigator.canShare?.({ files: [file] })) { await navigator.share({ files: [file], text: testo }); return "condiviso"; } if (navigator.share) { await navigator.share({ text: testo }); return "condiviso"; } } catch { return "annullato"; }
   const u = URL.createObjectURL(blob), a = document.createElement("a"); a.href = u; a.download = nome; a.click(); setTimeout(() => URL.revokeObjectURL(u), 4000);
   try { await navigator.clipboard.writeText(testo); } catch { /* solo l'immagine */ }
