@@ -44,7 +44,7 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
   rr(c, 80, 262, W - 160, hb, 28); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
   c.fillStyle = NAVY; c.textAlign = "center"; righe.forEach((l, i) => c.fillText(l, W / 2, 262 + 38 + 56 * (i + 1) - 14));
   // le quattro carte
-  const carte = r.carte ?? [], cw = 214, ch = 300, gap = 26, x0 = (W - (4 * cw + 3 * gap)) / 2, y0 = 262 + hb + 44;
+  const carte = r.carte ?? [], cw = 232, ch = 326, gap = 14, x0 = (W - (4 * cw + 3 * gap)) / 2, y0 = 262 + hb + 44;
   const imgs = await Promise.all(carte.map((k) => img(cardFull(k.id))));
   carte.forEach((k, i) => {
     const caduta = r.cadute?.includes(k.pos), mia = r.voto === k.pos, cx = x0 + i * (cw + gap) + cw / 2, cy = y0 + ch / 2 + (caduta ? 34 : 0);
@@ -58,15 +58,15 @@ export async function disegnaCartolina(d: CartolinaDati): Promise<Blob> {
     if (mia) { c.fillStyle = TEAL; rr(c, cx - 44, y0 + ch + 38, 88, 44, 22); c.fill(); c.lineWidth = 5; c.strokeStyle = NAVY; c.stroke(); c.fillStyle = "#fff"; c.font = "400 30px Anton, Impact, sans-serif"; c.textAlign = "center"; c.fillText(ts("torre.c.tu"), cx, y0 + ch + 71); }
   });
   // punti, giudizio, emoji
-  const py = y0 + ch + 112;
-  rr(c, 70, py, 380, 250, 26); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
-  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 170px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 260, py + 172); c.font = "800 36px Nunito, system-ui, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 260, py + 224);
+  const py = y0 + ch + 100;
+  rr(c, 70, py, 380, 240, 26); c.fillStyle = "#fff"; c.fill(); c.lineWidth = 8; c.strokeStyle = NAVY; c.stroke();
+  c.fillStyle = NAVY; c.textAlign = "center"; c.font = "400 170px Anton, Impact, sans-serif"; c.fillText(`+${r.pts}`, 260, py + 166); c.font = "800 36px Nunito, system-ui, sans-serif"; c.fillText(ts("torre.punti").toUpperCase(), 260, py + 214);
   c.save(); c.translate(760, py + 82); c.rotate((-4 * Math.PI) / 180); let px = 96; c.font = `400 ${px}px Anton, Impact, sans-serif`; const vt = d.verdetto.toUpperCase(); while (c.measureText(vt).width > 560 && px > 40) { px -= 4; c.font = `400 ${px}px Anton, Impact, sans-serif`; } titolo(c, vt, 0, 0, px, RED); c.restore();
-  c.font = "84px sans-serif"; c.textAlign = "center"; c.fillText([...r.cella].join("  "), 760, py + 200);
+  c.font = "84px sans-serif"; c.textAlign = "center"; c.fillText([...r.cella].join("  "), 760, py + 190);
   // serie e totale
-  const by = py + 286; rr(c, 70, by, W - 140, 92, 46); c.fillStyle = NAVY; c.fill();
-  c.fillStyle = "#fff"; c.font = "400 44px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 62);
+  const by = py + 266; rr(c, 70, by, W - 140, 86, 43); c.fillStyle = NAVY; c.fill();
+  c.fillStyle = "#fff"; c.font = "400 44px Anton, Impact, sans-serif"; c.fillText(ts(d.serie === 1 ? "torre.c.serie1" : "torre.c.serie", { fila: d.serie, totale: d.totale }), W / 2, by + 59);
   // invito
-  c.fillStyle = "#fff"; c.font = "800 34px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 38); c.shadowColor = "transparent";
+  c.fillStyle = "#fff"; c.font = "800 34px Nunito, system-ui, sans-serif"; c.shadowColor = NAVY; c.shadowOffsetY = 2; c.fillText(ts("torre.c.invito", { url: d.indirizzo }), W / 2, H - 30); c.shadowColor = "transparent";
   return new Promise((ok, no) => cv.toBlob((b) => (b ? ok(b) : no(new Error("immagine non creata"))), "image/png"));
 }
