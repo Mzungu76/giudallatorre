@@ -35,10 +35,11 @@ export default function StereoScene({ stereo, isBot, sound, readOnly, onDone, la
         {!g ? <p className="sc-empty" data-testid="stereo-empty">{t("sp.vuoto")}</p> : (
           <>
             <div className="sc-gauge" data-testid="stereo-ring">
-              <svg viewBox="0 0 200 118" aria-hidden="true">
+              <svg viewBox="0 0 200 142" aria-hidden="true">
                 <path d={arc(0, 1, 80)} className="sc-g-out" />
                 {SEG.map((s) => <path key={s.c} d={arc(s.a, s.b, 80)} className="sc-g-seg" stroke={s.c} />)}
                 <g className="sc-needle" style={{ transform: `rotate(${on ? -90 + (g.pct / 100) * 180 : -90}deg)` }}><line x1="100" y1="100" x2="100" y2="34" /><circle cx="100" cy="100" r="9" /></g>
+                <rect x="34" y="112" width="132" height="26" rx="7" className="sc-plate" /><text x="100" y="130" textAnchor="middle" textLength="116" lengthAdjust="spacingAndGlyphs" className="sc-plate-t">{ts("torre.c.pregiudizio").toUpperCase()}</text>
               </svg>
               <div className="sc-num"><b data-testid="stereo-pct">{shown}%</b><span>{t("sp.partita")}</span></div>
             </div>
