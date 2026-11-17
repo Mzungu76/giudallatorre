@@ -1,5 +1,5 @@
 {
- "versione": 96,
+ "versione": 97,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -2952,7 +2952,7 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.top": {
-   "t": "Il luogo comune della partita",
+   "t": "Oggi abbiamo capito che:",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.lancio": {
@@ -3686,7 +3686,7 @@
    "s": "Condivisione"
   },
   "dt.btn": {
-   "t": "Dettagli",
+   "t": "Come l’abbiamo finalmente capito",
    "s": "Dettagli dei luoghi comuni"
   },
   "dt.titolo": {
