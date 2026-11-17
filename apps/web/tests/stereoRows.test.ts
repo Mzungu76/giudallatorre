@@ -4,7 +4,7 @@ import { stereoGame, stereoGruppi, ruoloDi, fraseLuogo, trattoPlurale } from "..
 describe("pannello luoghi comuni: dati della partita", () => {
   it("somma i voti di tutti (nessun nome), dà la quota per caso e i luoghi comuni più presenti", () => {
     const g = stereoGame({ n: { a: 4, b: 4, c: 0 }, s: { a: 1, b: 3 }, c: 1.2, turni: 4, cause: { "politico → bugiardo": 3, "occhiali → saputello": 1, "tuta → vanitoso": 1 } }, 2)!;
-    expect(g.pct).toBe(50); expect(g.caso).toBe(30); expect(g.n).toBe(8); expect(g.top).toEqual([{ k: "politico → bugiardo", n: 3, pct: 60 }, { k: "occhiali → saputello", n: 1, pct: 20 }]);
+    expect(g.pct).toBe(50); expect(g.caso).toBe(30); expect(g.n).toBe(8); expect(g.top).toEqual([{ k: "politico → bugiardo", n: 3, pct: 60, det: null }, { k: "occhiali → saputello", n: 1, pct: 20, det: null }]);
     expect(stereoGame(null)).toBeNull(); expect(stereoGame({ n: {}, s: {}, c: 0, turni: 0, cause: {} })).toBeNull();
   });
 
@@ -29,7 +29,11 @@ describe("pannello luoghi comuni: dati della partita", () => {
     const g = stereoGame({ ...base, cause: { "politico → bugiardo": 4, "giudice → bugiardo": 2, "@cravatta → bugiardo": 3, "cuoco → pigro": 1 }, asp: { "politico → bugiardo": { n: 4, l: { cravatta: 3, occhiali: 1 } }, "giudice → bugiardo": { n: 2, l: { cravatta: 2 } }, "cuoco → pigro": { n: 1, l: { cravatta: 1 } } } })!;
     expect(g.top.map((x) => x.k)).toEqual(["politico → bugiardo", "giudice → bugiardo", "cuoco → pigro"]);   // nessun «@…» in classifica
     expect(g.top[0]!.pct).toBe(57);                                                                     // 4 su 7 (il peso degli aspetti non conta)
-    expect(g.comune).toEqual({ k: "@cravatta → bugiardo", pct: 83 });                                    // 5 voti su 6 dei luoghi «bugiardo»; il cuoco (tratto diverso) non conta
+    expect(g.comune).toEqual({ k: "@cravatta → bugiardo", pct: 83, n: 5, tot: 6 });                                    // 5 voti su 6 dei luoghi «bugiardo»; il cuoco (tratto diverso) non conta
     expect(stereoGame({ ...base, cause: { "politico → bugiardo": 4 }, asp: { "politico → bugiardo": { n: 4, l: { cravatta: 1, occhiali: 1 } } } })!.comune).toBeNull();   // nessun aspetto in comune
+  });
+  it("i dettagli: da dove viene il peso, le carte coinvolte e quanto è solida la stima", () => {
+    const g = stereoGame({ n: { a: 4 }, s: { a: 2 }, c: 1, turni: 2, cause: { "politico → bugiardo": 5, "giudice → bugiardo": 2 }, det: { "politico → bugiardo": { v: 3, m: 1.5, e: 0.5, c: { c1: 2, c2: 1 } }, "giudice → bugiardo": { v: 1, m: 0, e: 1, c: { c3: 1 } } } })!;
+    expect(g.top[0]!.det).toEqual({ v: 3, m: 1.5, e: 0.5, c: { c1: 2, c2: 1 } }); expect(g.votiLuoghi).toBe(4);
   });
 });

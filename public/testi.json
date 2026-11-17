@@ -1,5 +1,5 @@
 {
- "versione": 94,
+ "versione": 95,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3684,6 +3684,66 @@
   "share.pg.punti": {
    "t": "{punti} punti, {posto}° posto su {tot}.",
    "s": "Condivisione"
+  },
+  "dt.btn": {
+   "t": "Dettagli",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.titolo": {
+   "t": "Dettagli dei luoghi comuni",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.origine": {
+   "t": "Come si è formato",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.voti": {
+   "t": "{n} voti sul personaggio",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.segnalino": {
+   "t": "{n} dal segnalino del Megafono",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.evitato": {
+   "t": "{n} da chi ha votato altrove",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.personaggi": {
+   "t": "Personaggi coinvolti",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.nessun": {
+   "t": "Nessun voto diretto: pesa solo il segnalino o chi ha votato altrove",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.comune": {
+   "t": "Caratteristica comune",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.comune.riga": {
+   "t": "{chi}: {n} voti su {tot} ({pct}%)",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.solida": {
+   "t": "Quanto è solida la stima",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s0": {
+   "t": "Solo {n} voti: è un indizio debole",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s1": {
+   "t": "{n} voti: stima discreta",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s2": {
+   "t": "{n} voti: stima abbastanza solida",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.nota": {
+   "t": "Il peso di un luogo comune: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
+   "s": "Dettagli dei luoghi comuni"
   }
  }
 }

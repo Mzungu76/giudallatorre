@@ -116,6 +116,9 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(luoghiTurno(tl, "i più bugiardi", { a: 3, b: 2 }, [{ position: 3, effect: "cade" }], [3])!.pesi).toEqual({ [K]: 1 });             // segnalino su carta senza ruolo né aspetto: non aggiunge nulla (resta il 2×0,5 di chi ha evitato)
     expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1 }, [{ position: 2, effect: "noncade" }], [1])!.pesi).toEqual({ [K]: 3 });       // NON CADE senza voti: +1 alla carta caduta
     expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [], [1])!.lancio).toEqual({ pos: 1, n: 2, causa: K });
+    // dettagli: voti diretti, segnalino (con il ×1,5), chi ha votato altrove, carte votate
+    const dd = luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [{ position: 1, effect: "cade" }], [1])!.dettagli[K]!;
+    expect(dd.v).toBe(2); expect(dd.m).toBe(2.5); expect(dd.e).toBe(0.5); expect(dd.c).toEqual({ pol: 2 }); expect(dd.v + dd.m + dd.e).toBe(5);   // (2+1)×1,5 = 4,5 = 2 voti + 2,5 dal segnalino; + 0,5
     expect(luoghiTurno(tl, "frase mai vista zorbo", { a: 1 }, [], [1])).toBeNull();
     // il pregiudiziometro: nessun minimo; sale con l'associazione; chi vota altrove evita il luogo comune (conta metà della carta più forte); anche il segnalino conta
     const tw = [{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], g = pregiudizioTurno(tw, "i più bugiardi", { a: 1, b: 2, c: 3 }, 3)!;

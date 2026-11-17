@@ -209,18 +209,20 @@ function causaGenerica(cardId: string, text: string): string | null {
   const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
   const d = difettoPrincipale(p); return d ? `${nome} → ${d}` : null;
 }
-export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }> } | null {
+export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }>; dettagli: Record<string, { v: number; m: number; e: number; c: Record<string, number> }> } | null {
   const causa: Record<number, string> = {};
   const fz: Record<number, number> = {};
   for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const c = e.causa ?? causaGenerica(t.cardId, text); if (c) { causa[t.position] = c; fz[t.position] = Math.max(e.s, affinityV2m(t.cardId, text) ?? 0); } }
   const nv: Record<number, number> = {}; for (const pos of Object.values(votes)) nv[pos] = (nv[pos] ?? 0) + 1;
   const w: Record<number, number> = {}; for (const k of Object.keys(causa)) w[Number(k)] = nv[Number(k)] ?? 0;
+  const wVoti: Record<number, number> = { ...w };
   for (const m of marks) {
     if ((m.effect === "cade" || m.effect === "nulli") && causa[m.position] !== undefined) { w[m.position]! += 1; if ((nv[m.position] ?? 0) > 0) w[m.position]! *= PESO_LUI_CONFERMA; }
     else if (m.effect === "noncade" && !nv[m.position]) for (const f of fallen) if (causa[f] !== undefined) w[f]! += 1;
   }
   let M = -1; for (const [k, v] of Object.entries(fz)) if (v > 0 && (M < 0 || v > fz[M]!)) M = Number(k);   // la carta più «da luogo comune»: chi vota altrove l'ha evitata
-  if (M >= 0) w[M]! += PESO_EVITATO * Object.values(votes).filter((pos) => pos !== M).length;
+  const wSeg: Record<number, number> = { ...w }, evitato = M >= 0 ? PESO_EVITATO * Object.values(votes).filter((pos) => pos !== M).length : 0;
+  if (M >= 0) w[M]! += evitato;
   const pesi: Record<string, number> = {}; let lancio: { pos: number; n: number; causa: string } | null = null;
   for (const [k, v] of Object.entries(w)) {
     if (v > 0) pesi[causa[Number(k)]!] = Math.round(((pesi[causa[Number(k)]!] ?? 0) + v) * 100) / 100;
@@ -229,5 +231,12 @@ export function luoghiTurno(tower: { cardId: string; position: number }[], text:
   // la caratteristica comune: per ogni luogo comune di ruolo, gli aspetti delle carte che hanno ricevuto i voti
   const aspetti: Record<string, { n: number; l: Record<string, number> }> = {};
   for (const t of tower) { const c = causa[t.position], n = nv[t.position] ?? 0; if (!c || c.startsWith("@") || !n) continue; const a = (aspetti[c] ??= { n: 0, l: {} }); a.n += n; for (const look of CARDLOOKS.get(t.cardId) ?? []) a.l[look] = (a.l[look] ?? 0) + n; }
-  return { pesi, lancio, aspetti };
+  // da dove viene il peso di ciascun luogo comune: voti, segnalino, chi ha votato altrove; e le carte votate
+  const r2 = (x: number) => Math.round(x * 100) / 100, dettagli: Record<string, { v: number; m: number; e: number; c: Record<string, number> }> = {};
+  for (const t of tower) {
+    const c = causa[t.position]; if (!c || c.startsWith("@")) continue; const d = (dettagli[c] ??= { v: 0, m: 0, e: 0, c: {} });
+    d.v += wVoti[t.position] ?? 0; d.m = r2(d.m + (wSeg[t.position]! - (wVoti[t.position] ?? 0))); if (t.position === M) d.e = r2(d.e + evitato);
+    if ((nv[t.position] ?? 0) > 0) d.c[t.cardId] = (d.c[t.cardId] ?? 0) + nv[t.position]!;
+  }
+  return { pesi, lancio, aspetti, dettagli };
 }

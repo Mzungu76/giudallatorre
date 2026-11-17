@@ -54,6 +54,7 @@ check("a fine animazione si passa al riepilogo (torre piccola + riquadri)", awai
 if (SHOTS) { await sleep(500); await p.screenshot({ path: `${SHOTS}/riep-1.png` }); }
 await sleep(3500);
 check("nel riepilogo c'è la classifica", await vis("final-rank")); check("nel riepilogo c'è il Pregiudiziometro", await vis("stereo-ring"));
+if (await vis("dettagli-btn")) { await p.click('[data-testid="dettagli-btn"]').catch(() => {}); await sleep(500); check("Dettagli apre il foglio con solidità della stima", (await vis("dettagli")) && (await vis("dettagli-solida")) && (await vis("dettagli-luogo"))); if (SHOTS) await p.screenshot({ path: `${SHOTS}/dettagli.png` }); await p.click('.shm-x').catch(() => {}); await sleep(300); }
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/riep-2.png` })
 { const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("share-final"))) await sleep(300); }
 check("nella classifica finale c'è il pulsante Condividi", await vis("share-final"));

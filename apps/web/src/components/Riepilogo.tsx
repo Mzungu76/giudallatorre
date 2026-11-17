@@ -15,7 +15,7 @@ const ATTESA = 850;
 
 /** Riepilogo di fine partita: sotto la torre rimpicciolita, in due colonne, classifica, Pregiudiziometro, luogo comune, miglior lancio, umani contro bot.
  *  I riquadri compaiono uno alla volta con un effetto «pop»; quelli senza dati non ci sono. */
-export default function Riepilogo({ rows, winners, stereo, isBot, sound }: { rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean; }) {
+export default function Riepilogo({ rows, winners, stereo, isBot, sound, onDettagli }: { /** Apre il foglio dei dettagli. */ onDettagli?: (g: NonNullable<ReturnType<typeof stereoGame>>) => void; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
   const { H } = useStage(), top = Math.round(H * 0.25) + 42, g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), [n, setN] = useState(0), [on, setOn] = useState(false);
   const uvb = gr.umani !== null && gr.bot !== null;
   const blocchi = ["rank", ...(g ? ["gauge"] : []), ...(g?.top[0] ? ["luogo"] : []), ...(g?.lancio ? ["lancio"] : []), ...(uvb ? ["uvb"] : [])];
@@ -35,6 +35,7 @@ export default function Riepilogo({ rows, winners, stereo, isBot, sound }: { row
       {g && vis("gauge") && <div className="rp-b rp-g"><Gauge pct={g.pct} on={on} shown={shown} />{on && <div className="rp-verd">{t(`sc.f${fascia(g.pct)}`)}</div>}</div>}
       {g?.top[0] && vis("luogo") && (
         <div className="rp-b sc-lc rp-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="rp-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>{g.top.slice(1).map((x) => <div key={x.k} className="rp-alt">{fraseLuogo(x.k)} · {x.pct}%</div>)}{g.comune && <div className="rp-alt rp-com">{t("lc.tra")} {fraseLuogo(g.comune.k)} · {g.comune.pct}%</div>}
+          {onDettagli && <button className="rp-det" onClick={() => onDettagli(g)} data-testid="dettagli-btn">{t("dt.btn")}</button>}
           </div>)}
       {g?.lancio && vis("lancio") && <div className="rp-b rp-lan" data-testid="stereo-lancio"><h4>{t("sc.lancio")}</h4><div className="rp-lr"><img src={cardFull(g.lancio.cardId)} alt="" draggable={false} /><div><b>{ts("sc.lancio.voti", { ruolo: g.lancio.ruolo, n: g.lancio.n })}</b><q>{g.lancio.text}</q></div></div></div>}
       {uvb && vis("uvb") && <div className={`rp-b rp-uvb ${g?.lancio ? "" : "full"}`} data-testid="stereo-uvb"><h4>{t("sc.uvb")}</h4>
