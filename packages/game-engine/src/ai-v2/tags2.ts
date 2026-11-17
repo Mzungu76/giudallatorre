@@ -45,6 +45,8 @@ const STEREO = new Map<string, [string, number][]>();
 /** L'accusa al plurale di ogni frase del Megafono («non prendono mai niente sul serio»): è il «difetto» che si legge nei luoghi comuni. Chiave: il testo intero della frase. */
 const ACCUSE = new Map<string, string>();
 export function registerAccuse(m: Record<string, string>): void { ACCUSE.clear(); for (const [k, v] of Object.entries(m)) ACCUSE.set(k, v); }
+/** Cosa porta il luogo comune di una frase: la sua accusa; con le accuse caricate, le frasi che non ne hanno (le confessioni «ammette di…», le frasi libere) non generano luoghi comuni; senza accuse caricate (prove) resta il difetto principale. */
+const etichettaLuogo = (text: string, difetto: string | null): string | null => (ACCUSE.size ? ACCUSE.get(text) ?? null : difetto);
 /** Tetto: un luogo comune non può aggiungere a una carta più di questo peso totale (nessuna carta attira voti solo per i pregiudizi). */
 export const STEREO_CAP = 2;
 export function registerStereotypes(voci: Stereo[]): void { STEREO.clear(); for (const v of voci) { const k = (v.asse === "ruolo" ? "r:" : v.asse === "aspetto" ? "a:" : "t:") + v.ruolo; let a = STEREO.get(k); if (!a) STEREO.set(k, (a = [])); a.push(["t:" + v.tratto, v.forza]); } }
@@ -160,7 +162,7 @@ export function stereoExplain(cardId: string, text: string): { s: number; base: 
   const D = difettoPrincipale(p), forzaRiga = (cue: string) => (STEREO.get(cue) ?? []).find(([t]) => t === "t:" + D)?.[1] ?? 0;
   const migliore = (ids: string[], pre: string) => [...ids].sort((x, y) => forzaRiga(pre + ":" + y) - forzaRiga(pre + ":" + x))[0];
   const ruolo = migliore(CARDROLES.get(cardId) ?? [], "r"), aspetto = migliore(CARDLOOKS.get(cardId) ?? [], "a");
-  const L = ACCUSE.get(text) ?? D;   // il luogo comune porta l'accusa della frase (se c'è) altrimenti il difetto principale
+  const L = etichettaLuogo(text, D);   // il luogo comune porta l'accusa della frase
   const causa = L ? (ruolo !== undefined ? `${ruolo} → ${L}` : aspetto !== undefined ? `@${aspetto} → ${L}` : null) : null;
   return { s, base: affinityV2(cardId, text) ?? 0, causa };
 }
@@ -211,7 +213,7 @@ export const PESO_EVITATO = 0.5;
 function causaGenerica(cardId: string, text: string): string | null {
   const p = PHRASES[text] ?? inferV2(text); if (!p) return null;
   const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
-  const d = ACCUSE.get(text) ?? difettoPrincipale(p); return d ? `${nome} → ${d}` : null;
+  const d = etichettaLuogo(text, difettoPrincipale(p)); return d ? `${nome} → ${d}` : null;
 }
 export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }>; dettagli: Record<string, { v: number; m: number; e: number; c: Record<string, number> }> } | null {
   const causa: Record<number, string> = {};
