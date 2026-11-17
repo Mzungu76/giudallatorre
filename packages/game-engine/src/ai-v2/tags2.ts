@@ -139,16 +139,25 @@ export function affinityLens(cardId: string, phraseText: string, lens: Lens): nu
  * e quanto la spiegano le etichette della carta (`base`). Il voto è «per luogo comune» se il luogo comune da solo basta a spiegarlo (`s > 0` e `s ≥ base`): la carta
  * ha il ruolo o l'aspetto che fa pensare a quel tratto, ma di suo non c'entra con la frase. È una stima, non una prova delle intenzioni di chi ha votato.
  */
+/** Tipi che descrivono un ruolo o un interesse e non un difetto: non possono essere il «difetto» di una frase. */
+const NON_DIFETTI = new Set(["influencer", "genitore", "sportivo", "religioso", "politico", "nerd", "artista", "guru"]);
+/** Il difetto che la frase dichiara: il tipo con il peso più alto (a parità, in ordine alfabetico). Null se la frase non ha un difetto. */
+function difettoPrincipale(p: { tipi: Record<string, number> }): string | null {
+  const e = Object.entries(p.tipi).filter(([k, w]) => w > 0 && !NON_DIFETTI.has(k)).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]));
+  return e[0]?.[0] ?? null;
+}
 export function stereoExplain(cardId: string, text: string): { s: number; base: number; causa: string | null } | null {
   const c = CARDS[cardId], p = PHRASES[text] ?? inferV2(text); if (!c || !p) return null;
   const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x), ...(CARDLOOKS.get(cardId) ?? []).map((x) => "a:" + x)];
-  let s = 0, bestR = 0, bestA = 0, causaR: string | null = null, causaA: string | null = null;
+  let s = 0;
   for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
-    const wp = p.tipi[tratto.slice(2)]; if (!wp) continue; const v = 3 * (f + wp) / 6; s += v;
-    if (cue[0] === "r" && v > bestR) { bestR = v; causaR = `${cue.slice(2)} → ${tratto.slice(2)}`; }
-    if (cue[0] === "a" && v > bestA) { bestA = v; causaA = `@${cue.slice(2)} → ${tratto.slice(2)}`; }   // l'aspetto si distingue con «@»
+    const wp = p.tipi[tratto.slice(2)]; if (!wp) continue; s += 3 * (f + wp) / 6;
   }
-  const causa = causaR ?? causaA;   // il luogo comune è dato principalmente dal ruolo; l'aspetto solo se il ruolo non c'entra
+  // il luogo comune è «ruolo → difetto principale della frase»: il ruolo (o, se non c'è, l'aspetto) della carta e il difetto che la frase dichiara; la tabella ne dà solo la forza
+  const D = difettoPrincipale(p), forzaRiga = (cue: string) => (STEREO.get(cue) ?? []).find(([t]) => t === "t:" + D)?.[1] ?? 0;
+  const migliore = (ids: string[], pre: string) => [...ids].sort((x, y) => forzaRiga(pre + ":" + y) - forzaRiga(pre + ":" + x))[0];
+  const ruolo = migliore(CARDROLES.get(cardId) ?? [], "r"), aspetto = migliore(CARDLOOKS.get(cardId) ?? [], "a");
+  const causa = D ? (ruolo !== undefined ? `${ruolo} → ${D}` : aspetto !== undefined ? `@${aspetto} → ${D}` : null) : null;
   return { s, base: affinityV2(cardId, text) ?? 0, causa };
 }
 export const isStereoVote = (e: { s: number; base: number; causa?: string | null } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
@@ -198,7 +207,7 @@ export const PESO_EVITATO = 0.5;
 function causaGenerica(cardId: string, text: string): string | null {
   const p = PHRASES[text] ?? inferV2(text); if (!p) return null;
   const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
-  const tr = Object.entries(p.tipi).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]; return tr ? `${nome} → ${tr[0]}` : null;
+  const d = difettoPrincipale(p); return d ? `${nome} → ${d}` : null;
 }
 export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }> } | null {
   const causa: Record<number, string> = {};

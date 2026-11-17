@@ -125,6 +125,12 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(pregiudizioTurno(tw, "i più bugiardi", { a: 1 })!.lui).toBeNull(); expect(pregiudizioTurno(tw, "frase mai vista zorbo", { a: 1 })).toBeNull();
     // un turno senza alcuna associazione non è misurabile: non vale zero, non c'è
     expect(pregiudizioTurno([{ cardId: "neutra", position: 1 }], "i più bugiardi", { a: 1 }, 1)!.voti).toEqual({});
+    // il luogo comune porta sempre il DIFETTO PRINCIPALE della frase (non un tratto secondario che la tabella premia di più), anche se la tabella non ha la riga
+    registerRoles([{ id: "politico", temi: ["politica"] }], { pol: ["politico"] });
+    registerTagsV2({ pol: { tipi: { avaro: 3 }, temi: {} } }, { "i più testardi e un po' arroganti": { tipi: { testardo: 3, arrogante: 1 }, temi: {} }, "i più bravi": { tipi: { influencer: 3, vanitoso: 2 }, temi: {} } });
+    registerStereotypes([{ ruolo: "politico", tratto: "arrogante", forza: 3, asse: "ruolo" }]);
+    expect(stereoExplain("pol", "i più testardi e un po' arroganti")!.causa).toBe("politico → testardo");   // non «arrogante», che la tabella premia di più
+    expect(stereoExplain("pol", "i più bravi")!.causa).toBe("politico → vanitoso");                           // «influencer» è un ruolo, non un difetto
     registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });
 });
