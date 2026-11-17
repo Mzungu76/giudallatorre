@@ -30,13 +30,15 @@ const hash = (t: string): number => { let h = 2166136261; for (const c of t) { h
 /** La scritta a pennarello (cambia da una serata all'altra: stessa carta e stesso tratto, stessa scritta). */
 export function notaPennarello(cardId: string, tratto: string | null, giorno: string, pct?: number): string {
   if (!tratto) return ts("rot.nota.vuota");
-  let i = hash(cardId + giorno) % 5; if (i === 2 && pct === undefined) i = 0;   // la scritta con la percentuale solo se la conosciamo
+  const h = hash(cardId + giorno);
+  if (tratto.includes(" ")) return ts(`rot.nota.a.${h % 4}` as "rot.nota.a.0", { pct: pct ?? 0 });   // il luogo comune è un'accusa intera: niente «testardo» da scrivere
+  let i = h % 5; if (i === 2 && pct === undefined) i = 0;   // la scritta con la percentuale solo se la conosciamo
   return ts(`rot.nota.${i}` as "rot.nota.0", { tratto, pct: pct ?? 0 });
 }
 /** Titolo e riga sotto, con lo schema fisso. */
 export function testiRotocalco(causa: string | undefined, pct?: number): { titolo: string; sotto: string } {
   const c = spezzaCausa(causa);
-  return c ? { titolo: ts("rot.titolo", { tratto: c.tratto }), sotto: ts("rot.sotto", { frase: fraseLuogo(causa!) + (pct !== undefined ? ` · ${pct}%` : "") }) } : { titolo: ts("rot.titolo.vuoto"), sotto: ts("rot.sotto.vuoto") };
+  return c ? { titolo: c.tratto.includes(" ") ? ts("rot.titolo.accusa", { frase: fraseLuogo(causa!) }) : ts("rot.titolo", { tratto: c.tratto }), sotto: ts("rot.sotto", { frase: fraseLuogo(causa!) + (pct !== undefined ? ` · ${pct}%` : "") }) } : { titolo: ts("rot.titolo.vuoto"), sotto: ts("rot.sotto.vuoto") };
 }
 
 /** Foto in bianco e nero con un po' di contrasto (a mano sui pixel: `ctx.filter` non c'è su tutti i telefoni). */
@@ -107,12 +109,19 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   }
   // il titolo-sentenza e la riga del luogo comune
   c.fillStyle = RED; c.fillRect(0, PY + PH, W, 156); c.fillStyle = "#000"; c.fillRect(0, PY + PH, W, 6); c.fillRect(0, PY + PH + 150, W, 6);
-  const ttl = tx.titolo.toUpperCase(); const sz = fit(c, `\u201C${ttl}\u201D`, (s) => `400 ${s}px ${DISPLAY}`, 132, W - 80, 56);
-  c.font = `400 ${sz}px ${DISPLAY}`; c.textAlign = "center"; c.lineJoin = "round"; c.lineWidth = 9; c.strokeStyle = "#000"; c.strokeText(`\u201C${ttl}\u201D`, W / 2 + 5, PY + PH + 112 + 5); c.fillStyle = "#000"; c.fillText(`\u201C${ttl}\u201D`, W / 2 + 5, PY + PH + 112 + 5);
-  c.strokeText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112); c.fillStyle = "#fff"; c.fillText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112);
+  const ttl = tx.titolo.toUpperCase(), tutto = `\u201C${ttl}\u201D`, FONT = (z: number) => `400 ${z}px ${DISPLAY}`;
+  let lt: string[] = [tutto], sz = fit(c, tutto, FONT, 132, W - 80, 56);
+  c.font = FONT(sz);
+  if (c.measureText(tutto).width > W - 80) {   // frase lunga (l'accusa): su due righe, divise a metà parole
+    const par = ttl.split(" "), m = Math.ceil(par.length / 2); lt = [`\u201C${par.slice(0, m).join(" ")}`, `${par.slice(m).join(" ")}\u201D`];
+    sz = Math.min(...lt.map((r) => fit(c, r, FONT, 76, W - 80, 36)));
+  }
+  c.font = FONT(sz); c.textAlign = "center"; c.lineJoin = "round"; c.lineWidth = 9; c.strokeStyle = "#000";
+  lt.forEach((r, i) => { const y = PY + PH + (lt.length === 1 ? 112 : 70 + i * (sz + 6));
+    c.strokeText(r, W / 2 + 5, y + 5); c.fillStyle = "#000"; c.fillText(r, W / 2 + 5, y + 5); c.strokeText(r, W / 2, y); c.fillStyle = "#fff"; c.fillText(r, W / 2, y); });
   const by0 = PY + PH + 156; c.fillStyle = "#000"; c.fillRect(0, by0, W, H - by0);
   let sp = fit(c, tx.sotto, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`;
-  if (cs) { const a = ts("rot.sotto.testa"), b = `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}`; sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
+  if (cs) { const acc = cs.tratto.includes(" "), a = acc ? ts("rot.sotto.verdetto") : ts("rot.sotto.testa"), b = acc ? (d.pct !== undefined ? ts("rot.sotto.pct", { pct: d.pct }) : ts("rot.sotto.nopct")) : `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}`; sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
   else { c.textAlign = "center"; c.fillStyle = GOLD; c.fillText(tx.sotto, W / 2, by0 + 60); }
   // il logo: la torre e il nome del gioco
   { const torre = await img("/giocatori/torre.webp"), nome = ts("share.titolo").toUpperCase(), area = H - by0 - 56;

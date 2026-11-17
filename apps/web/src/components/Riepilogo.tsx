@@ -5,7 +5,7 @@ import { Who } from "./Persona.tsx";
 import { PtIcon } from "./Pt.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
-import { fasciaPregiudizio as fascia, fraseLuogo, stereoGame, stereoGruppi } from "../lib/stereo.ts";
+import { fasciaPregiudizio as fascia, aspettoDi, fraseLuogo, stereoGame, stereoGruppi } from "../lib/stereo.ts";
 import { battutaRiga, carteLuoghi, commentoLancio, premi, rigaGauge, titoloVincitori } from "../lib/riepilogo.ts";
 import { cardFull } from "../lib/cards.ts";
 import type { FinalRow } from "./FinalScene.tsx";
@@ -44,7 +44,7 @@ export default function Riepilogo({ rows, winners, stereo, isBot, sound, seme, o
         <div className="rp-b rp-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="rp-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>
           {carte.length > 0 && <div className="rp-ct">{carte.map((id) => <img key={id} src={cardFull(id)} alt="" draggable={false} />)}</div>}
           {g.top.slice(1).map((x, i) => <div key={x.k} className="rp-alt">{ts(`rp.alt.${i + 1}` as "rp.alt.1", { frase: fraseLuogo(x.k), pct: x.pct })}</div>)}
-          {g.comune && <div className="rp-alt rp-com">{t("lc.tra")} {fraseLuogo(g.comune.k)} · {g.comune.pct}%</div>}
+          {g.comune && <div className="rp-alt rp-com">{ts("lc.tra.riga", { n: g.comune.n, tot: g.comune.tot, chi: aspettoDi(g.comune.k) })}</div>}
           {onDettagli && <button className="rp-det" onClick={() => onDettagli(g)} data-testid="dettagli-btn">{t("dt.btn")}</button>}
         </div>
       )}

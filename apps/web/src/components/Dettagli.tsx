@@ -1,4 +1,4 @@
-import { fraseLuogo, type StereoGame } from "../lib/stereo.ts";
+import { aspettoDi, fraseLuogo, type StereoGame } from "../lib/stereo.ts";
 import { chiusaAggravante, ruoloDelLuogo, testimone } from "../lib/riepilogo.ts";
 import { cardFull } from "../lib/cards.ts";
 import { t, ts } from "../lib/testi.ts";
@@ -26,7 +26,7 @@ export default function Dettagli({ g, onClose }: { g: StereoGame; onClose: () =>
               </div>
             );
           })}
-          {g.comune && <div className="dt-b" data-testid="dettagli-comune"><h4>{t("dt.aggravante")}</h4><p className="dt-o">{ts("dt.agg.riga", { frase: fraseLuogo(g.comune.k), n: g.comune.n, tot: g.comune.tot, chiusa: chiusaAggravante(g.comune.k) })}</p></div>}
+          {g.comune && <div className="dt-b" data-testid="dettagli-comune"><h4>{t("dt.aggravante")}</h4><p className="dt-o">{ts("dt.agg.riga", { chi: aspettoDi(g.comune.k).replace(/^./, (c) => c.toUpperCase()), n: g.comune.n, tot: g.comune.tot, chiusa: chiusaAggravante(g.comune.k) })}</p></div>}
           <div className="dt-b" data-testid="dettagli-solida"><h4>{t("dt.attendibilita")}</h4><p className="dt-o">{ts(solida, { n: n1(g.votiLuoghi) })}</p><small>{t("dt.nota")}</small></div>
         </div>
         <button className="shm-x dt-x" onClick={onClose}>{t("dt.chiudi")}</button>

@@ -1,5 +1,5 @@
 {
- "versione": 102,
+ "versione": 103,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3615,11 +3615,6 @@
    "s": "Luoghi comuni · frasi",
    "n": "Luogo comune su un aspetto: «Chi porta la cravatta è più bugiardo degli altri»"
   },
-  "lc.tra": {
-   "t": "Tra loro:",
-   "s": "Luoghi comuni · frasi",
-   "n": "Introduce la caratteristica (aspetto) comune alle carte dei luoghi comuni di ruolo"
-  },
   "sm.titolo": {
    "t": "Condividi",
    "s": "Condivisione"
@@ -4375,9 +4370,9 @@
    "s": "Come l’abbiamo finalmente capito"
   },
   "dt.agg.riga": {
-   "t": "{frase}: {n} voti su {tot}. {chiusa}",
+   "t": "{chi}: {n} su {tot}. {chiusa}",
    "s": "Come l’abbiamo finalmente capito",
-   "n": "L'aggravante: la caratteristica comune e come finisce"
+   "n": "L'aggravante: l'aspetto in comune e come finisce"
   },
   "dt.agg.0": {
    "t": "La giuria si è commossa.",
@@ -4406,6 +4401,45 @@
   "dt.p.v1": {
    "t": "1 voto dal pubblico",
    "s": "Come l’abbiamo finalmente capito"
+  },
+  "lc.tra.riga": {
+   "t": "Tra loro, {n} su {tot}: {chi}",
+   "s": "Luoghi comuni · frasi",
+   "n": "Caratteristica (aspetto) comune alle carte dietro i luoghi comuni"
+  },
+  "rot.titolo.accusa": {
+   "t": "{frase}",
+   "s": "Copertina rotocalco",
+   "n": "Titolo grande quando il luogo comune è l'accusa della frase del Megafono"
+  },
+  "rot.sotto.verdetto": {
+   "t": "Verdetto della serata:",
+   "s": "Copertina rotocalco"
+  },
+  "rot.sotto.pct": {
+   "t": "{pct}% dei sospetti",
+   "s": "Copertina rotocalco"
+  },
+  "rot.sotto.nopct": {
+   "t": "nessun appello",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.0": {
+   "t": "lo sapevamo!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello con la freccia quando il luogo comune è un'accusa"
+  },
+  "rot.nota.a.1": {
+   "t": "chiaro come il sole",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.2": {
+   "t": "{pct}%\nci siamo",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.3": {
+   "t": "parola\ndi giuria",
+   "s": "Copertina rotocalco"
   }
  }
 }
