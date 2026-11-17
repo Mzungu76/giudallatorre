@@ -210,7 +210,8 @@ function resolve(s: GameState, events: GameEvent[]) {
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
   // voto giusto (voto valido) e carta caduta (anche quella del Megafono)
   for (const p of s.playerIds) if (!annulled.includes(p) && fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
-  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
+  // Flash: le carte sulla Torre si assegnano da sole, nessuno le sceglie: niente +2 per la carta caduta
+  if (!s.flash) for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
   // segnalini: CADE +4 se cade, NON CADE +2 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
   const outs = marks.map((m) => {
     const fell = fallen.includes(m.position), voters = s.playerIds.filter((p) => p !== mega && !annulled.includes(p) && s.votes[p] === m.position);
