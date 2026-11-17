@@ -49,7 +49,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
   }
   const copertina = async () => {   // la copertina del rotocalco: il personaggio del miglior lancio e il luogo comune più forte
     if (cop) return; setCop(true);
-    try { const dd = datiRotocalco(view.stereo, ultimo ? ultimo.carte.find((c) => c.pos === ultimo.voto)?.id : undefined, dayId(), location.host); if (dd) await condividiRotocalco(dd, `copertina-${dd.giorno}.png`); } catch { /* niente copertina */ }
+    try { const dd = datiRotocalco(view.stereo, ultimo ? ultimo.carte.find((c) => c.pos === ultimo.voto)?.id : undefined, dayId(), location.host); if (dd) { const mio = rows.find((r) => r.id === me), punti = mio?.score ?? 0; await condividiRotocalco({ ...dd, risultato: { posto: 1 + rows.filter((r) => r.score > punti).length, tot: rows.length, punti, vinto: winners.has(me), pariMerito: winners.size > 1, flash: !!room.options.flash } }, `copertina-${dd.giorno}.png`); } } catch { /* niente copertina */ }
     setCop(false);
   };
   const testo = async () => {   // il messaggio di testo: Pregiudiziometro, luoghi comuni e il mio punteggio

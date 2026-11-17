@@ -1,5 +1,5 @@
 {
- "versione": 95,
+ "versione": 96,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3642,11 +3642,11 @@
    "s": "Condivisione"
   },
   "sm.copertina": {
-   "t": "Copertina del giornale",
+   "t": "Copertina con il mio risultato",
    "s": "Condivisione"
   },
   "sm.copertina.s": {
-   "t": "Il luogo comune più votato in prima pagina",
+   "t": "Il giornale con il luogo comune e il tuo piazzamento",
    "s": "Condivisione"
   },
   "sm.testo": {
@@ -3744,6 +3744,30 @@
   "dt.nota": {
    "t": "Il peso di un luogo comune: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
    "s": "Dettagli dei luoghi comuni"
+  },
+  "rot.vinto": {
+   "t": "Ho vinto!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.vinto.pari": {
+   "t": "a pari merito",
+   "s": "Copertina rotocalco"
+  },
+  "rot.res.posto": {
+   "t": "{posto}° su {tot}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.res.punti": {
+   "t": "{punti} punti",
+   "s": "Copertina rotocalco"
+  },
+  "rot.res.vinto": {
+   "t": "{punti} punti · {posto}° su {tot}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.res.flash": {
+   "t": "Flash · 2 turni",
+   "s": "Copertina rotocalco"
   }
  }
 }

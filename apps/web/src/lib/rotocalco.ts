@@ -9,7 +9,9 @@ import type { GameState } from "@gdt/game-engine";
  * Il personaggio colpito dal luogo comune più forte, a figura intera (mai ritagliato), il titolo «È un {tratto}» e la riga con il luogo comune.
  */
 export const ROTOCALCO_W = 1080, ROTOCALCO_H = 1350;
-export interface RotocalcoDati { giorno: string; cardId: string; /** Il luogo comune, es. «politico → bugiardo»; assente: copertina senza luogo comune. */ causa?: string; /** Quota (%) di quel luogo comune sul totale della partita, se nota. */ pct?: number; indirizzo: string }
+/** Piazzamento di chi condivide la copertina. */
+export interface Risultato { posto: number; tot: number; punti: number; vinto: boolean; pariMerito: boolean; flash: boolean }
+export interface RotocalcoDati { giorno: string; cardId: string; /** Il luogo comune, es. «politico → bugiardo»; assente: copertina senza luogo comune. */ causa?: string; /** Quota (%) di quel luogo comune sul totale della partita, se nota. */ pct?: number; /** Il risultato di chi condivide: il bollo «HO VINTO!» o il piazzamento. */ risultato?: Risultato; indirizzo: string }
 
 const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffd84a";
 const SERIF = "Georgia, serif", DISPLAY = "Anton, Impact, sans-serif", PENNARELLO = ["Caveat", "Brush"].join(" ") + ", cursive";   // il pennarello: il carattere «Caveat Brush» del gioco
@@ -90,6 +92,19 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   const testa = (): void => { for (const sgn of [-1, 1]) { c.moveTo(bx, by); c.lineTo(bx - Math.cos(ang + sgn * APERT) * TESTA, by - Math.sin(ang + sgn * APERT) * TESTA); } };
   for (const [lw, col] of [[22, "#000"], [11, "#ff3b2e"]] as const) { c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo(qx, qy, bx, by); testa(); c.stroke(); }
   c.restore();
+  // il bollo del risultato di chi condivide (in basso a sinistra sulla foto, lontano dal viso)
+  if (d.risultato) {
+    const r = d.risultato, righe: string[] = [], grande = r.vinto ? ts("rot.vinto").toUpperCase() : ts("rot.res.posto", { posto: r.posto, tot: r.tot }).toUpperCase();
+    righe.push(r.vinto ? ts("rot.res.vinto", { punti: r.punti, posto: r.posto, tot: r.tot }) : ts("rot.res.punti", { punti: r.punti })); if (r.vinto && r.pariMerito) righe.push(ts("rot.vinto.pari")); if (r.flash) righe.push(ts("rot.res.flash"));
+    const bw = 360, bh = (r.vinto ? 104 : 84) + righe.length * 32, bx0 = 30, by0b = PY + PH - bh - 36;
+    c.save(); c.translate(bx0 + bw / 2, by0b + bh / 2); c.rotate(((r.vinto ? -6 : -3) * Math.PI) / 180);
+    c.shadowColor = "#000a"; c.shadowOffsetX = 6; c.shadowOffsetY = 8; c.shadowBlur = 10; c.fillStyle = r.vinto ? GOLD : "#ffffffee"; c.fillRect(-bw / 2, -bh / 2, bw, bh); c.shadowColor = "transparent";
+    c.lineWidth = r.vinto ? 9 : 6; c.strokeStyle = r.vinto ? RED : NAVY; c.strokeRect(-bw / 2, -bh / 2, bw, bh);
+    c.textAlign = "center"; c.fillStyle = r.vinto ? NAVY : RED; const gs = fit(c, grande, (z) => `400 ${z}px ${DISPLAY}`, r.vinto ? 78 : 62, bw - 40, 36); c.font = `400 ${gs}px ${DISPLAY}`; c.fillText(grande, 0, -bh / 2 + (r.vinto ? 80 : 66));
+    c.fillStyle = NAVY; c.font = "800 25px Nunito, sans-serif"; righe.forEach((t, i) => c.fillText(t, 0, -bh / 2 + (r.vinto ? 80 : 66) + 34 + i * 30));
+    if (r.vinto) { c.font = "52px sans-serif"; c.fillText("\u{1F451}", bw / 2 - 44, -bh / 2 + 6); }
+    c.restore();
+  }
   // il titolo-sentenza e la riga del luogo comune
   c.fillStyle = RED; c.fillRect(0, PY + PH, W, 156); c.fillStyle = "#000"; c.fillRect(0, PY + PH, W, 6); c.fillRect(0, PY + PH + 150, W, 6);
   const ttl = tx.titolo.toUpperCase(); const sz = fit(c, `\u201C${ttl}\u201D`, (s) => `400 ${s}px ${DISPLAY}`, 132, W - 80, 56);
@@ -106,6 +121,6 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
 
 /** Disegna la copertina e la manda (o la salva). */
 export async function condividiRotocalco(d: RotocalcoDati, nome: string): Promise<"condiviso" | "annullato" | "salvato"> {
-  const tx = testiRotocalco(d.causa, d.pct);
-  return condividiImmagine(await disegnaRotocalco(d), `«${tx.titolo}» ${tx.sotto}\n${d.indirizzo}`, nome);
+  const tx = testiRotocalco(d.causa, d.pct), r = d.risultato, io = r ? (r.vinto ? ts("rot.res.vinto", { punti: r.punti, posto: r.posto, tot: r.tot }) : ts("share.t", { punti: r.punti, posto: r.posto, tot: r.tot })) : "";
+  return condividiImmagine(await disegnaRotocalco(d), [`«${tx.titolo}» ${tx.sotto}`, io, d.indirizzo].filter(Boolean).join("\n"), nome);
 }
