@@ -163,21 +163,23 @@ export function stereoVoteFlags(tower: { cardId: string; position: number }[], t
 }
 
 /**
- * Il pregiudiziometro. Ogni voto, e ogni segnalino piazzato, è un giudizio a occhio su una faccia e un ruolo: quindi non scende mai a zero.
- * Parte da `PREGIUDIZIO_BASE` (giudicare dall'aspetto, comunque) e sale con quanto la carta e la frase sono associate dalle etichette
- * (luoghi comuni su ruolo e aspetto, o tratti della carta): `1 − e^(−v/3)` con v = la forza dell'associazione (mediana 2, forte oltre 4).
+ * Il pregiudiziometro. Ogni voto, e ogni segnalino piazzato, è un giudizio a occhio su una faccia e un ruolo; la sua forza è quanto la carta e la frase sono
+ * associate (luoghi comuni su ruolo e aspetto, tratti della carta, anche per parentela tra tratti): `1 − e^(−v/3)` con v = la forza dell'associazione (mediana 2, forte oltre 4).
+ * Nessun minimo artificiale. Un voto dato altrove rispetto alla carta più «da luogo comune» del turno non è neutro: chi vota così sta evitando quel luogo comune
+ * (contro-bluff, scelta di fare cadere altro), e conta almeno `PREGIUDIZIO_EVITATO` volte la forza di quella carta.
+ * Un turno in cui nessuna carta ha alcuna associazione con la frase non è misurabile e non entra nel conto (non vale zero).
  */
-export const PREGIUDIZIO_BASE = 0.35;
-export function pregiudizio(cardId: string, text: string): number | null {
-  const e = stereoExplain(cardId, text); if (!e) return null;
-  return PREGIUDIZIO_BASE + (1 - PREGIUDIZIO_BASE) * (1 - Math.exp(-Math.max(e.s, e.base) / 3));
-}
-/** Per un turno: il pregiudizio di ogni voto (0–1), quello del segnalino piazzato dal Megafono e la media su tutte le carte in torre («quanto verrebbe a caso»). Null se la frase non ha etichette. */
+export const PREGIUDIZIO_EVITATO = 0.5;
+const forza = (cardId: string, text: string): number | null => { const e = stereoExplain(cardId, text); return e ? Math.max(e.s, affinityV2m(cardId, text) ?? 0) : null; };
+export function pregiudizio(cardId: string, text: string): number | null { const v = forza(cardId, text); return v === null ? null : 1 - Math.exp(-v / 3); }
+/** Per un turno: il pregiudizio di ogni voto (0–1) e del segnalino piazzato dal Megafono (vuoti se il turno non è misurabile) e la media su tutte le carte in torre. Null se la frase non ha etichette. */
 export function pregiudizioTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, markPos?: number): { voti: Record<string, number>; lui: number | null; caso: number } | null {
-  const by: Record<number, number> = {}; let sum = 0;
-  for (const t of tower) { const p = pregiudizio(t.cardId, text); if (p === null) return null; by[t.position] = p; sum += p; }
-  const voti: Record<string, number> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = by[pos] ?? PREGIUDIZIO_BASE;
-  return { voti, lui: markPos !== undefined && by[markPos] !== undefined ? by[markPos]! : null, caso: tower.length ? sum / tower.length : PREGIUDIZIO_BASE };
+  const by: Record<number, number> = {}; let sum = 0, pM = 0;
+  for (const t of tower) { const p = pregiudizio(t.cardId, text); if (p === null) return null; by[t.position] = p; sum += p; if (p > pM) pM = p; }
+  const caso = tower.length ? sum / tower.length : 0; if (pM === 0) return { voti: {}, lui: null, caso };
+  const eff = (pos: number) => Math.max(by[pos] ?? 0, PREGIUDIZIO_EVITATO * pM);
+  const voti: Record<string, number> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = eff(pos);
+  return { voti, lui: markPos !== undefined && by[markPos] !== undefined ? eff(markPos) : null, caso };
 }
 
 /**
@@ -188,15 +190,26 @@ export function pregiudizioTurno(tower: { cardId: string; position: number }[], 
  * I pesi sono una scelta di progetto (docs/GAME_RULES.md), non una misura. Null se la frase non ha etichette.
  */
 export const PESO_LUI_CONFERMA = 1.5;
+/** Peso di chi vota altrove rispetto alla carta più «da luogo comune» del turno: ha evitato quel luogo comune, e questo è un giudizio. */
+export const PESO_EVITATO = 0.5;
+/** Il luogo comune evocato da una carta e da una frase: la tabella se c'è la riga, altrimenti l'associazione diretta «ruolo (o aspetto) della carta → tratto principale della frase». Null se la carta non ha né ruolo né aspetto. */
+function causaGenerica(cardId: string, text: string): string | null {
+  const p = PHRASES[text] ?? inferV2(text); if (!p) return null;
+  const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? LOOKNAME.get(look) ?? look : null); if (!nome) return null;
+  const tr = Object.entries(p.tipi).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]; return tr ? `${nome} → ${tr[0]}` : null;
+}
 export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null } | null {
   const causa: Record<number, string> = {};
-  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; if (e.causa) causa[t.position] = e.causa; }
+  const fz: Record<number, number> = {};
+  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const c = e.causa ?? causaGenerica(t.cardId, text); if (c) { causa[t.position] = c; fz[t.position] = Math.max(e.s, affinityV2m(t.cardId, text) ?? 0); } }
   const nv: Record<number, number> = {}; for (const pos of Object.values(votes)) nv[pos] = (nv[pos] ?? 0) + 1;
   const w: Record<number, number> = {}; for (const k of Object.keys(causa)) w[Number(k)] = nv[Number(k)] ?? 0;
   for (const m of marks) {
     if ((m.effect === "cade" || m.effect === "nulli") && causa[m.position] !== undefined) { w[m.position]! += 1; if ((nv[m.position] ?? 0) > 0) w[m.position]! *= PESO_LUI_CONFERMA; }
     else if (m.effect === "noncade" && !nv[m.position]) for (const f of fallen) if (causa[f] !== undefined) w[f]! += 1;
   }
+  let M = -1; for (const [k, v] of Object.entries(fz)) if (v > 0 && (M < 0 || v > fz[M]!)) M = Number(k);   // la carta più «da luogo comune»: chi vota altrove l'ha evitata
+  if (M >= 0) w[M]! += PESO_EVITATO * Object.values(votes).filter((pos) => pos !== M).length;
   const pesi: Record<string, number> = {}; let lancio: { pos: number; n: number; causa: string } | null = null;
   for (const [k, v] of Object.entries(w)) {
     if (v > 0) pesi[causa[Number(k)]!] = Math.round(((pesi[causa[Number(k)]!] ?? 0) + v) * 100) / 100;

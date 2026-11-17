@@ -1486,7 +1486,7 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 
 /* Riepilogo di fine partita: la scena si rimpicciolisce in alto, sotto i riquadri compaiono uno alla volta */
 .fin-world{position:absolute;inset:0;transform-origin:50% 0;transition:transform .9s cubic-bezier(.55,0,.2,1)}
-.fin.sum .fin-world{transform:translateY(40px) scale(.28)}
+.fin.sum .fin-world{transform:translateY(40px) scale(.25)}
 .fin.sum .fin-head{scale:.62;transform-origin:50% 0;top:8px}
 .fin-head{transition:scale .9s cubic-bezier(.55,0,.2,1)}
 .fin.sum .fin-skip{display:none}
@@ -1502,7 +1502,7 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .rp-row u{margin-left:auto;text-decoration:none;font:400 15px Anton;display:inline-flex;align-items:center;gap:3px}.rp-row.win u{color:#e8362b}
 .rp-g{padding:4px 6px;text-align:center}.rp-g .sc-gauge{animation:none;width:100%;margin-top:0}.rp-g .sc-num{margin-top:0}.rp-g .sc-num b{font-size:30px;color:#e8362b;text-shadow:2px 2px 0 var(--navy)}.rp-g .sc-num span{font-size:10px;color:var(--navy);text-shadow:none}
 .rp-verd{font:400 13px/1.1 Anton;text-transform:uppercase;animation:rpPop .4s both}
-.rp-lc{grid-column:1/3;transform:rotate(-1.2deg);background:var(--mus);text-align:center;padding:8px 10px;border-width:4px;box-shadow:4px 5px 0 var(--navy)}.rp-lc h4{color:var(--navy);font-size:13px}.rp-k{font:400 30px/1 Anton;text-transform:uppercase}.rp-k2{font:400 24px/1.05 Anton;text-transform:uppercase;color:var(--red);text-shadow:1px 1px 0 var(--navy)}.rp-lc small{font:800 11px Nunito;opacity:.7}
+.rp-lc{grid-column:1/3;transform:rotate(-1.2deg);background:var(--mus);text-align:center;padding:5px 10px;border-width:4px;box-shadow:4px 5px 0 var(--navy)}.rp-lc h4{color:var(--navy);font-size:13px}.rp-k{font:400 24px/1 Anton;text-transform:uppercase}.rp-k2{font:400 19px/1.05 Anton;text-transform:uppercase;color:var(--red);text-shadow:1px 1px 0 var(--navy)}.rp-lc small{font:800 11px Nunito;opacity:.7}
 .rp-cop{margin-top:5px;width:100%;background:#fff;border:2.5px solid var(--navy);border-radius:9px;font:400 12px Anton;text-transform:uppercase;padding:3px;color:var(--navy)}.rp-cop:disabled{opacity:.6}
 .rp-lr{display:flex;gap:7px;align-items:center}.rp-lr img{width:46px;border:2px solid var(--navy);border-radius:6px;flex:none;background:#fff;transform:rotate(-6deg);animation:scDrop .9s .2s cubic-bezier(.3,1.4,.5,1) both}
 .rp-lr b{display:block;font:400 13px/1.1 Anton;text-transform:uppercase}.rp-lr q{display:block;font:800 11px/1.2 Nunito;margin-top:2px;quotes:"«" "»"}
@@ -1510,3 +1510,4 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .rp-uvv{margin:3px 0 0;font:400 12px/1.1 Anton;text-transform:uppercase;text-align:center;color:#e5382b}
 .rp-uvb.full{grid-column:1/3}
 .rp-alt,.sc-alt{font:800 12px Nunito;margin-top:3px;text-transform:capitalize}.rp-lc small{display:block;margin-top:2px}
+.rp-alt,.sc-alt{margin-top:1px;font-size:11.5px}.rp-cop{margin-top:3px;padding:2px}.rp-lan .rp-lr b{font-size:12px}.rp .rp-b h4{margin-bottom:3px}

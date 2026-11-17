@@ -9,7 +9,7 @@ export { shuffle, nextRandom } from "./rng.ts";
 export { chooseBotAction, planMiniVote, TUNE, newBotMemory, learnFromResult, BOT_LEVELS } from "./ai.ts";
 export type { BotLevel, BotMemory } from "./ai.ts";
 export { chooseBotAction as chooseBotActionV2, chooseBotActionLabels as chooseBotActionV2E, chooseBotActionSmooth as chooseBotActionV2M, chooseBotActionLens as chooseBotActionV2O, learnFromResult as learnFromResultV2 } from "./ai-v2/ai.ts";
-export { stereoExplain, stereoVoteFlags, luoghiTurno, PESO_LUI_CONFERMA, isStereoVote, pregiudizio, pregiudizioTurno, PREGIUDIZIO_BASE } from "./ai-v2/tags2.ts";
+export { stereoExplain, stereoVoteFlags, luoghiTurno, PESO_LUI_CONFERMA, PESO_EVITATO, isStereoVote, pregiudizio, pregiudizioTurno, PREGIUDIZIO_EVITATO } from "./ai-v2/tags2.ts";
 export { registerStereotypes, registerRoles, registerLooks, stereoTags, STEREO_CAP } from "./ai-v2/tags2.ts";
 export type { Stereo } from "./ai-v2/tags2.ts";
 export { registerTagsV2, affinityV2, affinityV2m, inferV2, tagSimilarity, hasTagsV2 } from "./ai-v2/tags2.ts";

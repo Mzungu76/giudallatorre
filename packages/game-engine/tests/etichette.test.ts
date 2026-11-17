@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { isStereoVote, luoghiTurno, pregiudizioTurno, PREGIUDIZIO_BASE, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
+import { isStereoVote, luoghiTurno, pregiudizioTurno, PREGIUDIZIO_EVITATO, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
 import { drawLens, mulberry } from "../src/ai-v2/lens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -109,20 +109,22 @@ describe("etichette v2 (occhi dei bot)", () => {
     expect(stereoVoteFlags([{ cardId: "pol", position: 1 }], "frase mai vista zorbo", { a: 1 })).toBeNull();   // frase senza etichette: nessun dato
     // luoghi comuni con i pesi: voti (1 ciascuno) + segnalino del Megafono (CADE/VOTI NULLI +1, ×1,5 se la carta ha anche voti; NON CADE senza voti: +1 alla carta caduta)
     const tl = [{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], K = "politico → bugiardo";
-    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [], [1])!.pesi).toEqual({ [K]: 2 });                                   // solo voti
-    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [{ position: 1, effect: "cade" }], [1])!.pesi).toEqual({ [K]: 4.5 });   // CADE confermato dai voti: (2+1)×1,5
-    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 2 }, [{ position: 1, effect: "cade" }], [2])!.pesi).toEqual({ [K]: 3 });          // un solo voto: (1+1)×1,5
-    expect(luoghiTurno(tl, "i più bugiardi", { a: 2, b: 2 }, [{ position: 1, effect: "nulli" }], [2])!.pesi).toEqual({ [K]: 1 });         // VOTI NULLI senza voti: solo +1
-    expect(luoghiTurno(tl, "i più bugiardi", { a: 3, b: 2 }, [{ position: 3, effect: "cade" }], [3])!.pesi).toEqual({});                   // segnalino su carta non associata: non conta
+    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [], [1])!.pesi).toEqual({ [K]: 2.5 });                                 // 2 voti + 0,5 per chi ha votato altrove (ha evitato il luogo comune)
+    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [{ position: 1, effect: "cade" }], [1])!.pesi).toEqual({ [K]: 5 });     // CADE confermato dai voti: (2+1)×1,5 + 0,5 di chi l'ha evitato
+    expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 2 }, [{ position: 1, effect: "cade" }], [2])!.pesi).toEqual({ [K]: 3.5 });        // un solo voto: (1+1)×1,5 + 0,5
+    expect(luoghiTurno(tl, "i più bugiardi", { a: 2, b: 2 }, [{ position: 1, effect: "nulli" }], [2])!.pesi).toEqual({ [K]: 2 });         // VOTI NULLI senza voti: +1, più 2×0,5 di chi ha votato altrove
+    expect(luoghiTurno(tl, "i più bugiardi", { a: 3, b: 2 }, [{ position: 3, effect: "cade" }], [3])!.pesi).toEqual({ [K]: 1 });             // segnalino su carta senza ruolo né aspetto: non aggiunge nulla (resta il 2×0,5 di chi ha evitato)
     expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1 }, [{ position: 2, effect: "noncade" }], [1])!.pesi).toEqual({ [K]: 3 });       // NON CADE senza voti: +1 alla carta caduta
     expect(luoghiTurno(tl, "i più bugiardi", { a: 1, b: 1, c: 2 }, [], [1])!.lancio).toEqual({ pos: 1, n: 2, causa: K });
     expect(luoghiTurno(tl, "frase mai vista zorbo", { a: 1 }, [], [1])).toBeNull();
-    // il pregiudiziometro: ogni voto è un giudizio a occhio, quindi mai zero; sale con l'associazione; anche il segnalino conta
+    // il pregiudiziometro: nessun minimo; sale con l'associazione; chi vota altrove evita il luogo comune (conta metà della carta più forte); anche il segnalino conta
     const tw = [{ cardId: "pol", position: 1 }, { cardId: "vero", position: 2 }, { cardId: "neutra", position: 3 }], g = pregiudizioTurno(tw, "i più bugiardi", { a: 1, b: 2, c: 3 }, 3)!;
-    expect(g.voti.c).toBeCloseTo(PREGIUDIZIO_BASE, 5);                          // nessun legame con la frase: comunque il giudizio a occhio di base
-    expect(g.voti.a).toBeGreaterThan(g.voti.c!); expect(g.voti.b).toBeGreaterThan(g.voti.c!); expect(Math.max(...Object.values(g.voti))).toBeLessThan(1);
-    expect(Object.values(g.voti).every((x) => x >= PREGIUDIZIO_BASE)).toBe(true); expect(g.lui).toBeCloseTo(PREGIUDIZIO_BASE, 5); expect(g.caso).toBeGreaterThan(PREGIUDIZIO_BASE);
+    const forte = Math.max(g.voti.a!, g.voti.b!);
+    expect(g.voti.c).toBeCloseTo(PREGIUDIZIO_EVITATO * forte, 5); expect(g.voti.c).toBeGreaterThan(0);   // «neutra» non ha legami con la frase: vale quanto aver evitato la carta più forte
+    expect(g.voti.a).toBeGreaterThan(g.voti.c!); expect(forte).toBeLessThan(1); expect(g.lui).toBeCloseTo(g.voti.c!, 5);
     expect(pregiudizioTurno(tw, "i più bugiardi", { a: 1 })!.lui).toBeNull(); expect(pregiudizioTurno(tw, "frase mai vista zorbo", { a: 1 })).toBeNull();
+    // un turno senza alcuna associazione non è misurabile: non vale zero, non c'è
+    expect(pregiudizioTurno([{ cardId: "neutra", position: 1 }], "i più bugiardi", { a: 1 }, 1)!.voti).toEqual({});
     registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });
 });

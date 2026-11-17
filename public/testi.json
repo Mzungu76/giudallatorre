@@ -1,5 +1,5 @@
 {
- "versione": 88,
+ "versione": 89,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3308,11 +3308,6 @@
   "rp.classifica": {
    "t": "Classifica",
    "s": "Fine partita · riepilogo"
-  },
-  "rp.nessuno": {
-   "t": "Stavolta nessuno",
-   "s": "Fine partita · riepilogo",
-   "n": "Titolo grosso del riquadro quando nessun luogo comune ha pesato"
   },
   "rp.quota": {
    "t": "{pct}% dei luoghi comuni",
