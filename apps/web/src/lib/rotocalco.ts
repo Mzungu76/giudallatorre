@@ -114,6 +114,12 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   let sp = fit(c, tx.sotto, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`;
   if (cs) { const a = `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}:`, b = ts("rot.sotto.coda"); sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
   else { c.textAlign = "center"; c.fillStyle = GOLD; c.fillText(tx.sotto, W / 2, by0 + 60); }
+  // il logo: la torre e il nome del gioco
+  { const torre = await img("/giocatori/torre.webp"), nome = ts("share.titolo").toUpperCase(), area = H - by0 - 56;
+    c.textAlign = "left"; c.fillStyle = "#fff"; const ns = fit(c, nome, (z) => `400 ${z}px ${DISPLAY}`, 54, W - 260, 36); c.font = `400 ${ns}px ${DISPLAY}`;
+    const th = Math.min(area - 6, 64), tw = torre ? Math.round((torre.width / torre.height) * th) : 0, nw = c.measureText(nome).width, tot = tw + (tw ? 22 : 0) + nw, x0 = (W - tot) / 2, cy = by0 + 112;
+    if (torre) c.drawImage(torre, x0, cy - th / 2, tw, th);
+    c.textBaseline = "middle"; c.lineJoin = "round"; c.lineWidth = 7; c.strokeStyle = RED; c.strokeText(nome, x0 + tw + (tw ? 22 : 0), cy + 4); c.fillText(nome, x0 + tw + (tw ? 22 : 0), cy + 4); c.textBaseline = "alphabetic"; }
   c.textAlign = "center"; c.fillStyle = "#ffffffb0"; c.font = "800 26px Nunito, sans-serif"; c.fillText(ts("rot.url", { url: d.indirizzo }), W / 2, H - 24);
   c.strokeStyle = "#000"; c.lineWidth = 14; c.strokeRect(7, 7, W - 14, H - 14);
   return new Promise((ok, no) => cv.toBlob((b) => (b ? ok(b) : no(new Error("immagine non creata"))), "image/png"));
