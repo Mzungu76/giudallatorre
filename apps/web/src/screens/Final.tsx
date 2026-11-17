@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import PagellaSheet from "../components/PagellaSheet.tsx";
+import Riepilogo from "../components/Riepilogo.tsx";
 import type { PlayerView } from "@gdt/game-engine";
 import { FAST, navigate } from "../ui.tsx";
 import { forgetSession } from "../lib/session.ts";
@@ -13,7 +13,6 @@ import { condividiCartolina, dataLunga } from "../lib/cartolina.ts";
 import { leggiUltimo } from "../lib/ultimoTurno.ts";
 import { condividiRotocalco, datiRotocalco } from "../lib/rotocalco.ts";
 import { stereoGame } from "../lib/stereo.ts";
-import { t as tx } from "../lib/testi.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import type { UiCtl } from "../components/BUi.tsx";
 import type { ClientMessage } from "@gdt/game-protocol";
@@ -25,10 +24,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
   // Premio della serata prima della scalata: una volta per partita (e per scheda), mai nei test veloci
   const awKey = `gdt.award.${room.code}`, award = view.award;
   const [seen, setSeen] = useState(() => { if (FAST || !award) return true; try { return sessionStorage.getItem(awKey) === "1"; } catch { return false; } });
-  const stKey = `gdt.stereo.${room.code}`;   // poi il pregiudiziometro («Luoghi comuni») della partita, sempre prima della classifica finale; gli stati vanno SEMPRE prima di ogni ritorno anticipato (altrimenti React perde il conto degli hook e la schermata si svuota)
-  const [stSeen, setStSeen] = useState(() => { if (FAST) return true; try { return sessionStorage.getItem(stKey) === "1"; } catch { return false; } });
-  const [sharing, setSharing] = useState(false), [cop, setCop] = useState(false), [pgOpen, setPgOpen] = useState(false);
-  const chiudiPg = () => { try { sessionStorage.setItem(stKey, "1"); } catch { /* vale per questa visita */ } setStSeen(true); setPgOpen(false); };
+  const [sharing, setSharing] = useState(false), [cop, setCop] = useState(false), [riep, setRiep] = useState(false);
   const inAward = !seen && !!award;
   useEffect(() => { music.theme(inAward ? null : "musica-finale.mp3"); return () => music.theme(null); }, [inAward]);   // dalle statistiche in poi: la musica del finale
   const ultimo = leggiUltimo(room.code);
@@ -52,9 +48,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
     try { const dd = datiRotocalco(view.stereo, ultimo ? ultimo.carte.find((c) => c.pos === ultimo.voto)?.id : undefined, dayId(), location.host); if (dd) await condividiRotocalco(dd, `copertina-${dd.giorno}.png`); } catch { /* niente copertina */ }
     setCop(false);
   };
-  const haPg = !!stereoGame(view.stereo);
-  return <FinalScene onDone={() => { if (!stSeen && haPg) setPgOpen(true); }} onShare={!readOnly && ultimo ? condividi : undefined} sharing={sharing} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }} >
-    {pgOpen && <PagellaSheet rows={rows} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} onDone={chiudiPg} onShare={!readOnly ? copertina : undefined} sharing={cop} />}
-    {!pgOpen && stSeen && haPg && <button className="pg-riv" onClick={() => setPgOpen(true)} data-testid="pagella-riapri">{tx("pg.riv")}</button>}
+  return <FinalScene summary={riep} onDone={() => setRiep(true)} onShare={!readOnly && ultimo ? condividi : undefined} sharing={sharing} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }}>
+    {riep && <Riepilogo rows={rows} winners={winners} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} onShare={!readOnly ? copertina : undefined} sharing={cop} />}
   </FinalScene>;
 }

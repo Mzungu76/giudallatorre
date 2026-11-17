@@ -13,7 +13,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing, children }: { /** Altro da disegnare sopra la scena (es. il pannello della pagella). */ children?: ReactNode; /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing, children, summary }: { /** Riepilogo: la scena si rimpicciolisce in alto e al posto della classifica compaiono i `children`. */ summary?: boolean; /** Altro da disegnare sopra la scena (es. il pannello della pagella). */ children?: ReactNode; /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST || instant ? 3 : 0), [inst, setInst] = useState(!!(FAST || instant)), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -53,10 +53,11 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
   const shared = W > 1, done = ph === 3;
   useEffect(() => { if (done && !instant) onDone?.(); }, [done]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
-    <div className="fin" data-testid="final" onClick={() => { if (!done) finish(); }}>
+    <div className={`fin ${summary ? "sum" : ""}`} data-testid="final" onClick={() => { if (!done) finish(); }}>
       <div className="stbd-sky" /><div className="stbd-rays" />
       {done && Array.from({ length: 30 }, (_, i) => <i key={i} className="confetti fin-conf" style={{ left: (i * 53) % 360, top: -20, width: 8 + (i % 3) * 3, height: 5 + (i % 4) * 2, background: ["#e8362b", "#ffc72c", "#14a3a1", "#fff7e0", "#ff7aa8"][i % 5], animationDelay: `${(i % 10) * 0.18}s`, animationDuration: `${3 + (i % 5) * 0.5}s` }} />)}
       <div className="h fin-head" key={done ? "w" : "t"}><small>{done ? (shared ? tx("fin.shared") : tx("fin.ha")) : tx("fin.chi")}</small>{done ? tx("fin.megafono") : tx("fin.scalata")}</div>
+      <div className="fin-world">
       <div className="fin-ground" style={{ top: gy }} />
       <img className="fin-tower" src="/giocatori/torre.webp" alt="" style={{ left: tl, top: Y0, width: 505 * k, height: 741 * k }} />
       {geo.map((g) => {
@@ -80,8 +81,9 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       })}
       {ph === 2 && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-bam" style={{ left: g.x0 + cw / 2 - 14, top: g.y0 + ch / 3, animationDelay: `${g.delay}s` }}>💥</span>)}
       {(inst || ph >= 2) && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-diz" style={{ left: g.x1 + cw / 2 - 12, top: g.y1 - 20, animationDelay: inst ? "0s" : `${g.delay + FALL_S + 0.3}s` }}>💫</span>)}
+      </div>
       {!done && <div className="fin-skip" style={{ top: gy + 22 }}>{tx("fin.salta")}</div>}
-      {done && (
+      {done && !summary && (
         <div className="fin-rank" style={{ top: gy + 14 }} data-testid="final-rank">
           {rows.map((r, i) => (
             <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><Who id={r.id}><i className="dc" style={{ background: r.color }} /><span>{r.name}</span></Who><u><PtIcon s={15} /> {pts(r.score)}</u></div>

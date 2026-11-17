@@ -1,5 +1,5 @@
 {
- "versione": 84,
+ "versione": 85,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3313,22 +3313,9 @@
    "t": "Preparo la copertina…",
    "s": "Copertina rotocalco"
   },
-  "pg.salta": {
-   "t": "Salta",
-   "s": "Fine partita · pagella"
-  },
-  "pg.avanza": {
-   "t": "Tocca per andare avanti",
-   "s": "Fine partita · pagella"
-  },
-  "pg.riv": {
-   "t": "Rivedi la pagella",
-   "s": "Fine partita · pagella"
-  },
-  "pg.pos": {
-   "t": "{n}°",
-   "s": "Fine partita · pagella",
-   "n": "Posizione in classifica nella riga compatta della pagella"
+  "rp.classifica": {
+   "t": "Classifica",
+   "s": "Fine partita · riepilogo"
   }
  }
 }

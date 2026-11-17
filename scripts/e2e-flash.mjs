@@ -49,11 +49,12 @@ while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("Flash: nessuna scelta di frase o carte (si va subito al segnalino e al voto)", scelte === 0 && vistoVoto, `scelte=${scelte} voto=${vistoVoto}`); await p.click('[data-testid="final"]').catch(() => {});   // salta la scalata
-{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("pagella"))) await sleep(200); }
-check("a fine partita sale da solo il pannello con la pagella", await vis("pagella")); check("nel pannello c'è la classifica compatta", await vis("pagella-rank")); check("la prima scheda è il Pregiudiziometro", await vis("pagella-pregiudizio"));
-if (SHOTS) await p.screenshot({ path: `${SHOTS}/pagella-1.png` });
-{ let k = 2; const t1 = Date.now(); while (Date.now() - t1 < 25_000 && await vis("pagella")) { await sleep(4200); if (SHOTS && await vis("pagella")) await p.screenshot({ path: `${SHOTS}/pagella-${k++}.png` }); } }
-check("la pagella si chiude da sola dopo l'ultima scheda", !(await vis("pagella"))); check("si può riaprire", await vis("pagella-riapri"));
+{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("riepilogo"))) await sleep(200); }
+check("a fine animazione si passa al riepilogo (torre piccola + riquadri)", await vis("riepilogo"));
+if (SHOTS) { await sleep(500); await p.screenshot({ path: `${SHOTS}/riep-1.png` }); }
+await sleep(3500);
+check("nel riepilogo c'è la classifica", await vis("final-rank")); check("nel riepilogo c'è il Pregiudiziometro", await vis("stereo-ring"));
+if (SHOTS) await p.screenshot({ path: `${SHOTS}/riep-2.png` })
 { const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("share-final"))) await sleep(300); }
 check("nella classifica finale c'è il pulsante Condividi", await vis("share-final"));
 { const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 10_000 }).catch(() => null), p.click('[data-testid="share-final"]').catch(() => {})]); if (dl && SHOTS) await dl.saveAs(`${SHOTS}/cartolina-partita.png`); check("Condividi genera la cartolina (senza foglio di condivisione la scarica come .png)", !!dl && /\.png$/.test(dl.suggestedFilename()), dl ? dl.suggestedFilename() : "nessun file"); } if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-finale.png` });
