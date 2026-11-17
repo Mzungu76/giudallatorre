@@ -1,5 +1,5 @@
 {
- "versione": 92,
+ "versione": 94,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3248,7 +3248,7 @@
    "n": "Titolo-sentenza (il tratto del luogo comune più forte)"
   },
   "rot.sotto": {
-   "t": "{ruolo} = {tratto}: il luogo comune più votato!",
+   "t": "{frase}: il luogo comune più votato!",
    "s": "Copertina rotocalco",
    "n": "Riga sotto il titolo"
   },
@@ -3276,7 +3276,7 @@
    "s": "Copertina rotocalco"
   },
   "rot.nota.2": {
-   "t": "100%\n{tratto}",
+   "t": "{pct}%\n{tratto}",
    "s": "Copertina rotocalco"
   },
   "rot.nota.3": {
@@ -3628,6 +3628,62 @@
    "t": "Tra loro:",
    "s": "Luoghi comuni · frasi",
    "n": "Introduce la caratteristica (aspetto) comune alle carte dei luoghi comuni di ruolo"
+  },
+  "sm.titolo": {
+   "t": "Condividi",
+   "s": "Condivisione"
+  },
+  "sm.cartolina": {
+   "t": "Cartolina della partita",
+   "s": "Condivisione"
+  },
+  "sm.cartolina.s": {
+   "t": "Il tuo punteggio e il tuo posto",
+   "s": "Condivisione"
+  },
+  "sm.copertina": {
+   "t": "Copertina del giornale",
+   "s": "Condivisione"
+  },
+  "sm.copertina.s": {
+   "t": "Il luogo comune più votato in prima pagina",
+   "s": "Condivisione"
+  },
+  "sm.testo": {
+   "t": "Messaggio di testo",
+   "s": "Condivisione"
+  },
+  "sm.testo.s": {
+   "t": "Pregiudiziometro e luoghi comuni da incollare",
+   "s": "Condivisione"
+  },
+  "sm.copiato": {
+   "t": "Testo copiato negli appunti",
+   "s": "Condivisione"
+  },
+  "sm.carico": {
+   "t": "Preparo…",
+   "s": "Condivisione"
+  },
+  "sm.chiudi": {
+   "t": "Chiudi",
+   "s": "Condivisione"
+  },
+  "share.pg.pgm": {
+   "t": "Giù dalla Torre: il mio Pregiudiziometro è al {pct}%.",
+   "s": "Condivisione"
+  },
+  "share.pg.t": {
+   "t": "I luoghi comuni della partita:",
+   "s": "Condivisione"
+  },
+  "share.pg.riga": {
+   "t": "{frase} ({pct}%)",
+   "s": "Condivisione"
+  },
+  "share.pg.punti": {
+   "t": "{punti} punti, {posto}° posto su {tot}.",
+   "s": "Condivisione"
   }
  }
 }

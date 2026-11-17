@@ -57,6 +57,11 @@ check("nel riepilogo c'è la classifica", await vis("final-rank")); check("nel r
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/riep-2.png` })
 { const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("share-final"))) await sleep(300); }
 check("nella classifica finale c'è il pulsante Condividi", await vis("share-final"));
-{ const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 10_000 }).catch(() => null), p.click('[data-testid="share-final"]').catch(() => {})]); if (dl && SHOTS) await dl.saveAs(`${SHOTS}/cartolina-partita.png`); check("Condividi genera la cartolina (senza foglio di condivisione la scarica come .png)", !!dl && /\.png$/.test(dl.suggestedFilename()), dl ? dl.suggestedFilename() : "nessun file"); } if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-finale.png` });
+await p.click('[data-testid="share-final"]').catch(() => {});
+check("Condividi apre il foglio con almeno 3 modi", (await vis("share-menu")) && (await vis("share-cartolina")) && (await vis("share-testo")));
+if (SHOTS) await p.screenshot({ path: `${SHOTS}/share-menu.png` });
+{ const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 12_000 }).catch(() => null), p.click('[data-testid="share-cartolina"]').catch(() => {})]); if (dl && SHOTS) await dl.saveAs(`${SHOTS}/cartolina-partita.png`); check("la cartolina si genera (senza foglio di condivisione si scarica come .png)", !!dl && /\.png$/.test(dl.suggestedFilename())); }
+await sleep(800); if (!(await vis("share-menu"))) { await p.click('[data-testid="share-final"]').catch(() => {}); await sleep(400); }
+if (await vis("share-copertina")) { const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 12_000 }).catch(() => null), p.click('[data-testid="share-copertina"]').catch(() => {})]); if (dl && SHOTS) await dl.saveAs(`${SHOTS}/copertina-partita.png`); check("la copertina del giornale si genera", !!dl); }
 check("nessun errore JavaScript", p.errors.length === 0, JSON.stringify(p.errors));
 await browser.close(); console.log(failures ? `\n${failures} falliti` : "\nTutti i controlli superati"); process.exit(failures ? 1 : 0);

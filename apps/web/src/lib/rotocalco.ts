@@ -1,3 +1,4 @@
+import { fraseLuogo, stereoGame } from "./stereo.ts";
 import { cardFull, loadCards } from "./cards.ts";
 import { condividiImmagine, dataLunga, img } from "./cartolina.ts";
 import { ts } from "./testi.ts";
@@ -8,7 +9,7 @@ import type { GameState } from "@gdt/game-engine";
  * Il personaggio colpito dal luogo comune più forte, a figura intera (mai ritagliato), il titolo «È un {tratto}» e la riga con il luogo comune.
  */
 export const ROTOCALCO_W = 1080, ROTOCALCO_H = 1350;
-export interface RotocalcoDati { giorno: string; cardId: string; /** Il luogo comune, es. «politico → bugiardo»; assente: copertina senza luogo comune. */ causa?: string; indirizzo: string }
+export interface RotocalcoDati { giorno: string; cardId: string; /** Il luogo comune, es. «politico → bugiardo»; assente: copertina senza luogo comune. */ causa?: string; /** Quota (%) di quel luogo comune sul totale della partita, se nota. */ pct?: number; indirizzo: string }
 
 const NAVY = "#13224a", RED = "#e8362b", GOLD = "#ffd84a";
 const SERIF = "Georgia, serif", DISPLAY = "Anton, Impact, sans-serif", PENNARELLO = ["Caveat", "Brush"].join(" ") + ", cursive";   // il pennarello: il carattere «Caveat Brush» del gioco
@@ -20,19 +21,20 @@ export function spezzaCausa(causa: string | undefined): { ruolo: string; tratto:
 }
 /** I dati della copertina dalle statistiche della partita: serve il «miglior lancio» (carta e luogo comune insieme); senza, copertina senza luogo comune con la carta di ripiego. */
 export function datiRotocalco(stereo: GameState["stereo"] | null | undefined, ripiego: string | undefined, giorno: string, indirizzo: string): RotocalcoDati | null {
-  const L = stereo?.lancio; if (L && spezzaCausa(L.causa)) return { giorno, cardId: L.cardId, causa: L.causa, indirizzo };
+  const L = stereo?.lancio; if (L && spezzaCausa(L.causa)) { const g = stereoGame(stereo, 99), pct = g?.top.find((x) => x.k === L.causa)?.pct; return { giorno, cardId: L.cardId, causa: L.causa, ...(pct !== undefined ? { pct } : {}), indirizzo }; }
   return ripiego ? { giorno, cardId: ripiego, indirizzo } : null;
 }
 const hash = (t: string): number => { let h = 2166136261; for (const c of t) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
 /** La scritta a pennarello (cambia da una serata all'altra: stessa carta e stesso tratto, stessa scritta). */
-export function notaPennarello(cardId: string, tratto: string | null, giorno: string): string {
+export function notaPennarello(cardId: string, tratto: string | null, giorno: string, pct?: number): string {
   if (!tratto) return ts("rot.nota.vuota");
-  return ts(`rot.nota.${hash(cardId + giorno) % 5}` as "rot.nota.0", { tratto });
+  let i = hash(cardId + giorno) % 5; if (i === 2 && pct === undefined) i = 0;   // la scritta con la percentuale solo se la conosciamo
+  return ts(`rot.nota.${i}` as "rot.nota.0", { tratto, pct: pct ?? 0 });
 }
 /** Titolo e riga sotto, con lo schema fisso. */
-export function testiRotocalco(causa: string | undefined): { titolo: string; sotto: string } {
+export function testiRotocalco(causa: string | undefined, pct?: number): { titolo: string; sotto: string } {
   const c = spezzaCausa(causa);
-  return c ? { titolo: ts("rot.titolo", { tratto: c.tratto }), sotto: ts("rot.sotto", { ruolo: MAI(c.ruolo), tratto: c.tratto }) } : { titolo: ts("rot.titolo.vuoto"), sotto: ts("rot.sotto.vuoto") };
+  return c ? { titolo: ts("rot.titolo", { tratto: c.tratto }), sotto: ts("rot.sotto", { frase: fraseLuogo(causa!) + (pct !== undefined ? ` · ${pct}%` : "") }) } : { titolo: ts("rot.titolo.vuoto"), sotto: ts("rot.sotto.vuoto") };
 }
 
 /** Foto in bianco e nero con un po' di contrasto (a mano sui pixel: `ctx.filter` non c'è su tutti i telefoni). */
@@ -49,7 +51,7 @@ function fit(c: CanvasRenderingContext2D, t: string, font: (px: number) => strin
 export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   try { await Promise.all([document.fonts.load("120px Anton"), document.fonts.load("80px " + PENNARELLO), loadCards()]); } catch { /* caratteri di ripiego */ }
   const W = ROTOCALCO_W, H = ROTOCALCO_H, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const c = cv.getContext("2d")!;
-  const foto = await img(cardFull(d.cardId)), tx = testiRotocalco(d.causa), cs = spezzaCausa(d.causa);
+  const foto = await img(cardFull(d.cardId)), tx = testiRotocalco(d.causa, d.pct), cs = spezzaCausa(d.causa);
   c.fillStyle = "#fff"; c.fillRect(0, 0, W, H);
   // la foto: sfondo = la stessa carta ingrandita, in bianco e nero e scurita; al centro la carta INTERA (mai ritagliata)
   const PY = 168, PH = 832;
@@ -77,14 +79,16 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   c.save(); c.translate(150, PY + 70); c.rotate((-9 * Math.PI) / 180); c.font = `400 52px ${DISPLAY}`; const ew = c.measureText(ts("rot.esclusivo").toUpperCase()).width + 36;
   c.fillStyle = "#ffffffe6"; c.fillRect(-ew / 2, -48, ew, 74); c.lineWidth = 7; c.strokeStyle = RED; c.strokeRect(-ew / 2, -48, ew, 74); c.fillStyle = RED; c.textAlign = "center"; c.fillText(ts("rot.esclusivo").toUpperCase(), 0, 8); c.restore();
   // la scritta a pennarello con la freccia verso il personaggio (non sappiamo dov'è il viso: la freccia indica la figura)
-  const nota = notaPennarello(d.cardId, cs?.tratto ?? null, d.giorno), nx = 905, ny = PY + 250;
+  const nota = notaPennarello(d.cardId, cs?.tratto ?? null, d.giorno, d.pct), nx = 905, ny = PY + 250;
   c.save(); c.translate(nx, ny); c.rotate((7 * Math.PI) / 180);
   const righe = nota.split("\n"); let npx = 70; for (const r of righe) npx = Math.min(npx, fit(c, r, (s) => `400 ${s}px ${PENNARELLO}`, 70, 250, 34));
   c.font = `400 ${npx}px ${PENNARELLO}`; c.textAlign = "center"; c.lineJoin = "round"; c.lineWidth = 9; c.strokeStyle = "#000"; c.fillStyle = "#ff3b2e";
   righe.forEach((r, i) => { c.strokeText(r, 0, i * (npx + 6)); c.fillText(r, 0, i * (npx + 6)); }); c.restore();
   c.save(); c.strokeStyle = "#000"; c.lineWidth = 18; c.lineCap = "round"; c.lineJoin = "round";
   const ax = nx - 70, ay = ny + 48 + (righe.length - 1) * (npx + 6), bx = W / 2 + 100, by = PY + 270;   // dalla scritta verso la parte alta del personaggio
-  for (const [lw, col] of [[18, "#000"], [10, "#ff3b2e"]] as const) { c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo((ax + bx) / 2, ay + 70, bx, by); c.stroke(); c.beginPath(); c.moveTo(bx + 4, by - 46); c.lineTo(bx, by); c.lineTo(bx + 46, by + 14); c.stroke(); }
+  const qx = (ax + bx) / 2, qy = ay + 70, ang = Math.atan2(by - qy, bx - qx), TESTA = 58, APERT = 0.5;   // la testa segue la direzione con cui la curva arriva sul personaggio
+  const testa = (): void => { for (const sgn of [-1, 1]) { c.moveTo(bx, by); c.lineTo(bx - Math.cos(ang + sgn * APERT) * TESTA, by - Math.sin(ang + sgn * APERT) * TESTA); } };
+  for (const [lw, col] of [[22, "#000"], [11, "#ff3b2e"]] as const) { c.strokeStyle = col; c.lineWidth = lw; c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo(qx, qy, bx, by); testa(); c.stroke(); }
   c.restore();
   // il titolo-sentenza e la riga del luogo comune
   c.fillStyle = RED; c.fillRect(0, PY + PH, W, 156); c.fillStyle = "#000"; c.fillRect(0, PY + PH, W, 6); c.fillRect(0, PY + PH + 150, W, 6);
@@ -93,7 +97,7 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   c.strokeText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112); c.fillStyle = "#fff"; c.fillText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112);
   const by0 = PY + PH + 156; c.fillStyle = "#000"; c.fillRect(0, by0, W, H - by0);
   let sp = fit(c, tx.sotto, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`;
-  if (cs) { const a = `${MAI(cs.ruolo)} = ${cs.tratto}:`, b = ts("rot.sotto.coda"); sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
+  if (cs) { const a = `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}:`, b = ts("rot.sotto.coda"); sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
   else { c.textAlign = "center"; c.fillStyle = GOLD; c.fillText(tx.sotto, W / 2, by0 + 60); }
   c.textAlign = "center"; c.fillStyle = "#ffffffb0"; c.font = "800 26px Nunito, sans-serif"; c.fillText(ts("rot.url", { url: d.indirizzo }), W / 2, H - 24);
   c.strokeStyle = "#000"; c.lineWidth = 14; c.strokeRect(7, 7, W - 14, H - 14);
@@ -102,6 +106,6 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
 
 /** Disegna la copertina e la manda (o la salva). */
 export async function condividiRotocalco(d: RotocalcoDati, nome: string): Promise<"condiviso" | "annullato" | "salvato"> {
-  const tx = testiRotocalco(d.causa);
+  const tx = testiRotocalco(d.causa, d.pct);
   return condividiImmagine(await disegnaRotocalco(d), `«${tx.titolo}» ${tx.sotto}\n${d.indirizzo}`, nome);
 }

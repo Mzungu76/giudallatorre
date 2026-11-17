@@ -51,3 +51,14 @@ export function stereoGruppi(st: GameState["stereo"] | null | undefined, isBot: 
 /** Le fasce del pregiudiziometro: ogni voto è già un giudizio a occhio, quindi il tachimetro parte da circa il 35% e le fasce stanno nella parte alta. */
 export const SEG_PREGIUDIZIO = [{ a: 0, b: 0.5, c: "#4aa63a" }, { a: 0.5, b: 0.65, c: "#f4c20d" }, { a: 0.65, b: 0.8, c: "#f08a1c" }, { a: 0.8, b: 1, c: "#e5382b" }] as const;
 export const fasciaPregiudizio = (pct: number): 0 | 1 | 2 | 3 => (pct < 50 ? 0 : pct < 65 ? 1 : pct < 80 ? 2 : 3);
+
+/** Il messaggio di testo della partita: Pregiudiziometro, i primi luoghi comuni con le percentuali, il mio punteggio. */
+export function testoPartita(st: GameState["stereo"] | null | undefined, punti: { punti: number; posto: number; tot: number } | null, url: string): string {
+  const g = stereoGame(st), righe: string[] = [];
+  if (g) {
+    righe.push(ts("share.pg.pgm", { pct: g.pct }));
+    if (g.top.length) { righe.push(ts("share.pg.t")); for (const x of g.top) righe.push(ts("share.pg.riga", { frase: fraseLuogo(x.k), pct: x.pct })); }
+  }
+  if (punti) righe.push(ts("share.pg.punti", punti));
+  righe.push(url); return righe.join("\n");
+}

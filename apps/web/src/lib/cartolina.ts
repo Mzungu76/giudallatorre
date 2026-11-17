@@ -133,3 +133,9 @@ export async function condividiImmagine(blob: Blob, testo: string, nome: string)
   try { await navigator.clipboard.writeText(testo); } catch { /* solo l'immagine */ }
   return "salvato";
 }
+
+/** Condivide un testo: foglio di condivisione se c'è, altrimenti lo copia negli appunti. */
+export async function condividiTesto(testo: string): Promise<"condiviso" | "annullato" | "copiato" | "niente"> {
+  try { if (navigator.share) { await navigator.share({ text: testo }); return "condiviso"; } } catch (e) { if ((e as Error)?.name === "AbortError") return "annullato"; }
+  try { await navigator.clipboard.writeText(testo); return "copiato"; } catch { return "niente"; }
+}
