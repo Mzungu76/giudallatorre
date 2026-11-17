@@ -20,21 +20,21 @@ function gioca(core: RoomCore, host: string) {
   return { visti, guard };
 }
 
-describe("partita Flash: un solo turno", () => {
+describe("partita Flash: due turni", () => {
   it("il protocollo accetta flash e flashMega", () => {
     expect(createRoomBody.safeParse({ nickname: "Io", flash: true, flashMega: "host", bots: { count: 3, level: "hard" } }).success).toBe(true);
     expect(createRoomBody.safeParse({ nickname: "Io", flash: true, flashMega: "boh" }).success).toBe(false);
   });
-  it("frase e carte si assegnano da sole: si va subito al segnalino e al voto; un turno e basta, senza premio né spareggio", () => {
+  it("frase e carte si assegnano da sole: si va subito al segnalino e al voto; due turni e basta, senza premio né spareggio", () => {
     for (const mega of ["host", "random"] as const) for (let i = 0; i < 4; i++) {
       const c = RoomCore.create("FLASH", deps(20 + i), 0, { nickname: "Io", flash: true, flashMega: mega, bots: { count: 3, level: "hard" } });
       expect(c.core.data.options.flash).toBe(true);
       const { visti } = gioca(c.core, c.playerId), g = c.core.data.game as GameState;
-      expect(c.core.data.stage).toBe("FINISHED"); expect(g.phase).toBe("GAME_OVER"); expect(g.totalTurns).toBe(1); expect(g.history).toHaveLength(1);
+      expect(c.core.data.stage).toBe("FINISHED"); expect(g.phase).toBe("GAME_OVER"); expect(g.totalTurns).toBe(2); expect(g.history).toHaveLength(2);
       expect(g.award).toBeNull(); expect(g.winners!.length).toBeGreaterThan(0); expect(g.goldenTurns).toBe(0);
       expect(visti.has("PROCLAIM") && !visti.has("PLAY")).toBe(false);   // le fasi di scelta non sono mai lasciate al giocatore
       expect(visti.has("PROCLAIM")).toBe(false); expect(visti.has("PLAY")).toBe(false); expect(visti.has("VOTE")).toBe(true);
-      expect(g.history![0] !== undefined).toBe(true);
+      expect(g.history![0]!.megafonoId).not.toBe(g.history![1]!.megafonoId);   // il Megafono ruota
     }
   });
   it("«Io faccio il Megafono»: l'host posa il segnalino; «a caso»: il Megafono varia da una stanza all'altra", () => {

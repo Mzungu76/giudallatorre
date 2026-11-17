@@ -1,6 +1,6 @@
 {
- "versione": 82,
- "aggiornato": "2026-11-16",
+ "versione": 83,
+ "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -3055,14 +3055,14 @@
   "home.flash": {
    "t": "Flash",
    "s": "Home",
-   "n": "Partita di un solo turno, con amici o bot"
+   "n": "Partita di due turni, con amici o bot"
   },
   "home.torre": {
    "t": "Torre del giorno",
    "s": "Home"
   },
   "fm.flash.sopra": {
-   "t": "Flash · un solo turno",
+   "t": "Flash · due turni",
    "s": "Crea partita"
   },
   "fm.w.mega": {
@@ -3087,7 +3087,7 @@
    "s": "Intro Flash e Torre del giorno"
   },
   "splash.flash.s": {
-   "t": "Un solo turno. Chi cade?",
+   "t": "Due turni. Chi cade?",
    "s": "Intro Flash e Torre del giorno"
   },
   "splash.torre.t": {

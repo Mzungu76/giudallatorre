@@ -35,6 +35,8 @@ export const luiForbidden = (s: GameState, p: PlayerId): number | null => (p ===
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
+/** Partita Flash: quanti turni (il Megafono ruota). */
+export const FLASH_TURNS = 2;
 /** 3 giocatori: 2 giri di Megafono a testa (6 turni); da 4 a 8: 1 giro, cioè tanti turni quanti sono i giocatori. */
 export const roundsFor = (n: number) => (n === 3 ? 2 : 1);
 /** Turni dopo cui c'è un intervallo (mini-gioco): sempre uno solo, a metà partita, con qualsiasi numero di giocatori. (Prima da 6 a 8 giocatori erano due.) */
@@ -65,7 +67,7 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: config.flash ? 1 : roundsFor(n), totalTurns: config.flash ? 1 : n * roundsFor(n), turnNumber: 1,
+    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: config.flash ? FLASH_TURNS : roundsFor(n), totalTurns: config.flash ? FLASH_TURNS : n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, tower: [], votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
@@ -243,7 +245,7 @@ function endTurn(s: GameState, events: GameEvent[]) {
   }
   s.megafonoTurns[mega]! += 1;
   events.push({ type: "turnEnded", turn: s.turnNumber });
-  if (s.flash || s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
+  if (s.flash ? s.turnNumber >= s.totalTurns : s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
     // fine dei giri regolari: vince chi ha più punti; se più giocatori sono in testa si gioca a oltranza ("Golden goal")
     const best = Math.max(...Object.values(s.scores)), leaders = s.playerIds.filter((p) => s.scores[p] === best);
     if (!s.flash && leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {

@@ -184,8 +184,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const showFallScene = !!res && watched && !revealing && !FAST;
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
   const afterStep = after.turn === turn ? after.step : "points";
-  // Flash: dopo lo spoglio niente classifica del turno: chi può far proseguire (host o Megafono) passa subito al finale di partita
-  const flashAvanti = !!room.options.flash && !readOnly && (isMega || isHost || megaBot);
+  // Flash: dopo lo spoglio dell'ultimo turno niente classifica del turno: chi può far proseguire passa subito al finale di partita
+  const flashAvanti = !!room.options.flash && !readOnly && view.turn >= view.totalTurns && (isMega || (isHost && megaBot));
   // chi ha visto spoglio e caduta non rivede i punti: dopo la caduta si passa da soli alla classifica (subito se ha saltato l'animazione)
   const skippedAt = useRef(0), seenAll = !!res && watched && !FAST;
   useEffect(() => {
