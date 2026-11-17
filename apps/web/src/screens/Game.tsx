@@ -5,6 +5,8 @@ import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
 import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import { music } from "../lib/music.ts";
+import { sfx } from "../lib/sfx.ts";
+import { salvaUltimo } from "../lib/ultimoTurno.ts";
 import SceneHost from "../components/SceneHost.tsx";
 import Standings from "../components/Standings.tsx";
 import { ResultMarks, ScoreStrip } from "../components/ResultsView.tsx";
@@ -137,6 +139,9 @@ const Flags = ({ flags, people }: { flags: { id: string; done: boolean }[]; peop
 );
 
 
+/** Flash: passa subito al finale (nessuna classifica del turno). */
+function FlashAvanza({ onGo }: { onGo: () => void }) { useEffect(() => { onGo(); }, []); return null; }   // eslint-disable-line react-hooks/exhaustive-deps
+
 export default function Game({ room, view, deadline, send, readOnly, sound, ui }: GameProps) {
   const stage = useStage(), { H, dy } = stage, [shift, setShift] = useState({ dy: 0, sc: 1 });
   const people = usePeople(room), me = view.viewerId, isMega = me === view.megafonoId, isHost = room.hostId === me, gold = isMega && !readOnly;
@@ -179,6 +184,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const showFallScene = !!res && watched && !revealing && !FAST;
   const showPanel = !!res && (!watched || FAST || fallDone === turn);
   const afterStep = after.turn === turn ? after.step : "points";
+  // Flash: dopo lo spoglio dell'ultimo turno niente classifica del turno: chi può far proseguire passa subito al finale di partita
+  const flashAvanti = !!room.options.flash && !readOnly && view.turn >= view.totalTurns && (isMega || (isHost && megaBot));
   // chi ha visto spoglio e caduta non rivede i punti: dopo la caduta si passa da soli alla classifica (subito se ha saltato l'animazione)
   const skippedAt = useRef(0), seenAll = !!res && watched && !FAST;
   useEffect(() => {
@@ -211,10 +218,16 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
   const act = (a: ClientMessage) => send(a);
   const needTerrace = N > 0 && (phase === "SUSPECT" || phase === "VOTE" || (phase === "RESULTS" && !showFallScene));
   const animating = climbing || revealing || falling;
-  // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto, spoglio) fino alla fine della caduta; all'inizio del percorso dei punti torna il sottofondo
-  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (!!res && watched && !FAST && fallDone !== turn && musicOff !== turn);
+  // musica del voto: dalla fine della salita delle carte sulla torre (scelta del Megafono, voto) fino alla fine dello spoglio; dall'animazione della caduta torna il tema principale
+  const suspense = ((phase === "SUSPECT" || phase === "VOTE") && !climbing) || (revealing && musicOff !== turn);
   useEffect(() => { music.voting(suspense); }, [suspense]);
   useEffect(() => () => music.voting(false), []);
+  // l'ultimo turno visto: serve alla cartolina da condividere dalla classifica finale
+  useEffect(() => {
+    const rr = res; if (!rr || readOnly || !view.tower.length) return;
+    const mk = rr.marks?.[0], voto = rr.votes[me]; if (voto === undefined) return;
+    salvaUltimo(room.code, { frase: view.phrase && "text" in view.phrase ? view.phrase.text ?? "" : "", carte: view.tower.map((t) => ({ pos: t.position, id: t.cardId })).sort((a, b) => a.pos - b.pos), voto, cadute: rr.fallenPositions ?? [rr.fallenPosition], ...(mk ? { seg: { pos: mk.position, effetto: mk.effect } } : {}), pts: rr.points[me] ?? 0 });
+  }, [res?.turn]); // eslint-disable-line react-hooks/exhaustive-deps
   const annullati: string[] = res ? (res.marks?.find((x) => x.effect === "nulli")?.caught ?? []) : [];
   const fellArr = res ? res.fallenPositions ?? [res.fallenPosition] : [];
   const resMarks = res?.marks?.length ? res.marks.map((m) => ({ pos: m.position, spec: markSpec(m) })) : null;
@@ -328,7 +341,8 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
         </div>
       )}
       {animating && !readOnly && <button className="skip" onClick={() => { if (falling) skippedAt.current = turn; if (res) { setMusicOff(turn); music.voting(false); } setSkip((s) => s + 1); apiRef.current?.skip(); }} data-testid="skip">{tx("g.salta")}</button>}
-      {showPanel && res && afterStep === "board" && (
+      {showPanel && res && afterStep === "board" && flashAvanti && <FlashAvanza onGo={() => act({ t: "act", action: { type: "advance" } })} />}
+      {showPanel && res && afterStep === "board" && !flashAvanti && (
         <Standings title={view.goldenGoal ? txs("g.cl.spareggio") : view.roundEnd ? txs("g.cl.giro", { n: Math.min(view.round, view.rounds), tot: view.rounds }) : txs("g.cl")} turn={view.turn} total={view.totalTurns} onClose={() => undefined}
           rows={view.players.map((p) => ({ id: p.id, name: people.get(p.id).name, color: people.get(p.id).color, score: p.score, prev: p.score - (res.points[p.id] ?? 0) }))}
           action={!readOnly && (isMega || isHost || megaBot) ? { label: view.turn >= view.totalTurns ? txs("g.az.finale") : view.roundEnd ? txs("g.az.giro") : txs("g.az.turno"), onClick: () => act({ t: "act", action: { type: "advance" } }) } : { wait: readOnly ? txs("g.az.wait.ro") : txs("g.az.wait") }} />

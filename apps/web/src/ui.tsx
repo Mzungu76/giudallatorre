@@ -69,8 +69,8 @@ export function Stage({ children, bg = "paper", frame = true, testId, fixed, dim
   );
 }
 
-export function Btn({ children, onClick, kind = "mus", disabled, style, testId, type = "button" }: { children: ReactNode; onClick?: () => void; kind?: "mus" | "red" | "pap" | "dis"; disabled?: boolean; style?: CSSProperties; testId?: string; type?: "button" | "submit" }) {
-  return <button type={type} className={`bt ${disabled ? "dis" : kind}`} disabled={disabled} onClick={onClick} style={style} data-testid={testId}>{children}</button>;
+export function Btn({ children, onClick, kind = "mus", disabled, style, testId, type = "button", className = "" }: { className?: string; children: ReactNode; onClick?: () => void; kind?: "mus" | "red" | "pap" | "dis"; disabled?: boolean; style?: CSSProperties; testId?: string; type?: "button" | "submit" }) {
+  return <button type={type} className={`bt ${disabled ? "dis" : kind}${className ? " " + className : ""}`} disabled={disabled} onClick={onClick} style={style} data-testid={testId}>{children}</button>;
 }
 export const Disc = ({ color, size = "" }: { color: string; size?: "" | "l" | "xl" }) => <i className={`dc ${size}`} style={{ background: color }} />;
 export function Toast({ text }: { text: string | null }) { return text ? <div className="toast" role="alert" data-testid="toast">{text}</div> : null; }

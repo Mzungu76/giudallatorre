@@ -1,6 +1,6 @@
 {
- "versione": 57,
- "aggiornato": "2026-11-15",
+ "versione": 95,
+ "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -2926,6 +2926,824 @@
   "st.perc": {
    "t": "Quanto sei preciso",
    "s": "Statistiche personali"
+  },
+  "sp.titolo": {
+   "t": "Luoghi comuni",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.sotto": {
+   "t": "Chi ha giudicato dalla copertina?",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sp.vuoto": {
+   "t": "Nessun dato in questa partita",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "st.luoghi": {
+   "t": "Voti per luogo comune",
+   "s": "Statistiche personali"
+  },
+  "st.acaso": {
+   "t": "a caso: {pct}%",
+   "s": "Statistiche personali"
+  },
+  "sp.partita": {
+   "t": "dei voti dati a occhio",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.top": {
+   "t": "Il luogo comune della partita",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.lancio": {
+   "t": "Il miglior lancio dalla Torre",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.lancio.voti": {
+   "t": "{ruolo}: {n} voti per",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb": {
+   "t": "Umani contro bot",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.umani": {
+   "t": "🧑 Umani",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.bot": {
+   "t": "🤖 Bot",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f0": {
+   "t": "Mente aperta!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f1": {
+   "t": "Qualche occhiata storta",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f2": {
+   "t": "Giudici da bar",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.f3": {
+   "t": "Tribunale della copertina",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.u": {
+   "t": "Gli umani giudicano più dei bot!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.b": {
+   "t": "I bot hanno più pregiudizi di voi!",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "sc.uvb.p": {
+   "t": "Umani e bot, pari e patta",
+   "s": "Fine partita · luoghi comuni"
+  },
+  "torre.punti": {
+   "t": "punti",
+   "s": "Torre del giorno"
+  },
+  "torre.prossima": {
+   "t": "Prossima Torre tra {t}",
+   "s": "Torre del giorno"
+  },
+  "torre.condividi": {
+   "t": "Condividi",
+   "s": "Torre del giorno"
+  },
+  "torre.copiato": {
+   "t": "Copiato!",
+   "s": "Torre del giorno"
+  },
+  "torre.home": {
+   "t": "Torna alla home",
+   "s": "Torre del giorno"
+  },
+  "torre.share.t": {
+   "t": "Torre n.{n} {cella} · {pts} punti",
+   "s": "Torre del giorno",
+   "n": "Testo da condividere (solo testo)"
+  },
+  "torre.share.serie": {
+   "t": "Serie: {n} giorni 🔥",
+   "s": "Torre del giorno"
+  },
+  "torre.carico": {
+   "t": "Preparo la Torre…",
+   "s": "Torre del giorno"
+  },
+  "torre.errore": {
+   "t": "Non riesco a caricare la Flash.",
+   "s": "Torre del giorno"
+  },
+  "torre.riprova": {
+   "t": "Riprova",
+   "s": "Torre del giorno"
+  },
+  "home.flash": {
+   "t": "Flash",
+   "s": "Home",
+   "n": "Partita di due turni, con amici o bot"
+  },
+  "home.torre": {
+   "t": "Torre del giorno",
+   "s": "Home"
+  },
+  "fm.flash.sopra": {
+   "t": "Flash · due turni",
+   "s": "Crea partita"
+  },
+  "fm.w.mega": {
+   "t": "Chi fa il Megafono",
+   "s": "Crea partita"
+  },
+  "fm.mega.io": {
+   "t": "Io",
+   "s": "Crea partita"
+  },
+  "fm.mega.caso": {
+   "t": "A caso",
+   "s": "Crea partita"
+  },
+  "home.torre.nuova": {
+   "t": "Nuova!",
+   "s": "Home",
+   "n": "Compare sul pulsante finché non apri la Torre del giorno di oggi"
+  },
+  "splash.flash.t": {
+   "t": "Flash",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.flash.s": {
+   "t": "Due turni. Chi cade?",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.torre.t": {
+   "t": "La Torre del giorno",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "splash.torre.s": {
+   "t": "Una Torre per tutti. Una sola occasione.",
+   "s": "Intro Flash e Torre del giorno"
+  },
+  "torre.v0": {
+   "t": "Giù anche tu!",
+   "s": "Torre del giorno"
+  },
+  "torre.v1": {
+   "t": "Mezzo colpo!",
+   "s": "Torre del giorno"
+  },
+  "torre.v2": {
+   "t": "Occhio fino!",
+   "s": "Torre del giorno"
+  },
+  "torre.v3": {
+   "t": "Cecchino della Torre!",
+   "s": "Torre del giorno"
+  },
+  "torre.stats": {
+   "t": "Il tuo punteggio",
+   "s": "Torre del giorno"
+  },
+  "torre.c.titolo": {
+   "t": "Giù dalla Torre!",
+   "s": "Torre del giorno",
+   "n": "Cartolina da condividere"
+  },
+  "torre.c.sotto": {
+   "t": "La Torre del giorno · n.{n} · {data}",
+   "s": "Torre del giorno",
+   "n": "Cartolina da condividere"
+  },
+  "torre.c.tu": {
+   "t": "TU",
+   "s": "Torre del giorno",
+   "n": "Cartolina: la carta che hai votato"
+  },
+  "torre.c.serie": {
+   "t": "🔥 {fila} giorni di fila · Totale {totale}",
+   "s": "Torre del giorno",
+   "n": "Cartolina da condividere"
+  },
+  "torre.c.invito": {
+   "t": "Chi butteresti giù? Gioca anche tu: {url}",
+   "s": "Torre del giorno",
+   "n": "Cartolina da condividere"
+  },
+  "torre.k.cade": {
+   "t": "CADE!",
+   "s": "Torre del giorno"
+  },
+  "torre.k.noncade": {
+   "t": "NON CADE!",
+   "s": "Torre del giorno"
+  },
+  "torre.k.nulli": {
+   "t": "VOTI NULLI!",
+   "s": "Torre del giorno"
+  },
+  "torre.salva": {
+   "t": "Salva immagine",
+   "s": "Torre del giorno"
+  },
+  "torre.cartolina": {
+   "t": "Preparo la cartolina…",
+   "s": "Torre del giorno"
+  },
+  "torre.cartolina.alt": {
+   "t": "Cartolina da condividere con il tuo risultato",
+   "s": "Torre del giorno",
+   "n": "Testo alternativo dell'immagine"
+  },
+  "torre.c.frase": {
+   "t": "«{f}»",
+   "s": "Torre del giorno",
+   "n": "Cartolina: la frase del Megafono tra virgolette"
+  },
+  "torre.c.serie1": {
+   "t": "🔥 1 giorno · Totale {totale}",
+   "s": "Torre del giorno",
+   "n": "Cartolina da condividere, prima Torre della serie"
+  },
+  "torre.c.aaah": {
+   "t": "AAAAHHH!",
+   "s": "Torre del giorno",
+   "n": "Cartolina: il grido della carta che cade"
+  },
+  "torre.c.buttiamo": {
+   "t": "Oggi buttiamo dalla torre {resto}",
+   "s": "Torre del giorno",
+   "n": "Frase per i social: sostituisce «Oggi sale sulla torre…»"
+  },
+  "torre.c.pregiudizio": {
+   "t": "Pregiudiziometro",
+   "s": "Torre del giorno",
+   "n": "Cartolina: il tachimetro dei luoghi comuni"
+  },
+  "fin.condividi": {
+   "t": "Condividi",
+   "s": "Fine partita"
+  },
+  "fin.cond.carico": {
+   "t": "Preparo la cartolina…",
+   "s": "Fine partita"
+  },
+  "share.sotto.partita": {
+   "t": "La partita · {data}",
+   "s": "Condivisione della partita"
+  },
+  "share.sotto.flash": {
+   "t": "Flash · {data}",
+   "s": "Condivisione della partita"
+  },
+  "share.v.vinto": {
+   "t": "Hai vinto!",
+   "s": "Condivisione della partita"
+  },
+  "share.v.podio": {
+   "t": "Sul podio!",
+   "s": "Condivisione della partita"
+  },
+  "share.v.altri": {
+   "t": "Alla prossima!",
+   "s": "Condivisione della partita"
+  },
+  "share.banda": {
+   "t": "{punti} punti · {posto}° posto su {tot}",
+   "s": "Condivisione della partita"
+  },
+  "share.t": {
+   "t": "Ho fatto {punti} punti: {posto}° posto su {tot}. Giù dalla Torre!",
+   "s": "Condivisione della partita"
+  },
+  "splash.flash.mega": {
+   "t": "Megafono: {nome}",
+   "s": "Intro Flash e Torre del giorno",
+   "n": "Nell'intro di Flash: chi è il Megafono (scelto dall'host o a caso)"
+  },
+  "rot.testata": {
+   "t": "IL GIORNALE DELLA TORRE",
+   "s": "Copertina rotocalco"
+  },
+  "rot.fondato": {
+   "t": "Fondato oggi",
+   "s": "Copertina rotocalco"
+  },
+  "rot.prezzo": {
+   "t": "Prezzo: un pregiudizio",
+   "s": "Copertina rotocalco"
+  },
+  "rot.esclusivo": {
+   "t": "Esclusivo",
+   "s": "Copertina rotocalco"
+  },
+  "rot.titolo": {
+   "t": "È un {tratto}",
+   "s": "Copertina rotocalco",
+   "n": "Titolo-sentenza (il tratto del luogo comune più forte)"
+  },
+  "rot.sotto": {
+   "t": "{frase}: il luogo comune più votato!",
+   "s": "Copertina rotocalco",
+   "n": "Riga sotto il titolo"
+  },
+  "rot.sotto.coda": {
+   "t": "il luogo comune più votato!",
+   "s": "Copertina rotocalco",
+   "n": "Parte bianca della riga sotto il titolo"
+  },
+  "rot.titolo.vuoto": {
+   "t": "Giudicati dalla copertina",
+   "s": "Copertina rotocalco",
+   "n": "Titolo quando non c'è un luogo comune in evidenza"
+  },
+  "rot.sotto.vuoto": {
+   "t": "Nessun luogo comune in evidenza: si vota a occhio!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.0": {
+   "t": "{tratto}!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello (una a caso per serata)"
+  },
+  "rot.nota.1": {
+   "t": "sì,\n{tratto}!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.2": {
+   "t": "{pct}%\n{tratto}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.3": {
+   "t": "chiaramente\n{tratto}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.4": {
+   "t": "{tratto},\nlo so!",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.vuota": {
+   "t": "lo dice\nla faccia!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello senza luogo comune"
+  },
+  "rot.url": {
+   "t": "{url}",
+   "s": "Copertina rotocalco"
+  },
+  "rot.condividi": {
+   "t": "Condividi la copertina",
+   "s": "Copertina rotocalco",
+   "n": "Pulsante nella pagina delle statistiche"
+  },
+  "rot.cond.carico": {
+   "t": "Preparo la copertina…",
+   "s": "Copertina rotocalco"
+  },
+  "rp.classifica": {
+   "t": "Classifica",
+   "s": "Fine partita · riepilogo"
+  },
+  "lc.r.politico": {
+   "t": "I politici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.religioso": {
+   "t": "I preti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.insegnante": {
+   "t": "Gli insegnanti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.studente": {
+   "t": "Gli studenti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.sanitario": {
+   "t": "I medici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.giudice": {
+   "t": "I giudici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.cuoco": {
+   "t": "I cuochi",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.tassista": {
+   "t": "I tassisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.ciclista": {
+   "t": "I ciclisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.meccanico": {
+   "t": "I meccanici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.corriere": {
+   "t": "I corrieri",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.venditore": {
+   "t": "I venditori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.guardia": {
+   "t": "Le guardie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.hacker": {
+   "t": "Gli hacker",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.giornalista": {
+   "t": "I giornalisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.comico": {
+   "t": "I comici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.artista": {
+   "t": "Gli artisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.musicista": {
+   "t": "I musicisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.rapper": {
+   "t": "I rapper",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.punk": {
+   "t": "I punk",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.hippie": {
+   "t": "Gli hippie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.turista": {
+   "t": "I turisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.istruttore": {
+   "t": "Gli istruttori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.influencer": {
+   "t": "Gli influencer",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.guru": {
+   "t": "I guru",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.manager": {
+   "t": "I manager",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.impiegato": {
+   "t": "Gli impiegati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.trader": {
+   "t": "I trader",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.nerd": {
+   "t": "I nerd",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.attivista": {
+   "t": "Gli attivisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.genitore": {
+   "t": "I genitori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.presentatore": {
+   "t": "I presentatori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.scienziato": {
+   "t": "Gli scienziati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.atleta": {
+   "t": "Gli atleti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.mago": {
+   "t": "I maghi",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.reginetta": {
+   "t": "Le reginette",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.architetto": {
+   "t": "Gli architetti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.bibliotecario": {
+   "t": "I bibliotecari",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.a.occhiali": {
+   "t": "Chi porta gli occhiali",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.occhiali_sole": {
+   "t": "Chi porta gli occhiali da sole",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.completo": {
+   "t": "Chi veste in completo",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.catena_oro": {
+   "t": "Chi porta la catena d'oro",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cappellino": {
+   "t": "Chi porta il cappellino",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.berretto": {
+   "t": "Chi porta il berretto",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.divisa": {
+   "t": "Chi indossa la divisa",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.abito_elegante": {
+   "t": "Chi veste elegante",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.abbigliamento_sportivo": {
+   "t": "Chi veste sportivo",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cuffie": {
+   "t": "Chi porta le cuffie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.sandali": {
+   "t": "Chi porta i sandali",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.camicia_hawaiana": {
+   "t": "Chi porta la camicia hawaiana",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.giacca_pelle": {
+   "t": "Chi porta la giacca di pelle",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.borchie": {
+   "t": "Chi porta le borchie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.fascia_corona": {
+   "t": "Chi porta la corona",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.pantofole": {
+   "t": "Chi porta le pantofole",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.collana": {
+   "t": "Chi porta la collana",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cappello_stagnola": {
+   "t": "Chi porta il cappello di stagnola",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.casco": {
+   "t": "Chi porta il casco",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.maschera": {
+   "t": "Chi porta la maschera",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.capelli_colorati": {
+   "t": "Chi ha i capelli colorati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.sciarpa": {
+   "t": "Chi porta la sciarpa",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cravatta": {
+   "t": "Chi porta la cravatta",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.frase.r": {
+   "t": "{chi} sono {tratto}",
+   "s": "Luoghi comuni · frasi",
+   "n": "Luogo comune su un ruolo: «I politici sono bugiardi»"
+  },
+  "lc.frase.a": {
+   "t": "{chi} è più {tratto} degli altri",
+   "s": "Luoghi comuni · frasi",
+   "n": "Luogo comune su un aspetto: «Chi porta la cravatta è più bugiardo degli altri»"
+  },
+  "lc.tra": {
+   "t": "Tra loro:",
+   "s": "Luoghi comuni · frasi",
+   "n": "Introduce la caratteristica (aspetto) comune alle carte dei luoghi comuni di ruolo"
+  },
+  "sm.titolo": {
+   "t": "Condividi",
+   "s": "Condivisione"
+  },
+  "sm.cartolina": {
+   "t": "Cartolina della partita",
+   "s": "Condivisione"
+  },
+  "sm.cartolina.s": {
+   "t": "Il tuo punteggio e il tuo posto",
+   "s": "Condivisione"
+  },
+  "sm.copertina": {
+   "t": "Copertina del giornale",
+   "s": "Condivisione"
+  },
+  "sm.copertina.s": {
+   "t": "Il luogo comune più votato in prima pagina",
+   "s": "Condivisione"
+  },
+  "sm.testo": {
+   "t": "Messaggio di testo",
+   "s": "Condivisione"
+  },
+  "sm.testo.s": {
+   "t": "Pregiudiziometro e luoghi comuni da incollare",
+   "s": "Condivisione"
+  },
+  "sm.copiato": {
+   "t": "Testo copiato negli appunti",
+   "s": "Condivisione"
+  },
+  "sm.carico": {
+   "t": "Preparo…",
+   "s": "Condivisione"
+  },
+  "sm.chiudi": {
+   "t": "Chiudi",
+   "s": "Condivisione"
+  },
+  "share.pg.pgm": {
+   "t": "Giù dalla Torre: il mio Pregiudiziometro è al {pct}%.",
+   "s": "Condivisione"
+  },
+  "share.pg.t": {
+   "t": "I luoghi comuni della partita:",
+   "s": "Condivisione"
+  },
+  "share.pg.riga": {
+   "t": "{frase} ({pct}%)",
+   "s": "Condivisione"
+  },
+  "share.pg.punti": {
+   "t": "{punti} punti, {posto}° posto su {tot}.",
+   "s": "Condivisione"
+  },
+  "dt.btn": {
+   "t": "Dettagli",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.titolo": {
+   "t": "Dettagli dei luoghi comuni",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.origine": {
+   "t": "Come si è formato",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.voti": {
+   "t": "{n} voti sul personaggio",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.segnalino": {
+   "t": "{n} dal segnalino del Megafono",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.evitato": {
+   "t": "{n} da chi ha votato altrove",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.personaggi": {
+   "t": "Personaggi coinvolti",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.nessun": {
+   "t": "Nessun voto diretto: pesa solo il segnalino o chi ha votato altrove",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.comune": {
+   "t": "Caratteristica comune",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.comune.riga": {
+   "t": "{chi}: {n} voti su {tot} ({pct}%)",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.solida": {
+   "t": "Quanto è solida la stima",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s0": {
+   "t": "Solo {n} voti: è un indizio debole",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s1": {
+   "t": "{n} voti: stima discreta",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.s2": {
+   "t": "{n} voti: stima abbastanza solida",
+   "s": "Dettagli dei luoghi comuni"
+  },
+  "dt.nota": {
+   "t": "Il peso di un luogo comune: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
+   "s": "Dettagli dei luoghi comuni"
   }
  }
 }

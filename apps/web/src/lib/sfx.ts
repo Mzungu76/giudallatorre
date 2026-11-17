@@ -38,7 +38,25 @@ function sample(n: Name, rate: number): boolean {
   const s = c.createBufferSource(); s.buffer = b; s.playbackRate.value = rate; s.connect(master); s.start();
   return true;
 }
+// Brevi file con nome proprio (es. «musica-fart.mp3»): suonano una volta sola; se il file manca, niente.
+const shots = new Map<string, AudioBuffer | null | "carico">();
+function shot(on: boolean, file: string, duckMs = 0) {
+  if (!on) return; const c = ctx(); if (!c || !master) return;
+  const go = (b: AudioBuffer) => { const s = c.createBufferSource(), g = c.createGain(); g.gain.value = 1.6; s.buffer = b; s.connect(g); g.connect(master!); if (duckMs) music.duck(duckMs); s.start(); };
+  const b = shots.get(file);
+  if (b === null || b === "carico") return;
+  if (b) { go(b); return; }
+  shots.set(file, "carico");
+  fetch(`/audio/${file}`).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error("manca")))).then((ab) => c.decodeAudioData(ab)).then((d) => { shots.set(file, d); go(d); }).catch(() => { shots.set(file, null); });
+}
+/** Scalda i file brevi (così il primo suono parte al momento giusto). */
+export function precarica(files: string[]) { const c = ctx(); if (!c) return; for (const f of files) if (!shots.has(f)) { shots.set(f, "carico"); fetch(`/audio/${f}`).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error("manca")))).then((ab) => c.decodeAudioData(ab)).then((d) => shots.set(f, d)).catch(() => shots.set(f, null)); } }
+
 export const sfx = {
+  /** Il momento in cui la carta caduta tocca i materassi: la pernacchia (public/audio/musica-fart.mp3). */
+  fart(on: boolean) { shot(on, "musica-fart.mp3", 3200); },
+  /** Collegamento pronto, oggi non usato: suona public/audio/musica-segnapunti.mp3 se c'è (il file è stato tolto). */
+  segnapunti(on: boolean) { shot(on, "musica-segnapunti.mp3", 3000); },
   whoosh(on: boolean) { if (!on) return; preload(); if (!sample("whoosh", 1)) synth.whoosh(on); },
   tap(on: boolean, freq = 520) { if (!on) return; preload(); if (!sample("tap", Math.min(2, Math.max(0.5, freq / 520)))) synth.tap(on, freq); },
   drum(on: boolean, len = 0.6) { if (!on) return; preload(); music.duck(DUCK.drum ?? 0); if (!sample("drum", 1)) synth.drum(on, len); },

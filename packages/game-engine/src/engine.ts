@@ -20,13 +20,13 @@ export const luiTokens = (_s?: GameState): LuiSpec[] => cncPool();
  * cade solo lei, altrimenti cadono tutte (il voto del Megafono non ha ruolo speciale). Funzione pura, la usano il motore e i bot.
  */
 export function tallyMarks(positions: number[], votes: Record<PlayerId, number>, marks: { effect?: string; position: number }[]) {
-  const nul = marks.find((m) => m.effect === "nulli")?.position ?? -1, cade = marks.find((m) => m.effect === "cade")?.position ?? -1;
+  const nul = marks.find((m) => m.effect === "nulli")?.position ?? -1;
   const counts: Record<number, number> = Object.fromEntries(positions.map((p) => [p, 0]));
   const annulled = Object.keys(votes).filter((p) => votes[p] === nul);
   for (const [p, v] of Object.entries(votes)) if (v !== nul) counts[v] = (counts[v] ?? 0) + 1;
   const top = Math.max(...Object.values(counts)), leaders = Object.keys(counts).map(Number).filter((k) => counts[k] === top).sort((x, y) => x - y);
-  const tie = leaders.length > 1, cadeTie = tie && leaders.includes(cade), fallen = top === 0 ? [] : cadeTie ? [cade] : leaders;
-  return { counts, annulled, tie, cadeTie, fallen };
+  const tie = leaders.length > 1, fallen = top === 0 ? [] : leaders;   // pareggio: cadono tutte le carte pari, anche se una ha CADE
+  return { counts, annulled, tie, cadeTie: false, fallen };
 }
 
 /** Il Megafono non può votare la carta su cui ha posato VOTI NULLI!. Restituisce quella posizione (o null). */
@@ -35,6 +35,8 @@ export const luiForbidden = (s: GameState, p: PlayerId): number | null => (p ===
 export const MAX_PHRASE_CHARS = 80;
 /** Limite di sicurezza ai turni di spareggio: oltre, la vittoria resta condivisa. */
 export const GOLDEN_GOAL_MAX_TURNS = 30;
+/** Partita Flash: quanti turni (il Megafono ruota). */
+export const FLASH_TURNS = 2;
 /** 3 giocatori: 2 giri di Megafono a testa (6 turni); da 4 a 8: 1 giro, cioè tanti turni quanti sono i giocatori. */
 export const roundsFor = (n: number) => (n === 3 ? 2 : 1);
 /** Turni dopo cui c'è un intervallo (mini-gioco): sempre uno solo, a metà partita, con qualsiasi numero di giocatori. (Prima da 6 a 8 giocatori erano due.) */
@@ -65,12 +67,12 @@ export function createGame(config: GameConfig): { state: GameState; events: Game
   if (config.phraseDeck.length < 1 || config.phraseDeck.some((c) => c.phrases.length < 1)) throw new EngineError("INVALID_DECK", "mazzo frasi non valido");
   const s: GameState = {
     version: 1, playerIds: ids, names: Object.fromEntries(config.players.map((p) => [p.id, p.name])),
-    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: roundsFor(n), totalTurns: n * roundsFor(n), turnNumber: 1,
+    marks: null, mixPhrases: !!config.mixPhrases, handSize, rounds: config.flash ? FLASH_TURNS : roundsFor(n), totalTurns: config.flash ? FLASH_TURNS : n * roundsFor(n), turnNumber: 1,
     megafonoIndex: 0, phase: "PROCLAIM", hands: {}, drawPile: [], discardPile: [], phraseDraw: [], phraseDiscard: [],
     rng: config.seed | 0, proclaim: null, phrase: null, played: {}, tower: [], votes: {},
     scores: Object.fromEntries(ids.map((i) => [i, 0])), megafonoTurns: Object.fromEntries(ids.map((i) => [i, 0])),
     lastResult: null, winners: null, history: [], botIds: (config.botIds ?? []).filter((b) => ids.includes(b)), award: null, goldenGoal: false, goldenTurns: 0,
-    miniGame: config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null,
+    ...(config.flash ? { flash: true } : {}), miniGame: config.flash ? false : config.miniGame ?? false, accuseDeck: (config.accuseDeck ?? []).slice(), miniAt: miniAtsFor(n)[0]!, miniAts: miniAtsFor(n), minisDone: 0, miniKinds: [], miniDone: false, mini: null, miniResult: null,
   };
   s.drawPile = shuffle(config.deck, s);
   s.phraseDraw = s.mixPhrases ? mixPhrases(config.phraseDeck, s) : shuffle(config.phraseDeck, s);
@@ -208,7 +210,8 @@ function resolve(s: GameState, events: GameEvent[]) {
   const give = (p: PlayerId, pts: number, kind: ScoreLine["kind"], pos: number, n?: number) => { points[p]! += pts; lines[p]!.push(n === undefined ? { kind, pts, pos } : { kind, pts, pos, n }); };
   // voto giusto (voto valido) e carta caduta (anche quella del Megafono)
   for (const p of s.playerIds) if (!annulled.includes(p) && fallen.includes(s.votes[p]!)) give(p, 2, "voto", s.votes[p]!);
-  for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
+  // Flash: le carte sulla Torre si assegnano da sole, nessuno le sceglie: niente +2 per la carta caduta
+  if (!s.flash) for (const sl of slots) if (sl.ownerId !== null) give(sl.ownerId, 2, "carta", sl.position);
   // segnalini: CADE +4 se cade, NON CADE +2 se resta su, al Megafono (ovunque abbia votato, una volta sola) e a ognuno della Folla che l'ha votata
   const outs = marks.map((m) => {
     const fell = fallen.includes(m.position), voters = s.playerIds.filter((p) => p !== mega && !annulled.includes(p) && s.votes[p] === m.position);
@@ -243,14 +246,14 @@ function endTurn(s: GameState, events: GameEvent[]) {
   }
   s.megafonoTurns[mega]! += 1;
   events.push({ type: "turnEnded", turn: s.turnNumber });
-  if (s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
+  if (s.flash ? s.turnNumber >= s.totalTurns : s.playerIds.every((p) => s.megafonoTurns[p]! >= s.rounds)) {
     // fine dei giri regolari: vince chi ha più punti; se più giocatori sono in testa si gioca a oltranza ("Golden goal")
     const best = Math.max(...Object.values(s.scores)), leaders = s.playerIds.filter((p) => s.scores[p] === best);
-    if (leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {
+    if (!s.flash && leaders.length > 1 && s.goldenTurns < GOLDEN_GOAL_MAX_TURNS) {
       s.goldenGoal = true; s.goldenTurns += 1; s.totalTurns += 1;
       events.push({ type: "goldenGoal", leaders });
     } else {
-      s.winners = leaders; s.phase = "GAME_OVER"; s.award = pickAward({ playerIds: s.playerIds, scores: s.scores, history: s.history ?? [], botIds: s.botIds }, s);
+      s.winners = leaders; s.phase = "GAME_OVER"; s.award = s.flash ? null : pickAward({ playerIds: s.playerIds, scores: s.scores, history: s.history ?? [], botIds: s.botIds }, s);
       s.tower = []; s.played = {}; s.votes = {}; s.marks = null;
       events.push({ type: "gameOver", winners: s.winners });
       return;

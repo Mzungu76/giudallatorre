@@ -7,7 +7,7 @@ import type { Outbox, RoomData } from "./RoomCore.ts";
 import { ACCUSE_DECK, CONFESSIONS, DECK, PHRASE_DECK, PHRASE_POOL } from "./content.ts";
 import { TokenBucket, cryptoBytes } from "./security.ts";
 
-export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; ASSETS: Fetcher }
+export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; ASSETS: Fetcher; /** Solo anteprima: "v2o" = le stanze normali usano i bot v2o. */ BOT_ENGINE_DEFAULT?: string }
 interface Attachment { pid: string | null; at: number; spec?: boolean }
 const UNAUTH_MS = 10_000;
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store", "x-content-type-options": "nosniff" } });
@@ -31,7 +31,7 @@ export class GameRoom extends DurableObject<Env> {
   }
 
   private save() { if (this.core) this.ctx.storage.sql.exec("INSERT OR REPLACE INTO kv (k, v) VALUES ('room', ?)", JSON.stringify(this.core.data)); }
-  private deps() { return { rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, phrasePool: PHRASE_POOL, confessions: CONFESSIONS, accuseDeck: ACCUSE_DECK }; }
+  private deps() { return { defaultBotEngine: this.env.BOT_ENGINE_DEFAULT, rng: cryptoBytes, deck: DECK, phraseDeck: PHRASE_DECK, phrasePool: PHRASE_POOL, confessions: CONFESSIONS, accuseDeck: ACCUSE_DECK }; }
   private spectators() { return this.ctx.getWebSockets().filter((w) => (w.deserializeAttachment() as Attachment | null)?.spec === true); }
   private sendSpectators(events: GameEvent[]) {
     const specs = this.spectators(); if (!specs.length || !this.core) return;

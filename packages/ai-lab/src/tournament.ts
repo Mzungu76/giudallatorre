@@ -66,7 +66,7 @@ export function runTournament(cfg: TournamentConfig, content: LabContent, opts: 
     }
     for (let g = 0; g < cfg.games; g++) {
       const seed = (cfg.seed + g * 7919) | 0, seats = lineupFor(cfg, seed);
-      const row = playGame(seats, g, seed, content, { ...(cfg.miniGame !== undefined ? { miniGame: cfg.miniGame } : {}), ...(opts.strict !== undefined ? { strict: opts.strict } : {}) });
+      const row = playGame(seats, g, seed, content, { ...(cfg.miniGame !== undefined ? { miniGame: cfg.miniGame } : {}), ...(opts.strict !== undefined ? { strict: opts.strict } : {}), ...(opts.onResults ? { onResults: opts.onResults } : {}) });
       games.push(row); opts.onGame?.(row, g + 1, cfg.games);
       if (opts.shouldStop?.()) break;
     }

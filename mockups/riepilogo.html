@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Riepilogo di fine partita · mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#13224a;--red:#e8362b;--mus:#ffc72c;--teal:#14a3a1;--vio:#8e6bd8;--bg:#e9edf5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:700 14px Nunito,system-ui,sans-serif;color:var(--navy)}
+h1{font:400 30px Anton;margin:22px 16px 4px;text-transform:uppercase}.lead{margin:0 16px 18px;max-width:780px}
+.grid{display:flex;flex-wrap:wrap;gap:26px;padding:0 16px 40px;align-items:flex-start}
+.item{width:320px}.item h2{font:400 18px Anton;text-transform:uppercase;margin:0 0 2px}.item p{margin:0 0 10px;font-size:13px;opacity:.8}
+.ph{width:320px;height:660px;border:6px solid var(--navy);border-radius:30px;overflow:hidden;position:relative;background:#6db4e8;box-shadow:6px 7px 0 var(--navy)}
+.sky{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 12%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg)}
+.col{position:absolute;inset:0;display:flex;flex-direction:column;padding:8px 8px 0}
+/* torre ridotta */
+.top{height:158px;position:relative;flex:none}
+.hd{text-align:center;font:400 19px/1 Anton;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy);text-transform:uppercase}
+.hd small{display:block;font:400 11px Anton;letter-spacing:.1em;text-shadow:1px 1px 0 var(--navy)}
+.tw{position:absolute;left:50%;top:48px;width:70px;height:104px;margin-left:-35px;background:linear-gradient(#f5b948,#e39a2b);border:3px solid var(--navy);border-radius:6px 6px 2px 2px}
+.tw:before{content:"";position:absolute;left:-6px;right:-6px;top:-10px;height:12px;background:#f5b948;border:3px solid var(--navy);border-radius:4px}
+.tw:after{content:"";position:absolute;left:22px;bottom:0;width:22px;height:30px;background:#2a1f4a;border:3px solid var(--navy);border-bottom:0;border-radius:12px 12px 0 0}
+.cd{position:absolute;width:30px;height:42px;border:2.5px solid #fff;border-radius:5px;box-shadow:2px 2px 0 var(--navy);display:grid;place-items:center;font-size:17px}
+.mat{position:absolute;bottom:0;width:56px;height:20px;border:3px solid var(--navy);border-radius:5px}
+/* due colonne */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0;align-content:start}
+.box{background:#fff;border:3px solid var(--navy);border-radius:11px;box-shadow:3px 4px 0 var(--navy);padding:6px 8px;min-width:0}
+.box h4{font:400 11px/1 Anton;text-transform:uppercase;letter-spacing:.06em;color:var(--vio);margin:0 0 5px}
+.span2{grid-column:1/3}
+.rk{display:flex;align-items:center;gap:5px;font:800 12px Nunito;padding:2.5px 0;border-bottom:1.5px dashed #13224a33}.rk:last-child{border:0}
+.rk b{width:14px;opacity:.55}.rk i{width:12px;height:12px;border-radius:50%;border:2px solid var(--navy);flex:none}.rk em{margin-left:auto;font:400 14px Anton;font-style:normal}.rk .w{color:var(--red)}
+.gz{position:relative}.gz svg{width:100%;display:block;overflow:visible}
+.needle{transform-origin:100px 100px;animation:sw 1.6s cubic-bezier(.3,1.5,.5,1) both}@keyframes sw{from{transform:rotate(-90deg)}to{transform:rotate(36deg)}}
+.pn{text-align:center;font:400 28px/1 Anton;color:var(--red);text-shadow:2px 2px 0 var(--navy);-webkit-text-stroke:.8px var(--navy);margin-top:1px}
+.verd{text-align:center;font:400 12px/1.1 Anton;text-transform:uppercase}
+.lc{background:var(--mus);transform:rotate(-1.2deg)}.lc h4{color:var(--navy)}.lc .k{font:400 18px/1.05 Anton;text-transform:uppercase}.lc small{font:800 11px Nunito;opacity:.7}
+.lan{display:flex;gap:6px;align-items:center}.lan .c2{width:42px;height:58px;flex:none;border:2px solid var(--navy);border-radius:6px;display:grid;place-items:center;font-size:24px;background:#ffd9a0;transform:rotate(-6deg)}
+.lan b{display:block;font:400 12px/1.1 Anton;text-transform:uppercase}.lan q{display:block;font:800 10.5px/1.2 Nunito;margin-top:2px;quotes:"«" "»"}
+.uv{display:grid;grid-template-columns:44px 1fr 32px;gap:6px;align-items:center;font:800 11px Nunito;margin:2px 0}.uv b{font:400 14px Anton;text-align:right}
+.br{height:12px;border:2.5px solid var(--navy);border-radius:99px;background:#eef1f7;overflow:hidden}.br u{display:block;height:100%;animation:gr 1.3s .3s cubic-bezier(.2,.8,.2,1) both}@keyframes gr{from{width:0}}
+.uvv{margin:3px 0 0;font:400 12px/1.1 Anton;text-transform:uppercase;text-align:center;color:var(--red)}
+.dock{position:absolute;left:0;right:0;bottom:0;padding:8px;background:#fffe;border-top:3px solid var(--navy);display:flex;gap:6px}
+.bib{width:42px;height:42px;border:3px solid var(--navy);border-radius:50%;background:#fff;display:grid;place-items:center;font-size:17px;flex:none}
+.btn{flex:1;background:linear-gradient(#ffd75a,#f2a900);border:3px solid var(--navy);border-radius:12px;box-shadow:0 3px 0 var(--navy);font:400 15px Anton;text-transform:uppercase;text-align:center;display:grid;place-items:center}
+.btn.alt{background:#fff;flex:none;padding:0 12px;font-size:13px}
+.notes{max-width:360px;font-size:13px;line-height:1.45}.notes li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<h1>Riepilogo di fine partita</h1>
+<p class="lead">Dopo la salita delle carte (che resta com'è) e al termine o al «salta»: la torre in piccolo in alto, sotto le informazioni in due colonne, in basso i pulsanti. Le animazioni dei grafici restano (lancetta, barre).</p>
+<div class="grid">
+<div class="item"><h2>Riepilogo</h2><p>Una schermata sola, senza scorrere.</p>
+<div class="ph"><div class="sky"></div><div class="col">
+ <div class="top"><div class="hd"><small>Ha vinto…</small>Gran Megafono!</div>
+  <div class="tw"></div>
+  <div class="cd" style="left:50%;margin-left:-15px;top:47px;background:#d9ccff">👩‍💼</div>
+  <div class="mat" style="left:18%;background:#14a3a1"></div><div class="mat" style="right:18%;background:#e8362b"></div>
+  <div class="cd" style="left:22%;bottom:16px;background:#ffc1c1;transform:rotate(-22deg)">👷</div>
+  <div class="cd" style="right:20%;bottom:16px;background:#bfe3ff;transform:rotate(18deg)">🧑‍🍳</div>
+  <div class="cd" style="right:30%;bottom:12px;background:#ffe08a;transform:rotate(-8deg)">🤵</div></div>
+ <div class="two">
+  <div class="box"><h4>Classifica</h4>
+   <div class="rk"><b>1</b><i style="background:#8e6bd8"></i>Bot Vera<em class="w">10</em></div>
+   <div class="rk"><b>2</b><i style="background:#e8362b"></i>Bot Gino<em>8</em></div>
+   <div class="rk"><b>3</b><i style="background:#ff7aa8"></i>Bot Silvia<em>6</em></div>
+   <div class="rk"><b>4</b><i style="background:#14a3a1"></i>Io<em>4</em></div></div>
+  <div class="box"><h4>Pregiudiziometro</h4>
+   <div class="gz"><svg viewBox="0 0 200 112"><path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#13224a" stroke-width="30" stroke-linecap="round"/><path d="M 20 100 A 80 80 0 0 1 60 31" fill="none" stroke="#14a3a1" stroke-width="20"/><path d="M 60 31 A 80 80 0 0 1 120 21" fill="none" stroke="#ffc72c" stroke-width="20"/><path d="M 120 21 A 80 80 0 0 1 164 52" fill="none" stroke="#ff8a3c" stroke-width="20"/><path d="M 164 52 A 80 80 0 0 1 180 100" fill="none" stroke="#e8362b" stroke-width="20"/><g class="needle" style="transform:rotate(36deg)"><line x1="100" y1="100" x2="100" y2="34" stroke="#13224a" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="9" fill="#fff" stroke="#13224a" stroke-width="5"/></g></svg></div>
+   <div class="pn">72%</div><div class="verd">Un po' di pancia</div></div>
+  <div class="box lc"><h4>Luogo comune</h4><div class="k">Influencer → vanitoso</div><small>2 voti</small></div>
+  <div class="box"><h4>Miglior lancio</h4><div class="lan"><div class="c2">🧔</div><div><b>Influencer: 2 voti</b><q>Sale chi si crede il più intelligente.</q></div></div></div>
+  <div class="box span2"><h4>Umani contro bot</h4>
+   <div class="uv"><span>Umani</span><div class="br"><u style="width:58%;background:var(--vio)"></u></div><b>58%</b></div>
+   <div class="uv"><span>Bot</span><div class="br"><u style="width:42%;background:var(--teal)"></u></div><b>42%</b></div>
+   <p class="uvv">Umani più di pancia dei bot</p></div>
+ </div>
+ <div style="height:62px;flex:none"></div>
+ </div>
+ <div class="dock"><div class="bib">↗</div><div class="bib">💬</div><div class="bib">🏆</div><div class="btn alt">Esci</div><div class="btn">Nuova partita</div></div></div></div>
+
+<div class="item"><h2>Come funziona</h2>
+<ul class="notes">
+<li><b>Salita carte:</b> identica a ora (musica finale, vincitore in cima, le altre cadono).</li>
+<li><b>Passaggio:</b> automatico a fine animazione, o subito col tocco «salta».</li>
+<li><b>Torre in piccolo:</b> la scena finale rimpicciolita e fissa, con il vincitore e le carte cadute sui materassi.</li>
+<li><b>Due colonne:</b> classifica e Pregiudiziometro in alto (le due cose più guardate), poi luogo comune e miglior lancio, a tutta larghezza umani contro bot.</li>
+<li><b>Animazioni:</b> lancetta che scatta, numero che sale, barre che crescono, carta del lancio che cade.</li>
+<li><b>Dati insufficienti:</b> il riquadro non compare e gli altri si ricompongono.</li>
+<li><b>Condividi:</b> il pulsante tondo in basso fa la cartolina; la copertina rotocalco si può aprire dal riquadro del luogo comune.</li>
+</ul></div>
+</div></body></html>

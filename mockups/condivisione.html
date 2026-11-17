@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Condividere la partita · mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#13224a;--red:#e8362b;--mus:#ffc72c;--teal:#14a3a1;--vio:#8e6bd8;--paper:#f6f2ea;--bg:#e9edf5;--ink:#13224a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:700 14px Nunito,system-ui,sans-serif;color:var(--ink)}
+h1{font:400 30px Anton;margin:22px 16px 4px;text-transform:uppercase}
+.lead{margin:0 16px 18px;max-width:760px}
+.grid{display:flex;flex-wrap:wrap;gap:26px;padding:0 16px 40px;align-items:flex-start}
+.item{width:300px}.item h2{font:400 18px Anton;text-transform:uppercase;margin:0 0 2px}.item p{margin:0 0 10px;font-size:13px;opacity:.8}
+.ph{width:300px;height:620px;border:6px solid var(--navy);border-radius:30px;overflow:hidden;position:relative;background:#fff;box-shadow:6px 7px 0 var(--navy)}
+.sky{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 38%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg)}
+.dim{position:absolute;inset:0;background:linear-gradient(#0000,#1b4f8c88)}
+.col{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 12px}
+.t{font:400 24px/1 Anton;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy);text-transform:uppercase;letter-spacing:.03em;text-align:center}
+.k{display:inline-block;font:400 11px Anton;letter-spacing:.12em;text-transform:uppercase;background:var(--navy);color:#fff;padding:2px 9px}
+.stamp{transform:rotate(-4deg);text-align:center}.stamp b{display:block;font:400 28px/1 Anton;color:var(--red);text-shadow:2px 2px 0 var(--navy);-webkit-text-stroke:1px var(--navy);text-transform:uppercase;margin-top:3px}
+.card{width:74px;height:104px;border:3px solid #fff;border-radius:8px;box-shadow:3px 4px 0 var(--navy);display:grid;place-items:center;font-size:40px;flex:none}
+.box{background:#fff;border:3px solid var(--navy);border-radius:11px;box-shadow:3px 4px 0 var(--navy);padding:6px 9px;width:100%}
+.box h4{font:400 12px/1 Anton;text-transform:uppercase;letter-spacing:.06em;color:var(--vio);margin:0 0 4px}
+.btn{width:100%;background:linear-gradient(#ffd75a,#f2a900);border:3px solid var(--navy);border-radius:12px;box-shadow:0 4px 0 var(--navy);font:400 17px Anton;text-transform:uppercase;text-align:center;padding:9px;color:var(--navy);flex:none}
+.btn.alt{background:#fff;font-size:14px;padding:6px}
+.row{display:flex;gap:8px;width:100%}.row .btn{flex:1}
+.rk{display:flex;justify-content:space-between;font:800 12px Nunito;padding:2px 0;border-bottom:1.5px dashed #13224a33}.rk:last-child{border:0}
+.gauge{width:150px;height:80px;position:relative;flex:none}
+.gauge svg{width:100%;display:block}
+.note{font-size:11px;opacity:.7;text-align:center;color:#fff;text-shadow:0 1px 0 var(--navy)}
+/* chat */
+.chatbg{position:absolute;inset:0;background:#d9e5d3}
+.bub{background:#fff;border-radius:12px 12px 12px 3px;padding:8px 10px;margin:8px 10px;max-width:82%;box-shadow:0 1px 0 #0002;font:700 13px/1.35 Nunito;white-space:pre-line}
+.bub.me{margin-left:auto;background:#dcf8c6;border-radius:12px 12px 3px 12px}
+.bar{position:absolute;left:0;right:0;top:0;background:#1f7a62;color:#fff;padding:12px;font:800 14px Nunito}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:4px solid var(--navy);border-radius:18px 18px 0 0;padding:12px;display:flex;flex-direction:column;gap:8px}
+.sheet h3{font:400 17px Anton;margin:0;text-transform:uppercase}
+.mono{font:700 15px/1.4 ui-monospace,Menlo,monospace;background:#f1f3f8;border:2px solid var(--navy);border-radius:10px;padding:8px;white-space:pre-line}
+.tog{display:flex;align-items:center;gap:8px;font:800 12px Nunito}.sw{width:34px;height:20px;border-radius:99px;background:var(--teal);border:2.5px solid var(--navy);position:relative;flex:none}.sw:after{content:"";position:absolute;right:2px;top:1px;width:12px;height:12px;border-radius:50%;background:#fff;border:2px solid var(--navy)}.sw.off{background:#cfd5e3}.sw.off:after{right:auto;left:2px}
+.sticker{border:3px solid var(--navy);border-radius:12px;box-shadow:3px 4px 0 var(--navy);padding:6px 8px;display:flex;gap:8px;align-items:center;width:100%;background:#fff}
+.sticker .em{font-size:30px;flex:none}.sticker b{display:block;font:400 14px/1.05 Anton;text-transform:uppercase}.sticker small{font:700 11px Nunito;opacity:.75}
+.og{border:3px solid var(--navy);border-radius:12px;overflow:hidden;background:#fff;margin:6px 10px;width:230px}
+.og .im{height:104px;background:repeating-conic-gradient(from 0deg at 50% 60%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg);display:grid;place-items:center;font:400 30px Anton;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy)}
+.og .tx{padding:6px 9px;font:800 12px/1.3 Nunito}.og .tx small{display:block;opacity:.65;font-weight:700}
+.bubq{background:#fff;border:3px solid var(--navy);border-radius:12px;padding:8px 10px;font:800 14px/1.3 Nunito;position:relative;width:100%}
+.bubq:after{content:"";position:absolute;left:34px;bottom:-12px;border:9px solid transparent;border-top-color:var(--navy)}
+.fall{position:relative;height:150px;width:100%}
+.fall .card{position:absolute;left:50%;top:6px;margin-left:-37px;transform:rotate(-14deg)}
+.fall .ground{position:absolute;left:10%;right:10%;bottom:6px;height:8px;background:var(--navy);border-radius:4px}
+.fall .ghost{position:absolute;left:50%;top:50px;margin-left:-37px;transform:rotate(20deg);opacity:.35}
+.nulli{position:absolute;right:6px;top:70px;transform:rotate(8deg);background:var(--red);color:#fff;font:400 20px Anton;border:3px solid var(--navy);padding:2px 9px;box-shadow:3px 3px 0 var(--navy)}
+.legend{font:700 11px Nunito;opacity:.75;text-align:center}
+.tag{position:absolute;top:8px;right:8px;background:var(--mus);border:2px solid var(--navy);border-radius:99px;padding:1px 8px;font:800 10px Nunito;z-index:5}
+</style>
+</head>
+<body>
+<h1>Condividere la partita</h1>
+<p class="lead">Cinque idee, tutte generate sul telefono (niente dati al server). Personaggi e carte sono segnaposto: nell'app useremo le carte vere. I nomi sono inventati.</p>
+<div class="grid">
+
+<!-- 1 FIGURINA -->
+<div class="item"><h2>1 · La figurina della partita</h2><p>Immagine verticale per storie e chat, con premio, miglior lancio, quadrante e classifica.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div>
+<div class="col">
+  <div class="t" style="font-size:20px">Giù dalla Torre</div>
+  <div class="stamp"><span class="k">Premio della serata</span><b>Il Sopravvissuto</b></div>
+  <div style="display:flex;gap:10px;align-items:center;width:100%">
+    <div class="card" style="background:#e8362b;transform:rotate(-4deg)">🧑‍🚀</div>
+    <div class="bubq" style="font-size:12px">«Marta» ha tenuto la Torre in piedi<br>per 5 turni di fila.</div>
+  </div>
+  <div class="box"><h4>Il miglior lancio dalla Torre</h4>
+    <div style="display:flex;gap:8px;align-items:center"><div class="card" style="width:46px;height:64px;font-size:24px;background:#2f7be0;transform:rotate(12deg)">🧑‍💼</div><div style="font:800 12px/1.25 Nunito"><b style="font:400 14px Anton;text-transform:uppercase">Politico: 5 voti per</b><br>«Si fa promettere tutto e poi non mantiene niente»</div></div></div>
+  <div class="box" style="display:flex;gap:8px;align-items:center"><div class="gauge"><svg viewBox="0 0 200 118"><path d="M20 100A80 80 0 0 1 180 100" fill="none" stroke="#13224a" stroke-width="30" stroke-linecap="round"/><path d="M20 100A80 80 0 0 1 58 33" fill="none" stroke="#4aa63a" stroke-width="20"/><path d="M58 33A80 80 0 0 1 100 20" fill="none" stroke="#f4c20d" stroke-width="20"/><path d="M100 20A80 80 0 0 1 146 38" fill="none" stroke="#f08a1c" stroke-width="20"/><path d="M146 38A80 80 0 0 1 180 100" fill="none" stroke="#e5382b" stroke-width="20"/><g style="transform-origin:100px 100px;transform:rotate(-20deg)"><line x1="100" y1="100" x2="100" y2="36" stroke="#13224a" stroke-width="7" stroke-linecap="round"/><circle cx="100" cy="100" r="9" fill="#fff" stroke="#13224a" stroke-width="5"/></g></svg></div>
+    <div><div style="font:400 28px/1 Anton">38%</div><div style="font:800 11px/1.2 Nunito">Giudici da bar</div></div></div>
+  <div class="box"><div class="rk"><span>1 · Marta</span><b>31</b></div><div class="rk"><span>2 · Luca</span><b>27</b></div><div class="rk"><span>3 · Bot Ada</span><b>22</b></div><div class="rk"><span>4 · Bot Teo</span><b>19</b></div></div>
+  <div style="flex:1"></div>
+  <div class="row"><div class="btn">Condividi</div><div class="btn alt">Salva</div></div>
+</div></div></div>
+
+<!-- 2 EMOJI -->
+<div class="item"><h2>2 · Il riassunto a emoji</h2><p>Una riga per turno, come Wordle: si incolla ovunque come testo.</p>
+<div class="ph"><div class="chatbg"></div><div class="bar">Gruppo «Torre del venerdì»</div>
+<div style="position:absolute;top:50px;left:0;right:0">
+<div class="bub me">Giù dalla Torre · 8 turni
+🟩🟩⬛🟥🟩🟧🟩🟩
+Giudici da bar · 38%
+giudallatorre.it</div>
+<div class="bub">Io solo 🟥🟥🟧… sempre fregato dal Lui 😭</div>
+<div class="bub">Rivincita sabato?</div>
+</div>
+<div class="sheet"><h3>Il tuo riassunto</h3>
+<div class="mono">Giù dalla Torre · 8 turni
+🟩🟩⬛🟥🟩🟧🟩🟩
+Giudici da bar · 38%</div>
+<div class="legend">🟩 voto giusto · 🟧 segnalino fregato · 🟥 voti annullati · ⬛ carta tua caduta</div>
+<div class="row"><div class="btn">Copia</div><div class="btn alt">Condividi…</div></div></div></div></div>
+
+<!-- 3 TURNO -->
+<div class="item"><h2>3 · Il turno da ricordare</h2><p>Un solo turno come meme: la frase del Megafono, la carta che cade, il segnalino.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div>
+<div class="col">
+  <div class="t" style="font-size:20px">Turno 5</div>
+  <div class="bubq">«Si fa promettere tutto e poi non mantiene niente»<br><small style="font-weight:700;opacity:.7">Megafono: Luca</small></div>
+  <div style="height:8px"></div>
+  <div class="fall"><div class="card ghost" style="background:#2f7be0">🧑‍💼</div><div class="card" style="background:#2f7be0;top:30px">🧑‍💼</div><div class="ground"></div><div class="nulli">VOTI NULLI!</div></div>
+  <div class="stamp"><span class="k">3 voti annullati</span><b>Fregati tutti</b></div>
+  <div style="flex:1"></div>
+  <div class="row"><div class="btn">Condividi turno</div></div>
+  <div class="note">Appare a fine turno, solo se è successo qualcosa di buffo</div>
+</div></div></div>
+
+<!-- 4 PREMI PER TUTTI -->
+<div class="item"><h2>4 · Premi per tutti</h2><p>Titoli buffi a fine partita. Il nome si mostra solo se il giocatore acconsente.</p>
+<div class="ph"><div class="sky"></div><div class="dim"></div>
+<div class="col">
+  <div class="t" style="font-size:20px">I titoli della serata</div>
+  <div class="sticker"><div class="em">🎣</div><div style="flex:1"><b>Il Boccalone</b><small>Ha seguito il segnalino 6 volte su 8</small></div><div class="tog"><span>Marta</span><div class="sw"></div></div></div>
+  <div class="sticker"><div class="em">🦊</div><div style="flex:1"><b>Il Bastian contrario</b><small>Ha votato contro la folla 5 volte</small></div><div class="tog"><span>Luca</span><div class="sw"></div></div></div>
+  <div class="sticker"><div class="em">🕵️</div><div style="flex:1"><b>Il Fiuto</b><small>Ha smascherato 3 voti nulli</small></div><div class="tog"><span>Un giocatore</span><div class="sw off"></div></div></div>
+  <div class="sticker"><div class="em">🎭</div><div style="flex:1"><b>Giudice da bar</b><small>Ha votato più per ruolo e aspetto</small></div><div class="tog"><span>Bot Ada</span><div class="sw"></div></div></div>
+  <div style="flex:1"></div>
+  <div class="note">Interruttore spento = «Un giocatore» nell'immagine</div>
+  <div class="row"><div class="btn">Condividi i titoli</div></div>
+</div></div></div>
+
+<!-- 5 SFIDA -->
+<div class="item"><h2>5 · La sfida con il link</h2><p>«Batti il mio»: il link apre la creazione di una partita; l'anteprima è un'immagine.</p>
+<div class="ph"><div class="chatbg"></div><div class="bar">Gruppo «Torre del venerdì»</div>
+<div style="position:absolute;top:50px;left:0;right:0">
+<div class="bub me" style="max-width:92%;padding:6px">Ho fatto 38% di giudizio a occhio 😎 batti il mio!
+<div class="og" style="margin:6px 0 0;width:100%"><div class="im">GIÙ DALLA TORRE</div><div class="tx">Giudici da bar · 38%<small>Sfida: giudica meno dalla copertina. giudallatorre.it/sfida/K7QX</small></div></div></div>
+<div class="bub">Accetto 😈 stasera alle 21</div>
+</div>
+<div class="sheet"><h3>Lancia la sfida</h3>
+<div class="mono">Ho fatto 38% di giudizio a occhio. Batti il mio!
+giudallatorre.it/sfida/K7QX</div>
+<div class="legend">Chi apre il link crea una partita e, alla fine, vede il suo risultato accanto al tuo.</div>
+<div class="row"><div class="btn">Invia sfida</div><div class="btn alt">Copia link</div></div></div></div></div>
+
+</div>
+</body>
+</html>

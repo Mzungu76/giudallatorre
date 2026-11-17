@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
 import { IntroSlides } from "../components/Intro.tsx";
 import HomeTools from "../components/HomeTools.tsx";
 import { t } from "../lib/testi.ts";
+import { dayId, loadTorre, nuovaTorre } from "../lib/torre.ts";
 
 export default function Home() {
-  const [how, setHow] = useState(false);
+  const [how, setHow] = useState(false), [nuova, setNuova] = useState(() => nuovaTorre(loadTorre(), dayId()));
+  useEffect(() => {   // la nuova Torre compare a mezzanotte e un minuto, anche con l'app aperta
+    const f = () => setNuova(nuovaTorre(loadTorre(), dayId())), i = setInterval(f, 20_000);
+    document.addEventListener("visibilitychange", f); window.addEventListener("focus", f);
+    return () => { clearInterval(i); document.removeEventListener("visibilitychange", f); window.removeEventListener("focus", f); };
+  }, []);
   return (
     <Stage bg="sky" testId="home">
       <div className="logo">
@@ -18,6 +24,10 @@ export default function Home() {
       <div className="home-btns">
         <Btn onClick={() => navigate("/crea")} testId="go-create">{t("home.crea")}</Btn>
         <Btn kind="red" onClick={() => navigate("/entra")} testId="go-join">{t("home.entra")}</Btn>
+        <div className="seg">
+          <Btn kind="pap" onClick={() => navigate("/crea?flash=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-flash">⚡ {t("home.flash")}</Btn>
+          <Btn kind={nuova ? "mus" : "pap"} onClick={() => navigate("/torre")} className={nuova ? "tn" : ""} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-torre">🏰 {t("home.torre")}{nuova && <i className="tnew" data-testid="torre-nuova">{t("home.torre.nuova")}</i>}</Btn>
+        </div>
         <div className="seg">
           <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-solo">{t("home.solo")}</Btn>
           <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-how">{t("home.come")}</Btn>

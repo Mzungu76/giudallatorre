@@ -1,0 +1,36 @@
+name: Torre del giorno
+# Ogni giorno alle 23:50 (ora di Roma) prepara le Torri del giorno con 3 giorni di anticipo (oggi, domani e i due dopo, se mancano) e le pubblica nel repository.
+# Le Torri si vedono nell'app solo dalle 00:01 di Roma (lo decide il Worker, vedi worker/src/torre.ts). GitHub usa l'ora UTC: due orari per l'ora legale e solare;
+# l'altro, quando non è l'ora giusta, non trova nulla da fare. Vedi docs/TORRE_DEL_GIORNO.md.
+on:
+  schedule:
+    - cron: "50 21 * * *"   # 23:50 con l'ora legale (CEST)
+    - cron: "50 22 * * *"   # 23:50 con l'ora solare (CET)
+  workflow_dispatch:
+concurrency:
+  group: torre-del-giorno
+permissions:
+  contents: write
+jobs:
+  prepara:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Prepara le Torri
+        run: npx tsx tools/oggi/genera.ts --prepara 3
+      - name: Salva nel repository
+        id: git
+        run: |
+          git config user.name "Torre del giorno"; git config user.email "torre-del-giorno@users.noreply.github.com"
+          git add public/oggi
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; echo "Niente di nuovo."; else git commit -m "Torre del giorno: prepara i prossimi giorni" && git push && echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+      # Un push fatto da GitHub Actions non fa partire gli altri workflow: se il deploy non parte da solo dal ramo principale, qui lo si fa direttamente (solo con i segreti Cloudflare).
+      - name: Pubblica il gioco con le nuove Torri
+        if: steps.git.outputs.changed == 'true' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: npm run build && npx wrangler deploy

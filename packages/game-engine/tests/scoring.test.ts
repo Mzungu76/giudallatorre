@@ -53,11 +53,11 @@ describe("pareggio: se tra le pari merito c'è la carta del CADE cade solo lei; 
     const r = castVotes(g, { p1: b, p2: a, p3: b, p4: a }).lastResult!;
     expect(r.tie).toBe(true); expect(r.tieBreak).toBe(false); expect(r.fallenPositions).toEqual([a, b].sort((x, y) => x - y));
   });
-  it("pareggio con la carta del CADE tra le pari: cade solo quella", () => {
+  it("pareggio con la carta del CADE tra le pari: cadono tutte, il CADE non decide", () => {
     const g = setup(4, (s) => ({ slot: "cade", position: posOf(s, "p2") }));
     const a = posOf(g, "p2"), b = posOf(g, "p3");
     const r = castVotes(g, { p1: b, p2: a, p3: b, p4: a }).lastResult!;
-    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(true); expect(r.fallenPositions).toEqual([a]);
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(false); expect(r.fallenPositions).toEqual([a, b].sort((x, y) => x - y));
   });
   it("senza pareggio vince la maggioranza anche contro il Megafono", () => {
     const g = setup(4, () => ({ slot: "noncade", position: 1 }));

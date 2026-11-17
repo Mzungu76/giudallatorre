@@ -39,11 +39,11 @@ describe("gioco base «Cade / Non cade»", () => {
     expect(viewFor(g, "p1").myForbidden).toBe(b); expect(viewFor(g, "p2").myForbidden).toBeNull();
   });
 
-  it("CADE: se la carta cade, +4 al Megafono (ovunque abbia votato, una volta sola) e +4 a chi della Folla l'ha votata; pareggio vinto dalla carta del CADE", () => {
+  it("CADE: se la carta cade, +4 al Megafono (ovunque abbia votato, una volta sola) e +4 a chi della Folla l'ha votata; nel pareggio cadono tutte le pari", () => {
     const g0 = C(4), { m, a, b } = pos(g0);
-    const r = castVotes(place(g0, "cade", a), { p1: b, p2: a, p3: a, p4: b }).lastResult!;   // a 2, b 2: vince la carta del CADE
-    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(true); expect(r.fallenPositions).toEqual([a]);
-    expect(r.points).toEqual({ p1: 4, p2: 2 + 2 + 4, p3: 2 + 4, p4: 0 });
+    const r = castVotes(place(g0, "cade", a), { p1: b, p2: a, p3: a, p4: b }).lastResult!;   // a 2, b 2: cadono entrambe
+    expect(r.tie).toBe(true); expect(r.tieBreak).toBe(false); expect(r.fallenPositions).toEqual([a, b].sort((x, y) => x - y));
+    expect(r.points).toEqual({ p1: 2 + 4, p2: 2 + 2 + 4, p3: 2 + 2 + 4, p4: 2 });   // cadono a e b
     expect(r.marks).toEqual([{ slot: "cade", effect: "cade", position: a, hit: true, voters: ["p2", "p3"] }]);
     const r2 = castVotes(place(g0, "cade", m), { p1: m, p2: m, p3: b, p4: a }).lastResult!;
     expect(r2.fallenPositions).toEqual([m]); expect(r2.points.p1).toBe(2 + 2 + 4); expect(r2.points.p2).toBe(2 + 4);
@@ -77,7 +77,7 @@ describe("gioco base «Cade / Non cade»", () => {
     const g0 = C(3); expect(g0.tower).toHaveLength(3);
     const [x, y, z] = g0.tower.map((t) => t.position) as [number, number, number];
     const r = castVotes(place(g0, "cade", x), { p1: z, p2: x, p3: y }).lastResult!;
-    expect(r.tie).toBe(true); expect(r.fallenPositions).toEqual([x]);   // 1-1-1: vince il CADE
+    expect(r.tie).toBe(true); expect(r.fallenPositions).toEqual([x, y, z].sort((p, q) => p - q));   // 1-1-1: cadono tutte
   });
 
   it("i bot giocano il gioco base fino in fondo, da 3 a 8 giocatori, senza azioni illegali", () => {

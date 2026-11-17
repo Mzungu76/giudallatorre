@@ -97,6 +97,7 @@ export default function Stats() {
               <Tile id="media" icon="crescita" color="#14a3a1" label={ts("st.media")} value={s.avg === null ? "–" : String(s.avg).replace(".", ",")} />
               <Tile id="record" icon="razzo" color="#8e6bd8" label={ts("st.record")} value={s.best} />
               <Tile id="voti" icon="urna" color="#5b7cfa" label={ts("st.voti")} value={s.votes} />
+              <Tile id="luoghi" icon="maschere" color="#8e6bd8" label={ts("st.luoghi")} value={pc(s.stereoRate)} sub={s.stereoCaso === null ? undefined : ts("st.acaso", { pct: String(s.stereoCaso).replace(".", ",") })} />
               <Tile id="intuito" icon="bersaglio" color="#e8505b" label={ts("st.intuito")} value={pc(s.voteRate)} />
               <Tile id="cadute" icon="caduta" color="#ff9f45" label={ts("st.cadute")} value={s.cardFell} />
               <Tile id="mega" icon="megafono" color="#ffc72c" label={ts("st.mega")} value={s.megaTurns} />

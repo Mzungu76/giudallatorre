@@ -1,0 +1,376 @@
+{
+ "versione": 1,
+ "nota": "Asse dell'ASPETTO SCELTO: abbigliamento, accessori e stile, cioè fatti visibili che una persona sceglie di indossare. Mai corpo, età, sesso, origine o altre caratteristiche della persona. Usato solo dai bot v2o per i luoghi comuni (stereotipi.json, asse «aspetto»).",
+ "aspetti": [
+  {
+   "id": "occhiali",
+   "def": "Occhiali da vista",
+   "nome": "occhiali"
+  },
+  {
+   "id": "occhiali_sole",
+   "def": "Occhiali da sole",
+   "nome": "occhiali da sole"
+  },
+  {
+   "id": "completo",
+   "def": "Giacca e cravatta, tailleur",
+   "nome": "giacca e cravatta"
+  },
+  {
+   "id": "catena_oro",
+   "def": "Catene e collane vistose, d'oro",
+   "nome": "catene d'oro"
+  },
+  {
+   "id": "cappellino",
+   "def": "Cappellino da baseball",
+   "nome": "cappellino"
+  },
+  {
+   "id": "berretto",
+   "def": "Berretto di lana",
+   "nome": "berretto"
+  },
+  {
+   "id": "divisa",
+   "def": "Divisa o abiti da lavoro (cuoco, sanitario, toga, tonaca, sicurezza)",
+   "nome": "divisa"
+  },
+  {
+   "id": "abito_elegante",
+   "def": "Abito da sera o da cerimonia",
+   "nome": "abito elegante"
+  },
+  {
+   "id": "abbigliamento_sportivo",
+   "def": "Tuta, canotta, pantaloncini, costume da gara",
+   "nome": "tuta"
+  },
+  {
+   "id": "cuffie",
+   "def": "Cuffie o auricolari",
+   "nome": "cuffie"
+  },
+  {
+   "id": "sandali",
+   "def": "Sandali, anche con i calzini",
+   "nome": "sandali"
+  },
+  {
+   "id": "camicia_hawaiana",
+   "def": "Camicia a fiori da vacanza",
+   "nome": "camicia hawaiana"
+  },
+  {
+   "id": "giacca_pelle",
+   "def": "Giubbotto di pelle",
+   "nome": "giubbotto di pelle"
+  },
+  {
+   "id": "borchie",
+   "def": "Borchie e stivali da punk",
+   "nome": "borchie"
+  },
+  {
+   "id": "fascia_corona",
+   "def": "Fascia di concorso e corona",
+   "nome": "fascia e corona"
+  },
+  {
+   "id": "pantofole",
+   "def": "Pantofole",
+   "nome": "pantofole"
+  },
+  {
+   "id": "collana",
+   "def": "Collane etniche o spirituali",
+   "nome": "collane spirituali"
+  },
+  {
+   "id": "cappello_stagnola",
+   "def": "Cappello di stagnola",
+   "nome": "cappello di stagnola"
+  },
+  {
+   "id": "casco",
+   "def": "Casco da moto o da bici",
+   "nome": "casco"
+  },
+  {
+   "id": "maschera",
+   "def": "Maschera sul volto",
+   "nome": "maschera"
+  },
+  {
+   "id": "capelli_colorati",
+   "def": "Capelli colorati o cresta",
+   "nome": "capelli colorati"
+  },
+  {
+   "id": "sciarpa",
+   "def": "Sciarpa o foulard",
+   "nome": "sciarpa"
+  },
+  {
+   "id": "cravatta",
+   "def": "Cravatta",
+   "nome": "cravatta"
+  }
+ ],
+ "carte": {
+  "p01-i01": [
+   "completo"
+  ],
+  "p01-i02": [
+   "catena_oro",
+   "occhiali_sole"
+  ],
+  "p01-i04": [
+   "occhiali"
+  ],
+  "p01-i05": [
+   "occhiali",
+   "completo"
+  ],
+  "p01-i06": [
+   "occhiali"
+  ],
+  "p01-i07": [
+   "occhiali"
+  ],
+  "p01-i08": [
+   "abbigliamento_sportivo"
+  ],
+  "p01-i09": [
+   "occhiali",
+   "capelli_colorati"
+  ],
+  "p02-i01": [
+   "divisa",
+   "occhiali"
+  ],
+  "p02-i02": [
+   "cappellino",
+   "occhiali"
+  ],
+  "p02-i03": [
+   "occhiali_sole",
+   "abito_elegante",
+   "sciarpa"
+  ],
+  "p02-i04": [
+   "occhiali"
+  ],
+  "p02-i06": [
+   "cuffie",
+   "pantofole"
+  ],
+  "p02-i07": [
+   "occhiali_sole",
+   "giacca_pelle",
+   "catena_oro"
+  ],
+  "p02-i08": [
+   "occhiali_sole",
+   "completo"
+  ],
+  "p02-i09": [
+   "berretto"
+  ],
+  "p03-i03": [
+   "occhiali"
+  ],
+  "p03-i05": [
+   "occhiali_sole",
+   "catena_oro"
+  ],
+  "p03-i06": [
+   "divisa"
+  ],
+  "p03-i07": [
+   "occhiali",
+   "divisa"
+  ],
+  "p03-i08": [
+   "abbigliamento_sportivo"
+  ],
+  "p03-i10": [
+   "occhiali",
+   "sandali",
+   "capelli_colorati"
+  ],
+  "p04-i01": [
+   "fascia_corona"
+  ],
+  "p04-i03": [
+   "occhiali"
+  ],
+  "p04-i04": [
+   "sciarpa"
+  ],
+  "p04-i06": [
+   "occhiali"
+  ],
+  "p04-i08": [
+   "occhiali"
+  ],
+  "p04-i09": [
+   "berretto"
+  ],
+  "p04-i10": [
+   "collana",
+   "sandali"
+  ],
+  "p05-i01": [
+   "divisa"
+  ],
+  "p05-i02": [
+   "cuffie"
+  ],
+  "p05-i04": [
+   "divisa",
+   "occhiali_sole"
+  ],
+  "p05-i05": [
+   "cappellino",
+   "occhiali_sole",
+   "catena_oro"
+  ],
+  "p05-i07": [
+   "divisa"
+  ],
+  "p05-i09": [
+   "completo",
+   "occhiali"
+  ],
+  "p06-i01": [
+   "cuffie"
+  ],
+  "p06-i03": [
+   "maschera"
+  ],
+  "p06-i05": [
+   "abito_elegante"
+  ],
+  "p06-i07": [
+   "occhiali"
+  ],
+  "p06-i08": [
+   "occhiali"
+  ],
+  "p06-i09": [
+   "cappellino"
+  ],
+  "p06-i10": [
+   "completo"
+  ],
+  "p07-i01": [
+   "occhiali"
+  ],
+  "p07-i02": [
+   "abito_elegante"
+  ],
+  "p07-i05": [
+   "divisa",
+   "occhiali"
+  ],
+  "p07-i06": [
+   "completo"
+  ],
+  "p07-i07": [
+   "borchie",
+   "capelli_colorati"
+  ],
+  "p07-i08": [
+   "camicia_hawaiana",
+   "occhiali_sole",
+   "catena_oro"
+  ],
+  "p08-i03": [
+   "occhiali"
+  ],
+  "p08-i04": [
+   "berretto"
+  ],
+  "p08-i05": [
+   "occhiali_sole"
+  ],
+  "p08-i06": [
+   "occhiali"
+  ],
+  "p09-i03": [
+   "occhiali"
+  ],
+  "p09-i05": [
+   "occhiali"
+  ],
+  "p09-i06": [
+   "completo"
+  ],
+  "p09-i07": [
+   "cappellino"
+  ],
+  "p09-i09": [
+   "abbigliamento_sportivo"
+  ],
+  "p10-i01": [
+   "casco",
+   "occhiali_sole"
+  ],
+  "p10-i03": [
+   "abbigliamento_sportivo"
+  ],
+  "p10-i04": [
+   "divisa"
+  ],
+  "p10-i06": [
+   "catena_oro"
+  ],
+  "p10-i08": [
+   "cuffie",
+   "occhiali_sole"
+  ],
+  "p11-i05": [
+   "cappellino",
+   "occhiali_sole",
+   "sandali"
+  ],
+  "p11-i07": [
+   "divisa"
+  ],
+  "p12-i01": [
+   "berretto",
+   "divisa"
+  ],
+  "p12-i02": [
+   "occhiali",
+   "completo"
+  ],
+  "p12-i03": [
+   "occhiali"
+  ],
+  "p12-i07": [
+   "collana"
+  ],
+  "p13-i01": [
+   "cuffie"
+  ],
+  "p13-i02": [
+   "cravatta",
+   "cuffie"
+  ],
+  "p13-i05": [
+   "cappello_stagnola"
+  ],
+  "p13-i06": [
+   "occhiali"
+  ],
+  "p14-i05": [
+   "cuffie"
+  ],
+  "p14-i01": [
+   "cuffie"
+  ]
+ }
+}

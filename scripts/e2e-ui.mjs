@@ -47,6 +47,7 @@ async function stepPage(p) {
     await p.click('[data-testid="zoom-action"]'); if (!p.s3) { await shot(p, "09-voto"); p.s3 = 1; } await p.click('[data-testid="confirm-vote"]'); return true; }
   if (await vis(p, "award-open")) { await p.click('[data-testid="award-open"]'); return true; }
   if (await vis(p, "award-next")) { await p.click('[data-testid="award-next"]'); return true; }
+  if (await vis(p, "stereo-next")) { if (!globalThis.__st) { globalThis.__st = 1; await p.waitForTimeout(2500); await shot(p, "11-luoghi-comuni"); } await p.click('[data-testid="stereo-next"]'); return true; }
   if (await vis(p, "reveal-throw")) { await p.click('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
   if (await vis(p, "skip")) { if (!p.s4) { await sleep(3200); await shot(p, "10-caduta"); await shot(D, "10b-schermo-in-partita"); p.s4 = 1; } await p.click('[data-testid="skip"]', { timeout: 5000 }); return true; }
   if (await vis(p, "advance")) { if (!p.s5) { await shot(p, "11-punti"); p.s5 = 1; } await p.click('[data-testid="advance"]'); turns++; return true; }
@@ -59,6 +60,7 @@ while (Date.now() - t0 < 240_000) {
 }
 check("classifica finale su tutti i telefoni", (await Promise.all(pages.map((p) => vis(p, "final")))).every(Boolean)); await shot(A, "12-finale");
 check("tutti e 3 hanno fatto il Megafono 2 volte (6 turni)", turns >= 5, `turni avanzati: ${turns}`);
+{ const t1 = Date.now(); while (Date.now() - t1 < 30_000 && !(await vis(D, "final"))) await sleep(500); }   // con le animazioni vere lo schermo condiviso passa da solo dal premio alla classifica
 check("lo schermo condiviso mostra la classifica", await vis(D, "final")); await shot(D, "13-schermo-finale");
 check("nessun errore JavaScript nelle pagine", [...pages, D].every((p) => p.errors.length === 0), JSON.stringify([...pages, D].map((p) => p.errors)));
 await browser.close();
