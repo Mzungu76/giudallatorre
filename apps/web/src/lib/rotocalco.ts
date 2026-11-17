@@ -112,7 +112,7 @@ export async function disegnaRotocalco(d: RotocalcoDati): Promise<Blob> {
   c.strokeText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112); c.fillStyle = "#fff"; c.fillText(`\u201C${ttl}\u201D`, W / 2, PY + PH + 112);
   const by0 = PY + PH + 156; c.fillStyle = "#000"; c.fillRect(0, by0, W, H - by0);
   let sp = fit(c, tx.sotto, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`;
-  if (cs) { const a = `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}:`, b = ts("rot.sotto.coda"); sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
+  if (cs) { const a = ts("rot.sotto.testa"), b = `${fraseLuogo(d.causa!)}${d.pct !== undefined ? ` · ${d.pct}%` : ""}`; sp = fit(c, `${a} ${b}`, (s) => `900 ${s}px ${SERIF}`, 46, W - 70, 26); c.font = `900 ${sp}px ${SERIF}`; const wa = c.measureText(a + " ").width, wb = c.measureText(b).width, x0 = (W - wa - wb) / 2; c.textAlign = "left"; c.fillStyle = GOLD; c.fillText(a, x0, by0 + 60); c.fillStyle = "#fff"; c.fillText(b, x0 + wa, by0 + 60); }
   else { c.textAlign = "center"; c.fillStyle = GOLD; c.fillText(tx.sotto, W / 2, by0 + 60); }
   // il logo: la torre e il nome del gioco
   { const torre = await img("/giocatori/torre.webp"), nome = ts("share.titolo").toUpperCase(), area = H - by0 - 56;
