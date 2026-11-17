@@ -142,11 +142,13 @@ export function affinityLens(cardId: string, phraseText: string, lens: Lens): nu
 export function stereoExplain(cardId: string, text: string): { s: number; base: number; causa: string | null } | null {
   const c = CARDS[cardId], p = PHRASES[text] ?? inferV2(text); if (!c || !p) return null;
   const cues = [...Object.keys(c.tipi).map((x) => "t:" + x), ...(CARDROLES.get(cardId) ?? []).map((x) => "r:" + x), ...(CARDLOOKS.get(cardId) ?? []).map((x) => "a:" + x)];
-  let s = 0, best = 0, causa: string | null = null;
+  let s = 0, bestR = 0, bestA = 0, causaR: string | null = null, causaA: string | null = null;
   for (const cue of cues) for (const [tratto, f] of STEREO.get(cue) ?? []) {
     const wp = p.tipi[tratto.slice(2)]; if (!wp) continue; const v = 3 * (f + wp) / 6; s += v;
-    if (v > best && cue[0] !== "t") { best = v; const nome = cue[0] === "a" ? LOOKNAME.get(cue.slice(2)) ?? cue.slice(2) : cue.slice(2); causa = `${nome} → ${tratto.slice(2)}`; }
+    if (cue[0] === "r" && v > bestR) { bestR = v; causaR = `${cue.slice(2)} → ${tratto.slice(2)}`; }
+    if (cue[0] === "a" && v > bestA) { bestA = v; causaA = `@${cue.slice(2)} → ${tratto.slice(2)}`; }   // l'aspetto si distingue con «@»
   }
+  const causa = causaR ?? causaA;   // il luogo comune è dato principalmente dal ruolo; l'aspetto solo se il ruolo non c'entra
   return { s, base: affinityV2(cardId, text) ?? 0, causa };
 }
 export const isStereoVote = (e: { s: number; base: number; causa?: string | null } | null): boolean => !!e && e.s > 0 && e.s >= e.base;
@@ -195,7 +197,7 @@ export const PESO_EVITATO = 0.5;
 /** Il luogo comune evocato da una carta e da una frase: la tabella se c'è la riga, altrimenti l'associazione diretta «ruolo (o aspetto) della carta → tratto principale della frase». Null se la carta non ha né ruolo né aspetto. */
 function causaGenerica(cardId: string, text: string): string | null {
   const p = PHRASES[text] ?? inferV2(text); if (!p) return null;
-  const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? LOOKNAME.get(look) ?? look : null); if (!nome) return null;
+  const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
   const tr = Object.entries(p.tipi).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]; return tr ? `${nome} → ${tr[0]}` : null;
 }
 export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null } | null {

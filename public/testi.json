@@ -1,5 +1,5 @@
 {
- "versione": 89,
+ "versione": 91,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3309,10 +3309,320 @@
    "t": "Classifica",
    "s": "Fine partita · riepilogo"
   },
-  "rp.quota": {
-   "t": "{pct}% dei luoghi comuni",
-   "s": "Fine partita · luoghi comuni",
-   "n": "Quota del peso del luogo comune sul totale (voti + segnalino del Megafono)"
+  "lc.r.politico": {
+   "t": "I politici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.religioso": {
+   "t": "I preti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.insegnante": {
+   "t": "Gli insegnanti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.studente": {
+   "t": "Gli studenti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.sanitario": {
+   "t": "I medici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.giudice": {
+   "t": "I giudici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.cuoco": {
+   "t": "I cuochi",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.tassista": {
+   "t": "I tassisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.ciclista": {
+   "t": "I ciclisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.meccanico": {
+   "t": "I meccanici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.corriere": {
+   "t": "I corrieri",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.venditore": {
+   "t": "I venditori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.guardia": {
+   "t": "Le guardie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.hacker": {
+   "t": "Gli hacker",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.giornalista": {
+   "t": "I giornalisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.comico": {
+   "t": "I comici",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.artista": {
+   "t": "Gli artisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.musicista": {
+   "t": "I musicisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.rapper": {
+   "t": "I rapper",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.punk": {
+   "t": "I punk",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.hippie": {
+   "t": "Gli hippie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.turista": {
+   "t": "I turisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.istruttore": {
+   "t": "Gli istruttori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.influencer": {
+   "t": "Gli influencer",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.guru": {
+   "t": "I guru",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.manager": {
+   "t": "I manager",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.impiegato": {
+   "t": "Gli impiegati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.trader": {
+   "t": "I trader",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.nerd": {
+   "t": "I nerd",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.attivista": {
+   "t": "Gli attivisti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.genitore": {
+   "t": "I genitori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.presentatore": {
+   "t": "I presentatori",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.scienziato": {
+   "t": "Gli scienziati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.atleta": {
+   "t": "Gli atleti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.mago": {
+   "t": "I maghi",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.reginetta": {
+   "t": "Le reginette",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.architetto": {
+   "t": "Gli architetti",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.r.bibliotecario": {
+   "t": "I bibliotecari",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto plurale del luogo comune basato sul ruolo («Le …» = femminile: il tratto si accorda)"
+  },
+  "lc.a.occhiali": {
+   "t": "Chi porta gli occhiali",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.occhiali_sole": {
+   "t": "Chi porta gli occhiali da sole",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.completo": {
+   "t": "Chi veste in completo",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.catena_oro": {
+   "t": "Chi porta la catena d'oro",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cappellino": {
+   "t": "Chi porta il cappellino",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.berretto": {
+   "t": "Chi porta il berretto",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.divisa": {
+   "t": "Chi indossa la divisa",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.abito_elegante": {
+   "t": "Chi veste elegante",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.abbigliamento_sportivo": {
+   "t": "Chi veste sportivo",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cuffie": {
+   "t": "Chi porta le cuffie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.sandali": {
+   "t": "Chi porta i sandali",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.camicia_hawaiana": {
+   "t": "Chi porta la camicia hawaiana",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.giacca_pelle": {
+   "t": "Chi porta la giacca di pelle",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.borchie": {
+   "t": "Chi porta le borchie",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.fascia_corona": {
+   "t": "Chi porta la corona",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.pantofole": {
+   "t": "Chi porta le pantofole",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.collana": {
+   "t": "Chi porta la collana",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cappello_stagnola": {
+   "t": "Chi porta il cappello di stagnola",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.casco": {
+   "t": "Chi porta il casco",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.maschera": {
+   "t": "Chi porta la maschera",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.capelli_colorati": {
+   "t": "Chi ha i capelli colorati",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.sciarpa": {
+   "t": "Chi porta la sciarpa",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.a.cravatta": {
+   "t": "Chi porta la cravatta",
+   "s": "Luoghi comuni · frasi",
+   "n": "Soggetto del luogo comune basato sull'aspetto"
+  },
+  "lc.frase.r": {
+   "t": "{chi} sono {tratto}",
+   "s": "Luoghi comuni · frasi",
+   "n": "Luogo comune su un ruolo: «I politici sono bugiardi»"
+  },
+  "lc.frase.a": {
+   "t": "{chi} è più {tratto} degli altri",
+   "s": "Luoghi comuni · frasi",
+   "n": "Luogo comune su un aspetto: «Chi porta la cravatta è più bugiardo degli altri»"
   }
  }
 }

@@ -1,4 +1,6 @@
 import type { GameState } from "@gdt/game-engine";
+import { ts } from "./testi.ts";
+import type { TestoKey } from "./testi.ts";
 
 export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number }[]; lancio: { cardId: string; ruolo: string; n: number; text: string } | null }
 /** Il pannello «Luoghi comuni» è della PARTITA, non dei giocatori: quanta parte dei voti di tutti si spiega con un luogo comune, quanto sarebbe stato per caso e quali luoghi comuni hanno pesato di più. */
@@ -11,8 +13,24 @@ export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3):
   return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
 }
 
-/** «politico → bugiardo» → «Politico». */
-export const ruoloDi = (causa: string): string => { const r = causa.split(" → ")[0] ?? causa; return r.charAt(0).toUpperCase() + r.slice(1); };
+/** Nome breve del soggetto di un luogo comune: «politico → bugiardo» → «Politico»; «@cravatta → bugiardo» (aspetto) → «Cravatta». */
+export const ruoloDi = (causa: string): string => { const r = (causa.split(" → ")[0] ?? causa).replace(/^@/, "").replace(/_/g, " "); return r.charAt(0).toUpperCase() + r.slice(1); };
+const MIN = (x: string) => x.charAt(0).toLowerCase() + x.slice(1);
+/** Il tratto al plurale (maschile o femminile): bugiardo → bugiardi / bugiarde, egoista → egoisti / egoiste, drammatico → drammatici / drammatiche, infedele → infedeli. Invariato se non finisce in vocale (nerd). */
+export function trattoPlurale(t: string, femm: boolean): string {
+  if (/co$/.test(t)) return t.slice(0, -2) + (femm ? "che" : "ci");
+  if (/o$/.test(t)) return t.slice(0, -1) + (femm ? "e" : "i");
+  if (/a$/.test(t)) return t.slice(0, -1) + (femm ? "e" : "i");
+  if (/e$/.test(t)) return t.slice(0, -1) + "i";
+  return t;
+}
+/** Il luogo comune come frase: ruolo → «I politici sono bugiardi»; aspetto → «Chi porta la cravatta è più bugiardo degli altri». Se la voce non è nei testi, ricade sul nome grezzo. */
+export function fraseLuogo(causa: string): string {
+  const [sogg = "", tratto = ""] = causa.split(" → "); if (!tratto) return causa;
+  const asp = sogg.startsWith("@"), id = asp ? sogg.slice(1) : sogg, chiave = (asp ? `lc.a.${id}` : `lc.r.${id}`) as TestoKey, chi = ts(chiave);
+  if (chi === chiave) return causa;
+  return asp ? ts("lc.frase.a", { chi, tratto }) : ts("lc.frase.r", { chi, tratto: trattoPlurale(tratto, chi.startsWith("Le ")) });
+}
 /** Umani contro bot: quota dei voti «per luogo comune» di ciascun gruppo (null se il gruppo non ha votato). */
 export function stereoGruppi(st: GameState["stereo"] | null | undefined, isBot: (id: string) => boolean): { umani: number | null; bot: number | null } {
   const acc = { u: [0, 0], b: [0, 0] };

@@ -3,7 +3,7 @@ import type { GameState } from "@gdt/game-engine";
 import GameIcon from "./GameIcon.tsx";
 import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
-import { fasciaPregiudizio as fascia, SEG_PREGIUDIZIO as SEG, stereoGame, stereoGruppi } from "../lib/stereo.ts";
+import { fasciaPregiudizio as fascia, SEG_PREGIUDIZIO as SEG, fraseLuogo, stereoGame, stereoGruppi } from "../lib/stereo.ts";
 import { cardFull, useCards } from "../lib/cards.ts";
 
 /** Quadrante: da 0% (sinistra) a 100% (destra), quattro fasce colorate. */
@@ -60,7 +60,7 @@ export default function StereoScene({ stereo, isBot, sound, readOnly, onDone, la
           <>
             <Gauge pct={g.pct} on={on} shown={shown} />
             {on && <div className="aw-stamp sc-v" data-testid="stereo-verdict"><span className="aw-k">{t(`sc.f${fascia(g.pct)}`)}</span></div>}
-            {g.top[0] && <div className="sc-blk sc-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="sc-lc-k">{g.top[0].k}</div><small>{ts("rp.quota", { pct: g.top[0].pct })}</small>{g.top.slice(1).map((x, i) => <div key={x.k} className="sc-alt">{i + 2}° {x.k} · {x.pct}%</div>)}</div>}
+            {g.top[0] && <div className="sc-blk sc-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="sc-lc-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>{g.top.slice(1).map((x) => <div key={x.k} className="sc-alt">{fraseLuogo(x.k)} · {x.pct}%</div>)}</div>}
             {g.lancio && (
               <div className="sc-blk sc-lan" data-testid="stereo-lancio">
                 <h4>{t("sc.lancio")}</h4>
