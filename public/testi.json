@@ -1,5 +1,5 @@
 {
- "versione": 85,
+ "versione": 86,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3316,6 +3316,11 @@
   "rp.classifica": {
    "t": "Classifica",
    "s": "Fine partita · riepilogo"
+  },
+  "rp.nessuno": {
+   "t": "Stavolta nessuno",
+   "s": "Fine partita · riepilogo",
+   "n": "Titolo grosso del riquadro quando nessun luogo comune ha pesato"
   }
  }
 }
