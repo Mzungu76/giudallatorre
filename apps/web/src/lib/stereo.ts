@@ -2,15 +2,24 @@ import type { GameState } from "@gdt/game-engine";
 import { ts } from "./testi.ts";
 import type { TestoKey } from "./testi.ts";
 
-export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number }[]; lancio: { cardId: string; ruolo: string; n: number; text: string } | null }
+export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number }[]; lancio: { cardId: string; ruolo: string; n: number; text: string } | null; /** La caratteristica (aspetto) comune alle carte dietro i luoghi comuni di ruolo con lo stesso tratto del primo, se c'è. */ comune: { k: string; pct: number } | null }
 /** Il pannello «Luoghi comuni» è della PARTITA, non dei giocatori: quanta parte dei voti di tutti si spiega con un luogo comune, quanto sarebbe stato per caso e quali luoghi comuni hanno pesato di più. */
 export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3): StereoGame | null {
   if (!st || !st.turni) return null;
   const n = Object.values(st.n).reduce((a, b) => a + b, 0); if (!n) return null;
-  const s = Object.values(st.s).reduce((a, b) => a + b, 0), pesi = Object.values(st.cause ?? {}).reduce((a, b) => a + b, 0);   // percentuale = quota del peso totale dei luoghi comuni emersi
-  const top = Object.entries(st.cause ?? {}).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, max).map(([k, v]) => ({ k, n: v, pct: pesi > 0 ? Math.round((v / pesi) * 100) : 0 }));
+  const s = Object.values(st.s).reduce((a, b) => a + b, 0);
+  // i luoghi comuni sono quelli di RUOLO («politico → bugiardo»); gli aspetti («@cravatta → …») non entrano nella classifica: servono a trovare la caratteristica comune
+  const ruoli = Object.entries(st.cause ?? {}).filter(([k]) => !k.startsWith("@")), pesi = ruoli.reduce((a, [, v]) => a + v, 0);   // percentuale = quota del peso totale dei luoghi comuni emersi
+  const top = ruoli.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, max).map(([k, v]) => ({ k, n: v, pct: pesi > 0 ? Math.round((v / pesi) * 100) : 0 }));
+  let comune: StereoGame["comune"] = null;
+  if (top[0]) {   // tra i luoghi comuni con lo stesso tratto del primo: l'aspetto presente in almeno metà dei voti (e almeno 2)
+    const tratto = top[0].k.split(" → ")[1], gruppo = top.filter((x) => x.k.split(" → ")[1] === tratto).map((x) => st.asp?.[x.k]).filter((x): x is NonNullable<typeof x> => !!x);
+    const tot = gruppo.reduce((a, x) => a + x.n, 0), conta: Record<string, number> = {}; for (const x of gruppo) for (const [l, c] of Object.entries(x.l)) conta[l] = (conta[l] ?? 0) + c;
+    const mig = Object.entries(conta).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0];
+    if (tratto && mig && mig[1] >= 2 && tot > 0 && mig[1] / tot >= 0.5) comune = { k: `@${mig[0]} → ${tratto}`, pct: Math.round((mig[1] / tot) * 100) };
+  }
   const L = st.lancio;
-  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
+  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, comune, lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
 }
 
 /** Nome breve del soggetto di un luogo comune: «politico → bugiardo» → «Politico»; «@cravatta → bugiardo» (aspetto) → «Cravatta». */

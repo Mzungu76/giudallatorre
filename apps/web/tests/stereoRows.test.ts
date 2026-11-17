@@ -24,4 +24,12 @@ describe("pannello luoghi comuni: dati della partita", () => {
     expect(trattoPlurale("infedele", false)).toBe("infedeli"); expect(trattoPlurale("drammatico", false)).toBe("drammatici"); expect(trattoPlurale("nerd", false)).toBe("nerd");
     expect(ruoloDi("@occhiali_sole → arrogante")).toBe("Occhiali sole");
   });
+  it("la classifica dei luoghi comuni è solo di ruolo; la caratteristica comune è l'aspetto presente in almeno metà dei voti (e almeno 2) dei luoghi con lo stesso tratto del primo", () => {
+    const base = { n: { a: 4 }, s: { a: 2 }, c: 1, turni: 2 };
+    const g = stereoGame({ ...base, cause: { "politico → bugiardo": 4, "giudice → bugiardo": 2, "@cravatta → bugiardo": 3, "cuoco → pigro": 1 }, asp: { "politico → bugiardo": { n: 4, l: { cravatta: 3, occhiali: 1 } }, "giudice → bugiardo": { n: 2, l: { cravatta: 2 } }, "cuoco → pigro": { n: 1, l: { cravatta: 1 } } } })!;
+    expect(g.top.map((x) => x.k)).toEqual(["politico → bugiardo", "giudice → bugiardo", "cuoco → pigro"]);   // nessun «@…» in classifica
+    expect(g.top[0]!.pct).toBe(57);                                                                     // 4 su 7 (il peso degli aspetti non conta)
+    expect(g.comune).toEqual({ k: "@cravatta → bugiardo", pct: 83 });                                    // 5 voti su 6 dei luoghi «bugiardo»; il cuoco (tratto diverso) non conta
+    expect(stereoGame({ ...base, cause: { "politico → bugiardo": 4 }, asp: { "politico → bugiardo": { n: 4, l: { cravatta: 1, occhiali: 1 } } } })!.comune).toBeNull();   // nessun aspetto in comune
+  });
 });

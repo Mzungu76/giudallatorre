@@ -268,6 +268,7 @@ export class RoomCore {
     const f = stereoVoteFlags(state.tower, text, r.votes), g = pregiudizioTurno(state.tower, text, r.votes, r.marks?.[0]?.position); if (!f || !g) return;
     const L = luoghiTurno(state.tower, text, r.votes, r.marks ?? [], r.fallenPositions);   // luoghi comuni con i pesi (voti + segnalino del Megafono)
     if (L) { f.cause = L.pesi; f.lancio = L.lancio; }
+    const tt = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); if (L) { const A = (tt.asp ??= {}); for (const [k, v] of Object.entries(L.aspetti)) { const a = (A[k] ??= { n: 0, l: {} }); a.n += v.n; for (const [l, c] of Object.entries(v.l)) a.l[l] = (a.l[l] ?? 0) + c; } }
     r.stereo = { ...f, forza: g.voti, ...(g.lui !== null ? { lui: g.lui } : {}), caso: g.caso };
     const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
     // ogni voto è un giudizio a occhio (mai zero); anche il segnalino del Megafono lo è

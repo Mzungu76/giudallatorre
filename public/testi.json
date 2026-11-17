@@ -1,5 +1,5 @@
 {
- "versione": 91,
+ "versione": 92,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -3623,6 +3623,11 @@
    "t": "{chi} è più {tratto} degli altri",
    "s": "Luoghi comuni · frasi",
    "n": "Luogo comune su un aspetto: «Chi porta la cravatta è più bugiardo degli altri»"
+  },
+  "lc.tra": {
+   "t": "Tra loro:",
+   "s": "Luoghi comuni · frasi",
+   "n": "Introduce la caratteristica (aspetto) comune alle carte dei luoghi comuni di ruolo"
   }
  }
 }

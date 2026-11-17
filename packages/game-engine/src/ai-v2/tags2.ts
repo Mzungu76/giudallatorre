@@ -200,7 +200,7 @@ function causaGenerica(cardId: string, text: string): string | null {
   const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
   const tr = Object.entries(p.tipi).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))[0]; return tr ? `${nome} → ${tr[0]}` : null;
 }
-export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null } | null {
+export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }> } | null {
   const causa: Record<number, string> = {};
   const fz: Record<number, number> = {};
   for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const c = e.causa ?? causaGenerica(t.cardId, text); if (c) { causa[t.position] = c; fz[t.position] = Math.max(e.s, affinityV2m(t.cardId, text) ?? 0); } }
@@ -217,5 +217,8 @@ export function luoghiTurno(tower: { cardId: string; position: number }[], text:
     if (v > 0) pesi[causa[Number(k)]!] = Math.round(((pesi[causa[Number(k)]!] ?? 0) + v) * 100) / 100;
     const n = nv[Number(k)] ?? 0; if (n > 0 && (!lancio || n > lancio.n)) lancio = { pos: Number(k), n, causa: causa[Number(k)]! };
   }
-  return { pesi, lancio };
+  // la caratteristica comune: per ogni luogo comune di ruolo, gli aspetti delle carte che hanno ricevuto i voti
+  const aspetti: Record<string, { n: number; l: Record<string, number> }> = {};
+  for (const t of tower) { const c = causa[t.position], n = nv[t.position] ?? 0; if (!c || c.startsWith("@") || !n) continue; const a = (aspetti[c] ??= { n: 0, l: {} }); a.n += n; for (const look of CARDLOOKS.get(t.cardId) ?? []) a.l[look] = (a.l[look] ?? 0) + n; }
+  return { pesi, lancio, aspetti };
 }

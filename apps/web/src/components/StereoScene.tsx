@@ -60,7 +60,7 @@ export default function StereoScene({ stereo, isBot, sound, readOnly, onDone, la
           <>
             <Gauge pct={g.pct} on={on} shown={shown} />
             {on && <div className="aw-stamp sc-v" data-testid="stereo-verdict"><span className="aw-k">{t(`sc.f${fascia(g.pct)}`)}</span></div>}
-            {g.top[0] && <div className="sc-blk sc-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="sc-lc-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>{g.top.slice(1).map((x) => <div key={x.k} className="sc-alt">{fraseLuogo(x.k)} · {x.pct}%</div>)}</div>}
+            {g.top[0] && <div className="sc-blk sc-lc" data-testid="stereo-top"><h4>{t("sc.top")}</h4><div className="sc-lc-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>{g.top.slice(1).map((x) => <div key={x.k} className="sc-alt">{fraseLuogo(x.k)} · {x.pct}%</div>)}{g.comune && <div className="sc-alt rp-com">{t("lc.tra")} {fraseLuogo(g.comune.k)} · {g.comune.pct}%</div>}</div>}
             {g.lancio && (
               <div className="sc-blk sc-lan" data-testid="stereo-lancio">
                 <h4>{t("sc.lancio")}</h4>
