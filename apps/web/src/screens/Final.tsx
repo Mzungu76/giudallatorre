@@ -64,7 +64,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
     { id: "testo", label: "sm.testo" as const, hint: "sm.testo.s" as const, icon: "💬", onPick: () => { void testo(); } },
   ];
   return <FinalScene summary={riep} onDone={() => setRiep(true)} onShare={!readOnly ? () => { setNota(null); setMenu(true); } : undefined} sharing={sharing || cop} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }}>
-    {riep && <Riepilogo rows={rows} winners={winners} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} onDettagli={setDett} />}
+    {riep && <Riepilogo rows={rows} winners={winners} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} seme={room.code} onDettagli={setDett} />}
     {dett && <Dettagli g={dett} onClose={() => setDett(null)} />}
     {menu && <ShareMenu options={opzioni} busy={occupato} note={nota} onClose={() => setMenu(false)} />}
   </FinalScene>;

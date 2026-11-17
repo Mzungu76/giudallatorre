@@ -1,5 +1,5 @@
 {
- "versione": 99,
+ "versione": 102,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -2976,11 +2976,11 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f0": {
-   "t": "Mente aperta!",
+   "t": "Mente aperta, per ora",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f1": {
-   "t": "Qualche occhiata storta",
+   "t": "Occhiate storte, ma educate",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f2": {
@@ -2988,19 +2988,19 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f3": {
-   "t": "Tribunale della copertina",
+   "t": "Tribunale del popolo",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.u": {
-   "t": "Gli umani giudicano più dei bot!",
+   "t": "Gli umani giudicano più dei bot. Brava gente",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.b": {
-   "t": "I bot hanno più pregiudizi di voi!",
+   "t": "I bot hanno più pregiudizi di voi. Complimenti",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.p": {
-   "t": "Umani e bot, pari e patta",
+   "t": "Pari e patta, come al bar",
    "s": "Fine partita · luoghi comuni"
   },
   "torre.punti": {
@@ -3299,10 +3299,6 @@
   "rot.cond.carico": {
    "t": "Preparo la copertina…",
    "s": "Copertina rotocalco"
-  },
-  "rp.classifica": {
-   "t": "Classifica",
-   "s": "Fine partita · riepilogo"
   },
   "lc.r.politico": {
    "t": "I politici",
@@ -3686,59 +3682,23 @@
   },
   "dt.titolo": {
    "t": "Come l’abbiamo finalmente capito",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.origine": {
-   "t": "Come si è formato",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.voti": {
-   "t": "{n} voti sul personaggio",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.segnalino": {
-   "t": "{n} dal segnalino del Megafono",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.evitato": {
-   "t": "{n} da chi ha votato altrove",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.personaggi": {
-   "t": "Personaggi coinvolti",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.nessun": {
-   "t": "Nessun voto diretto: pesa solo il segnalino o chi ha votato altrove",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.comune": {
-   "t": "Caratteristica comune",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.comune.riga": {
-   "t": "{chi}: {n} voti su {tot} ({pct}%)",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.solida": {
-   "t": "Quanto è solida la stima",
-   "s": "Dettagli dei luoghi comuni"
+   "s": "Come l’abbiamo finalmente capito"
   },
   "dt.s0": {
-   "t": "Solo {n} voti: è un indizio debole",
-   "s": "Dettagli dei luoghi comuni"
+   "t": "{n} voti: poco più di un sospetto. Per condannare serve altro.",
+   "s": "Come l’abbiamo finalmente capito"
   },
   "dt.s1": {
-   "t": "{n} voti: stima discreta",
-   "s": "Dettagli dei luoghi comuni"
+   "t": "{n} voti: stima discreta. Per una condanna ci vuole di più. Per un meme, basta.",
+   "s": "Come l’abbiamo finalmente capito"
   },
   "dt.s2": {
-   "t": "{n} voti: stima abbastanza solida",
-   "s": "Dettagli dei luoghi comuni"
+   "t": "{n} voti: ce n’è abbastanza. Il giudice può dormire.",
+   "s": "Come l’abbiamo finalmente capito"
   },
   "dt.nota": {
-   "t": "Come pesa ogni cosa capita: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
-   "s": "Dettagli dei luoghi comuni"
+   "t": "Il peso di ogni accusa: 1 per ogni voto del pubblico, +1 dal Megafono (×1,5 se i voti gli danno ragione), 0,5 per chi ha votato altrove.",
+   "s": "Come l’abbiamo finalmente capito"
   },
   "rot.vinto": {
    "t": "Ho vinto!",
@@ -3768,6 +3728,684 @@
    "t": "Oggi abbiamo capito che:",
    "s": "Copertina rotocalco",
    "n": "Parte bianca della riga sotto il titolo"
+  },
+  "rp.titolo.0": {
+   "t": "{nome}, campione in carica (da 4 minuti)",
+   "s": "Riepilogo satirico",
+   "n": "Titolo sopra la classifica quando vince una persona sola ({nome})"
+  },
+  "rp.titolo.1": {
+   "t": "Vince {nome}. Si accettano reclami",
+   "s": "Riepilogo satirico"
+  },
+  "rp.titolo.2": {
+   "t": "{nome} ha vinto, e adesso lo sa",
+   "s": "Riepilogo satirico"
+  },
+  "rp.titolo.3": {
+   "t": "{nome} sul gradino più alto, senza scale",
+   "s": "Riepilogo satirico"
+  },
+  "rp.titolo.4": {
+   "t": "Ha vinto {nome}. La mamma è già stata avvisata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.titolo.pari": {
+   "t": "A pari merito: {nomi}. Il podio è stretto",
+   "s": "Riepilogo satirico",
+   "n": "Titolo quando vincono in più ({nomi} = elenco dei nomi)"
+  },
+  "rp.q.primo.0": {
+   "t": "ha lasciato intendere di aver vinto",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: primo in classifica"
+  },
+  "rp.q.primo.1": {
+   "t": "lo sapeva anche la mamma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.primo.2": {
+   "t": "vittoria certificata da un cugino",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.primo.3": {
+   "t": "non ha detto niente, ma si vede",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.0": {
+   "t": "argento, con il broncio",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: secondo"
+  },
+  "rp.q.secondo.1": {
+   "t": "secondo, di un soffio (si dice sempre)",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.2": {
+   "t": "a un passo, ma sul tappeto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.3": {
+   "t": "il vincitore morale. Di nessuno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.0": {
+   "t": "«io ero distratto»",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: a metà classifica"
+  },
+  "rp.q.centro.1": {
+   "t": "a metà strada, come sempre",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.2": {
+   "t": "ci ha provato, con calma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.3": {
+   "t": "stava pensando ad altro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.0": {
+   "t": "ultimo, ma con eleganza",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: ultimo con punti"
+  },
+  "rp.q.ultimo.1": {
+   "t": "la coda del gruppo, quella fotogenica",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.2": {
+   "t": "ha perso con dignità. Un po'",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.3": {
+   "t": "ultimo, però sorridente",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.0": {
+   "t": "zero punti, zero rimpianti",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: zero punti"
+  },
+  "rp.q.zero.1": {
+   "t": "zero punti, grande stile",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.2": {
+   "t": "assolto per mancanza di prove",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.3": {
+   "t": "presente. E già questo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.0": {
+   "t": "Previsioni: sereno, con qualche dubbio",
+   "s": "Riepilogo satirico",
+   "n": "Riga sotto il verdetto del Pregiudiziometro"
+  },
+  "rp.gs.1": {
+   "t": "TG Pregiudizi: cielo coperto da sospetti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.2": {
+   "t": "Sentenze emesse prima di sapere i fatti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.3": {
+   "t": "Il processo non è mai cominciato. La condanna sì",
+   "s": "Riepilogo satirico"
+  },
+  "rp.lan.0": {
+   "t": "Standing ovation del Megafono, che si era distratto.",
+   "s": "Riepilogo satirico",
+   "n": "Commento sotto il miglior lancio"
+  },
+  "rp.lan.1": {
+   "t": "Il Megafono ha sorriso. Poi ha incassato.",
+   "s": "Riepilogo satirico"
+  },
+  "rp.lan.2": {
+   "t": "Applauso a scena aperta. Durato un respiro.",
+   "s": "Riepilogo satirico"
+  },
+  "rp.lan.3": {
+   "t": "Lanciato con una mano sola. L'altra teneva il caffè.",
+   "s": "Riepilogo satirico"
+  },
+  "rp.alt.1": {
+   "t": "Intanto: {frase} · {pct}%",
+   "s": "Riepilogo satirico"
+  },
+  "rp.alt.2": {
+   "t": "E poi: {frase} · {pct}%",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.politico.t": {
+   "t": "Mandato a vita",
+   "s": "Riepilogo satirico",
+   "n": "Titolo del badge (premio) per il ruolo"
+  },
+  "rp.b.politico.s": {
+   "t": "Ha promesso di non ricandidarsi",
+   "s": "Riepilogo satirico",
+   "n": "Riga sotto il titolo del badge"
+  },
+  "rp.b.religioso.t": {
+   "t": "Predica smart",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.religioso.s": {
+   "t": "Fa la morale anche col telecomando",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.insegnante.t": {
+   "t": "Segna in rosso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.insegnante.s": {
+   "t": "Ti corregge anche il saluto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.studente.t": {
+   "t": "Giustificato",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.studente.s": {
+   "t": "Ha una scusa per ogni compito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.sanitario.t": {
+   "t": "Cartella chiusa",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.sanitario.s": {
+   "t": "Ha diagnosticato tutti tranne sé stesso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giudice.t": {
+   "t": "Si ritira in camera",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giudice.s": {
+   "t": "A mangiare, di solito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.cuoco.t": {
+   "t": "Mestolo d'oro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.cuoco.s": {
+   "t": "Il sale lo mette a occhio, come i voti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.tassista.t": {
+   "t": "Il contachilometri",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.tassista.s": {
+   "t": "Sa tutto di tutti, tariffa a parte",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.ciclista.t": {
+   "t": "Passa col rosso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.ciclista.s": {
+   "t": "Per allenamento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.meccanico.t": {
+   "t": "Sotto il cofano",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.meccanico.s": {
+   "t": "Il rumore è normale. Il conto no",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.corriere.t": {
+   "t": "Non c'eri",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.corriere.s": {
+   "t": "Il pacco l'ha lasciato dal vicino. Che non ha",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.venditore.t": {
+   "t": "Ultimo pezzo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.venditore.s": {
+   "t": "Ne restava uno. Ce n'è sempre uno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guardia.t": {
+   "t": "Ha visto tutto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guardia.s": {
+   "t": "Tranne quello che stava succedendo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hacker.t": {
+   "t": "Cappuccio d'oro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hacker.s": {
+   "t": "Nessuno sa cosa fa. Nemmeno lui",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giornalista.t": {
+   "t": "Fonte attendibile",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giornalista.s": {
+   "t": "Un amico di un amico, di solito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.comico.t": {
+   "t": "Ride per ultimo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.comico.s": {
+   "t": "O per primo. Dipende dalla battuta",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.artista.t": {
+   "t": "Genio incompreso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.artista.s": {
+   "t": "Anche da chi ha capito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.musicista.t": {
+   "t": "Soundcheck eterno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.musicista.s": {
+   "t": "Arriva tardi, ma con gli strumenti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.rapper.t": {
+   "t": "Rima obbligata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.rapper.s": {
+   "t": "Con tutto, anche con le multe",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.punk.t": {
+   "t": "Contro tutto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.punk.s": {
+   "t": "Tranne l'orario del concerto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hippie.t": {
+   "t": "Pace e rimandi",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hippie.s": {
+   "t": "Lo fa domani, con calma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.turista.t": {
+   "t": "Perso in centro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.turista.s": {
+   "t": "Ha chiesto indicazioni a un altro turista",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.istruttore.t": {
+   "t": "Ancora uno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.istruttore.s": {
+   "t": "Dieci piegamenti. Li fai tu",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.influencer.t": {
+   "t": "Posta, ergo sum",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.influencer.s": {
+   "t": "Se non c'è la foto, non è successo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guru.t": {
+   "t": "Illuminato a pagamento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guru.s": {
+   "t": "La pace interiore costa 49 euro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.manager.t": {
+   "t": "Riunione alle 9",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.manager.s": {
+   "t": "Poteva essere una mail",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.impiegato.t": {
+   "t": "Premio Poltrona",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.impiegato.s": {
+   "t": "Immobile ma di successo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.trader.t": {
+   "t": "Al rialzo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.trader.s": {
+   "t": "Come l'umore, quando ha ragione",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.nerd.t": {
+   "t": "L'aveva detto lui",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.nerd.s": {
+   "t": "Quattro volte, con i link",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.attivista.t": {
+   "t": "Non cede di un millimetro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.attivista.s": {
+   "t": "Però l'aereo l'ha preso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.genitore.t": {
+   "t": "Ho detto di no",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.genitore.s": {
+   "t": "Ormai è un'abitudine",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.presentatore.t": {
+   "t": "Applauso registrato",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.presentatore.s": {
+   "t": "Sorride anche con la sedia vuota",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.scienziato.t": {
+   "t": "Ipotesi azzardata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.scienziato.s": {
+   "t": "Con il grafico, per sembrare vera",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.atleta.t": {
+   "t": "Campione di sé stesso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.atleta.s": {
+   "t": "L'avversario era lo specchio",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.mago.t": {
+   "t": "Ora lo vedi",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.mago.s": {
+   "t": "Ora non c'è più, e nemmeno la cassa",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.reginetta.t": {
+   "t": "Corona d'argento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.reginetta.s": {
+   "t": "Il ballo non c'è. Il giudizio sì",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.architetto.t": {
+   "t": "Bella facciata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.architetto.s": {
+   "t": "Dietro non ha guardato nessuno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.bibliotecario.t": {
+   "t": "Silenzio!",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.bibliotecario.s": {
+   "t": "Ha già detto tutto, a bassa voce",
+   "s": "Riepilogo satirico"
+  },
+  "dt.sub": {
+   "t": "Il processo, in diretta. Nessun appello",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.imputati": {
+   "t": "Imputati: {frase}",
+   "s": "Come l’abbiamo finalmente capito",
+   "n": "Titolo di ogni luogo comune nel processo ({frase} già con la percentuale)"
+  },
+  "dt.prove": {
+   "t": "Prove a carico:",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.p.v": {
+   "t": "{n} voti dal pubblico",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.p.m": {
+   "t": "+{n} dal Megafono (teste dubbio)",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.p.e": {
+   "t": "+{n} da chi ha votato altrove (dei vigliacchi, diciamolo)",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.p.nessuna": {
+   "t": "nessuna prova, solo sensazioni",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.politico": {
+   "t": "Chiariamo: non l'ho detto. E se l'ho detto, intendevo altro.",
+   "s": "Come l’abbiamo finalmente capito",
+   "n": "Cosa dice il testimone (il personaggio) in sua difesa"
+  },
+  "dt.q.religioso": {
+   "t": "Io perdono tutti. Poi però mi ricordo chi ha votato.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.insegnante": {
+   "t": "Segno tutto, eh.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.studente": {
+   "t": "Ero convinto che fosse un'altra frase.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.sanitario": {
+   "t": "Ho visto di peggio. Stamattina.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.giudice": {
+   "t": "Mi riservo.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.cuoco": {
+   "t": "Prima assaggiate, poi giudicate. Va bene, giudicate.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.tassista": {
+   "t": "Io lo sapevo già. Me l'ha detto uno stamattina.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.ciclista": {
+   "t": "Ero già passato.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.meccanico": {
+   "t": "Il rumore c'è sempre stato.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.corriere": {
+   "t": "Ho suonato. Non c'era nessuno, ho lasciato il pacco.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.venditore": {
+   "t": "Per voi, solo oggi, a metà prezzo: la sentenza.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.guardia": {
+   "t": "Circolare, non c'è niente da vedere. Davvero.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.hacker": {
+   "t": "(non risponde)",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.giornalista": {
+   "t": "Scusate, devo sentire un'altra versione.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.comico": {
+   "t": "Sto aspettando la risata. Fate con comodo.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.artista": {
+   "t": "Voi non capite. È proprio questo il punto.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.musicista": {
+   "t": "Posso rifare l'attacco?",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.rapper": {
+   "t": "Giudicare? Io faccio rima.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.punk": {
+   "t": "E chi lo decide?",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.hippie": {
+   "t": "Ognuno ha la sua verità. La mia è più comoda.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.turista": {
+   "t": "Scusi, in che lingua è il processo?",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.istruttore": {
+   "t": "Dai, un altro. L'ultimo.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.influencer": {
+   "t": "Un attimo, mi serve la luce giusta.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.guru": {
+   "t": "L'avevo previsto. Vi mando la fattura.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.manager": {
+   "t": "Per me è un'opportunità.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.impiegato": {
+   "t": "Io pigro? Sto ottimizzando il tempo.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.trader": {
+   "t": "Vedo un rialzo. Anche delle mie colpe.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.nerd": {
+   "t": "In realtà, tecnicamente, no.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.attivista": {
+   "t": "Io avevo avvisato.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.genitore": {
+   "t": "Poi ne parliamo a casa.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.presentatore": {
+   "t": "Ne parliamo dopo la pubblicità.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.scienziato": {
+   "t": "Il campione è piccolo. Si può ingrandire.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.atleta": {
+   "t": "Ho già giudicato. Di corsa.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.mago": {
+   "t": "Nessun trucco, nessun inganno. Chiedete a mio cugino.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.reginetta": {
+   "t": "Ci vorrebbe un applauso. Dopo.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.architetto": {
+   "t": "Veramente è stato il cliente a volerlo così.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.q.bibliotecario": {
+   "t": "Shh.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.aggravante": {
+   "t": "L’aggravante",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.agg.riga": {
+   "t": "{frase}: {n} voti su {tot}. {chiusa}",
+   "s": "Come l’abbiamo finalmente capito",
+   "n": "L'aggravante: la caratteristica comune e come finisce"
+  },
+  "dt.agg.0": {
+   "t": "La giuria si è commossa.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.agg.1": {
+   "t": "Il pubblico è esploso.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.agg.2": {
+   "t": "Si accettano appelli, ma scritti a mano.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.agg.3": {
+   "t": "L'avvocato era in pausa.",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.attendibilita": {
+   "t": "Attendibilità",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.chiudi": {
+   "t": "Si chiude la seduta",
+   "s": "Come l’abbiamo finalmente capito"
+  },
+  "dt.p.v1": {
+   "t": "1 voto dal pubblico",
+   "s": "Come l’abbiamo finalmente capito"
   }
  }
 }
