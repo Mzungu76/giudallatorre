@@ -179,3 +179,28 @@ export function pregiudizioTurno(tower: { cardId: string; position: number }[], 
   const voti: Record<string, number> = {}; for (const [pid, pos] of Object.entries(votes)) voti[pid] = by[pos] ?? PREGIUDIZIO_BASE;
   return { voti, lui: markPos !== undefined && by[markPos] !== undefined ? by[markPos]! : null, caso: tower.length ? sum / tower.length : PREGIUDIZIO_BASE };
 }
+
+/**
+ * I luoghi comuni evocati in un turno, con i PESI. Ogni voto su una carta che la tabella associa alla frase vale 1 per il suo luogo comune (ruolo → tratto).
+ * Il segnalino del Megafono (bot o umano, pesa uguale) è una dichiarazione: CADE o VOTI NULLI su una carta associata aggiunge 1 a quella carta, e se la carta
+ * ha anche voti il suo peso si moltiplica per `PESO_LUI_CONFERMA` (il luogo comune si consolida). NON CADE su una carta rimasta senza voti dice «non è lui»:
+ * aggiunge 1 alla carta che invece è caduta (se associata). Un segnalino su una carta non associata è una mossa di gioco, non conta.
+ * I pesi sono una scelta di progetto (docs/GAME_RULES.md), non una misura. Null se la frase non ha etichette.
+ */
+export const PESO_LUI_CONFERMA = 1.5;
+export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null } | null {
+  const causa: Record<number, string> = {};
+  for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; if (e.causa) causa[t.position] = e.causa; }
+  const nv: Record<number, number> = {}; for (const pos of Object.values(votes)) nv[pos] = (nv[pos] ?? 0) + 1;
+  const w: Record<number, number> = {}; for (const k of Object.keys(causa)) w[Number(k)] = nv[Number(k)] ?? 0;
+  for (const m of marks) {
+    if ((m.effect === "cade" || m.effect === "nulli") && causa[m.position] !== undefined) { w[m.position]! += 1; if ((nv[m.position] ?? 0) > 0) w[m.position]! *= PESO_LUI_CONFERMA; }
+    else if (m.effect === "noncade" && !nv[m.position]) for (const f of fallen) if (causa[f] !== undefined) w[f]! += 1;
+  }
+  const pesi: Record<string, number> = {}; let lancio: { pos: number; n: number; causa: string } | null = null;
+  for (const [k, v] of Object.entries(w)) {
+    if (v > 0) pesi[causa[Number(k)]!] = Math.round(((pesi[causa[Number(k)]!] ?? 0) + v) * 100) / 100;
+    const n = nv[Number(k)] ?? 0; if (n > 0 && (!lancio || n > lancio.n)) lancio = { pos: Number(k), n, causa: causa[Number(k)]! };
+  }
+  return { pesi, lancio };
+}
