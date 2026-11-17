@@ -1,5 +1,5 @@
 import { Who } from "./Persona.tsx";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { PtIcon } from "./Pt.tsx";
 import { cardUrl } from "../lib/characters.ts";
 import { FAST, useStage } from "../ui.tsx";
@@ -13,7 +13,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing }: { /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing, children }: { /** Altro da disegnare sopra la scena (es. il pannello della pagella). */ children?: ReactNode; /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST || instant ? 3 : 0), [inst, setInst] = useState(!!(FAST || instant)), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -101,6 +101,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
           </div>
         </div>
       )}
+      {children}
     </div>
   );
 }

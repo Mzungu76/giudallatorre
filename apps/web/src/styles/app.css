@@ -1483,3 +1483,21 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .sc-plate{fill:var(--navy);stroke:#fff;stroke-width:2.5}.sc-plate-t{fill:#fff;font:400 16px Anton,Impact,sans-serif}
 .spl-x{font:400 30px Anton,Impact,sans-serif;text-transform:uppercase;margin-top:4px;animation-delay:1.2s}
 .sc-btns{width:calc(100% - 24px);margin-top:auto;display:flex;flex-direction:column;gap:8px;z-index:5;flex:none}.sc-btns .bt{width:100%}.sc-btns .bt:disabled{opacity:.65}
+
+/* Pagella sulla torre: pannello che sale a fine partita, classifica compatta in alto e schede che scorrono da sole */
+.pg{position:absolute;left:0;right:0;bottom:0;z-index:60;max-height:64%;background:#fff;border-top:4px solid var(--navy);border-radius:22px 22px 0 0;padding:6px 12px 12px;display:flex;flex-direction:column;gap:8px;transform:translateY(105%);transition:transform .55s cubic-bezier(.2,.9,.3,1.05);box-shadow:0 -6px 0 #13224a33}
+.pg.su{transform:none}
+.pg-grip{width:46px;height:5px;border-radius:3px;background:var(--navy);opacity:.4;align-self:center;flex:none}
+.pg-rank{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:center;font:800 12px Nunito;color:var(--navy);flex:none}
+.pg-r{display:inline-flex;align-items:center;gap:4px}.pg-r b{opacity:.55;font-weight:800}.pg-r i{width:11px;height:11px;border-radius:50%;border:2px solid var(--navy)}.pg-r u{text-decoration:none;font:400 14px Anton}
+.pg-card{display:flex;flex-direction:column;align-items:center;gap:8px;min-height:0;overflow:hidden;animation:pgIn .45s ease-out both;cursor:pointer}
+@keyframes pgIn{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+.pg .sc-gauge{animation:none;width:min(250px,64vw);margin-top:0}.pg .sc-num{margin-top:2px}.pg .sc-num b{font-size:38px;color:var(--red);text-shadow:2px 2px 0 var(--navy)}.pg .sc-num span{color:var(--navy);text-shadow:none}
+.pg-verd{font:400 19px/1.1 Anton;text-transform:uppercase;text-align:center;color:var(--navy)}
+.pg .pg-b{animation:none;width:100%;transform:none;box-shadow:3px 4px 0 var(--navy)}.pg .sc-lan-r img{animation:none}
+.pg-cop{width:100%;margin-top:2px;font-size:15px}
+.pg-foot{display:flex;align-items:center;gap:10px;flex:none}
+.pg-foot small{flex:1;font:700 11px Nunito;opacity:.6}
+.pg-dots{display:flex;gap:5px}.pg-dots i{width:9px;height:9px;border-radius:50%;border:2px solid var(--navy);background:#fff}.pg-dots i.on{background:var(--navy)}
+.pg-skip{background:none;border:0;font:800 12px Nunito;color:var(--navy);text-decoration:underline;padding:4px}
+.pg-riv{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);z-index:45;background:#fff;border:3px solid var(--navy);border-radius:99px;box-shadow:0 3px 0 var(--navy);padding:5px 14px;font:400 14px Anton;text-transform:uppercase;color:var(--navy)}

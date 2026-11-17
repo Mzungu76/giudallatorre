@@ -37,7 +37,7 @@ async function step() {
   if (await vis("lui-chooser")) { await p.locator('button.hit[data-pos="1"]').dispatchEvent("click"); await p.locator('.lui-opts button:not([disabled])').first().click(); return true; }
   if (await vis("confirm-vote")) { vistoVoto = true; await p.locator('button.hit[data-pos="2"]').dispatchEvent("click"); await wfs('[data-testid="zoom"]'); await clk('[data-testid="zoom-action"]'); await clk('[data-testid="confirm-vote"]'); return true; }
   if (await vis("points-continue")) { await sleep(SAMPLE ? 4000 : 800); await clk('[data-testid="points-continue"]', { timeout: 3000 }); return true; }
-  if (await vis("stereo-next")) { statsViste++; await clk('[data-testid="stereo-next"]'); return true; }
+  // (le statistiche non sono più una pagina a sé: stanno nel pannello sulla torre)
   if (await vis("award-open")) { await clk('[data-testid="award-open"]'); return true; }
   if (await vis("award-next")) { await clk('[data-testid="award-next"]'); return true; }
   if (await vis("reveal-throw")) { await clk('[data-testid="reveal-throw"]', { timeout: 3000 }); return true; }
@@ -48,7 +48,12 @@ async function step() {
 while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final")) break; let a = false; try { a = await step(); } catch { /* stato cambiato nel frattempo */ } if (!a) await sleep(150); }
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
-check("Flash: nessuna scelta di frase o carte (si va subito al segnalino e al voto)", scelte === 0 && vistoVoto, `scelte=${scelte} voto=${vistoVoto}`); check("Flash: dopo lo spoglio il pregiudiziometro compare PRIMA della classifica finale", statsViste >= 1 && await vis("final")); await p.click('[data-testid="final"]').catch(() => {});   // salta la scalata
+check("Flash: nessuna scelta di frase o carte (si va subito al segnalino e al voto)", scelte === 0 && vistoVoto, `scelte=${scelte} voto=${vistoVoto}`); await p.click('[data-testid="final"]').catch(() => {});   // salta la scalata
+{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("pagella"))) await sleep(200); }
+check("a fine partita sale da solo il pannello con la pagella", await vis("pagella")); check("nel pannello c'è la classifica compatta", await vis("pagella-rank")); check("la prima scheda è il Pregiudiziometro", await vis("pagella-pregiudizio"));
+if (SHOTS) await p.screenshot({ path: `${SHOTS}/pagella-1.png` });
+{ let k = 2; const t1 = Date.now(); while (Date.now() - t1 < 25_000 && await vis("pagella")) { await sleep(4200); if (SHOTS && await vis("pagella")) await p.screenshot({ path: `${SHOTS}/pagella-${k++}.png` }); } }
+check("la pagella si chiude da sola dopo l'ultima scheda", !(await vis("pagella"))); check("si può riaprire", await vis("pagella-riapri"));
 { const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("share-final"))) await sleep(300); }
 check("nella classifica finale c'è il pulsante Condividi", await vis("share-final"));
 { const [dl] = await Promise.all([p.waitForEvent("download", { timeout: 10_000 }).catch(() => null), p.click('[data-testid="share-final"]').catch(() => {})]); if (dl && SHOTS) await dl.saveAs(`${SHOTS}/cartolina-partita.png`); check("Condividi genera la cartolina (senza foglio di condivisione la scarica come .png)", !!dl && /\.png$/.test(dl.suggestedFilename()), dl ? dl.suggestedFilename() : "nessun file"); } if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-finale.png` });
