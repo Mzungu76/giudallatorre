@@ -1,5 +1,5 @@
 {
- "versione": 104,
+ "versione": 106,
  "aggiornato": "2026-11-17",
  "testi": {
   "intro.aria": {
@@ -4442,12 +4442,12 @@
    "s": "Copertina rotocalco"
   },
   "mv.btn": {
-   "t": "Rivediamo l’azione",
+   "t": "Com’è finito il turno",
    "s": "Moviola",
    "n": "Pulsante sotto ogni accusa nel foglio dei dettagli"
   },
   "mv.titolo": {
-   "t": "La moviola",
+   "t": "Il turno, a fine corsa",
    "s": "Moviola"
   },
   "mv.scena": {
@@ -4455,124 +4455,11 @@
    "s": "Moviola"
   },
   "mv.chiudi": {
-   "t": "Basta replay",
+   "t": "Chiudi",
    "s": "Moviola"
   },
-  "mv.avanti": {
-   "t": "Avanti",
-   "s": "Moviola"
-  },
-  "mv.indietro": {
-   "t": "Indietro",
-   "s": "Moviola"
-  },
-  "mv.parti": {
-   "t": "Parti da sola",
-   "s": "Moviola"
-  },
-  "mv.ferma": {
-   "t": "Ferma",
-   "s": "Moviola"
-  },
-  "mv.aaah": {
-   "t": "AAAAH!",
-   "s": "Moviola",
-   "n": "Scritta sulle carte che cadono"
-  },
-  "mv.senza": {
-   "t": "senza ruolo",
-   "s": "Moviola",
-   "n": "Sotto le carte che non hanno un ruolo"
-  },
-  "mv.frase.0": {
-   "t": "Il Megafono apre il microfono: «{frase}». Silenzio in sala.",
-   "s": "Moviola",
-   "n": "Primo passo: la frase letta dal Megafono ({frase})"
-  },
-  "mv.frase.1": {
-   "t": "Si parte con «{frase}». Prime facce storte in tribuna.",
-   "s": "Moviola"
-  },
-  "mv.frase.2": {
-   "t": "La frase della serata: «{frase}». Nessun avvocato presente.",
-   "s": "Moviola"
-  },
-  "mv.carte.0": {
-   "t": "Quattro carte in torre, nessuna colpa dimostrata.",
-   "s": "Moviola",
-   "n": "Secondo passo: le carte in torre ({n} = quante)"
-  },
-  "mv.carte.1": {
-   "t": "La giuria guarda i personaggi. Solo le facce, mai le carte processuali.",
-   "s": "Moviola"
-  },
-  "mv.carte.2": {
-   "t": "In torre ci sono {n} sospettati. Hanno tutti un’aria innocente, il che è sospetto.",
-   "s": "Moviola"
-  },
-  "mv.voti.0": {
-   "t": "{n} voti sulla carta «{ruolo}». La giuria ha deciso a occhio.",
-   "s": "Moviola",
-   "n": "Terzo passo: i voti sulla carta dell'accusa ({n}, {ruolo})"
-  },
-  "mv.voti.1": {
-   "t": "Il pubblico indica la carta «{ruolo}»: {n} dita puntate.",
-   "s": "Moviola"
-  },
-  "mv.voti.2": {
-   "t": "{n} giocatori votano «{ruolo}». Nessuna perizia, solo sensazioni.",
-   "s": "Moviola"
-  },
-  "mv.voti.uno": {
-   "t": "Un solo voto sulla carta «{ruolo}». Ma convinto.",
-   "s": "Moviola"
-  },
-  "mv.voti.zero": {
-   "t": "Nessun voto sulla carta «{ruolo}»: l’accusa nasce da un’altra parte.",
-   "s": "Moviola"
-  },
-  "mv.m.cade": {
-   "t": "Il Megafono mette CADE sulla carta «{ruolo}». Fiuto, o cattiveria?",
-   "s": "Moviola",
-   "n": "Quarto passo: il segnalino sulla carta dell'accusa"
-  },
-  "mv.m.noncade": {
-   "t": "NON CADE sulla carta «{ruolo}»: il Megafono la protegge. Il motivo resta un mistero.",
-   "s": "Moviola"
-  },
-  "mv.m.nulli": {
-   "t": "VOTI NULLI sulla carta «{ruolo}»: il Megafono annulla tutto, come un arbitro di paese.",
-   "s": "Moviola"
-  },
-  "mv.m.altrove": {
-   "t": "Il segnalino finisce su un’altra carta: per questa accusa non conta niente.",
-   "s": "Moviola"
-  },
-  "mv.m.nessuno": {
-   "t": "Nessun segnalino da queste parti. Pigrizia o strategia.",
-   "s": "Moviola"
-  },
-  "mv.m.conf": {
-   "t": "I voti danno ragione al Megafono: il peso dell’accusa si moltiplica per 1,5.",
-   "s": "Moviola",
-   "n": "Aggiunta quando segnalino e voti coincidono"
-  },
-  "mv.m.evit": {
-   "t": "{n} giocatori votano altrove: mezzo punto d’accusa a testa. Anche evitare è un giudizio.",
-   "s": "Moviola",
-   "n": "Aggiunta quando altri hanno evitato la carta dell'accusa"
-  },
-  "mv.fine.0": {
-   "t": "Verdetto: {frase}. Peso dell’accusa: {peso}. Si accettano reclami.",
-   "s": "Moviola",
-   "n": "Ultimo passo: il verdetto ({frase}, {fraseMin} = con l'iniziale minuscola, {peso})"
-  },
-  "mv.fine.1": {
-   "t": "La corte stabilisce che {fraseMin}. Peso: {peso}. Contro la sentenza si può solo brontolare.",
-   "s": "Moviola"
-  },
-  "mv.fine.2": {
-   "t": "Condanna morale: {frase}. Peso {peso}, pena sospesa.",
+  "mv.legenda": {
+   "t": "Le pedine sono i voti. La freccia rossa è chi è caduto. L’anello giallo è la carta dell’accusa.",
    "s": "Moviola"
   }
  }

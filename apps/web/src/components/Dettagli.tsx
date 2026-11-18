@@ -27,7 +27,7 @@ export default function Dettagli({ g, persona, onClose }: { g: StereoGame; /** N
                 <p className="dt-o"><b>{t("dt.prove")}</b> {prove.length ? prove.join(" · ") : t("dt.p.nessuna")}</p>
                 {carta && ruolo && <div className="dt-w"><img src={cardFull(carta)} alt="" draggable={false} /><div className="dt-fum">{testimone(ruolo)}</div></div>}
                 {(() => { const sce = g.scene.filter((sc) => sc.c.some((c) => c.k === x.k)); return sce.length > 0 && (aperta === x.k
-                  ? <Moviola k={x.k} peso={x.n} scene={sce} persona={persona} onChiudi={() => setAperta(null)} />
+                  ? <Moviola k={x.k} scene={sce} persona={persona} onChiudi={() => setAperta(null)} />
                   : <button className="dt-mv" onClick={() => setAperta(x.k)} data-testid="moviola-btn">{t("mv.btn")}</button>); })()}
               </div>
             );
