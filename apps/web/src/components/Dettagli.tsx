@@ -1,6 +1,8 @@
 import { aspettoDi, fraseLuogo, type StereoGame } from "../lib/stereo.ts";
 import { chiusaAggravante, ruoloDelLuogo, testimone } from "../lib/riepilogo.ts";
 import { cardFull } from "../lib/cards.ts";
+import Moviola from "./Moviola.tsx";
+import { useState } from "react";
 import { t, ts } from "../lib/testi.ts";
 
 /** Numero con la virgola e al massimo un decimale: 2,5. */
@@ -8,7 +10,8 @@ const n1 = (x: number): string => String(Math.round(x * 10) / 10).replace(".", "
 
 /** Foglio «Come l'abbiamo finalmente capito»: il processo ai luoghi comuni. Per ognuno le prove (voti, segnalino, chi ha votato altrove), il testimone (il personaggio che si difende),
  *  l'aggravante (la caratteristica comune) e quanto è attendibile la stima. Mai nomi di giocatori. */
-export default function Dettagli({ g, onClose }: { g: StereoGame; onClose: () => void }) {
+export default function Dettagli({ g, persona, onClose }: { g: StereoGame; /** Nome e colore di un giocatore (per le pedine della moviola). */ persona: (id: string) => { name: string; color: string }; onClose: () => void }) {
+  const [aperta, setAperta] = useState<string | null>(null);
   const solida = g.votiLuoghi < 4 ? "dt.s0" : g.votiLuoghi < 8 ? "dt.s1" : "dt.s2";
   return (
     <div className="shm" data-testid="dettagli" onClick={onClose}>
@@ -23,6 +26,9 @@ export default function Dettagli({ g, onClose }: { g: StereoGame; onClose: () =>
                 <h4>{ts("dt.imputati", { frase: `${fraseLuogo(x.k)} · ${x.pct}%` })}</h4>
                 <p className="dt-o"><b>{t("dt.prove")}</b> {prove.length ? prove.join(" · ") : t("dt.p.nessuna")}</p>
                 {carta && ruolo && <div className="dt-w"><img src={cardFull(carta)} alt="" draggable={false} /><div className="dt-fum">{testimone(ruolo)}</div></div>}
+                {(() => { const sce = g.scene.filter((sc) => sc.c.some((c) => c.k === x.k)); return sce.length > 0 && (aperta === x.k
+                  ? <Moviola k={x.k} peso={x.n} scene={sce} persona={persona} onChiudi={() => setAperta(null)} />
+                  : <button className="dt-mv" onClick={() => setAperta(x.k)} data-testid="moviola-btn">{t("mv.btn")}</button>); })()}
               </div>
             );
           })}

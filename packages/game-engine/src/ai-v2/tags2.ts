@@ -215,7 +215,7 @@ function causaGenerica(cardId: string, text: string): string | null {
   const look = CARDLOOKS.get(cardId)?.[0], nome = CARDROLES.get(cardId)?.[0] ?? (look !== undefined ? `@${look}` : null); if (!nome) return null;
   const d = etichettaLuogo(text, difettoPrincipale(p)); return d ? `${nome} → ${d}` : null;
 }
-export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }>; dettagli: Record<string, { v: number; m: number; e: number; c: Record<string, number> }> } | null {
+export function luoghiTurno(tower: { cardId: string; position: number }[], text: string, votes: Record<string, number>, marks: { position: number; effect: string }[], fallen: number[]): { pesi: Record<string, number>; lancio: { pos: number; n: number; causa: string } | null; aspetti: Record<string, { n: number; l: Record<string, number> }>; dettagli: Record<string, { v: number; m: number; e: number; c: Record<string, number> }>; scena: { c: { p: number; id: string; k: string | null }[]; e: number | null } } | null {
   const causa: Record<number, string> = {};
   const fz: Record<number, number> = {};
   for (const t of tower) { const e = stereoExplain(t.cardId, text); if (!e) return null; const c = e.causa ?? causaGenerica(t.cardId, text); if (c) { causa[t.position] = c; fz[t.position] = Math.max(e.s, affinityV2m(t.cardId, text) ?? 0); } }
@@ -244,5 +244,6 @@ export function luoghiTurno(tower: { cardId: string; position: number }[], text:
     d.v += wVoti[t.position] ?? 0; d.m = r2(d.m + (wSeg[t.position]! - (wVoti[t.position] ?? 0))); if (t.position === M) d.e = r2(d.e + evitato);
     if ((nv[t.position] ?? 0) > 0) d.c[t.cardId] = (d.c[t.cardId] ?? 0) + nv[t.position]!;
   }
-  return { pesi, lancio, aspetti, dettagli };
+  const scena = { c: tower.map((t) => ({ p: t.position, id: t.cardId, k: causa[t.position] ?? null })), e: M >= 0 ? M : null };
+  return { pesi, lancio, aspetti, dettagli, scena };
 }

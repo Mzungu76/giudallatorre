@@ -1,8 +1,8 @@
-import type { GameState } from "@gdt/game-engine";
+import type { GameState, StereoScena } from "@gdt/game-engine";
 import { ts } from "./testi.ts";
 import type { TestoKey } from "./testi.ts";
 
-export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number; det: { v: number; m: number; e: number; c: Record<string, number> } | null }[]; /** Voti diretti dietro tutti i luoghi comuni di ruolo (per dire quanto è solida la stima). */ votiLuoghi: number; lancio: { cardId: string; ruolo: string; n: number; text: string } | null; /** La caratteristica (aspetto) comune alle carte dietro i luoghi comuni di ruolo con lo stesso tratto del primo, se c'è. */ comune: { k: string; pct: number; n: number; tot: number } | null }
+export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number; det: { v: number; m: number; e: number; c: Record<string, number> } | null }[]; /** Voti diretti dietro tutti i luoghi comuni di ruolo (per dire quanto è solida la stima). */ votiLuoghi: number; lancio: { cardId: string; ruolo: string; n: number; text: string } | null; /** La caratteristica (aspetto) comune alle carte dietro i luoghi comuni di ruolo con lo stesso tratto del primo, se c'è. */ comune: { k: string; pct: number; n: number; tot: number } | null; /** La moviola: i turni che hanno generato luoghi comuni. */ scene: StereoScena[] }
 /** Il pannello «Luoghi comuni» è della PARTITA, non dei giocatori: quanta parte dei voti di tutti si spiega con un luogo comune, quanto sarebbe stato per caso e quali luoghi comuni hanno pesato di più. */
 export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3): StereoGame | null {
   if (!st || !st.turni) return null;
@@ -20,7 +20,7 @@ export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3):
     if (tratto && mig && mig[1] >= 2 && tot > 0 && mig[1] / tot >= 0.5) comune = { k: `@${mig[0]} → ${tratto}`, pct: Math.round((mig[1] / tot) * 100), n: mig[1], tot };
   }
   const L = st.lancio;
-  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, votiLuoghi, comune, lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
+  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, votiLuoghi, comune, scene: st.scene ?? [], lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
 }
 
 /** Nome breve del soggetto di un luogo comune: «politico → bugiardo» → «Politico»; «@cravatta → bugiardo» (aspetto) → «Cravatta». */
