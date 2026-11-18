@@ -20,11 +20,12 @@ function passo(v, send, ctx) {
 
 async function stanza(i, stat) {
   const flash = MODE === "flash" || (MODE === "mix" && i % 2 === 0), bots = flash ? 3 : 5, t0 = Date.now();
-  const r = await fetch(BASE + "/api/rooms", { method: "POST", body: JSON.stringify({ nickname: "Io" + i, bots: { count: bots, level: "hard" }, ...(flash ? { flash: true, flashMega: "host" } : {}) }) });
-  if (!r.ok) { stat.errCreazione++; return; }
+  const ip = `10.${(i >> 8) & 255}.${i & 255}.7`;   // ogni stanza da un IP diverso, come giocatori veri: il limite di 10 creazioni al minuto è per IP
+  const r = await fetch(BASE + "/api/rooms", { method: "POST", headers: { "cf-connecting-ip": ip }, body: JSON.stringify({ nickname: "Io" + i, bots: { count: bots, level: "hard" }, ...(flash ? { flash: true, flashMega: "host" } : {}) }) });
+  if (!r.ok) { stat.errCreazione++; stat.err["creazione-" + r.status] = (stat.err["creazione-" + r.status] ?? 0) + 1; return; }
   const s = await r.json(), ctx = { azioni: 0, invio: 0 };
   await new Promise((fine) => {
-    const ws = new WebSocket(`${WS}/ws/${s.code}`); let view = null, avviata = false, chiusa = false, ultima = Date.now();
+    const ws = new WebSocket(`${WS}/ws/${s.code}`, { headers: { "cf-connecting-ip": ip } }); let view = null, avviata = false, chiusa = false, ultima = Date.now();
     const chiudi = (esito) => { if (chiusa) return; chiusa = true; stat.esiti[esito] = (stat.esiti[esito] ?? 0) + 1; try { ws.close(); } catch { /* */ } fine(); };
     const t = setInterval(() => { if (Date.now() - t0 > LIMITE) { clearInterval(t); chiudi("timeout"); } else if (view) passo(view, (m) => ws.send(JSON.stringify(m)), ctx); }, 40);
     ws.on("open", () => ws.send(JSON.stringify({ t: "hello", token: s.token })));
