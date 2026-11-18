@@ -65,6 +65,19 @@ section{padding:0 16px 30px}section>h2{font:400 22px Anton;text-transform:upperc
 .sc.on .clap:before{animation:ciak .35s 1.4s both}@keyframes ciak{to{transform:rotate(0)}}
 .clap div{font:800 12px Nunito;color:#fff;text-align:left;padding:6px 10px;border-bottom:1px solid #fff4}.clap b{font:400 15px Anton;color:var(--mus)}
 .blooper{background:#fff;border:3px solid var(--navy);border-radius:11px;color:var(--navy);padding:6px 10px;margin:6px 0;font:800 12.5px/1.3 Nunito;text-align:left}.blooper b{font:400 12px Anton;text-transform:uppercase;color:var(--red);display:block}
+
+/* RITMO: montaggio serrato per il mockup 1 */
+.rit .sc.on .a{animation:pop .3s 0s both}.rit .sc.on .b{animation:pop .3s .5s both}.rit .sc.on .c{animation:pop .3s 1s both}.rit .sc.on .d{animation:pop .3s 1.5s both}
+@keyframes pop{0%{opacity:0;transform:scale(1.7)}70%{transform:scale(.95)}100%{opacity:1;transform:none}}
+.rit .sc.on .cam{animation:dolly 5.6s cubic-bezier(.5,0,.2,1) both}
+.rit .sc.on .cl{animation:climb 2.2s calc(var(--d)*.45) cubic-bezier(.3,.1,.4,1) both}
+.rit .sc.on .cl.f{animation:climb 2.2s calc(var(--d)*.45) cubic-bezier(.3,.1,.4,1) both,fall .8s calc(var(--d)*.45 + 2.5s) cubic-bezier(.5,0,.9,.4) both}
+.rit .sc.on .spot{animation:beam .4s 2.6s both}.rit .sc.on .aaah{animation:pop .25s 3.1s both}
+.rit .sc.on .rk{animation:slide .3s both}.rit .sc.on .rk:nth-child(1){animation-delay:.9s}.rit .sc.on .rk:nth-child(2){animation-delay:.65s}.rit .sc.on .rk:nth-child(3){animation-delay:.45s}.rit .sc.on .rk:nth-child(4){animation-delay:.25s}.rit .sc.on .rk:nth-child(5){animation-delay:.05s}
+@keyframes slide{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+.rit .sc.on .cred{animation:roll 15s linear both}
+.rit .flash{position:absolute;inset:0;background:#fff;z-index:29;opacity:0;pointer-events:none}.rit .sc.on .flash{animation:fl .35s 2.6s both}@keyframes fl{0%{opacity:0}15%{opacity:.85}100%{opacity:0}}
+.rit .sc.on .ti.c{animation:pop .3s 1s both,pulse .5s 1.4s 3}@keyframes pulse{50%{transform:scale(1.07)}}
 </style>
 </head>
 <body>
@@ -72,7 +85,7 @@ section{padding:0 16px 30px}section>h2{font:400 22px Anton;text-transform:upperc
 <p class="lead">Lo storyboard che hai pensato, nello stile dell'app: <b>atto 1</b> la scalata delle carte sulla torre, resa cinematografica (macchina da presa che si avvicina, riflettore sul vincitore, le carte che cadono), poi la classifica; <b>atto 2</b> i titoli di coda con i partecipanti, l'accusa, tutti i badge e le curiosità. Tre registi diversi, sempre autoironici. Si avviano da soli e, nell'app, un tocco salta ai titoli di coda. Stessi dati d'esempio di prima.</p>
 
 <section id="m1"><h2>Mockup 1 · «Il kolossal»</h2><p>Epico e un po' pomposo: titoli giganti, la torre inquadrata dal basso, il riflettore sul vincitore. I titoli di coda sono l'unica cosa seria, e anche lì ci si prende in giro.</p>
-<div class="wrap"><div><div class="ph dark" id="p1"></div><div class="ctl"><button onclick="P[0].prev()">⏮</button><button onclick="P[0].toggle()">⏯</button><button onclick="P[0].next()">⏭</button><button onclick="P[0].go(0)">↺</button><button onclick="P[0].fine()">Salta ai titoli di coda</button><span id="l1"></span></div></div>
+<div class="wrap"><div><div class="ph dark rit" id="p1"></div><div class="ctl"><button onclick="P[0].prev()">⏮</button><button onclick="P[0].toggle()">⏯</button><button onclick="P[0].next()">⏭</button><button onclick="P[0].go(0)">↺</button><button onclick="P[0].fine()">Salta ai titoli di coda</button><span id="l1"></span></div></div>
 <ul class="side"><li><b>Atto 1 (circa 17 s):</b> titolo, scalata con zoom lento, classifica «locandina».</li><li><b>Atto 2 (circa 24 s):</b> titoli di coda a scorrimento.</li><li><b>Tono:</b> «Un film di nessuno. Girato a occhio.»</li></ul></div></section>
 
 <section id="m2"><h2>Mockup 2 · «La prima al cinema»</h2><p>Si apre il sipario rosso, c'è l'insegna illuminata, il pubblico in sala in controluce. Ci si prende in giro con le reazioni della platea («il pubblico ha lasciato la sala prima della fine»).</p>
@@ -103,9 +116,9 @@ ${extra}<h5>Avvertenze</h5><p>Nessun influencer è stato maltrattato durante le 
 const FIN='<div class="fin"><div>Rivedi</div><div>Condividi</div><div>Come l’abbiamo capito</div><div class="y">Nuova partita</div></div>';
 const BARS='<div class="bar t"></div><div class="bar b"></div><div class="vig"></div><div class="skip">tocca per saltare ›</div>';
 const SET=[
- {dur:[3800,9800,5200,24000],lab:['Il titolo','La scalata','La classifica','Titoli di coda'],sc:[
-  `<div class="ser a">Un film di nessuno</div><div class="ti b" style="font-size:36px;margin-top:8px">Una torre.<br>Cinque carte.</div><div class="ti y c" style="margin-top:6px">Un solo vincitore.</div>`,
-  climb()+`<div class="sub">Tutte puntano in alto. Una sola ci arriva. Le altre scendono, con meno dignità.</div>`,
+ {dur:[2300,5600,4200,15000],lab:['Il titolo','La scalata','La classifica','Titoli di coda'],sc:[
+  `<div class="ti a" style="font-size:44px">Una torre.</div><div class="ti b" style="font-size:44px;margin-top:4px">Cinque carte.</div><div class="ti y c" style="margin-top:8px;font-size:34px">Un solo vincitore.</div>`,
+  climb()+`<div class="flash"></div><div class="sub">Tutte puntano in alto. Una sola ci arriva. Le altre scendono, con meno dignità.</div>`,
   RANK('Dariaccioo ha vinto, e adesso lo sa'),
   CRED('<div class="ti sm">Titoli di coda</div>','')+FIN]},
  {dur:[4600,9800,5200,24000],lab:['Il sipario','La scalata','La classifica','Titoli di coda'],sc:[
