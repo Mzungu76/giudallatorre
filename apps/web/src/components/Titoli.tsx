@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { GameState } from "@gdt/game-engine";
 import { Gauge, useContaSu } from "./StereoScene.tsx";
-import { sfx } from "../lib/sfx.ts";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 import { fasciaPregiudizio as fascia, aspettoDi, fraseLuogo, stereoGame, stereoGruppi } from "../lib/stereo.ts";
@@ -10,7 +9,7 @@ import { cardFull } from "../lib/cards.ts";
 import { FAST } from "../ui.tsx";
 import type { FinalRow } from "./FinalScene.tsx";
 
-const VELOCITA = 42;   // pixel al secondo
+const VELOCITA = 78;   // pixel al secondo
 const PAUSA = 700;     // ms di attesa dopo che il dito si alza (o finisce l'inerzia) prima di ripartire
 const mov = () => typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -30,17 +29,18 @@ function Effetti({ pct, radice }: { pct: number; radice: React.RefObject<HTMLDiv
 /** Titoli di coda di fine partita («La prima al cinema»): i partecipanti, la trama (il luogo comune), le carte ospiti, i premi, gli effetti speciali, la scena più riuscita, umani contro bot,
  *  critica e pubblico, ringraziamenti e avvertenze. Salgono da soli; col dito li si ferma e li si porta dove si vuole, e quando il dito si alza ripartono da lì fino alla fine. */
 export default function Titoli({ rows, winners, stereo, isBot, sound, seme, onDettagli }: { /** Apre il foglio «Come l'abbiamo finalmente capito». */ onDettagli?: (g: NonNullable<ReturnType<typeof stereoGame>>) => void; /** Per far variare i testi da una partita all'altra. */ seme: string; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
-  const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), box = useRef<HTMLDivElement>(null), [hint, setHint] = useState(true);
+  const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), box = useRef<HTMLDivElement>(null);
   const uvb = gr.umani !== null && gr.bot !== null, badge = g ? premi(g) : [], carte = g ? carteLuoghi(g) : [];
   const nomi = rows.filter((r) => winners.has(r.id)).map((r) => r.name);
   useEffect(() => {
     const el = box.current; if (!el) return undefined;
-    sfx.fanfare(sound);
-    if (FAST || mov()) { el.scrollTop = el.scrollHeight; setHint(false); return undefined; }
+        if (FAST || mov()) { el.scrollTop = el.scrollHeight; el.parentElement?.style.setProperty("--bgo", "1"); return undefined; }
     let raf = 0, last = performance.now(), pos = 0, giu = false, tocco = performance.now() + 600, scritto = -1;
-    const dito = () => { giu = true; setHint(false); }, su = () => { giu = false; tocco = performance.now(); };
-    const scroll = () => { if (Math.abs(el.scrollTop - scritto) > 1.5) { tocco = performance.now(); pos = el.scrollTop; } };   // lo scorrimento non è il nostro: è del dito (o dell'inerzia)
-    const ruota = () => { tocco = performance.now(); setHint(false); };
+    const dito = () => { giu = true; }, su = () => { giu = false; tocco = performance.now(); };
+    const fin = el.closest(".fin") as HTMLElement | null, wrap = el.parentElement as HTMLElement;
+    const muovi = () => { const y = el.scrollTop; fin?.style.setProperty("--ty", `${-y}px`); wrap.style.setProperty("--bgo", String(Math.min(1, y / (el.clientHeight * 0.7)))); };
+    const scroll = () => { muovi(); if (Math.abs(el.scrollTop - scritto) > 1.5) { tocco = performance.now(); pos = el.scrollTop; } };   // lo scorrimento non è il nostro: è del dito (o dell'inerzia)
+    const ruota = () => { tocco = performance.now(); };
     const loop = (now: number) => {
       const dt = Math.min(0.1, (now - last) / 1000); last = now;
       const max = el.scrollHeight - el.clientHeight;
@@ -65,7 +65,7 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme, onDe
         <div className="tc-win">{titoloVincitori(nomi, seme)}</div>
 
         <h5>{t("tc.int")}</h5>
-        <div data-testid="final-rank">
+        <div data-testid="titoli-cast">
           {rows.map((r, i) => {
             const n = Math.abs(r.score), ca = r.score === 0 ? ts("tc.cachet.0") : n === 1 && r.score > 0 ? ts("tc.cachet.1") : ts("tc.cachet", { n: r.score < 0 ? `−${n}` : n });
             return <div key={r.id} className={`tc-cast ${winners.has(r.id) ? "win" : ""}`}><div><i style={{ background: r.color }} />{r.name}{winners.has(r.id) && <u>★ {t("tc.prot")}</u>}<small>{battutaRiga(rows, i, winners)}</small></div><em>{ca}</em></div>;
@@ -127,7 +127,6 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme, onDe
         <small className="tc-s">{t("tc.sub")}</small>
         <div className="tc-end" />
       </div>
-      {hint && <div className="tc-hint">{t("tc.hint")}</div>}
     </div>
   );
 }

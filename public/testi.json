@@ -1,5 +1,5 @@
 {
- "versione": 107,
+ "versione": 108,
  "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
@@ -4462,20 +4462,12 @@
    "t": "Le pedine sono i voti. La freccia rossa è chi è caduto. L’anello giallo è la carta dell’accusa.",
    "s": "Moviola"
   },
-  "tc.vai": {
-   "t": "Titoli di coda ›",
-   "s": "Titoli di coda"
-  },
   "tc.premiere": {
    "t": "Giù dalla Torre · Prima assoluta",
    "s": "Titoli di coda"
   },
   "tc.titolo": {
    "t": "Titoli di coda",
-   "s": "Titoli di coda"
-  },
-  "tc.hint": {
-   "t": "Tieni il dito sullo schermo per fermare i titoli",
    "s": "Titoli di coda"
   },
   "tc.int": {

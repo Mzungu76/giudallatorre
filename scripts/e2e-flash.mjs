@@ -50,10 +50,8 @@ while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("Flash: nessuna scelta di frase o carte (si va subito al segnalino e al voto)", scelte === 0 && vistoVoto, `scelte=${scelte} voto=${vistoVoto}`); await p.click('[data-testid="final"]').catch(() => {});   // salta la scalata
-{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("titoli-vai"))) await sleep(200); }
-check("a fine animazione compare il pulsante «Titoli di coda»", await vis("titoli-vai"));
-await p.click('[data-testid="titoli-vai"]').catch(() => {}); await sleep(900);
-check("i titoli di coda si aprono", await vis("titoli"));
+{ const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("titoli"))) await sleep(200); }
+check("a scalata finita partono da soli i titoli di coda", await vis("titoli"));
 if (SHOTS) await p.screenshot({ path: `${SHOTS}/titoli-1.png` });
 { const top0 = await p.evaluate(() => document.querySelector(".tc").scrollTop); await sleep(2500); const top1 = await p.evaluate(() => document.querySelector(".tc").scrollTop); check("i titoli salgono da soli", FASTMODE || top1 > top0, `${top0}→${top1}`);
   // il dito li ferma: simulo uno scorrimento a mano e verifico che poi riprendano

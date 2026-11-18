@@ -13,7 +13,7 @@ const FALL_S = 1.15;
 const pts = (n: number) => (n < 0 ? `−${-n}` : String(n));
 
 /** Scena finale: le carte dei giocatori salgono sulla torre; chi arriva primo butta giù le altre sui materassi. */
-export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onProceed, onShare, sharing, children, summary }: { /** Pulsante «Titoli di coda» a scalata finita. */ onProceed?: () => void; /** Riepilogo: la scena si rimpicciolisce in alto e al posto della classifica compaiono i `children`. */ summary?: boolean; /** Altro da disegnare sopra la scena (es. il pannello della pagella). */ children?: ReactNode; /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
+export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave, onNew, instant, onDone, onShare, sharing, children, summary }: { /** Riepilogo: la scena si rimpicciolisce in alto e al posto della classifica compaiono i `children`. */ summary?: boolean; /** Altro da disegnare sopra la scena (es. il pannello della pagella). */ children?: ReactNode; /** Condividi la cartolina della partita. */ onShare?: () => void; sharing?: boolean; /** Mostra subito la classifica finale (senza la scalata). */ instant?: boolean; /** Chiamata quando la scalata è finita (o saltata). */ onDone?: () => void; rows: FinalRow[]; winners: Set<string>; sound: boolean; readOnly?: boolean; ui?: UiCtl | null; onLeave: () => void; onNew: () => void }) {
   const { H } = useStage(), N = rows.length;
   const [ph, setPh] = useState<0 | 1 | 2 | 3>(FAST || instant ? 3 : 0), [inst, setInst] = useState(!!(FAST || instant)), [arr, setArr] = useState<number[]>([]);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
@@ -83,14 +83,13 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       {(inst || ph >= 2) && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-diz" style={{ left: g.x1 + cw / 2 - 12, top: g.y1 - 20, animationDelay: inst ? "0s" : `${g.delay + FALL_S + 0.3}s` }}>💫</span>)}
       </div>
       {!done && <div className="fin-skip" style={{ top: gy + 22 }}>{tx("fin.salta")}</div>}
-      {done && !summary && (
+      {done && (
         <div className="fin-rank" style={{ top: gy + 14 }} data-testid="final-rank">
           {rows.map((r, i) => (
             <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><Who id={r.id}><i className="dc" style={{ background: r.color }} /><span>{r.name}</span></Who><u><PtIcon s={15} /> {pts(r.score)}</u></div>
           ))}
         </div>
       )}
-      {done && !summary && onProceed && <button className="bt mus fin-go" onClick={(e) => { e.stopPropagation(); onProceed(); }} data-testid="titoli-vai">{tx("tc.vai")}</button>}
       {done && !readOnly && (
         <div className="pp bsheet finsheet" onClick={(e) => e.stopPropagation()}>
           <div className="bcrow">

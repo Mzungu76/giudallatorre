@@ -1486,11 +1486,9 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 
 /* Riepilogo di fine partita: la scena si rimpicciolisce in alto, sotto i riquadri compaiono uno alla volta */
 .fin-world{position:absolute;inset:0;transform-origin:50% 0;transition:transform .9s cubic-bezier(.55,0,.2,1)}
-.fin.sum .fin-world{transform:translateY(40px) scale(.25)}
-.fin.sum .fin-head{scale:.62;transform-origin:50% 0;top:8px}
+.fin.sum .fin-world,.fin.sum .fin-head,.fin.sum .fin-rank{transform:translateY(var(--ty,0px));transition:none}
 .fin-head{transition:scale .9s cubic-bezier(.55,0,.2,1)}
 .fin.sum .fin-skip{display:none}
-.fin-ground{transition:opacity .5s}.fin.sum .fin-ground{opacity:0}
 @keyframes rpPop{0%{opacity:0;transform:scale(.4) translateY(14px)}100%{opacity:1;transform:none}}
 /* Foglio «Condividi» */
 .shm{position:absolute;inset:0;z-index:80;background:#0a1230a8;display:flex;align-items:flex-end}
@@ -1537,8 +1535,6 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .rp-uvr{display:flex;gap:10px;align-items:flex-end}.rp-uv{flex:1;display:grid;grid-template-columns:1fr auto;gap:1px 6px;align-items:end;font:800 11px Nunito}.rp-uv b{font:400 14px Anton}.rp-uv .sc-bar{grid-column:1/3;height:10px}
 .rp-uvv{margin:5px 0 0;font:400 12px/1.1 Anton;text-transform:uppercase;text-align:center;color:#e5382b}
 /* a scena finita la torre sparisce nell'icona: il riepilogo prende tutto lo schermo */
-.fin.sum .fin-world{transform:translateY(-40px) scale(.12);opacity:0;transition:transform .8s cubic-bezier(.55,0,.2,1),opacity .6s}
-.fin.sum .fin-head{display:none}
 /* Foglio «Come l'abbiamo finalmente capito» (il processo) */
 .dt-box{max-height:88%;padding-top:0;background:#f6f2ea}
 .dt-h{margin:0 -14px 2px;background:var(--navy);color:#fff;padding:10px 12px;font:400 18px/1.1 Anton;text-transform:uppercase;text-align:center}.dt-h small{display:block;font:700 11px Nunito;opacity:.8;text-transform:none;margin-top:2px}
@@ -1568,12 +1564,11 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .mv-x{display:block;margin:4px auto 0;background:none;border:0;font:800 12px Nunito;color:var(--navy);text-decoration:underline}
 
 /* Titoli di coda («La prima al cinema»): salgono da soli, il dito li ferma e li porta dove vuole */
-.fin-go{position:absolute;left:50%;transform:translateX(-50%);bottom:92px;z-index:41;font-size:19px;padding:6px 22px;white-space:nowrap;animation:rpPop .45s .3s cubic-bezier(.3,1.6,.5,1) both}
 .tc-wrap{position:absolute;inset:0;z-index:30;color:#fff}
-.tc-bg{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 30%,#1c3f73 0 6deg,#244e88 6deg 12deg),#1c3f73;box-shadow:inset 0 0 90px #000c}
+.tc-bg{opacity:var(--bgo,0);position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 30%,#1c3f73 0 6deg,#244e88 6deg 12deg),#1c3f73;box-shadow:inset 0 0 90px #000c}
 .tc{position:absolute;inset:0 0 0 0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px 120px;text-align:center;scrollbar-width:none;-webkit-mask-image:linear-gradient(transparent 0,#000 9%,#000 90%,transparent 100%);mask-image:linear-gradient(transparent 0,#000 9%,#000 90%,transparent 100%)}
 .tc::-webkit-scrollbar{display:none}
-.tc-gap{height:100%;min-height:420px}.tc-end{height:46vh}
+.tc-gap{height:118%;min-height:480px}.tc-end{height:46vh}
 .tc h5{font:400 14px Anton;color:var(--mus);text-transform:uppercase;letter-spacing:.14em;margin:30px 0 8px;text-shadow:2px 2px 0 var(--navy)}
 .tc p{margin:3px 0;font:800 14px Nunito;text-shadow:0 2px 0 var(--navy)}
 .tc-s{display:block;font:700 12px/1.3 Nunito;opacity:.88;margin-top:6px;text-shadow:0 1px 0 var(--navy)}
@@ -1593,5 +1588,3 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .tc .rp-lan{text-align:left}
 .tc-cr{background:#fff;color:var(--navy);border:3px solid var(--navy);border-radius:11px;padding:6px 10px;margin:8px 0;font:800 13px/1.3 Nunito;text-align:left}.tc-cr b{display:block;font:400 12px Anton;text-transform:uppercase;color:var(--red);margin-bottom:1px}
 .tc-logo{margin:46px auto 4px;font:400 30px Anton;text-transform:uppercase;color:var(--mus);text-shadow:3px 3px 0 var(--red)}.tc-logo img{display:block;width:64px;margin:0 auto 6px;filter:drop-shadow(2px 3px 0 #13224a88)}
-.tc-hint{position:absolute;left:0;right:0;bottom:104px;text-align:center;font:800 12px Nunito;color:#fff;text-shadow:0 1px 0 var(--navy);pointer-events:none;animation:rpPop .5s 1s both}
-@media(prefers-reduced-motion:reduce){.tc-hint,.fin-go{animation:none}}
