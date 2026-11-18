@@ -23,7 +23,7 @@ export interface Premio { ruolo: string; carta: string | null; titolo: string; r
 export function premi(g: StereoGame, max = 3): Premio[] {
   const out: Premio[] = [];
   for (const x of g.top) {
-    const r = ruoloDelLuogo(x.k); if (!r || !ha(`rp.b.${r}.t`)) continue;
+    const r = ruoloDelLuogo(x.k); if (!r || !ha(`rp.b.${r}.t`) || out.some((o) => o.ruolo === r)) continue;
     const carta = x.det ? Object.entries(x.det.c).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null : null;
     out.push({ ruolo: r, carta, titolo: ts(`rp.b.${r}.t` as TestoKey), riga: ts(`rp.b.${r}.s` as TestoKey) });
     if (out.length >= max) break;
