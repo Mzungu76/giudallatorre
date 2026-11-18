@@ -1,5 +1,5 @@
 {
- "versione": 108,
+ "versione": 109,
  "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
@@ -3671,30 +3671,6 @@
    "t": "{punti} punti, {posto}° posto su {tot}.",
    "s": "Condivisione"
   },
-  "dt.btn": {
-   "t": "Come l’abbiamo finalmente capito",
-   "s": "Dettagli dei luoghi comuni"
-  },
-  "dt.titolo": {
-   "t": "Come l’abbiamo finalmente capito",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.s0": {
-   "t": "{n} voti: poco più di un sospetto. Per condannare serve altro.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.s1": {
-   "t": "{n} voti: stima discreta. Per una condanna ci vuole di più. Per un meme, basta.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.s2": {
-   "t": "{n} voti: ce n’è abbastanza. Il giudice può dormire.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.nota": {
-   "t": "Il peso di ogni accusa: 1 per ogni voto del pubblico, +1 dal Megafono (×1,5 se i voti gli danno ragione), 0,5 per chi ha votato altrove.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
   "rot.vinto": {
    "t": "Ho vinto!",
    "s": "Copertina rotocalco"
@@ -4183,225 +4159,6 @@
    "t": "Ha già detto tutto, a bassa voce",
    "s": "Riepilogo satirico"
   },
-  "dt.sub": {
-   "t": "Il processo, in diretta. Nessun appello",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.imputati": {
-   "t": "Imputati: {frase}",
-   "s": "Come l’abbiamo finalmente capito",
-   "n": "Titolo di ogni luogo comune nel processo ({frase} già con la percentuale)"
-  },
-  "dt.prove": {
-   "t": "Prove a carico:",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.p.v": {
-   "t": "{n} voti dal pubblico",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.p.m": {
-   "t": "+{n} dal Megafono (teste dubbio)",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.p.e": {
-   "t": "+{n} da chi ha votato altrove (dei vigliacchi, diciamolo)",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.p.nessuna": {
-   "t": "nessuna prova, solo sensazioni",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.politico": {
-   "t": "Chiariamo: non l'ho detto. E se l'ho detto, intendevo altro.",
-   "s": "Come l’abbiamo finalmente capito",
-   "n": "Cosa dice il testimone (il personaggio) in sua difesa"
-  },
-  "dt.q.religioso": {
-   "t": "Io perdono tutti. Poi però mi ricordo chi ha votato.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.insegnante": {
-   "t": "Segno tutto, eh.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.studente": {
-   "t": "Ero convinto che fosse un'altra frase.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.sanitario": {
-   "t": "Ho visto di peggio. Stamattina.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.giudice": {
-   "t": "Mi riservo.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.cuoco": {
-   "t": "Prima assaggiate, poi giudicate. Va bene, giudicate.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.tassista": {
-   "t": "Io lo sapevo già. Me l'ha detto uno stamattina.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.ciclista": {
-   "t": "Ero già passato.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.meccanico": {
-   "t": "Il rumore c'è sempre stato.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.corriere": {
-   "t": "Ho suonato. Non c'era nessuno, ho lasciato il pacco.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.venditore": {
-   "t": "Per voi, solo oggi, a metà prezzo: la sentenza.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.guardia": {
-   "t": "Circolare, non c'è niente da vedere. Davvero.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.hacker": {
-   "t": "(non risponde)",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.giornalista": {
-   "t": "Scusate, devo sentire un'altra versione.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.comico": {
-   "t": "Sto aspettando la risata. Fate con comodo.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.artista": {
-   "t": "Voi non capite. È proprio questo il punto.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.musicista": {
-   "t": "Posso rifare l'attacco?",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.rapper": {
-   "t": "Giudicare? Io faccio rima.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.punk": {
-   "t": "E chi lo decide?",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.hippie": {
-   "t": "Ognuno ha la sua verità. La mia è più comoda.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.turista": {
-   "t": "Scusi, in che lingua è il processo?",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.istruttore": {
-   "t": "Dai, un altro. L'ultimo.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.influencer": {
-   "t": "Un attimo, mi serve la luce giusta.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.guru": {
-   "t": "L'avevo previsto. Vi mando la fattura.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.manager": {
-   "t": "Per me è un'opportunità.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.impiegato": {
-   "t": "Io pigro? Sto ottimizzando il tempo.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.trader": {
-   "t": "Vedo un rialzo. Anche delle mie colpe.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.nerd": {
-   "t": "In realtà, tecnicamente, no.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.attivista": {
-   "t": "Io avevo avvisato.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.genitore": {
-   "t": "Poi ne parliamo a casa.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.presentatore": {
-   "t": "Ne parliamo dopo la pubblicità.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.scienziato": {
-   "t": "Il campione è piccolo. Si può ingrandire.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.atleta": {
-   "t": "Ho già giudicato. Di corsa.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.mago": {
-   "t": "Nessun trucco, nessun inganno. Chiedete a mio cugino.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.reginetta": {
-   "t": "Ci vorrebbe un applauso. Dopo.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.architetto": {
-   "t": "Veramente è stato il cliente a volerlo così.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.q.bibliotecario": {
-   "t": "Shh.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.aggravante": {
-   "t": "L’aggravante",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.agg.riga": {
-   "t": "{chi}: {n} su {tot}. {chiusa}",
-   "s": "Come l’abbiamo finalmente capito",
-   "n": "L'aggravante: l'aspetto in comune e come finisce"
-  },
-  "dt.agg.0": {
-   "t": "La giuria si è commossa.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.agg.1": {
-   "t": "Il pubblico è esploso.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.agg.2": {
-   "t": "Si accettano appelli, ma scritti a mano.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.agg.3": {
-   "t": "L'avvocato era in pausa.",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.attendibilita": {
-   "t": "Attendibilità",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.chiudi": {
-   "t": "Si chiude la seduta",
-   "s": "Come l’abbiamo finalmente capito"
-  },
-  "dt.p.v1": {
-   "t": "1 voto dal pubblico",
-   "s": "Come l’abbiamo finalmente capito"
-  },
   "lc.tra.riga": {
    "t": "Tra loro, {n} su {tot}: {chi}",
    "s": "Luoghi comuni · frasi",
@@ -4441,27 +4198,6 @@
    "t": "parola\ndi giuria",
    "s": "Copertina rotocalco"
   },
-  "mv.btn": {
-   "t": "Com’è finito il turno",
-   "s": "Moviola",
-   "n": "Pulsante sotto ogni accusa nel foglio dei dettagli"
-  },
-  "mv.titolo": {
-   "t": "Il turno, a fine corsa",
-   "s": "Moviola"
-  },
-  "mv.scena": {
-   "t": "Scena {n} di {tot}",
-   "s": "Moviola"
-  },
-  "mv.chiudi": {
-   "t": "Chiudi",
-   "s": "Moviola"
-  },
-  "mv.legenda": {
-   "t": "Le pedine sono i voti. La freccia rossa è chi è caduto. L’anello giallo è la carta dell’accusa.",
-   "s": "Moviola"
-  },
   "tc.premiere": {
    "t": "Giù dalla Torre · Prima assoluta",
    "s": "Titoli di coda"
@@ -4491,7 +4227,7 @@
    "s": "Titoli di coda"
   },
   "tc.trama": {
-   "t": "La trama",
+   "t": "Cosa abbiamo capito oggi:",
    "s": "Titoli di coda"
   },
   "tc.trama.s.0": {

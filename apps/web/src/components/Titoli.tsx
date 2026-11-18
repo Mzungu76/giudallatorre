@@ -28,7 +28,7 @@ function Effetti({ pct, radice }: { pct: number; radice: React.RefObject<HTMLDiv
 
 /** Titoli di coda di fine partita («La prima al cinema»): i partecipanti, la trama (il luogo comune), le carte ospiti, i premi, gli effetti speciali, la scena più riuscita, umani contro bot,
  *  critica e pubblico, ringraziamenti e avvertenze. Salgono da soli; col dito li si ferma e li si porta dove si vuole, e quando il dito si alza ripartono da lì fino alla fine. */
-export default function Titoli({ rows, winners, stereo, isBot, sound, seme, onDettagli }: { /** Apre il foglio «Come l'abbiamo finalmente capito». */ onDettagli?: (g: NonNullable<ReturnType<typeof stereoGame>>) => void; /** Per far variare i testi da una partita all'altra. */ seme: string; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
+export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { /** Per far variare i testi da una partita all'altra. */ seme: string; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
   const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), box = useRef<HTMLDivElement>(null);
   const uvb = gr.umani !== null && gr.bot !== null, badge = g ? premi(g) : [], carte = g ? carteLuoghi(g) : [];
   const nomi = rows.filter((r) => winners.has(r.id)).map((r) => r.name);
@@ -77,10 +77,10 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme, onDe
           <div className="tc-trama" data-testid="stereo-top">
             <div className="rp-k">{fraseLuogo(g.top[0].k)} <span className="rp-pct">{g.top[0].pct}%</span></div>
             {g.top.slice(1).map((x, i) => <div key={x.k} className="rp-alt">{ts(`rp.alt.${i + 1}` as "rp.alt.1", { frase: fraseLuogo(x.k), pct: x.pct })}</div>)}
+            {carte.length > 0 && <div className="tc-tct">{carte.map((id) => <img key={id} src={cardFull(id)} alt="" draggable={false} />)}</div>}
             {g.comune && <div className="rp-alt rp-com">{ts("lc.tra.riga", { n: g.comune.n, tot: g.comune.tot, chi: aspettoDi(g.comune.k) })}</div>}
           </div>
           <small className="tc-s">{ts(`tc.trama.s.${variante(4, seme)}` as TestoKey)}</small>
-          {onDettagli && <button className="tc-det" onClick={() => onDettagli(g)} data-testid="dettagli-btn">{t("dt.btn")}</button>}
         </>}
 
         {carte.length > 0 && <>
