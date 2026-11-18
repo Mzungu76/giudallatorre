@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Statistiche finali · il film (3 mockup animati nello stile dell'app)</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Nunito:wght@700;800&family=Caveat+Brush&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#13224a;--red:#e8362b;--mus:#ffc72c;--teal:#14a3a1;--vio:#8e6bd8;--bg:#e9edf5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:700 14px Nunito,system-ui,sans-serif;color:var(--navy)}
+h1{font:400 30px Anton;margin:22px 16px 4px;text-transform:uppercase}.lead{margin:0 16px 14px;max-width:880px}
+section{padding:0 16px 30px}section>h2{font:400 22px Anton;text-transform:uppercase;margin:12px 0 2px}section>p{margin:0 0 10px;max-width:840px}
+.wrap{display:flex;gap:26px;align-items:flex-start;flex-wrap:wrap}.side{max-width:330px;font-size:13px;line-height:1.45}.side li{margin-bottom:5px}
+.ph{width:330px;height:700px;border:6px solid var(--navy);border-radius:30px;overflow:hidden;position:relative;background:#6db4e8;box-shadow:6px 7px 0 var(--navy)}
+.ctl{display:flex;gap:6px;align-items:center;margin-top:10px;flex-wrap:wrap}.ctl button{background:#fff;border:2.5px solid var(--navy);border-radius:10px;font:800 13px Nunito;padding:5px 11px;cursor:pointer;color:var(--navy)}.ctl span{font:800 12px Nunito;opacity:.7}
+/* base: lo stile dell'app (raggi di sole, Anton, riquadri con bordo navy) + il cinema (barre, vignetta) */
+.sky{position:absolute;inset:0;background:repeating-conic-gradient(from 0deg at 50% 30%,#4a9ad8 0 6deg,#6db4e8 6deg 12deg)}
+.dark .sky{background:repeating-conic-gradient(from 0deg at 50% 30%,#1c3f73 0 6deg,#244e88 6deg 12deg)}
+.bar{position:absolute;left:0;right:0;height:50px;background:#000;z-index:30}.bar.t{top:0}.bar.b{bottom:0}
+.vig{position:absolute;inset:0;z-index:25;pointer-events:none;background:radial-gradient(ellipse at 50% 45%,transparent 55%,#000a 100%)}
+.sc{position:absolute;inset:0;opacity:0;transition:opacity .6s;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:62px 16px;overflow:hidden}.sc.on{opacity:1}
+.ti{font:400 31px/1.04 Anton;text-transform:uppercase;color:#fff;text-shadow:2px 2px 0 var(--red),3px 3px 0 var(--navy);letter-spacing:.02em}.ti.sm{font-size:21px}.ti.y{color:var(--mus)}
+.ser{font:800 14px Nunito;color:#fff;text-shadow:0 2px 0 var(--navy)}
+.sc.on .a{animation:up .8s both}.sc.on .b{animation:up .8s .8s both}.sc.on .c{animation:up .8s 1.6s both}.sc.on .d{animation:up .8s 2.4s both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.box{background:#fff;border:3px solid var(--navy);border-radius:13px;box-shadow:3px 4px 0 var(--navy);padding:7px 11px;color:var(--navy);width:100%}
+.rk{display:flex;align-items:center;gap:7px;font:800 13px Nunito;padding:4px 0;border-bottom:1.5px dashed #13224a33;text-align:left}.rk:last-child{border:0}
+.rk b{width:15px;opacity:.55}.rk i{width:13px;height:13px;border-radius:50%;border:2px solid var(--navy);flex:none}.rk em{margin-left:auto;font:400 17px Anton;font-style:normal;display:inline-flex;gap:4px;align-items:center}.rk .w{color:var(--red)}.rk small{font:700 10.5px Nunito;opacity:.65;margin-left:4px}
+.coin{width:15px;height:15px;border-radius:50%;background:var(--mus);border:2px solid var(--navy);display:inline-block}
+/* scena della scalata */
+.cam{position:absolute;inset:0;transform-origin:50% 62%}.sc.on .cam{animation:dolly 9s ease-in-out both}
+@keyframes dolly{0%{transform:scale(1) translateY(0)}60%{transform:scale(1.18) translateY(26px)}100%{transform:scale(1.32) translateY(70px)}}
+.torre{position:absolute;left:50%;bottom:86px;width:230px;margin-left:-115px;z-index:2;filter:drop-shadow(0 8px 0 #13224a44)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(#58c06a,#2e8a47 40%,#256f3a);border-top:5px solid var(--navy);z-index:1}
+.cl{position:absolute;width:44px;aspect-ratio:2/3;object-fit:cover;z-index:4;left:50%;bottom:72px;border-radius:6px;border:2px solid #fff;box-shadow:0 3px 0 var(--navy);transform:translate(var(--x),0)}
+.sc.on .cl{animation:climb 4.2s var(--d) cubic-bezier(.4,.1,.5,1) both}
+@keyframes climb{0%{transform:translate(var(--x),0)}100%{transform:translate(var(--x),calc(var(--h) * -1))}}
+.sc.on .cl.f{animation:climb 4.2s var(--d) cubic-bezier(.4,.1,.5,1) both,fall 1.4s calc(var(--d) + 4.9s) cubic-bezier(.5,0,.9,.4) both}
+@keyframes fall{0%{}100%{transform:translate(calc(var(--x) * 2.4),70px) rotate(220deg);opacity:.9}}
+.cl.win:after{content:"👑";position:absolute;left:50%;top:-26px;transform:translateX(-50%);font-size:24px}
+.spot{position:absolute;left:50%;top:0;width:260px;margin-left:-130px;height:100%;background:linear-gradient(#fff6,#fff0 70%);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);z-index:3;opacity:0}.sc.on .spot{animation:beam 2s 3.2s both}
+@keyframes beam{to{opacity:1}}
+.aaah{position:absolute;z-index:6;font:400 20px Anton;color:#ffc72c;text-shadow:2px 2px 0 #13224a;opacity:0}.sc.on .aaah{animation:beam .3s 5.5s both}
+.sub{position:absolute;left:12px;right:12px;bottom:60px;z-index:28;text-align:center;font:800 13px/1.25 Nunito;color:#fff;background:#000a;border-radius:6px;padding:4px 8px}
+/* titoli di coda */
+.cred{position:absolute;left:0;right:0;top:50px;padding:0 20px;text-align:center;color:#fff;transform:translateY(600px)}.sc.on .cred{animation:roll 24s linear both}
+@keyframes roll{from{transform:translateY(600px)}to{transform:translateY(-100%)}}
+.cred h5{font:400 14px Anton;color:var(--mus);text-transform:uppercase;letter-spacing:.14em;margin:26px 0 6px;text-shadow:2px 2px 0 var(--navy)}
+.cred p{margin:3px 0;font:800 14px Nunito;text-shadow:0 2px 0 var(--navy)}.cred small{display:block;font:700 11.5px Nunito;opacity:.85}
+.cred .cast{display:flex;justify-content:space-between;gap:8px;font:800 14px Nunito;border-bottom:1px dashed #fff5;padding:3px 0;text-align:left}.cred .cast em{font:400 15px Anton;font-style:normal;color:var(--mus)}
+.cred img.k{width:46px;aspect-ratio:5/7;object-fit:cover;border:2px solid #fff;border-radius:6px;margin:2px;box-shadow:0 2px 0 var(--navy)}
+.cred .bd{display:flex;gap:6px;margin:6px 0}.cred .bd div{flex:1;background:#fff;border:3px solid var(--navy);border-radius:11px;padding:8px 3px 4px;color:var(--navy);position:relative}.cred .bd b{display:block;font:400 11px/1.05 Anton;text-transform:uppercase}.cred .bd small{color:var(--navy);font-size:9.5px;opacity:.8}.cred .bd img{width:26px;aspect-ratio:5/7;object-fit:cover;border:2px solid var(--navy);border-radius:5px;display:block;margin:0 auto 2px}
+.cred .bd .rib{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--red);color:#fff;font:400 9px Anton;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.cred .gz svg{width:130px}.cred .barx{height:12px;border:2.5px solid #fff;border-radius:99px;overflow:hidden;background:#0003;margin:3px 0}.cred .barx u{display:block;height:100%}
+.logo{font:400 26px Anton;color:var(--mus);text-shadow:3px 3px 0 var(--red);margin-top:30px}
+.fin{position:absolute;left:0;right:0;bottom:50px;z-index:31;display:flex;gap:7px;padding:8px 10px;background:linear-gradient(#0000,#000b 40%)}.fin div{flex:1;text-align:center;border:3px solid var(--navy);border-radius:12px;padding:8px 2px;font:400 13px Anton;text-transform:uppercase;background:#fff;color:var(--navy)}.fin .y{background:linear-gradient(#ffd75a,#f2a900)}
+.skip{position:absolute;right:10px;top:56px;z-index:35;font:800 11px Nunito;color:#fff;background:#0008;border:1.5px solid #fff8;border-radius:99px;padding:2px 10px}
+/* varianti */
+.curt{position:absolute;top:0;bottom:0;width:52%;background:repeating-linear-gradient(90deg,#9b1c1c 0 14px,#7e1414 14px 28px);z-index:32;box-shadow:inset -8px 0 14px #0006}.curt.l{left:0;transform-origin:left}.curt.r{right:0;transform-origin:right}
+.sc.on .curt.l{animation:openL 2s .4s both}.sc.on .curt.r{animation:openR 2s .4s both}@keyframes openL{to{transform:scaleX(.08)}}@keyframes openR{to{transform:scaleX(.08)}}
+.mq{position:absolute;top:56px;left:10px;right:10px;z-index:33;background:#13224a;border:3px solid var(--mus);border-radius:8px;padding:5px;font:400 16px Anton;color:var(--mus);text-transform:uppercase;text-align:center}
+.mq:before,.mq:after{content:"● ● ● ● ● ● ● ●";position:absolute;left:0;right:0;font-size:8px;letter-spacing:6px;color:#ffe6a0}.mq:before{top:-11px}.mq:after{bottom:-11px}
+.pub{position:absolute;left:0;right:0;bottom:50px;height:70px;z-index:27;background:linear-gradient(#0000,#000);}.pub i{position:absolute;bottom:-18px;width:50px;height:60px;background:#000;border-radius:50% 50% 0 0}
+.clap{position:relative;width:190px;height:150px;background:#111;border:4px solid #fff;border-radius:6px}.clap:before{content:"";position:absolute;left:-4px;right:-4px;top:-26px;height:28px;background:repeating-linear-gradient(115deg,#fff 0 18px,#111 18px 36px);border:4px solid #fff;transform-origin:left bottom;transform:rotate(-14deg)}
+.sc.on .clap:before{animation:ciak .35s 1.4s both}@keyframes ciak{to{transform:rotate(0)}}
+.clap div{font:800 12px Nunito;color:#fff;text-align:left;padding:6px 10px;border-bottom:1px solid #fff4}.clap b{font:400 15px Anton;color:var(--mus)}
+.blooper{background:#fff;border:3px solid var(--navy);border-radius:11px;color:var(--navy);padding:6px 10px;margin:6px 0;font:800 12.5px/1.3 Nunito;text-align:left}.blooper b{font:400 12px Anton;text-transform:uppercase;color:var(--red);display:block}
+</style>
+</head>
+<body>
+<h1>Statistiche finali · il film</h1>
+<p class="lead">Lo storyboard che hai pensato, nello stile dell'app: <b>atto 1</b> la scalata delle carte sulla torre, resa cinematografica (macchina da presa che si avvicina, riflettore sul vincitore, le carte che cadono), poi la classifica; <b>atto 2</b> i titoli di coda con i partecipanti, l'accusa, tutti i badge e le curiosità. Tre registi diversi, sempre autoironici. Si avviano da soli e, nell'app, un tocco salta ai titoli di coda. Stessi dati d'esempio di prima.</p>
+
+<section id="m1"><h2>Mockup 1 · «Il kolossal»</h2><p>Epico e un po' pomposo: titoli giganti, la torre inquadrata dal basso, il riflettore sul vincitore. I titoli di coda sono l'unica cosa seria, e anche lì ci si prende in giro.</p>
+<div class="wrap"><div><div class="ph dark" id="p1"></div><div class="ctl"><button onclick="P[0].prev()">⏮</button><button onclick="P[0].toggle()">⏯</button><button onclick="P[0].next()">⏭</button><button onclick="P[0].go(0)">↺</button><button onclick="P[0].fine()">Salta ai titoli di coda</button><span id="l1"></span></div></div>
+<ul class="side"><li><b>Atto 1 (circa 17 s):</b> titolo, scalata con zoom lento, classifica «locandina».</li><li><b>Atto 2 (circa 24 s):</b> titoli di coda a scorrimento.</li><li><b>Tono:</b> «Un film di nessuno. Girato a occhio.»</li></ul></div></section>
+
+<section id="m2"><h2>Mockup 2 · «La prima al cinema»</h2><p>Si apre il sipario rosso, c'è l'insegna illuminata, il pubblico in sala in controluce. Ci si prende in giro con le reazioni della platea («il pubblico ha lasciato la sala prima della fine»).</p>
+<div class="wrap"><div><div class="ph" id="p2"></div><div class="ctl"><button onclick="P[1].prev()">⏮</button><button onclick="P[1].toggle()">⏯</button><button onclick="P[1].next()">⏭</button><button onclick="P[1].go(0)">↺</button><button onclick="P[1].fine()">Salta ai titoli di coda</button><span id="l2"></span></div></div>
+<ul class="side"><li><b>Atto 1:</b> sipario che si apre, scalata «sullo schermo», siluette del pubblico.</li><li><b>Atto 2:</b> titoli di coda con «critica e pubblico».</li><li><b>Tono:</b> recensioni inventate («★★★☆☆ — l'ho visto, non lo ricordo»).</li></ul></div></section>
+
+<section id="m3"><h2>Mockup 3 · «Il dietro le quinte»</h2><p>Il ciak, il regista (il Megafono) che commenta, gli «stunt non eseguiti da professionisti». Nei titoli di coda ci sono gli errori di ripresa: l'autoironia al massimo.</p>
+<div class="wrap"><div><div class="ph" id="p3"></div><div class="ctl"><button onclick="P[2].prev()">⏮</button><button onclick="P[2].toggle()">⏯</button><button onclick="P[2].next()">⏭</button><button onclick="P[2].go(0)">↺</button><button onclick="P[2].fine()">Salta ai titoli di coda</button><span id="l3"></span></div></div>
+<ul class="side"><li><b>Atto 1:</b> ciak, scalata con i commenti del regista in sottotitolo, classifica.</li><li><b>Atto 2:</b> titoli di coda con «errori di ripresa» e ringraziamenti.</li><li><b>Tono:</b> «La carta che cade è stata ripresa due volte. La seconda ci è piaciuta di più.»</li></ul></div></section>
+
+<script>
+const G=i=>`../public/giocatori/card-${i}.webp`, K=i=>`<img class="k" src="../public/cards/${i}.webp">`, TOWER='../public/giocatori/torre.webp';
+const GAUGE=`<div class="gz"><svg viewBox="0 0 200 112"><path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#fff" stroke-width="30" stroke-linecap="round"/><path d="M 20 100 A 80 80 0 0 1 60 31" fill="none" stroke="#4aa63a" stroke-width="20"/><path d="M 60 31 A 80 80 0 0 1 120 21" fill="none" stroke="#f4c20d" stroke-width="20"/><path d="M 120 21 A 80 80 0 0 1 164 52" fill="none" stroke="#f08a1c" stroke-width="20"/><path d="M 164 52 A 80 80 0 0 1 180 100" fill="none" stroke="#e5382b" stroke-width="20"/><line x1="100" y1="100" x2="132" y2="42" stroke="#fff" stroke-width="8" stroke-linecap="round"/><circle cx="100" cy="100" r="9" fill="#13224a" stroke="#fff" stroke-width="4"/></svg></div>`;
+const PL=[['Dariaccioo','#e8362b',4,'lo sapeva anche la mamma'],['Bot Pino','#2f9e44',2,'argento, con il broncio'],['Bot Franco','#ffc72c',2,'stava pensando ad altro'],['Bot Mara','#8e6bd8',0,'presente. E già questo'],['Bot Lella','#ff7aa8',0,'ci ha provato. Per modo di dire']];
+// la scalata: ogni carta sale fino a una certa altezza; chi non vince cade alla fine
+const H=[150,112,96,78,64], X=[0,-52,50,-86,84];
+const climb=()=>`<div class="cam"><div class="ground"></div><img class="torre" src="${TOWER}">`+PL.map((p,i)=>`<img class="cl ${i===0?'win':'f'}" src="${G(i)}" style="--x:${X[i]}px;--h:${H[i]+(i===0?150:0)}px;--d:${.3+i*.35}s">`).join('')+`<div class="spot"></div><div class="aaah" style="left:48px;top:300px">AAAAH!</div><div class="aaah" style="right:50px;top:330px">AAAAH!</div></div>`;
+const RANK=(titolo)=>`<div class="ti sm a" style="margin-bottom:10px">${titolo}</div><div class="box b">`+PL.map((p,i)=>`<div class="rk"><b>${i+1}</b><i style="background:${p[1]}"></i>${p[0]}<small>${p[3]}</small><em class="${i?'':'w'}"><span class="coin"></span>${p[2]}</em></div>`).join('')+`</div>`;
+const CRED=(top,extra)=>`<div class="cred">${top}<h5>Interpreti (nei panni di sé stessi)</h5>`+PL.map(p=>`<div class="cast"><span>${p[0]}</span><em>cachet: ${p[2]} punti</em></div>`).join('')+`
+<h5>La trama</h5><p style="font:400 22px/1.1 Anton;text-transform:uppercase">Gli influencer non prendono mai niente sul serio</p><p>43% dei sospetti · Peso dell'accusa: 6</p><small>Basata su una frase del Megafono, pronunciata con troppa convinzione.</small>
+<h5>Con la partecipazione straordinaria di</h5><p>${K('p01-i03')}${K('p02-i02')}${K('p03-i09')}</p><small>Tutti presenti. Nessuno ha letto il copione.</small>
+<h5>Premi speciali</h5><div class="bd"><div><span class="rib">Premio Poltrona</span>${'<img src="../public/cards/p03-i01.webp">'}<small>Immobile ma di successo</small></div><div><span class="rib">Riunione alle 9</span><img src="../public/cards/p02-i08.webp"><small>Poteva essere una mail</small></div><div><span class="rib">Cappuccio d'oro</span><img src="../public/cards/p05-i06.webp"><small>Nessuno sa cosa fa. Nemmeno lui</small></div></div>
+<h5>Effetti speciali</h5>${GAUGE}<p style="font:400 22px Anton;color:#ffd75a">57%</p><small>Pregiudiziometro: occhiate storte, ma educate. Nessuna lancetta è stata maltrattata.</small>
+<h5>Scena più riuscita</h5><p>${K('p02-i08')}</p><p>«Oggi sale sulla torre chi è convinto di poter vivere senza lavorare.»</p><small>Manager, 2 voti. Il Megafono ha sorriso, poi ha incassato.</small>
+<h5>Cast: umani e bot</h5><p style="text-align:left">Umani 59%</p><div class="barx"><u style="width:59%;background:#8e6bd8"></u></div><p style="text-align:left">Bot 57%</p><div class="barx"><u style="width:57%;background:#14a3a1"></u></div><small>Pari e patta, come al bar.</small>
+${extra}<h5>Avvertenze</h5><p>Nessun influencer è stato maltrattato durante le riprese.</p><p>Ogni riferimento a persone reali è puramente a occhio.</p><p>Questo film non ha budget. Nemmeno i bot sono stati pagati.</p>
+<div class="logo">GIÙ DALLA TORRE</div><small style="margin-top:6px">Un film di nessuno</small></div>`;
+const FIN='<div class="fin"><div>Rivedi</div><div>Condividi</div><div>Come l’abbiamo capito</div><div class="y">Nuova partita</div></div>';
+const BARS='<div class="bar t"></div><div class="bar b"></div><div class="vig"></div><div class="skip">tocca per saltare ›</div>';
+const SET=[
+ {dur:[3800,9800,5200,24000],lab:['Il titolo','La scalata','La classifica','Titoli di coda'],sc:[
+  `<div class="ser a">Un film di nessuno</div><div class="ti b" style="font-size:36px;margin-top:8px">Una torre.<br>Cinque carte.</div><div class="ti y c" style="margin-top:6px">Un solo vincitore.</div>`,
+  climb()+`<div class="sub">Tutte puntano in alto. Una sola ci arriva. Le altre scendono, con meno dignità.</div>`,
+  RANK('Dariaccioo ha vinto, e adesso lo sa'),
+  CRED('<div class="ti sm">Titoli di coda</div>','')+FIN]},
+ {dur:[4600,9800,5200,24000],lab:['Il sipario','La scalata','La classifica','Titoli di coda'],sc:[
+  `<div class="mq">Giù dalla Torre · Prima assoluta</div><div class="curt l"></div><div class="curt r"></div><div class="ser a" style="margin-top:20px">Ore 21:30 · Sala 1</div><div class="ti b" style="margin-top:8px">Si spengono<br>le luci</div>`,
+  climb()+`<div class="pub"><i style="left:6%"></i><i style="left:30%;height:70px"></i><i style="left:58%"></i><i style="left:82%;height:66px"></i></div><div class="sub">Il pubblico trattiene il fiato. Uno ha già finito i popcorn.</div>`,
+  RANK('Applausi per Dariaccioo (due, di cortesia)'),
+  CRED('<div class="ti sm">Titoli di coda</div>','<h5>Critica e pubblico</h5><div class="blooper"><b>★★★☆☆ · Il Corriere della Torre</b>«L\'ho visto, non lo ricordo.»</div><div class="blooper"><b>★★★★☆ · La mamma di Dariaccioo</b>«Bravo il mio bambino.»</div><div class="blooper"><b>★☆☆☆☆ · Un influencer</b>«Non l\'ho nemmeno guardato.»</div><small>Il pubblico ha lasciato la sala prima della fine.</small>')+FIN]},
+ {dur:[4600,9800,5200,24000],lab:['Il ciak','La scalata','La classifica','Titoli di coda'],sc:[
+  `<div class="clap a"><div><b>Giù dalla Torre</b></div><div>Regia: il Megafono</div><div>Scena 1 · Ripresa 3</div><div>Operatore: nessuno</div></div><div class="ti b" style="margin-top:14px;font-size:28px">Ciak, si cade</div>`,
+  climb()+`<div class="sub">Regista: «Più sicurezza, più convinzione!». Stunt non eseguiti da professionisti.</div>`,
+  RANK('Dariaccioo, migliore in scena (il resto è in sala)'),
+  CRED('<div class="ti sm">Titoli di coda</div>','<h5>Errori di ripresa</h5><div class="blooper"><b>Scena 1</b>La carta che cade è stata ripresa due volte. La seconda ci è piaciuta di più.</div><div class="blooper"><b>Scena 2</b>Bot Lella ha chiesto dove fosse il copione. Non c\'è.</div><div class="blooper"><b>Scena 3</b>Il Megafono ha detto «azione» e ha votato altrove.</div><h5>Ringraziamenti</h5><p>Alla mamma, che lo sapeva già.</p><p>Ai bot, che non hanno protestato.</p>')+FIN]}
+];
+const P=[];
+function player(host,lab,k){
+  const el=document.getElementById(host),S=SET[k],n=S.sc.length;let i=0,t=null,play=true;
+  el.innerHTML=`<div class="sky"></div>`+S.sc.map((h,j)=>`<div class="sc" data-i="${j}">${h}</div>`).join('')+BARS;
+  const L=document.getElementById(lab);
+  const o={go(x,keep){i=(x+n)%n;[...el.querySelectorAll('.sc')].forEach((s,j)=>{s.classList.remove('on');if(j===i){void s.offsetWidth;s.classList.add('on')}});L.textContent=(i+1)+'/'+n+' · '+S.lab[i];clearTimeout(t);if(play&&!keep)t=setTimeout(()=>o.go(i+1===n?0:i+1),S.dur[i]+(i===n-1?3000:0))},
+    next(){o.go(i+1)},prev(){o.go(i-1)},fine(){o.go(n-1)},toggle(){play=!play;if(play)o.go(i);else clearTimeout(t)},at(x){play=false;o.go(x,true)}};
+  el.addEventListener('click',()=>{if(i<n-1)o.fine()});return o}
+P.push(player('p1','l1',0),player('p2','l2',1),player('p3','l3',2));P.forEach(p=>p.go(0));
+</script>
+</body></html>
