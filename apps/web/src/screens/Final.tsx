@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import Riepilogo from "../components/Riepilogo.tsx";
+import Titoli from "../components/Titoli.tsx";
 import ShareMenu from "../components/ShareMenu.tsx";
 import Dettagli from "../components/Dettagli.tsx";
 import type { StereoGame } from "../lib/stereo.ts";
@@ -28,7 +28,7 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
   // Premio della serata prima della scalata: una volta per partita (e per scheda), mai nei test veloci
   const awKey = `gdt.award.${room.code}`, award = view.award;
   const [seen, setSeen] = useState(() => { if (FAST || !award) return true; try { return sessionStorage.getItem(awKey) === "1"; } catch { return false; } });
-  const [sharing, setSharing] = useState(false), [cop, setCop] = useState(false), [riep, setRiep] = useState(false), [menu, setMenu] = useState(false), [dett, setDett] = useState<StereoGame | null>(null), [nota, setNota] = useState<string | null>(null);
+  const [sharing, setSharing] = useState(false), [cop, setCop] = useState(false), [titoli, setTitoli] = useState(false), [menu, setMenu] = useState(false), [dett, setDett] = useState<StereoGame | null>(null), [nota, setNota] = useState<string | null>(null);
   const inAward = !seen && !!award;
   useEffect(() => { music.theme(inAward ? null : "musica-finale.mp3"); return () => music.theme(null); }, [inAward]);   // dalle statistiche in poi: la musica del finale
   const ultimo = leggiUltimo(room.code);
@@ -63,8 +63,8 @@ export default function Final({ room, view, readOnly, sound = false, ui, send }:
     ...(datiRotocalco(view.stereo, ultimo ? ultimo.carte.find((c) => c.pos === ultimo.voto)?.id : undefined, dayId(), location.host) ? [{ id: "copertina", label: "sm.copertina" as const, hint: "sm.copertina.s" as const, icon: "📰", onPick: () => { void copertina().then(() => setMenu(false)); } }] : []),
     { id: "testo", label: "sm.testo" as const, hint: "sm.testo.s" as const, icon: "💬", onPick: () => { void testo(); } },
   ];
-  return <FinalScene summary={riep} onDone={() => setRiep(true)} onShare={!readOnly ? () => { setNota(null); setMenu(true); } : undefined} sharing={sharing || cop} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }}>
-    {riep && <Riepilogo rows={rows} winners={winners} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} seme={room.code} onDettagli={setDett} />}
+  return <FinalScene summary={titoli} onProceed={() => setTitoli(true)} onDone={() => { if (readOnly) setTimeout(() => setTitoli(true), 7000); }} onShare={!readOnly ? () => { setNota(null); setMenu(true); } : undefined} sharing={sharing || cop} rows={rows} winners={winners} sound={sound} readOnly={readOnly} ui={ui} onLeave={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/"); }} onNew={() => { send?.({ t: "leave" }); forgetSession(room.code); navigate("/crea"); }}>
+    {titoli && <Titoli rows={rows} winners={winners} stereo={view.stereo} isBot={(id) => people.get(id).bot} sound={sound} seme={room.code} onDettagli={setDett} />}
     {dett && <Dettagli g={dett} persona={(id) => { const pe = people.get(id); return { name: pe.name, color: pe.color }; }} onClose={() => setDett(null)} />}
     {menu && <ShareMenu options={opzioni} busy={occupato} note={nota} onClose={() => setMenu(false)} />}
   </FinalScene>;

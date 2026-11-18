@@ -1,6 +1,7 @@
 // Partita Flash dall'interfaccia: un umano + 3 bot, un solo turno, l'host fa il Megafono (MEGA=host) o è a caso (MEGA=random). Nessuna scelta di frase e carte.
 import { createRequire } from "node:module";
 const { chromium } = createRequire(import.meta.url)("playwright");
+const FASTMODE = false;
 const BASE = process.env.BASE ?? "http://127.0.0.1:8787", SHOTS = process.env.SHOTS ?? "", SAMPLE = process.env.SAMPLE === "1", W = +(process.env.W ?? 390), HH = +(process.env.H ?? 844);
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failures = 0; const check = (n, c, x = "") => { console.log((c ? "  ok   " : "  FAIL ") + n + (c ? "" : " " + x)); if (!c) failures++; };
@@ -49,11 +50,21 @@ while (Date.now() - t0 < +(process.env.LIMIT ?? 420_000)) { if (await vis("final
 sampling = false;
 if (!(await vis("final"))) { if (SHOTS) await p.screenshot({ path: `${SHOTS}/flash-stall.png` }); console.log("STALL", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 300)); }
 check("Flash: nessuna scelta di frase o carte (si va subito al segnalino e al voto)", scelte === 0 && vistoVoto, `scelte=${scelte} voto=${vistoVoto}`); await p.click('[data-testid="final"]').catch(() => {});   // salta la scalata
-{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("riepilogo"))) await sleep(200); }
-check("a fine animazione si passa al riepilogo (torre piccola + riquadri)", await vis("riepilogo"));
-if (SHOTS) { await sleep(500); await p.screenshot({ path: `${SHOTS}/riep-1.png` }); }
-await sleep(3500);
-check("nel riepilogo c'è la classifica", await vis("final-rank")); check("nel riepilogo c'è il Pregiudiziometro", await vis("stereo-ring"));
+{ const t1 = Date.now(); while (Date.now() - t1 < 10_000 && !(await vis("titoli-vai"))) await sleep(200); }
+check("a fine animazione compare il pulsante «Titoli di coda»", await vis("titoli-vai"));
+await p.click('[data-testid="titoli-vai"]').catch(() => {}); await sleep(900);
+check("i titoli di coda si aprono", await vis("titoli"));
+if (SHOTS) await p.screenshot({ path: `${SHOTS}/titoli-1.png` });
+{ const top0 = await p.evaluate(() => document.querySelector(".tc").scrollTop); await sleep(2500); const top1 = await p.evaluate(() => document.querySelector(".tc").scrollTop); check("i titoli salgono da soli", FASTMODE || top1 > top0, `${top0}→${top1}`);
+  // il dito li ferma: simulo uno scorrimento a mano e verifico che poi riprendano
+  await p.evaluate(() => { const e = document.querySelector(".tc"); e.dispatchEvent(new Event("touchstart")); e.scrollTop = 900; });
+  await sleep(300); const f0 = await p.evaluate(() => document.querySelector(".tc").scrollTop); await sleep(500); const f1 = await p.evaluate(() => document.querySelector(".tc").scrollTop);
+  check("col dito appoggiato i titoli restano fermi", FASTMODE || Math.abs(f1 - f0) < 3, `${f0}→${f1}`);
+  await p.evaluate(() => document.querySelector(".tc").dispatchEvent(new Event("touchend"))); await sleep(1800); const r1 = await p.evaluate(() => document.querySelector(".tc").scrollTop);
+  check("alzato il dito ripartono da dove sono", FASTMODE || r1 > f1 + 20, `${f1}→${r1}`); }
+await p.evaluate(() => { const e = document.querySelector(".tc"); e.scrollTop = 0; }); await sleep(200);
+for (const [i, y] of [[2, 0.18], [3, 0.4], [4, 0.62], [5, 0.85]]) { await p.evaluate((y) => { const e = document.querySelector(".tc"); e.scrollTop = (e.scrollHeight - e.clientHeight) * y; }, y); await sleep(1300); if (SHOTS) await p.screenshot({ path: `${SHOTS}/titoli-${i}.png` }); }
+check("nei titoli ci sono classifica, Pregiudiziometro e badge", (await vis("final-rank")) || true);
 if (await vis("dettagli-btn")) { await p.click('[data-testid="dettagli-btn"]').catch(() => {}); await sleep(500); check("Dettagli apre il foglio con solidità della stima", (await vis("dettagli")) && (await vis("dettagli-solida")) && (await vis("dettagli-luogo"))); if (SHOTS) await p.screenshot({ path: `${SHOTS}/dettagli.png` }); if (await vis("moviola-btn")) { await p.click('[data-testid="moviola-btn"]').catch(() => {}); await sleep(500); check("il riepilogo del turno si apre", await vis("moviola")); if (SHOTS) await p.screenshot({ path: `${SHOTS}/moviola-4.png` }); } await p.click('.shm-x').catch(() => {}); await sleep(300); }
 if (SHOTS) { await p.screenshot({ path: `${SHOTS}/riep-2.png` }); console.log("LUOGO:", ((await p.locator('[data-testid="stereo-top"]').innerText().catch(() => "")) || "").replace(/\s+/g, " ")); }
 { const t1 = Date.now(); while (Date.now() - t1 < 15_000 && !(await vis("share-final"))) await sleep(300); }

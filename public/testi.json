@@ -1,6 +1,6 @@
 {
- "versione": 106,
- "aggiornato": "2026-11-17",
+ "versione": 107,
+ "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -4461,6 +4461,202 @@
   "mv.legenda": {
    "t": "Le pedine sono i voti. La freccia rossa è chi è caduto. L’anello giallo è la carta dell’accusa.",
    "s": "Moviola"
+  },
+  "tc.vai": {
+   "t": "Titoli di coda ›",
+   "s": "Titoli di coda"
+  },
+  "tc.premiere": {
+   "t": "Giù dalla Torre · Prima assoluta",
+   "s": "Titoli di coda"
+  },
+  "tc.titolo": {
+   "t": "Titoli di coda",
+   "s": "Titoli di coda"
+  },
+  "tc.hint": {
+   "t": "Tieni il dito sullo schermo per fermare i titoli",
+   "s": "Titoli di coda"
+  },
+  "tc.int": {
+   "t": "Interpreti (nei panni di sé stessi)",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet.0": {
+   "t": "cachet: nessuno",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet.1": {
+   "t": "cachet: 1 punto",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet": {
+   "t": "cachet: {n} punti",
+   "s": "Titoli di coda"
+  },
+  "tc.prot": {
+   "t": "protagonista",
+   "s": "Titoli di coda"
+  },
+  "tc.trama": {
+   "t": "La trama",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.0": {
+   "t": "Basata su una frase del Megafono, pronunciata con troppa convinzione.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.1": {
+   "t": "Ogni riferimento a persone reali è puramente voluto. Soprattutto il vostro.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.2": {
+   "t": "Tratta da una storia vera: come vi siete giudicati a vicenda.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.3": {
+   "t": "Non è colpa vostra. È colpa della frase, che era scritta bene.",
+   "s": "Titoli di coda"
+  },
+  "tc.ospiti": {
+   "t": "Con la partecipazione straordinaria di",
+   "s": "Titoli di coda"
+  },
+  "tc.ospiti.s.0": {
+   "t": "Tutti presenti. Nessuno ha letto il copione.",
+   "s": "Titoli di coda"
+  },
+  "tc.ospiti.s.1": {
+   "t": "Cachet versato in complimenti.",
+   "s": "Titoli di coda"
+  },
+  "tc.ospiti.s.2": {
+   "t": "Girati in una sola ripresa, perché la carta cade una volta sola.",
+   "s": "Titoli di coda"
+  },
+  "tc.premi": {
+   "t": "Premi speciali",
+   "s": "Titoli di coda"
+  },
+  "tc.fx": {
+   "t": "Effetti speciali",
+   "s": "Titoli di coda"
+  },
+  "tc.fx.s": {
+   "t": "Nessuna lancetta è stata maltrattata.",
+   "s": "Titoli di coda"
+  },
+  "tc.scena": {
+   "t": "Scena più riuscita",
+   "s": "Titoli di coda"
+  },
+  "tc.cast": {
+   "t": "Cast: umani e bot",
+   "s": "Titoli di coda"
+  },
+  "tc.cast.s": {
+   "t": "Nessun bot è stato pagato. Nemmeno gli umani.",
+   "s": "Titoli di coda"
+  },
+  "tc.critica": {
+   "t": "Critica e pubblico",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.t": {
+   "t": "★★★☆☆ · Il Corriere della Torre",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.0": {
+   "t": "«L'ho visto, non lo ricordo.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.1": {
+   "t": "«Si cade, si ride, si dimentica.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.2": {
+   "t": "«Troppe carte, poca torre. Ci siamo divertiti lo stesso.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.t": {
+   "t": "★★★★★ · La mamma di {nome}",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.0": {
+   "t": "«Bravo il mio bambino.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.1": {
+   "t": "«L'ho sempre detto io.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.2": {
+   "t": "«Non ho capito il gioco, ma lui è il più bravo.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.t": {
+   "t": "★☆☆☆☆ · Un giocatore a caso",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.0": {
+   "t": "«Non l'ho nemmeno guardato.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.1": {
+   "t": "«Ero distratto, lo giuro.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.2": {
+   "t": "«Il mio voto l'avevo dato. Chiedete al Megafono.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.fine": {
+   "t": "Il pubblico ha lasciato la sala prima della fine. Poi è tornato per il bis.",
+   "s": "Titoli di coda"
+  },
+  "tc.rin": {
+   "t": "Ringraziamenti",
+   "s": "Titoli di coda"
+  },
+  "tc.rin.0": {
+   "t": "Alla mamma, che lo sapeva già.",
+   "s": "Titoli di coda"
+  },
+  "tc.rin.1": {
+   "t": "Ai bot, che non hanno protestato.",
+   "s": "Titoli di coda"
+  },
+  "tc.rin.2": {
+   "t": "Alla torre, che ha retto. Le carte meno.",
+   "s": "Titoli di coda"
+  },
+  "tc.av": {
+   "t": "Avvertenze",
+   "s": "Titoli di coda"
+  },
+  "tc.av.0": {
+   "t": "Nessuna carta è stata maltrattata durante le riprese.",
+   "s": "Titoli di coda"
+  },
+  "tc.av.1": {
+   "t": "Ogni riferimento a persone reali è puramente a occhio.",
+   "s": "Titoli di coda"
+  },
+  "tc.av.2": {
+   "t": "Il Megafono non ha budget. I bot nemmeno.",
+   "s": "Titoli di coda"
+  },
+  "tc.fine": {
+   "t": "Fine",
+   "s": "Titoli di coda"
+  },
+  "tc.sub": {
+   "t": "Un film di nessuno. Girato a occhio.",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.nota": {
+   "t": "Recensioni inventate, come i giudizi di questa partita.",
+   "s": "Titoli di coda"
   }
  }
 }

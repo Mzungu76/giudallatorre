@@ -189,7 +189,7 @@ mostra();'''
 
 
 # =========================================================== 3. TESTI DELLE STATISTICHE FINALI
-PREFISSI = ('rp.', 'sc.', 'sp.', 'dt.', 'mv.', 'lc.', 'rot.', 'sm.', 'share.', 'fin.', 'aw.')
+PREFISSI = ('rp.', 'sc.', 'sp.', 'dt.', 'mv.', 'lc.', 'rot.', 'sm.', 'share.', 'fin.', 'aw.', 'tc.')
 
 
 def statistiche():
