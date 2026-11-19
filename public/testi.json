@@ -1,5 +1,5 @@
 {
- "versione": 109,
+ "versione": 110,
  "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
@@ -3828,23 +3828,6 @@
    "t": "Il processo non è mai cominciato. La condanna sì",
    "s": "Riepilogo satirico"
   },
-  "rp.lan.0": {
-   "t": "Standing ovation del Megafono, che si era distratto.",
-   "s": "Riepilogo satirico",
-   "n": "Commento sotto il miglior lancio"
-  },
-  "rp.lan.1": {
-   "t": "Il Megafono ha sorriso. Poi ha incassato.",
-   "s": "Riepilogo satirico"
-  },
-  "rp.lan.2": {
-   "t": "Applauso a scena aperta. Durato un respiro.",
-   "s": "Riepilogo satirico"
-  },
-  "rp.lan.3": {
-   "t": "Lanciato con una mano sola. L'altra teneva il caffè.",
-   "s": "Riepilogo satirico"
-  },
   "rp.alt.1": {
    "t": "Intanto: {frase} · {pct}%",
    "s": "Riepilogo satirico"
@@ -4246,22 +4229,6 @@
    "t": "Non è colpa vostra. È colpa della frase, che era scritta bene.",
    "s": "Titoli di coda"
   },
-  "tc.ospiti": {
-   "t": "Con la partecipazione straordinaria di",
-   "s": "Titoli di coda"
-  },
-  "tc.ospiti.s.0": {
-   "t": "Tutti presenti. Nessuno ha letto il copione.",
-   "s": "Titoli di coda"
-  },
-  "tc.ospiti.s.1": {
-   "t": "Cachet versato in complimenti.",
-   "s": "Titoli di coda"
-  },
-  "tc.ospiti.s.2": {
-   "t": "Girati in una sola ripresa, perché la carta cade una volta sola.",
-   "s": "Titoli di coda"
-  },
   "tc.premi": {
    "t": "Premi speciali",
    "s": "Titoli di coda"
@@ -4270,20 +4237,8 @@
    "t": "Effetti speciali",
    "s": "Titoli di coda"
   },
-  "tc.fx.s": {
-   "t": "Nessuna lancetta è stata maltrattata.",
-   "s": "Titoli di coda"
-  },
-  "tc.scena": {
-   "t": "Scena più riuscita",
-   "s": "Titoli di coda"
-  },
   "tc.cast": {
    "t": "Cast: umani e bot",
-   "s": "Titoli di coda"
-  },
-  "tc.cast.s": {
-   "t": "Nessun bot è stato pagato. Nemmeno gli umani.",
    "s": "Titoli di coda"
   },
   "tc.critica": {
@@ -4340,38 +4295,6 @@
   },
   "tc.cr.fine": {
    "t": "Il pubblico ha lasciato la sala prima della fine. Poi è tornato per il bis.",
-   "s": "Titoli di coda"
-  },
-  "tc.rin": {
-   "t": "Ringraziamenti",
-   "s": "Titoli di coda"
-  },
-  "tc.rin.0": {
-   "t": "Alla mamma, che lo sapeva già.",
-   "s": "Titoli di coda"
-  },
-  "tc.rin.1": {
-   "t": "Ai bot, che non hanno protestato.",
-   "s": "Titoli di coda"
-  },
-  "tc.rin.2": {
-   "t": "Alla torre, che ha retto. Le carte meno.",
-   "s": "Titoli di coda"
-  },
-  "tc.av": {
-   "t": "Avvertenze",
-   "s": "Titoli di coda"
-  },
-  "tc.av.0": {
-   "t": "Nessuna carta è stata maltrattata durante le riprese.",
-   "s": "Titoli di coda"
-  },
-  "tc.av.1": {
-   "t": "Ogni riferimento a persone reali è puramente a occhio.",
-   "s": "Titoli di coda"
-  },
-  "tc.av.2": {
-   "t": "Il Megafono non ha budget. I bot nemmeno.",
    "s": "Titoli di coda"
   },
   "tc.fine": {

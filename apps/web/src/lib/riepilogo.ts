@@ -36,7 +36,6 @@ export function carteLuoghi(g: StereoGame, max = 4): string[] {
   for (const x of g.top) for (const [id, n] of Object.entries(x.det?.c ?? {})) conta[id] = (conta[id] ?? 0) + n;
   return Object.entries(conta).sort((a, b) => b[1] - a[1]).slice(0, max).map(([id]) => id);
 }
-export const commentoLancio = (cardId: string): string => ts(`rp.lan.${hash(cardId) % 4}` as TestoKey);
 export const rigaGauge = (fascia: number): string => ts(`rp.gs.${fascia}` as TestoKey);
 /** Quale variante di un testo usare (0…n−1): stabile per partita e per «seme» (es. la riga della recensione). */
 export const variante = (n: number, seme: string): number => hash(seme) % n;

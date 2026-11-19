@@ -4,7 +4,7 @@ import { Gauge, useContaSu } from "./StereoScene.tsx";
 import { t, ts } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 import { fasciaPregiudizio as fascia, aspettoDi, fraseLuogo, stereoGame, stereoGruppi } from "../lib/stereo.ts";
-import { battutaRiga, carteLuoghi, commentoLancio, premi, rigaGauge, titoloVincitori, variante } from "../lib/riepilogo.ts";
+import { battutaRiga, carteLuoghi, premi, rigaGauge, titoloVincitori, variante } from "../lib/riepilogo.ts";
 import { cardFull } from "../lib/cards.ts";
 import { FAST } from "../ui.tsx";
 import type { FinalRow } from "./FinalScene.tsx";
@@ -83,12 +83,6 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { 
           <small className="tc-s">{ts(`tc.trama.s.${variante(4, seme)}` as TestoKey)}</small>
         </>}
 
-        {carte.length > 0 && <>
-          <h5>{t("tc.ospiti")}</h5>
-          <div className="tc-ct">{carte.map((id) => <img key={id} src={cardFull(id)} alt="" draggable={false} />)}</div>
-          <small className="tc-s">{ts(`tc.ospiti.s.${variante(3, seme)}` as TestoKey)}</small>
-        </>}
-
         {badge.length > 0 && <>
           <h5>{t("tc.premi")}</h5>
           <div className="rp-bd" data-testid="badge">{badge.map((b) => <div key={b.ruolo}><span className="rib">{b.titolo}</span>{b.carta && <img src={cardFull(b.carta)} alt="" draggable={false} />}<small>{b.riga}</small></div>)}</div>
@@ -97,12 +91,6 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { 
         {g && <>
           <h5>{t("tc.fx")}</h5>
           <Effetti pct={g.pct} radice={box} />
-          <small className="tc-s">{t("tc.fx.s")}</small>
-        </>}
-
-        {g?.lancio && <>
-          <h5>{t("tc.scena")}</h5>
-          <div className="rp-b rp-lan" data-testid="stereo-lancio"><div className="rp-lr"><img src={cardFull(g.lancio.cardId)} alt="" draggable={false} /><b>{ts("sc.lancio.voti", { ruolo: g.lancio.ruolo, n: g.lancio.n })}</b></div><q>{g.lancio.text}</q><div className="rp-sub">{commentoLancio(g.lancio.cardId)}</div></div>
         </>}
 
         {uvb && <>
@@ -110,18 +98,11 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { 
           <div className="rp-b" data-testid="stereo-uvb">
             <div className="rp-uvr">{([["sc.umani", gr.umani, "sc-u"], ["sc.bot", gr.bot, "sc-b"]] as const).map(([k, v, c]) => <div className="rp-uv" key={k}><span>{t(k)}</span><b>{v}%</b><div className="sc-bar"><u className={c} style={{ width: `${v}%` }} /></div></div>)}</div>
             <p className="rp-uvv" data-testid="stereo-uvb-verdetto">{t(verd)}</p></div>
-          <small className="tc-s">{t("tc.cast.s")}</small>
         </>}
 
         <h5>{t("tc.critica")}</h5>
         {(["a", "b", "c"] as const).map((s) => { const x = cr(s); return <div className="tc-cr" key={s}><b>{x.titolo}</b>{x.frase}</div>; })}
         <small className="tc-s">{t("tc.cr.fine")}</small>
-
-        <h5>{t("tc.rin")}</h5>
-        <p>{t("tc.rin.0")}</p><p>{t("tc.rin.1")}</p><p>{t("tc.rin.2")}</p>
-
-        <h5>{t("tc.av")}</h5>
-        <p>{t("tc.av.0")}</p><p>{t("tc.av.1")}</p><p>{t("tc.av.2")}</p>
 
         <div className="tc-logo"><img src="/giocatori/torre.webp" alt="" draggable={false} /><span>{t("tc.fine")}</span></div>
         <small className="tc-s">{t("tc.sub")}</small>
