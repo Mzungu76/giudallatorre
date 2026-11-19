@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mockup Espansioni</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a;--teal:#14a3a1;--pink:#ff7aa8;--sky1:#79d3ee;--sky2:#4fbce6}
+*{box-sizing:border-box;margin:0}
+body{background:#23232a;color:#fff;font-family:Nunito,system-ui,sans-serif;min-height:100vh;padding:0 max(16px,env(safe-area-inset-left,0px)) 60px}
+header.g{padding:18px 0 6px}header.g h1{font:400 34px/1 Anton;color:var(--mus);letter-spacing:.02em}header.g p{opacity:.75;font-size:14px;max-width:780px;margin-top:6px;line-height:1.45}
+.row{display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start;margin-top:18px}
+.beat{width:390px;flex:none}.beat h3{font:400 22px/1.1 Anton;color:var(--mus);text-transform:uppercase;letter-spacing:.02em;margin-top:12px}.beat p{font-size:13px;opacity:.85;line-height:1.45;margin-top:4px}
+.ph{width:390px;height:844px;border-radius:44px;border:9px solid #07070b;position:relative;overflow:hidden;background:var(--paper);box-shadow:0 24px 60px #000a;color:var(--navy)}
+.s{position:absolute;inset:0;overflow:hidden}.s>*{position:absolute}
+.sky{background:repeating-conic-gradient(from -4deg at 50% 22%,var(--sky1) 0 6deg,var(--sky2) 6deg 12deg)}
+.pap{background:var(--paper)}
+.dots{background:radial-gradient(circle,#fff 0 26%,transparent 28%) 0 0/10px 10px;-webkit-mask-image:linear-gradient(0deg,#000,transparent 55%);mask-image:linear-gradient(0deg,#000,transparent 55%);opacity:.5}
+.hr{background:radial-gradient(circle,#e8362b 0 26%,transparent 28%) 0 0/9px 9px;-webkit-mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);mask-image:radial-gradient(ellipse at 100% 100%,#000,transparent 60%);opacity:.5}
+.fr{inset:0;pointer-events:none;border-radius:35px;box-shadow:inset 0 0 0 5px #13224a,inset 0 0 0 9px #f4e3bd,inset 0 0 0 13px #13224a;z-index:50}
+.grain{inset:0;pointer-events:none;z-index:60;mix-blend-mode:multiply;opacity:.35;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>")}
+.top{left:24px;right:24px;top:28px;display:flex;align-items:center;justify-content:space-between;z-index:20}
+.chip{background:#fff;border:2px solid var(--navy);border-radius:99px;padding:5px 11px;box-shadow:2px 2px 0 var(--navy);display:inline-flex;gap:6px;align-items:center;font:800 13px Nunito;color:var(--navy)}
+.strip{left:-10px;right:-10px;transform:rotate(-2.2deg);background:var(--navy);color:var(--mus);font:400 16px/1 Anton;letter-spacing:.16em;padding:8px 0 7px;text-align:center;box-shadow:0 5px 0 #0005;z-index:19}
+.h{font:400 46px/.9 Anton;text-transform:uppercase;color:#fff;text-shadow:4px 4px 0 var(--red),7px 7px 0 var(--navy);z-index:18;left:26px;right:20px}
+.h small{display:block;font:400 22px/1 'Caveat Brush';text-transform:none;margin-bottom:5px;transform:rotate(-1.5deg);text-shadow:2px 2px 0 var(--navy);color:#fff}
+.bt{display:flex;align-items:center;justify-content:center;gap:8px;font:400 22px/1 Anton;text-transform:uppercase;letter-spacing:.02em;padding:13px 12px;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);color:var(--navy);background:var(--mus);text-align:center}
+.bt.red{background:var(--red);color:#fff}.bt.pap{background:#fff7e0}.bt.dis{background:#c9c3b0;color:#8c8672;box-shadow:4px 4px 0 #7b7766}.bt.sm{font-size:16px;padding:8px 10px;box-shadow:3px 3px 0 var(--navy)}
+.bt small{display:block;font:800 11px Nunito;text-transform:none;letter-spacing:0}
+.pp{background:var(--paper);border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);padding:12px 14px}
+.tape{position:absolute;left:50%;top:-12px;width:60px;height:20px;margin-left:-30px;background:#ffc72ccc;transform:rotate(3deg)}
+.c{border-radius:9px;background:center/cover #fff;border:4px solid #fff;box-shadow:3px 4px 0 var(--navy);position:absolute;aspect-ratio:2/3}
+.price{font:400 20px/1 Anton;background:var(--mus);border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:5px 9px;letter-spacing:.02em;color:var(--navy);display:inline-block;transform:rotate(-3deg)}
+.price.free{background:#9be28f}
+.badge{font:400 12px/1 Anton;letter-spacing:.08em;text-transform:uppercase;padding:4px 8px;border:2px solid var(--navy);background:var(--red);color:#fff;display:inline-block;box-shadow:2px 2px 0 var(--navy)}
+.badge.ok{background:#9be28f;color:var(--navy)}.badge.new{background:var(--pink);color:var(--navy)}.badge.try{background:#fff;color:var(--navy)}
+.lb{font:400 22px/1 'Caveat Brush';color:var(--navy);display:block;transform:rotate(-1deg)}
+.tit{font:400 24px/.95 Anton;text-transform:uppercase;color:var(--navy);letter-spacing:.01em}
+.meta{font:800 12px/1.3 Nunito;opacity:.8}
+.sw{width:54px;height:30px;border:3px solid var(--navy);background:#c9c3b0;position:relative;flex:none;border-radius:99px}.sw::after{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;border-radius:50%;background:#fff;border:2px solid var(--navy)}.sw.on{background:var(--mus)}.sw.on::after{left:auto;right:3px}
+.fan{position:relative}
+/* ===== A: scaffale di scatole ===== */
+.box{position:relative;border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);background:var(--a);display:flex;gap:10px;padding:10px 12px 10px 10px;height:150px;overflow:hidden}
+.box .art{width:104px;flex:none;position:relative}
+.box .art .c{width:62px}
+.box .tx{flex:1;display:flex;flex-direction:column;justify-content:space-between;min-width:0;color:var(--navy)}
+.box .tx .tit{color:#fff;text-shadow:2px 2px 0 var(--navy);font-size:25px}
+.box .tx .meta{color:#fff;text-shadow:1px 1px 0 var(--navy);opacity:1}
+.box::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,#fff 0 22%,transparent 24%) 0 0/9px 9px;opacity:.12;pointer-events:none}
+.box .ft{display:flex;align-items:center;justify-content:space-between;gap:6px;position:relative;z-index:2}
+.box .badge{position:absolute;right:-4px;top:8px;transform:rotate(4deg);z-index:3}
+/* ===== B: vetrina ===== */
+.hero{left:20px;right:20px}
+.dotsnav{display:flex;gap:7px;justify-content:center}.dotsnav i{width:11px;height:11px;border-radius:50%;border:2px solid var(--navy);background:#fff}.dotsnav i.on{background:var(--mus);width:26px;border-radius:9px}
+.cardsrow{display:flex;gap:7px}.cardsrow .c{position:relative;flex:1;border-width:3px;box-shadow:2px 3px 0 var(--navy)}
+.phr{background:var(--red);color:#fff;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:9px 12px;font:700 14px/1.25 Nunito}
+.phr small{display:block;font:400 11px/1 Anton;letter-spacing:.1em;text-transform:uppercase;opacity:.9;margin-bottom:3px}
+.dock{left:0;right:0;bottom:0;padding:14px 22px 26px;background:linear-gradient(0deg,var(--paper) 78%,transparent);z-index:30}
+/* ===== C: collezione + foglio ===== */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 14px}
+.tile{position:relative;border:4px solid var(--navy);box-shadow:5px 6px 0 var(--navy);background:#fff7e0;padding:8px;display:flex;flex-direction:column;gap:6px}
+.tile .cv{height:118px;border:3px solid var(--navy);background:var(--a);position:relative;overflow:hidden}
+.tile .cv .c{width:56px;border-width:3px;box-shadow:2px 3px 0 var(--navy)}
+.tile.lock .cv{filter:saturate(.55)}
+.tile .badge{position:absolute;top:-10px;left:-8px;transform:rotate(-5deg);z-index:3}
+.tile .row2{display:flex;justify-content:space-between;align-items:center}
+.sheet{left:0;right:0;bottom:0;background:var(--paper);border-top:4px solid var(--navy);box-shadow:0 -6px 0 #0004;z-index:40;padding:14px 20px 24px;border-radius:22px 22px 0 0}
+.sheet .grab{width:48px;height:6px;border-radius:9px;background:var(--navy);opacity:.35;margin:0 auto 10px}
+.veil{inset:0;background:#0b143099;z-index:35}
+.mini{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.mini .c{position:relative;border-width:2px;box-shadow:1px 2px 0 var(--navy);border-radius:5px}
+.mini .c.lk{filter:grayscale(1) brightness(.5)}
+.row3{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:8px 10px;font:800 14px Nunito}
+</style></head><body>
+<header class="g"><h1>Giù dalla Torre – Espansioni (3 mockup)</h1>
+<p>Pagina dove i giocatori vedono, provano e acquistano i mazzi tematici. Stile pop dell'app: carta, senape, rosso, inchiostro, ombre dure, Anton + Caveat Brush. <b>I nomi, i prezzi e le carte di ogni mazzo sono segnaposto</b> (uso carte esistenti come immagini di prova).</p></header>
+
+<div class="row">
+
+<!-- ================= A ================= -->
+<div class="beat"><div class="ph"><div class="s">
+ <div class="sky"></div><div class="dots"></div>
+ <div class="top"><span class="chip">‹ Home</span><span class="chip">🃏 1 mazzo tuo</span></div>
+ <div class="strip" style="top:76px">★ NUOVI MAZZI ★</div>
+ <div class="h" style="top:112px"><small>Più carte, più guai…</small>Espansioni</div>
+
+ <div style="left:22px;right:22px;top:228px;display:flex;flex-direction:column;gap:18px">
+  <div class="box" style="--a:#14a3a1"><span class="badge ok">Tuo</span>
+   <div class="art"><div class="c" style="left:2px;top:14px;transform:rotate(-9deg);background-image:url(../public/cards/p03-i04.webp)"></div><div class="c" style="left:26px;top:2px;transform:rotate(2deg);background-image:url(../public/cards/p07-i02.webp)"></div><div class="c" style="left:46px;top:20px;transform:rotate(12deg);background-image:url(../public/cards/p09-i05.webp)"></div></div>
+   <div class="tx"><div><div class="tit">Al mare</div><div class="meta">30 personaggi · 60 frasi</div></div>
+   <div class="ft"><span class="bt pap sm">Usa in partita</span></div></div></div>
+
+  <div class="box" style="--a:#e8362b"><span class="badge new">Novità</span>
+   <div class="art"><div class="c" style="left:2px;top:14px;transform:rotate(-9deg);background-image:url(../public/cards/p10-i03.webp)"></div><div class="c" style="left:26px;top:2px;transform:rotate(2deg);background-image:url(../public/cards/p11-i06.webp)"></div><div class="c" style="left:46px;top:20px;transform:rotate(12deg);background-image:url(../public/cards/p12-i01.webp)"></div></div>
+   <div class="tx"><div><div class="tit">Anni '90</div><div class="meta">30 personaggi · 60 frasi</div></div>
+   <div class="ft"><span class="price">€ 2,99</span><span class="bt sm">Scopri ›</span></div></div></div>
+
+  <div class="box" style="--a:#8e44c8"><span class="badge try">Prova gratis</span>
+   <div class="art"><div class="c" style="left:2px;top:14px;transform:rotate(-9deg);background-image:url(../public/cards/p13-i02.webp)"></div><div class="c" style="left:26px;top:2px;transform:rotate(2deg);background-image:url(../public/cards/p02-i07.webp)"></div><div class="c" style="left:46px;top:20px;transform:rotate(12deg);background-image:url(../public/cards/p05-i04.webp)"></div></div>
+   <div class="tx"><div><div class="tit">Fantasy</div><div class="meta">30 personaggi · 60 frasi</div></div>
+   <div class="ft"><span class="price">€ 2,99</span><span class="bt sm">Scopri ›</span></div></div></div>
+
+  <div class="box" style="--a:#ffc72c;"><span class="badge">In arrivo</span>
+   <div class="art" style="filter:grayscale(1) brightness(.6)"><div class="c" style="left:2px;top:14px;transform:rotate(-9deg);background-image:url(../public/cards/p06-i05.webp)"></div><div class="c" style="left:26px;top:2px;transform:rotate(2deg);background-image:url(../public/cards/p08-i01.webp)"></div></div>
+   <div class="tx"><div><div class="tit" style="color:var(--navy);text-shadow:none">Ufficio</div><div class="meta" style="color:var(--navy);text-shadow:none">Presto in app</div></div>
+   <div class="ft"><span class="bt dis sm">Avvisami</span></div></div></div>
+ </div>
+ <div class="fr"></div><div class="grain"></div>
+</div></div>
+<h3>A · Scaffale delle scatole</h3><p>Lista verticale, una "scatola" colorata per mazzo con ventaglio di carte, titolo, prezzo e stato (Tuo / Novità / Prova gratis / In arrivo). Semplice e veloce da scorrere, scala bene con tanti mazzi.</p></div>
+
+<!-- ================= B ================= -->
+<div class="beat"><div class="ph"><div class="s">
+ <div class="sky" style="background:repeating-conic-gradient(from -4deg at 50% 30%,#f7a3c0 0 6deg,var(--pink) 6deg 12deg)"></div><div class="dots"></div>
+ <div class="top"><span class="chip">‹ Espansioni</span><span class="chip">2 / 4</span></div>
+ <div class="strip" style="top:76px">★ MAZZO DEL MESE ★</div>
+ <div class="h" style="top:108px"><small>Estate sulla torre</small>Anni '90</div>
+
+ <div class="hero" style="top:222px;height:236px">
+  <div class="c" style="width:130px;left:6px;top:30px;transform:rotate(-12deg);background-image:url(../public/cards/p10-i03.webp);border-width:5px;box-shadow:4px 5px 0 var(--navy)"></div>
+  <div class="c" style="width:130px;right:6px;top:30px;transform:rotate(12deg);background-image:url(../public/cards/p12-i01.webp);border-width:5px;box-shadow:4px 5px 0 var(--navy)"></div>
+  <div class="c" style="width:150px;left:100px;top:0;transform:rotate(-1deg);background-image:url(../public/cards/p11-i06.webp);border-width:6px;box-shadow:5px 6px 0 var(--navy);z-index:3"></div>
+  <span class="price" style="position:absolute;right:2px;top:-6px;z-index:5;font-size:26px;transform:rotate(6deg)">€ 2,99</span>
+  <span class="badge new" style="position:absolute;left:0;top:-4px;z-index:5;transform:rotate(-6deg)">Novità</span>
+ </div>
+ <div class="dotsnav" style="left:0;right:0;top:452px"><i></i><i class="on"></i><i></i><i></i></div>
+
+ <div class="pp" style="left:20px;right:20px;top:478px"><span class="tape"></span>
+  <div class="meta" style="margin-bottom:6px;opacity:1">Walkman, Tamagotchi e gelati al cioccolato. <b>30 nuovi personaggi</b> e <b>60 frasi</b> a tema, che si mescolano ai tuoi mazzi.</div>
+  <div class="phr"><small>Il Megafono dice</small>Oggi sale sulla torre chi ha ancora il Nokia 3310.</div>
+ </div>
+ <div class="cardsrow" style="left:20px;right:20px;top:636px"><div class="c" style="background-image:url(../public/cards/p10-i01.webp)"></div><div class="c" style="background-image:url(../public/cards/p10-i05.webp)"></div><div class="c" style="background-image:url(../public/cards/p11-i02.webp)"></div><div class="c" style="background-image:url(../public/cards/p11-i07.webp)"></div><div class="c" style="background-image:url(../public/cards/p12-i04.webp);filter:brightness(.55)"><b style="position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:400 18px Anton">+26</b></div></div>
+
+ <div class="dock"><div class="bt red" style="font-size:25px">Compralo · € 2,99<small style="color:#fff">Per sempre · vale per tutta la stanza se lo attivi tu</small></div></div>
+ <div class="fr"></div><div class="grain"></div>
+</div></div>
+<h3>B · Vetrina a poster</h3><p>Un mazzo alla volta a tutto schermo, da scorrere col dito (pallini in basso). Ventaglio grande, descrizione, una frase d'esempio, anteprima delle carte e tasto d'acquisto sempre ancorato. Il più "emozionale", ottimo per vendere.</p></div>
+
+<!-- ================= C ================= -->
+<div class="beat"><div class="ph"><div class="s">
+ <div class="pap"></div><div class="hr"></div>
+ <div class="top"><span class="chip">‹ Home</span><span class="chip">🛒 Ripristina acquisti</span></div>
+ <div class="h" style="top:70px;text-shadow:3px 3px 0 var(--navy);color:var(--red)"><small style="color:var(--navy);text-shadow:none">La tua collezione</small>Espansioni</div>
+ <div class="row3" style="left:22px;right:22px;top:166px"><span style="font-size:20px">📦</span><div style="flex:1">Mazzo base<br><span class="meta">125 personaggi · sempre incluso</span></div><span class="badge ok">Tuo</span></div>
+
+ <div class="grid" style="left:22px;right:22px;top:230px">
+  <div class="tile" style="--a:#14a3a1"><span class="badge ok">Tuo</span><div class="cv"><div class="c" style="left:14px;top:20px;transform:rotate(-10deg);background-image:url(../public/cards/p03-i04.webp)"></div><div class="c" style="left:56px;top:8px;transform:rotate(6deg);background-image:url(../public/cards/p07-i02.webp)"></div></div><div class="tit" style="font-size:20px">Al mare</div><div class="row2"><span class="meta">30 carte</span><span class="sw on"></span></div></div>
+  <div class="tile lock" style="--a:#e8362b"><span class="badge new">Novità</span><div class="cv"><div class="c" style="left:14px;top:20px;transform:rotate(-10deg);background-image:url(../public/cards/p10-i03.webp)"></div><div class="c" style="left:56px;top:8px;transform:rotate(6deg);background-image:url(../public/cards/p11-i06.webp)"></div></div><div class="tit" style="font-size:20px">Anni '90</div><div class="row2"><span class="meta">30 carte</span><span class="price" style="font-size:15px;padding:3px 7px">€ 2,99</span></div></div>
+  <div class="tile lock" style="--a:#8e44c8"><div class="cv"><div class="c" style="left:14px;top:20px;transform:rotate(-10deg);background-image:url(../public/cards/p13-i02.webp)"></div><div class="c" style="left:56px;top:8px;transform:rotate(6deg);background-image:url(../public/cards/p05-i04.webp)"></div></div><div class="tit" style="font-size:20px">Fantasy</div><div class="row2"><span class="meta">30 carte</span><span class="price" style="font-size:15px;padding:3px 7px">€ 2,99</span></div></div>
+  <div class="tile lock" style="--a:#ffc72c"><span class="badge">Presto</span><div class="cv" style="filter:grayscale(1) brightness(.75)"><div class="c" style="left:14px;top:20px;transform:rotate(-10deg);background-image:url(../public/cards/p06-i05.webp)"></div></div><div class="tit" style="font-size:20px">Ufficio</div><div class="row2"><span class="meta">in arrivo</span><span style="font-size:18px">🔔</span></div></div>
+ </div>
+
+ <div class="veil"></div>
+ <div class="sheet" style="top:290px">
+  <div class="grab"></div>
+  <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:10px"><div style="flex:1"><span class="lb" style="font-size:20px">Anteprima</span><div class="tit" style="font-size:30px">Anni '90</div><div class="meta" style="margin-top:3px">30 personaggi · 60 frasi · a vita</div></div><span class="price" style="font-size:24px;transform:rotate(4deg)">€ 2,99</span></div>
+  <div class="mini">
+   <div class="c" style="background-image:url(../public/cards/p10-i01.webp)"></div><div class="c" style="background-image:url(../public/cards/p10-i05.webp)"></div><div class="c" style="background-image:url(../public/cards/p11-i02.webp)"></div><div class="c" style="background-image:url(../public/cards/p11-i07.webp)"></div><div class="c" style="background-image:url(../public/cards/p12-i04.webp)"></div>
+   <div class="c lk" style="background-image:url(../public/cards/p03-i01.webp)"></div><div class="c lk" style="background-image:url(../public/cards/p04-i02.webp)"></div><div class="c lk" style="background-image:url(../public/cards/p05-i03.webp)"></div><div class="c lk" style="background-image:url(../public/cards/p06-i04.webp)"></div><div class="c lk" style="background-image:url(../public/cards/p07-i05.webp)"></div>
+  </div>
+  <div class="meta" style="margin:5px 0 10px;opacity:1">5 carte in anteprima · le altre 25 si sbloccano con l'acquisto</div>
+  <div class="phr" style="margin-bottom:12px"><small>Frase d'esempio</small>Oggi sale sulla torre chi ha ancora il Nokia 3310.</div>
+  <div class="bt red" style="font-size:24px">Compralo · € 2,99</div>
+  <div style="text-align:center;margin-top:9px;font:800 12px Nunito;opacity:.75">Provalo gratis in una partita ›</div>
+ </div>
+ <div class="fr"></div><div class="grain"></div>
+</div></div>
+<h3>C · Collezione + foglio d'anteprima</h3><p>Griglia a 2 colonne con i mazzi "figurina" e interruttore Usa/Non usare per quelli posseduti; il tocco su un mazzo apre un foglio dal basso con anteprima carte (alcune bloccate), frase d'esempio, acquisto o prova gratuita. Include "Ripristina acquisti".</p></div>
+
+</div></body></html>
