@@ -28,7 +28,7 @@ function Effetti({ pct, radice }: { pct: number; radice: React.RefObject<HTMLDiv
 
 /** Titoli di coda di fine partita («La prima al cinema»): i partecipanti, la trama (il luogo comune), le carte ospiti, i premi, gli effetti speciali, la scena più riuscita, umani contro bot,
  *  critica e pubblico, ringraziamenti e avvertenze. Salgono da soli; col dito li si ferma e li si porta dove si vuole, e quando il dito si alza ripartono da lì fino alla fine. */
-export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { /** Per far variare i testi da una partita all'altra. */ seme: string; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
+export default function Titoli({ rows, winners, stereo, isBot, sound, seme, solo }: { /** Senza la scena della torre sotto (Torre del giorno): sfondo scuro fin dall'inizio. */ solo?: boolean;  /** Per far variare i testi da una partita all'altra. */ seme: string; rows: FinalRow[]; winners: Set<string>; stereo: GameState["stereo"] | null | undefined; isBot: (id: string) => boolean; sound: boolean }) {
   const g = stereoGame(stereo), gr = stereoGruppi(stereo, isBot), box = useRef<HTMLDivElement>(null);
   const uvb = gr.umani !== null && gr.bot !== null, badge = g ? premi(g) : [], carte = g ? carteLuoghi(g) : [];
   const nomi = rows.filter((r) => winners.has(r.id)).map((r) => r.name);
@@ -56,7 +56,7 @@ export default function Titoli({ rows, winners, stereo, isBot, sound, seme }: { 
   const diff = uvb ? gr.umani! - gr.bot! : 0, verd = diff > 5 ? "sc.uvb.u" : diff < -5 ? "sc.uvb.b" : "sc.uvb.p";
   const cr = (slot: "a" | "b" | "c") => ({ titolo: ts(`tc.cr.${slot}.t` as TestoKey, { nome: nomi[0] ?? "" }), frase: ts(`tc.cr.${slot}.${variante(3, seme + slot)}` as TestoKey) });
   return (
-    <div className="tc-wrap" data-testid="titoli">
+    <div className={`tc-wrap ${solo ? "tc-solo" : ""}`} data-testid="titoli">
       <div className="tc-bg" />
       <div className="tc" ref={box}>
         <div className="tc-gap" />

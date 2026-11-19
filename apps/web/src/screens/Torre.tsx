@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { applyAction, DEFAULT_AGE_BAND, viewFor } from "@gdt/game-engine";
 import type { GameState, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
-import { Stage, Btn, navigate, useNow } from "../ui.tsx";
+import { Stage, Btn, navigate, useNow, PLAYER_COLORS } from "../ui.tsx";
 import { useAudio } from "../lib/audio.ts";
 import { useCards } from "../lib/cards.ts";
 import { PersonaProvider } from "../components/Persona.tsx";
@@ -12,7 +12,7 @@ import { cella, dayId, loadTorre, numeroDelGiorno, registra, saveTorre, secondiA
 import type { TorreDb, Indice, Torre } from "../lib/torre.ts";
 import type { RoomMsg } from "../hooks/useRoom.ts";
 import Game from "./Game.tsx";
-import ModeSplash from "../components/ModeSplash.tsx";
+import Titoli from "../components/Titoli.tsx";
 import { music } from "../lib/music.ts";
 import { condividiRotocalco, datiRotocalco } from "../lib/rotocalco.ts";
 import StereoScene from "../components/StereoScene.tsx";
@@ -22,7 +22,7 @@ import { Plancia } from "./Room.tsx";
 /** «Torre del giorno»: un solo turno già pronto, con le schermate di gioco di sempre (voto, segnalino, caduta, punti); poi il riepilogo. Una stanza finta, tutta sul dispositivo. */
 export default function Torre() {
   const { sound } = useAudio(), ready = useCards(), day = useMemo(() => dayId(), []), now = useNow(1000);
-  const [db, setDb] = useState<TorreDb>(loadTorre), [giaGiocata] = useState(() => loadTorre().giorni[day]), [splash, setSplash] = useState(() => !loadTorre().giorni[day]);   // già giocata oggi all'apertura: si vede solo il risultato
+  const [db, setDb] = useState<TorreDb>(loadTorre), [giaGiocata] = useState(() => loadTorre().giorni[day]), [titoliVisti, setTitoliVisti] = useState(false);   // già giocata oggi all'apertura: si vede solo il risultato
   const [idx, setIdx] = useState<Indice | null>(null), [torre, setTorre] = useState<Torre | null>(null), [err, setErr] = useState(0);
   const [stato, setStato] = useState<GameState | null>(null), [fine, setFine] = useState(false), [stats, setStats] = useState(false), [copied, setCopied] = useState(false), done = useRef(false);
   useEffect(() => { let on = true; setIdx(null); fetch("/oggi/indice.json").then((r) => (r.ok ? r.json() : Promise.reject())).then((x: Indice) => { if (on) setIdx(x); }).catch(() => { if (on) setErr((e) => e + 1); }); return () => { on = false; }; }, [err]);
@@ -53,10 +53,14 @@ export default function Torre() {
   const stereo = r && torre ? torre.stereo?.[r.votes[torre.umano]!] : undefined;   // le stesse statistiche del turno di una partita normale
   const copertina = async () => { if (cop || !torre || !r) return; setCop(true); try { const dd = datiRotocalco(stereo, torre.stato.tower.find((c) => c.position === r.votes[torre.umano])?.cardId, day, location.host); if (dd) await condividiRotocalco(dd, `copertina-${day}.png`); } catch { /* niente copertina */ } setCop(false); };
   if (!giaGiocata && fine && !stats && torre && stereo) return <Stage bg="sky" testId="torre-stats"><StereoScene onShare={copertina} sharing={cop} stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} label={ts("torre.stats")} onDone={() => setStats(true)} /></Stage>;
+  if (!giaGiocata && fine && torre && r && !titoliVisti && (stats || !stereo)) {   // titoli di coda del turno, prima della cartolina
+    const righe = torre.giocatori.map((g, i) => ({ id: g.id, name: g.nickname, color: PLAYER_COLORS[(g.char ?? i) % 8]!, score: r.points[g.id] ?? 0 })).sort((a, b) => b.score - a.score), top = righe[0]?.score ?? 0;
+    return <Stage bg="sky" testId="torre-titoli"><div className="fin"><Titoli solo rows={righe} winners={new Set(righe.filter((x) => x.score === top && top > 0).map((x) => x.id))} stereo={stereo} isBot={(id) => !!torre.giocatori.find((g) => g.id === id)?.isBot} sound={sound} seme={`${day}${torre.n}`} />
+      <button className="bt mus tc-next" onClick={() => setTitoliVisti(true)} data-testid="titoli-avanti">{t("tc.avanti")}</button></div></Stage>;
+  }
   if (rec) return (
     <Stage bg="sky" testId="torre-fine"><TorreFinale day={day} rec={rec} serie={db.serie} totale={db.totale} secondi={secondiAllaProssima(now)} testo={testoDaCondividere(rec.n, rec.cella, rec.pts, db.serie, `${location.origin}/torre`, rec.frase)} sound={sound} onHome={() => navigate("/")} /></Stage>
   );
-  if (splash) return <Stage bg="sky" testId="torre-splash"><ModeSplash kind="torre" sound={sound} onDone={() => setSplash(false)} /></Stage>;
   if (!torre || !room || !view || !ready) return (
     <Stage bg="sky" testId="torre-wait"><div className="center-msg">{err > 0 ? <><h2>{t("torre.errore")}</h2><Btn kind="pap" onClick={() => setErr(0)}>{t("torre.riprova")}</Btn></> : <h2>{t("torre.carico")}</h2>}</div></Stage>
   );

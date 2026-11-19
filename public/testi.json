@@ -1,5 +1,5 @@
 {
- "versione": 110,
+ "versione": 111,
  "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
@@ -3082,14 +3082,6 @@
    "t": "Due turni. Chi cade?",
    "s": "Intro Flash e Torre del giorno"
   },
-  "splash.torre.t": {
-   "t": "La Torre del giorno",
-   "s": "Intro Flash e Torre del giorno"
-  },
-  "splash.torre.s": {
-   "t": "Una Torre per tutti. Una sola occasione.",
-   "s": "Intro Flash e Torre del giorno"
-  },
   "torre.v0": {
    "t": "Giù anche tu!",
    "s": "Torre del giorno"
@@ -4307,6 +4299,10 @@
   },
   "tc.cr.nota": {
    "t": "Recensioni inventate, come i giudizi di questa partita.",
+   "s": "Titoli di coda"
+  },
+  "tc.avanti": {
+   "t": "Continua",
    "s": "Titoli di coda"
   }
  }

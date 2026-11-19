@@ -1566,3 +1566,5 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 
 .tc-tct{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin:8px 0 4px}.tc-tct img{width:56px;aspect-ratio:5/7;object-fit:cover;border:2px solid var(--navy);border-radius:6px;box-shadow:0 2px 0 var(--navy);background:#fff}.tc-tct img:nth-child(odd){transform:rotate(-4deg)}.tc-tct img:nth-child(even){transform:rotate(3deg)}
 .tc .rp-bd img{width:42px}.tc .rp-lan .rp-lr img{width:54px}
+.tc-solo .tc-bg{opacity:1 !important}.tc-solo .tc-gap{height:46%;min-height:220px}
+.tc-next{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;z-index:41;font-size:19px;padding:6px 28px}
