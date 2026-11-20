@@ -3,7 +3,9 @@ import type { CSSProperties } from "react";
 import { Stage, Btn, navigate } from "../ui.tsx";
 import Scatola from "../components/Scatola.tsx";
 import { t, ts } from "../lib/testi.ts";
-import { PAGAMENTI_ATTIVI, urlCarta, urlCarte, useCatalogo, useCollezione } from "../lib/espansioni.ts";
+import { ESP_LIVELLI, PAGAMENTI_ATTIVI, urlCarta, urlCarte, useCatalogo, useCollezione } from "../lib/espansioni.ts";
+import type { EspLivello } from "../lib/espansioni.ts";
+import type { TestoKey } from "../lib/testi.ts";
 import type { Mazzo } from "../lib/espansioni.ts";
 
 /** Pagina «Espansioni»: i mazzi tematici su un ripiano; un tocco apre il foglio con anteprima e acquisto. */
@@ -24,7 +26,7 @@ export default function Espansioni() {
           {cat && <div className="esp-next" data-testid="esp-prossimo"><b>{t("esp.prossimo")}</b><span>{t("esp.prossimo.sub")}</span></div>}
         </div>
       </div>
-      {m && <Foglio m={m} mio={col.haMazzo(m.id)} usa={col.usa(m.id)} onClose={() => setAperto(null)} onCompra={() => col.sblocca(m.id)} onBlocca={() => col.blocca(m.id)} onUsa={() => col.commuta(m.id)} />}
+      {m && <Foglio m={m} mio={col.haMazzo(m.id)} usa={col.usa(m.id)} liv={col.livello(m.id)} onLiv={(l) => col.setLivello(m.id, l)} onClose={() => setAperto(null)} onCompra={() => col.sblocca(m.id)} onBlocca={() => col.blocca(m.id)} onUsa={() => col.commuta(m.id)} />}
     </Stage>
   );
 }
@@ -49,7 +51,7 @@ function Cella({ m, mio, usa, onOpen, onUsa }: { m: Mazzo; mio: boolean; usa: bo
   );
 }
 
-function Foglio({ m, mio, usa, onClose, onCompra, onBlocca, onUsa }: { m: Mazzo; mio: boolean; usa: boolean; onClose: () => void; onCompra: () => void; onBlocca: () => void; onUsa: () => void }) {
+function Foglio({ m, mio, usa, liv, onLiv, onClose, onCompra, onBlocca, onUsa }: { m: Mazzo; mio: boolean; usa: boolean; liv: EspLivello; onLiv: (l: EspLivello) => void; onClose: () => void; onCompra: () => void; onBlocca: () => void; onUsa: () => void }) {
   const tutte = Array.from({ length: m.carte }, (_, i) => i + 1);
   return (
     <div className="esp-over" data-testid="esp-foglio">
@@ -70,6 +72,11 @@ function Foglio({ m, mio, usa, onClose, onCompra, onBlocca, onUsa }: { m: Mazzo;
         {mio ? (
           <div className="esp-own">
             <label className="esp-usarow"><span>{t("esp.usa")}</span><Interruttore on={usa} onClick={onUsa} label={ts("esp.usa")} /></label>
+            <div className="esp-liv in" role="radiogroup" aria-label={ts("esp.liv.aria", { nome: m.nome })} data-testid="esp-liv">
+              <span>{t("esp.liv")}</span>
+              {ESP_LIVELLI.map((l) => <button key={l} type="button" role="radio" aria-checked={liv === l} className={liv === l ? "on" : ""} onClick={() => onLiv(l)} data-testid={`esp-liv-${l}`}>{t(`esp.liv.${l}` as TestoKey)}</button>)}
+            </div>
+            <p className="esp-nota">{ts(`esp.liv.nota.${liv}` as TestoKey, { c: m.personaggi })}</p>
             {!PAGAMENTI_ATTIVI && <button type="button" className="esp-link" onClick={onBlocca} data-testid="esp-blocca">{t("esp.blocca")}</button>}
           </div>
         ) : (

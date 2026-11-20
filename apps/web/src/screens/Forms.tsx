@@ -6,7 +6,8 @@ import type { BotLevel } from "../lib/api.ts";
 import { CHAR_COLORS, cardUrl, charName, tokenUrl } from "../lib/characters.ts";
 import { saveSession, loadSession, lastNickname, rememberNickname } from "../lib/session.ts";
 import { t, ts } from "../lib/testi.ts";
-import { useCatalogo, useCollezione } from "../lib/espansioni.ts";
+import { ESP_LIVELLI, useCatalogo, useCollezione } from "../lib/espansioni.ts";
+import type { EspLivello } from "../lib/espansioni.ts";
 import type { TestoKey } from "../lib/testi.ts";
 
 const CODE_CHARS = /[^ABCDEFGHJKMNPQRSTUVWXYZ23456789]/g;
@@ -48,14 +49,15 @@ export function CreateScreen() {
   const cat = useCatalogo(), col = useCollezione(), mieiMazzi = (cat?.mazzi ?? []).filter((m) => col.haMazzo(m.id));
   const [espOff, setEspOff] = useState<string[]>(() => mieiMazzi.map((m) => m.id).filter((id) => !col.usa(id)));   // di default valgono le scelte «Usa in partita» della pagina Espansioni
   const espOn = mieiMazzi.map((m) => m.id).filter((id) => !espOff.includes(id)), toggleEsp = (id: string) => setEspOff((x) => (x.includes(id) ? x.filter((k) => k !== id) : [...x, id]));
-  const [soloEsp, setSoloEsp] = useState(false);
+  const [soloEsp, setSoloEsp] = useState(false), [espLiv, setEspLiv] = useState<Record<string, EspLivello>>({});
+  const livDi = (id: string): EspLivello => espLiv[id] ?? col.livello(id);   // di default l'intensità preferita nella pagina Espansioni
   const [busy, setBusy] = useState(false), [err, setErr] = useState<string | null>(null);
   const LAST = 1, titles = ["fm.w.chi", "fm.w.ultimi"] as const;
   async function submit(e: FormEvent) {
     e.preventDefault(); if (busy) return;
     if (step < LAST) { if (step === 0 && !nick.trim()) return; setStep(step + 1); return; }
     setBusy(true); setErr(null);
-    try { const s = await createRoom(nick, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(espOn.length ? { espansioni: espOn, ...(soloEsp ? { soloEsp: true } : {}) } : {}), ...(flash ? { flash: true, flashMega: mega } : {}), ...(/[?&]debug=bot/.test(location.search) ? { debug: true, ...(/[?&]motore=attuali/.test(location.search) ? { botEngine: "attuali" as const } : /[?&]motore=v2o/.test(location.search) ? { botEngine: "v2o" as const } : /[?&]motore=v2m/.test(location.search) ? { botEngine: "v2m" as const } : /[?&]motore=v2e/.test(location.search) ? { botEngine: "v2e" as const } : /[?&]motore=v2/.test(location.search) ? { botEngine: "v2" as const } : {}) } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
+    try { const s = await createRoom(nick, { count: bots, level }, { char, ageBand: age, turnTimerSec: timer, ...(espOn.length ? { espansioni: espOn, espLivelli: Object.fromEntries(espOn.map((id) => [id, livDi(id)])), ...(soloEsp ? { soloEsp: true } : {}) } : {}), ...(flash ? { flash: true, flashMega: mega } : {}), ...(/[?&]debug=bot/.test(location.search) ? { debug: true, ...(/[?&]motore=attuali/.test(location.search) ? { botEngine: "attuali" as const } : /[?&]motore=v2o/.test(location.search) ? { botEngine: "v2o" as const } : /[?&]motore=v2m/.test(location.search) ? { botEngine: "v2m" as const } : /[?&]motore=v2e/.test(location.search) ? { botEngine: "v2e" as const } : /[?&]motore=v2/.test(location.search) ? { botEngine: "v2" as const } : {}) } : {}) }); saveSession(s, nick.trim()); rememberNickname(nick.trim()); navigate(`/stanza/${s.code}`); }
     catch (x) { setErr(errText(x)); setBusy(false); }
   }
   const back = () => (step > 0 ? setStep(step - 1) : navigate("/"));
@@ -93,6 +95,12 @@ export function CreateScreen() {
               <div className="wchips g5">{TIMERS.map((x) => <button key={x} type="button" className={`wchip${timer === x ? " on" : ""}`} onClick={() => setTimer(x)} data-testid={`timer-${x}`}>{x === 0 ? t("fm.w.libero") : ts("fm.w.sec", { n: x })}</button>)}</div></div>
             {mieiMazzi.length > 0 && <div className="fld sec sE" data-testid="esp-box"><span className="lb">{t("fm.w.esp")}</span>
               <div className="wchips g2">{mieiMazzi.map((m) => <button key={m.id} type="button" className={`wchip${espOn.includes(m.id) ? " on" : ""}`} aria-pressed={espOn.includes(m.id)} onClick={() => toggleEsp(m.id)} data-testid={`esp-${m.id}`}>{m.nome}</button>)}</div>
+              {!soloEsp && mieiMazzi.filter((m) => espOn.includes(m.id)).map((m) => (
+                <div key={m.id} className="esp-liv" role="radiogroup" aria-label={ts("esp.liv.aria", { nome: m.nome })} data-testid={`esp-liv-${m.id}`}>
+                  <span>{m.nome}</span>
+                  {ESP_LIVELLI.map((l) => <button key={l} type="button" role="radio" aria-checked={livDi(m.id) === l} className={livDi(m.id) === l ? "on" : ""} onClick={() => setEspLiv({ ...espLiv, [m.id]: l })} data-testid={`esp-liv-${m.id}-${l}`}>{t(`esp.liv.${l}` as TestoKey)}</button>)}
+                </div>
+              ))}
               {espOn.length > 0 && <button type="button" className={`wchip esp-solo${soloEsp ? " on" : ""}`} aria-pressed={soloEsp} onClick={() => setSoloEsp(!soloEsp)} data-testid="esp-solo">{t("fm.w.esp.solo")}</button>}</div>}
             {flash && <div className="fld sec sD" data-testid="mega-box"><span className="lb">{t("fm.w.mega")}</span>
               <div className="wchips g2">{(["host", "random"] as const).map((k) => <button key={k} type="button" className={`wchip${mega === k ? " on" : ""}`} onClick={() => setMega(k)} data-testid={`mega-${k}`}>{t(k === "host" ? "fm.mega.io" : "fm.mega.caso")}</button>)}</div></div>}

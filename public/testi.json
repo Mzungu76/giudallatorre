@@ -1,5 +1,5 @@
 {
- "versione": 98,
+ "versione": 99,
  "aggiornato": "2026-11-20",
  "testi": {
   "intro.aria": {
@@ -3885,6 +3885,43 @@
    "t": "Solo i loro personaggi",
    "s": "Crea la partita (passi)",
    "n": "Per provare un'espansione: tutte le carte in mano sono dell'espansione (se bastano per tutti i giocatori)"
+  },
+  "esp.liv": {
+   "t": "Quanto usarlo",
+   "s": "Espansioni",
+   "n": "Etichetta del selettore di intensità nel foglio di un mazzo che possiedi"
+  },
+  "esp.liv.assaggio": {
+   "t": "Assaggio",
+   "s": "Espansioni",
+   "n": "Poche carte del mazzo, estratte a sorte a ogni partita"
+  },
+  "esp.liv.meta": {
+   "t": "Metà",
+   "s": "Espansioni",
+   "n": "Metà delle carte del mazzo, estratte a sorte a ogni partita"
+  },
+  "esp.liv.tutto": {
+   "t": "Tutto",
+   "s": "Espansioni",
+   "n": "Tutto il mazzo"
+  },
+  "esp.liv.aria": {
+   "t": "Quanto usare il mazzo {nome}",
+   "s": "Espansioni",
+   "n": "Nome accessibile del selettore di intensità (lettori di schermo)"
+  },
+  "esp.liv.nota.assaggio": {
+   "t": "Assaggio: 12 carte a sorte a ogni partita e una carta frase del Megafono.",
+   "s": "Espansioni"
+  },
+  "esp.liv.nota.meta": {
+   "t": "Metà: 18 carte a sorte a ogni partita e tre carte frase del Megafono.",
+   "s": "Espansioni"
+  },
+  "esp.liv.nota.tutto": {
+   "t": "Tutto: tutte le {c} carte e tutte le frasi del mazzo.",
+   "s": "Espansioni"
   }
  }
 }

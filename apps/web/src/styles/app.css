@@ -1592,3 +1592,8 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .eb-tp::after{content:"";position:absolute;left:12%;right:12%;top:35%;height:30%;background:#fff7e0;border:2px solid var(--navy);opacity:.9}
 
 .fbody .sec.sE .esp-solo{margin-top:8px;width:100%;font-size:15px;padding:8px 10px}
+.esp-liv{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px;font:800 12px Nunito}
+.esp-liv>span{flex:1 0 100%;margin-bottom:2px;font:400 14px/1 Anton;text-transform:uppercase;letter-spacing:.03em}
+.esp-liv button{flex:1;border:3px solid var(--navy);border-radius:99px;background:#fff7e0;box-shadow:0 3px 0 var(--navy);padding:7px 4px;font:400 15px/1 Anton;text-transform:uppercase;color:var(--navy);cursor:pointer}
+.esp-liv button.on{background:var(--mus)}
+.esp-liv.in{margin:2px 0 4px}.esp-liv.in>span{flex:0 0 auto;margin-right:auto}

@@ -24,11 +24,25 @@ describe("espansioni nelle partite", () => {
     const base = makeRoom(4, 70); send(base, 0, { t: "start" });
     expect(base.core.data.options.espansioni).toBeUndefined();
     expect(deckIds(base.core.data.game!).length).toBe(DECK.length);
-    const conf = makeRoom(4, 71, 1_000_000, { espansioni: ["summit", "summit", "nonesiste"] }); send(conf, 0, { t: "start" });
+    const conf = makeRoom(4, 71, 1_000_000, { espansioni: ["summit", "summit", "nonesiste"], espLivelli: { summit: "tutto" } }); send(conf, 0, { t: "start" });
     expect(conf.core.data.options.espansioni).toEqual(["summit"]);
     const ids = deckIds(conf.core.data.game!);
     expect(ids.length).toBe(DECK.length + 36); expect(new Set(ids).size).toBe(ids.length);
     expect(ids.filter((i) => i.startsWith("summit-")).length).toBe(36);
+  });
+  it("intensità: assaggio 12 carte, metà 18 (predefinito), tutto 36; cambiano a ogni partita; frasi 1 / 3 / tutte", () => {
+    const conta = (r: ReturnType<typeof makeRoom>) => deckIds(r.core.data.game!).filter((i) => i.startsWith("summit-"));
+    const nFrasi = (r: ReturnType<typeof makeRoom>) => { const g = r.core.data.game!, testi = new Set(EXPANSIONS.summit!.phrases.map((f) => `Oggi ${f.verb} sulla torre ${f.text}`)); return [g.proclaim!, ...g.phraseDraw].filter((c) => c.phrases.some((t) => testi.has(t))).length; };
+    const prova = (liv: "assaggio" | "meta" | "tutto" | undefined, seed: number) => { const r = makeRoom(4, seed, 1_000_000, { espansioni: ["summit"], ...(liv ? { espLivelli: { summit: liv } } : {}) }); send(r, 0, { t: "setOptions", ageBand: 14 }); send(r, 0, { t: "start" }); return r; };
+    expect(conta(prova("assaggio", 90))).toHaveLength(12); expect(conta(prova("meta", 90))).toHaveLength(18); expect(conta(prova(undefined, 90))).toHaveLength(18); expect(conta(prova("tutto", 90))).toHaveLength(36);
+    expect(conta(prova("meta", 91)).sort().join()).not.toBe(conta(prova("meta", 92)).sort().join());   // estrazione diversa a ogni partita
+    expect(nFrasi(prova("assaggio", 93))).toBe(1); expect(nFrasi(prova("meta", 93))).toBe(3); expect(nFrasi(prova("tutto", 93))).toBeGreaterThanOrEqual(4);
+  });
+  it("il protocollo accetta i livelli e rifiuta valori sconosciuti; la stanza li ricorda", () => {
+    expect(createRoomBody.safeParse({ nickname: "Ada", espansioni: ["summit"], espLivelli: { summit: "assaggio" } }).success).toBe(true);
+    expect(createRoomBody.safeParse({ nickname: "Ada", espansioni: ["summit"], espLivelli: { summit: "troppo" } }).success).toBe(false);
+    const r = makeRoom(3, 94, 1_000_000, { espansioni: ["summit", "altro"], espLivelli: { summit: "assaggio", altro: "tutto" } });
+    expect(r.core.data.options.espLivelli).toEqual({ summit: "assaggio" });
   });
   it("«solo i loro personaggi»: tutte le carte sono Summit se bastano per tutti (36 → fino a 6 giocatori), altrimenti mazzo misto", () => {
     const r = makeRoom(4, 80, 1_000_000, { espansioni: ["summit"], soloEsp: true }); send(r, 0, { t: "start" });

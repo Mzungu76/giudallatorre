@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { ESP_LIVELLI } from "@gdt/game-protocol";
+import type { EspLivello } from "@gdt/game-protocol";
 import base from "../../../../public/espansioni/catalogo.json";
 
 /**
@@ -31,7 +33,11 @@ export const urlCarta = (m: Mazzo, n: number) => `${m.cartella}c${String(n).padS
 export const urlCarte = (m: Mazzo, ns: number[]) => ns.map((n) => urlCarta(m, n));
 
 const LS = "gdt.espansioni";
-interface Stato { tuoi: string[]; usa: string[] }
+interface Stato { tuoi: string[]; usa: string[]; liv?: Record<string, EspLivello> }
+export { ESP_LIVELLI };
+export type { EspLivello };
+/** Intensità di partenza di un mazzo (se non ne hai scelta un'altra). */
+export const LIVELLO_BASE: EspLivello = "meta";
 function leggi(): Stato {
   try { const x = JSON.parse(localStorage.getItem(LS) ?? "null") as Stato | null; if (x && Array.isArray(x.tuoi) && Array.isArray(x.usa)) return x; } catch { /* */ }
   return { tuoi: [], usa: [] };
@@ -46,6 +52,8 @@ export function useCollezione() {
     tuoi: s.tuoi, haMazzo: (id: string) => s.tuoi.includes(id), usa: (id: string) => s.usa.includes(id),
     sblocca: (id: string) => upd((x) => ({ tuoi: x.tuoi.includes(id) ? x.tuoi : [...x.tuoi, id], usa: x.usa.includes(id) ? x.usa : [...x.usa, id] })),
     blocca: (id: string) => upd((x) => ({ tuoi: x.tuoi.filter((k) => k !== id), usa: x.usa.filter((k) => k !== id) })),
+    livello: (id: string): EspLivello => (ESP_LIVELLI.includes(s.liv?.[id] as EspLivello) ? s.liv![id]! : LIVELLO_BASE),
+    setLivello: (id: string, l: EspLivello) => upd((x) => ({ ...x, liv: { ...(x.liv ?? {}), [id]: l } })),
     commuta: (id: string) => upd((x) => ({ ...x, usa: x.usa.includes(id) ? x.usa.filter((k) => k !== id) : [...x.usa, id] })),
   };
 }

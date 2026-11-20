@@ -46,8 +46,8 @@ const lv = (l: "easy" | "medium" | "hard") => txs(`room.lv.${l}` as TestoKey);
 const AGES = [6, 10, 14, 18] as const;
 const ageLabel = (v: number) => (AGES as readonly number[]).includes(v) ? txs(`room.age.${v}` as TestoKey) : `${v}+`;
 /** Nella lobby: i mazzi di espansione attivi (nomi dal catalogo). */
-function EspLine({ ids }: { ids: string[] }) {
-  const cat = useCatalogo(), nomi = ids.map((id) => cat?.mazzi.find((m) => m.id === id)?.nome ?? id);
+function EspLine({ ids, liv }: { ids: string[]; liv?: Record<string, string> }) {
+  const cat = useCatalogo(), nomi = ids.map((id) => { const n = cat?.mazzi.find((m) => m.id === id)?.nome ?? id, l = liv?.[id]; return l ? `${n} (${txs(`esp.liv.${l}` as TestoKey)})` : n; });
   return <span data-testid="esp-info">{txs("room.esp", { nomi: nomi.join(", ") })}</span>;
 }
 
@@ -86,7 +86,7 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
           <span className="bgrip" />
           <div className="wsum lsum" data-testid="age-info">
             <span>{txs(`room.age.${o.ageBand}` as TestoKey)}</span><span>{o.turnTimerSec === 0 ? tx("fm.w.libero") : txs("fm.w.sec", { n: o.turnTimerSec })}</span>
-            {o.espansioni?.length ? <EspLine ids={o.espansioni} /> : null}
+            {o.espansioni?.length ? <EspLine ids={o.espansioni} liv={o.espLivelli} /> : null}
           </div>
           {host
             ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? tx("room.servono") : tx("room.avvia")}</Btn>
