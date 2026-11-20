@@ -27,6 +27,7 @@ import type { PlayerView } from "@gdt/game-engine";
 import { t as tx, ts as txs } from "../lib/testi.ts";
 import type { TestoKey } from "../lib/testi.ts";
 import { MegaIcon } from "../components/MegaIcon.tsx";
+import { useCatalogo } from "../lib/espansioni.ts";
 
 /** Su schermi larghi la partita sta al centro di una plancia con codice a sinistra e giocatori a destra. */
 export function Plancia({ room, view, children }: { room: RoomMsg; view: PlayerView | null; children: ReactNode }) {
@@ -44,6 +45,12 @@ const lv = (l: "easy" | "medium" | "hard") => txs(`room.lv.${l}` as TestoKey);
 /** Fascia d'età del gruppo: il mazzo contiene solo frasi adatte a quell'età o meno. */
 const AGES = [6, 10, 14, 18] as const;
 const ageLabel = (v: number) => (AGES as readonly number[]).includes(v) ? txs(`room.age.${v}` as TestoKey) : `${v}+`;
+/** Nella lobby: i mazzi di espansione attivi (nomi dal catalogo). */
+function EspLine({ ids }: { ids: string[] }) {
+  const cat = useCatalogo(), nomi = ids.map((id) => cat?.mazzi.find((m) => m.id === id)?.nome ?? id);
+  return <span data-testid="esp-info">{txs("room.esp", { nomi: nomi.join(", ") })}</span>;
+}
+
 function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMessage) => void; ui: UiCtl; overlays: ReactNode }) {
   const me = room.you, host = room.hostId === me, link = `${location.origin}/entra?c=${room.code}`, o = room.options;
   const [copied, setCopied] = useState(false), openPersona = usePersona();
@@ -79,6 +86,7 @@ function Lobby({ room, send, ui, overlays }: { room: RoomMsg; send: (m: ClientMe
           <span className="bgrip" />
           <div className="wsum lsum" data-testid="age-info">
             <span>{txs(`room.age.${o.ageBand}` as TestoKey)}</span><span>{o.turnTimerSec === 0 ? tx("fm.w.libero") : txs("fm.w.sec", { n: o.turnTimerSec })}</span>
+            {o.espansioni?.length ? <EspLine ids={o.espansioni} /> : null}
           </div>
           {host
             ? <Btn disabled={room.players.length < 3} onClick={() => send({ t: "start" })} testId="start">{room.players.length < 3 ? tx("room.servono") : tx("room.avvia")}</Btn>

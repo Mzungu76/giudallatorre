@@ -1459,6 +1459,7 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 @keyframes tnewP{50%{transform:rotate(8deg) scale(1.14)}}
 .home-btns .bt.tn{overflow:visible}.home-btns .bt.tn::after{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);display:none}
 .fbody .sec.sD{--tab:#8e6bd8;background:#e8e0fa}
+.fbody .sec.sE{--tab:#8e44c8;background:#efe0fa}
 
 .spl{position:absolute;inset:0;z-index:90;overflow:hidden;display:grid;place-items:center;background:#2f86cc;animation:splOut .35s 1.95s both}
 @keyframes splOut{to{opacity:0;visibility:hidden}}
@@ -1589,3 +1590,5 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .eb-sd span{font:400 15px/1 Anton;color:#fff;letter-spacing:.14em;text-transform:uppercase;transform:rotate(90deg);white-space:nowrap}
 .eb-tp{background:var(--a);filter:brightness(1.18)}
 .eb-tp::after{content:"";position:absolute;left:12%;right:12%;top:35%;height:30%;background:#fff7e0;border:2px solid var(--navy);opacity:.9}
+
+.fbody .sec.sE .esp-solo{margin-top:8px;width:100%;font-size:15px;padding:8px 10px}

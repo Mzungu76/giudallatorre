@@ -11,6 +11,8 @@ import ruoliJson from "../../content/etichette/ruoli.json";
 import aspettoJson from "../../content/etichette/aspetto.json";
 import stereotipi from "../../content/etichette/stereotipi.json";
 import accuse from "../../content/accuse.json";
+import catalogo from "../../public/espansioni/catalogo.json";
+import frasiSummit from "../../content/espansioni/summit/frasi.json";
 
 /** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
 export const ACCUSE_DECK: string[] = (accuse as { testo: string }[]).map((a) => a.testo);
@@ -43,3 +45,14 @@ registerTagsV2((etPersonaggi as { personaggi: Record<string, T2> }).personaggi, 
 registerRoles((ruoliJson as { ruoli: { id: string; temi: string[] }[] }).ruoli, (ruoliJson as { carte: Record<string, string[]> }).carte);
 registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte, Object.fromEntries((aspettoJson as { aspetti: { id: string; nome: string }[] }).aspetti.map((a) => [a.id, a.nome])));
 registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "aspetto" | "tipo" }[] }).voci);
+
+/**
+ * Espansioni (mazzi extra, vedi docs/ESPANSIONI.md): per ognuna le carte Personaggio (`<id>-cNN`) e le frasi del Megafono.
+ * Per aggiungere un mazzo: voce nel catalogo + importare qui il suo file di frasi e inserirlo in `FRASI_ESPANSIONI`.
+ */
+const FRASI_ESPANSIONI: Record<string, { frasi: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[] }> = { summit: frasiSummit };
+export const EXPANSIONS: Record<string, { cards: string[]; phrases: PoolPhrase[] }> = Object.fromEntries(
+  (catalogo.mazzi as { id: string; carte: number; stato: string }[]).filter((m) => m.stato === "vendita" && FRASI_ESPANSIONI[m.id]).map((m) => [m.id, {
+    cards: Array.from({ length: m.carte }, (_, i) => `${m.id}-c${String(i + 1).padStart(2, "0")}`),
+    phrases: FRASI_ESPANSIONI[m.id]!.frasi.map((f) => ({ id: f.id, text: f.testo, verb: f.verbo as "sale" | "salgono", family: f.famiglia as PhraseFamily, age: parseAge(f.eta) })),
+  }]));

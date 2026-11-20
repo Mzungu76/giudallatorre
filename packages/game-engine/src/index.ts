@@ -19,7 +19,7 @@ export type { BotEngine } from "./bot-engines.ts";
 export type { BotStyle } from "./botstyle.ts";
 export { registerTags, affinity, phraseTagCount, inferTags } from "./tags.ts";
 export type { TagSet } from "./tags.ts";
-export { buildPhraseDeck, PHRASES_PER_CARD, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
+export { buildPhraseDeck, expansionPhraseCards, insertEarly, PHRASES_PER_CARD, fullPhrase, parseAge, isAgeBand, AGE_BANDS, DEFAULT_AGE_BAND, PHRASE_FAMILIES } from "./phrases.ts";
 export type { AgeBand, PhraseFamily, PoolPhrase, PoolConfession, BuildOptions } from "./phrases.ts";
 export { BOT_STYLES, NEUTRAL_STYLE, styleById } from "./botstyle.ts";
 export { pickAward, awardCandidates, eligiblePlayers, AWARD_WEIGHTS, AWARD_IDS } from "./awards.ts";

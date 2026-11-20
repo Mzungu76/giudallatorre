@@ -69,4 +69,4 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 ## Fase 9 — Espansioni (in corso)
 - [x] Pagina `/espansioni` con scatola 3D, anteprima, acquisto in modalità prova e mazzo di prova «Summit» (36 carte + 18 frasi): `docs/ESPANSIONI.md`
 - [ ] Pagamento, codici di sblocco e consegna protetta delle carte
-- [ ] Uso dei mazzi nelle partite (personaggi, frasi, bot)
+- [x] Uso dei mazzi nelle partite (test): scelta alla creazione, personaggi e frasi nel mazzo, bot, «solo i loro personaggi»

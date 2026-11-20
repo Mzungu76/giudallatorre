@@ -80,3 +80,22 @@ export function buildPhraseDeck(pool: readonly PoolPhrase[], confessions: readon
   const n = Math.min(conf.length, Math.round((cards.length * share) / (1 - share)));
   return shuffle([...cards, ...conf.slice(0, n).map((c) => ({ id: c.id, phrases: [c.text] }))], h);
 }
+
+
+/** Le frasi di un'espansione diventano carte «Su sulla Torre» da `per` frasi (filtrate per età, senza badare alle famiglie: sono poche). */
+export function expansionPhraseCards(pool: readonly PoolPhrase[], opts: { age: number; seed: number; per?: number; idPrefix: string }): PhraseCard[] {
+  const per = opts.per ?? PHRASES_PER_CARD, h = { rng: opts.seed | 0 };
+  const items = shuffle(pool.filter((p) => p.age <= opts.age), h), cards: PhraseCard[] = [];
+  for (let i = 0; i < items.length; i += per) cards.push({ id: `${opts.idPrefix}-${cards.length + 1}`, phrases: items.slice(i, i + per).map(fullPhrase) });
+  return cards;
+}
+
+/** Mescola nel mazzo le carte di un'espansione mettendole tra le prime `window` carte, così in una partita normale compaiono davvero. */
+export function insertEarly(base: readonly PhraseCard[], extra: readonly PhraseCard[], seed: number, window = 14): PhraseCard[] {
+  if (!extra.length) return [...base];
+  const total = base.length + extra.length, h = { rng: seed | 0 };
+  const slots = new Set(shuffle(Array.from({ length: Math.min(window, total) }, (_, i) => i), h).slice(0, extra.length));
+  const out: PhraseCard[] = []; let b = 0, e = 0;
+  for (let i = 0; i < total; i++) out.push(slots.has(i) && e < extra.length ? extra[e++]! : b < base.length ? base[b++]! : extra[e++]!);
+  return out;
+}

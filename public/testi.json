@@ -1,5 +1,5 @@
 {
- "versione": 96,
+ "versione": 98,
  "aggiornato": "2026-11-20",
  "testi": {
   "intro.aria": {
@@ -3870,6 +3870,21 @@
    "t": "Espansioni: mazzi di carte in più",
    "s": "Espansioni",
    "n": "Icona delle espansioni accanto a statistiche, condividi e installa (lettori di schermo)"
+  },
+  "fm.w.esp": {
+   "t": "Espansioni",
+   "s": "Crea la partita (passi)",
+   "n": "Compare solo se hai sbloccato almeno un mazzo: tocca per mescolarlo o no nella partita"
+  },
+  "room.esp": {
+   "t": "Espansioni: {nomi}",
+   "s": "Lobby",
+   "n": "Riga riassuntiva con i mazzi extra attivi nella stanza"
+  },
+  "fm.w.esp.solo": {
+   "t": "Solo i loro personaggi",
+   "s": "Crea la partita (passi)",
+   "n": "Per provare un'espansione: tutte le carte in mano sono dell'espansione (se bastano per tutti i giocatori)"
   }
  }
 }

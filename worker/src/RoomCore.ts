@@ -1,4 +1,4 @@
-import { luoghiTurno, pregiudizioTurno, applyAction, BOT_STYLES, buildPhraseDeck, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
+import { luoghiTurno, pregiudizioTurno, applyAction, BOT_STYLES, buildPhraseDeck, expansionPhraseCards, insertEarly, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
 import type { ChatDto, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
@@ -39,9 +39,14 @@ export interface Deps {
   /** Mazzo già pronto (prove e strumenti). Se c'è la riserva sotto, all'avvio il mazzo si costruisce da quella, filtrato per età. */
   phraseDeck: PhraseCard[];
   phrasePool?: PoolPhrase[]; confessions?: PoolConfession[];
+  /** Espansioni disponibili: carte Personaggio e frasi di ogni mazzo extra. In prova il server si fida dell'elenco inviato dall'host (nessun pagamento verificato). */
+  expansions?: Record<string, { cards: CardId[]; phrases: PoolPhrase[] }>;
   /** Motore dei bot delle stanze normali al posto di v2e: solo "v2o" (la copia di anteprima lo imposta con la variabile BOT_ENGINE_DEFAULT; il gioco vero no). */
   defaultBotEngine?: string;
 }
+
+/** Solo gli identificativi di espansioni che il server conosce, senza doppioni. */
+const espOk = (deps: Deps, ids?: string[]): string[] => [...new Set(ids ?? [])].filter((id) => !!deps.expansions?.[id]);
 
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
 
@@ -97,11 +102,11 @@ export class RoomCore {
     return free[new DataView(this.deps.rng(4).buffer).getUint32(0) % free.length]!;
   }
 
-  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "v2m" | "v2o" | "attuali"; flash?: boolean; flashMega?: "host" | "random"; char?: number; ageBand?: 6 | 10 | 14 | 18; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
+  static create(code: string, deps: Deps, now: number, p: { nickname: string; debug?: boolean; botEngine?: "v2" | "v2e" | "v2m" | "v2o" | "attuali"; flash?: boolean; flashMega?: "host" | "random"; char?: number; ageBand?: 6 | 10 | 14 | 18; espansioni?: string[]; soloEsp?: boolean; turnTimerSec?: 0 | 30 | 60 | 90 | 120; bots?: { count: number; level: BotLevel } }) {
     const playerId = newPlayerId(deps.rng), token = newToken(deps.rng);
     const data: RoomData = {
       code, createdAt: now, lastActivity: now, stage: "LOBBY", finishedAt: null, seq: 0, deadline: null, game: null, hostLostAt: null,
-      options: { ...(p.flash ? { flash: true, flashMega: p.flashMega ?? "random" } : {}), ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (deps.defaultBotEngine === "v2o" ? "v2o" as const : NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
+      options: { ...(p.flash ? { flash: true, flashMega: p.flashMega ?? "random" } : {}), ...(p.debug ? { debug: true } : {}), ...(V2_BOTS_ENABLED ? { botEngine: (p.debug && p.botEngine) || (deps.defaultBotEngine === "v2o" ? "v2o" as const : NEW_BOTS_DEFAULT ? "v2e" as const : "attuali" as const) } : {}), turnTimerSec: p.turnTimerSec ?? 0, display: true, ageBand: p.ageBand ?? DEFAULT_AGE_BAND, ...(espOk(deps, p.espansioni).length ? { espansioni: espOk(deps, p.espansioni), ...(p.soloEsp ? { soloEsp: true } : {}) } : {}) }, botMem: newBotMemory(), botAt: null, chat: [], chatSeq: 0,
       players: [{ id: playerId, nickname: p.nickname, tokenHash: hashToken(token), isHost: true, joinedAt: now, ...(p.char !== undefined ? { char: p.char } : {}) }],
     };
     const core = new RoomCore(data, deps);
@@ -243,8 +248,14 @@ export class RoomCore {
         const seedBytes = this.deps.rng(4), seed = new DataView(seedBytes.buffer, seedBytes.byteOffset, 4).getInt32(0);
         const pool = this.deps.phrasePool;
         // con la riserva: mazzo costruito per questa stanza (età, famiglie miste, confessioni); senza: mazzo pronto, rimescolato in gruppi come prima
+        const exps = espOk(this.deps, d.options.espansioni).map((id) => this.deps.expansions![id]!);
         const phraseDeck = pool ? buildPhraseDeck(pool, this.deps.confessions ?? [], { age: d.options.ageBand, seed: seed ^ 0x5bd1e995 }) : this.deps.phraseDeck;
-        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, botIds: d.players.filter((p) => p.isBot).map((p) => p.id), mixPhrases: !pool, deck: this.deps.deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [], ...(d.options.flash ? { flash: true, ...(d.options.flashMega === "host" ? { firstMegafonoIndex: Math.max(0, d.players.findIndex((p) => p.isHost)) } : {}) } : {}) });
+        // espansioni attive: i loro personaggi si aggiungono al mazzo; le loro frasi si inseriscono tra le prime carte del Megafono subito dopo la mescolata del motore
+        const expCards = pool ? exps.flatMap((e, i) => expansionPhraseCards(e.phrases, { age: d.options.ageBand, seed: seed ^ (0x2f6b4a13 + i), idPrefix: `x${i + 1}` })) : [];
+        const expCarte = exps.flatMap((e) => e.cards), soloOk = !!d.options.soloEsp && expCarte.length >= d.players.length * 6;   // 5 in mano + una di scorta a testa
+        const deck = !exps.length ? this.deps.deck : soloOk ? expCarte : [...this.deps.deck, ...expCarte];
+        const { state, events } = createGame({ players: d.players.map((p) => ({ id: p.id, name: p.nickname })), seed, botIds: d.players.filter((p) => p.isBot).map((p) => p.id), mixPhrases: !pool, deck, phraseDeck, miniGame: "random", accuseDeck: this.deps.accuseDeck ?? [], ...(d.options.flash ? { flash: true, ...(d.options.flashMega === "host" ? { firstMegafonoIndex: Math.max(0, d.players.findIndex((p) => p.isHost)) } : {}) } : {}) });
+        if (expCards.length) state.phraseDraw = insertEarly(state.phraseDraw, expCards, seed ^ 0x1b873593, 8);
         { const a = this.autoFlash(state); events.push(...a.events); Object.assign(state, a.state); }
         d.game = state; d.stage = "PLAYING"; d.seq++; this.armDeadline(now); out.persist = true; d.botMem = newBotMemory();
         this.scheduleBots(now);
