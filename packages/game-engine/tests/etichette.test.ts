@@ -15,6 +15,10 @@ const T = new Set(cat.tipi.map((t) => t.id)), M = new Set(cat.temi.map((t) => t.
 const poolIds = (json("content/frasi-megafono.json").frasi as { id: string }[]).map((f) => f.id);
 const deck = (json("public/cards/manifest.json") as { id: string; overlay_of?: string }[]).filter((m) => !m.overlay_of).map((m) => m.id);
 
+/** Anche le carte delle espansioni (<mazzo>-cNN) hanno le etichette dei bot. */
+const espCarte = (json("public/espansioni/catalogo.json").mazzi as { id: string; carte: number }[]).flatMap((m) => Array.from({ length: m.carte }, (_, i) => `${m.id}-c${String(i + 1).padStart(2, "0")}`));
+const deckTutte = [...deck, ...espCarte];
+
 describe("etichette v2 (occhi dei bot)", () => {
   it("catalogo: id unici e definizione per ogni voce", () => {
     expect(new Set(cat.tipi.map((t) => t.id)).size).toBe(cat.tipi.length);
@@ -23,7 +27,7 @@ describe("etichette v2 (occhi dei bot)", () => {
   });
   it("ogni frase del Megafono e ogni carta ha etichette; nessuna in più", () => {
     expect(Object.keys(frasi).sort()).toEqual([...poolIds].sort());
-    expect(Object.keys(carte).sort()).toEqual([...deck].sort());
+    expect(Object.keys(carte).sort()).toEqual([...deckTutte].sort());
   });
   it("etichette valide: stanno nel catalogo, pesi 1–3, numero entro i massimi", () => {
     for (const [name, set] of [["frasi", frasi], ["carte", carte]] as const) for (const [id, t] of Object.entries(set)) {
@@ -82,9 +86,9 @@ describe("etichette v2 (occhi dei bot)", () => {
       expect(T.has(v.tratto), `tratto fuori catalogo: ${v.tratto}`).toBe(true); expect([1, 2, 3]).toContain(v.forza); expect(v.nota.length).toBeGreaterThan(3);
     }
     for (const r of ruoli.ruoli) { expect(VIETATI.test(r.id), `ruolo vietato: ${r.id}`).toBe(false); expect(r.def.length).toBeGreaterThan(5); for (const t of r.temi) expect(M.has(t), `tema ${t} di ${r.id}`).toBe(true); }
-    for (const [c, rs] of Object.entries(ruoli.carte)) { expect(deck.includes(c) || c === "p14-i01", c).toBe(true); for (const r of rs) expect(R.has(r), `${c}: ${r}`).toBe(true); }
+    for (const [c, rs] of Object.entries(ruoli.carte)) { expect(deckTutte.includes(c) || c === "p14-i01", c).toBe(true); for (const r of rs) expect(R.has(r), `${c}: ${r}`).toBe(true); }
     for (const a of asp.aspetti) { expect(VIETATI.test(a.id), `aspetto vietato: ${a.id}`).toBe(false); expect(a.def.length).toBeGreaterThan(5); }
-    for (const [c, as] of Object.entries(asp.carte)) { expect(deck.includes(c) || c === "p14-i01", c).toBe(true); for (const a of as) expect(A.has(a), `${c}: ${a}`).toBe(true); }
+    for (const [c, as] of Object.entries(asp.carte)) { expect(deckTutte.includes(c) || c === "p14-i01", c).toBe(true); for (const a of as) expect(A.has(a), `${c}: ${a}`).toBe(true); }
     expect(Object.keys(asp.carte).length).toBeGreaterThan(60);
     expect(Object.keys(ruoli.carte).length).toBeGreaterThan(70);   // copertura: oltre il 60% delle carte ha un ruolo
   });

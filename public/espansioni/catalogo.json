@@ -1,5 +1,5 @@
 {
- "versione": 1,
+ "versione": 2,
  "aggiornato": "2026-11-20",
  "mazzi": [
   {
@@ -20,7 +20,45 @@
    ],
    "esempio": "Oggi sale sulla torre chi non ammetterebbe mai di aver sbagliato.",
    "cartella": "/espansioni/summit/",
-   "carte": 36
+   "carte": 36,
+   "nomi": [
+    "Donald Trump – Stati Uniti",
+    "JD Vance – Stati Uniti",
+    "Giorgia Meloni – Italia",
+    "Emmanuel Macron – Francia",
+    "Friedrich Merz – Germania",
+    "Ursula von der Leyen – Unione Europea",
+    "Pedro Sánchez – Spagna",
+    "Donald Tusk – Polonia",
+    "Mark Carney – Canada",
+    "Vladimir Putin – Russia",
+    "Volodymyr Zelensky – Ucraina",
+    "Xi Jinping – Cina",
+    "Narendra Modi – India",
+    "Sanae Takaichi – Giappone",
+    "Recep Tayyip Erdoğan – Turchia",
+    "Benjamin Netanyahu – Israele",
+    "Mohammed bin Salman – Arabia Saudita",
+    "Masoud Pezeshkian – Iran",
+    "Prabowo Subianto – Indonesia",
+    "Lee Jae-myung – Corea del Sud",
+    "Shehbaz Sharif – Pakistan",
+    "Ferdinand Marcos Jr. – Filippine",
+    "Tô Lâm – Vietnam",
+    "Anthony Albanese – Australia",
+    "Cyril Ramaphosa – Sudafrica",
+    "Bola Tinubu – Nigeria",
+    "William Ruto – Kenya",
+    "Luiz Inácio Lula da Silva – Brasile",
+    "Javier Milei – Argentina",
+    "Claudia Sheinbaum – Messico",
+    "Nayib Bukele – El Salvador",
+    "Gustavo Petro – Colombia",
+    "Daniel Noboa – Ecuador",
+    "Abiy Ahmed – Etiopia",
+    "Tarique Rahman – Bangladesh",
+    "Andy Burnham – Regno Unito"
+   ]
   }
  ]
 }

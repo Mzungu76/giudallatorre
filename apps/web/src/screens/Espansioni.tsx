@@ -63,7 +63,7 @@ function Foglio({ m, mio, usa, onClose, onCompra, onBlocca, onUsa }: { m: Mazzo;
         </div>
         <p className="esp-desc">{m.descrizione}</p>
         <div className="esp-mini" data-testid="esp-carte">
-          {tutte.map((n) => { const chiusa = !mio && n > m.anteprima; return <i key={n} className={chiusa ? "lk" : ""} style={{ backgroundImage: `url(${urlCarta(m, n)})` }} aria-label={ts("esp.aria.carta", { n })} />; })}
+          {tutte.map((n) => { const chiusa = !mio && n > m.anteprima; return <i key={n} className={chiusa ? "lk" : ""} style={{ backgroundImage: `url(${urlCarta(m, n)})` }} aria-label={m.nomi?.[n - 1] ?? ts("esp.aria.carta", { n })} />; })}
         </div>
         {!mio && <p className="esp-nota">{ts("esp.anteprima", { n: m.anteprima, tot: m.carte })}</p>}
         <div className="esp-phr"><small>{t("esp.frase")}</small>{m.esempio}</div>

@@ -7,7 +7,7 @@ import base from "../../../../public/espansioni/catalogo.json";
  */
 export interface Mazzo {
   id: string; nome: string; colore: string; prezzo: string; stato: "vendita" | "arrivo"; novita?: boolean; descrizione: string;
-  personaggi: number; frasi: number; anteprima: number; scatola: [number, number, number]; esempio: string; cartella: string; carte: number;
+  personaggi: number; frasi: number; anteprima: number; scatola: [number, number, number]; esempio: string; cartella: string; carte: number; /** Nome e paese di ogni carta (testo alternativo per i lettori di schermo, non si vede nel gioco). */ nomi?: string[];
 }
 export interface Catalogo { versione: number; aggiornato: string; mazzi: Mazzo[] }
 
