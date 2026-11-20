@@ -42,7 +42,7 @@ function giorno(n: number, seed: number): Giorno {
       const f = stereoVoteFlags(pre.tower, pre.phrase!.text, r.votes), g = pregiudizioTurno(pre.tower, pre.phrase!.text, r.votes, r.marks?.[0]?.position);   // come RoomCore.markStereo
       const L = f && luoghiTurno(pre.tower, pre.phrase!.text, r.votes, r.marks ?? [], r.fallenPositions); if (f && L) { f.cause = L.pesi; f.lancio = L.lancio; }
       const aspC = L ? L.aspetti : undefined, detC = L ? L.dettagli : undefined;
-      if (f && g) { const st: NonNullable<GameState["stereo"]> = { n: {}, s: {}, c: g.caso, turni: 1, cause: { ...f.cause }, ...(aspC && Object.keys(aspC).length ? { asp: aspC } : {}), ...(detC && Object.keys(detC).length ? { det: detC } : {}) };
+      if (f && g) { const st: NonNullable<GameState["stereo"]> = { n: {}, s: {}, c: g.caso, turni: 1, cause: { ...f.cause }, ...(aspC && Object.keys(aspC).length ? { asp: aspC } : {}), ...(detC && Object.keys(detC).length ? { det: detC } : {}), ...(L && Object.keys(L.pesi).length ? { scene: [{ t: pre.phrase!.text, c: L.scena.c, v: { ...r.votes }, m: (r.marks ?? []).map((x) => ({ p: x.position, e: x.effect })), f: r.fallenPositions.slice(), e: L.scena.e }] } : {}) };
         for (const [pid, p] of Object.entries(g.voti)) { st.n[pid] = 1; st.s[pid] = p; }
         if (g.lui !== null) { st.n[mega] += 1; st.s[mega] += g.lui; }
         if (f.lancio && f.lancio.n >= 2) { const c = pre.tower.find((x) => x.position === f.lancio!.pos); if (c) st.lancio = { cardId: c.cardId, causa: f.lancio.causa, n: f.lancio.n, text: pre.phrase!.text }; }

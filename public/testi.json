@@ -1,6 +1,6 @@
 {
- "versione": 95,
- "aggiornato": "2026-11-17",
+ "versione": 111,
+ "aggiornato": "2026-11-18",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -2928,7 +2928,7 @@
    "s": "Statistiche personali"
   },
   "sp.titolo": {
-   "t": "Luoghi comuni",
+   "t": "Oggi abbiamo capito che:",
    "s": "Fine partita · luoghi comuni"
   },
   "sp.sotto": {
@@ -2940,7 +2940,7 @@
    "s": "Fine partita · luoghi comuni"
   },
   "st.luoghi": {
-   "t": "Voti per luogo comune",
+   "t": "Quanto abbiamo capito",
    "s": "Statistiche personali"
   },
   "st.acaso": {
@@ -2952,7 +2952,7 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.top": {
-   "t": "Il luogo comune della partita",
+   "t": "Oggi abbiamo capito che:",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.lancio": {
@@ -2976,11 +2976,11 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f0": {
-   "t": "Mente aperta!",
+   "t": "Mente aperta, per ora",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f1": {
-   "t": "Qualche occhiata storta",
+   "t": "Occhiate storte, ma educate",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f2": {
@@ -2988,19 +2988,19 @@
    "s": "Fine partita · luoghi comuni"
   },
   "sc.f3": {
-   "t": "Tribunale della copertina",
+   "t": "Tribunale del popolo",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.u": {
-   "t": "Gli umani giudicano più dei bot!",
+   "t": "Gli umani giudicano più dei bot. Brava gente",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.b": {
-   "t": "I bot hanno più pregiudizi di voi!",
+   "t": "I bot hanno più pregiudizi di voi. Complimenti",
    "s": "Fine partita · luoghi comuni"
   },
   "sc.uvb.p": {
-   "t": "Umani e bot, pari e patta",
+   "t": "Pari e patta, come al bar",
    "s": "Fine partita · luoghi comuni"
   },
   "torre.punti": {
@@ -3080,14 +3080,6 @@
   },
   "splash.flash.s": {
    "t": "Due turni. Chi cade?",
-   "s": "Intro Flash e Torre del giorno"
-  },
-  "splash.torre.t": {
-   "t": "La Torre del giorno",
-   "s": "Intro Flash e Torre del giorno"
-  },
-  "splash.torre.s": {
-   "t": "Una Torre per tutti. Una sola occasione.",
    "s": "Intro Flash e Torre del giorno"
   },
   "torre.v0": {
@@ -3248,14 +3240,9 @@
    "n": "Titolo-sentenza (il tratto del luogo comune più forte)"
   },
   "rot.sotto": {
-   "t": "{frase}: il luogo comune più votato!",
+   "t": "Oggi abbiamo capito che: {frase}",
    "s": "Copertina rotocalco",
    "n": "Riga sotto il titolo"
-  },
-  "rot.sotto.coda": {
-   "t": "il luogo comune più votato!",
-   "s": "Copertina rotocalco",
-   "n": "Parte bianca della riga sotto il titolo"
   },
   "rot.titolo.vuoto": {
    "t": "Giudicati dalla copertina",
@@ -3263,7 +3250,7 @@
    "n": "Titolo quando non c'è un luogo comune in evidenza"
   },
   "rot.sotto.vuoto": {
-   "t": "Nessun luogo comune in evidenza: si vota a occhio!",
+   "t": "Oggi non abbiamo capito niente: si vota a occhio!",
    "s": "Copertina rotocalco"
   },
   "rot.nota.0": {
@@ -3304,10 +3291,6 @@
   "rot.cond.carico": {
    "t": "Preparo la copertina…",
    "s": "Copertina rotocalco"
-  },
-  "rp.classifica": {
-   "t": "Classifica",
-   "s": "Fine partita · riepilogo"
   },
   "lc.r.politico": {
    "t": "I politici",
@@ -3624,11 +3607,6 @@
    "s": "Luoghi comuni · frasi",
    "n": "Luogo comune su un aspetto: «Chi porta la cravatta è più bugiardo degli altri»"
   },
-  "lc.tra": {
-   "t": "Tra loro:",
-   "s": "Luoghi comuni · frasi",
-   "n": "Introduce la caratteristica (aspetto) comune alle carte dei luoghi comuni di ruolo"
-  },
   "sm.titolo": {
    "t": "Condividi",
    "s": "Condivisione"
@@ -3642,11 +3620,11 @@
    "s": "Condivisione"
   },
   "sm.copertina": {
-   "t": "Copertina del giornale",
+   "t": "Copertina con il mio risultato",
    "s": "Condivisione"
   },
   "sm.copertina.s": {
-   "t": "Il luogo comune più votato in prima pagina",
+   "t": "Il giornale con quello che abbiamo capito e il tuo piazzamento",
    "s": "Condivisione"
   },
   "sm.testo": {
@@ -3654,7 +3632,7 @@
    "s": "Condivisione"
   },
   "sm.testo.s": {
-   "t": "Pregiudiziometro e luoghi comuni da incollare",
+   "t": "Pregiudiziometro e quello che abbiamo capito, da incollare",
    "s": "Condivisione"
   },
   "sm.copiato": {
@@ -3674,7 +3652,7 @@
    "s": "Condivisione"
   },
   "share.pg.t": {
-   "t": "I luoghi comuni della partita:",
+   "t": "Oggi abbiamo capito che:",
    "s": "Condivisione"
   },
   "share.pg.riga": {
@@ -3685,65 +3663,647 @@
    "t": "{punti} punti, {posto}° posto su {tot}.",
    "s": "Condivisione"
   },
-  "dt.btn": {
-   "t": "Dettagli",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.vinto": {
+   "t": "Ho vinto!",
+   "s": "Copertina rotocalco"
   },
-  "dt.titolo": {
-   "t": "Dettagli dei luoghi comuni",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.vinto.pari": {
+   "t": "a pari merito",
+   "s": "Copertina rotocalco"
   },
-  "dt.origine": {
-   "t": "Come si è formato",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.res.posto": {
+   "t": "{posto}° su {tot}",
+   "s": "Copertina rotocalco"
   },
-  "dt.voti": {
-   "t": "{n} voti sul personaggio",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.res.punti": {
+   "t": "{punti} punti",
+   "s": "Copertina rotocalco"
   },
-  "dt.segnalino": {
-   "t": "{n} dal segnalino del Megafono",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.res.vinto": {
+   "t": "{punti} punti · {posto}° su {tot}",
+   "s": "Copertina rotocalco"
   },
-  "dt.evitato": {
-   "t": "{n} da chi ha votato altrove",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.res.flash": {
+   "t": "Flash · 2 turni",
+   "s": "Copertina rotocalco"
   },
-  "dt.personaggi": {
-   "t": "Personaggi coinvolti",
-   "s": "Dettagli dei luoghi comuni"
+  "rot.sotto.testa": {
+   "t": "Oggi abbiamo capito che:",
+   "s": "Copertina rotocalco",
+   "n": "Parte bianca della riga sotto il titolo"
   },
-  "dt.nessun": {
-   "t": "Nessun voto diretto: pesa solo il segnalino o chi ha votato altrove",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.0": {
+   "t": "{nome}, campione in carica (da 4 minuti)",
+   "s": "Riepilogo satirico",
+   "n": "Titolo sopra la classifica quando vince una persona sola ({nome})"
   },
-  "dt.comune": {
-   "t": "Caratteristica comune",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.1": {
+   "t": "Vince {nome}. Si accettano reclami",
+   "s": "Riepilogo satirico"
   },
-  "dt.comune.riga": {
-   "t": "{chi}: {n} voti su {tot} ({pct}%)",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.2": {
+   "t": "{nome} ha vinto, e adesso lo sa",
+   "s": "Riepilogo satirico"
   },
-  "dt.solida": {
-   "t": "Quanto è solida la stima",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.3": {
+   "t": "{nome} sul gradino più alto, senza scale",
+   "s": "Riepilogo satirico"
   },
-  "dt.s0": {
-   "t": "Solo {n} voti: è un indizio debole",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.4": {
+   "t": "Ha vinto {nome}. La mamma è già stata avvisata",
+   "s": "Riepilogo satirico"
   },
-  "dt.s1": {
-   "t": "{n} voti: stima discreta",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.titolo.pari": {
+   "t": "A pari merito: {nomi}. Il podio è stretto",
+   "s": "Riepilogo satirico",
+   "n": "Titolo quando vincono in più ({nomi} = elenco dei nomi)"
   },
-  "dt.s2": {
-   "t": "{n} voti: stima abbastanza solida",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.q.primo.0": {
+   "t": "ha lasciato intendere di aver vinto",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: primo in classifica"
   },
-  "dt.nota": {
-   "t": "Il peso di un luogo comune: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
-   "s": "Dettagli dei luoghi comuni"
+  "rp.q.primo.1": {
+   "t": "lo sapeva anche la mamma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.primo.2": {
+   "t": "vittoria certificata da un cugino",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.primo.3": {
+   "t": "non ha detto niente, ma si vede",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.0": {
+   "t": "argento, con il broncio",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: secondo"
+  },
+  "rp.q.secondo.1": {
+   "t": "secondo, di un soffio (si dice sempre)",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.2": {
+   "t": "a un passo, ma sul tappeto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.secondo.3": {
+   "t": "il vincitore morale. Di nessuno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.0": {
+   "t": "«io ero distratto»",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: a metà classifica"
+  },
+  "rp.q.centro.1": {
+   "t": "a metà strada, come sempre",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.2": {
+   "t": "ci ha provato, con calma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.centro.3": {
+   "t": "stava pensando ad altro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.0": {
+   "t": "ultimo, ma con eleganza",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: ultimo con punti"
+  },
+  "rp.q.ultimo.1": {
+   "t": "la coda del gruppo, quella fotogenica",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.2": {
+   "t": "ha perso con dignità. Un po'",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.ultimo.3": {
+   "t": "ultimo, però sorridente",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.0": {
+   "t": "zero punti, zero rimpianti",
+   "s": "Riepilogo satirico",
+   "n": "Battuta accanto al nome: zero punti"
+  },
+  "rp.q.zero.1": {
+   "t": "zero punti, grande stile",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.2": {
+   "t": "assolto per mancanza di prove",
+   "s": "Riepilogo satirico"
+  },
+  "rp.q.zero.3": {
+   "t": "presente. E già questo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.0": {
+   "t": "Previsioni: sereno, con qualche dubbio",
+   "s": "Riepilogo satirico",
+   "n": "Riga sotto il verdetto del Pregiudiziometro"
+  },
+  "rp.gs.1": {
+   "t": "TG Pregiudizi: cielo coperto da sospetti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.2": {
+   "t": "Sentenze emesse prima di sapere i fatti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.gs.3": {
+   "t": "Il processo non è mai cominciato. La condanna sì",
+   "s": "Riepilogo satirico"
+  },
+  "rp.alt.1": {
+   "t": "Intanto: {frase} · {pct}%",
+   "s": "Riepilogo satirico"
+  },
+  "rp.alt.2": {
+   "t": "E poi: {frase} · {pct}%",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.politico.t": {
+   "t": "Mandato a vita",
+   "s": "Riepilogo satirico",
+   "n": "Titolo del badge (premio) per il ruolo"
+  },
+  "rp.b.politico.s": {
+   "t": "Ha promesso di non ricandidarsi",
+   "s": "Riepilogo satirico",
+   "n": "Riga sotto il titolo del badge"
+  },
+  "rp.b.religioso.t": {
+   "t": "Predica smart",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.religioso.s": {
+   "t": "Fa la morale anche col telecomando",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.insegnante.t": {
+   "t": "Segna in rosso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.insegnante.s": {
+   "t": "Ti corregge anche il saluto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.studente.t": {
+   "t": "Giustificato",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.studente.s": {
+   "t": "Ha una scusa per ogni compito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.sanitario.t": {
+   "t": "Cartella chiusa",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.sanitario.s": {
+   "t": "Ha diagnosticato tutti tranne sé stesso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giudice.t": {
+   "t": "Si ritira in camera",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giudice.s": {
+   "t": "A mangiare, di solito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.cuoco.t": {
+   "t": "Mestolo d'oro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.cuoco.s": {
+   "t": "Il sale lo mette a occhio, come i voti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.tassista.t": {
+   "t": "Il contachilometri",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.tassista.s": {
+   "t": "Sa tutto di tutti, tariffa a parte",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.ciclista.t": {
+   "t": "Passa col rosso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.ciclista.s": {
+   "t": "Per allenamento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.meccanico.t": {
+   "t": "Sotto il cofano",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.meccanico.s": {
+   "t": "Il rumore è normale. Il conto no",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.corriere.t": {
+   "t": "Non c'eri",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.corriere.s": {
+   "t": "Il pacco l'ha lasciato dal vicino. Che non ha",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.venditore.t": {
+   "t": "Ultimo pezzo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.venditore.s": {
+   "t": "Ne restava uno. Ce n'è sempre uno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guardia.t": {
+   "t": "Ha visto tutto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guardia.s": {
+   "t": "Tranne quello che stava succedendo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hacker.t": {
+   "t": "Cappuccio d'oro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hacker.s": {
+   "t": "Nessuno sa cosa fa. Nemmeno lui",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giornalista.t": {
+   "t": "Fonte attendibile",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.giornalista.s": {
+   "t": "Un amico di un amico, di solito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.comico.t": {
+   "t": "Ride per ultimo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.comico.s": {
+   "t": "O per primo. Dipende dalla battuta",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.artista.t": {
+   "t": "Genio incompreso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.artista.s": {
+   "t": "Anche da chi ha capito",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.musicista.t": {
+   "t": "Soundcheck eterno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.musicista.s": {
+   "t": "Arriva tardi, ma con gli strumenti",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.rapper.t": {
+   "t": "Rima obbligata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.rapper.s": {
+   "t": "Con tutto, anche con le multe",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.punk.t": {
+   "t": "Contro tutto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.punk.s": {
+   "t": "Tranne l'orario del concerto",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hippie.t": {
+   "t": "Pace e rimandi",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.hippie.s": {
+   "t": "Lo fa domani, con calma",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.turista.t": {
+   "t": "Perso in centro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.turista.s": {
+   "t": "Ha chiesto indicazioni a un altro turista",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.istruttore.t": {
+   "t": "Ancora uno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.istruttore.s": {
+   "t": "Dieci piegamenti. Li fai tu",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.influencer.t": {
+   "t": "Posta, ergo sum",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.influencer.s": {
+   "t": "Se non c'è la foto, non è successo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guru.t": {
+   "t": "Illuminato a pagamento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.guru.s": {
+   "t": "La pace interiore costa 49 euro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.manager.t": {
+   "t": "Riunione alle 9",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.manager.s": {
+   "t": "Poteva essere una mail",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.impiegato.t": {
+   "t": "Premio Poltrona",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.impiegato.s": {
+   "t": "Immobile ma di successo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.trader.t": {
+   "t": "Al rialzo",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.trader.s": {
+   "t": "Come l'umore, quando ha ragione",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.nerd.t": {
+   "t": "L'aveva detto lui",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.nerd.s": {
+   "t": "Quattro volte, con i link",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.attivista.t": {
+   "t": "Non cede di un millimetro",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.attivista.s": {
+   "t": "Però l'aereo l'ha preso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.genitore.t": {
+   "t": "Ho detto di no",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.genitore.s": {
+   "t": "Ormai è un'abitudine",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.presentatore.t": {
+   "t": "Applauso registrato",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.presentatore.s": {
+   "t": "Sorride anche con la sedia vuota",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.scienziato.t": {
+   "t": "Ipotesi azzardata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.scienziato.s": {
+   "t": "Con il grafico, per sembrare vera",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.atleta.t": {
+   "t": "Campione di sé stesso",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.atleta.s": {
+   "t": "L'avversario era lo specchio",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.mago.t": {
+   "t": "Ora lo vedi",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.mago.s": {
+   "t": "Ora non c'è più, e nemmeno la cassa",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.reginetta.t": {
+   "t": "Corona d'argento",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.reginetta.s": {
+   "t": "Il ballo non c'è. Il giudizio sì",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.architetto.t": {
+   "t": "Bella facciata",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.architetto.s": {
+   "t": "Dietro non ha guardato nessuno",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.bibliotecario.t": {
+   "t": "Silenzio!",
+   "s": "Riepilogo satirico"
+  },
+  "rp.b.bibliotecario.s": {
+   "t": "Ha già detto tutto, a bassa voce",
+   "s": "Riepilogo satirico"
+  },
+  "lc.tra.riga": {
+   "t": "Tra loro, {n} su {tot}: {chi}",
+   "s": "Luoghi comuni · frasi",
+   "n": "Caratteristica (aspetto) comune alle carte dietro i luoghi comuni"
+  },
+  "rot.titolo.accusa": {
+   "t": "{frase}",
+   "s": "Copertina rotocalco",
+   "n": "Titolo grande quando il luogo comune è l'accusa della frase del Megafono"
+  },
+  "rot.sotto.verdetto": {
+   "t": "Verdetto della serata:",
+   "s": "Copertina rotocalco"
+  },
+  "rot.sotto.pct": {
+   "t": "{pct}% dei sospetti",
+   "s": "Copertina rotocalco"
+  },
+  "rot.sotto.nopct": {
+   "t": "nessun appello",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.0": {
+   "t": "lo sapevamo!",
+   "s": "Copertina rotocalco",
+   "n": "Scritta a pennarello con la freccia quando il luogo comune è un'accusa"
+  },
+  "rot.nota.a.1": {
+   "t": "chiaro come il sole",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.2": {
+   "t": "{pct}%\nci siamo",
+   "s": "Copertina rotocalco"
+  },
+  "rot.nota.a.3": {
+   "t": "parola\ndi giuria",
+   "s": "Copertina rotocalco"
+  },
+  "tc.premiere": {
+   "t": "Giù dalla Torre · Prima assoluta",
+   "s": "Titoli di coda"
+  },
+  "tc.titolo": {
+   "t": "Titoli di coda",
+   "s": "Titoli di coda"
+  },
+  "tc.int": {
+   "t": "Interpreti (nei panni di sé stessi)",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet.0": {
+   "t": "cachet: nessuno",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet.1": {
+   "t": "cachet: 1 punto",
+   "s": "Titoli di coda"
+  },
+  "tc.cachet": {
+   "t": "cachet: {n} punti",
+   "s": "Titoli di coda"
+  },
+  "tc.prot": {
+   "t": "protagonista",
+   "s": "Titoli di coda"
+  },
+  "tc.trama": {
+   "t": "Cosa abbiamo capito oggi:",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.0": {
+   "t": "Basata su una frase del Megafono, pronunciata con troppa convinzione.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.1": {
+   "t": "Ogni riferimento a persone reali è puramente voluto. Soprattutto il vostro.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.2": {
+   "t": "Tratta da una storia vera: come vi siete giudicati a vicenda.",
+   "s": "Titoli di coda"
+  },
+  "tc.trama.s.3": {
+   "t": "Non è colpa vostra. È colpa della frase, che era scritta bene.",
+   "s": "Titoli di coda"
+  },
+  "tc.premi": {
+   "t": "Premi speciali",
+   "s": "Titoli di coda"
+  },
+  "tc.fx": {
+   "t": "Effetti speciali",
+   "s": "Titoli di coda"
+  },
+  "tc.cast": {
+   "t": "Cast: umani e bot",
+   "s": "Titoli di coda"
+  },
+  "tc.critica": {
+   "t": "Critica e pubblico",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.t": {
+   "t": "★★★☆☆ · Il Corriere della Torre",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.0": {
+   "t": "«L'ho visto, non lo ricordo.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.1": {
+   "t": "«Si cade, si ride, si dimentica.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.a.2": {
+   "t": "«Troppe carte, poca torre. Ci siamo divertiti lo stesso.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.t": {
+   "t": "★★★★★ · La mamma di {nome}",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.0": {
+   "t": "«Bravo il mio bambino.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.1": {
+   "t": "«L'ho sempre detto io.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.b.2": {
+   "t": "«Non ho capito il gioco, ma lui è il più bravo.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.t": {
+   "t": "★☆☆☆☆ · Un giocatore a caso",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.0": {
+   "t": "«Non l'ho nemmeno guardato.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.1": {
+   "t": "«Ero distratto, lo giuro.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.c.2": {
+   "t": "«Il mio voto l'avevo dato. Chiedete al Megafono.»",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.fine": {
+   "t": "Il pubblico ha lasciato la sala prima della fine. Poi è tornato per il bis.",
+   "s": "Titoli di coda"
+  },
+  "tc.fine": {
+   "t": "Fine",
+   "s": "Titoli di coda"
+  },
+  "tc.sub": {
+   "t": "Un film di nessuno. Girato a occhio.",
+   "s": "Titoli di coda"
+  },
+  "tc.cr.nota": {
+   "t": "Recensioni inventate, come i giudizi di questa partita.",
+   "s": "Titoli di coda"
+  },
+  "tc.avanti": {
+   "t": "Continua",
+   "s": "Titoli di coda"
   }
  }
 }

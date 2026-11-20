@@ -1,8 +1,8 @@
-import type { GameState } from "@gdt/game-engine";
+import type { GameState, StereoScena } from "@gdt/game-engine";
 import { ts } from "./testi.ts";
 import type { TestoKey } from "./testi.ts";
 
-export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number; det: { v: number; m: number; e: number; c: Record<string, number> } | null }[]; /** Voti diretti dietro tutti i luoghi comuni di ruolo (per dire quanto è solida la stima). */ votiLuoghi: number; lancio: { cardId: string; ruolo: string; n: number; text: string } | null; /** La caratteristica (aspetto) comune alle carte dietro i luoghi comuni di ruolo con lo stesso tratto del primo, se c'è. */ comune: { k: string; pct: number; n: number; tot: number } | null }
+export interface StereoGame { pct: number; caso: number; n: number; top: { k: string; n: number; pct: number; det: { v: number; m: number; e: number; c: Record<string, number> } | null }[]; /** Voti diretti dietro tutti i luoghi comuni di ruolo (per dire quanto è solida la stima). */ votiLuoghi: number; lancio: { cardId: string; ruolo: string; n: number; text: string } | null; /** La caratteristica (aspetto) comune alle carte dietro i luoghi comuni di ruolo con lo stesso tratto del primo, se c'è. */ comune: { k: string; pct: number; n: number; tot: number } | null; /** La moviola: i turni che hanno generato luoghi comuni. */ scene: StereoScena[] }
 /** Il pannello «Luoghi comuni» è della PARTITA, non dei giocatori: quanta parte dei voti di tutti si spiega con un luogo comune, quanto sarebbe stato per caso e quali luoghi comuni hanno pesato di più. */
 export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3): StereoGame | null {
   if (!st || !st.turni) return null;
@@ -20,7 +20,7 @@ export function stereoGame(st: GameState["stereo"] | null | undefined, max = 3):
     if (tratto && mig && mig[1] >= 2 && tot > 0 && mig[1] / tot >= 0.5) comune = { k: `@${mig[0]} → ${tratto}`, pct: Math.round((mig[1] / tot) * 100), n: mig[1], tot };
   }
   const L = st.lancio;
-  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, votiLuoghi, comune, lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
+  return { pct: Math.round((s / n) * 100), caso: Math.round((st.c / st.turni) * 100), n, top, votiLuoghi, comune, scene: st.scene ?? [], lancio: L ? { cardId: L.cardId, ruolo: ruoloDi(L.causa), n: L.n, text: L.text } : null };
 }
 
 /** Nome breve del soggetto di un luogo comune: «politico → bugiardo» → «Politico»; «@cravatta → bugiardo» (aspetto) → «Cravatta». */
@@ -34,13 +34,21 @@ export function trattoPlurale(t: string, femm: boolean): string {
   if (/e$/.test(t)) return t.slice(0, -1) + "i";
   return t;
 }
-/** Il luogo comune come frase: ruolo → «I politici sono bugiardi»; aspetto → «Chi porta la cravatta è più bugiardo degli altri». Se la voce non è nei testi, ricade sul nome grezzo. */
+/** Accorda al femminile le accuse con un aggettivo («sono i più bugiardi» → «sono le più bugiarde»): vale per i ruoli al femminile plurale (le reginette, le guardie). */
+export function accordaFemminile(p: string): string {
+  const fem = (w: string): string => (/(enti|anti|ali|ili|uli|immuni)$/.test(w) ? w : w === "tirchi" ? "tirchie" : w.endsWith("ci") ? w.slice(0, -2) + "che" : w.endsWith("gi") ? w.slice(0, -2) + "ghe" : w.endsWith("i") ? w.slice(0, -1) + "e" : w);
+  return p.replace(/\bi più (\p{L}+)/gu, (_m, w: string) => `le più ${fem(w)}`).replace(/\bconvinti\b/g, "convinte").replace(/\bessere (più )?(\p{L}+i)\b/gu, (_m, pi: string | undefined, w: string) => `essere ${pi ?? ""}${fem(w)}`);
+}
+/** Il luogo comune come frase: ruolo → «I politici non prendono mai niente sul serio» (l'accusa è la frase del Megafono) o, se non c'è l'accusa, «I politici sono bugiardi»; aspetto → «Chi porta la cravatta è più bugiardo degli altri». Se la voce non è nei testi, ricade sul nome grezzo. */
 export function fraseLuogo(causa: string): string {
   const [sogg = "", tratto = ""] = causa.split(" → "); if (!tratto) return causa;
   const asp = sogg.startsWith("@"), id = asp ? sogg.slice(1) : sogg, chiave = (asp ? `lc.a.${id}` : `lc.r.${id}`) as TestoKey, chi = ts(chiave);
   if (chi === chiave) return causa;
+  if (tratto.includes(" ")) return asp ? `${chi}: ${tratto}` : `${chi} ${chi.startsWith("Le ") ? accordaFemminile(tratto) : tratto}`;
   return asp ? ts("lc.frase.a", { chi, tratto }) : ts("lc.frase.r", { chi, tratto: trattoPlurale(tratto, chi.startsWith("Le ")) });
 }
+/** L'aspetto di un luogo comune «@cravatta → …» come «chi porta la cravatta» (minuscolo, per la riga «Tra loro»). */
+export function aspettoDi(causa: string): string { const id = (causa.split(" → ")[0] ?? "").replace(/^@/, ""), k = `lc.a.${id}` as TestoKey, t = ts(k); return t === k ? id : t.charAt(0).toLowerCase() + t.slice(1); }
 /** Umani contro bot: quota dei voti «per luogo comune» di ciascun gruppo (null se il gruppo non ha votato). */
 export function stereoGruppi(st: GameState["stereo"] | null | undefined, isBot: (id: string) => boolean): { umani: number | null; bot: number | null } {
   const acc = { u: [0, 0], b: [0, 0] };

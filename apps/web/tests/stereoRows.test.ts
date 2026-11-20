@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { stereoGame, stereoGruppi, ruoloDi, fraseLuogo, trattoPlurale } from "../src/lib/stereo.ts";
+import { stereoGame, stereoGruppi, ruoloDi, fraseLuogo, trattoPlurale, accordaFemminile, aspettoDi } from "../src/lib/stereo.ts";
 
 describe("pannello luoghi comuni: dati della partita", () => {
   it("somma i voti di tutti (nessun nome), dà la quota per caso e i luoghi comuni più presenti", () => {
@@ -35,5 +35,13 @@ describe("pannello luoghi comuni: dati della partita", () => {
   it("i dettagli: da dove viene il peso, le carte coinvolte e quanto è solida la stima", () => {
     const g = stereoGame({ n: { a: 4 }, s: { a: 2 }, c: 1, turni: 2, cause: { "politico → bugiardo": 5, "giudice → bugiardo": 2 }, det: { "politico → bugiardo": { v: 3, m: 1.5, e: 0.5, c: { c1: 2, c2: 1 } }, "giudice → bugiardo": { v: 1, m: 0, e: 1, c: { c3: 1 } } } })!;
     expect(g.top[0]!.det).toEqual({ v: 3, m: 1.5, e: 0.5, c: { c1: 2, c2: 1 } }); expect(g.votiLuoghi).toBe(4);
+  });
+  it("il luogo comune con l'accusa della frase: «I manager non prendono mai niente sul serio»; al femminile si accorda; l'aspetto comune si legge «chi porta…»", () => {
+    expect(fraseLuogo("influencer → non prendono mai niente sul serio")).toBe("Gli influencer non prendono mai niente sul serio");
+    expect(fraseLuogo("manager → sono i più bugiardi")).toBe("I manager sono i più bugiardi");
+    expect(fraseLuogo("reginetta → sono i più simpatici")).toBe("Le reginette sono le più simpatiche");
+    expect(fraseLuogo("guardia → sono convinti di essere insostituibili")).toBe("Le guardie sono convinte di essere insostituibili");
+    expect(accordaFemminile("sono i più teatrali e sono convinti di essere più furbi")).toBe("sono le più teatrali e sono convinte di essere più furbe");
+    expect(aspettoDi("@cravatta → sono i più bugiardi")).toBe("chi porta la cravatta");
   });
 });

@@ -1,7 +1,7 @@
 import manifest from "../../public/cards/manifest.json";
 import frasi from "../../content/frasi-megafono.json";
 import confessioni from "../../content/confessioni.json";
-import { buildPhraseDeck, parseAge, registerTags, registerTagsV2, registerStereotypes, registerRoles, registerLooks, fullPhrase } from "@gdt/game-engine";
+import { buildPhraseDeck, parseAge, registerTags, registerTagsV2, registerStereotypes, registerAccuse, registerRoles, registerLooks, fullPhrase } from "@gdt/game-engine";
 import type { PhraseCard, PhraseFamily, PoolConfession, PoolPhrase } from "@gdt/game-engine";
 import tagsCards from "../../content/tags-personaggi.json";
 import tagsPhrases from "../../content/tags-frasi.json";
@@ -10,6 +10,7 @@ import etFrasi from "../../content/etichette/frasi.v2.json";
 import ruoliJson from "../../content/etichette/ruoli.json";
 import aspettoJson from "../../content/etichette/aspetto.json";
 import stereotipi from "../../content/etichette/stereotipi.json";
+import accuseJson from "../../content/etichette/accuse.json";
 import accuse from "../../content/accuse.json";
 
 /** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
@@ -43,3 +44,6 @@ registerTagsV2((etPersonaggi as { personaggi: Record<string, T2> }).personaggi, 
 registerRoles((ruoliJson as { ruoli: { id: string; temi: string[] }[] }).ruoli, (ruoliJson as { carte: Record<string, string[]> }).carte);
 registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte, Object.fromEntries((aspettoJson as { aspetti: { id: string; nome: string }[] }).aspetti.map((a) => [a.id, a.nome])));
 registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "aspetto" | "tipo" }[] }).voci);
+
+/** L'accusa di ogni frase («{ruoli} non prendono mai niente sul serio»): il difetto che si legge nei luoghi comuni di fine partita. */
+registerAccuse(Object.fromEntries(PHRASE_POOL.flatMap((f) => { const a = (accuseJson as { accuse: Record<string, string> }).accuse[f.id]; return a ? [[fullPhrase(f), a]] : []; })));

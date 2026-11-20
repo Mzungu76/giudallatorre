@@ -53,7 +53,7 @@ export function viewFor(s: GameState, viewer: PlayerId): PlayerView {
     myVote: s.votes[viewer] ?? null,
     votes: revealed ? { ...s.votes, ...(s.lastResult?.votes ?? {}) } : null,
     lastResult: revealed && !inMini ? s.lastResult : null,
-    stereo: revealed ? s.stereo ?? null : null,
+    stereo: revealed ? (s.stereo && s.phase !== "GAME_OVER" ? { ...s.stereo, scene: undefined } : s.stereo ?? null) : null,   // le scene della moviola servono solo a partita finita: non si rimandano a ogni turno
     mini: inMini && s.mini ? { ...s.mini, order: s.mini.order.slice() } : null, miniResult: s.phase === "MINI_RESULTS" ? s.miniResult ?? null : null,
     winners: s.winners, award: s.phase === "GAME_OVER" ? s.award ?? null : null, goldenGoal: s.goldenGoal,
     round: Math.ceil(s.turnNumber / s.playerIds.length), rounds: s.rounds, roundEnd: s.phase === "RESULTS" && s.turnNumber % s.playerIds.length === 0,

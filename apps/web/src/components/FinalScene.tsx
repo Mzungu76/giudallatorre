@@ -83,7 +83,7 @@ export default function FinalScene({ rows, winners, sound, readOnly, ui, onLeave
       {(inst || ph >= 2) && geo.filter((g) => !g.win).map((g) => <span key={g.row.id} className="fin-diz" style={{ left: g.x1 + cw / 2 - 12, top: g.y1 - 20, animationDelay: inst ? "0s" : `${g.delay + FALL_S + 0.3}s` }}>💫</span>)}
       </div>
       {!done && <div className="fin-skip" style={{ top: gy + 22 }}>{tx("fin.salta")}</div>}
-      {done && !summary && (
+      {done && (
         <div className="fin-rank" style={{ top: gy + 14 }} data-testid="final-rank">
           {rows.map((r, i) => (
             <div key={r.id} className={`fin-row ${winners.has(r.id) ? "win" : ""}`}><b className="num">{i + 1}</b><Who id={r.id}><i className="dc" style={{ background: r.color }} /><span>{r.name}</span></Who><u><PtIcon s={15} /> {pts(r.score)}</u></div>

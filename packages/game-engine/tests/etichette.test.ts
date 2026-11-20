@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import { isStereoVote, luoghiTurno, pregiudizioTurno, PREGIUDIZIO_EVITATO, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
+import { isStereoVote, luoghiTurno, registerAccuse, pregiudizioTurno, PREGIUDIZIO_EVITATO, stereoExplain, stereoVoteFlags, affinityV2, affinityV2m, inferV2, registerRoles, registerStereotypes, registerTagsV2, stereoTags, STEREO_CAP, tagSimilarity } from "../src/index.ts";
 import { drawLens, mulberry } from "../src/ai-v2/lens.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
@@ -134,6 +134,10 @@ describe("etichette v2 (occhi dei bot)", () => {
     registerStereotypes([{ ruolo: "politico", tratto: "arrogante", forza: 3, asse: "ruolo" }]);
     expect(stereoExplain("pol", "i più testardi e un po' arroganti")!.causa).toBe("politico → testardo");   // non «arrogante», che la tabella premia di più
     expect(stereoExplain("pol", "i più bravi")!.causa).toBe("politico → vanitoso");                           // «influencer» è un ruolo, non un difetto
+    // l'accusa della frase al posto del difetto: il luogo comune dice cosa si è votato davvero
+    registerAccuse({ "i più testardi e un po' arroganti": "sono i più testardi e un po' arroganti" });
+    expect(stereoExplain("pol", "i più testardi e un po' arroganti")!.causa).toBe("politico → sono i più testardi e un po' arroganti");
+    registerAccuse({});
     registerRoles([], {}); registerStereotypes([]); registerTagsV2({}, {});
   });
 });

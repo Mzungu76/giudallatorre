@@ -270,6 +270,7 @@ export class RoomCore {
     if (L) { f.cause = L.pesi; f.lancio = L.lancio; }
     const tt = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); if (L) { const A = (tt.asp ??= {}); for (const [k, v] of Object.entries(L.aspetti)) { const a = (A[k] ??= { n: 0, l: {} }); a.n += v.n; for (const [l, c] of Object.entries(v.l)) a.l[l] = (a.l[l] ?? 0) + c; }
       const D = (tt.det ??= {}); for (const [k, v] of Object.entries(L.dettagli)) { const d = (D[k] ??= { v: 0, m: 0, e: 0, c: {} }); d.v += v.v; d.m = Math.round((d.m + v.m) * 100) / 100; d.e = Math.round((d.e + v.e) * 100) / 100; for (const [cid, n] of Object.entries(v.c)) d.c[cid] = (d.c[cid] ?? 0) + n; } }
+    if (L && Object.keys(L.pesi).length) { const sc = (tt.scene ??= []); sc.push({ t: text, c: L.scena.c, v: { ...r.votes }, m: (r.marks ?? []).map((x) => ({ p: x.position, e: x.effect })), f: r.fallenPositions.slice(), e: L.scena.e }); if (sc.length > 24) sc.shift(); }   // la moviola
     r.stereo = { ...f, forza: g.voti, ...(g.lui !== null ? { lui: g.lui } : {}), caso: g.caso };
     const t = (state.stereo ??= { n: {}, s: {}, c: 0, turni: 0, cause: {} }); t.cause ??= {}; for (const [k, v] of Object.entries(f.cause)) t.cause[k] = (t.cause[k] ?? 0) + v;
     // ogni voto è un giudizio a occhio (mai zero); anche il segnalino del Megafono lo è
