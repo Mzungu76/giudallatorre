@@ -81,10 +81,10 @@ h2.sec{font:400 26px/1 Anton;color:#fff;margin:34px 0 0;letter-spacing:.02em}
 <div class="row" id="row2"></div>
 
 <script>
-const IMG=n=>`url(../public/cards/${n}.webp)`, CUT=n=>`../public/cutouts/${n}.webp`;
+const IMG=n=>n.startsWith('..')?`url(${n}.webp)`:`url(../public/cards/${n}.webp)`, CUT=n=>`../public/cutouts/${n}.webp`;
 /* scatola 3D: w,h,d in px, colore, nome, cutouts, font size titolo, lato */
-function box({w=150,h=200,d=46,a,name,cuts=[],fs=34,tag='ESPANSIONE'}){
- const art=cuts.map((c,i)=>`<img class="cut" src="${CUT(c)}" style="height:${h*.46}px;left:${[8,w*.34,w*.62][i]}px;z-index:${[1,3,2][i]}">`).join('');
+function box({w=150,h=200,d=46,a,name,cuts=[],cards=[],fs=34,tag='ESPANSIONE'}){
+ const art=cards.length?cards.map((c,i)=>`<div style="position:absolute;bottom:${[4,10,0][i]}px;left:${[w*.06,w*.52,w*.29][i]}px;width:${w*.4}px;aspect-ratio:2/3;background:${IMG(c)} center/cover;border:3px solid #fff;border-radius:6px;box-shadow:2px 3px 0 var(--navy);transform:rotate(${[-8,8,-1][i]}deg);z-index:${[1,2,3][i]}"></div>`).join(''):cuts.map((c,i)=>`<img class="cut" src="${CUT(c)}" style="height:${h*.46}px;left:${[8,w*.34,w*.62][i]}px;z-index:${[1,3,2][i]}">`).join('');
  return `<div class="bx" style="--a:${a};--fs:${fs}px;width:${w}px;height:${h}px">
  <div class="f" style="width:${w}px;height:${h}px;transform:translateZ(${d/2}px)"><div class="band">${tag}</div><div class="nm">${name}</div><div class="art">${art}</div></div>
  <div class="sd" style="width:${d}px;height:${h}px;left:${(w-d)/2}px;top:0;transform:rotateY(90deg) translateZ(${w/2}px)"><span>${name} · 36+18</span></div>
@@ -99,7 +99,7 @@ const frame='<div class="fr"></div><div class="grain"></div>';
 const P={
  mare:{a:'#14a3a1',name:'Al mare',cuts:['p03-i04','p07-i02'],img:['p03-i04','p07-i02','p09-i05','p03-i02']},
  anni:{a:'#e8362b',name:"Anni '90",cuts:['p10-i03','p11-i06','p12-i01'],img:['p10-i03','p11-i06','p12-i01','p10-i01']},
- fan:{a:'#8e44c8',name:'Fantasy',cuts:['p13-i02','p05-i04'],img:['p13-i02','p05-i04','p13-i05','p10-i04']}
+ fan:{a:'#8e44c8',name:'Summit',cuts:[],cards:['../mockups/espansioni-assets/mondo/m01','../mockups/espansioni-assets/mondo/m19','../mockups/espansioni-assets/mondo/m10'],img:['../mockups/espansioni-assets/mondo/m14','../mockups/espansioni-assets/mondo/m02','../mockups/espansioni-assets/mondo/m22','../mockups/espansioni-assets/mondo/m33']}
 };
 const R=document.getElementById('row');
 function beat(inner,h3,p){const d=document.createElement('div');d.className='beat';d.innerHTML=`<div class="ph"><div class="s">${inner}${frame}</div></div><h3>${h3}</h3><p>${p}</p>`;return d}
@@ -108,7 +108,7 @@ function beat(inner,h3,p){const d=document.createElement('div');d.className='bea
 function panelA(k,y,badge,price,btn){const p=P[k];return `<div style="left:22px;right:22px;top:${y}px;height:196px;border:4px solid var(--navy);box-shadow:6px 7px 0 var(--navy);background:var(--paper);overflow:hidden">
  <div class="hr" style="position:absolute;inset:0;opacity:.35"></div>
  <div class="shad" style="left:30px;width:110px;height:16px;top:140px"></div>
- ${sc({a:p.a,name:p.name,cuts:p.cuts,fs:34},.6,'left:40px;top:24px')}
+ ${sc({a:p.a,name:p.name,cuts:p.cuts,cards:p.cards||[],fs:34},.6,'left:40px;top:24px')}
  ${card(p.img[1],176,20,62,10)}${card(p.img[2],232,34,62,-7,2)}${card(p.img[0],206,70,62,4,3)}${back(274,92,50,14,1)}
  <div style="position:absolute;left:12px;right:12px;bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="tit" style="font-size:22px">${p.name}</div><div class="meta">36 personaggi · 18 frasi</div></div>${btn}</div>
  ${badge?`<span class="badge ${badge[1]}" style="position:absolute;right:-3px;top:8px;transform:rotate(5deg);z-index:9">${badge[0]}</span>`:''}</div>`}
@@ -136,7 +136,7 @@ R.appendChild(beat(`<div class="bgp"></div><div class="hr"></div><div class="ht"
  'B · Vetrina del singolo mazzo','Scatola grande 3D al centro del tavolo, carte sparse intorno (una coperta), frecce per cambiare mazzo, descrizione e acquisto fisso in basso. È il più d'+"'"+'effetto.'));
 
 /* ---------- C: collezione su ripiani ---------- */
-function cell(k,x,y,badge,price,own){const p=P[k];return `<div class="cell" style="left:${x}px;top:${y}px"><div class="shad" style="left:8px;width:112px;height:16px;top:152px"></div>${sc({a:p.a,name:p.name,cuts:p.cuts,fs:34},.72,'left:20px;top:18px')}
+function cell(k,x,y,badge,price,own){const p=P[k];return `<div class="cell" style="left:${x}px;top:${y}px"><div class="shad" style="left:8px;width:112px;height:16px;top:152px"></div>${sc({a:p.a,name:p.name,cuts:p.cuts,cards:p.cards||[],fs:34},.72,'left:20px;top:18px')}
  ${card(p.img[1],104,100,40,10,3)}${card(p.img[2],122,86,40,-6,2)}
  <div class="tit" style="position:absolute;left:4px;top:176px;font-size:19px">${p.name}</div>
  <div style="position:absolute;left:4px;right:4px;top:198px;display:flex;justify-content:space-between;align-items:center">${own?'<span class="meta">Usa in partita</span><span class="sw on"></span>':`<span class="meta">36+18 carte</span><span class="price" style="font-size:14px;padding:3px 6px">${price}</span>`}</div>
@@ -154,15 +154,15 @@ R.appendChild(beat(`<div class="sky"></div><div class="dots"></div>
 /* ---------- C2: foglio di dettaglio ---------- */
 R.appendChild(beat(`<div class="sky"></div><div class="dots"></div>
  <div class="top"><span class="chip">‹ Indietro</span><span class="chip">3 di 3</span></div>
- ${sc({w:150,h:200,d:46,a:P.fan.a,name:'Fantasy',cuts:P.fan.cuts,fs:36},.9,'left:20px;top:96px')}
+ ${sc({w:150,h:200,d:46,a:P.fan.a,name:'Summit',cards:P.fan.cards,fs:36},.9,'left:20px;top:96px')}
  <div class="shad" style="left:30px;width:140px;height:20px;top:296px"></div>
- ${card('p13-i05',190,100,88,9,2)}${card('p10-i04',268,150,84,-7,3)}${back(214,230,70,-5,4)}
+ ${card('../mockups/espansioni-assets/mondo/m05',190,100,88,9,2)}${card('../mockups/espansioni-assets/mondo/m27',268,150,84,-7,3)}${back(214,230,70,-5,4)}
  <div class="veil" style="display:none"></div>
  <div class="sheet" style="top:352px"><div class="grab"></div>
-  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px"><div style="flex:1"><span class="lb" style="font-size:20px">Espansione</span><div class="tit" style="font-size:32px">Fantasy</div><div class="meta">36 personaggi · 18 frasi · per sempre</div></div><span class="price" style="font-size:24px;transform:rotate(4deg)">€ 2,99</span></div>
-  <div class="mini">${['p13-i02','p05-i04','p13-i05','p10-i04','p13-i07','p13-i08'].map(i=>`<div class="c" style="background-image:${IMG(i)}"></div>`).join('')}${['p03-i01','p04-i02','p05-i03','p06-i04','p07-i05','p08-i03'].map(i=>`<div class="c lk" style="background-image:${IMG(i)}"></div>`).join('')}</div>
+  <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:8px"><div style="flex:1"><span class="lb" style="font-size:20px">Espansione</span><div class="tit" style="font-size:32px">Summit</div><div class="meta">36 personaggi · 18 frasi · per sempre</div></div><span class="price" style="font-size:24px;transform:rotate(4deg)">€ 2,99</span></div>
+  <div class="mini">${['m01','m04','m09','m12','m20','m33'].map(i=>`<div class="c" style="background-image:${IMG('../mockups/espansioni-assets/mondo/'+i)}"></div>`).join('')}${['p03-i01','p04-i02','p05-i03','p06-i04','p07-i05','p08-i03'].map(i=>`<div class="c lk" style="background-image:${IMG(i)}"></div>`).join('')}</div>
   <div class="meta" style="margin:5px 0 10px">Qui 6 di 36 carte: le altre si sbloccano con l'acquisto.</div>
-  <div class="phr" style="margin-bottom:12px"><small>Frase del Megafono</small>Oggi sale sulla torre chi ha chiamato il drago “Fuffi”.</div>
+  <div class="phr" style="margin-bottom:12px"><small>Frase del Megafono</small>Oggi sale sulla torre chi non molla mai la poltrona.</div>
   <div class="bt red" style="font-size:24px">Compralo · € 2,99</div>
   <div style="text-align:center;margin-top:9px;font:800 12px Nunito;opacity:.8">Pagamento sicuro · codice di sblocco sul tuo dispositivo</div></div>`,
  'C · Foglio di dettaglio','Toccando una scatola: scatola ruotabile col dito e carte sul tavolo in alto, anteprima di 6 carte in un foglio (le altre bloccate), frase d'+"'"+'esempio e acquisto.'));
@@ -189,4 +189,31 @@ R2.appendChild(beat(`<div class="sky"></div><div class="dots"></div>
   <div class="bt red" style="position:absolute;left:12px;right:12px;bottom:14px;font-size:20px">Scoprilo · € 2,99</div></div>
  <div class="bt" style="left:20px;right:20px;bottom:90px">Rivincita!</div><div class="bt pap" style="left:20px;right:20px;bottom:24px">Torna alla Home</div>`,
  'Fine partita · proposta','Una cartolina discreta sotto il podio, con un solo mazzo (a rotazione, mai quello che hai già). Si chiude senza obbligo e non compare se tutto è già acquistato.'));
+
+/* ---------- Test mazzo da 36 ---------- */
+const h2=document.createElement('h2');h2.className='sec';h2.textContent='Test con il mazzo da 36 carte';document.body.appendChild(h2);
+const R3=document.createElement('div');R3.className='row';document.body.appendChild(R3);
+const all=Array.from({length:36},(_,i)=>'../mockups/espansioni-assets/mondo/m'+String(i+1).padStart(2,'0'));
+R3.appendChild(beat(`<div class="sky"></div><div class="dots"></div>
+ <div class="top"><span class="chip">‹ Espansioni</span><span class="chip">✓ Tuo</span></div>
+ <div class="shad" style="left:24px;width:110px;height:16px;top:194px"></div>
+ ${sc({a:P.fan.a,name:'Summit',cards:P.fan.cards,fs:34},.66,'left:30px;top:78px')}
+ <div class="h" style="top:84px;left:170px;font-size:38px"><small style="font-size:19px">Il tuo mazzo</small>Summit</div>
+ <div style="left:170px;right:24px;top:166px;display:flex;align-items:center;gap:10px;background:#fff7e0;border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:7px 9px;font:800 13px Nunito;color:var(--navy)"><span style="flex:1">Usa in partita</span><span class="sw on"></span></div>
+ <div class="pp" style="left:14px;right:14px;top:246px;padding:10px 10px 8px"><span class="tape"></span>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span class="tit" style="font-size:20px">36 personaggi</span><span class="meta">+18 frasi</span></div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px">${all.map(i=>`<div class="c" style="position:relative;border-width:2px;border-radius:5px;box-shadow:1px 2px 0 var(--navy);background-image:${IMG(i)}"></div>`).join('')}</div>
+ </div>
+ <div class="dock"><div class="bt pap" style="font-size:19px">Anteprima frasi del Megafono ›</div></div>`,
+ 'Mazzo Summit · 36 carte reali','Il mazzo di prova a pieno organico: scatola 3D, interruttore “Usa in partita” e griglia completa delle 36 carte sbloccate. Le carte sono quelle che hai caricato; “Summit” è solo un nome provvisorio.'));
+R3.appendChild(beat(`<div class="sky"></div><div class="dots"></div>
+ <div class="top"><span class="chip">‹ Espansioni</span><span class="chip">3 / 3</span></div>
+ <div class="strip" style="top:76px">★ NUOVO MAZZO ★</div>
+ <div class="h" style="top:108px;color:var(--red);text-shadow:3px 3px 0 var(--navy)"><small style="color:var(--navy);text-shadow:none">Chi comanda?</small>Summit</div>
+ <div class="shad" style="left:78px;width:240px;height:36px;top:520px"></div>
+ ${card('../mockups/espansioni-assets/mondo/m03',18,380,88,-14,1)}${card('../mockups/espansioni-assets/mondo/m17',276,366,88,12,1)}${card('../mockups/espansioni-assets/mondo/m26',30,462,86,8,4)}${card('../mockups/espansioni-assets/mondo/m22',264,460,86,-9,4)}${back(150,500,56,-4,5)}
+ ${sc({w:170,h:226,d:54,a:P.fan.a,name:'Summit',cards:P.fan.cards,fs:44},1,'left:105px;top:250px')}
+ <div class="pp" style="left:20px;right:20px;top:600px;padding:10px 12px"><span class="tape"></span><div class="meta" style="opacity:1"><b>36 personaggi</b> e <b>18 frasi</b> sui grandi della politica mondiale: caricature di figure pubbliche, da mescolare ai mazzi base.</div></div>
+ <div class="dock"><div class="bt red" style="font-size:25px">Compralo · € 2,99<small style="color:#fff">Tuo per sempre · lo attivi tu per tutta la stanza</small></div></div>`,
+ 'Vetrina Summit','La vetrina B con la scatola costruita sulle tue carte: non servono ritagli, la scatola usa tre carte del mazzo.'));
 </script></body></html>
