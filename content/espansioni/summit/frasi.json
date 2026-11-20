@@ -1,0 +1,151 @@
+{
+ "versione": 1,
+ "espansione": "summit",
+ "note": "18 frasi del Megafono del mazzo «Summit». Stesso formato di content/frasi-megafono.json; la frase completa è «Oggi {verbo} sulla torre {testo}». Tutte neutre rispetto a persone, partiti e Paesi: parlano di tratti del potere, non di individui.",
+ "frasi": [
+  {
+   "testo": "chi promette di più e mantiene di meno.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU01",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più bravi a dare la colpa a qualcun altro.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU02",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi farebbe un discorso di tre ore per non dire niente.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU03",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi cambierebbe idea appena cambia il sondaggio.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU04",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più attaccati alla poltrona.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU05",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi non ammetterebbe mai di aver sbagliato.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU06",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi riusciresti a convincere a pagare il conto per tutti.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU07",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi litigherebbe con tutti a una cena di famiglia.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU08",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più convinti di essere indispensabili.",
+   "famiglia": "convinzione",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU09",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi si farebbe fare un monumento da vivo.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU10",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi si prenderebbe il merito del lavoro altrui.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU11",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più simpatici mentre ti stanno fregando.",
+   "famiglia": "ribaltato",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU12",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi lasceresti da solo a gestire un’emergenza.",
+   "famiglia": "confronto",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU13",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi dichiarerebbe guerra per un parcheggio.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU14",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più testardi quando hanno torto.",
+   "famiglia": "etichetta",
+   "eta": "10+",
+   "stato": "nuova",
+   "id": "SU15",
+   "verbo": "salgono"
+  },
+  {
+   "testo": "chi manderebbe avanti gli altri e resterebbe nelle retrovie.",
+   "famiglia": "confronto",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU16",
+   "verbo": "sale"
+  },
+  {
+   "testo": "chi avrebbe sempre un piano B per scappare.",
+   "famiglia": "convinzione",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU17",
+   "verbo": "sale"
+  },
+  {
+   "testo": "i più pronti a stringerti la mano e a pugnalarti alle spalle.",
+   "famiglia": "collettivo",
+   "eta": "14+",
+   "stato": "nuova",
+   "id": "SU18",
+   "verbo": "salgono"
+  }
+ ]
+}

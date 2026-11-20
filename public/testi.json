@@ -1,6 +1,6 @@
 {
- "versione": 95,
- "aggiornato": "2026-11-17",
+ "versione": 96,
+ "aggiornato": "2026-11-20",
  "testi": {
   "intro.aria": {
    "t": "Come si gioca",
@@ -3744,6 +3744,132 @@
   "dt.nota": {
    "t": "Il peso di un luogo comune: 1 per ogni voto sul personaggio, +1 per il segnalino del Megafono (×1,5 se coincide con i voti), 0,5 per chi ha votato altrove.",
    "s": "Dettagli dei luoghi comuni"
+  },
+  "esp.titolo": {
+   "t": "Espansioni",
+   "s": "Espansioni",
+   "n": "Titolo della pagina"
+  },
+  "esp.sotto": {
+   "t": "La tua collezione",
+   "s": "Espansioni",
+   "n": "Scritta a mano sopra il titolo"
+  },
+  "esp.indietro": {
+   "t": "‹ Home",
+   "s": "Espansioni"
+  },
+  "esp.chip.zero": {
+   "t": "Nessun mazzo tuo",
+   "s": "Espansioni",
+   "n": "Segnalino in alto, quando non hai espansioni"
+  },
+  "esp.chip.uno": {
+   "t": "1 mazzo tuo",
+   "s": "Espansioni"
+  },
+  "esp.chip.molti": {
+   "t": "{n} mazzi tuoi",
+   "s": "Espansioni"
+  },
+  "esp.carico": {
+   "t": "Carico le espansioni…",
+   "s": "Espansioni"
+  },
+  "esp.tuo": {
+   "t": "Tuo",
+   "s": "Espansioni",
+   "n": "Bollino sulla scatola di un mazzo che possiedi"
+  },
+  "esp.novita": {
+   "t": "Novità",
+   "s": "Espansioni",
+   "n": "Bollino sulla scatola di un mazzo nuovo"
+  },
+  "esp.carte": {
+   "t": "{n} carte",
+   "s": "Espansioni",
+   "n": "Sotto la scatola: personaggi + frasi"
+  },
+  "esp.usa": {
+   "t": "Usa in partita",
+   "s": "Espansioni",
+   "n": "Interruttore dei mazzi posseduti"
+  },
+  "esp.prossimo": {
+   "t": "Prossimo\nmazzo",
+   "s": "Espansioni",
+   "n": "Casella tratteggiata a fine ripiano"
+  },
+  "esp.prossimo.sub": {
+   "t": "in arrivo…",
+   "s": "Espansioni"
+  },
+  "esp.apri": {
+   "t": "Apri il mazzo {nome}",
+   "s": "Espansioni",
+   "n": "Nome accessibile della scatola (lettori di schermo)"
+  },
+  "esp.aria.scatola": {
+   "t": "Scatola del mazzo {nome}",
+   "s": "Espansioni",
+   "n": "Nome accessibile dell'immagine della scatola"
+  },
+  "esp.aria.carta": {
+   "t": "Carta {n}",
+   "s": "Espansioni",
+   "n": "Nome accessibile di una carta nell'anteprima"
+  },
+  "esp.scatola.fascia": {
+   "t": "ESPANSIONE",
+   "s": "Espansioni",
+   "n": "Fascia in alto sul fronte della scatola"
+  },
+  "esp.espansione": {
+   "t": "Espansione",
+   "s": "Espansioni",
+   "n": "Scritta a mano sopra il nome nel foglio di dettaglio"
+  },
+  "esp.meta": {
+   "t": "{p} personaggi · {f} frasi",
+   "s": "Espansioni"
+  },
+  "esp.anteprima": {
+   "t": "Qui {n} di {tot} carte: le altre si sbloccano con l'acquisto.",
+   "s": "Espansioni"
+  },
+  "esp.frase": {
+   "t": "Frase del Megafono",
+   "s": "Espansioni",
+   "n": "Etichetta della frase d'esempio"
+  },
+  "esp.compra": {
+   "t": "Compralo · {prezzo}",
+   "s": "Espansioni"
+  },
+  "esp.compra.nota": {
+   "t": "Tuo per sempre · lo attivi tu per tutta la stanza",
+   "s": "Espansioni",
+   "n": "Sotto il tasto d'acquisto"
+  },
+  "esp.prova": {
+   "t": "Modalità prova: l'acquisto non è ancora collegato, il mazzo si sblocca solo su questo dispositivo.",
+   "s": "Espansioni",
+   "n": "Si toglie quando il pagamento sarà attivo"
+  },
+  "esp.blocca": {
+   "t": "Blocca di nuovo (prova)",
+   "s": "Espansioni",
+   "n": "Solo in modalità prova"
+  },
+  "esp.chiudi": {
+   "t": "Chiudi",
+   "s": "Espansioni"
+  },
+  "esp.home.aria": {
+   "t": "Espansioni: mazzi di carte in più",
+   "s": "Espansioni",
+   "n": "Icona delle espansioni accanto a statistiche, condividi e installa (lettori di schermo)"
   }
  }
 }

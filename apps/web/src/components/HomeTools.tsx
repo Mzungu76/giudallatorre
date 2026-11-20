@@ -15,6 +15,9 @@ export default function HomeTools() {
     <>
       <button onClick={() => setSound(!sound)} aria-label={sound ? ts("help.suoni.off") : ts("help.suoni.on")} title={sound ? ts("help.suoni.off") : ts("help.suoni.on")} data-testid="sound-toggle-home" className="home-sound">{sound ? "🔊" : "🔇"}</button>
       <div className="home-tools">
+        <button onClick={() => navigate("/espansioni")} aria-label={ts("esp.home.aria")} title={ts("esp.home.aria")} data-testid="go-espansioni" className="esp-ico">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8l9-5 9 5v8l-9 5-9-5zM3 8l9 5 9-5M12 13v8" /></svg>
+        </button>
         <button onClick={() => navigate("/statistiche")} aria-label={ts("ht.stat")} title={ts("ht.stat")} data-testid="go-stats">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#13224a" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 20V10M12 20V4M19 20v-7" /></svg>
         </button>
