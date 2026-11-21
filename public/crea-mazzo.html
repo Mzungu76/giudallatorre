@@ -4,18 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex">
+<meta name="claude:viewport-fit-sides" content="cover">
 <title>Crea mazzo · Giù dalla Torre</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f1e7;--card:#fff;--ink:#2a2118;--mut:#7a6b5a;--line:#e3d8c4;--acc:#b5471f;--ok:#2f7d4f;--err:#b3261e;--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a}
+:root{color-scheme:light;--gut:max(16px,env(safe-area-inset-left,0px));--gutr:max(16px,env(safe-area-inset-right,0px));--bg:#f6f1e7;--card:#fff;--ink:#2a2118;--mut:#7a6b5a;--line:#e3d8c4;--acc:#b5471f;--ok:#2f7d4f;--err:#b3261e;--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;padding-left:var(--gut);padding-right:var(--gutr)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--ink);z-index:10}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ink);color:#fff;margin-left:calc(-1*var(--gut));margin-right:calc(-1*var(--gutr));padding:10px var(--gutr) 10px var(--gut);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 header h1{font-size:16px;margin:0;flex:1 1 auto}
 button,.btn{font:inherit;border:0;border-radius:8px;padding:8px 12px;background:var(--acc);color:#fff;cursor:pointer}
 button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
 button:disabled{opacity:.4;cursor:default}
-main{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:start}
+main{max-width:1100px;margin:0 auto;padding:16px 0;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:start}
 @media (max-width:900px){main{grid-template-columns:1fr}}
 section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
 section h2{margin:0 0 8px;font-size:16px}
@@ -46,7 +48,7 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
 .chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}.chip.nuovo{border-style:dashed;border-color:#c77c00}.chip select{border:0;background:transparent;color:inherit;padding:0;width:auto;font-size:12px}.chip b{cursor:pointer;opacity:.8}
 .et-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.et-tools input[type=text]{flex:1 1 140px}
 .avv{background:#fffbe9;border:1px solid #ecdca0;border-radius:8px;padding:8px 10px;font-size:12.5px;margin:8px 0}
-.prev{position:sticky;top:60px}
+.prev{position:sticky;top:calc(60px + env(safe-area-inset-top,0px))}
 .prev h2{font-size:14px;color:var(--mut);margin:0 0 6px}
 .stage{position:relative;height:290px;border-radius:14px;overflow:hidden;background:repeating-conic-gradient(from -4deg at 50% 34%,#79d3ee 0 6deg,#4fbce6 6deg 12deg);border:3px solid var(--navy);margin-bottom:12px}
 .stage .box{position:absolute;left:44px;top:34px}
@@ -120,6 +122,7 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
     <p class="h">Ogni frase completa: «Oggi sale/salgono sulla torre <i>…</i>». Scrivi solo la parte dopo «sulla torre»: deve iniziare con <b>chi</b>, <b>i più</b>, <b>quelli che</b> o <b>il più</b>, finire con un punto ed essere lunga al massimo 80 caratteri. Il verbo si sceglie da solo («i più»/«quelli che» → salgono). Di norma 18.</p>
     <div id="frasi"></div>
     <div class="row"><button class="sec" id="addFrase">+ Aggiungi frase</button><button class="sec" id="incolla">Incolla più frasi (una per riga)</button></div>
+    <div id="incollaBox" hidden style="margin-top:8px"><textarea id="incollaTxt" placeholder="chi …&#10;i più …"></textarea><div class="row" style="margin-top:6px"><button id="incollaOk">Aggiungi le frasi</button><button class="sec" id="incollaNo">Annulla</button></div></div>
     <label>Frase d'esempio mostrata nella pagina</label><select id="esempio"></select>
     <div class="msg" id="frMsg"></div>
   </section>
@@ -128,6 +131,18 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
     <p class="h">Servono ai giocatori virtuali per capire chi è chi: una carta con certi <b>tipi</b> (che persona è) e <b>temi</b> (di cosa si parla) viene abbinata alle frasi con le stesse etichette. Senza etichette i bot giocano le carte alla cieca. Scegli una carta o una frase, poi tocca le etichette (al massimo 3 tipi e 6 temi, con peso da 1 «accenno» a 3 «tratto dominante»).</p>
     <div class="avv">Un tipo o un tema <b>nuovo</b> funziona solo se compare sia su carte sia su frasi (anche di questo mazzo): etichetta quindi anche le frasi. <b>Ruolo</b> e <b>aspetto</b> attivano i «luoghi comuni» del gioco (es. politico → ipocrita, giacca e cravatta → ambizioso): usali con giudizio, soprattutto per persone reali. Non si possono inventare.</div>
     <div class="msg" id="etMsg"></div>
+    <div class="avv" id="etAI" hidden>
+      <b>Suggerimenti di Claude</b> · Claude guarda l'immagine e propone le etichette (usa il tuo account Claude, ti chiede il permesso la prima volta). Controlla sempre e correggi.
+      <label style="font-weight:400"><input type="checkbox" id="reali"> Persone reali: niente tipi di carattere, solo temi, ruolo e abbigliamento visibile</label>
+      <div class="et-tools"><button class="sec" id="sugUna">Suggerisci per questa carta/frase</button><button class="sec" id="sugTutte">Suggerisci per tutte quelle senza etichette</button><button class="sec" id="sugStop" hidden>Ferma</button></div>
+      <div class="msg" id="sugMsg"></div>
+    </div>
+    <details id="etJson"><summary>Importa o copia le etichette (JSON)</summary>
+      <p class="h" style="margin-top:6px">Per farti aiutare in una chat con Claude: «Copia» e incolla il testo nella chat; Claude ti risponde con lo stesso formato e lo metti nella casella con «Applica». Le etichette si abbinano a carte e frasi in ordine.</p>
+      <textarea id="etJsonTxt" placeholder='{"carte":[{"tipi":{"furbo":2},"temi":{"viaggio":3}}],"frasi":[]}'></textarea>
+      <div class="et-tools"><button class="sec" id="etCopia">Copia le etichette attuali</button><button id="etApplica">Applica il JSON incollato</button></div>
+      <div class="msg" id="etJsonMsg"></div>
+    </details>
     <div class="et-sel"><button class="sec on" data-v="carta">Carte</button><button class="sec" data-v="frase">Frasi</button></div>
     <div id="etPick"></div>
     <div class="et-ed" id="etEd"></div>
@@ -162,11 +177,11 @@ const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().rep
 const verboDi = (t) => (/^(i più|quelli che)(?=\s)/.test(t) ? "salgono" : "sale");
 
 // ---------- catalogo esistente ----------
-function leggiCatalogo(c) {
-  catalogo = c; const sel = $("esist"); sel.innerHTML = '<option value="">Nuovo mazzo</option>' + c.mazzi.map((m) => `<option value="${m.id}">${esc(m.nome)} (${m.id})</option>`).join("");
-  $("catMsg").className = "msg ok"; $("catMsg").textContent = `Catalogo versione ${c.versione}: ${c.mazzi.length} mazzi.`;
+function leggiCatalogo(c, daMemoria) {
+  catalogo = c; if (!daMemoria) { try { localStorage.setItem("cm.catalogo", JSON.stringify(c)); } catch (e) { /* memoria non disponibile */ } } const sel = $("esist"); sel.innerHTML = '<option value="">Nuovo mazzo</option>' + c.mazzi.map((m) => `<option value="${m.id}">${esc(m.nome)} (${m.id})</option>`).join("");
+  $("catMsg").className = "msg ok"; $("catMsg").textContent = `Catalogo versione ${c.versione}: ${c.mazzi.length} mazzi.${daMemoria ? " (ricordato dall'ultima volta: se è cambiato, caricalo di nuovo)" : ""}`;
 }
-fetch("/espansioni/catalogo.json", { cache: "no-cache" }).then((r) => r.ok ? r.json() : Promise.reject()).then(leggiCatalogo).catch(() => { $("catMsg").className = "msg err"; $("catMsg").textContent = "Catalogo non trovato: caricalo a mano (public/espansioni/catalogo.json) per non perdere gli altri mazzi."; });
+fetch("/espansioni/catalogo.json", { cache: "no-cache" }).then((r) => r.ok ? r.json() : Promise.reject()).then(leggiCatalogo).catch(() => { let m = null; try { m = JSON.parse(localStorage.getItem("cm.catalogo") || "null"); } catch (e) { /* niente */ } if (m && m.mazzi) { leggiCatalogo(m, true); return; } $("catMsg").className = "msg err"; $("catMsg").textContent = "Catalogo non trovato: caricalo a mano (public/espansioni/catalogo.json) per non perdere gli altri mazzi."; });
 $("catFile").onchange = async (e) => { try { leggiCatalogo(JSON.parse(await e.target.files[0].text())); } catch { $("catMsg").className = "msg err"; $("catMsg").textContent = "File non valido."; } };
 $("esist").onchange = () => {
   const m = catalogo && catalogo.mazzi.find((x) => x.id === $("esist").value); modifica = m || null; if (!m) return;
@@ -241,7 +256,9 @@ function esempi() { const v = $("esempio").value || $("esempio").dataset.v || ""
 $("frasi").oninput = (e) => { const r = e.target.closest(".fr"); if (!r || !e.target.dataset.k) return; frasi[+r.dataset.i][e.target.dataset.k] = e.target.value; controllaFrasi(); esempi(); anteprima(); };
 $("frasi").onclick = (e) => { if (e.target.dataset.x) { frasi.splice(+e.target.closest(".fr").dataset.i, 1); righeFrasi(); } };
 $("addFrase").onclick = () => { frasi.push({ testo: "", famiglia: "confronto", eta: "10+", et: vuoto() }); righeFrasi(); };
-$("incolla").onclick = () => { const t = prompt("Incolla le frasi, una per riga (solo la parte dopo «sulla torre»):"); if (!t) return; t.split("\n").map((s) => s.trim()).filter(Boolean).forEach((s) => frasi.push({ testo: s, famiglia: /^(i più|quelli che)/.test(s) ? "etichetta" : "confronto", eta: "10+", et: vuoto() })); righeFrasi(); };
+$("incolla").onclick = () => { $("incollaBox").hidden = !$("incollaBox").hidden; if (!$("incollaBox").hidden) $("incollaTxt").focus(); };
+$("incollaNo").onclick = () => { $("incollaBox").hidden = true; };
+$("incollaOk").onclick = () => { const t = $("incollaTxt").value; $("incollaTxt").value = ""; $("incollaBox").hidden = true; t.split("\n").map((s) => s.trim()).filter(Boolean).forEach((s) => frasi.push({ testo: s, famiglia: /^(i più|quelli che)/.test(s) ? "etichetta" : "confronto", eta: "10+", et: vuoto() })); righeFrasi(); };
 
 // ---------- anteprima ----------
 function scatola(nome, colore, urls, k) {
@@ -314,6 +331,78 @@ $("etEd").onclick = (e) => {
 $("etEd").onchange = (e) => { const w = e.target.dataset.w; if (w) { const [kind, k] = w.split("|"); lista()[bersaglio].et[kind][k] = +e.target.value; } };
 $("etEd").oninput = (e) => { if (e.target.id === "etCerca") { const pos = e.target.selectionStart; etichette(); const c = $("etCerca"); c.focus(); c.setSelectionRange(pos, pos); } };
 
+// ---------- capacità opzionali dell'artefatto di Claude (assenti: la pagina funziona lo stesso) ----------
+const CAP = { sample: null, dl: null, img: null };
+(async () => {
+  try {
+    if (window.claude && window.claude.use) {
+      CAP.sample = await window.claude.use("sample"); CAP.dl = await window.claude.use("downloads");
+      if (CAP.sample && CAP.sample.limits) { try { CAP.img = (await CAP.sample.limits()).images || null; } catch (e) { /* senza immagini */ } }
+    }
+  } catch (e) { /* niente */ }
+  $("etAI").hidden = !CAP.sample; etichette();
+})();
+const vocTesto = (l) => l.map((x) => `- ${x.id}: ${x.def}`).join("\n");
+async function immagineCarta(c) {
+  let blob = c.blob; if (!blob) { try { blob = await (await fetch(c.url)).blob(); } catch (e) { return null; } }
+  const tipi = CAP.img && CAP.img.mediaTypes; if (!tipi || tipi.includes(blob.type)) return blob;
+  const bmp = await createImageBitmap(blob), cv = document.createElement("canvas"); cv.width = bmp.width; cv.height = bmp.height; cv.getContext("2d").drawImage(bmp, 0, 0);
+  return await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.88));
+}
+function pulisciSug(r, carta) {
+  const ids = (voc) => new Set(voc.map((x) => x.id)), T = ids(vocab.tipi), M = ids(vocab.temi), R = ids(vocab.ruoli), A = ids(vocab.aspetti), reali = $("reali").checked;
+  const pesi = (src, set, max) => Object.fromEntries(Object.entries(src || {}).filter(([k]) => set.has(k)).slice(0, max).map(([k, w]) => [k, Math.max(1, Math.min(3, Math.round(+w) || 2))]));
+  const o = vuoto(); o.tipi = reali ? {} : pesi(r.tipi, T, 3); o.temi = pesi(r.temi, M, 6);
+  if (carta) { o.ruoli = (r.ruoli || []).filter((k) => R.has(k)).slice(0, 3); o.aspetto = (r.aspetto || []).filter((k) => A.has(k)).slice(0, 4); }
+  return o;
+}
+async function suggerisci(kind, i) {
+  const t = (kind === "carta" ? carte : frasi)[i], reali = $("reali").checked, carta = kind === "carta";
+  const regole = `Rispondi SOLO con un oggetto JSON valido, senza altro testo, di questa forma: {"tipi":{"<id>":<peso>},"temi":{"<id>":<peso>}${carta ? ',"ruoli":["<id>"],"aspetto":["<id>"]' : ""}}.
+Regole: ${reali ? "NON usare tipi (lascia \"tipi\":{}); " : "al massimo 3 tipi (che persona è) e "}al massimo 6 temi (di cosa si parla); pesi 1 = accenno, 2 = presente, 3 = tratto dominante; usa SOLO gli id degli elenchi qui sotto${carta ? "; ruoli e aspetto solo se si vedono chiaramente (mestiere, abbigliamento, accessori)" : ""}.${reali ? " Le carte raffigurano persone reali: non dedurre chi siano dal volto, non attribuire colpe, caratteri o giudizi a persone reali; vale ciò che si vede (abbigliamento, accessori, scenografia) e il nome indicato dall'utente." : ""}
+Le etichette servono ai giocatori virtuali per abbinare le carte alle frasi del Megafono («Oggi sale sulla torre chi…»).
+TIPI:\n${vocTesto(vocab.tipi)}\nTEMI:\n${vocTesto(vocab.temi)}${carta ? `\nRUOLI:\n${vocTesto(vocab.ruoli)}\nASPETTO:\n${vocTesto(vocab.aspetti)}` : ""}`;
+  const mazzo = `Mazzo «${$("nome").value.trim() || "senza nome"}»${$("descr").value.trim() ? ": " + $("descr").value.trim() : ""}.`;
+  let input, opts = { modelTier: "default" };
+  if (carta) {
+    const img = await immagineCarta(t); if (!img) throw { code: "no_image", message: "serve il foglio caricato in questa sessione" };
+    opts.images = [img];
+    input = `Etichetta la carta personaggio allegata (carta ${i + 1}). ${mazzo}${t.nome ? ` Nome indicato dall'utente: ${t.nome}.` : ""}\n\n${regole}`;
+  } else input = `Etichetta questa frase del Megafono: «Oggi ${verboDi(t.testo)} sulla torre ${t.testo}». ${mazzo}\n\n${regole}`;
+  const r = await CAP.sample.json(input, opts); t.et = pulisciSug(r, carta);
+}
+const messaggioErr = (e) => ({ not_granted: "Permesso negato: le funzioni di Claude restano spente.", rate_limited: "Troppe richieste: aspetta un momento e riprova.", no_image: "Per le carte già pubblicate serve caricare di nuovo il foglio (l'immagine non è raggiungibile da qui).", cancelled: "Fermato." }[e && e.code] || `Non riesco a ottenere il suggerimento (${(e && (e.code || e.message)) || "errore"}).`);
+let fermo = false;
+$("sugUna").onclick = async () => {
+  if (!vocab) return; $("sugMsg").className = "msg"; $("sugMsg").textContent = "Claude sta guardando…"; $("sugUna").disabled = true;
+  try { await suggerisci(vistaEt, bersaglio); $("sugMsg").className = "msg ok"; $("sugMsg").textContent = "Suggerimento applicato: controlla e correggi."; } catch (e) { $("sugMsg").className = "msg err"; $("sugMsg").textContent = messaggioErr(e); }
+  $("sugUna").disabled = false; etichette();
+};
+$("sugTutte").onclick = async () => {
+  if (!vocab) return; const L = lista(), da = L.map((t, i) => i).filter((i) => !haEt(L[i].et)); if (!da.length) { $("sugMsg").textContent = "Sono già tutte etichettate."; return; }
+  fermo = false; $("sugStop").hidden = false; $("sugTutte").disabled = $("sugUna").disabled = true; let n = 0;
+  for (const i of da) {
+    if (fermo) break; $("sugMsg").className = "msg"; $("sugMsg").textContent = `Claude sta guardando… ${n}/${da.length}`;
+    try { await suggerisci(vistaEt, i); n++; bersaglio = i; etichette(); } catch (e) { $("sugMsg").className = "msg err"; $("sugMsg").textContent = `${messaggioErr(e)} Fatte ${n} su ${da.length}.`; fermo = true; break; }
+  }
+  if (!$("sugMsg").classList.contains("err")) { $("sugMsg").className = "msg ok"; $("sugMsg").textContent = `${n} suggerimenti applicati: controlla e correggi.`; }
+  $("sugStop").hidden = true; $("sugTutte").disabled = $("sugUna").disabled = false; etichette();
+};
+$("sugStop").onclick = () => { fermo = true; };
+$("etCopia").onclick = async () => {
+  const et = (x) => (haEt(x) ? { ...(Object.keys(x.tipi).length ? { tipi: x.tipi } : {}), ...(Object.keys(x.temi).length ? { temi: x.temi } : {}), ...(x.ruoli.length ? { ruoli: x.ruoli } : {}), ...(x.aspetto.length ? { aspetto: x.aspetto } : {}) } : null);
+  const txt = JSON.stringify({ carte: carte.map((c) => et(c.et)), frasi: frasi.map((f) => et(f.et)) }); $("etJsonTxt").value = txt;
+  try { await navigator.clipboard.writeText(txt); $("etJsonMsg").className = "msg ok"; $("etJsonMsg").textContent = "Copiato."; } catch (e) { $("etJsonTxt").select(); $("etJsonMsg").className = "msg"; $("etJsonMsg").textContent = "Selezionato: copia con Ctrl/Cmd+C."; }
+};
+$("etApplica").onclick = () => {
+  if (!vocab) return; let d; try { d = JSON.parse($("etJsonTxt").value); } catch (e) { $("etJsonMsg").className = "msg err"; $("etJsonMsg").textContent = "JSON non valido."; return; }
+  const R = new Set(vocab.ruoli.map((x) => x.id)), A = new Set(vocab.aspetti.map((x) => x.id)); let n = 0;
+  const applica = (arr, dest) => (arr || []).forEach((e, i) => { if (!e || !dest[i]) return; const v = copiaEt(e); v.ruoli = v.ruoli.filter((k) => R.has(k)); v.aspetto = v.aspetto.filter((k) => A.has(k)); if (dest === frasi) { v.ruoli = []; v.aspetto = []; }
+    for (const k of ["tipi", "temi"]) for (const [t, w] of Object.entries(v[k])) { if (!/^[a-z][a-z_]{1,24}$/.test(t)) delete v[k][t]; else v[k][t] = Math.max(1, Math.min(3, Math.round(+w) || 2)); }
+    v.tipi = Object.fromEntries(Object.entries(v.tipi).slice(0, 3)); v.temi = Object.fromEntries(Object.entries(v.temi).slice(0, 6)); dest[i].et = v; n++; });
+  applica(d.carte, carte); applica(d.frasi, frasi); $("etJsonMsg").className = "msg ok"; $("etJsonMsg").textContent = `Applicate le etichette a ${n} elementi: controllale qui sopra.`; etichette();
+};
+
 // ---------- controlli ed esportazione ----------
 function problemi() {
   const p = [], id = $("id").value.trim();
@@ -362,7 +451,9 @@ $("scarica").onclick = async () => {
   files.push({ name: "public/espansioni/catalogo.json", data: enc.encode(JSON.stringify(cat, null, 1)) });
   for (let n = 0; n < carte.length; n++) if (carte[n].blob) files.push({ name: `public/espansioni/${m.id}/c${String(n + 1).padStart(2, "0")}.webp`, data: new Uint8Array(await carte[n].blob.arrayBuffer()) });
   files.push({ name: "LEGGIMI.txt", data: enc.encode(`Mazzo «${m.nome}» (${m.id})\n\n1. Scompatta questo ZIP nella cartella principale del progetto, sovrascrivendo.\n2. Fai commit e pubblica.\n3. (Facoltativo) aggiungi le etichette per i bot in content/etichette e fai girare npm test.\n\n${carte.some((c) => c.blob) ? "" : "Questo ZIP non contiene le carte: restano quelle già pubblicate.\n"}`) });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(zip(files)); a.download = `mazzo-${m.id}.zip`; a.click();
+  const blob = zip(files), nome = `mazzo-${m.id}.zip`;
+  if (CAP.dl) { try { await CAP.dl.save({ filename: nome, data: blob }); } catch (e) { if (e && e.code !== "declined") { $("errMsg").className = "msg err"; $("errMsg").textContent = "Non riesco a salvare il file in questa vista (" + (e.code || "errore") + ")."; } } return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; a.click();
 };
 tutto();
 </script>
