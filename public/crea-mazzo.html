@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Crea mazzo · Giù dalla Torre</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat+Brush&family=Nunito:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1e7;--card:#fff;--ink:#2a2118;--mut:#7a6b5a;--line:#e3d8c4;--acc:#b5471f;--ok:#2f7d4f;--err:#b3261e;--paper:#f4e3bd;--red:#e8362b;--mus:#ffc72c;--navy:#13224a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--ink);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+header h1{font-size:16px;margin:0;flex:1 1 auto}
+button,.btn{font:inherit;border:0;border-radius:8px;padding:8px 12px;background:var(--acc);color:#fff;cursor:pointer}
+button.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:default}
+main{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+section h2{margin:0 0 8px;font-size:16px}
+section p.h{margin:0 0 10px;color:var(--mut);font-size:13.5px}
+label{display:block;font-weight:600;font-size:13px;margin:8px 0 3px}
+input[type=text],input[type=number],select,textarea{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff}
+textarea{min-height:90px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap}.row>*{flex:1 1 140px}
+.sw{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.sw i{width:28px;height:28px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-top:8px}
+.thumbs div{position:relative;aspect-ratio:2/3;background:#ddd center/cover;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.thumbs div b{position:absolute;left:2px;top:2px;background:#fff;border-radius:99px;font-size:11px;padding:0 5px}
+.thumbs div.sel{box-shadow:0 0 0 3px var(--acc)}.thumbs div.sel b{background:var(--acc);color:#fff}
+.msg{font-size:13px;margin:6px 0}.msg.err{color:var(--err)}.msg.ok{color:var(--ok)}
+.fr{display:grid;grid-template-columns:1fr 112px 64px 24px;gap:6px;margin-bottom:6px;align-items:start}
+.fr .e{grid-column:1/-1;font-size:12px;color:var(--err);margin:-3px 0 2px}
+.fr button{padding:6px}
+details{margin-top:8px}summary{cursor:pointer;font-weight:600}
+.names{display:grid;grid-template-columns:28px 1fr;gap:4px 8px;margin-top:6px;max-height:320px;overflow:auto;align-items:center;font-size:13px}
+.prev{position:sticky;top:60px}
+.prev h2{font-size:14px;color:var(--mut);margin:0 0 6px}
+.stage{position:relative;height:290px;border-radius:14px;overflow:hidden;background:repeating-conic-gradient(from -4deg at 50% 34%,#79d3ee 0 6deg,#4fbce6 6deg 12deg);border:3px solid var(--navy);margin-bottom:12px}
+.stage .box{position:absolute;left:44px;top:34px}
+.sheet{position:relative;background:var(--paper);border:3px solid var(--navy);border-radius:14px;padding:12px 14px;color:var(--navy);font-family:Nunito,system-ui,sans-serif}
+/* ---- stessi stili dell'app (pagina Espansioni): scatola 3D e foglio ---- */
+.eb-sc{perspective:900px;position:relative}
+.eb-k{position:absolute;left:12px;top:22px;transform-origin:0 0}
+.eb{position:relative;transform-style:preserve-3d;transform:rotateX(-14deg) rotateY(-30deg)}
+.eb>div{position:absolute;border:4px solid var(--navy);backface-visibility:hidden}
+.eb-f{background:var(--a);overflow:hidden;display:flex;flex-direction:column;align-items:center}
+.eb-f::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#fff 0 20%,transparent 22%) 0 0/9px 9px;opacity:.13}
+.eb-band{position:relative;width:100%;background:var(--navy);color:var(--mus);font:400 11px/1 Anton;letter-spacing:.18em;text-align:center;padding:5px 0 4px;z-index:2}
+.eb-nm{position:relative;z-index:2;font:400 var(--fs)/.88 Anton;text-transform:uppercase;color:#fff;text-shadow:2px 2px 0 var(--navy),4px 4px 0 var(--navy);text-align:center;margin-top:8px;padding:0 6px;transform:rotate(-3deg)}
+.eb-art{position:absolute;left:0;right:0;bottom:6px;height:46%;z-index:2}
+.eb-art i{position:absolute;aspect-ratio:2/3;background:center/cover #fff;border:3px solid #fff;border-radius:6px;box-shadow:2px 3px 0 var(--navy)}
+.eb-sd{background:var(--a);filter:brightness(.62);display:grid;place-items:center;overflow:hidden}
+.eb-sd span{font:400 15px/1 Anton;color:#fff;letter-spacing:.14em;text-transform:uppercase;transform:rotate(90deg);white-space:nowrap}
+.eb-tp{background:var(--a);filter:brightness(1.18)}
+.eb-tp::after{content:"";position:absolute;left:12%;right:12%;top:35%;height:30%;background:#fff7e0;border:2px solid var(--navy);opacity:.9}
+.p-lb{display:block;font:400 20px/1 'Caveat Brush',cursive;transform:rotate(-1deg)}
+.p-tit{display:block;font:400 30px/.95 Anton;text-transform:uppercase}
+.p-meta{display:block;font:800 12px/1.3 Nunito;opacity:.85;margin-top:3px}
+.p-price{font:400 22px/1 Anton;background:var(--mus);border:3px solid var(--navy);box-shadow:3px 3px 0 var(--navy);padding:5px 9px;transform:rotate(4deg);display:inline-block}
+.p-head{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.p-desc{font:700 13.5px/1.35 Nunito;margin:0 0 10px}
+.p-mini{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.p-mini i{display:block;aspect-ratio:2/3;background:center/cover #fff;border:2px solid #fff;border-radius:5px;box-shadow:1px 2px 0 var(--navy)}
+.p-mini i.lk{filter:grayscale(1) brightness(.5)}
+.p-phr{background:var(--red);color:#fff;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy);padding:9px 12px;font:700 14px/1.25 Nunito;margin:10px 0 4px}
+.p-phr small{display:block;font:400 11px/1 Anton;letter-spacing:.1em;text-transform:uppercase;opacity:.9;margin-bottom:3px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Crea mazzo · Giù dalla Torre</h1>
+  <button class="sec" id="nuovo">Nuovo mazzo</button>
+  <button id="scarica" disabled>Scarica ZIP</button>
+</header>
+<main>
+<div>
+  <section>
+    <h2>1 · Mazzo da modificare (facoltativo)</h2>
+    <p class="h">Per cambiare un mazzo già pubblicato scegli qui il suo nome. Il catalogo viene letto da <code>/espansioni/catalogo.json</code>; se apri la pagina da file, caricalo a mano.</p>
+    <div class="row"><select id="esist"><option value="">Nuovo mazzo</option></select><input type="file" id="catFile" accept=".json"></div>
+    <div class="msg" id="catMsg"></div>
+  </section>
+  <section>
+    <h2>2 · Fogli delle carte</h2>
+    <p class="h">Carica i fogli (immagini con 9 carte, 3×3, su fondo bianco). Le carte vengono ritagliate in 320×480 nell'ordine: foglio per foglio, da sinistra a destra e dall'alto in basso. Un mazzo ha di norma 4 fogli (36 carte).</p>
+    <input type="file" id="fogli" accept="image/*" multiple>
+    <div class="msg" id="foglMsg"></div>
+    <div class="thumbs" id="thumbs"></div>
+  </section>
+  <section>
+    <h2>3 · Scatola e pagina</h2>
+    <div class="row"><div><label>Nome del mazzo</label><input type="text" id="nome" maxlength="16" placeholder="Es. Anni '90"></div>
+      <div><label>Identificativo (a-z, 0-9)</label><input type="text" id="id" maxlength="12" placeholder="anni90"></div></div>
+    <div class="row"><div><label>Colore della scatola</label><input type="color" id="colore" value="#8e44c8"><div class="sw" id="sw"></div></div>
+      <div><label>Prezzo</label><input type="text" id="prezzo" value="€ 2,99"></div>
+      <div><label>Stato</label><select id="stato"><option value="vendita">In vendita</option><option value="arrivo">In arrivo (non giocabile)</option></select></div></div>
+    <div class="row"><div><label>Carte d'anteprima in chiaro</label><input type="number" id="anteprima" min="0" max="36" value="6"></div>
+      <div><label><input type="checkbox" id="novita"> Bollino «Novità»</label></div></div>
+    <label>Descrizione (pagina del mazzo)</label><textarea id="descr" placeholder="Una o due frasi che presentano il mazzo."></textarea>
+    <label>Le 3 carte sul fronte della scatola (tocca le miniature qui sotto, nell'ordine)</label>
+    <div class="msg">Scelte: <span id="scelte">–</span></div>
+    <div class="thumbs" id="thumbs2"></div>
+    <details><summary>Nomi delle carte (facoltativo: testo alternativo per i lettori di schermo)</summary><div class="names" id="names"></div></details>
+  </section>
+  <section>
+    <h2>4 · Frasi del Megafono</h2>
+    <p class="h">Ogni frase completa: «Oggi sale/salgono sulla torre <i>…</i>». Scrivi solo la parte dopo «sulla torre»: deve iniziare con <b>chi</b>, <b>i più</b>, <b>quelli che</b> o <b>il più</b>, finire con un punto ed essere lunga al massimo 80 caratteri. Il verbo si sceglie da solo («i più»/«quelli che» → salgono). Di norma 18.</p>
+    <div id="frasi"></div>
+    <div class="row"><button class="sec" id="addFrase">+ Aggiungi frase</button><button class="sec" id="incolla">Incolla più frasi (una per riga)</button></div>
+    <label>Frase d'esempio mostrata nella pagina</label><select id="esempio"></select>
+    <div class="msg" id="frMsg"></div>
+  </section>
+  <section>
+    <h2>5 · Installazione</h2>
+    <p class="h">«Scarica ZIP» crea: le carte <code>public/espansioni/&lt;id&gt;/cNN.webp</code> e il nuovo <code>public/espansioni/catalogo.json</code> (con tutti gli altri mazzi, versione + 1). Scompatta lo ZIP nella cartella principale del progetto (sovrascrivendo), fai commit e pubblica; oppure caricalo in chat e lo inserisco io. Non occorre altro: il gioco legge frasi e carte dal catalogo. Le etichette per i bot (<code>content/etichette</code>) sono a parte: senza, i bot giocano con le carte come neutre.</p>
+    <div class="msg" id="errMsg"></div>
+  </section>
+</div>
+<aside class="prev">
+  <h2>Anteprima della scatola</h2>
+  <div class="stage" id="stage"></div>
+  <h2>Anteprima della pagina del mazzo</h2>
+  <div class="sheet" id="sheet" style="--a:#8e44c8"></div>
+</aside>
+</main>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const FAMIGLIE = ["etichetta", "collettivo", "confronto", "convinzione", "ribaltato"], ETA = ["10+", "14+", "18+", "6+"];
+const COLORI = ["#e8362b", "#8e44c8", "#14a3a1", "#ff7aa8", "#ffc72c", "#2f7be0", "#3aa655", "#8a5a3b", "#13224a"];
+let carte = [];              // [{ url, blob? }] in ordine
+let sceltaBox = [];          // numeri carta (1..N) del fronte della scatola
+let frasi = [];              // [{ testo, famiglia, eta }]
+let catalogo = null, modifica = null;
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12);
+const verboDi = (t) => (/^(i più|quelli che)(?=\s)/.test(t) ? "salgono" : "sale");
+
+// ---------- catalogo esistente ----------
+function leggiCatalogo(c) {
+  catalogo = c; const sel = $("esist"); sel.innerHTML = '<option value="">Nuovo mazzo</option>' + c.mazzi.map((m) => `<option value="${m.id}">${esc(m.nome)} (${m.id})</option>`).join("");
+  $("catMsg").className = "msg ok"; $("catMsg").textContent = `Catalogo versione ${c.versione}: ${c.mazzi.length} mazzi.`;
+}
+fetch("/espansioni/catalogo.json", { cache: "no-cache" }).then((r) => r.ok ? r.json() : Promise.reject()).then(leggiCatalogo).catch(() => { $("catMsg").className = "msg err"; $("catMsg").textContent = "Catalogo non trovato: caricalo a mano (public/espansioni/catalogo.json) per non perdere gli altri mazzi."; });
+$("catFile").onchange = async (e) => { try { leggiCatalogo(JSON.parse(await e.target.files[0].text())); } catch { $("catMsg").className = "msg err"; $("catMsg").textContent = "File non valido."; } };
+$("esist").onchange = () => {
+  const m = catalogo && catalogo.mazzi.find((x) => x.id === $("esist").value); modifica = m || null; if (!m) return;
+  $("nome").value = m.nome; $("id").value = m.id; $("id").disabled = true; $("colore").value = m.colore; $("prezzo").value = m.prezzo; $("stato").value = m.stato; $("anteprima").value = m.anteprima; $("novita").checked = !!m.novita; $("descr").value = m.descrizione;
+  carte = Array.from({ length: m.carte }, (_, i) => ({ url: `${m.cartella}c${String(i + 1).padStart(2, "0")}.webp`, nome: (m.nomi || [])[i] || "" }));
+  sceltaBox = (m.scatola || []).slice(); frasi = (m.frasiMegafono || []).map((f) => ({ testo: f.testo, famiglia: f.famiglia, eta: f.eta }));
+  $("esempio").dataset.v = m.esempio; $("foglMsg").className = "msg ok"; $("foglMsg").textContent = `Uso le ${m.carte} carte già pubblicate. Carica nuovi fogli solo per sostituirle.`;
+  tutto();
+};
+$("nuovo").onclick = () => { modifica = null; carte = []; sceltaBox = []; frasi = []; ["nome", "id", "descr"].forEach((k) => { $(k).value = ""; }); $("id").disabled = false; $("esist").value = ""; $("fogli").value = ""; $("foglMsg").textContent = ""; $("esempio").dataset.v = ""; tutto(); };
+
+// ---------- ritaglio dei fogli ----------
+function corse(v, minLen) { const r = []; let s = null; v.forEach((x, i) => { if (x && s === null) s = i; if (!x && s !== null) { if (i - s >= minLen) r.push([s, i]); s = null; } }); if (s !== null && v.length - s >= minLen) r.push([s, v.length]); return r; }
+async function ritaglia(file) {
+  const bmp = await createImageBitmap(file), W = bmp.width, H = bmp.height, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const cx = cv.getContext("2d", { willReadFrequently: true }); cx.drawImage(bmp, 0, 0); const d = cx.getImageData(0, 0, W, H).data;
+  const colN = new Float32Array(W), rowN = new Float32Array(H);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const i = (y * W + x) * 4; if (d[i] + d[i + 1] + d[i + 2] < 735 && d[i + 3] > 10) { colN[x]++; rowN[y]++; } }
+  let cols = [], rows = [];
+  for (const t of [0.2, 0.12, 0.3]) { cols = corse(Array.from(colN, (v) => v / H > t), W * 0.057); rows = corse(Array.from(rowN, (v) => v / W > t), H * 0.04); if (cols.length === 3 && rows.length === 3) break; }
+  if (cols.length !== 3 || rows.length !== 3) throw new Error(`${file.name}: non trovo una griglia 3×3 (trovate ${cols.length} colonne e ${rows.length} righe)`);
+  const out = [];
+  for (const [y0, y1] of rows) for (const [x0, x1] of cols) {
+    const c = document.createElement("canvas"); c.width = 320; c.height = 480; c.getContext("2d").drawImage(bmp, x0, y0, x1 - x0, y1 - y0, 0, 0, 320, 480);
+    const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.88)); if (blob.type !== "image/webp") throw new Error("Questo browser non sa salvare in WebP: usa Chrome, Edge o Firefox.");
+    out.push({ blob, url: URL.createObjectURL(blob), nome: "" });
+  }
+  return out;
+}
+$("fogli").onchange = async (e) => {
+  const files = [...e.target.files].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })); if (!files.length) return;
+  $("foglMsg").className = "msg"; $("foglMsg").textContent = "Ritaglio…"; const nuove = [];
+  try { for (const f of files) nuove.push(...await ritaglia(f)); } catch (err) { $("foglMsg").className = "msg err"; $("foglMsg").textContent = err.message; return; }
+  carte = nuove; sceltaBox = sceltaBox.filter((n) => n <= carte.length);
+  $("foglMsg").className = "msg ok"; $("foglMsg").textContent = `${files.length} fogli → ${carte.length} carte${carte.length === 36 ? "" : " (di norma sono 36)"}. L'ordine è quello dei fogli: controlla le miniature.`;
+  tutto();
+};
+
+// ---------- colori, miniature, nomi ----------
+$("sw").innerHTML = COLORI.map((c) => `<i style="background:${c}" data-c="${c}"></i>`).join(""); $("sw").onclick = (e) => { if (e.target.dataset.c) { $("colore").value = e.target.dataset.c; anteprima(); } };
+function miniature() {
+  const h = carte.map((c, i) => `<div data-n="${i + 1}" style="background-image:url(${c.url})"><b>${i + 1}</b></div>`).join("");
+  $("thumbs").innerHTML = h;
+  $("thumbs2").innerHTML = carte.map((c, i) => { const k = sceltaBox.indexOf(i + 1); return `<div data-n="${i + 1}" class="${k >= 0 ? "sel" : ""}" style="background-image:url(${c.url})"><b>${k >= 0 ? k + 1 : i + 1}</b></div>`; }).join("");
+  $("scelte").textContent = sceltaBox.length ? sceltaBox.map((n) => "carta " + n).join(", ") : "–";
+  $("names").innerHTML = carte.map((c, i) => `<span>${i + 1}</span><input type="text" data-i="${i}" value="${esc(c.nome || "")}" placeholder="Nome carta ${i + 1}">`).join("");
+}
+$("thumbs2").onclick = (e) => { const n = +(e.target.closest("[data-n]")?.dataset.n || 0); if (!n) return; const k = sceltaBox.indexOf(n); if (k >= 0) sceltaBox.splice(k, 1); else if (sceltaBox.length < 3) sceltaBox.push(n); else { sceltaBox.shift(); sceltaBox.push(n); } miniature(); anteprima(); };
+$("names").oninput = (e) => { if (e.target.dataset.i) carte[+e.target.dataset.i].nome = e.target.value; };
+
+// ---------- frasi ----------
+function righeFrasi() {
+  $("frasi").innerHTML = frasi.map((f, i) => `<div class="fr" data-i="${i}">
+    <input type="text" data-k="testo" value="${esc(f.testo)}" placeholder="chi …">
+    <select data-k="famiglia">${FAMIGLIE.map((x) => `<option${x === f.famiglia ? " selected" : ""}>${x}</option>`).join("")}</select>
+    <select data-k="eta">${ETA.map((x) => `<option${x === f.eta ? " selected" : ""}>${x}</option>`).join("")}</select>
+    <button class="sec" data-x="1" title="Togli">×</button><div class="e" id="e${i}"></div></div>`).join("");
+  controllaFrasi(); esempi(); anteprima();
+}
+function erroriFrase(f, tutte) {
+  const e = [], t = f.testo.trim(); if (!t) return ["vuota"];
+  if (!/^(i più|quelli che|chi|il più)(?=[\s,])/.test(t)) e.push("deve iniziare con chi / i più / quelli che / il più");
+  if (!t.endsWith(".")) e.push("deve finire con un punto"); if (t.length > 80) e.push(`troppo lunga (${t.length}/80)`);
+  if (tutte.filter((x) => x.testo.trim().toLowerCase() === t.toLowerCase()).length > 1) e.push("doppione");
+  return e;
+}
+function controllaFrasi() {
+  let n = 0; frasi.forEach((f, i) => { const e = erroriFrase(f, frasi); n += e.length ? 1 : 0; const el = $("e" + i); if (el) el.textContent = e.join(" · "); });
+  $("frMsg").className = "msg " + (n ? "err" : "ok"); $("frMsg").textContent = `${frasi.length} frasi${n ? `, ${n} da correggere` : ""}${frasi.length !== 18 ? " (di norma sono 18)" : ""}.`;
+}
+function esempi() { const v = $("esempio").value || $("esempio").dataset.v || ""; $("esempio").innerHTML = frasi.filter((f) => f.testo.trim()).map((f) => { const t = `Oggi ${verboDi(f.testo.trim())} sulla torre ${f.testo.trim()}`; return `<option${t === v ? " selected" : ""}>${esc(t)}</option>`; }).join(""); }
+$("frasi").oninput = (e) => { const r = e.target.closest(".fr"); if (!r || !e.target.dataset.k) return; frasi[+r.dataset.i][e.target.dataset.k] = e.target.value; controllaFrasi(); esempi(); anteprima(); };
+$("frasi").onclick = (e) => { if (e.target.dataset.x) { frasi.splice(+e.target.closest(".fr").dataset.i, 1); righeFrasi(); } };
+$("addFrase").onclick = () => { frasi.push({ testo: "", famiglia: "confronto", eta: "10+" }); righeFrasi(); };
+$("incolla").onclick = () => { const t = prompt("Incolla le frasi, una per riga (solo la parte dopo «sulla torre»):"); if (!t) return; t.split("\n").map((s) => s.trim()).filter(Boolean).forEach((s) => frasi.push({ testo: s, famiglia: /^(i più|quelli che)/.test(s) ? "etichetta" : "confronto", eta: "10+" })); righeFrasi(); };
+
+// ---------- anteprima ----------
+function scatola(nome, colore, urls, k) {
+  const W = 150, H = 200, D = 46, fs = nome.length > 7 ? 28 : 34, pos = [{ b: 4, l: W * 0.06, r: -8, z: 1 }, { b: 10, l: W * 0.52, r: 8, z: 2 }, { b: 0, l: W * 0.29, r: -1, z: 3 }];
+  return `<div class="eb-sc" style="width:${(W + D) * k}px;height:${(H + 20) * k}px"><div class="eb-k" style="transform:scale(${k})"><div class="eb" style="--a:${colore};--fs:${fs}px;width:${W}px;height:${H}px">
+   <div class="eb-f" style="width:${W}px;height:${H}px;transform:translateZ(${D / 2}px)"><div class="eb-band">ESPANSIONE</div><div class="eb-nm">${esc(nome)}</div><div class="eb-art">${urls.slice(0, 3).map((u, i) => `<i style="bottom:${pos[i].b}px;left:${pos[i].l}px;width:${W * 0.4}px;transform:rotate(${pos[i].r}deg);z-index:${pos[i].z};background-image:url(${u})"></i>`).join("")}</div></div>
+   <div class="eb-sd" style="width:${D}px;height:${H}px;left:${(W - D) / 2}px;transform:rotateY(90deg) translateZ(${W / 2}px)"><span>${esc(nome)}</span></div>
+   <div class="eb-tp" style="width:${W}px;height:${D}px;top:${(H - D) / 2}px;transform:rotateX(90deg) translateZ(${H / 2}px)"></div></div></div></div>`;
+}
+function anteprima() {
+  const nome = $("nome").value.trim() || "Nome", col = $("colore").value, urls = (sceltaBox.length ? sceltaBox : [1, 2, 3]).map((n) => carte[n - 1]?.url).filter(Boolean);
+  $("stage").innerHTML = `<div class="box">${scatola(nome, col, urls, 1)}</div>`;
+  const ant = Math.max(0, Math.min(carte.length, +$("anteprima").value || 0)), ex = $("esempio").value || "";
+  $("sheet").style.setProperty("--a", col);
+  $("sheet").innerHTML = `<div class="p-head"><div><span class="p-lb">Espansione</span><b class="p-tit">${esc(nome)}</b><span class="p-meta">${carte.length} personaggi · ${frasi.length} frasi</span></div><span class="p-price">${esc($("prezzo").value)}</span></div>
+   <p class="p-desc">${esc($("descr").value)}</p><div class="p-mini">${carte.map((c, i) => `<i class="${i >= ant ? "lk" : ""}" style="background-image:url(${c.url})"></i>`).join("")}</div>
+   <div class="p-phr"><small>Frase del Megafono</small>${esc(ex)}</div>`;
+  controllo();
+}
+["nome", "colore", "prezzo", "anteprima", "descr", "stato", "novita", "esempio"].forEach((k) => { $(k).oninput = $(k).onchange = () => { if (k === "nome" && !modifica && !$("id").dataset.manuale) $("id").value = slug($("nome").value); anteprima(); }; });
+$("id").oninput = () => { $("id").dataset.manuale = "1"; $("id").value = slug($("id").value); controllo(); };
+
+// ---------- controlli ed esportazione ----------
+function problemi() {
+  const p = [], id = $("id").value.trim();
+  if (!$("nome").value.trim()) p.push("manca il nome"); if (!/^[a-z0-9]{2,12}$/.test(id)) p.push("identificativo non valido (2–12 caratteri, a-z e 0-9)");
+  if (!modifica && catalogo && catalogo.mazzi.some((m) => m.id === id)) p.push(`esiste già un mazzo «${id}»: sceglilo in alto per modificarlo`);
+  if (!catalogo) p.push("catalogo non caricato (serve per non perdere gli altri mazzi)");
+  if (carte.length < 12) p.push("servono le carte (almeno 12, di norma 36)"); if (sceltaBox.length !== 3) p.push("scegli le 3 carte del fronte della scatola");
+  if (!frasi.length) p.push("mancano le frasi"); if (frasi.some((f) => erroriFrase(f, frasi).length)) p.push("ci sono frasi da correggere");
+  if (!$("descr").value.trim()) p.push("manca la descrizione"); if (!$("esempio").value) p.push("manca la frase d'esempio");
+  return p;
+}
+function controllo() { const p = problemi(); $("errMsg").className = "msg " + (p.length ? "err" : "ok"); $("errMsg").innerHTML = p.length ? "Prima di scaricare: " + p.map(esc).join(" · ") : "Tutto a posto: puoi scaricare lo ZIP."; $("scarica").disabled = p.length > 0; }
+function tutto() { miniature(); righeFrasi(); anteprima(); }
+
+const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return (b) => { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = t[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }; })();
+function zip(files) {   // ZIP senza compressione: abbastanza per immagini già compresse e JSON piccoli
+  const enc = new TextEncoder(), parts = [], dir = []; let off = 0;
+  const u16 = (n) => new Uint8Array([n & 255, (n >> 8) & 255]), u32 = (n) => new Uint8Array([n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255]);
+  for (const f of files) {
+    const name = enc.encode(f.name), crc = CRC(f.data), size = f.data.length;
+    const head = [u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(size), u32(size), u16(name.length), u16(0), name];
+    head.forEach((h) => parts.push(h)); parts.push(f.data);
+    dir.push([u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(size), u32(size), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(off), name]);
+    off += 30 + name.length + size;
+  }
+  let dsz = 0; dir.forEach((d) => d.forEach((x) => { parts.push(x); dsz += x.length; }));
+  [u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(dsz), u32(off), u16(0)].forEach((x) => parts.push(x));
+  return new Blob(parts, { type: "application/zip" });
+}
+function voce() {
+  const id = $("id").value.trim(), nomi = carte.map((c) => (c.nome || "").trim()), ex = $("esempio").value;
+  const m = { id, nome: $("nome").value.trim(), colore: $("colore").value, prezzo: $("prezzo").value.trim(), stato: $("stato").value };
+  if ($("novita").checked) m.novita = true;
+  Object.assign(m, { descrizione: $("descr").value.trim(), personaggi: carte.length, frasi: frasi.length, anteprima: Math.max(0, Math.min(carte.length - 1, +$("anteprima").value || 0)), scatola: sceltaBox.slice(0, 3), esempio: ex, cartella: `/espansioni/${id}/`, carte: carte.length });
+  if (nomi.some(Boolean)) m.nomi = nomi.map((n, i) => n || `Carta ${i + 1}`);
+  m.frasiMegafono = frasi.map((f, i) => ({ id: `${id.toUpperCase()}-${String(i + 1).padStart(2, "0")}`, testo: f.testo.trim(), verbo: verboDi(f.testo.trim()), famiglia: f.famiglia, eta: f.eta }));
+  return m;
+}
+$("scarica").onclick = async () => {
+  const p = problemi(); if (p.length) return; const m = voce(), enc = new TextEncoder(), files = [];
+  const cat = JSON.parse(JSON.stringify(catalogo)), i = cat.mazzi.findIndex((x) => x.id === m.id); if (i >= 0) cat.mazzi[i] = m; else cat.mazzi.unshift(m);
+  cat.versione += 1; cat.aggiornato = new Date().toISOString().slice(0, 10);
+  files.push({ name: "public/espansioni/catalogo.json", data: enc.encode(JSON.stringify(cat, null, 1)) });
+  for (let n = 0; n < carte.length; n++) if (carte[n].blob) files.push({ name: `public/espansioni/${m.id}/c${String(n + 1).padStart(2, "0")}.webp`, data: new Uint8Array(await carte[n].blob.arrayBuffer()) });
+  files.push({ name: "LEGGIMI.txt", data: enc.encode(`Mazzo «${m.nome}» (${m.id})\n\n1. Scompatta questo ZIP nella cartella principale del progetto, sovrascrivendo.\n2. Fai commit e pubblica.\n3. (Facoltativo) aggiungi le etichette per i bot in content/etichette e fai girare npm test.\n\n${carte.some((c) => c.blob) ? "" : "Questo ZIP non contiene le carte: restano quelle già pubblicate.\n"}`) });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(zip(files)); a.download = `mazzo-${m.id}.zip`; a.click();
+};
+tutto();
+</script>
+</body>
+</html>

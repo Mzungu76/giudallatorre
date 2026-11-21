@@ -12,8 +12,6 @@ import aspettoJson from "../../content/etichette/aspetto.json";
 import stereotipi from "../../content/etichette/stereotipi.json";
 import accuse from "../../content/accuse.json";
 import catalogo from "../../public/espansioni/catalogo.json";
-import frasiSummit from "../../content/espansioni/summit/frasi.json";
-import frasiAnni90 from "../../content/espansioni/anni90/frasi.json";
 
 /** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
 export const ACCUSE_DECK: string[] = (accuse as { testo: string }[]).map((a) => a.testo);
@@ -48,12 +46,12 @@ registerLooks((aspettoJson as { carte: Record<string, string[]> }).carte, Object
 registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forza: number; asse?: "ruolo" | "aspetto" | "tipo" }[] }).voci);
 
 /**
- * Espansioni (mazzi extra, vedi docs/ESPANSIONI.md): per ognuna le carte Personaggio (`<id>-cNN`) e le frasi del Megafono.
- * Per aggiungere un mazzo: voce nel catalogo + importare qui il suo file di frasi e inserirlo in `FRASI_ESPANSIONI`.
+ * Espansioni (mazzi extra, vedi docs/ESPANSIONI.md): per ognuna le carte Personaggio (`<id>-cNN`) e le frasi del Megafono, entrambe
+ * descritte da `public/espansioni/catalogo.json` (lo scrive lo strumento `/crea-mazzo.html`). Basta aggiungere un mazzo al catalogo.
  */
-const FRASI_ESPANSIONI: Record<string, { frasi: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[] }> = { summit: frasiSummit, anni90: frasiAnni90 };
+type MazzoCat = { id: string; carte: number; stato: string; frasiMegafono?: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[] };
 export const EXPANSIONS: Record<string, { cards: string[]; phrases: PoolPhrase[] }> = Object.fromEntries(
-  (catalogo.mazzi as { id: string; carte: number; stato: string }[]).filter((m) => m.stato === "vendita" && FRASI_ESPANSIONI[m.id]).map((m) => [m.id, {
+  (catalogo.mazzi as MazzoCat[]).filter((m) => m.stato === "vendita").map((m) => [m.id, {
     cards: Array.from({ length: m.carte }, (_, i) => `${m.id}-c${String(i + 1).padStart(2, "0")}`),
-    phrases: FRASI_ESPANSIONI[m.id]!.frasi.map((f) => ({ id: f.id, text: f.testo, verb: f.verbo as "sale" | "salgono", family: f.famiglia as PhraseFamily, age: parseAge(f.eta) })),
+    phrases: (m.frasiMegafono ?? []).map((f) => ({ id: f.id, text: f.testo, verb: f.verbo as "sale" | "salgono", family: f.famiglia as PhraseFamily, age: parseAge(f.eta) })),
   }]));

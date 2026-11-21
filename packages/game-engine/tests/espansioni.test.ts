@@ -6,7 +6,7 @@ import { AGE_BANDS, PHRASE_FAMILIES, fullPhrase, parseAge } from "../src/index.t
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 const json = (p: string) => JSON.parse(readFileSync(resolve(root, p), "utf8"));
-const cat = json("public/espansioni/catalogo.json") as { versione: number; mazzi: { id: string; cartella: string; carte: number; nomi?: string[]; personaggi: number; frasi: number; anteprima: number; scatola: number[] }[] };
+const cat = json("public/espansioni/catalogo.json") as { versione: number; mazzi: { id: string; cartella: string; carte: number; nomi?: string[]; frasiMegafono: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[]; personaggi: number; frasi: number; anteprima: number; scatola: number[] }[] };
 
 describe("espansioni", () => {
   it("il catalogo ha id univoci e le carte di ogni mazzo esistono", () => {
@@ -22,7 +22,7 @@ describe("espansioni", () => {
   });
   it("le frasi di ogni mazzo rispettano le regole del Megafono e il conto del catalogo", () => {
     for (const m of cat.mazzi) {
-      const fr = json(`content/espansioni/${m.id}/frasi.json`).frasi as { id: string; testo: string; verbo: string; famiglia: string; eta: string }[];
+      const fr = m.frasiMegafono;
       expect(fr).toHaveLength(m.frasi);
       expect(new Set(fr.map((f) => f.id)).size).toBe(fr.length);
       expect(new Set(fr.map((f) => f.testo.toLowerCase())).size).toBe(fr.length);
@@ -38,12 +38,9 @@ describe("espansioni", () => {
   });
 });
 
-describe("etichette dei bot per le carte delle espansioni", () => {
+describe("etichette dei bot per le carte delle espansioni (facoltative: senza, i bot le giocano come neutre)", () => {
   const ruoli = json("content/etichette/ruoli.json") as { carte: Record<string, string[]> }, asp = json("content/etichette/aspetto.json") as { carte: Record<string, string[]> };
   const v2 = json("content/etichette/personaggi.v2.json").personaggi as Record<string, unknown>, v1 = json("content/tags-personaggi.json") as Record<string, unknown>;
-  it("ogni carta di ogni mazzo ha le etichette v1 e v2", () => {
-    for (const m of cat.mazzi) for (let n = 1; n <= m.carte; n++) { const id = `${m.id}-c${String(n).padStart(2, "0")}`; expect(v1[id], id).toBeTruthy(); expect(v2[id], id).toBeTruthy(); }
-  });
   it("Summit (personaggi reali): ruolo politico per tutti; l'aspetto solo da capi di vestiario visibili", () => {
     for (let n = 1; n <= 36; n++) {
       const id = `summit-c${String(n).padStart(2, "0")}`;

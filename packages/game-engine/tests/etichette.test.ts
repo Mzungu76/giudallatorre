@@ -27,7 +27,9 @@ describe("etichette v2 (occhi dei bot)", () => {
   });
   it("ogni frase del Megafono e ogni carta ha etichette; nessuna in più", () => {
     expect(Object.keys(frasi).sort()).toEqual([...poolIds].sort());
-    expect(Object.keys(carte).sort()).toEqual([...deckTutte].sort());
+    expect(Object.keys(carte).filter((k) => deck.includes(k)).sort()).toEqual([...deck].sort());
+    // le carte delle espansioni possono non avere ancora etichette (i bot le giocano come neutre); se ci sono, devono riguardare carte esistenti
+    for (const k of Object.keys(carte)) expect(deckTutte.includes(k), `etichetta per una carta che non esiste: ${k}`).toBe(true);
   });
   it("etichette valide: stanno nel catalogo, pesi 1–3, numero entro i massimi", () => {
     for (const [name, set] of [["frasi", frasi], ["carte", carte]] as const) for (const [id, t] of Object.entries(set)) {

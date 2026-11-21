@@ -9,7 +9,8 @@ import base from "../../../../public/espansioni/catalogo.json";
  */
 export interface Mazzo {
   id: string; nome: string; colore: string; prezzo: string; stato: "vendita" | "arrivo"; novita?: boolean; descrizione: string;
-  personaggi: number; frasi: number; anteprima: number; scatola: [number, number, number]; esempio: string; cartella: string; carte: number; /** Nome e paese di ogni carta (testo alternativo per i lettori di schermo, non si vede nel gioco). */ nomi?: string[];
+  personaggi: number; frasi: number; anteprima: number; scatola: [number, number, number]; esempio: string; cartella: string; carte: number; /** Nome di ogni carta (testo alternativo per i lettori di schermo, non si vede nel gioco). */ nomi?: string[];
+  /** Frasi del Megafono del mazzo (le usa il server: `{id, testo, verbo, famiglia, eta}`). */ frasiMegafono?: { id: string; testo: string; verbo: "sale" | "salgono"; famiglia: string; eta: string }[];
 }
 export interface Catalogo { versione: number; aggiornato: string; mazzi: Mazzo[] }
 

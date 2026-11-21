@@ -1,5 +1,5 @@
 {
- "versione": 3,
+ "versione": 4,
  "aggiornato": "2026-11-20",
  "mazzi": [
   {
@@ -58,6 +58,134 @@
     "Forrest Gump",
     "Neo",
     "Léon"
+   ],
+   "frasiMegafono": [
+    {
+     "id": "ANNI90-01",
+     "testo": "chi citerebbe un film a memoria in ogni occasione.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-02",
+     "testo": "i più bravi a farsi notare entrando in una stanza.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-03",
+     "testo": "chi si presenterebbe a una festa vestito in modo assurdo.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-04",
+     "testo": "chi trasformerebbe una sciocchezza in una catastrofe.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-05",
+     "testo": "i più sicuri di sé senza avere un piano.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-06",
+     "testo": "chi tornerebbe indietro nel tempo per rifare tutto.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-07",
+     "testo": "chi se la caverebbe sempre senza un graffio.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-08",
+     "testo": "i più convinti di essere i protagonisti della storia.",
+     "verbo": "salgono",
+     "famiglia": "collettivo",
+     "eta": "14+"
+    },
+    {
+     "id": "ANNI90-09",
+     "testo": "chi svelerebbe un segreto per un minuto di attenzione.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "ANNI90-10",
+     "testo": "chi avrebbe una risposta pronta anche quando sbaglia.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-11",
+     "testo": "chi lasceresti a guardia di casa per un weekend.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-12",
+     "testo": "i più bravi a cavarsela con una battuta.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-13",
+     "testo": "chi ha lo sguardo da duro e il cuore tenero.",
+     "verbo": "sale",
+     "famiglia": "ribaltato",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-14",
+     "testo": "chi si caccerebbe nei guai per una scommessa.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-15",
+     "testo": "chi lascerebbe tutto per inseguire un’avventura.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-16",
+     "testo": "i più teatrali anche per una cosa da niente.",
+     "verbo": "salgono",
+     "famiglia": "collettivo",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-17",
+     "testo": "chi sarebbe il peggior coinquilino.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "ANNI90-18",
+     "testo": "chi sembra tranquillo ma nasconde un lato inquietante.",
+     "verbo": "sale",
+     "famiglia": "ribaltato",
+     "eta": "14+"
+    }
    ]
   },
   {
@@ -116,6 +244,134 @@
     "Abiy Ahmed – Etiopia",
     "Tarique Rahman – Bangladesh",
     "Andy Burnham – Regno Unito"
+   ],
+   "frasiMegafono": [
+    {
+     "id": "SUMMIT-01",
+     "testo": "chi promette di più e mantiene di meno.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-02",
+     "testo": "i più bravi a dare la colpa a qualcun altro.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-03",
+     "testo": "chi farebbe un discorso di tre ore per non dire niente.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-04",
+     "testo": "chi cambierebbe idea appena cambia il sondaggio.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-05",
+     "testo": "i più attaccati alla poltrona.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-06",
+     "testo": "chi non ammetterebbe mai di aver sbagliato.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-07",
+     "testo": "chi riusciresti a convincere a pagare il conto per tutti.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-08",
+     "testo": "chi litigherebbe con tutti a una cena di famiglia.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-09",
+     "testo": "i più convinti di essere indispensabili.",
+     "verbo": "salgono",
+     "famiglia": "convinzione",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-10",
+     "testo": "chi si farebbe fare un monumento da vivo.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-11",
+     "testo": "chi si prenderebbe il merito del lavoro altrui.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-12",
+     "testo": "i più simpatici mentre ti stanno fregando.",
+     "verbo": "salgono",
+     "famiglia": "ribaltato",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-13",
+     "testo": "chi lasceresti da solo a gestire un’emergenza.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-14",
+     "testo": "chi dichiarerebbe guerra per un parcheggio.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-15",
+     "testo": "i più testardi quando hanno torto.",
+     "verbo": "salgono",
+     "famiglia": "etichetta",
+     "eta": "10+"
+    },
+    {
+     "id": "SUMMIT-16",
+     "testo": "chi manderebbe avanti gli altri e resterebbe nelle retrovie.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-17",
+     "testo": "chi avrebbe sempre un piano B per scappare.",
+     "verbo": "sale",
+     "famiglia": "convinzione",
+     "eta": "14+"
+    },
+    {
+     "id": "SUMMIT-18",
+     "testo": "i più pronti a stringerti la mano e a pugnalarti alle spalle.",
+     "verbo": "salgono",
+     "famiglia": "collettivo",
+     "eta": "14+"
+    }
    ]
   }
  ]

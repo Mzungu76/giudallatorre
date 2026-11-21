@@ -3,8 +3,8 @@
 Pagina **`/espansioni`** (icona della scatola in Home, accanto a statistiche/condividi/installa). Mockup di riferimento: `mockups/espansioni.html`.
 
 ## Cosa c'è oggi (test)
-- Mazzi di prova: **Summit** (figure pubbliche della politica mondiale) e **Anni '90** (personaggi dei film: `anni90-cNN`, 18 frasi in `content/espansioni/anni90/frasi.json`). Per i personaggi di fantasia le etichette dei bot sono di carattere (tipi e temi, v1 e v2) più ruolo/abbigliamento dove si vede; per i personaggi reali solo ruolo «politico» e abbigliamento visibile.
-- Primo mazzo di prova, **Summit**: 36 carte personaggio (`public/espansioni/summit/c01..c36.webp`, 320×480) + 18 frasi del Megafono (`content/espansioni/summit/frasi.json`, stesso formato di `content/frasi-megafono.json`).
+- Mazzi di prova: **Summit** (figure pubbliche della politica mondiale) e **Anni '90** (personaggi dei film: `anni90-cNN`, 18 frasi nel catalogo). Per i personaggi di fantasia le etichette dei bot sono di carattere (tipi e temi, v1 e v2) più ruolo/abbigliamento dove si vede; per i personaggi reali solo ruolo «politico» e abbigliamento visibile.
+- Primo mazzo di prova, **Summit**: 36 carte personaggio (`public/espansioni/summit/c01..c36.webp`, 320×480) + 18 frasi del Megafono (frasi nel catalogo, stesso formato di `content/frasi-megafono.json`).
 - Pagina con scatolina 3D (`components/Scatola.tsx`) su ripiano, foglio di dettaglio con anteprima (le prime `anteprima` carte in chiaro, le altre grigie finché il mazzo non è tuo), frase d'esempio, acquisto, interruttore «Usa in partita».
 - Il mazzo posseduto e la scelta «usa» sono salvati **solo sul dispositivo** (`localStorage`, chiave `gdt.espansioni`, `lib/espansioni.ts`). Nessun account.
 - **Modalità prova** (`PAGAMENTI_ATTIVI = false` in `lib/espansioni.ts`): «Compralo» sblocca il mazzo senza pagare e compare «Blocca di nuovo (prova)». Con `true` queste due cose spariscono e `onCompra` va collegato al pagamento.
@@ -18,12 +18,14 @@ Pagina **`/espansioni`** (icona della scatola in Home, accanto a statistiche/con
 - **Il server si fida dell'host**: in prova non verifica che i mazzi siano pagati (basta che l'id esista). Con il pagamento vero va controllata una licenza.
 - I bot giocano con le nuove carte anche senza etichette scritte a mano (test in `worker/tests/espansioni.test.ts`: partite complete a tutti i livelli). Per un personaggio nuovo i bot lo valutano come «neutro»: le etichette dedicate migliorerebbero le loro scelte (`content/etichette/`).
 
-## Aggiungere un mazzo
-0. Il mazzo diventa giocabile solo dopo aver aggiunto in `worker/src/content.ts` l'import delle sue frasi in `FRASI_ESPANSIONI`.
-1. Immagini in `public/espansioni/<id>/cNN.webp` (NN con due cifre, da 01); frasi in `content/espansioni/<id>/frasi.json` (verbo `sale`/`salgono`, famiglia ed età come per le frasi base).
-2. Una voce in `public/espansioni/catalogo.json` (`id`, `nome`, `colore`, `prezzo`, `stato` `vendita`/`arrivo`, `novita`, `descrizione`, `personaggi`, `frasi`, `anteprima`, `scatola` = tre numeri di carta per il fronte della scatola, `esempio`, `cartella`, `carte`).
-3. **Aumenta `versione` del catalogo**: l'app lo rilegge all'apertura della pagina (e usa quello incluso se manca la rete).
-4. `npm test`: `packages/game-engine/tests/espansioni.test.ts` controlla che le carte esistano, i conti tornino e le frasi rispettino le regole (`docs/FRASI_MEGAFONO.md`).
+## Aggiungere un mazzo: lo strumento `/crea-mazzo.html`
+Pagina riservata (come `/testi.html`, non scrive nulla da sola) che prepara tutto da 4 fogli A4:
+1. Carica i fogli (9 carte ciascuno, 3×3, su fondo bianco): le carte vengono ritagliate in 320×480 WebP, nell'ordine dei fogli.
+2. Compila nome, colore della scatola, prezzo, descrizione, quante carte mostrare in anteprima; tocca le 3 carte per il fronte della scatola; scrivi le 18 frasi (solo la parte dopo «sulla torre», le regole sono controllate); i nomi delle carte sono facoltativi.
+3. A destra l'anteprima della scatola 3D e della pagina del mazzo, con gli stessi stili dell'app.
+4. «Scarica ZIP»: contiene `public/espansioni/<id>/cNN.webp` e il nuovo `public/espansioni/catalogo.json` (tutti i mazzi, versione + 1). Scompattalo nella cartella principale (sovrascrivendo), commit e pubblica. Per modificare un mazzo già pubblicato lo si sceglie in alto.
+Il catalogo contiene anche le frasi del Megafono (`frasiMegafono`) e il Worker legge tutto da lì: non serve toccare il codice. Con `stato: "arrivo"` il mazzo si vede ma non è giocabile.
+Le etichette per i bot (`content/etichette/*`, `content/tags-personaggi.json`) sono facoltative e si fanno a parte: senza, i bot giocano le carte come neutre. `npm test` controlla carte, conti, regole delle frasi e che le etichette presenti riguardino carte esistenti (`packages/game-engine/tests/espansioni.test.ts`).
 Nomi, descrizione e prezzo stanno nel catalogo (dati). I testi fissi della pagina sono in `public/testi.json` (chiavi `esp.*`).
 
 ## Non ancora fatto
