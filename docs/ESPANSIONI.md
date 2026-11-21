@@ -3,7 +3,8 @@
 Pagina **`/espansioni`** (icona della scatola in Home, accanto a statistiche/condividi/installa). Mockup di riferimento: `mockups/espansioni.html`.
 
 ## Cosa c'è oggi (test)
-- Un mazzo di prova, **Summit**: 36 carte personaggio (`public/espansioni/summit/c01..c36.webp`, 320×480) + 18 frasi del Megafono (`content/espansioni/summit/frasi.json`, stesso formato di `content/frasi-megafono.json`).
+- Mazzi di prova: **Summit** (figure pubbliche della politica mondiale) e **Anni '90** (personaggi dei film: `anni90-cNN`, 18 frasi in `content/espansioni/anni90/frasi.json`). Per i personaggi di fantasia le etichette dei bot sono di carattere (tipi e temi, v1 e v2) più ruolo/abbigliamento dove si vede; per i personaggi reali solo ruolo «politico» e abbigliamento visibile.
+- Primo mazzo di prova, **Summit**: 36 carte personaggio (`public/espansioni/summit/c01..c36.webp`, 320×480) + 18 frasi del Megafono (`content/espansioni/summit/frasi.json`, stesso formato di `content/frasi-megafono.json`).
 - Pagina con scatolina 3D (`components/Scatola.tsx`) su ripiano, foglio di dettaglio con anteprima (le prime `anteprima` carte in chiaro, le altre grigie finché il mazzo non è tuo), frase d'esempio, acquisto, interruttore «Usa in partita».
 - Il mazzo posseduto e la scelta «usa» sono salvati **solo sul dispositivo** (`localStorage`, chiave `gdt.espansioni`, `lib/espansioni.ts`). Nessun account.
 - **Modalità prova** (`PAGAMENTI_ATTIVI = false` in `lib/espansioni.ts`): «Compralo» sblocca il mazzo senza pagare e compare «Blocca di nuovo (prova)». Con `true` queste due cose spariscono e `onCompra` va collegato al pagamento.

@@ -41,10 +41,13 @@ describe("espansioni", () => {
 describe("etichette dei bot per le carte delle espansioni", () => {
   const ruoli = json("content/etichette/ruoli.json") as { carte: Record<string, string[]> }, asp = json("content/etichette/aspetto.json") as { carte: Record<string, string[]> };
   const v2 = json("content/etichette/personaggi.v2.json").personaggi as Record<string, unknown>, v1 = json("content/tags-personaggi.json") as Record<string, unknown>;
-  it("ogni carta Summit ha ruolo, etichette v1 e v2; l'aspetto solo dove si vede un capo di vestiario", () => {
-    for (const m of cat.mazzi) for (let n = 1; n <= m.carte; n++) {
-      const id = `${m.id}-c${String(n).padStart(2, "0")}`;
-      expect(ruoli.carte[id], id).toEqual(["politico"]); expect(v1[id], id).toBeTruthy(); expect(v2[id], id).toBeTruthy();
+  it("ogni carta di ogni mazzo ha le etichette v1 e v2", () => {
+    for (const m of cat.mazzi) for (let n = 1; n <= m.carte; n++) { const id = `${m.id}-c${String(n).padStart(2, "0")}`; expect(v1[id], id).toBeTruthy(); expect(v2[id], id).toBeTruthy(); }
+  });
+  it("Summit (personaggi reali): ruolo politico per tutti; l'aspetto solo da capi di vestiario visibili", () => {
+    for (let n = 1; n <= 36; n++) {
+      const id = `summit-c${String(n).padStart(2, "0")}`;
+      expect(ruoli.carte[id], id).toEqual(["politico"]);
       for (const a of asp.carte[id] ?? []) expect(["completo", "cravatta", "occhiali", "divisa", "abito_elegante"], `${id}: ${a}`).toContain(a);
     }
   });

@@ -9,6 +9,7 @@ import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
 const deckIds = (g: GameState) => [...g.drawPile, ...g.discardPile, ...Object.values(g.hands).flat(), ...g.tower.map((t) => t.cardId)];
 
 describe("espansioni nelle partite", () => {
+  it("il registro ha i mazzi del catalogo in vendita", () => { expect(Object.keys(EXPANSIONS).sort()).toEqual(["anni90", "summit"]); expect(EXPANSIONS.anni90!.cards).toHaveLength(36); expect(EXPANSIONS.anni90!.phrases).toHaveLength(18); });
   it("il registro ha il mazzo Summit: 36 carte (summit-cNN) e 18 frasi", () => {
     expect(EXPANSIONS.summit!.cards).toHaveLength(36);
     expect(EXPANSIONS.summit!.cards[0]).toBe("summit-c01");
@@ -60,8 +61,8 @@ describe("espansioni nelle partite", () => {
     expect(visto).toBeGreaterThanOrEqual(8);
   });
   it("partite complete giocate dall'intelligenza dei bot (suggestAction) con i personaggi dell'espansione, senza errori", () => {
-    for (const age of [10, 18] as const) for (const n of [3, 5]) {
-      const r = makeRoom(n, 200 + n + age, 1_000_000, { espansioni: ["summit"] }); send(r, 0, { t: "setOptions", ageBand: age }); send(r, 0, { t: "start" });
+    for (const exp of Object.keys(EXPANSIONS)) for (const age of [10, 18] as const) for (const n of [3, 5]) {
+      const r = makeRoom(n, 200 + n + age, 1_000_000, { espansioni: [exp], soloEsp: true }); send(r, 0, { t: "setOptions", ageBand: age }); send(r, 0, { t: "start" });
       let seed = 7; const rand = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
       expect(() => playToEnd(r, 1_000_100, rand)).not.toThrow();
       expect(r.core.data.stage).toBe("FINISHED");

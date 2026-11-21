@@ -13,6 +13,7 @@ import stereotipi from "../../content/etichette/stereotipi.json";
 import accuse from "../../content/accuse.json";
 import catalogo from "../../public/espansioni/catalogo.json";
 import frasiSummit from "../../content/espansioni/summit/frasi.json";
+import frasiAnni90 from "../../content/espansioni/anni90/frasi.json";
 
 /** Accuse del mini-gioco di metà partita (testo + etichette nascoste per i bot). */
 export const ACCUSE_DECK: string[] = (accuse as { testo: string }[]).map((a) => a.testo);
@@ -50,7 +51,7 @@ registerStereotypes((stereotipi as { voci: { ruolo: string; tratto: string; forz
  * Espansioni (mazzi extra, vedi docs/ESPANSIONI.md): per ognuna le carte Personaggio (`<id>-cNN`) e le frasi del Megafono.
  * Per aggiungere un mazzo: voce nel catalogo + importare qui il suo file di frasi e inserirlo in `FRASI_ESPANSIONI`.
  */
-const FRASI_ESPANSIONI: Record<string, { frasi: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[] }> = { summit: frasiSummit };
+const FRASI_ESPANSIONI: Record<string, { frasi: { id: string; testo: string; verbo: string; famiglia: string; eta: string }[] }> = { summit: frasiSummit, anni90: frasiAnni90 };
 export const EXPANSIONS: Record<string, { cards: string[]; phrases: PoolPhrase[] }> = Object.fromEntries(
   (catalogo.mazzi as { id: string; carte: number; stato: string }[]).filter((m) => m.stato === "vendita" && FRASI_ESPANSIONI[m.id]).map((m) => [m.id, {
     cards: Array.from({ length: m.carte }, (_, i) => `${m.id}-c${String(i + 1).padStart(2, "0")}`),
