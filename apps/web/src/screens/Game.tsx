@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { PlayerView, TurnResult } from "@gdt/game-engine";
 import type { ClientMessage } from "@gdt/game-protocol";
-import { MAX_PHRASE_CHARS } from "@gdt/game-protocol";
+import { MAX_PHRASE_CHARS, verificaFrase } from "@gdt/game-protocol";
 import { Btn, Disc, FAST, PLAYER_COLORS, StageCtx, useStage } from "../ui.tsx";
 import { cardFull } from "../lib/cards.ts";
 import { music } from "../lib/music.ts";
@@ -43,10 +43,11 @@ export function usePeople(room: RoomMsg) {
 export function Tip({ children, style, className = "" }: { children: React.ReactNode; style?: React.CSSProperties; className?: string }) { return <div className={`tip ${className}`} style={style} data-testid="tip">{children}</div>; }
 
 /** Frasi tra cui sceglie il Megafono: ognuna su due righe, si apre con ▾ (e si richiude da sola); un tocco la sceglie, «Proclama» conferma. */
-function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; meta: React.ReactNode }) {
+function PhrasePicker({ view, send, ui, meta, age }: { view: PlayerView; send: GameProps["send"]; ui?: UiCtl | null; meta: React.ReactNode; age: number }) {
   const card = view.proclaimCard!, single = card.phrases.length === 1, conf = /^C\d+$/.test(card.id);   // le confessioni sono le carte «C01…» a frase singola
   const [own, setOwn] = useState(false), [text, setText] = useState(""), [sel, setSel] = useState<number | null>(single ? 0 : null);
   const say = (i: number) => send({ t: "act", action: { type: "choosePhrase", mode: "card", index: i } });
+  const verifica = own && text.trim() ? verificaFrase(text, age) : null;   // moderazione per età della stanza (il server la ripete)
   const goOwn = () => send({ t: "act", action: { type: "choosePhrase", mode: "free", text: text.trim() } });
   return (
     <div className="bl" data-testid="phrase-picker">
@@ -65,13 +66,14 @@ function PhrasePicker({ view, send, ui, meta }: { view: PlayerView; send: GamePr
             <div className="phr-fixed" style={{ color: "#fff", textShadow: "2px 2px 0 #13224a" }}>{tx("g.fr.oggi")}</div>
             <textarea className="phr-in" maxLength={MAX_PHRASE_CHARS} value={text} onChange={(e) => setText(e.target.value)} placeholder={txs("g.fr.ph")} data-testid="phrase-text" aria-label={txs("g.fr.aria")} />
             <div className="hint" style={{ textAlign: "right", margin: 0 }}>{text.length}/{MAX_PHRASE_CHARS}</div>
+            {verifica && !verifica.ok && <div className="hint" style={{ color: "#fff", background: "#e8362b", border: "3px solid #13224a", padding: "6px 10px", margin: 0 }} role="alert" data-testid="phrase-mod">{verifica.motivoBlocco === "vietata" ? txs("g.fr.mod.vietata") : txs("g.fr.mod.eta", { eta: verifica.etaMin })}</div>}
           </div>
         )}
       </div>
       <BSheet gold title={own ? tx("g.fr.t.own") : tx("g.fr.t")} sub={own ? tx("g.fr.s.own") : single ? tx("g.fr.s.single") : tx("g.fr.s")} ui={ui}>
         <Row>
           {(!single || own) && <Btn kind="pap" onClick={() => setOwn(!own)} style={{ fontSize: 15, padding: "0 12px", flex: "none" }} testId="phrase-free">{own ? tx("g.fr.indietro") : tx("g.fr.inventa")}</Btn>}
-          <Btn kind="red" disabled={own ? !text.trim() : sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
+          <Btn kind="red" disabled={own ? !text.trim() || (!!verifica && !verifica.ok) : sel === null} onClick={() => (own ? goOwn() : sel !== null && say(sel))} testId="phrase-go">{tx("g.fr.proclama")}</Btn>
         </Row>
       </BSheet>
     </div>
@@ -281,7 +283,7 @@ export default function Game({ room, view, deadline, send, readOnly, sound, ui }
       </StageCtx.Provider>
       {banner && <div className="banner" style={{ top: Math.round(H * 0.3) - dy / 2 }} key={banner.k} data-testid="banner"><b>{banner.title}</b><small>{banner.sub}</small></div>}
 
-      {inPicker && <PhrasePicker view={view} send={act} ui={uiv} meta={metaEl} />}
+      {inPicker && <PhrasePicker view={view} send={act} ui={uiv} meta={metaEl} age={room.options.ageBand} />}
       {!inPicker && (
         <div className="bl">
           {metaEl}

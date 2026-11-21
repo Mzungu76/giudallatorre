@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { GameEvent, PlayerView } from "@gdt/game-engine";
+export * from "./moderazione.ts";
 
 // ---------- costanti ----------
 /** Alfabeto senza caratteri ambigui (niente I, L, O, 0, 1). */

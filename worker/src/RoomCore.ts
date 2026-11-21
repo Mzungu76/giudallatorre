@@ -1,6 +1,6 @@
 import { luoghiTurno, pregiudizioTurno, applyAction, BOT_STYLES, buildPhraseDeck, expansionPhraseCards, insertEarly, shuffle, chooseBotAction, chooseBotActionV2, chooseBotActionV2E, chooseBotActionV2M, chooseBotActionV2O, learnFromResultV2, stereoVoteFlags, planMiniVote, styleById, createGame, DEFAULT_AGE_BAND, EngineError, learnFromResult, megafonoOf, MINI_COUNTDOWN_MS, MINI_INTRO_MS, MINI_SLOT_MS, newBotMemory, suggestAction, viewFor } from "@gdt/game-engine";
 import type { Action, BotLevel, BotMemory, CardId, GameEvent, GameState, PhraseCard, PoolConfession, PoolPhrase } from "@gdt/game-engine";
-import { MAX_CHAT_CHARS } from "@gdt/game-protocol";
+import { MAX_CHAT_CHARS, nomiNoti, verificaFrase } from "@gdt/game-protocol";
 import type { ChatDto, EspLivello, ClientMessage, RoomInfoResponse, RoomOptionsDto, RoomStage, ServerMessage } from "@gdt/game-protocol";
 import { constantTimeEqual, hashToken, newPlayerId, newToken } from "./security.ts";
 import type { RandomBytes } from "./security.ts";
@@ -50,6 +50,9 @@ const espOk = (deps: Deps, ids?: string[]): string[] => [...new Set(ids ?? [])].
 
 /** Quante carte di un'espansione entrano in partita con «assaggio» e «meta»: personaggi e carte frase del Megafono. */
 const ESP_QUOTE = { assaggio: { carte: 12, frasi: 1 }, meta: { carte: 18, frasi: 3 } } as const;
+
+/** Nomi di persona già noti (personaggi dei mazzi): non si segnalano come nomi sconosciuti. */
+const NOMI_NOTI = nomiNoti([]);
 
 export class RoomError extends Error { constructor(public code: string, message: string) { super(message); } }
 
@@ -271,6 +274,8 @@ export class RoomCore {
         // intervallo a tempo: il voto vale solo per il personaggio che è in scena (o appena uscito) in questo momento
         if (a.type === "vote" && d.game.phase === "MINI_RUN" && !this.onStage(a.position, now)) return err("NOT_ON_STAGE", "quel personaggio non è in scena", msg.reqId);
         if (a.type === "advance" && playerId !== megafonoOf(d.game) && !me.isHost && !d.players.find((p) => p.id === megafonoOf(d.game!))?.isBot) return err("NOT_ALLOWED", "solo il Megafono o l'host proseguono", msg.reqId);
+        // frase inventata dal Megafono: moderazione per fascia d'età della stanza (docs/TORRI_UTENTE.md)
+        if (a.type === "choosePhrase" && a.mode === "free" && a.text) { const v = verificaFrase(a.text, d.options.ageBand, { nomiNoti: NOMI_NOTI }); if (!v.ok) return err(v.motivoBlocco === "vietata" ? "PHRASE_BLOCKED" : "PHRASE_AGE", "frase non ammessa", msg.reqId); }
         try { return this.applyGame(out, { ...a, playerId } as Action, now); }
         catch (e) { if (e instanceof EngineError) return err(e.code, e.message, msg.reqId); throw e; }
       }

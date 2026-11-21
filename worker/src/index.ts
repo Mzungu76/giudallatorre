@@ -1,4 +1,4 @@
-import { createRoomBody, joinRoomBody, roomCodeSchema, ROOM_CODE_ALPHABET, ROOM_CODE_LENGTH } from "@gdt/game-protocol";
+import { createRoomBody, joinRoomBody, nicknameAmmesso, roomCodeSchema, ROOM_CODE_ALPHABET, ROOM_CODE_LENGTH } from "@gdt/game-protocol";
 import { GameRoom } from "./GameRoom.ts";
 import type { Env } from "./GameRoom.ts";
 import { KeyedLimiter, cryptoBytes } from "./security.ts";
@@ -46,6 +46,7 @@ async function handle(request: Request, env: Env): Promise<Response> {
       if (!createLimit.allow(ip, now)) return reply({ error: "RATE_LIMIT" }, 429);
       const body = createRoomBody.safeParse(await readJson(request));
       if (!body.success) return reply({ error: "INVALID_REQUEST" }, 400);
+      if (!nicknameAmmesso(body.data.nickname)) return reply({ error: "NICKNAME_NOT_ALLOWED" }, 400);   // moderazione: docs/TORRI_UTENTE.md
       for (let i = 0; i < 6; i++) {
         const code = newCode();
         const res = await stub(env, code).fetch("https://room/create", { method: "POST", headers: { "x-room-code": code }, body: JSON.stringify(body.data) });
@@ -62,6 +63,7 @@ async function handle(request: Request, env: Env): Promise<Response> {
         if (!joinLimit.allow(ip, now)) return reply({ error: "RATE_LIMIT" }, 429);
         const body = joinRoomBody.safeParse(await readJson(request));
         if (!body.success) return reply({ error: "INVALID_REQUEST" }, 400);
+        if (!nicknameAmmesso(body.data.nickname)) return reply({ error: "NICKNAME_NOT_ALLOWED" }, 400);
         const res = await stub(env, code.data).fetch("https://room/join", { method: "POST", body: JSON.stringify(body.data) });
         return new Response(res.body, { status: res.status, headers });
       }

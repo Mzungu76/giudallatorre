@@ -1,5 +1,5 @@
 {
- "versione": 99,
+ "versione": 101,
  "aggiornato": "2026-11-20",
  "testi": {
   "intro.aria": {
@@ -3922,6 +3922,31 @@
   "esp.liv.nota.tutto": {
    "t": "Tutto: tutte le {c} carte e tutte le frasi del mazzo.",
    "s": "Espansioni"
+  },
+  "err.NICKNAME_NOT_ALLOWED": {
+   "t": "Questo nome non è ammesso: scegline un altro.",
+   "s": "Messaggi di errore (entrare/creare)",
+   "n": "Nickname bloccato dalla moderazione (parolacce, offese, dati personali)"
+  },
+  "ws.PHRASE_BLOCKED": {
+   "t": "Questa frase non è ammessa: scrivine un'altra.",
+   "s": "Messaggi di errore (in partita)",
+   "n": "Frase libera bloccata dalla moderazione (offese, minacce, dati personali)"
+  },
+  "ws.PHRASE_AGE": {
+   "t": "Questa frase non va bene per l'età del gruppo: scrivine una più leggera.",
+   "s": "Messaggi di errore (in partita)",
+   "n": "Frase libera con parole adatte a un pubblico più grande di quello della stanza"
+  },
+  "g.fr.mod.vietata": {
+   "t": "Questa frase non è ammessa: scrivine un'altra.",
+   "s": "Partita: turno normale",
+   "n": "Compare sotto la frase libera se la moderazione la vieta a qualsiasi età"
+  },
+  "g.fr.mod.eta": {
+   "t": "Questa frase è adatta dai {eta} anni in su: il gruppo è più giovane. Scrivine una più leggera.",
+   "s": "Partita: turno normale",
+   "n": "Compare sotto la frase libera se contiene parole per un pubblico più grande di quello della stanza"
   }
  }
 }

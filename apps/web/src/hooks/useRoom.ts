@@ -9,7 +9,7 @@ import { loadSession } from "../lib/session.ts";
 export type RoomMsg = Extract<ServerMessage, { t: "room" }>;
 /** La vista col «via!» dell'intervallo a tempo già convertito nell'orologio di questo dispositivo (`goAtLocal`). */
 export type ViewMsg = Extract<ServerMessage, { t: "view" }> & { goAtLocal: number | null };
-const WS_CODES = ["NOT_HOST", "NOT_ENOUGH_PLAYERS", "WRONG_PHASE", "ALREADY_DONE", "NOT_ALLOWED", "RATE_LIMIT", "CARD_NOT_IN_HAND", "INVALID_POSITION", "WRONG_STAGE", "DISPLAY_OFF", "INVALID_CHOICE", "INVALID_MESSAGE", "NOT_ON_STAGE"];
+const WS_CODES = ["NOT_HOST", "NOT_ENOUGH_PLAYERS", "WRONG_PHASE", "ALREADY_DONE", "NOT_ALLOWED", "RATE_LIMIT", "CARD_NOT_IN_HAND", "INVALID_POSITION", "WRONG_STAGE", "DISPLAY_OFF", "INVALID_CHOICE", "INVALID_MESSAGE", "NOT_ON_STAGE", "PHRASE_BLOCKED", "PHRASE_AGE"];
 const errMsg = (code: string) => (WS_CODES.includes(code) ? ts(`ws.${code}` as TestoKey) : ts("ws.altro"));
 
 export function useRoom(code: string, mode: "player" | "watch") {

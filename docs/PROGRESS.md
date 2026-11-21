@@ -70,3 +70,7 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 - [x] Pagina `/espansioni` con scatola 3D, anteprima, acquisto in modalità prova e mazzo di prova «Summit» (36 carte + 18 frasi): `docs/ESPANSIONI.md`
 - [ ] Pagamento, codici di sblocco e consegna protetta delle carte
 - [x] Uso dei mazzi nelle partite (test): scelta alla creazione, personaggi e frasi nel mazzo, bot, «solo i loro personaggi»
+
+## Fase 10 — Torri degli utenti (progettazione, fase 1 fatta)
+- [x] Moderazione di frasi libere e nickname per fascia d'età (`docs/TORRI_UTENTE.md`)
+- [ ] Creazione, link, voto e risultati; immagini social; notifiche push; segnalazioni (mockup in `mockups/torri-utente.html`)
