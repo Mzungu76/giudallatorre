@@ -8,10 +8,12 @@ import DisplayScreen from "./screens/Display.tsx";
 import Simulator from "./screens/Simulator.tsx";
 import Stats from "./screens/Stats.tsx";
 import Espansioni from "./screens/Espansioni.tsx";
+import TorreNuova from "./screens/TorreNuova.tsx";
+import TorreUtente from "./screens/TorreUtente.tsx";
 import Torre from "./screens/Torre.tsx";
 import StandingsDemo, { TieDemo, FinalDemo, CharDemo, TerraceDemo, MiniDemo } from "./screens/StandingsDemo.tsx";
 
-type Route = { name: "torre" } | { name: "sim" } | { name: "stats" } | { name: "espansioni" } | { name: "home" } | { name: "create" } | { name: "join"; code: string } | { name: "room"; code: string } | { name: "display"; code: string };
+type Route = { name: "torre" } | { name: "sim" } | { name: "stats" } | { name: "espansioni" } | { name: "torrenuova" } | { name: "torreutente"; id: string } | { name: "home" } | { name: "create" } | { name: "join"; code: string } | { name: "room"; code: string } | { name: "display"; code: string };
 function parse(): Route {
   const p = location.pathname, q = new URLSearchParams(location.search);
   let m: RegExpMatchArray | null;
@@ -20,6 +22,8 @@ function parse(): Route {
   if (p === "/crea") return { name: "create" };
   if (p === "/statistiche") return { name: "stats" };
   if (p === "/espansioni") return { name: "espansioni" };
+  if (p === "/torri/nuova") return { name: "torrenuova" };
+  if ((m = p.match(/^\/t\/([a-z0-9]{8})$/))) return { name: "torreutente", id: m[1]! };
   if (p === "/torre" || p === "/oggi") return { name: "torre" };
   if (p === "/intervalli" || p === "/fuoriprogramma") return { name: "sim" };
   if (p === "/entra") return { name: "join", code: (q.get("c") ?? "").toUpperCase().slice(0, 5) };
@@ -42,6 +46,8 @@ export default function App() {
     case "sim": return <Simulator />;
     case "stats": return <Stats />;
     case "espansioni": return <Espansioni />;
+    case "torrenuova": return <TorreNuova />;
+    case "torreutente": return <TorreUtente key={route.id} id={route.id} />;
     case "torre": return <Torre />;
     case "create": return <CreateScreen />;
     case "join": return <JoinScreen initialCode={route.code} />;

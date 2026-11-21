@@ -1,5 +1,5 @@
 {
- "versione": 101,
+ "versione": 102,
  "aggiornato": "2026-11-20",
  "testi": {
   "intro.aria": {
@@ -3947,6 +3947,530 @@
    "t": "Questa frase è adatta dai {eta} anni in su: il gruppo è più giovane. Scrivine una più leggera.",
    "s": "Partita: turno normale",
    "n": "Compare sotto la frase libera se contiene parole per un pubblico più grande di quello della stanza"
+  },
+  "tu.home.crea": {
+   "t": "Crea una torre",
+   "s": "Home",
+   "n": "Pulsante in Home: crea una torre da condividere"
+  },
+  "tu.sopra": {
+   "t": "La tua torre",
+   "s": "Creazione",
+   "n": "Scritta a mano sopra il titolo del passo"
+  },
+  "tu.step.0": {
+   "t": "Le carte",
+   "s": "Torri degli utenti"
+  },
+  "tu.step.1": {
+   "t": "La frase",
+   "s": "Torri degli utenti"
+  },
+  "tu.step.2": {
+   "t": "Segnalino e voto",
+   "s": "Torri degli utenti"
+  },
+  "tu.step.3": {
+   "t": "Quanto dura?",
+   "s": "Torri degli utenti"
+  },
+  "tu.indietro": {
+   "t": "Indietro",
+   "s": "Torri degli utenti"
+  },
+  "tu.avanti": {
+   "t": "Avanti",
+   "s": "Torri degli utenti"
+  },
+  "tu.passo": {
+   "t": "Passo {n} di {tot}",
+   "s": "Torri degli utenti",
+   "n": "Nome accessibile dei pallini dei passi"
+  },
+  "tu.carte.lb": {
+   "t": "Scegli da 3 a 6 carte (scelte: {n})",
+   "s": "Torri degli utenti"
+  },
+  "tu.carte.nota": {
+   "t": "Toccando una carta la aggiungi, toccandola ancora la togli. L'ordine è quello della numerazione sulla torre.",
+   "s": "Torri degli utenti"
+  },
+  "tu.carta.aria": {
+   "t": "Carta {id}",
+   "s": "Torri degli utenti",
+   "n": "Nome accessibile di una carta nella scelta"
+  },
+  "tu.frase.lb": {
+   "t": "La frase",
+   "s": "Torri degli utenti"
+  },
+  "tu.frase.oggi": {
+   "t": "Oggi sale sulla torre…",
+   "s": "Torri degli utenti"
+  },
+  "tu.frase.ph": {
+   "t": "…chi riderebbe alla propria battuta.",
+   "s": "Torri degli utenti",
+   "n": "Esempio nel campo di testo"
+  },
+  "tu.frase.aria": {
+   "t": "La tua frase (da 8 a 80 caratteri)",
+   "s": "Torri degli utenti"
+  },
+  "tu.mod.vietata": {
+   "t": "Questa frase non è ammessa a nessuna età (offese, minacce, dati personali…). Scrivine un'altra.",
+   "s": "Torri degli utenti",
+   "n": "Moderazione: frase vietata"
+  },
+  "tu.mod.eta": {
+   "t": "Per questa frase l'età minima è {eta}+: viene impostata in automatico e non si può abbassare.",
+   "s": "Torri degli utenti",
+   "n": "Moderazione: età minima trovata"
+  },
+  "tu.mod.pubblico": {
+   "t": "C'è un nome di persona ({nomi}). Si possono usare solo personaggi pubblici: spunta se lo è.",
+   "s": "Torri degli utenti",
+   "n": "Moderazione: nomi di persona"
+  },
+  "tu.mod.corta": {
+   "t": "La frase è troppo corta.",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.lb": {
+   "t": "Età della torre",
+   "s": "Torri degli utenti",
+   "n": "L'età minima non si può abbassare, solo alzare"
+  },
+  "tu.idee.lb": {
+   "t": "Non sai cosa scrivere? Scegli dal mazzo",
+   "s": "Torri degli utenti"
+  },
+  "tu.idee.ph": {
+   "t": "Cerca tra le frasi (es. soldi, amici)",
+   "s": "Torri degli utenti"
+  },
+  "tu.idee.altre": {
+   "t": "Altre idee",
+   "s": "Torri degli utenti"
+  },
+  "tu.seg.titolo": {
+   "t": "Segnalino e voto",
+   "s": "Torri degli utenti"
+  },
+  "tu.seg.sub.seg": {
+   "t": "Tocca la carta su cui mettere il segnalino, poi scegli quale.",
+   "s": "Torri degli utenti"
+  },
+  "tu.seg.sub.voto": {
+   "t": "Tocca la carta che butteresti giù: sarà il tuo voto, uguale per tutti.",
+   "s": "Torri degli utenti"
+  },
+  "tu.modo.seg": {
+   "t": "Segnalino",
+   "s": "Torri degli utenti"
+  },
+  "tu.modo.voto": {
+   "t": "Il mio voto",
+   "s": "Torri degli utenti"
+  },
+  "tu.err.nulli": {
+   "t": "Con VOTI NULLI! non puoi votare quella carta.",
+   "s": "Torri degli utenti",
+   "n": "Errore nella creazione"
+  },
+  "tu.durata.lb": {
+   "t": "Aperta ai voti per",
+   "s": "Torri degli utenti"
+  },
+  "tu.durata.24h": {
+   "t": "24 ore",
+   "s": "Torri degli utenti"
+  },
+  "tu.durata.3g": {
+   "t": "3 giorni",
+   "s": "Torri degli utenti"
+  },
+  "tu.durata.7g": {
+   "t": "7 giorni",
+   "s": "Torri degli utenti"
+  },
+  "tu.durata.nota": {
+   "t": "Alla chiusura escono i risultati; restano visibili per 24 ore, poi la torre sparisce.",
+   "s": "Torri degli utenti"
+  },
+  "tu.riep.lb": {
+   "t": "Riepilogo",
+   "s": "Torri degli utenti"
+  },
+  "tu.riep.carte": {
+   "t": "{n} carte",
+   "s": "Torri degli utenti"
+  },
+  "tu.riep.segnalino": {
+   "t": "Segnalino {s} sulla carta {p} · il tuo voto: carta {v}",
+   "s": "Torri degli utenti"
+  },
+  "tu.riep.nota": {
+   "t": "Per 10 minuti potrai ancora annullare la torre. Il segnalino e il tuo voto restano nascosti fino alla chiusura.",
+   "s": "Torri degli utenti"
+  },
+  "tu.pubblica": {
+   "t": "Pubblica la torre",
+   "s": "Torri degli utenti"
+  },
+  "tu.pubblico": {
+   "t": "Pubblico…",
+   "s": "Torri degli utenti"
+  },
+  "tu.carico": {
+   "t": "Carico la torre…",
+   "s": "Pagina della torre"
+  },
+  "tu.riprova": {
+   "t": "Riprova",
+   "s": "Torri degli utenti"
+  },
+  "tu.nf.t": {
+   "t": "Torre non trovata",
+   "s": "Torri degli utenti"
+  },
+  "tu.nf.x": {
+   "t": "Il link non è valido oppure la torre è scaduta e non c'è più.",
+   "s": "Torri degli utenti"
+  },
+  "tu.ann.t": {
+   "t": "Torre annullata",
+   "s": "Torri degli utenti"
+  },
+  "tu.ann.x": {
+   "t": "L'autore ha annullato questa torre.",
+   "s": "Torri degli utenti"
+  },
+  "tu.nas.t": {
+   "t": "Torre in verifica",
+   "s": "Torri degli utenti"
+  },
+  "tu.nas.x": {
+   "t": "Questa torre è stata segnalata e viene controllata.",
+   "s": "Torri degli utenti"
+  },
+  "tu.crea": {
+   "t": "Crea la tua torre",
+   "s": "Torri degli utenti"
+  },
+  "tu.home": {
+   "t": "Torna alla Home",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.t": {
+   "t": "Questa torre non è per tutti",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.x": {
+   "t": "Contiene frasi adatte dai {eta} anni in su. Hai almeno {eta} anni?",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.si": {
+   "t": "Sì, ho {eta} anni o più",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.no": {
+   "t": "No, torna indietro",
+   "s": "Torri degli utenti"
+  },
+  "tu.eta.nota": {
+   "t": "Non c'è una verifica reale: ti chiediamo di dichiararlo.",
+   "s": "Torri degli utenti"
+  },
+  "tu.chiude": {
+   "t": "chiude tra {t}",
+   "s": "Torri degli utenti",
+   "n": "In alto: tempo che manca alla chiusura"
+  },
+  "tu.chiusa": {
+   "t": "chiusa",
+   "s": "Torri degli utenti"
+  },
+  "tu.t.gh": {
+   "t": "{g} g {h} h",
+   "s": "Torri degli utenti"
+  },
+  "tu.t.hm": {
+   "t": "{h} h {m} min",
+   "s": "Torri degli utenti"
+  },
+  "tu.t.m": {
+   "t": "{m} min",
+   "s": "Torri degli utenti"
+  },
+  "tu.vota.t": {
+   "t": "Vota in segreto",
+   "s": "Torri degli utenti"
+  },
+  "tu.vota.x": {
+   "t": "Il segnalino è già sulla torre: lo scoprirai alla chiusura. Tocca la carta che butteresti giù.",
+   "s": "Torri degli utenti"
+  },
+  "tu.vota.ok": {
+   "t": "Conferma il voto",
+   "s": "Torri degli utenti"
+  },
+  "tu.vota.nota": {
+   "t": "Non potrai cambiarlo",
+   "s": "Torri degli utenti"
+  },
+  "tu.dopo.t": {
+   "t": "Voto registrato!",
+   "s": "Torri degli utenti"
+  },
+  "tu.dopo.x": {
+   "t": "I risultati escono alla chiusura, tra {t}. Torna su questo link.",
+   "s": "Torri degli utenti"
+  },
+  "tu.nick.ph": {
+   "t": "Il tuo nome in classifica (facoltativo)",
+   "s": "Torri degli utenti"
+  },
+  "tu.nick.salva": {
+   "t": "Salva",
+   "s": "Torri degli utenti"
+  },
+  "tu.nick.ok": {
+   "t": "Nome salvato",
+   "s": "Torri degli utenti"
+  },
+  "tu.ricorda": {
+   "t": "Ricordamelo",
+   "s": "Torri degli utenti",
+   "n": "Scarica un promemoria per il calendario alla chiusura"
+  },
+  "tu.ics.titolo": {
+   "t": "Risultati della torre su Giù dalla Torre",
+   "s": "Torri degli utenti",
+   "n": "Titolo dell'evento di calendario"
+  },
+  "tu.segnala": {
+   "t": "Segnala questa torre",
+   "s": "Torri degli utenti"
+  },
+  "tu.segnala.conf": {
+   "t": "Tocca ancora per segnalare",
+   "s": "Torri degli utenti"
+  },
+  "tu.segnalata": {
+   "t": "Segnalata, grazie",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.t": {
+   "t": "Risultati",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.scade": {
+   "t": "Visibili ancora {t}",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.cade": {
+   "t": "Cade la carta {c} ({p}% dei voti)",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.nessuna": {
+   "t": "Nessun voto: non cade nessuno",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.seg": {
+   "t": "Segnalino: {s} sulla carta {p} · {ok}",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.si": {
+   "t": "azzeccato",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.no": {
+   "t": "sbagliato",
+   "s": "Torri degli utenti"
+  },
+  "tu.ris.nessuno": {
+   "t": "Nessuno ha ancora votato",
+   "s": "Torri degli utenti"
+  },
+  "tu.tu": {
+   "t": "(tu)",
+   "s": "Torri degli utenti"
+  },
+  "tu.condividi": {
+   "t": "Condividi",
+   "s": "Torri degli utenti"
+  },
+  "tu.aut.t": {
+   "t": "La tua torre",
+   "s": "Torri degli utenti"
+  },
+  "tu.aut.x": {
+   "t": "{n} voti finora: i risultati escono alla chiusura.",
+   "s": "Torri degli utenti"
+  },
+  "tu.wa": {
+   "t": "WhatsApp",
+   "s": "Torri degli utenti"
+  },
+  "tu.tg": {
+   "t": "Telegram",
+   "s": "Torri degli utenti"
+  },
+  "tu.copia": {
+   "t": "Copia il link",
+   "s": "Torri degli utenti"
+  },
+  "tu.copiato": {
+   "t": "Link copiato",
+   "s": "Torri degli utenti"
+  },
+  "tu.storia": {
+   "t": "Immagine per le storie",
+   "s": "Torri degli utenti"
+  },
+  "tu.altro": {
+   "t": "Altro…",
+   "s": "Torri degli utenti"
+  },
+  "tu.annulla": {
+   "t": "Annulla la torre (ancora {t})",
+   "s": "Torri degli utenti"
+  },
+  "tu.chiudi": {
+   "t": "Chiudi in anticipo…",
+   "s": "Torri degli utenti"
+  },
+  "tu.chiudi.m": {
+   "t": "Perché la chiudi in anticipo?",
+   "s": "Torri degli utenti"
+  },
+  "tu.motivo.errore": {
+   "t": "Ho sbagliato qualcosa",
+   "s": "Torri degli utenti"
+  },
+  "tu.motivo.frase": {
+   "t": "La frase non va",
+   "s": "Torri degli utenti"
+  },
+  "tu.motivo.altro": {
+   "t": "Altro",
+   "s": "Torri degli utenti"
+  },
+  "tu.chiudi.c": {
+   "t": "Scrivi CHIUDI per confermare: i voti raccolti saranno contati e la torre chiusa subito.",
+   "s": "Torri degli utenti"
+  },
+  "tu.chiudi.ok": {
+   "t": "Chiudi la torre",
+   "s": "Torri degli utenti"
+  },
+  "tu.share.testo": {
+   "t": "Chi butteresti giù da questa torre? {eta}Vota prima che chiuda!",
+   "s": "Torri degli utenti",
+   "n": "Testo condiviso insieme al link (eta = «14+ » oppure vuoto)"
+  },
+  "tu.og.titolo": {
+   "t": "Chi butteresti giù dalla torre?",
+   "s": "Torri degli utenti",
+   "n": "Titolo dell'immagine social"
+  },
+  "tu.og.frase": {
+   "t": "Oggi {verbo} sulla torre… {frase}",
+   "s": "Torri degli utenti"
+  },
+  "tu.og.diciotto": {
+   "t": "Torre 18+ · tocca per aprire e votare",
+   "s": "Torri degli utenti",
+   "n": "Immagine social delle torri 18+: la frase non si vede"
+  },
+  "tu.og.scade": {
+   "t": "Vota entro {quando}",
+   "s": "Torri degli utenti"
+  },
+  "tu.err.altro": {
+   "t": "Qualcosa non ha funzionato. Riprova.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.CARTE": {
+   "t": "Servono da 3 a 6 carte diverse.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.CARTA_NON_VALIDA": {
+   "t": "Una delle carte non è valida.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.FRASE": {
+   "t": "La frase deve avere da 8 a 80 caratteri.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.FRASE_VIETATA": {
+   "t": "Questa frase non è ammessa.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.FRASE_ETA": {
+   "t": "L'età scelta è troppo bassa per questa frase.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NOME_PERSONA": {
+   "t": "Nelle frasi si possono usare solo nomi di personaggi pubblici.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.SEGNALINO": {
+   "t": "Il segnalino non è valido.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.VOTO": {
+   "t": "Il voto non è valido.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.DURATA": {
+   "t": "Scegli una durata.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NON_TROVATA": {
+   "t": "Torre non trovata.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.CHIUSA": {
+   "t": "La torre è chiusa: non si può più votare.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.GIA_VOTATO": {
+   "t": "Hai già votato questa torre.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NICK": {
+   "t": "Questo nome non è ammesso: scegline un altro.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NON_AUTORE": {
+   "t": "Solo l'autore può farlo.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.TARDI": {
+   "t": "I 10 minuti per annullare sono passati: puoi chiuderla in anticipo.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.CONFERMA": {
+   "t": "Scrivi CHIUDI e scegli un motivo.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NON_AMMESSO": {
+   "t": "Operazione non ammessa.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.RATE_LIMIT": {
+   "t": "Troppe richieste: aspetta un momento.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.NETWORK": {
+   "t": "Non riesco a collegarmi a Internet.",
+   "s": "Torri degli utenti: errori"
+  },
+  "tu.err.PIENA": {
+   "t": "Questa torre ha raggiunto il numero massimo di voti.",
+   "s": "Torri degli utenti: errori"
   }
  }
 }

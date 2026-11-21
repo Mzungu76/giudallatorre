@@ -13,3 +13,6 @@
 | Segreti | Nessun segreto nel repository: le credenziali Cloudflare sono *GitHub Secrets* | `docs/DEPLOYMENT.md` |
 
 Limiti noti: i limiti per IP sono in memoria dell'isolate (protezione di base); per un'eventuale ondata di abusi Cloudflare offre regole di rate limiting gratuite da attivare nel pannello. Le sonde su `/api/rooms/:code/info` creano un oggetto vuoto per ogni codice interrogato (costo trascurabile ma contato nelle richieste): mitigato dal limite per IP.
+
+## Torri degli utenti
+Un voto per dispositivo (id casuale nel browser, solo l'impronta SHA-256 sul server); token dell'autore solo come impronta; limiti per IP su creazione, voti e letture; frasi e nickname moderati (`content/moderazione.json`); l'immagine social è un JPEG in base64 di al massimo ~240 KB; le torri si cancellano da sole 24 ore dopo la chiusura. Voti aggirabili cancellando i dati del browser: accettato (gioco tra amici).

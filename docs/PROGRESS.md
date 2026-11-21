@@ -73,4 +73,5 @@ Fase 2 (mockup) dopo il via sul rapporto di Fase 1.
 
 ## Fase 10 — Torri degli utenti (progettazione, fase 1 fatta)
 - [x] Moderazione di frasi libere e nickname per fascia d'età (`docs/TORRI_UTENTE.md`)
-- [ ] Creazione, link, voto e risultati; immagini social; notifiche push; segnalazioni (mockup in `mockups/torri-utente.html`)
+- [x] Creazione, link, voto e risultati; immagini social; segnalazioni; gestione dell'autore (mockup in `mockups/torri-utente.html`)
+- [ ] Notifiche push alla chiusura

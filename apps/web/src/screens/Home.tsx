@@ -28,6 +28,7 @@ export default function Home() {
           <Btn kind="pap" onClick={() => navigate("/crea?flash=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-flash">⚡ {t("home.flash")}</Btn>
           <Btn kind={nuova ? "mus" : "pap"} onClick={() => navigate("/torre")} className={nuova ? "tn" : ""} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-torre">🏰 {t("home.torre")}{nuova && <i className="tnew" data-testid="torre-nuova">{t("home.torre.nuova")}</i>}</Btn>
         </div>
+        <Btn kind="pap" onClick={() => navigate("/torri/nuova")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-torri-utente">🗼 {t("tu.home.crea")}</Btn>
         <div className="seg">
           <Btn kind="pap" onClick={() => navigate("/crea?solo=1")} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-solo">{t("home.solo")}</Btn>
           <Btn kind="pap" onClick={() => setHow(true)} style={{ fontSize: 16, padding: "10px 6px" }} testId="go-how">{t("home.come")}</Btn>
