@@ -9,8 +9,8 @@
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
     // Solo queste rotte passano dal Worker: gli asset statici non consumano richieste Worker.
-    "run_worker_first": ["/api/*", "/ws/*", "/oggi/*"]
+    "run_worker_first": ["/api/*", "/ws/*", "/oggi/*", "/t/*"]
   },
-  "durable_objects": { "bindings": [{ "name": "GAME_ROOM", "class_name": "GameRoom" }] },
-  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["GameRoom"] }]
+  "durable_objects": { "bindings": [{ "name": "GAME_ROOM", "class_name": "GameRoom" }, { "name": "TORRI", "class_name": "TowerPoll" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["GameRoom"] }, { "tag": "v2", "new_sqlite_classes": ["TowerPoll"] }]
 }

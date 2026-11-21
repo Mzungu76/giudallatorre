@@ -7,7 +7,7 @@ import type { Outbox, RoomData } from "./RoomCore.ts";
 import { ACCUSE_DECK, CONFESSIONS, DECK, EXPANSIONS, PHRASE_DECK, PHRASE_POOL } from "./content.ts";
 import { TokenBucket, cryptoBytes } from "./security.ts";
 
-export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; ASSETS: Fetcher; /** Solo anteprima: "v2o" = le stanze normali usano i bot v2o. */ BOT_ENGINE_DEFAULT?: string }
+export interface Env { GAME_ROOM: DurableObjectNamespace<GameRoom>; TORRI: DurableObjectNamespace<import("./TowerPoll.ts").TowerPoll>; ASSETS: Fetcher; /** Solo anteprima: "v2o" = le stanze normali usano i bot v2o. */ BOT_ENGINE_DEFAULT?: string }
 interface Attachment { pid: string | null; at: number; spec?: boolean }
 const UNAUTH_MS = 10_000;
 const json = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers: { "content-type": "application/json", "cache-control": "no-store", "x-content-type-options": "nosniff" } });

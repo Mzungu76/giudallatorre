@@ -3,8 +3,10 @@ import { GameRoom } from "./GameRoom.ts";
 import type { Env } from "./GameRoom.ts";
 import { KeyedLimiter, cryptoBytes } from "./security.ts";
 import { torreDelGiorno } from "./torre.ts";
+import { TowerPoll } from "./TowerPoll.ts";
+import { immagineTorre, paginaTorre, rotteTorri } from "./torriRotte.ts";
 
-export { GameRoom };
+export { GameRoom, TowerPoll };
 
 const headers = { "content-type": "application/json", "cache-control": "no-store", "x-content-type-options": "nosniff" };
 const reply = (data: unknown, status = 200) => new Response(JSON.stringify(data), { status, headers });
@@ -41,6 +43,8 @@ async function handle(request: Request, env: Env): Promise<Response> {
     const path = url.pathname;
     if (path === "/api/health") return reply({ ok: true });
     if (path.startsWith("/oggi/")) return torreDelGiorno(request, env, path, now);
+    if (path.startsWith("/api/torri")) { const r = await rotteTorri(request, env, path, ip, now); if (r) return r; }
+    { const t = path.match(/^\/t\/([a-z0-9]{8})(\/og\.jpg)?$/); if (t) return t[2] ? immagineTorre(env, t[1]!) : paginaTorre(request, env, t[1]!, now); }
 
     if (path === "/api/rooms" && request.method === "POST") {
       if (!createLimit.allow(ip, now)) return reply({ error: "RATE_LIMIT" }, 429);
