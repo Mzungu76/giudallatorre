@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { terraceBaseHtml, terraceCardsHtml, terracePos, profileShaft } from "../scene/draw.ts";
+import { skyLifeHtml } from "../scene/clouds.ts";
 import { cardFull } from "../lib/cards.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { usePersona } from "./Persona.tsx";
@@ -24,13 +25,17 @@ export interface TerraceProps {
 
 /** La terrazza vista dall'alto: carte intere su piedini neri, gettoni sopra. Disegno dal mockup approvato. */
 export function Terrace(p: TerraceProps) {
-  const { ts, ty } = useStage(), n = p.cardIds.length, openPersona = usePersona();
-  const base = useMemo(() => terraceBaseHtml(), []);
+  const { ts, ty, H } = useStage(), n = p.cardIds.length, openPersona = usePersona();
+  // il banco di nuvole spunta a ~215 px dal fondo dello schermo (il pannello sta sotto): la y va riportata nelle coordinate dello strato, scalato e spostato
+  const bankTop = Math.round((H - 215 - 300 - ty) / ts + 300), base = useMemo(() => terraceBaseHtml(bankTop), [bankTop]);
+  const sky = useMemo(() => skyLifeHtml(!FAST), []);
   const pos = useMemo(() => terracePos(n, p.spread), [n, p.spread]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
   const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.marks, p.sink, p.spread]);
   const cards = useMemo(() => terraceCardsHtml(urls, n, { down: p.down, show: p.show, pop: p.pop, flip: p.flip, votes: p.votes, lastVote: p.lastVote, sink: p.sink, spread: p.spread, ...(p.marks?.length ? { luiList: p.marks } : {}) }), [key]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
+    <>
+    <div className="layer" style={{ left: 0, top: 0, width: 372, height: H, zIndex: 0 }} dangerouslySetInnerHTML={{ __html: sky }} />
     <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace" onClick={(e) => { const el = (e.target as HTMLElement).closest("[data-pid]") as HTMLElement | null; if (el?.dataset.pid) openPersona?.(el.dataset.pid); }}>
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
@@ -43,6 +48,7 @@ export function Terrace(p: TerraceProps) {
         <button key={lp} className="hit luihit" aria-label={txs("rv.lui.aria")} data-testid="lui-token" onClick={p.onLui}
           style={{ left: c.x - 24, top: c.f - 6 - c.h / 2 - 27, width: 56, height: 54, zIndex: 120, background: "none", border: 0 }} />) : null; })}
     </div>
+    </>
   );
 }
 

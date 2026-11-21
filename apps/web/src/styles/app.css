@@ -1597,3 +1597,15 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .esp-liv button{flex:1;border:3px solid var(--navy);border-radius:99px;background:#fff7e0;box-shadow:0 3px 0 var(--navy);padding:7px 4px;font:400 15px/1 Anton;text-transform:uppercase;color:var(--navy);cursor:pointer}
 .esp-liv button.on{background:var(--mus)}
 .esp-liv.in{margin:2px 0 4px}.esp-liv.in>span{flex:0 0 auto;margin-right:auto}
+
+/* ===== Nuvole e uccellini della scena della torre ===== */
+.stage .layer>.sk-cloud{position:absolute}
+.sk-cloud{left:0;animation:skdrift linear infinite;will-change:transform}
+@keyframes skdrift{from{transform:translateX(-170px)}to{transform:translateX(400px)}}
+.sk-bird{position:absolute;left:0;opacity:0;animation:skbird linear infinite;will-change:transform}
+.sk-wing{display:block;transform-origin:50% 80%;animation:skflap .55s ease-in-out infinite alternate}
+@keyframes skflap{from{transform:scaleY(1)}to{transform:scaleY(.3)}}
+@keyframes skbird{0%{transform:translate(-40px,0);opacity:0}4%{opacity:1}12%{transform:translate(70px,-8px)}25%{transform:translate(170px,6px)}38%{transform:translate(270px,-6px)}48%{transform:translate(360px,2px);opacity:1}52%{transform:translate(412px,0);opacity:0}100%{transform:translate(412px,0);opacity:0}}
+.sk-b1{animation:skbank 9s ease-in-out infinite alternate}.sk-b2{animation:skbank 7s ease-in-out -3s infinite alternate-reverse}
+@keyframes skbank{from{transform:translateX(-11px)}to{transform:translateX(11px)}}
+@media (prefers-reduced-motion:reduce){.sk-anim,.sk-b1,.sk-b2,.sk-wing{animation:none !important}.sk-bird{display:none}}

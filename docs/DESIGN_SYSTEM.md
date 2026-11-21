@@ -50,3 +50,6 @@ Sostituisce barra in alto + nastro del titolo + riquadri di istruzioni. Mockup d
 - **Intervallo** (`MiniGame.tsx`): annuncio con nastro, carta illustrata e tre passi; poi stessa struttura del turno.
 - Lo schermo condiviso (sola visione) usa gli stessi componenti senza icone né segnalini.
 - Motore, protocollo e worker non cambiano. I test end-to-end usano `phrase-go` per confermare la frase e un secondo tocco su `confirm-vote` anche nell'intervallo.
+
+## Cielo vivo (nuvole e uccellini)
+`apps/web/src/scene/clouds.ts`: la torre prosegue fino al bordo inferiore e **spunta da un banco di nuvole** (due file che ondeggiano piano, sopra il fusto e sotto la terrazza); in alto **nuvole che scorrono lente** e **uccellini che passano** dietro la torre. Animazioni solo CSS (`sk-*` in `app.css`); con «riduci animazioni» / `?fast=1` nuvole ferme e niente uccellini. Fanno parte di `Terrace` (partite, intervalli, Torre del giorno, torri degli utenti).

@@ -1,5 +1,6 @@
 // Disegno della terrazza (vista dall'alto) e della Torre di profilo, come stringhe HTML/SVG. Derivato dal mockup approvato.
 // @ts-nocheck
+import { cloudBankHtml } from "./clouds.ts";
 import { tokenUrl } from "../lib/characters.ts";
 import { megaNested } from "./megaIcon.ts";
 import { visibleRect } from "../lib/results.ts";
@@ -24,9 +25,9 @@ function merlonG(x,y,w,h){
   return `<g stroke="${NV}" stroke-width="3.2" stroke-linejoin="round"><polygon points="${x+1},${y} ${x+w-1},${y} ${x+w},${y-h} ${x},${y-h}" fill="#d9bd82"/><polygon points="${x+w-8},${y} ${x+w-1},${y} ${x+w},${y-h} ${x+w-8},${y-h}" fill="#b99a68" stroke="none"/><path d="M${x+1} ${y-h*.66}H${x+w-1}M${x+1} ${y-h*.33}H${x+w-1}M${x+w*.45} ${y-h}V${y-h*.66}M${x+w*.7} ${y-h*.66}V${y-h*.33}M${x+w*.3} ${y-h*.33}V${y}" stroke="${NV}" stroke-opacity=".3" stroke-width="2" fill="none"/><rect x="${x-3}" y="${y-h-9}" width="${w+6}" height="11" rx="3" fill="#f7ebc8"/><path d="M${x} ${y-h-5}h${w}" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".8" fill="none"/></g>`}
 function corbelG(x,y,w=22,h=20){
   return `<g stroke="${NV}" stroke-width="2.8" stroke-linejoin="round"><path d="M${x-w/2} ${y}H${x+w/2}L${x+w/2-2} ${y+h*.35}H${x+w/2-5}L${x+w/2-6} ${y+h*.7}H${x+w/2-9}L${x+w/2-10} ${y+h}H${x-w/2+10}L${x-w/2+9} ${y+h*.7}H${x-w/2+6}L${x-w/2+5} ${y+h*.35}H${x-w/2+2}Z" fill="#dcc48c"/><path d="M${x-w/2+4} ${y+3}h${w-8}" stroke="#fff" stroke-opacity=".7" stroke-width="2.2"/></g>`}
-function shaft(top=640){ // fusto in mattoni con finestre, come la torre del regolamento
-  let o=`<svg style="position:absolute;left:0;top:0;z-index:1" width="372" height="826" viewBox="0 0 372 826"><defs><pattern id="bk" width="40" height="24" patternUnits="userSpaceOnUse"><rect width="40" height="24" fill="${ST}"/><path d="M0 0h40M0 12h40M20 0v12M0 12v12" stroke="${NV}" stroke-opacity=".3" stroke-width="2"/></pattern><pattern id="ht" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.1" fill="${NV}"/></pattern><linearGradient id="gr" x1="0" x2="1"><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset=".95" stop-color="#fff"/></linearGradient><mask id="mk"><rect width="372" height="826" fill="url(#gr)"/></mask></defs>`;
-  o+=`<rect x="40" y="${top}" width="292" height="700" fill="url(#bk)" stroke="${NV}" stroke-width="5"/><rect x="40" y="${top}" width="292" height="700" fill="url(#ht)" mask="url(#mk)" opacity=".55"/>`;
+function shaft(top=640){ // fusto in mattoni con finestre, come la torre del regolamento (prosegue fino fuori schermo)
+  let o=`<svg style="position:absolute;left:0;top:0;z-index:1" width="372" height="1700" viewBox="0 0 372 1700"><defs><pattern id="bk" width="40" height="24" patternUnits="userSpaceOnUse"><rect width="40" height="24" fill="${ST}"/><path d="M0 0h40M0 12h40M20 0v12M0 12v12" stroke="${NV}" stroke-opacity=".3" stroke-width="2"/></pattern><pattern id="ht" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="4" cy="4" r="2.1" fill="${NV}"/></pattern><linearGradient id="gr" x1="0" x2="1"><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset=".95" stop-color="#fff"/></linearGradient><mask id="mk"><rect width="372" height="826" fill="url(#gr)"/></mask></defs>`;
+  o+=`<rect x="40" y="${top}" width="292" height="1000" fill="url(#bk)" stroke="${NV}" stroke-width="5"/><rect x="40" y="${top}" width="292" height="1000" fill="url(#ht)" mask="url(#mk)" opacity=".55"/>`;
   [[104,top+80],[232,top+80]].forEach(([x,y])=>o+=`<path d="M${x} ${y+64}V${y+16}a22 22 0 0144 0V${y+64}z" fill="#3b4a55" stroke="${NV}" stroke-width="4"/><path d="M${x-6} ${y+66}h56" stroke="${NV}" stroke-width="5"/>`);
   return o+'</svg>'}
 function terraceBase(){
@@ -86,7 +87,8 @@ function cardsLayout(n,opt={}){
   if(opt.posOut)Object.assign(opt.posOut,pos);
   return o}
 const terrace=(n,opt={})=>shaft()+terraceBase()+cardsLayout(n,opt);
-export function terraceBaseHtml(): string { return shaft() + terraceBase(); }
+/** `bankTop`: y (strato della torre) da cui spuntano le nuvole in basso; senza, niente nuvole. */
+export function terraceBaseHtml(bankTop?: number): string { return shaft() + (bankTop === undefined ? "" : cloudBankHtml(bankTop)) + terraceBase(); }
 export function terraceCardsHtml(urls: string[], n: number, opt: any = {}): string { URLS = urls; return cardsLayout(n, opt); }
 export function terracePos(n: number, spread = false): Record<number, { x: number; f: number; w: number; h: number }> { const pos: any = {}; cardsLayout(n, { posOut: pos, spread }); return pos; }
 export { voteTok, luiTok };
