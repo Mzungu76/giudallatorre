@@ -39,6 +39,16 @@ h2.sec{font:400 26px/1 Anton;margin:34px 0 0}.row{display:flex;flex-wrap:wrap;ga
 .dc{width:22px;height:22px;border-radius:50%;border:3px solid var(--navy);flex:none}
 .opt{display:flex;gap:6px;flex-wrap:wrap}.opt .bt{flex:1 1 90px;font-size:15px;padding:9px 6px;box-shadow:3px 3px 0 var(--navy)}.opt .bt.on{background:var(--mus);outline:4px solid #fff;outline-offset:-7px}
 .veil{inset:0;background:#0b143099;z-index:30}.sheet{left:0;right:0;bottom:0;background:var(--paper);border-top:4px solid var(--navy);border-radius:22px 22px 0 0;padding:14px 18px 24px;z-index:40}
+/* torre vera dell'app: la terrazza è uno screenshot della scena reale (apps/web, /__terrazza) */
+.bg{position:absolute;inset:0;background:center top/100% 100%;z-index:0}
+.s>.bg~*{z-index:5}
+.pill{background:#fff7e0;border:3px solid var(--navy);border-radius:20px;box-shadow:0 4px 0 var(--navy);padding:8px 12px 8px 54px;font:700 13.5px/1.25 Nunito;min-height:52px}
+.pill::before{content:"📣";position:absolute;left:8px;top:7px;width:36px;height:36px;border-radius:50%;background:var(--mus);border:3px solid var(--navy);display:grid;place-items:center;font-size:17px;line-height:30px;text-align:center}
+.pill small{display:block;font:400 18px/1 'Caveat Brush';color:var(--red)}
+.bsheet{background:#fff7e0;border:4px solid var(--mus);outline:3px solid var(--navy);border-radius:18px;padding:10px 12px;box-shadow:0 6px 0 #0004}
+.bsheet h4{font:400 21px/1 Anton;text-transform:uppercase;color:var(--red)}
+.pct{position:absolute;font:400 19px/1 Anton;color:var(--navy);background:#fff;border:3px solid var(--navy);box-shadow:2px 2px 0 var(--navy);padding:3px 7px;z-index:8}.pct.fall{background:var(--red);color:#fff}
+.ster{position:relative;background:#79d3ee;border:3px solid var(--navy);overflow:hidden}
 /* immagini social */
 .soc{background:#23232a;border:1px solid #444;margin-top:12px;position:relative;overflow:hidden}
 .og{width:600px;height:315px;background:repeating-conic-gradient(from -4deg at 38% 40%,#79d3ee 0 6deg,#4fbce6 6deg 12deg);position:relative;color:var(--navy);font-family:Nunito;border:3px solid var(--navy)}
@@ -65,6 +75,7 @@ const C=(n)=>`url(../public/cards/${n}.webp)`;
 const IMG=["p03-i04","p07-i02","p10-i03","p05-i04","p12-i01","p09-i05"];
 const beat=(id,inner,h,p)=>{const d=document.createElement("div");d.className="beat";d.innerHTML=`<div class="ph"><div class="s">${inner}<div class="fr"></div></div></div><h3>${h}</h3><p>${p}</p>`;document.getElementById(id).appendChild(d)};
 const card=(i,x,y,w,r,n,extra="")=>`<div class="c" style="left:${x}px;top:${y}px;width:${w}px;transform:rotate(${r}deg);background-image:${C(IMG[i])};${extra}">${n?`<b class="num">${n}</b>`:""}</div>`;
+const T=(n)=>`<div class="bg" style="background-image:url(torri-utente-assets/${n}.webp)"></div>`;
 const barra=(l,r)=>`<div class="top"><span class="chip">${l}</span><span class="chip">${r}</span></div>`;
 
 /* 1 · scegli le carte */
@@ -97,19 +108,17 @@ beat("creare",`<div class="sky"></div>${barra("‹ Indietro","2 / 4")}
 <div class="bt dis" style="left:20px;right:20px;bottom:26px">Avanti</div>`,"Passo 2 · Frase bloccata","Le regole sono nostre (elenchi per fascia d'età): spiegano il motivo in chiaro. Il sistema dà un'età minima, non capisce il contesto: per questo c'è anche la segnalazione dei giocatori.");
 
 /* 3 · segnalino e voto */
-beat("creare",`<div class="sky"></div>${barra("‹ Indietro","3 / 4")}
-<div class="h" style="top:80px"><small>Come in una partita</small>Segnalino e voto</div>
-<div class="terr" style="left:20px;right:20px;top:200px;height:330px">${card(0,18,24,118,-4,1)}${card(1,150,16,118,3,2)}${card(2,34,172,118,2,3)}${card(3,164,164,118,-3,4)}</div>
-<div class="tok cade" style="left:30px;top:212px">CADE</div>
-<div class="pp" style="left:20px;right:20px;top:550px"><span class="lb">1 · Il segnalino (sulla carta 1)</span><div class="opt" style="margin-top:4px"><span class="bt on">Cade</span><span class="bt pap">Non cade</span><span class="bt pap">Voti nulli</span></div>
-<span class="lb" style="margin-top:8px">2 · Il tuo voto (fisso per tutti)</span><div class="meta">Tocca la carta che butteresti giù: <b>carta 3</b>. Non si cambia più.</div></div>
-<div class="bt" style="left:20px;right:20px;bottom:26px">Avanti</div>`,"Passo 3 · Segnalino e voto","Il segnalino (CADE / NON CADE / VOTI NULLI) sta su una carta; l'autore vota come il Megafono. Restano uguali per tutti i giocatori.");
+beat("creare",`${T("t4m")}${barra("‹ Indietro","3 / 4")}
+<div class="pill" style="left:14px;right:14px;top:70px"><small>Oggi sale sulla torre…</small>chi si ubriacherebbe al matrimonio del cugino.</div>
+<div class="bsheet" style="left:12px;right:12px;bottom:12px"><h4>Segnalino e voto</h4><div class="meta" style="margin:2px 0 6px">Tocca la carta per il segnalino, poi scegli quale. Poi tocca la carta che butteresti giù.</div>
+<div class="opt"><span class="bt on">Cade</span><span class="bt pap">Non cade</span><span class="bt pap">Voti nulli</span></div>
+<div class="meta" style="margin-top:8px"><b>Segnalino:</b> CADE sulla carta 1 · <b>Il tuo voto:</b> carta 3 (fisso per tutti)</div><div class="bt" style="margin-top:8px;font-size:19px">Avanti</div></div>`,"Passo 3 · Segnalino e voto","La torre è quella dell'app (terrazza con merli, carte numerate sul piedino nero). L'autore tocca una carta per il segnalino e una per il proprio voto (evidenziata in giallo); restano uguali per tutti.");
 
 /* 4 · durata + riepilogo */
 beat("creare",`<div class="sky"></div>${barra("‹ Indietro","4 / 4")}
 <div class="h" style="top:80px"><small>Quasi pronta</small>Quanto dura?</div>
 <div class="pp" style="left:20px;right:20px;top:200px"><span class="lb">Aperta ai voti per</span><div class="opt" style="margin-top:4px"><span class="bt pap">24 ore</span><span class="bt on">3 giorni</span><span class="bt pap">7 giorni</span></div><div class="meta" style="margin-top:6px">Chiude <b>sabato 29 alle 21:15</b>. I risultati restano visibili per 24 ore.</div></div>
-<div class="pp" style="left:20px;right:20px;top:360px"><span class="lb">Riepilogo</span><div style="display:flex;gap:10px;margin-top:6px"><div style="position:relative;width:90px;height:136px;flex:none">${card(0,0,6,56,-6,1)}${card(1,30,0,56,5,2)}${card(2,12,40,56,2,3)}</div><div style="flex:1;font:800 14px/1.3 Nunito">4 carte · tuo voto nascosto<br>«chi si ubriacherebbe al matrimonio del cugino.»<br><span class="age a14">14+</span> <span class="meta">età minima della frase</span></div></div></div>
+<div class="pp" style="left:20px;right:20px;top:360px"><span class="lb">Riepilogo</span><div style="display:flex;gap:10px;margin-top:6px"><div style="width:92px;height:120px;flex:none;border:3px solid var(--navy);background:url(torri-utente-assets/t4.webp) 0 0/100% auto;box-shadow:3px 3px 0 var(--navy)"></div><div style="flex:1;font:800 14px/1.3 Nunito">4 carte · tuo voto nascosto<br>«chi si ubriacherebbe al matrimonio del cugino.»<br><span class="age a14">14+</span> <span class="meta">età minima della frase</span></div></div></div>
 <div class="pp" style="left:20px;right:20px;top:560px;font:800 12.5px/1.35 Nunito">Per 14+ e 18+ chi apre il link deve prima confermare l'età. Per 18+ l'immagine social non mostra la frase.</div>
 <div class="bt red" style="left:20px;right:20px;bottom:26px">Pubblica la torre<small style="color:#fff">Per 10 minuti puoi ancora annullarla</small></div>`,"Passo 4 · Durata e pubblicazione","Durata scelta dall'autore. L'età non si sceglie a mano: è quella minima trovata dalla moderazione (si può alzare, non abbassare).");
 
@@ -122,12 +131,11 @@ beat("condividi",`<div class="sky"></div>${barra("‹ Le mie torri","pubblicata 
 <div class="pp" style="left:20px;right:20px;top:620px"><span class="lb">Hai cambiato idea?</span><div class="bt pap sm" style="margin-top:4px">Annulla la torre · <span style="font-family:Nunito">ancora 9:12</span></div></div>`,"Condivisione","Foglio di condivisione con i canali principali. I voti non si vedono fino alla chiusura.");
 
 document.getElementById("condividi").insertAdjacentHTML("beforeend",`<div class="beat" style="width:620px"><div class="soc"><div class="og"><div class="t">Chi butteresti<br>giù dalla torre?</div>
-<div class="cards"><div class="c" style="left:0;top:20px;width:100px;transform:rotate(-8deg);background-image:${C(IMG[0])}"><b class="num">1</b></div><div class="c" style="left:70px;top:0;width:100px;transform:rotate(4deg);background-image:${C(IMG[1])}"><b class="num">2</b></div><div class="c" style="left:20px;top:140px;width:100px;transform:rotate(3deg);background-image:${C(IMG[2])}"><b class="num">3</b></div><div class="c" style="left:100px;top:130px;width:100px;transform:rotate(-4deg);background-image:${C(IMG[3])}"><b class="num">4</b></div></div>
+<div class="cards" style="right:10px;top:10px;width:280px;height:290px;background:url(torri-utente-assets/t4.webp) 0 -70px/100% auto;border:3px solid var(--navy);box-shadow:5px 5px 0 var(--navy)"></div>
 <div class="q">Oggi sale sulla torre… chi si ubriacherebbe al matrimonio del cugino.</div><div class="badge age a14">14+</div></div></div>
 <h3>Immagine per l'anteprima del link (1200×630)</h3><p>WhatsApp, Telegram, Facebook, X: titolo-domanda, carte numerate, frase e badge d'età. Mai segnalino né voto dell'autore. Per le torri 18+ al posto della frase c'è «Torre 18+ · tocca per aprire».</p>
 <div class="soc" style="width:300px;margin-top:20px"><div class="vert"><div style="position:absolute;left:14px;top:18px;font:400 30px/.92 Anton;text-transform:uppercase;color:#fff;text-shadow:3px 3px 0 var(--red),5px 5px 0 var(--navy)">Chi butteresti giù dalla torre?</div>
-<div style="position:absolute;left:30px;top:130px;width:210px;height:200px">${[0,1,2,3].map((i)=>`<div class="c" style="left:${(i%2)*104}px;top:${Math.floor(i/2)*100}px;width:84px;transform:rotate(${[-4,3,2,-3][i]}deg);background-image:${C(IMG[i])}"><b class="num">${i+1}</b></div>`).join("")}</div>
-<div style="position:absolute;left:14px;right:14px;top:350px;background:var(--red);color:#fff;border:3px solid var(--navy);padding:7px 9px;font:800 12px/1.3 Nunito">Oggi sale sulla torre… chi si ubriacherebbe al matrimonio del cugino.</div>
+<div style="position:absolute;left:12px;right:12px;top:116px;height:245px;background:url(torri-utente-assets/t4.webp) 0 -58px/100% auto;border:3px solid var(--navy);box-shadow:4px 4px 0 var(--navy)"></div><div style="position:absolute;left:14px;right:14px;top:372px;background:var(--red);color:#fff;border:3px solid var(--navy);padding:7px 9px;font:800 12px/1.3 Nunito">Oggi sale sulla torre… chi si ubriacherebbe al matrimonio del cugino.</div>
 <div style="position:absolute;left:14px;right:14px;bottom:12px;display:flex;justify-content:space-between;align-items:center"><span class="age a14" style="font-size:12px">14+</span><span style="font:800 11px Nunito">Vota entro sab 29 · 21:15</span></div></div></div>
 <h3>Immagine verticale (1080×1920)</h3><p>Per storie Instagram/Facebook e stato di WhatsApp, dove i link non fanno anteprima: con la scadenza ben visibile.</p></div>`);
 
@@ -136,12 +144,14 @@ beat("gioca",`<div class="sky"></div>${barra("","")}
 <div class="pp" style="left:24px;right:24px;top:220px;text-align:center"><span class="age a14" style="font-size:22px;padding:8px 14px">14+</span><div class="tit" style="font-size:28px;margin:12px 0 6px">Torre per ragazzi e adulti</div><div class="meta" style="font-size:13px">Questa torre contiene frasi adatte dai 14 anni in su. Hai almeno 14 anni?</div>
 <div class="bt" style="margin-top:12px">Sì, ho 14 anni o più</div><div class="bt pap sm" style="margin-top:10px">No, torna indietro</div><div class="meta" style="margin-top:8px;font-size:11px">Nessuna verifica reale: ti chiediamo di dichiararlo.</div></div>`,"Conferma dell'età","Per 14+ e 18+ si vede prima questa schermata, poi frase e carte.");
 
-beat("gioca",`<div class="sky"></div>${barra("Torre di Marta <span class='age a14' style='font-size:10px;padding:2px 5px'>14+</span>","chiude tra 2g 21h")}
-<div class="pp" style="left:20px;right:20px;top:76px;background:var(--red);color:#fff"><span class="lb" style="color:#fff;opacity:.9">Oggi sale sulla torre…</span><div style="font:800 20px/1.2 Nunito">chi si ubriacherebbe al matrimonio del cugino.</div></div>
-<div class="terr" style="left:14px;right:14px;top:190px;height:360px">${card(0,16,22,118,-3,1)}${card(1,150,14,118,3,2)}${card(2,26,188,118,2,3)}${card(3,160,180,118,-3,4)}<div class="tok cade" style="left:12px;top:14px">?</div></div>
-<div class="pp" style="left:20px;right:20px;top:572px;padding:8px 12px"><span class="meta"><b>Il segnalino è già sulla torre</b>: scoprirai quale a chiusura. Chi butteresti giù?</span></div>
-<div style="left:20px;right:20px;top:640px;display:flex;gap:8px">${[1,2,3,4].map((n)=>`<div class="bt pap" style="flex:1;padding:12px 0;box-shadow:3px 3px 0 var(--navy)">${n}</div>`).join("")}</div>
-<div class="bt" style="left:20px;right:20px;bottom:24px;font-size:18px">Conferma il voto<small>Non potrai cambiarlo</small></div>`,"La torre da votare","Si vede la frase, le carte numerate e il segnalino coperto. Si vota in segreto, una volta (per dispositivo).");
+beat("gioca",`${T("t4q")}${barra("Torre di Marta <span class='age a14' style='font-size:10px;padding:2px 5px'>14+</span>","chiude tra 2g 21h")}
+<div class="pill" style="left:14px;right:14px;top:70px"><small>Oggi sale sulla torre…</small>chi si ubriacherebbe al matrimonio del cugino.</div>
+<div class="bsheet" style="left:12px;right:12px;bottom:12px"><h4>Vota in segreto</h4><div class="meta" style="margin:2px 0 6px">Il segnalino di Marta è già sulla torre: lo scoprirai alla chiusura. Tocca la carta che butteresti giù.</div>
+<div style="display:flex;gap:8px">${[1,2,3,4].map((n)=>`<div class="bt pap" style="flex:1;padding:10px 0;box-shadow:3px 3px 0 var(--navy);${n===3?"background:var(--mus)":""}">${n}</div>`).join("")}</div><div class="bt red" style="margin-top:8px;font-size:18px">Conferma il voto<small style="color:#fff">Non potrai cambiarlo</small></div></div>`,"La torre da votare","Stessa terrazza del gioco: carte numerate, segnalino coperto. Si tocca una carta (come nell'app) e si conferma; il voto è unico per dispositivo.");
+
+beat("gioca",`${T("t6")}${barra("Torre di Luca <span class='age' style='font-size:10px;padding:2px 5px'>6+</span>","chiude tra 23h")}
+<div class="pill" style="left:14px;right:14px;top:70px"><small>Oggi sale sulla torre…</small>chi riderebbe alla propria battuta.</div>
+<div class="bsheet" style="left:12px;right:12px;bottom:12px"><h4>Scegli chi cade</h4><div class="meta" style="margin:2px 0 6px">Torre da 6 carte: le file si allargano come nelle partite a 5 e 6 giocatori.</div><div class="bt dis" style="font-size:19px">Scegli una carta</div></div>`,"Torre da 6 carte","Con 5 o 6 carte la terrazza usa le file allargate dell'app: tutto resta leggibile e tappabile.");
 
 beat("gioca",`<div class="sky"></div>${barra("Torre di Marta","chiude tra 2g 21h")}
 <div class="h" style="top:90px"><small>Voto registrato!</small>Ci sei dentro</div>
@@ -150,13 +160,11 @@ beat("gioca",`<div class="sky"></div>${barra("Torre di Marta","chiude tra 2g 21h
 <div class="bt pap" style="left:20px;right:20px;bottom:100px">Crea la tua torre</div><div class="bt pap sm" style="left:20px;right:20px;bottom:26px">⚑ Segnala questa torre</div>`,"Dopo il voto","Nickname facoltativo, richiesta del permesso per la notifica (non obbligatoria) e un invito a creare la propria torre.");
 
 /* 4 · dopo */
-beat("dopo",`<div class="sky"></div>${barra("Torre di Marta <span class='age a14' style='font-size:10px;padding:2px 5px'>14+</span>","chiusa ✓")}
-<div class="h" style="top:80px"><small>È andata così</small>Risultati</div>
-<div class="terr" style="left:14px;right:14px;top:186px;height:236px">${[0,1,2,3].map((i)=>`<div class="c" style="left:${14+(i%2)*165}px;top:${12+Math.floor(i/2)*108}px;width:68px;transform:rotate(${[-3,3,2,-3][i]}deg);background-image:${C(IMG[i])};${i===2?"outline:4px solid var(--red)":""}"><b class="num">${i+1}</b></div>`).join("")}${[[1,6],[2,23],[3,54],[4,17]].map(([n,p],i)=>`<div style="position:absolute;left:${100+(i%2)*165}px;top:${22+Math.floor(i/2)*108}px;width:60px;font:400 26px/1 Anton;color:${n===3?"var(--red)":"var(--navy)"}">${p}%<div style="font:800 10px Nunito">${n===3?"CADE!":""}</div></div>`).join("")}</div>
-<div class="pp" style="left:14px;right:14px;top:440px;padding:6px 10px"><span class="meta">Carta 3 caduta (54% dei 41 voti) · segnalino: <b>CADE</b> ✓</span></div>
-<div style="left:14px;right:14px;top:490px;display:flex;flex-direction:column;gap:5px"><span class="lb">Classifica</span>
-<div class="pl"><i class="dc" style="background:#ffc72c"></i>1° Giulia <b>6</b></div><div class="pl"><i class="dc" style="background:#e5384b"></i>2° Anonimo <b>6</b><span style="font:800 10px Nunito"> (ha votato dopo)</span></div><div class="pl"><i class="dc" style="background:#3aa655"></i>3° Marco_88 <b>2</b></div><div class="pl"><i class="dc" style="background:#8e44c8"></i>Tu: Anonimo <b>2</b></div></div>
-<div class="bt pap sm" style="left:14px;right:14px;bottom:24px">Risultati visibili ancora 23 h 12 min</div>`,"Risultati","Percentuale di voti per carta, carta caduta, segnalino rivelato e classifica con i punti del gioco. A pari punti vince chi ha votato prima.");
+beat("dopo",`${T("t4r")}${barra("Torre di Marta <span class='age a14' style='font-size:10px;padding:2px 5px'>14+</span>","chiusa ✓")}
+<div class="pill" style="left:14px;right:14px;top:70px"><small>È andata così</small>Carta 3 caduta · 54% dei 41 voti · segnalino: CADE ✓</div>
+<div class="pct" style="left:102px;top:210px">6%</div><div class="pct" style="left:196px;top:212px">23%</div><div class="pct fall" style="left:96px;top:354px">54%</div><div class="pct" style="left:196px;top:354px">17%</div>
+<div class="bsheet" style="left:12px;right:12px;bottom:12px;padding:8px 10px"><h4>Classifica</h4>
+<div style="display:flex;flex-direction:column;gap:4px;margin-top:4px"><div class="pl"><i class="dc" style="background:#ffc72c"></i>1° Giulia <b>6</b></div><div class="pl"><i class="dc" style="background:#e5384b"></i>2° Anonimo <b>6</b><span style="font:800 10px Nunito">(votato dopo)</span></div><div class="pl"><i class="dc" style="background:#3aa655"></i>3° Marco_88 <b>2</b></div><div class="pl"><i class="dc" style="background:#8e44c8"></i>Tu · Anonimo <b>2</b></div></div><div class="meta" style="margin-top:5px;font-size:11px">Risultati visibili ancora 23 h 12 min</div></div>`,"Risultati","La carta caduta si abbassa come nello spoglio dell'app; percentuali sulle carte, segnalino rivelato e classifica con i punti del gioco. A pari punti vince chi ha votato prima.");
 
 beat("dopo",`<div class="sky"></div>${barra("‹ Le mie torri","aperta")}
 <div class="h" style="top:80px"><small>Torre di Marta</small>Gestione</div>

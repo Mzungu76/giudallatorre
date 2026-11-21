@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import type { MiniKind } from "@gdt/game-engine";
+import type { LuiSpec, MiniKind } from "@gdt/game-engine";
 import MiniGame from "../components/MiniGame.tsx";
 import { FinaleScene, useCast } from "../components/MiniStage.tsx";
 import { buildFinale } from "../lib/miniScenes.ts";
@@ -43,10 +43,14 @@ export function CharDemo() {
   return <Stage bg="sky"><CharIntro color={PLAYER_COLORS[c % 8]!} onClose={() => undefined} /></Stage>;
 }
 
-/** Solo sviluppo: /__terrazza mostra la terrazza vuota (per disegnare le scene dell'intervallo). */
+/** Solo sviluppo: /__terrazza mostra la terrazza (vuota, per disegnare le scene dell'intervallo). Parametri facoltativi, per i mockup:
+ *  `c=p01-i01,p01-i02,…` carte; `m=2:cade|noncade|nulli|?` segnalino sulla carta 2 (`?` = coperto); `sel=3` carta evidenziata; `sink=3` carta che cade; `s=1` file allargate; `down=1` carte coperte. */
 export function TerraceDemo() {
   const [ok, setOk] = useState(false); useEffect(() => { loadCards().then(() => setOk(true)); }, []);
-  return <Stage bg="sky">{ok && <Terrace cardIds={[]} />}</Stage>;
+  const q = new URLSearchParams(location.search), ids = (q.get("c") ?? "").split(",").filter(Boolean), [mp, me] = (q.get("m") ?? "").split(":");
+  const spec = me && me !== "?" ? ({ slot: "s", k: 1, pts: me === "cade" ? 4 : me === "noncade" ? 2 : 0, effect: me } as LuiSpec) : null;
+  const sink = (q.get("sink") ?? "").split(",").map(Number).filter(Boolean);
+  return <Stage bg="sky">{ok && <Terrace cardIds={ids} spread={q.get("s") === "1"} down={q.get("down") === "1"} sink={sink.length ? sink : undefined} selected={q.get("sel") ? Number(q.get("sel")) : null} marks={mp ? [{ pos: Number(mp), spec }] : null} />}</Stage>;
 }
 
 /** Solo sviluppo: /__intervallo?k=accusa|amore|peggiore&t=1500 (ms dal «via»; negativo = conto alla rovescia) oppure &fin=1&seek=2200&cadono=2,4 per la scenetta finale. */

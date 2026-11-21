@@ -1,6 +1,6 @@
 # Torri degli utenti (modalità «One shot» condivisibile)
 
-Stato: **progettazione + fase 1 (moderazione) fatta**. Mockup: `mockups/torri-utente.html`.
+Stato: **progettazione + fase 1 (moderazione) fatta**. Mockup: `mockups/torri-utente.html` (la terrazza è uno screenshot della scena vera dell'app: dalla pagina di sviluppo `/__terrazza?c=<carte>&m=1:cade&sel=3&sink=3&s=1`, immagini in `mockups/torri-utente-assets/`).
 
 ## Idea
 L'utente crea una torre (3–6 carte, una frase, il segnalino su una carta e il proprio voto, fissi) e la propone come un sondaggio: un link da condividere su WhatsApp, social, ecc. Chi lo apre vota una volta; i risultati escono **alla chiusura**.
