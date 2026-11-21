@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { terraceBaseHtml, terraceCardsHtml, terracePos, profileShaft } from "../scene/draw.ts";
-import { skyLifeHtml } from "../scene/clouds.ts";
+import { gabbianiHtml, skyLifeHtml } from "../scene/clouds.ts";
 import { cardFull } from "../lib/cards.ts";
 import { FAST, useStage } from "../ui.tsx";
 import { usePersona } from "./Persona.tsx";
@@ -28,7 +28,7 @@ export function Terrace(p: TerraceProps) {
   const { ts, ty, H } = useStage(), n = p.cardIds.length, openPersona = usePersona();
   // il banco di nuvole spunta a ~215 px dal fondo dello schermo (il pannello sta sotto): la y va riportata nelle coordinate dello strato, scalato e spostato
   const bankTop = Math.round((H - 215 - 300 - ty) / ts + 300), base = useMemo(() => terraceBaseHtml(bankTop), [bankTop]);
-  const sky = useMemo(() => skyLifeHtml(!FAST), []);
+  const sky = useMemo(() => skyLifeHtml(!FAST), []), gulls = useMemo(() => (FAST ? "" : gabbianiHtml()), []);
   const pos = useMemo(() => terracePos(n, p.spread), [n, p.spread]);
   const urls = useMemo(() => p.cardIds.map(cardFull), [p.cardIds.join("|")]); // eslint-disable-line react-hooks/exhaustive-deps
   const key = JSON.stringify([urls, p.down, p.show, p.pop, p.flip, p.votes, p.lastVote, p.marks, p.sink, p.spread]);
@@ -38,6 +38,7 @@ export function Terrace(p: TerraceProps) {
     <div className="layer" style={{ left: 0, top: 0, width: 372, height: H, zIndex: 0 }} dangerouslySetInnerHTML={{ __html: sky }} />
     <div className="layer" style={{ transformOrigin: "186px 300px", transform: `translateY(${ty}px) scale(${ts})` }} data-testid="terrace" onClick={(e) => { const el = (e.target as HTMLElement).closest("[data-pid]") as HTMLElement | null; if (el?.dataset.pid) openPersona?.(el.dataset.pid); }}>
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: base }} />
+      {gulls && <div style={{ left: 0, top: 0, width: 372, height: 826, zIndex: 40 }} aria-hidden="true" dangerouslySetInnerHTML={{ __html: gulls }} />}
       <div style={{ left: 0, top: 0, width: 372, height: 826 }} dangerouslySetInnerHTML={{ __html: cards }} />
       {p.onPick && Object.entries(pos).map(([i, c]) => {
         const num = Number(i) + 1;

@@ -45,3 +45,14 @@ export function skyLifeHtml(anim: boolean): string {
   const birds = anim ? uccello(0, 70, 26, 2, 1) + uccello(1, 150, 34, 11, 0.8) + uccello(2, 104, 30, 17, 0.65) + uccello(3, 232, 40, 24, 0.9) : "";
   return `<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none" aria-hidden="true">${cl}${birds}</div>`;
 }
+
+/**
+ * Gabbiani che ogni tanto arrivano, si posano su un merlo della terrazza, restano un po' e riprendono il volo.
+ * Stanno nello strato della torre (si muovono con lei); coordinate dello strato. `d` = 1 arriva da sinistra, -1 da destra.
+ */
+const GABBIANO_VOLO = `<svg width="38" height="22" viewBox="0 0 38 22" class="sk-gv"><g class="sk-gw"><path d="M2 8 Q9 -2 19 10 Q29 -2 36 8 Q29 6 19 14 Q9 6 2 8z" fill="#fff" stroke="#13224a" stroke-width="2.2" stroke-linejoin="round"/><path d="M2 8 Q6 5 9 5.5 M36 8 Q32 5 29 5.5" fill="none" stroke="#9aa8b8" stroke-width="2.4" stroke-linecap="round"/></g><ellipse cx="19" cy="12" rx="6.5" ry="3.8" fill="#fff" stroke="#13224a" stroke-width="2"/><circle cx="25.5" cy="10.6" r="2.7" fill="#fff" stroke="#13224a" stroke-width="2"/><path d="M27.6 10.8 l4 1.1 -4 .9z" fill="#ffc72c" stroke="#13224a" stroke-width="1.2"/></svg>`;
+const GABBIANO_POSATO = `<svg width="26" height="26" viewBox="0 0 26 26" class="sk-gp"><path d="M5 24 L6.5 18 M11 24 l-1 -6" stroke="#e8362b" stroke-width="2" stroke-linecap="round"/><ellipse cx="11" cy="14" rx="8.2" ry="5.6" fill="#fff" stroke="#13224a" stroke-width="2.2"/><path d="M3.5 12.5 Q9 9.5 14 13 Q9 15.5 3.5 14z" fill="#b7c3d0" stroke="#13224a" stroke-width="1.6"/><g class="sk-gh"><circle cx="17.5" cy="7.4" r="3.8" fill="#fff" stroke="#13224a" stroke-width="2.2"/><circle cx="18.6" cy="6.6" r="0.9" fill="#13224a"/><path d="M20.8 7.6 l4.4 1.2 -4.4 1z" fill="#ffc72c" stroke="#13224a" stroke-width="1.3"/></g></svg>`;
+export function gabbianiHtml(): string {
+  const g = (x: number, y: number, d: number, dur: number, dl: number) => `<div class="sk-gull sk-anim" style="left:${x - 13}px;top:${y - 26}px;--d:${d};animation-duration:${dur}s;animation-delay:${dl}s"><div class="sk-gfly" style="animation-duration:${dur}s;animation-delay:${dl}s">${GABBIANO_VOLO}</div><div class="sk-gsit" style="animation-duration:${dur}s;animation-delay:${dl}s">${GABBIANO_POSATO}</div></div>`;
+  return g(113, 580, 1, 52, -6) + g(250, 578, -1, 67, -30);
+}

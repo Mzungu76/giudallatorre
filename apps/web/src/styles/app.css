@@ -1609,3 +1609,24 @@ button.rs-pl{font:inherit;font-family:Anton,Impact,sans-serif;cursor:pointer;col
 .sk-b1{animation:skbank 9s ease-in-out infinite alternate}.sk-b2{animation:skbank 7s ease-in-out -3s infinite alternate-reverse}
 @keyframes skbank{from{transform:translateX(-11px)}to{transform:translateX(11px)}}
 @media (prefers-reduced-motion:reduce){.sk-anim,.sk-b1,.sk-b2,.sk-wing{animation:none !important}.sk-bird{display:none}}
+/* gabbiani: arrivano, si posano su un merlo, restano e ripartono (ciclo lungo; la maggior parte del tempo non si vedono) */
+.sk-gull{position:absolute;width:38px;height:26px;pointer-events:none;animation:skgull linear infinite}
+.sk-gfly,.sk-gsit{position:absolute;left:-6px;bottom:0;transform:scaleX(var(--d))}
+.sk-gfly{animation:skgfly linear infinite}.sk-gsit{left:0;animation:skgsit linear infinite}
+.sk-gw{transform-origin:19px 10px;animation:skgflap .42s ease-in-out infinite alternate}
+.sk-gh{transform-origin:16px 10px;animation:skgpeck 3.4s ease-in-out infinite}
+@keyframes skgflap{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+@keyframes skgpeck{0%,70%,100%{transform:rotate(0)}76%{transform:rotate(16deg)}82%{transform:rotate(-4deg)}88%{transform:rotate(0)}}
+@keyframes skgull{
+ 0%{transform:translate(calc(var(--d)*-330px),-210px)}
+ 4%{transform:translate(calc(var(--d)*-210px),-150px)}
+ 8%{transform:translate(calc(var(--d)*-100px),-72px)}
+ 11%{transform:translate(calc(var(--d)*-34px),-18px)}
+ 12.5%,31%{transform:translate(0,0)}
+ 33%{transform:translate(calc(var(--d)*18px),-26px)}
+ 37%{transform:translate(calc(var(--d)*130px),-120px)}
+ 43%{transform:translate(calc(var(--d)*340px),-250px)}
+ 100%{transform:translate(calc(var(--d)*340px),-250px)}}
+@keyframes skgfly{0%{opacity:0}1%,12%{opacity:1}12.6%,31.4%{opacity:0}32%,43%{opacity:1}43.5%,100%{opacity:0}}
+@keyframes skgsit{0%,12.4%{opacity:0}12.6%,31.4%{opacity:1}31.6%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.sk-gull,.sk-gfly,.sk-gsit{display:none}}
