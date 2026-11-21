@@ -68,5 +68,7 @@ describe("etichette dei bot nel catalogo (facoltative: senza, i bot giocano le c
     expect(voc.limiti).toEqual({ pesi: cat2.pesi, max_tipi: cat2.max_tipi, max_temi: cat2.max_temi });
     expect(voc.ruoli.map((r) => r.id)).toEqual((json("content/etichette/ruoli.json") as { ruoli: { id: string }[] }).ruoli.map((r) => r.id));
     expect(voc.aspetti.map((a) => a.id)).toEqual((json("content/etichette/aspetto.json") as { aspetti: { id: string }[] }).aspetti.map((a) => a.id));
+    const html = readFileSync(resolve(root, "public/crea-mazzo.html"), "utf8"), m = /\/\*VOC\*\/([\s\S]*?)\/\*FINE\*\//.exec(html);   // copia nella pagina (per l'uso da file)
+    expect(m && JSON.parse(m[1]!), "copia del vocabolario in crea-mazzo.html").toEqual(voc);
   });
 });
