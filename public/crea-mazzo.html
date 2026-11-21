@@ -89,6 +89,16 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
 </header>
 <main>
 <div>
+  <section id="bozza">
+    <h2>Bozza e progetto</h2>
+    <p class="h">Il lavoro si salva da solo in questo browser. Per riprenderlo su un altro dispositivo, o conservarlo, esporta il progetto in un file e riaprilo quando vuoi.</p>
+    <div class="avv" id="ripresa" hidden><span id="ripresaTxt"></span> <div class="et-tools"><button id="ripresaSi">Riprendi la bozza</button><button class="sec" id="ripresaNo">Scartala</button></div></div>
+    <div class="row"><div><label>Salva da solo ogni</label><select id="autoN"><option value="3">3 modifiche</option><option value="5">5 modifiche</option><option value="10" selected>10 modifiche</option><option value="20">20 modifiche</option><option value="50">50 modifiche</option></select></div>
+      <div style="align-self:end"><button class="sec" id="salvaOra" style="width:100%">Salva ora</button></div></div>
+    <div class="msg" id="autoMsg">Nessuna modifica da salvare.</div>
+    <div class="et-tools"><button class="sec" id="esportaProg">Esporta il progetto (.json)</button><label class="btn sec" style="margin:0;font-weight:400;border:1px solid var(--line);background:#fff;color:var(--ink)">Riprendi un progetto…<input type="file" id="progFile" accept=".json,application/json" hidden></label></div>
+    <div class="msg" id="progMsg"></div>
+  </section>
   <section>
     <h2>1 · Mazzo da modificare (facoltativo)</h2>
     <p class="h">Per cambiare un mazzo già pubblicato scegli qui il suo nome. Il catalogo viene letto da <code>/espansioni/catalogo.json</code>; se apri la pagina da file, caricalo a mano.</p>
@@ -123,6 +133,16 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
     <div id="frasi"></div>
     <div class="row"><button class="sec" id="addFrase">+ Aggiungi frase</button><button class="sec" id="incolla">Incolla più frasi (una per riga)</button></div>
     <div id="incollaBox" hidden style="margin-top:8px"><textarea id="incollaTxt" placeholder="chi …&#10;i più …"></textarea><div class="row" style="margin-top:6px"><button id="incollaOk">Aggiungi le frasi</button><button class="sec" id="incollaNo">Annulla</button></div></div>
+    <div class="avv" id="genBox" hidden>
+      <b>Claude scrive le frasi</b> · propone frasi nuove nello stile del gioco, in base a nome, descrizione e carte del mazzo. Usa il tuo account Claude; controlla e correggi le frasi proposte.
+      <div class="row"><div><label>Quante frasi</label><input type="number" id="genN" min="1" max="30" value="18"></div>
+        <div><label>Tono ed età</label><select id="genTono"><option value="misto">Misto (10+ e 14+)</option><option value="soft">Leggero (10+)</option><option value="deciso">Più pungente (14+)</option></select></div></div>
+      <label>Idee o temi da toccare (facoltativo)</label><textarea id="genExtra" style="min-height:56px" placeholder="Es. supereroi che falliscono nelle cose quotidiane; evitare battute sul lavoro"></textarea>
+      <label style="font-weight:400"><input type="checkbox" id="genImg" checked> Fai guardare a Claude anche le carte (se caricate in questa sessione)</label>
+      <label style="font-weight:400"><input type="checkbox" id="genSost"> Sostituisci le frasi che ci sono già (altrimenti si aggiungono)</label>
+      <div class="et-tools"><button id="genVai">Genera le frasi</button><button class="sec" id="genStop" hidden>Ferma</button></div>
+      <div class="msg" id="genMsg"></div>
+    </div>
     <label>Frase d'esempio mostrata nella pagina</label><select id="esempio"></select>
     <div class="msg" id="frMsg"></div>
   </section>
@@ -191,7 +211,7 @@ $("esist").onchange = () => {
   $("esempio").dataset.v = m.esempio; $("foglMsg").className = "msg ok"; $("foglMsg").textContent = `Uso le ${m.carte} carte già pubblicate. Carica nuovi fogli solo per sostituirle.`;
   tutto();
 };
-$("nuovo").onclick = () => { modifica = null; carte = []; sceltaBox = []; frasi = []; ["nome", "id", "descr"].forEach((k) => { $(k).value = ""; }); $("id").disabled = false; $("esist").value = ""; $("fogli").value = ""; $("foglMsg").textContent = ""; $("esempio").dataset.v = ""; tutto(); };
+$("nuovo").onclick = () => { modifica = null; modificaId = null; carte = []; sceltaBox = []; frasi = []; ["nome", "id", "descr"].forEach((k) => { $(k).value = ""; }); $("id").disabled = false; $("esist").value = ""; $("fogli").value = ""; $("foglMsg").textContent = ""; $("esempio").dataset.v = ""; tutto(); };
 
 // ---------- ritaglio dei fogli ----------
 function corse(v, minLen) { const r = []; let s = null; v.forEach((x, i) => { if (x && s === null) s = i; if (!x && s !== null) { if (i - s >= minLen) r.push([s, i]); s = null; } }); if (s !== null && v.length - s >= minLen) r.push([s, v.length]); return r; }
@@ -340,7 +360,7 @@ const CAP = { sample: null, dl: null, img: null };
       if (CAP.sample && CAP.sample.limits) { try { CAP.img = (await CAP.sample.limits()).images || null; } catch (e) { /* senza immagini */ } }
     }
   } catch (e) { /* niente */ }
-  $("etAI").hidden = !CAP.sample; etichette();
+  $("etAI").hidden = !CAP.sample; $("genBox").hidden = !CAP.sample; etichette();
 })();
 const vocTesto = (l) => l.map((x) => `- ${x.id}: ${x.def}`).join("\n");
 async function immagineCarta(c) {
@@ -453,10 +473,108 @@ $("scarica").onclick = async () => {
   files.push({ name: "public/espansioni/catalogo.json", data: enc.encode(JSON.stringify(cat, null, 1)) });
   for (let n = 0; n < carte.length; n++) if (carte[n].blob) files.push({ name: `public/espansioni/${m.id}/c${String(n + 1).padStart(2, "0")}.webp`, data: new Uint8Array(await carte[n].blob.arrayBuffer()) });
   files.push({ name: "LEGGIMI.txt", data: enc.encode(`Mazzo «${m.nome}» (${m.id})\n\n1. Scompatta questo ZIP nella cartella principale del progetto, sovrascrivendo.\n2. Fai commit e pubblica.\n3. (Facoltativo) aggiungi le etichette per i bot in content/etichette e fai girare npm test.\n\n${carte.some((c) => c.blob) ? "" : "Questo ZIP non contiene le carte: restano quelle già pubblicate.\n"}`) });
-  const blob = zip(files), nome = `mazzo-${m.id}.zip`;
-  if (CAP.dl) { try { await CAP.dl.save({ filename: nome, data: blob }); } catch (e) { if (e && e.code !== "declined") { $("errMsg").className = "msg err"; $("errMsg").textContent = "Non riesco a salvare il file in questa vista (" + (e.code || "errore") + ")."; } } return; }
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; a.click();
+  await consegna(zip(files), `mazzo-${m.id}.zip`, $("errMsg"));
 };
+async function consegna(blob, nome, msg) {   // dentro Claude passa dal permesso «downloads»; altrove è un normale scaricamento
+  if (CAP.dl) { try { await CAP.dl.save({ filename: nome, data: blob }); } catch (e) { if (e && e.code !== "declined") { msg.className = "msg err"; msg.textContent = "Non riesco a salvare il file in questa vista (" + (e.code || "errore") + ")."; } } return; }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; a.click();
+}
+
+// ---------- bozza automatica (IndexedDB del browser) e progetto esportabile ----------
+let modifiche = 0, modificaId = null;
+const idb = () => new Promise((ok, ko) => { const r = indexedDB.open("cm-bozze", 1); r.onupgradeneeded = () => r.result.createObjectStore("b"); r.onsuccess = () => ok(r.result); r.onerror = () => ko(r.error); });
+const idbPut = async (k, v) => { const db = await idb(); return new Promise((ok, ko) => { const t = db.transaction("b", "readwrite"); t.objectStore("b").put(v, k); t.oncomplete = ok; t.onerror = () => ko(t.error); }); };
+const idbGet = async (k) => { const db = await idb(); return new Promise((ok, ko) => { const q = db.transaction("b").objectStore("b").get(k); q.onsuccess = () => ok(q.result); q.onerror = () => ko(q.error); }); };
+const idbDel = async (k) => { const db = await idb(); return new Promise((ok) => { const t = db.transaction("b", "readwrite"); t.objectStore("b").delete(k); t.oncomplete = ok; }); };
+const CAMPI = ["nome", "id", "colore", "prezzo", "stato", "anteprima", "descr"];
+function statoCorrente() {
+  const o = { v: 1, quando: Date.now(), modificaId: modifica ? (modifica.id || $("id").value) : null, scatola: sceltaBox.slice(), esempio: $("esempio").value || $("esempio").dataset.v || "", novita: $("novita").checked, idManuale: !!$("id").dataset.manuale };
+  CAMPI.forEach((k) => { o[k] = $(k).value; });
+  o.carte = carte.map((c) => ({ blob: c.blob || null, url: c.blob ? null : c.url, nome: c.nome || "", et: c.et })); o.frasi = frasi.map((f) => ({ testo: f.testo, famiglia: f.famiglia, eta: f.eta, et: f.et }));
+  return o;
+}
+function applicaStato(o) {
+  CAMPI.forEach((k) => { if (o[k] !== undefined) $(k).value = o[k]; }); $("novita").checked = !!o.novita; if (o.idManuale) $("id").dataset.manuale = "1"; else delete $("id").dataset.manuale;
+  carte = (o.carte || []).map((c) => ({ blob: c.blob || undefined, url: c.blob ? URL.createObjectURL(c.blob) : c.url, nome: c.nome || "", et: copiaEt(c.et) }));
+  frasi = (o.frasi || []).map((f) => ({ testo: f.testo, famiglia: f.famiglia, eta: f.eta, et: copiaEt(f.et) })); sceltaBox = (o.scatola || []).slice();
+  modificaId = o.modificaId || null; modifica = modificaId ? ((catalogo && catalogo.mazzi.find((m) => m.id === modificaId)) || { id: modificaId }) : null; $("id").disabled = !!modificaId;
+  $("esempio").dataset.v = o.esempio || ""; bersaglio = 0; tutto();
+}
+const ora = (t) => new Date(t).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
+async function salvaBozza(motivo) {
+  try { const o = statoCorrente(); await idbPut("corrente", o); modifiche = 0; $("autoMsg").className = "msg ok"; $("autoMsg").textContent = `Bozza salvata alle ${ora(o.quando)}${motivo ? " (" + motivo + ")" : ""}.`; }
+  catch (e) { $("autoMsg").className = "msg err"; $("autoMsg").textContent = "Non riesco a salvare la bozza in questo browser: esporta il progetto per non perdere il lavoro."; }
+}
+function segna() {
+  modifiche++; const n = +$("autoN").value || 10;
+  if (modifiche >= n) salvaBozza("automatico"); else { $("autoMsg").className = "msg"; $("autoMsg").textContent = `${modifiche} modifiche da salvare (salvo a ${n}).`; }
+}
+try { const n = localStorage.getItem("cm.autoN"); if (n && [...$("autoN").options].some((o) => o.value === n)) $("autoN").value = n; } catch (e) { /* niente */ }
+$("autoN").onchange = () => { try { localStorage.setItem("cm.autoN", $("autoN").value); } catch (e) { /* niente */ } };
+$("salvaOra").onclick = () => salvaBozza("manuale");
+const mainEl = document.querySelector("main");
+mainEl.addEventListener("input", (e) => { if (!e.target.closest("#bozza") && e.target.type !== "file") segna(); });
+mainEl.addEventListener("change", (e) => { if (!e.target.closest("#bozza") && e.target.type !== "file") segna(); });
+mainEl.addEventListener("click", (e) => { if (e.target.closest("[data-a],[data-r],[data-l],[data-nn],[data-azione],#thumbs2 [data-n],#frasi [data-x],#addFrase,#incollaOk,#etApplica,#sugUna,#sugTutte,#genVai,#sw i")) segna(); });
+$("fogli").addEventListener("change", () => setTimeout(segna, 1500));
+(async () => {   // c'è una bozza di una sessione precedente?
+  try { const b = await idbGet("corrente"); if (b && (b.carte.length || b.frasi.length || b.nome)) { $("ripresa").hidden = false; $("ripresaTxt").textContent = `Hai una bozza salvata alle ${ora(b.quando)} del ${new Date(b.quando).toLocaleDateString("it-IT")}: «${b.nome || "senza nome"}», ${b.carte.length} carte, ${b.frasi.length} frasi.`;
+    $("ripresaSi").onclick = () => { applicaStato(b); $("ripresa").hidden = true; $("autoMsg").textContent = "Bozza ripresa."; }; $("ripresaNo").onclick = async () => { await idbDel("corrente"); $("ripresa").hidden = true; }; } } catch (e) { /* niente bozza */ }
+})();
+const aDataUrl = (blob) => new Promise((ok) => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(blob); });
+$("esportaProg").onclick = async () => {
+  $("progMsg").className = "msg"; $("progMsg").textContent = "Preparo il file…"; const o = statoCorrente(); let senzaImg = 0;
+  for (const c of o.carte) { let b = c.blob; if (!b && c.url) { try { b = await (await fetch(c.url)).blob(); } catch (e) { senzaImg++; } } c.img = b ? await aDataUrl(b) : null; delete c.blob; }
+  const nome = ($("id").value || slug($("nome").value) || "mazzo");
+  await consegna(new Blob([JSON.stringify({ progetto: "giu-dalla-torre-mazzo", ...o })], { type: "application/json" }), `progetto-${nome}.json`, $("progMsg"));
+  $("progMsg").className = "msg ok"; $("progMsg").textContent = `Progetto pronto${senzaImg ? ` (${senzaImg} carte pubblicate non raggiungibili da qui: restano quelle del sito)` : ""}.`;
+};
+$("progFile").onchange = async (e) => {
+  try {
+    const o = JSON.parse(await e.target.files[0].text()); if (o.progetto !== "giu-dalla-torre-mazzo") throw new Error("non è un progetto di questo strumento");
+    for (const c of o.carte || []) { if (c.img) { c.blob = await (await fetch(c.img)).blob(); c.url = null; } delete c.img; }
+    applicaStato(o); $("progMsg").className = "msg ok"; $("progMsg").textContent = `Progetto ripreso: «${o.nome || "senza nome"}», ${o.carte.length} carte, ${o.frasi.length} frasi.`; segna();
+  } catch (err) { $("progMsg").className = "msg err"; $("progMsg").textContent = "Non riesco a leggere il progetto: " + err.message; }
+  e.target.value = "";
+};
+
+// ---------- frasi del Megafono scritte da Claude ----------
+const montaggio = async () => {   // una sola immagine con tutte le carte caricate in questa sessione
+  const con = carte.filter((c) => c.blob).slice(0, 36); if (!con.length || !CAP.img) return null;
+  const col = 6, w = 100, h = 150, cv = document.createElement("canvas"); cv.width = col * w; cv.height = Math.ceil(con.length / col) * h; const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+  for (let i = 0; i < con.length; i++) { const b = await createImageBitmap(con[i].blob); cx.drawImage(b, (i % col) * w, Math.floor(i / col) * h, w, h); }
+  return await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.85));
+};
+let genFermo = false;
+$("genVai").onclick = async () => {
+  if (!CAP.sample) return; const n = Math.max(1, Math.min(30, +$("genN").value || 18)), tono = $("genTono").value, sost = $("genSost").checked, msg = $("genMsg");
+  const esistenti = sost ? [] : frasi.map((f) => f.testo.trim()).filter(Boolean), nomi = carte.map((c) => (c.nome || "").trim()).filter(Boolean);
+  const esempi = ((catalogo && catalogo.mazzi) || []).filter((m) => m.id !== (modifica && modifica.id)).flatMap((m) => (m.frasiMegafono || []).slice(0, 4)).slice(0, 12).map((f) => `- [${f.famiglia}, ${f.eta}] ${f.testo}`);
+  const eta = { misto: "circa due terzi con età \"10+\" e un terzo con \"14+\"", soft: "tutte con età \"10+\" (adatte a famiglie e ragazzi)", deciso: "tutte con età \"14+\" (più taglienti, mai volgari né espliciti)" }[tono];
+  const prompt = `Scrivi ${n} nuove frasi del Megafono per un mazzo di espansione del party game «Giù dalla Torre». Il gioco nasce dalla domanda «chi butteresti giù dalla torre tra questi personaggi?»: la frase del Megafono dà mordente al voto. La frase completa è «Oggi sale (o salgono) sulla torre…» e tu scrivi solo la parte dopo «sulla torre».
+MAZZO: «${$("nome").value.trim() || "senza nome"}»${$("descr").value.trim() ? ". Descrizione: " + $("descr").value.trim() : ""}.${nomi.length ? " Nomi delle carte: " + nomi.slice(0, 40).join("; ") + "." : ""}${$("genImg").checked ? " Se è allegata, l'immagine mostra le carte del mazzo: usala per capire il tema." : ""}
+${$("genExtra").value.trim() ? "IDEE DELL'AUTORE: " + $("genExtra").value.trim() + "\n" : ""}REGOLE: ogni frase è una sola clausola, chiara alla prima lettura ad alta voce; inizia con «chi», «i più», «quelli che» o «il più»; finisce con un punto; al massimo 80 caratteri; parla di un tratto di carattere o di una situazione ipotetica semplice (non un aneddoto); niente gergo o nicchie; mai nomi di persone, personaggi, film, partiti o Paesi; nessuna accusa o fatto specifico su persone reali; ammesso il positivo ribaltato se il lato negativo è chiaro. Per «i più…» e «quelli che…» il verbo è «salgono», per «chi…» è «sale» (lo aggiungo io).
+FAMIGLIE (usa un buon mix): "etichetta" = tratto al plurale («i più…»); "collettivo" = gruppo («quelli che…»); "confronto" = confronto semplice («chi sarebbe il peggior…», «chi lasceresti…»); "convinzione" = cosa uno crede o sostiene («chi sostiene che…»); "ribaltato" = positivo con lato negativo («i più generosi solo quando c'è pubblico»).
+ETÀ: ${eta}.
+${esempi.length ? "ESEMPI DI TONO (di altri mazzi):\n" + esempi.join("\n") + "\n" : ""}${esistenti.length ? "FRASI GIÀ PRESENTI (non ripeterle e non scriverne di simili):\n" + esistenti.map((t) => "- " + t).join("\n") + "\n" : ""}
+Rispondi SOLO con un array JSON valido, senza altro testo: [{"testo":"chi …","famiglia":"confronto","eta":"10+"}, …]`;
+  genFermo = false; $("genVai").disabled = true; $("genStop").hidden = false; msg.className = "msg"; msg.textContent = "Claude sta scrivendo…";
+  try {
+    const opts = { modelTier: "default" }; if ($("genImg").checked) { try { const m = await montaggio(); if (m) opts.images = [m]; } catch (e) { /* senza immagine */ } }
+    const r = await CAP.sample.json(prompt, opts), arr = Array.isArray(r) ? r : (r && (r.frasi || r.items)) || [];
+    const tenute = sost ? [] : frasi.slice(), nuove = []; let scartate = 0;
+    for (const x of arr) {
+      let t = String((x && x.testo) || "").trim().replace(/^oggi\s+(sale|salgono)\s+sulla\s+torre\s+/i, ""); if (t && !t.endsWith(".")) t += ".";
+      const f = { testo: t, famiglia: FAMIGLIE.includes(x && x.famiglia) ? x.famiglia : (/^(i più|quelli che)/.test(t) ? "etichetta" : "confronto"), eta: ETA.includes(x && x.eta) ? x.eta : "10+", et: vuoto() };
+      if (erroriFrase(f, [...tenute, ...nuove, f]).length || genFermo) { scartate++; continue; } nuove.push(f);
+    }
+    frasi = [...tenute, ...nuove.slice(0, n)]; righeFrasi(); segna();
+    msg.className = "msg ok"; msg.textContent = `${Math.min(nuove.length, n)} frasi aggiunte${scartate ? `, ${scartate} scartate perché non rispettavano le regole` : ""}. Controllale e correggile; puoi generarne altre.`;
+  } catch (e) { msg.className = "msg err"; msg.textContent = messaggioErr(e); }
+  $("genVai").disabled = false; $("genStop").hidden = true;
+};
+$("genStop").onclick = () => { genFermo = true; };
+
 tutto();
 </script>
 </body>
