@@ -38,14 +38,35 @@ describe("espansioni", () => {
   });
 });
 
-describe("etichette dei bot per le carte delle espansioni (facoltative: senza, i bot le giocano come neutre)", () => {
-  const ruoli = json("content/etichette/ruoli.json") as { carte: Record<string, string[]> }, asp = json("content/etichette/aspetto.json") as { carte: Record<string, string[]> };
-  const v2 = json("content/etichette/personaggi.v2.json").personaggi as Record<string, unknown>, v1 = json("content/tags-personaggi.json") as Record<string, unknown>;
-  it("Summit (personaggi reali): ruolo politico per tutti; l'aspetto solo da capi di vestiario visibili", () => {
-    for (let n = 1; n <= 36; n++) {
-      const id = `summit-c${String(n).padStart(2, "0")}`;
-      expect(ruoli.carte[id], id).toEqual(["politico"]);
-      for (const a of asp.carte[id] ?? []) expect(["completo", "cravatta", "occhiali", "divisa", "abito_elegante"], `${id}: ${a}`).toContain(a);
+describe("etichette dei bot nel catalogo (facoltative: senza, i bot giocano le carte come neutre)", () => {
+  const voc = json("public/espansioni/vocabolario.json") as { tipi: { id: string }[]; temi: { id: string }[]; ruoli: { id: string }[]; aspetti: { id: string }[]; limiti: { max_tipi: number; max_temi: number; pesi: number[] } };
+  type Et = { tipi?: Record<string, number>; temi?: Record<string, number>; ruoli?: string[]; aspetto?: string[] } | null;
+  const mazzi = cat.mazzi as unknown as { id: string; carte: number; frasiMegafono: unknown[]; etichette?: { carte?: Et[]; frasi?: Et[] } }[];
+  it("le etichette sono allineate a carte e frasi e usano pesi, massimi, ruoli e aspetti ammessi", () => {
+    const R = new Set(voc.ruoli.map((r) => r.id)), A = new Set(voc.aspetti.map((a) => a.id));
+    for (const m of mazzi) {
+      const et = m.etichette; if (!et) continue;
+      expect((et.carte ?? []).length, `${m.id}: etichette carte`).toBeLessThanOrEqual(m.carte); expect((et.frasi ?? []).length, `${m.id}: etichette frasi`).toBeLessThanOrEqual(m.frasiMegafono.length);
+      for (const e of [...(et.carte ?? []), ...(et.frasi ?? [])]) {
+        if (!e) continue;
+        for (const w of Object.values({ ...(e.tipi ?? {}), ...(e.temi ?? {}) })) expect(voc.limiti.pesi).toContain(w);
+        expect(Object.keys(e.tipi ?? {}).length).toBeLessThanOrEqual(voc.limiti.max_tipi); expect(Object.keys(e.temi ?? {}).length).toBeLessThanOrEqual(voc.limiti.max_temi);
+        for (const k of [...Object.keys(e.tipi ?? {}), ...Object.keys(e.temi ?? {})]) expect(k, `tag «${k}»`).toMatch(/^[a-z][a-z_]{1,24}$/);
+        for (const r of (e as { ruoli?: string[] }).ruoli ?? []) expect(R.has(r), `ruolo ${r}`).toBe(true);
+        for (const a of (e as { aspetto?: string[] }).aspetto ?? []) expect(A.has(a), `aspetto ${a}`).toBe(true);
+      }
     }
+  });
+  it("Summit (personaggi reali): ruolo politico per tutti; l'aspetto solo da capi di vestiario visibili", () => {
+    const s = mazzi.find((m) => m.id === "summit")!;
+    expect(s.etichette!.carte).toHaveLength(36);
+    s.etichette!.carte!.forEach((e, i) => { expect(e!.ruoli, `carta ${i + 1}`).toEqual(["politico"]); for (const a of e!.aspetto ?? []) expect(["completo", "cravatta", "occhiali", "divisa", "abito_elegante"], `carta ${i + 1}: ${a}`).toContain(a); });
+  });
+  it("il vocabolario pubblico (strumento /crea-mazzo.html) coincide con i file delle etichette; se cambia, rigeneralo con `node tools/espansioni/vocabolario.mjs`", () => {
+    const cat2 = json("content/etichette/catalogo.json") as { tipi: { id: string }[]; temi: { id: string }[]; pesi: number[]; max_tipi: number; max_temi: number };
+    expect(voc.tipi.map((t) => t.id)).toEqual(cat2.tipi.map((t) => t.id)); expect(voc.temi.map((t) => t.id)).toEqual(cat2.temi.map((t) => t.id));
+    expect(voc.limiti).toEqual({ pesi: cat2.pesi, max_tipi: cat2.max_tipi, max_temi: cat2.max_temi });
+    expect(voc.ruoli.map((r) => r.id)).toEqual((json("content/etichette/ruoli.json") as { ruoli: { id: string }[] }).ruoli.map((r) => r.id));
+    expect(voc.aspetti.map((a) => a.id)).toEqual((json("content/etichette/aspetto.json") as { aspetti: { id: string }[] }).aspetti.map((a) => a.id));
   });
 });

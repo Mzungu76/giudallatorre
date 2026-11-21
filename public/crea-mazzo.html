@@ -35,6 +35,17 @@ textarea{min-height:90px;resize:vertical}
 .fr button{padding:6px}
 details{margin-top:8px}summary{cursor:pointer;font-weight:600}
 .names{display:grid;grid-template-columns:28px 1fr;gap:4px 8px;margin-top:6px;max-height:320px;overflow:auto;align-items:center;font-size:13px}
+.et-sel{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.et-sel button{padding:5px 9px;font-size:13px}.et-sel button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.et-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:5px;max-height:230px;overflow:auto;margin:6px 0}
+.et-list div{position:relative;aspect-ratio:2/3;background:#ddd center/cover;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);cursor:pointer}
+.et-list div.on{box-shadow:0 0 0 3px var(--acc)}.et-list div i{position:absolute;right:2px;top:2px;width:10px;height:10px;border-radius:50%;background:var(--ok);border:2px solid #fff}
+.et-fr{display:flex;flex-direction:column;gap:4px;max-height:230px;overflow:auto;margin:6px 0}.et-fr button{text-align:left;padding:6px 9px;font-size:13px;background:#fff;color:var(--ink);border:1px solid var(--line)}.et-fr button.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}.et-fr button i{font-style:normal;color:var(--ok);margin-left:4px}
+.et-ed{border:1px solid var(--line);border-radius:10px;padding:10px;background:#fcfaf5;margin-top:8px}
+.et-ed h3{margin:0 0 6px;font-size:14px}.et-ed h4{margin:10px 0 4px;font-size:13px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}.chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:99px;padding:3px 9px;font-size:12.5px;background:#fff;cursor:pointer}
+.chip.on{background:var(--acc);color:#fff;border-color:var(--acc)}.chip.nuovo{border-style:dashed;border-color:#c77c00}.chip select{border:0;background:transparent;color:inherit;padding:0;width:auto;font-size:12px}.chip b{cursor:pointer;opacity:.8}
+.et-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.et-tools input[type=text]{flex:1 1 140px}
+.avv{background:#fffbe9;border:1px solid #ecdca0;border-radius:8px;padding:8px 10px;font-size:12.5px;margin:8px 0}
 .prev{position:sticky;top:60px}
 .prev h2{font-size:14px;color:var(--mut);margin:0 0 6px}
 .stage{position:relative;height:290px;border-radius:14px;overflow:hidden;background:repeating-conic-gradient(from -4deg at 50% 34%,#79d3ee 0 6deg,#4fbce6 6deg 12deg);border:3px solid var(--navy);margin-bottom:12px}
@@ -113,8 +124,17 @@ details{margin-top:8px}summary{cursor:pointer;font-weight:600}
     <div class="msg" id="frMsg"></div>
   </section>
   <section>
-    <h2>5 · Installazione</h2>
-    <p class="h">«Scarica ZIP» crea: le carte <code>public/espansioni/&lt;id&gt;/cNN.webp</code> e il nuovo <code>public/espansioni/catalogo.json</code> (con tutti gli altri mazzi, versione + 1). Scompatta lo ZIP nella cartella principale del progetto (sovrascrivendo), fai commit e pubblica; oppure caricalo in chat e lo inserisco io. Non occorre altro: il gioco legge frasi e carte dal catalogo. Le etichette per i bot (<code>content/etichette</code>) sono a parte: senza, i bot giocano con le carte come neutre.</p>
+    <h2>5 · Etichette per i bot (facoltativo)</h2>
+    <p class="h">Servono ai giocatori virtuali per capire chi è chi: una carta con certi <b>tipi</b> (che persona è) e <b>temi</b> (di cosa si parla) viene abbinata alle frasi con le stesse etichette. Senza etichette i bot giocano le carte alla cieca. Scegli una carta o una frase, poi tocca le etichette (al massimo 3 tipi e 6 temi, con peso da 1 «accenno» a 3 «tratto dominante»).</p>
+    <div class="avv">Un tipo o un tema <b>nuovo</b> funziona solo se compare sia su carte sia su frasi (anche di questo mazzo): etichetta quindi anche le frasi. <b>Ruolo</b> e <b>aspetto</b> attivano i «luoghi comuni» del gioco (es. politico → ipocrita, giacca e cravatta → ambizioso): usali con giudizio, soprattutto per persone reali. Non si possono inventare.</div>
+    <div class="msg" id="etMsg"></div>
+    <div class="et-sel"><button class="sec on" data-v="carta">Carte</button><button class="sec" data-v="frase">Frasi</button></div>
+    <div id="etPick"></div>
+    <div class="et-ed" id="etEd"></div>
+  </section>
+  <section>
+    <h2>6 · Installazione</h2>
+    <p class="h">«Scarica ZIP» crea: le carte <code>public/espansioni/&lt;id&gt;/cNN.webp</code> e il nuovo <code>public/espansioni/catalogo.json</code> (con tutti gli altri mazzi, versione + 1). Scompatta lo ZIP nella cartella principale del progetto (sovrascrivendo), fai commit e pubblica; oppure caricalo in chat e lo inserisco io. Non occorre altro: il gioco legge frasi e carte dal catalogo. Le etichette per i bot sono incluse nel catalogo.</p>
     <div class="msg" id="errMsg"></div>
   </section>
 </div>
@@ -133,7 +153,8 @@ const COLORI = ["#e8362b", "#8e44c8", "#14a3a1", "#ff7aa8", "#ffc72c", "#2f7be0"
 let carte = [];              // [{ url, blob? }] in ordine
 let sceltaBox = [];          // numeri carta (1..N) del fronte della scatola
 let frasi = [];              // [{ testo, famiglia, eta }]
-let catalogo = null, modifica = null;
+let catalogo = null, modifica = null, vocab = null, vistaEt = "carta", bersaglio = 0;
+fetch("/espansioni/vocabolario.json").then((r) => r.json()).then((v) => { vocab = v; etichette(); }).catch(() => { $("etMsg").className = "msg err"; $("etMsg").textContent = "Elenco delle etichette non trovato (/espansioni/vocabolario.json): apri la pagina dal sito."; });
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 const slug = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 12);
 const verboDi = (t) => (/^(i più|quelli che)(?=\s)/.test(t) ? "salgono" : "sale");
@@ -148,8 +169,8 @@ $("catFile").onchange = async (e) => { try { leggiCatalogo(JSON.parse(await e.ta
 $("esist").onchange = () => {
   const m = catalogo && catalogo.mazzi.find((x) => x.id === $("esist").value); modifica = m || null; if (!m) return;
   $("nome").value = m.nome; $("id").value = m.id; $("id").disabled = true; $("colore").value = m.colore; $("prezzo").value = m.prezzo; $("stato").value = m.stato; $("anteprima").value = m.anteprima; $("novita").checked = !!m.novita; $("descr").value = m.descrizione;
-  carte = Array.from({ length: m.carte }, (_, i) => ({ url: `${m.cartella}c${String(i + 1).padStart(2, "0")}.webp`, nome: (m.nomi || [])[i] || "" }));
-  sceltaBox = (m.scatola || []).slice(); frasi = (m.frasiMegafono || []).map((f) => ({ testo: f.testo, famiglia: f.famiglia, eta: f.eta }));
+  carte = Array.from({ length: m.carte }, (_, i) => ({ url: `${m.cartella}c${String(i + 1).padStart(2, "0")}.webp`, nome: (m.nomi || [])[i] || "", et: copiaEt(((m.etichette || {}).carte || [])[i]) }));
+  sceltaBox = (m.scatola || []).slice(); frasi = (m.frasiMegafono || []).map((f, i) => ({ testo: f.testo, famiglia: f.famiglia, eta: f.eta, et: copiaEt(((m.etichette || {}).frasi || [])[i]) })); bersaglio = 0;
   $("esempio").dataset.v = m.esempio; $("foglMsg").className = "msg ok"; $("foglMsg").textContent = `Uso le ${m.carte} carte già pubblicate. Carica nuovi fogli solo per sostituirle.`;
   tutto();
 };
@@ -169,7 +190,7 @@ async function ritaglia(file) {
   for (const [y0, y1] of rows) for (const [x0, x1] of cols) {
     const c = document.createElement("canvas"); c.width = 320; c.height = 480; c.getContext("2d").drawImage(bmp, x0, y0, x1 - x0, y1 - y0, 0, 0, 320, 480);
     const blob = await new Promise((r) => c.toBlob(r, "image/webp", 0.88)); if (blob.type !== "image/webp") throw new Error("Questo browser non sa salvare in WebP: usa Chrome, Edge o Firefox.");
-    out.push({ blob, url: URL.createObjectURL(blob), nome: "" });
+    out.push({ blob, url: URL.createObjectURL(blob), nome: "", et: vuoto() });
   }
   return out;
 }
@@ -177,7 +198,7 @@ $("fogli").onchange = async (e) => {
   const files = [...e.target.files].sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true })); if (!files.length) return;
   $("foglMsg").className = "msg"; $("foglMsg").textContent = "Ritaglio…"; const nuove = [];
   try { for (const f of files) nuove.push(...await ritaglia(f)); } catch (err) { $("foglMsg").className = "msg err"; $("foglMsg").textContent = err.message; return; }
-  carte = nuove; sceltaBox = sceltaBox.filter((n) => n <= carte.length);
+  nuove.forEach((c, i) => { c.et = (carte[i] && carte[i].et) || vuoto(); }); carte = nuove; sceltaBox = sceltaBox.filter((n) => n <= carte.length);
   $("foglMsg").className = "msg ok"; $("foglMsg").textContent = `${files.length} fogli → ${carte.length} carte${carte.length === 36 ? "" : " (di norma sono 36)"}. L'ordine è quello dei fogli: controlla le miniature.`;
   tutto();
 };
@@ -201,7 +222,7 @@ function righeFrasi() {
     <select data-k="famiglia">${FAMIGLIE.map((x) => `<option${x === f.famiglia ? " selected" : ""}>${x}</option>`).join("")}</select>
     <select data-k="eta">${ETA.map((x) => `<option${x === f.eta ? " selected" : ""}>${x}</option>`).join("")}</select>
     <button class="sec" data-x="1" title="Togli">×</button><div class="e" id="e${i}"></div></div>`).join("");
-  controllaFrasi(); esempi(); anteprima();
+  controllaFrasi(); esempi(); anteprima(); if (typeof etichette === "function") etichette();
 }
 function erroriFrase(f, tutte) {
   const e = [], t = f.testo.trim(); if (!t) return ["vuota"];
@@ -217,8 +238,8 @@ function controllaFrasi() {
 function esempi() { const v = $("esempio").value || $("esempio").dataset.v || ""; $("esempio").innerHTML = frasi.filter((f) => f.testo.trim()).map((f) => { const t = `Oggi ${verboDi(f.testo.trim())} sulla torre ${f.testo.trim()}`; return `<option${t === v ? " selected" : ""}>${esc(t)}</option>`; }).join(""); }
 $("frasi").oninput = (e) => { const r = e.target.closest(".fr"); if (!r || !e.target.dataset.k) return; frasi[+r.dataset.i][e.target.dataset.k] = e.target.value; controllaFrasi(); esempi(); anteprima(); };
 $("frasi").onclick = (e) => { if (e.target.dataset.x) { frasi.splice(+e.target.closest(".fr").dataset.i, 1); righeFrasi(); } };
-$("addFrase").onclick = () => { frasi.push({ testo: "", famiglia: "confronto", eta: "10+" }); righeFrasi(); };
-$("incolla").onclick = () => { const t = prompt("Incolla le frasi, una per riga (solo la parte dopo «sulla torre»):"); if (!t) return; t.split("\n").map((s) => s.trim()).filter(Boolean).forEach((s) => frasi.push({ testo: s, famiglia: /^(i più|quelli che)/.test(s) ? "etichetta" : "confronto", eta: "10+" })); righeFrasi(); };
+$("addFrase").onclick = () => { frasi.push({ testo: "", famiglia: "confronto", eta: "10+", et: vuoto() }); righeFrasi(); };
+$("incolla").onclick = () => { const t = prompt("Incolla le frasi, una per riga (solo la parte dopo «sulla torre»):"); if (!t) return; t.split("\n").map((s) => s.trim()).filter(Boolean).forEach((s) => frasi.push({ testo: s, famiglia: /^(i più|quelli che)/.test(s) ? "etichetta" : "confronto", eta: "10+", et: vuoto() })); righeFrasi(); };
 
 // ---------- anteprima ----------
 function scatola(nome, colore, urls, k) {
@@ -241,6 +262,56 @@ function anteprima() {
 ["nome", "colore", "prezzo", "anteprima", "descr", "stato", "novita", "esempio"].forEach((k) => { $(k).oninput = $(k).onchange = () => { if (k === "nome" && !modifica && !$("id").dataset.manuale) $("id").value = slug($("nome").value); anteprima(); }; });
 $("id").oninput = () => { $("id").dataset.manuale = "1"; $("id").value = slug($("id").value); controllo(); };
 
+// ---------- etichette per i bot ----------
+const vuoto = () => ({ tipi: {}, temi: {}, ruoli: [], aspetto: [] });
+function copiaEt(e) { const v = vuoto(); if (e) { Object.assign(v.tipi, e.tipi || {}); Object.assign(v.temi, e.temi || {}); v.ruoli = (e.ruoli || []).slice(); v.aspetto = (e.aspetto || []).slice(); } return v; }
+const haEt = (e) => !!e && (Object.keys(e.tipi).length || Object.keys(e.temi).length || e.ruoli.length || e.aspetto.length);
+const nomeTag = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim().replace(/[\s-]+/g, "_").replace(/[^a-z_]/g, "");
+const lista = () => (vistaEt === "carta" ? carte : frasi.filter(() => true));
+function etichette() {
+  const L = lista(); if (bersaglio >= L.length) bersaglio = 0;
+  document.querySelectorAll(".et-sel button").forEach((b) => b.classList.toggle("on", b.dataset.v === vistaEt));
+  const nc = carte.filter((c) => haEt(c.et)).length, nf = frasi.filter((f) => haEt(f.et)).length;
+  $("etMsg").className = "msg ok"; $("etMsg").textContent = `Etichettate: ${nc}/${carte.length} carte, ${nf}/${frasi.length} frasi.`;
+  $("etPick").innerHTML = vistaEt === "carta"
+    ? `<div class="et-list">${carte.map((c, i) => `<div data-i="${i}" class="${i === bersaglio ? "on" : ""}" style="background-image:url(${c.url})">${haEt(c.et) ? "<i></i>" : ""}</div>`).join("")}</div>`
+    : `<div class="et-fr">${frasi.map((f, i) => `<button data-i="${i}" class="${i === bersaglio ? "on" : ""}">${i + 1}. ${esc(f.testo || "(vuota)")}${haEt(f.et) ? "<i>●</i>" : ""}</button>`).join("")}</div>`;
+  const t = L[bersaglio]; if (!t) { $("etEd").innerHTML = '<span class="msg">Niente da etichettare: carica le carte o scrivi le frasi.</span>'; return; }
+  if (!vocab) { $("etEd").innerHTML = '<span class="msg">Carico l\'elenco delle etichette…</span>'; return; }
+  const e = t.et, q = ($("etCerca") && $("etCerca").value || "").toLowerCase();
+  const nuoviTipi = Object.keys(e.tipi).filter((k) => !vocab.tipi.some((x) => x.id === k)), nuoviTemi = Object.keys(e.temi).filter((k) => !vocab.temi.some((x) => x.id === k));
+  const gruppo = (kind, titolo, max, voc, ev) => {
+    const sel = Object.keys(e[kind]);
+    const scelte = sel.map((k) => `<span class="chip on${voc.some((x) => x.id === k) ? "" : " nuovo"}">${esc(k)} <select data-w="${kind}|${k}">${[1, 2, 3].map((w) => `<option${e[kind][k] === w ? " selected" : ""}>${w}</option>`).join("")}</select><b data-r="${kind}|${k}" title="Togli">×</b></span>`).join("") || '<span class="msg">nessuna</span>';
+    const disp = voc.filter((x) => !sel.includes(x.id) && (!q || x.id.includes(q) || (x.def || "").toLowerCase().includes(q))).map((x) => `<span class="chip" data-a="${kind}|${x.id}" title="${esc(x.def || "")}">${x.id}</span>`).join("");
+    return `<h4>${titolo} (${sel.length}/${max})</h4><div class="chips">${scelte}</div><div class="chips" style="margin-top:6px">${disp}</div>
+      <div class="et-tools"><input type="text" data-n="${kind}" placeholder="Nuovo ${kind === "tipi" ? "tipo" : "tema"} (es. ${kind === "tipi" ? "cinefilo" : "cinema"})"><button class="sec" data-nn="${kind}">Aggiungi nuovo</button></div>`;
+  };
+  const lista2 = (kind, titolo, voc) => `<h4>${titolo}</h4><div class="chips">${voc.map((x) => `<span class="chip${e[kind].includes(x.id) ? " on" : ""}" data-l="${kind}|${x.id}" title="${esc(x.def || "")}">${x.id}</span>`).join("")}</div>`;
+  const nome = vistaEt === "carta" ? `Carta ${bersaglio + 1}${t.nome ? " · " + esc(t.nome) : ""}` : `Frase ${bersaglio + 1}: «${esc(t.testo)}»`;
+  $("etEd").innerHTML = `<h3>${nome}</h3><input type="text" id="etCerca" placeholder="Cerca tra le etichette (nome o definizione)…" value="${esc(q)}" style="margin-bottom:4px">
+    ${gruppo("tipi", "Tipi · che persona è", 3, vocab.tipi)}${gruppo("temi", "Temi · di cosa si parla", 6, vocab.temi)}
+    ${vistaEt === "carta" ? lista2("ruoli", "Ruolo (attiva i luoghi comuni del mestiere)", vocab.ruoli) + lista2("aspetto", "Aspetto · abbigliamento e accessori (attiva i luoghi comuni)", vocab.aspetti) : ""}
+    <div class="et-tools"><button class="sec" data-azione="svuota">Svuota queste etichette</button>${vistaEt === "carta" ? '<button class="sec" data-azione="copia">Copia su tutte le carte senza etichette</button>' : ""}</div>`;
+}
+document.querySelector(".et-sel").onclick = (e) => { if (e.target.dataset.v) { vistaEt = e.target.dataset.v; bersaglio = 0; etichette(); } };
+$("etPick").onclick = (e) => { const d = e.target.closest("[data-i]"); if (d) { bersaglio = +d.dataset.i; etichette(); } };
+function aggiungiTag(kind, k) {
+  const e = lista()[bersaglio].et, max = kind === "tipi" ? 3 : 6; if (Object.keys(e[kind]).length >= max) { $("etMsg").className = "msg err"; $("etMsg").textContent = `Al massimo ${max} ${kind}: togline uno prima.`; return; }
+  e[kind][k] = e[kind][k] || 2; etichette();
+}
+$("etEd").onclick = (e) => {
+  const t = lista()[bersaglio]; if (!t) return; const d = e.target.dataset;
+  if (d.a) { const [kind, k] = d.a.split("|"); aggiungiTag(kind, k); }
+  else if (d.r) { const [kind, k] = d.r.split("|"); delete t.et[kind][k]; etichette(); }
+  else if (d.l) { const [kind, k] = d.l.split("|"), a = t.et[kind], i = a.indexOf(k); if (i >= 0) a.splice(i, 1); else a.push(k); etichette(); }
+  else if (d.nn) { const inp = $("etEd").querySelector(`input[data-n="${d.nn}"]`), k = nomeTag(inp.value); if (!/^[a-z][a-z_]{1,24}$/.test(k)) { $("etMsg").className = "msg err"; $("etMsg").textContent = "Il nome nuovo deve avere 2–25 lettere minuscole (senza numeri)."; return; } aggiungiTag(d.nn, k); }
+  else if (d.azione === "svuota") { t.et = vuoto(); etichette(); }
+  else if (d.azione === "copia") { carte.forEach((c) => { if (!haEt(c.et)) c.et = copiaEt(t.et); }); etichette(); }
+};
+$("etEd").onchange = (e) => { const w = e.target.dataset.w; if (w) { const [kind, k] = w.split("|"); lista()[bersaglio].et[kind][k] = +e.target.value; } };
+$("etEd").oninput = (e) => { if (e.target.id === "etCerca") { const pos = e.target.selectionStart; etichette(); const c = $("etCerca"); c.focus(); c.setSelectionRange(pos, pos); } };
+
 // ---------- controlli ed esportazione ----------
 function problemi() {
   const p = [], id = $("id").value.trim();
@@ -253,7 +324,7 @@ function problemi() {
   return p;
 }
 function controllo() { const p = problemi(); $("errMsg").className = "msg " + (p.length ? "err" : "ok"); $("errMsg").innerHTML = p.length ? "Prima di scaricare: " + p.map(esc).join(" · ") : "Tutto a posto: puoi scaricare lo ZIP."; $("scarica").disabled = p.length > 0; }
-function tutto() { miniature(); righeFrasi(); anteprima(); }
+function tutto() { miniature(); righeFrasi(); anteprima(); etichette(); }
 
 const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return (b) => { let c = 0xffffffff; for (let i = 0; i < b.length; i++) c = t[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xffffffff) >>> 0; }; })();
 function zip(files) {   // ZIP senza compressione: abbastanza per immagini già compresse e JSON piccoli
@@ -276,7 +347,10 @@ function voce() {
   if ($("novita").checked) m.novita = true;
   Object.assign(m, { descrizione: $("descr").value.trim(), personaggi: carte.length, frasi: frasi.length, anteprima: Math.max(0, Math.min(carte.length - 1, +$("anteprima").value || 0)), scatola: sceltaBox.slice(0, 3), esempio: ex, cartella: `/espansioni/${id}/`, carte: carte.length });
   if (nomi.some(Boolean)) m.nomi = nomi.map((n, i) => n || `Carta ${i + 1}`);
+  const et = (x) => { if (!haEt(x)) return null; const o = {}; if (Object.keys(x.tipi).length) o.tipi = x.tipi; if (Object.keys(x.temi).length) o.temi = x.temi; if (x.ruoli.length) o.ruoli = x.ruoli; if (x.aspetto.length) o.aspetto = x.aspetto; return o; };
+  const cut = (a) => { while (a.length && !a[a.length - 1]) a.pop(); return a; }, ec = cut(carte.map((c) => et(c.et))), ef = cut(frasi.map((f) => et(f.et)));
   m.frasiMegafono = frasi.map((f, i) => ({ id: `${id.toUpperCase()}-${String(i + 1).padStart(2, "0")}`, testo: f.testo.trim(), verbo: verboDi(f.testo.trim()), famiglia: f.famiglia, eta: f.eta }));
+  if (ec.length || ef.length) m.etichette = { ...(ec.length ? { carte: ec } : {}), ...(ef.length ? { frasi: ef } : {}) };
   return m;
 }
 $("scarica").onclick = async () => {

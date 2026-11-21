@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { suggestAction } from "@gdt/game-engine";
+import { affinity, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { createRoomBody, clientMessageSchema } from "@gdt/game-protocol";
 import { EXPANSIONS, DECK } from "../src/content.ts";
@@ -50,6 +50,11 @@ describe("espansioni nelle partite", () => {
     const ids = deckIds(r.core.data.game!); expect(ids).toHaveLength(36); expect(ids.every((i) => i.startsWith("summit-"))).toBe(true);
     const r7 = makeRoom(6, 81, 1_000_000, { espansioni: ["summit"], soloEsp: true }); send(r7, 0, { t: "start" });
     expect(deckIds(r7.core.data.game!)).toHaveLength(36);   // 6 × 6 = 36: bastano giusto
+  });
+  it("le etichette scritte nel catalogo arrivano ai bot (carte e frasi dei mazzi)", () => {
+    expect(affinity("summit-c01", "Oggi sale sulla torre chi cambierebbe idea appena cambia il sondaggio.")).toBeGreaterThan(0);   // ruolo/temi politici
+    expect(affinity("anni90-c01", "Oggi sale sulla torre chi sarebbe il peggior compagno di viaggio.")).not.toBeNull();            // carta con etichette v1 derivate dalle v2
+    expect(affinity("nessuno-c01", "Oggi sale sulla torre chi sarebbe il peggior compagno di viaggio.")).toBeNull();               // carta senza etichette: neutra
   });
   it("le frasi del mazzo entrano tra le prime carte del Megafono", () => {
     let visto = 0;

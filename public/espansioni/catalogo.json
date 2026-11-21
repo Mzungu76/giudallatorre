@@ -1,5 +1,5 @@
 {
- "versione": 4,
+ "versione": 5,
  "aggiornato": "2026-11-20",
  "mazzi": [
   {
@@ -186,7 +186,549 @@
      "famiglia": "ribaltato",
      "eta": "14+"
     }
-   ]
+   ],
+   "etichette": {
+    "carte": [
+     {
+      "tipi": {
+       "eccentrico": 3,
+       "chiacchierone": 2,
+       "dispettoso": 1
+      },
+      "temi": {
+       "animali": 3,
+       "caos": 2,
+       "imbarazzo": 1
+      },
+      "aspetto": [
+       "camicia_hawaiana"
+      ]
+     },
+     {
+      "tipi": {
+       "ingenuo": 3,
+       "distratto": 2,
+       "chiacchierone": 1
+      },
+      "temi": {
+       "amicizia": 3,
+       "viaggio": 2,
+       "imbarazzo": 2
+      },
+      "aspetto": [
+       "abito_elegante"
+      ]
+     },
+     {
+      "tipi": {
+       "ingenuo": 3,
+       "distratto": 2,
+       "pigro": 1
+      },
+      "temi": {
+       "amicizia": 3,
+       "viaggio": 2,
+       "pigrizia": 1
+      }
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "festaiolo": 2,
+       "eccentrico": 2
+      },
+      "temi": {
+       "seduzione": 3,
+       "moda": 2,
+       "feste": 2,
+       "spettacolo": 1
+      },
+      "aspetto": [
+       "occhiali",
+       "abito_elegante"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "viziato": 2,
+       "saputello": 1
+      },
+      "temi": {
+       "moda": 3,
+       "scuola": 2,
+       "soldi": 1
+      }
+     },
+     {
+      "tipi": {
+       "eccentrico": 3,
+       "romantico": 2,
+       "vanitoso": 1
+      },
+      "temi": {
+       "famiglia": 3,
+       "amore": 2,
+       "fumo": 2
+      },
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "cinico": 3,
+       "dispettoso": 2,
+       "vendicativo": 1
+      },
+      "temi": {
+       "morte": 3,
+       "famiglia": 1,
+       "scuola": 1
+      }
+     },
+     {
+      "tipi": {
+       "genitore": 3,
+       "eccentrico": 1
+      },
+      "temi": {
+       "famiglia": 3,
+       "casa": 3,
+       "bambini": 2
+      },
+      "ruoli": [
+       "genitore"
+      ],
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "festaiolo": 3,
+       "ingenuo": 1,
+       "ribelle": 1
+      },
+      "temi": {
+       "musica": 3,
+       "feste": 2,
+       "amicizia": 2
+      },
+      "ruoli": [
+       "musicista"
+      ],
+      "aspetto": [
+       "cappellino"
+      ]
+     },
+     {
+      "tipi": {
+       "saputello": 3,
+       "vanitoso": 2,
+       "cinico": 1
+      },
+      "temi": {
+       "caos": 3,
+       "tecnologia": 2,
+       "natura": 2,
+       "seduzione": 1
+      },
+      "ruoli": [
+       "scienziato"
+      ],
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "romantico": 3,
+       "ribelle": 1,
+       "artista": 2
+      },
+      "temi": {
+       "amore": 3,
+       "viaggio": 2,
+       "arte": 2
+      }
+     },
+     {
+      "tipi": {
+       "romantico": 3,
+       "ribelle": 2,
+       "viziato": 1
+      },
+      "temi": {
+       "amore": 3,
+       "viaggio": 2,
+       "soldi": 1
+      },
+      "aspetto": [
+       "abito_elegante"
+      ]
+     },
+     {
+      "tipi": {
+       "saputello": 2,
+       "ribelle": 2,
+       "nerd": 2
+      },
+      "temi": {
+       "scuola": 3,
+       "amicizia": 2,
+       "cultura": 2
+      }
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "impulsivo": 1
+      },
+      "temi": {
+       "viaggio": 3,
+       "coraggio": 3,
+       "natura": 1
+      }
+     },
+     {
+      "tipi": {
+       "guru": 3,
+       "complottista": 1
+      },
+      "temi": {
+       "tecnologia": 3,
+       "segreti": 2,
+       "fiducia": 2
+      },
+      "ruoli": [
+       "guru"
+      ],
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "ribelle": 3,
+       "cinico": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "rabbia": 3,
+       "caos": 2,
+       "corpo": 1
+      },
+      "aspetto": [
+       "occhiali_sole",
+       "giacca_pelle"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "testardo": 2,
+       "impulsivo": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "rabbia": 2,
+       "famiglia": 1
+      }
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "romantico": 1,
+       "eccentrico": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "legge": 1,
+       "seduzione": 1
+      },
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "testardo": 2,
+       "maleducato": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "legge": 2,
+       "caos": 2
+      },
+      "ruoli": [
+       "guardia"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "furbo": 2,
+       "ambizioso": 1
+      },
+      "temi": {
+       "segreti": 3,
+       "coraggio": 2,
+       "tecnologia": 1
+      },
+      "ruoli": [
+       "guardia"
+      ],
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 2,
+       "ribelle": 2,
+       "vendicativo": 1
+      },
+      "temi": {
+       "notte": 3,
+       "morte": 2,
+       "caos": 1
+      },
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 2,
+       "ambizioso": 2,
+       "ansioso": 1
+      },
+      "temi": {
+       "legge": 3,
+       "carriera": 2,
+       "segreti": 1
+      },
+      "ruoli": [
+       "guardia"
+      ]
+     },
+     {
+      "tipi": {
+       "cinico": 3,
+       "saputello": 2,
+       "arrogante": 1
+      },
+      "temi": {
+       "segreti": 2,
+       "cultura": 2,
+       "morte": 1
+      },
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "moralista": 2,
+       "arrogante": 1,
+       "vendicativo": 1
+      },
+      "temi": {
+       "religione": 2,
+       "legge": 1,
+       "cibo": 1
+      },
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "pigro": 2,
+       "vanitoso": 1,
+       "impulsivo": 1
+      },
+      "temi": {
+       "fumo": 2,
+       "notte": 2,
+       "musica": 1
+      },
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "testardo": 2,
+       "ansioso": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "famiglia": 2,
+       "tecnologia": 1
+      },
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "pigro": 2,
+       "cinico": 1,
+       "noioso": 1
+      },
+      "temi": {
+       "amicizia": 2,
+       "spettacolo": 2,
+       "pigrizia": 1
+      },
+      "aspetto": [
+       "cappellino"
+      ]
+     },
+     {
+      "tipi": {
+       "ingenuo": 2,
+       "romantico": 2,
+       "ansioso": 2
+      },
+      "temi": {
+       "amore": 2,
+       "arte": 2,
+       "imbarazzo": 2,
+       "natura": 1
+      },
+      "aspetto": [
+       "borchie"
+      ]
+     },
+     {
+      "tipi": {
+       "eccentrico": 3,
+       "festaiolo": 2,
+       "dispettoso": 1
+      },
+      "temi": {
+       "caos": 3,
+       "spettacolo": 2,
+       "feste": 2
+      },
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "impulsivo": 2,
+       "ingenuo": 1,
+       "coraggioso": 1
+      },
+      "temi": {
+       "viaggio": 3,
+       "giovinezza": 3,
+       "mezzi": 2,
+       "tecnologia": 1
+      },
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "testardo": 3,
+       "cinico": 2,
+       "pignolo": 1
+      },
+      "temi": {
+       "tecnologia": 3,
+       "morte": 2,
+       "mezzi": 1
+      },
+      "aspetto": [
+       "occhiali_sole",
+       "giacca_pelle"
+      ]
+     },
+     {
+      "tipi": {
+       "furbo": 3,
+       "dispettoso": 2,
+       "coraggioso": 1
+      },
+      "temi": {
+       "casa": 3,
+       "bambini": 3,
+       "feste": 1
+      }
+     },
+     {
+      "tipi": {
+       "furbo": 3,
+       "eccentrico": 2,
+       "inaffidabile": 2
+      },
+      "temi": {
+       "viaggio": 3,
+       "alcol": 2,
+       "truffe": 1
+      }
+     },
+     {
+      "tipi": {
+       "ingenuo": 3,
+       "romantico": 1,
+       "coraggioso": 1
+      },
+      "temi": {
+       "amore": 2,
+       "sport": 2,
+       "amicizia": 2
+      },
+      "aspetto": [
+       "completo"
+      ]
+     },
+     {
+      "tipi": {
+       "nerd": 2,
+       "coraggioso": 2,
+       "ingenuo": 1
+      },
+      "temi": {
+       "tecnologia": 3,
+       "coraggio": 2
+      },
+      "ruoli": [
+       "hacker"
+      ],
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "pignolo": 2,
+       "cinico": 1,
+       "ansioso": 1
+      },
+      "temi": {
+       "natura": 2,
+       "segreti": 2,
+       "amicizia": 1
+      },
+      "aspetto": [
+       "occhiali_sole",
+       "berretto"
+      ]
+     }
+    ]
+   }
   },
   {
    "id": "summit",
@@ -372,7 +914,531 @@
      "famiglia": "collettivo",
      "eta": "14+"
     }
-   ]
+   ],
+   "etichette": {
+    "carte": [
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta",
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "abito_elegante"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "divisa"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "abito_elegante"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "divisa",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta",
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta",
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "politico": 1
+      },
+      "temi": {
+       "politica": 3
+      },
+      "ruoli": [
+       "politico"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta",
+       "occhiali"
+      ]
+     }
+    ]
+   }
   }
  ]
 }
