@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 import { affinity, suggestAction } from "@gdt/game-engine";
 import type { GameState } from "@gdt/game-engine";
 import { createRoomBody, clientMessageSchema } from "@gdt/game-protocol";
@@ -9,7 +10,12 @@ import { deps, makeRoom, playToEnd, send } from "./helpers.ts";
 const deckIds = (g: GameState) => [...g.drawPile, ...g.discardPile, ...Object.values(g.hands).flat(), ...g.tower.map((t) => t.cardId)];
 
 describe("espansioni nelle partite", () => {
-  it("il registro ha i mazzi del catalogo in vendita", () => { expect(Object.keys(EXPANSIONS).sort()).toEqual(["anni90", "summit"]); expect(EXPANSIONS.anni90!.cards).toHaveLength(36); expect(EXPANSIONS.anni90!.phrases).toHaveLength(18); });
+  it("il registro contiene tutti i mazzi in vendita del catalogo, con carte e frasi giuste (un mazzo nuovo non richiede di toccare questo test)", () => {
+    const cat = JSON.parse(readFileSync(new URL("../../public/espansioni/catalogo.json", import.meta.url), "utf8")) as { mazzi: { id: string; stato: string; carte: number; frasiMegafono?: unknown[] }[] };
+    const vendita = cat.mazzi.filter((m) => m.stato === "vendita");
+    expect(Object.keys(EXPANSIONS).sort()).toEqual(vendita.map((m) => m.id).sort());
+    for (const m of vendita) { expect(EXPANSIONS[m.id]!.cards).toHaveLength(m.carte); expect(EXPANSIONS[m.id]!.phrases).toHaveLength(m.frasiMegafono?.length ?? 0); }
+  });
   it("il registro ha il mazzo Summit: 36 carte (summit-cNN) e 18 frasi", () => {
     expect(EXPANSIONS.summit!.cards).toHaveLength(36);
     expect(EXPANSIONS.summit!.cards[0]).toBe("summit-c01");

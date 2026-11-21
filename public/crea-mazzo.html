@@ -421,15 +421,17 @@ const CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n+
 function zip(files) {   // ZIP senza compressione: abbastanza per immagini già compresse e JSON piccoli
   const enc = new TextEncoder(), parts = [], dir = []; let off = 0;
   const u16 = (n) => new Uint8Array([n & 255, (n >> 8) & 255]), u32 = (n) => new Uint8Array([n & 255, (n >> 8) & 255, (n >> 16) & 255, (n >>> 24) & 255]);
-  for (const f of files) {
-    const name = enc.encode(f.name), crc = CRC(f.data), size = f.data.length;
+  const cartelle = [...new Set(files.flatMap((f) => f.name.split("/").slice(0, -1).map((_, i, a) => a.slice(0, i + 1).join("/") + "/")))];   // cartelle esplicite: alcuni programmi non mostrano i percorsi dei soli file
+  const voci = [...cartelle.map((n) => ({ name: n, data: new Uint8Array(0) })), ...files];
+  for (const f of voci) {
+    const name = enc.encode(f.name), crc = CRC(f.data), size = f.data.length, esDir = f.name.endsWith("/");
     const head = [u32(0x04034b50), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(size), u32(size), u16(name.length), u16(0), name];
     head.forEach((h) => parts.push(h)); parts.push(f.data);
-    dir.push([u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(size), u32(size), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(off), name]);
+    dir.push([u32(0x02014b50), u16(20), u16(20), u16(0x0800), u16(0), u16(0), u16(0x21), u32(crc), u32(size), u32(size), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(esDir ? 0x10 : 0), u32(off), name]);
     off += 30 + name.length + size;
   }
   let dsz = 0; dir.forEach((d) => d.forEach((x) => { parts.push(x); dsz += x.length; }));
-  [u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(dsz), u32(off), u16(0)].forEach((x) => parts.push(x));
+  [u32(0x06054b50), u16(0), u16(0), u16(voci.length), u16(voci.length), u32(dsz), u32(off), u16(0)].forEach((x) => parts.push(x));
   return new Blob(parts, { type: "application/zip" });
 }
 function voce() {

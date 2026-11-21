@@ -1,7 +1,811 @@
 {
- "versione": 5,
- "aggiornato": "2026-11-20",
+ "versione": 6,
+ "aggiornato": "2026-11-21",
  "mazzi": [
+  {
+   "id": "cosplaysuper",
+   "nome": "Cosplay Super 1",
+   "colore": "#e8362b",
+   "prezzo": "€ 2,99",
+   "stato": "vendita",
+   "novita": true,
+   "descrizione": "Abbiamo cercato i migliori supereroi del pianeta. Non erano disponibili. Questi erano in zona! I cosplayer migliori sulla piazza! (Forse)",
+   "personaggi": 36,
+   "frasi": 10,
+   "anteprima": 6,
+   "scatola": [
+    17,
+    8,
+    32
+   ],
+   "esempio": "Oggi sale sulla torre chi vuole salvare l'umanità, anche se l'umanità non gliel'ha mai chiesto.",
+   "cartella": "/espansioni/cosplaysuper/",
+   "carte": 36,
+   "frasiMegafono": [
+    {
+     "id": "COSPLAYSUPER-01",
+     "testo": "chi si sente supereroe, ma ha bisogno di qualcuno che gli allacci il mantello.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-02",
+     "testo": "chi è pronto a salvare il mondo, purché non debba fare gli straordinari.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-03",
+     "testo": "chi combatte il crimine, ma perde regolarmente le chiavi di casa.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-04",
+     "testo": "chi vuole salvare l'umanità, anche se l'umanità non gliel'ha mai chiesto.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-05",
+     "testo": "chi ha più muscoli che neuroni.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-06",
+     "testo": "chi ha un passato tormentato, un futuro incerto e un presente imbarazzante.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-07",
+     "testo": "chi ha il potere di diventare invisibile quando arriva il conto.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-08",
+     "testo": "chi ha sempre una soluzione, soprattutto quando non c'è nessun problema.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "6+"
+    },
+    {
+     "id": "COSPLAYSUPER-09",
+     "testo": "chi ha fatto più figure di merda che esperienze sessuali.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "18+"
+    },
+    {
+     "id": "COSPLAYSUPER-10",
+     "testo": "chi è la prova vivente che il preservativo deve essere messo qualche volta.",
+     "verbo": "sale",
+     "famiglia": "confronto",
+     "eta": "10+"
+    }
+   ],
+   "etichette": {
+    "carte": [
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "nerd": 2,
+       "pigro": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 1,
+       "animali": 1,
+       "corpo": 2,
+       "imbarazzo": 2,
+       "cibo": 1
+      },
+      "ruoli": [
+       "nerd",
+       "studente"
+      ],
+      "aspetto": [
+       "occhiali",
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "nerd": 2,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "tecnologia": 2,
+       "casa": 2,
+       "spettacolo": 1,
+       "corpo": 1,
+       "caos": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "occhiali",
+       "casco"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "coraggio": 2,
+       "spettacolo": 2,
+       "corpo": 1,
+       "politica": 1,
+       "moda": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "festaiolo": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "coraggio": 2,
+       "spettacolo": 1,
+       "corpo": 1,
+       "imbarazzo": 1,
+       "sport": 1
+      },
+      "aspetto": [
+       "sandali"
+      ]
+     },
+     {
+      "tipi": {
+       "rabbioso": 3,
+       "impulsivo": 2,
+       "goffo": 1
+      },
+      "temi": {
+       "rabbia": 3,
+       "corpo": 2,
+       "caos": 2,
+       "coraggio": 1,
+       "spettacolo": 1,
+       "imbarazzo": 1
+      }
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "arrogante": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "coraggio": 2,
+       "spettacolo": 2,
+       "legge": 1,
+       "tecnologia": 1,
+       "corpo": 1
+      },
+      "ruoli": [
+       "guardia"
+      ],
+      "aspetto": [
+       "capelli_colorati"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "sportivo": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "sport": 2,
+       "coraggio": 2,
+       "spettacolo": 1,
+       "corpo": 1,
+       "natura": 1
+      },
+      "ruoli": [
+       "atleta"
+      ],
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "coraggio": 2,
+       "spettacolo": 1,
+       "corpo": 2,
+       "moda": 1,
+       "imbarazzo": 1
+      },
+      "aspetto": [
+       "maschera",
+       "collana"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "eccentrico": 2,
+       "guru": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 2,
+       "superstizione": 2,
+       "cultura": 1,
+       "moda": 1
+      },
+      "ruoli": [
+       "mago",
+       "nerd"
+      ],
+      "aspetto": [
+       "occhiali",
+       "collana"
+      ]
+     },
+     {
+      "tipi": {
+       "goffo": 3,
+       "nerd": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "caos": 3,
+       "animali": 2,
+       "tecnologia": 2,
+       "imbarazzo": 2,
+       "spettacolo": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "arrogante": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 2,
+       "moda": 1,
+       "corpo": 1,
+       "imbarazzo": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 2,
+       "coraggio": 2,
+       "animali": 1,
+       "caos": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "casco",
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 2,
+       "eccentrico": 3,
+       "festaiolo": 1
+      },
+      "temi": {
+       "vanita": 2,
+       "spettacolo": 2,
+       "moda": 2,
+       "caos": 1,
+       "corpo": 1
+      },
+      "aspetto": [
+       "occhiali",
+       "cuffie"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "coraggio": 2,
+       "animali": 2,
+       "spettacolo": 1,
+       "moda": 1,
+       "casa": 1
+      }
+     },
+     {
+      "tipi": {
+       "goffo": 3,
+       "vanitoso": 2,
+       "coraggioso": 1
+      },
+      "temi": {
+       "imbarazzo": 3,
+       "caos": 2,
+       "vanita": 2,
+       "coraggio": 1,
+       "salute": 1
+      },
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "rabbioso": 2,
+       "vanitoso": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "rabbia": 2,
+       "legge": 1,
+       "vanita": 1,
+       "imbarazzo": 1,
+       "casa": 1
+      },
+      "ruoli": [
+       "guardia"
+      ],
+      "aspetto": [
+       "divisa"
+      ]
+     },
+     {
+      "tipi": {
+       "rabbioso": 3,
+       "eccentrico": 2,
+       "coraggioso": 1
+      },
+      "temi": {
+       "rabbia": 3,
+       "cibo": 2,
+       "casa": 2,
+       "imbarazzo": 2,
+       "feste": 1,
+       "corpo": 1
+      },
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "romantico": 3,
+       "eccentrico": 2,
+       "vanitoso": 1
+      },
+      "temi": {
+       "amore": 3,
+       "cibo": 2,
+       "spettacolo": 1,
+       "vanita": 1,
+       "seduzione": 1,
+       "casa": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "nerd": 3,
+       "vanitoso": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "spettacolo": 2,
+       "vanita": 3,
+       "corpo": 2,
+       "imbarazzo": 2,
+       "moda": 1,
+       "tecnologia": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "eccentrico": 2,
+       "festaiolo": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "corpo": 2,
+       "moda": 2,
+       "spettacolo": 1,
+       "natura": 1,
+       "imbarazzo": 1
+      },
+      "aspetto": [
+       "capelli_colorati"
+      ]
+     },
+     {
+      "tipi": {
+       "eccentrico": 3,
+       "nerd": 2,
+       "vanitoso": 1
+      },
+      "temi": {
+       "spettacolo": 2,
+       "caos": 3,
+       "animali": 2,
+       "casa": 2,
+       "pigrizia": 1,
+       "cibo": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "maschera",
+       "sciarpa"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "arrogante": 2,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 2,
+       "corpo": 2,
+       "moda": 2,
+       "imbarazzo": 1,
+       "caos": 1
+      },
+      "aspetto": [
+       "casco"
+      ]
+     },
+     {
+      "tipi": {
+       "rabbioso": 3,
+       "testardo": 1,
+       "eccentrico": 1
+      },
+      "temi": {
+       "animali": 3,
+       "vecchiaia": 2,
+       "rabbia": 2,
+       "salute": 2,
+       "pigrizia": 1,
+       "casa": 1
+      },
+      "ruoli": [
+       "scienziato"
+      ],
+      "aspetto": [
+       "completo",
+       "cravatta",
+       "pantofole"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "influencer": 2,
+       "nerd": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "social": 3,
+       "spettacolo": 2,
+       "moda": 2,
+       "tecnologia": 1,
+       "feste": 1
+      },
+      "ruoli": [
+       "influencer",
+       "nerd"
+      ]
+     },
+     {
+      "tipi": {
+       "mangione": 3,
+       "nerd": 2,
+       "vanitoso": 1
+      },
+      "temi": {
+       "cibo": 3,
+       "spettacolo": 2,
+       "feste": 2,
+       "vanita": 1,
+       "imbarazzo": 1,
+       "gioco": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "divisa"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 2,
+       "eccentrico": 2,
+       "nerd": 2
+      },
+      "temi": {
+       "musica": 3,
+       "spettacolo": 2,
+       "vanita": 2,
+       "moda": 1,
+       "tecnologia": 1,
+       "feste": 1
+      },
+      "ruoli": [
+       "nerd",
+       "musicista"
+      ],
+      "aspetto": [
+       "maschera",
+       "cuffie",
+       "giacca_pelle"
+      ]
+     },
+     {
+      "tipi": {
+       "eccentrico": 3,
+       "coraggioso": 2,
+       "impulsivo": 2
+      },
+      "temi": {
+       "caos": 3,
+       "vanita": 2,
+       "ambiente": 2,
+       "spettacolo": 1,
+       "gioco": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "divisa"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "sportivo": 1,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "corpo": 2,
+       "viaggio": 1,
+       "natura": 1,
+       "spettacolo": 1,
+       "moda": 1
+      },
+      "ruoli": [
+       "atleta"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "ribelle": 2,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "mezzi": 2,
+       "moda": 2,
+       "spettacolo": 1,
+       "corpo": 1
+      },
+      "ruoli": [
+       "punk"
+      ],
+      "aspetto": [
+       "occhiali_sole",
+       "giacca_pelle",
+       "borchie",
+       "capelli_colorati"
+      ]
+     },
+     {
+      "tipi": {
+       "coraggioso": 3,
+       "vanitoso": 2,
+       "eccentrico": 1
+      },
+      "temi": {
+       "coraggio": 3,
+       "superstizione": 2,
+       "spettacolo": 2,
+       "vanita": 1,
+       "moda": 1,
+       "notte": 1
+      },
+      "aspetto": [
+       "occhiali_sole"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "coraggioso": 2,
+       "arrogante": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "notte": 2,
+       "coraggio": 2,
+       "spettacolo": 1,
+       "moda": 1,
+       "corpo": 1
+      },
+      "ruoli": [
+       "nerd"
+      ],
+      "aspetto": [
+       "divisa",
+       "sciarpa"
+      ]
+     },
+     {
+      "tipi": {
+       "mangione": 3,
+       "pigro": 1,
+       "eccentrico": 1
+      },
+      "temi": {
+       "cibo": 3,
+       "natura": 1,
+       "corpo": 1,
+       "feste": 1,
+       "pigrizia": 1
+      },
+      "aspetto": [
+       "occhiali"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "festaiolo": 1,
+       "eccentrico": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "corpo": 2,
+       "spettacolo": 1,
+       "feste": 1,
+       "tecnologia": 1,
+       "natura": 1
+      }
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "eccentrico": 2,
+       "coraggioso": 1
+      },
+      "temi": {
+       "vanita": 3,
+       "spettacolo": 2,
+       "moda": 1,
+       "corpo": 1,
+       "casa": 1
+      }
+     },
+     {
+      "tipi": {
+       "vanitoso": 3,
+       "eccentrico": 2,
+       "arrogante": 2
+      },
+      "temi": {
+       "vanita": 3,
+       "corpo": 2,
+       "spettacolo": 1,
+       "animali": 1,
+       "natura": 1,
+       "casa": 1
+      },
+      "aspetto": [
+       "catena_oro",
+       "maschera"
+      ]
+     },
+     {
+      "tipi": {
+       "vanitoso": 2,
+       "sportivo": 2,
+       "coraggioso": 1
+      },
+      "temi": {
+       "corpo": 3,
+       "vanita": 2,
+       "sport": 2,
+       "cibo": 1,
+       "moda": 1,
+       "ambiente": 1
+      },
+      "ruoli": [
+       "atleta"
+      ],
+      "aspetto": [
+       "occhiali",
+       "abbigliamento_sportivo",
+       "capelli_colorati"
+      ]
+     }
+    ]
+   }
+  },
   {
    "id": "anni90",
    "nome": "Anni '90",
